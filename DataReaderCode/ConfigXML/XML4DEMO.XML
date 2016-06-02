@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+	<ReaderProperties>
+		<FileDirectory>C:\Users\foll154\Documents\BPA Oscillation App\ToGit\ForDemo\PseudoNewData</FileDirectory>
+        <Mnemonic>WISPDitt</Mnemonic>
+        <Mode>
+            <Name>Hybrid</Name>
+            <Params>
+                <DateTimeStart>2016-05-20 08:22:00 GMT</DateTimeStart>
+                <NoFutureWait>20</NoFutureWait>
+                <MaxNoFutureCount>2</MaxNoFutureCount>
+                <FutureWait>10</FutureWait>
+                <MaxFutureCount>2</MaxFutureCount>
+                <RealTimeRange>10</RealTimeRange>
+            </Params>
+        </Mode>
+	</ReaderProperties>
+	<SignalSelection>
+		<PMU>
+			<Name>GCFI 500 A1 SA  </Name>
+		</PMU>
+		<PMU>
+			<Name>MALN 500  A1 SA </Name>
+		</PMU>
+	</SignalSelection>
+    <!-- 
+    Each stage is composed of data quality filters and customizations. 
+    Filters are always applied first, then the customizations. The 
+    stages are carried out in sequential order. 
+    
+    For all filters, if PMU isn't included, the filter is applied to all 
+    PMUs. Under PMU, if Channel isn't included, the filter is applied for
+    all appropriate channels in the specified PMUs. 
+    -->
+    <!--
+    *******
+    Stage 1
+    *******
+    -->
+    <Stages>
+        <!--
+        **********************
+        Stage 1 - DQ Filtering
+        **********************
+        -->
+        <!-- Filter out bad data flagged in the PMU status channel -->
+        <Filter>
+            <Name>PMUflagFilt</Name>
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagVal>1</FlagVal>
+            </Parameters>
+        </Filter>
+        <!--
+        ***********************
+        Stage 1 - Customization
+        ***********************
+        -->
+        <!-- Get a sqrt(3) scalar to scale voltages so filter works -->
+        <Customization>
+            <Name>ScalarRep</Name>
+            <Parameters>
+                <scalar>sqrt(3)</scalar>
+                <SignalName>ScalarSQRT3</SignalName>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
+            </Parameters>
+        </Customization>
+        <!-- Get a 1 scalar to move voltage angles to Custom Signals PMU -->
+        <Customization>
+            <Name>ScalarRep</Name>
+            <Parameters>
+                <scalar>1</scalar>
+                <SignalName>ScalarUnity</SignalName>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
+            </Parameters>
+        </Customization>
+        <!-- Multiply GCFI voltage by sqrt(3) to change to line-neutral -->
+        <Customization>
+            <Name>Multiplication</Name>
+            <Parameters>
+                <SignalName>GCFI 500 A1 SA  .B500NORTH____1VP.MAG</SignalName>
+                <FlagVal>14</FlagVal>
+                <factor>
+                    <PMU>GCFI 500 A1 SA  </PMU>
+                    <Channel>GCFI 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
+                </factor>
+                <factor>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>ScalarSQRT3</Channel>
+                </factor>
+            </Parameters>
+        </Customization>
+        <!-- Multiply MALN voltage by sqrt(3) to change to line-neutral -->
+        <Customization>
+            <Name>Multiplication</Name>
+            <Parameters>
+                <SignalName>MALN 500  A1 SA .B500NORTH____1VP.MAG</SignalName>
+                <FlagVal>14</FlagVal>
+                <factor>
+                    <PMU>MALN 500  A1 SA </PMU>
+                    <Channel>MALN 500  A1 SA .B500NORTH____1VP.MAG</Channel>
+                </factor>
+                <factor>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>ScalarSQRT3</Channel>
+                </factor>
+            </Parameters>
+        </Customization>
+        <!-- Multiply GCFI voltage angle by 1 to move to Custom Signals PMU -->
+        <Customization>
+            <Name>Multiplication</Name>
+            <Parameters>
+                <SignalName>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</SignalName>
+                <FlagVal>14</FlagVal>
+                <factor>
+                    <PMU>GCFI 500 A1 SA  </PMU>
+                    <Channel>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
+                </factor>
+                <factor>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>ScalarUnity</Channel>
+                </factor>
+            </Parameters>
+        </Customization>
+        <!-- Multiply MALN voltage angle by 1 to move to Custom Signals PMU -->
+        <Customization>
+            <Name>Multiplication</Name>
+            <Parameters>
+                <SignalName>MALN 500  A1 SA .B500NORTH____1VP.ANG</SignalName>
+                <FlagVal>14</FlagVal>
+                <factor>
+                    <PMU>MALN 500  A1 SA </PMU>
+                    <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
+                </factor>
+                <factor>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>ScalarUnity</Channel>
+                </factor>
+            </Parameters>
+        </Customization>
+    </Stages>
+    <!--
+    *******
+    Stage 2
+    *******
+    -->
+    <Stages>
+        <!--
+        **********************
+        Stage 2 - DQ Filtering
+        **********************
+        -->
+        <Filter>
+            <Name>StaleFilt</Name>
+            <PMU>
+                <Name>Custom Signals</Name>
+                <Channel>
+					<Name>GCFI 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+				</Channel>
+                <Channel>
+					<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+				</Channel>
+				<Channel>
+					<Name>MALN 500  A1 SA .B500NORTH____1VP.MAG</Name>
+				</Channel>
+                <Channel>
+					<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+				</Channel>
+            </PMU>
+            <Parameters>
+                <FlagAllByFreq>FALSE</FlagAllByFreq>
+                <StaleThresh>60</StaleThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagVal>7</FlagVal>
+                <FlagValFreq>8</FlagValFreq>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>DropOutZeroFilt</Name>
+            <PMU>
+                <Name>Custom Signals</Name>
+            </PMU>
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagVal>2</FlagVal>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>DropOutMissingFilt</Name>
+            <PMU>
+                <Name>Custom Signals</Name>
+            </PMU>
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagVal>3</FlagVal>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>VoltPhasorFilt</Name>
+            <PMU>
+                <Name>Custom Signals</Name>
+            </PMU>
+            <Parameters>
+                <VoltMin>0.7</VoltMin>
+                <!-- <VoltMax>1.089</VoltMax> -->
+                <VoltMax>1.3</VoltMax>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagVal>4</FlagVal>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>PMUchanFilt</Name>
+            <PMU>
+                <Name>Custom Signals</Name>
+            </PMU>
+            <Parameters>
+                <PercentBadThresh>50</PercentBadThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagVal>10</FlagVal>
+            </Parameters>
+        </Filter>
+        <!--
+        ***********************
+        Stage 2 - Customization
+        ***********************
+        -->
+        <Customization>
+            <Name>Subtraction</Name>
+            <Parameters>
+                <SignalName>AngleDiff</SignalName>
+                <FlagVal>13</FlagVal>
+                <minuend>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
+                </minuend>
+                <subtrahend>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
+                </subtrahend>
+            </Parameters>
+        </Customization>
+    </Stages>
+</Configuration>
+		

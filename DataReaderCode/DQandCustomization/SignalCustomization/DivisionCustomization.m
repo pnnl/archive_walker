@@ -1,0 +1,76 @@
+function PMUstruct = DivisionCustomization(PMUstruct,custPMUidx,Parameters)
+
+SignalName = Parameters.SignalName;
+FlagVal = str2num(Parameters.FlagVal);
+if isempty(FlagVal)
+    warning(['Flag ' Parameters.FlagVal ' could not be converted to a number. Flags will be set to NaN.']);
+    FlagVal = NaN;
+end
+
+% Size of the current Data matrix for the custom PMU - N samples by NumSig signals
+[N,NumSig] = size(PMUstruct(custPMUidx).Data);
+
+AvailablePMU = {PMUstruct.PMU_Name};
+
+% Get dividend (what you divide by the divisor)
+PMUidxDend = find(strcmp(Parameters.dividend.PMU,AvailablePMU));
+if ~isempty(PMUidxDend)
+    SigIdxDend = find(strcmp(Parameters.dividend.Channel,PMUstruct(PMUidxDend).Signal_Name));
+end
+
+% Get divisor (what you divide by)
+PMUidxDisor = find(strcmp(Parameters.divisor.PMU,AvailablePMU));
+if ~isempty(PMUidxDisor)
+    SigIdxDisor = find(strcmp(Parameters.divisor.Channel,PMUstruct(PMUidxDisor).Signal_Name));
+end
+
+PMUstruct(custPMUidx).Signal_Name{NumSig+1} = SignalName;
+if (~isempty(SigIdxDend)) && (~isempty(SigIdxDisor))
+    SignalUnitDend = PMUstruct(PMUidxDend).Signal_Unit{SigIdxDend};
+    SignalTypeDend = PMUstruct(PMUidxDend).Signal_Type{SigIdxDend};
+    SignalUnitDisor = PMUstruct(PMUidxDisor).Signal_Unit{SigIdxDisor};
+    SignalTypeDisor = PMUstruct(PMUidxDisor).Signal_Type{SigIdxDisor};
+    
+    if strcmp(SignalTypeDisor,'SC') && strcmp(SignalUnitDisor,'SC')
+        % Dividing by a scalar results in the units and type of the
+        % dividend
+        SignalType = SignalTypeDend;
+        SignalUnit = SignalUnitDend;
+    end
+    
+    % If units are the same, the result is a scalar
+    if strcmp(SignalTypeDend,SignalTypeDisor)
+        SignalType = 'SC';
+        SignalUnit = 'SC';
+    else
+        % Signal types disagree, set to OTHER
+        SignalType = 'OTHER';
+        SignalUnit = 'O';
+    end
+    PMUstruct(custPMUidx).Signal_Type{NumSig+1} = SignalType;
+    
+    % Make sure units and type make sense together
+    if CheckTypeAndUnits(SignalType,SignalUnit)
+        % SignalUnit and SignalType are acceptable
+        PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = SignalUnit;
+        PMUstruct(custPMUidx).Signal_Type{NumSig+1} = SignalType;
+    else
+        % Specified SignalUnit and SignalType were not acceptable, so set to OTHER
+        warning('Disagreement between signal units and type, setting to other.');
+        PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
+        PMUstruct(custPMUidx).Signal_Type{NumSig+1} = 'OTHER';
+    end
+    
+    PMUstruct(custPMUidx).Data(:,NumSig+1) = PMUstruct(PMUidxDend).Data(:,SigIdxDend) ./ PMUstruct(PMUidxDisor).Data(:,SigIdxDisor);
+    
+    FlagVec = double((PMUstruct(PMUidxDend).Flag(:,SigIdxDend) > 0) | (PMUstruct(PMUidxDisor).Flag(:,SigIdxDisor) > 0));
+    FlagVec(FlagVec==1) = FlagVal;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1) = FlagVec;
+else
+    % Signals were not found
+    warning('Signals were not found. Values were set to NaN and Flags set.');
+    PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1) = FlagVal;
+    PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
+    PMUstruct(custPMUidx).Signal_Type{NumSig+1} = 'OTHER';
+end
