@@ -3,11 +3,11 @@
 % SigsToFilt is cell array. Each cell is a string specifying a signal to be
 % filtered.
 
-% function PMUstruct = DropOutZeroFilt(PMUstruct,SigsToFilt,SetToNaN,FlagVal)
+% function PMUstruct = DropOutZeroFilt(PMUstruct,SigsToFilt,SetToNaN,FlagBit)
 function PMUstruct = DropOutZeroFilt(PMUstruct,SigsToFilt,Parameters)
 
 SetToNaN = strcmp(Parameters.SetToNaN,'TRUE');
-FlagVal = str2num(Parameters.FlagVal);
+FlagBit = str2num(Parameters.FlagBit);
 
 % If specific signals were not listed, apply to all signals except 
 % digitals, scalars, and rocof
@@ -32,7 +32,7 @@ for SigIdx = 1:length(SigsToFilt)
     ZeroIdx = find(PMUstruct.Data(:,ThisSig) == 0);
     
     % Set flags for drop-outs
-    PMUstruct.Flag(ZeroIdx,ThisSig) = FlagVal;
+    PMUstruct.Flag(ZeroIdx,ThisSig,FlagBit) = true;
     % If desired, replace zeros in Data matrix with NaN
     if SetToNaN
         PMUstruct.Data(ZeroIdx,ThisSig) = NaN;

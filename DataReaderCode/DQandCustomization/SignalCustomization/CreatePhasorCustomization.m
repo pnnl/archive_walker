@@ -1,14 +1,8 @@
 function PMUstruct = CreatePhasorCustomization(PMUstruct,custPMUidx,Parameters)
 
-FlagVal = str2num(Parameters.FlagVal);
-if isempty(FlagVal)
-    warning(['Flag ' Parameters.FlagVal ' could not be converted to a number. Flags will be set to NaN.']);
-    FlagVal = NaN;
-end
-
-% Size of the current Data matrix for the custom PMU - N samples by NcustSigs signals
-[N,NcustSigs] = size(PMUstruct(custPMUidx).Data);
-
+% Size of the current Data matrix for the custom PMU - N samples by NumSig
+% signals by NFlags flags
+[N,NcustSigs,NFlags] = size(PMUstruct(custPMUidx).Flag);
 AvailablePMU = {PMUstruct.PMU_Name};
 
 NumPhasor = length(Parameters.phasor);
@@ -18,18 +12,20 @@ if NumPhasor == 1
     % indexing can be used in the following for loop.
     Parameters.phasor = {Parameters.phasor};
 end
-
+% [~,~,NumFlag] = size(PMUstruct(custPMUidx).Flag);
 SigMat = NaN*ones(N,NumPhasor);
-FlagMat = FlagVal*ones(N,NumPhasor);
+FlagMat = true(N,NumPhasor);
 SignalType = cell(1,NumPhasor);
 SignalUnit = cell(1,NumPhasor);
 SignalName = cell(1,NumPhasor);
+ErrFlagUser = zeros(NumPhasor,1);
 for PhasorIdx = 1:NumPhasor
     PMUidxMag = find(strcmp(Parameters.phasor{PhasorIdx}.mag.PMU,AvailablePMU));
     % If the specified PMU is not in PMUstruct, skip the rest of the for 
     % loop so that Data remains NaNs and Flags remain set.
     if isempty(PMUidxMag)
         warning(['PMU ' Parameters.phasor{PhasorIdx}.mag.PMU ' could not be found, returning NaN and setting Flags.']);
+        ErrFlagUser(PhasorIdx) = 1;
         continue
     end
     
@@ -38,6 +34,7 @@ for PhasorIdx = 1:NumPhasor
     % loop so that Data remains NaNs and Flags remain set.
     if isempty(PMUidxAng)
         warning(['PMU ' Parameters.phasor{PhasorIdx}.ang.PMU ' could not be found, returning NaN and setting Flags.']);
+        ErrFlagUser(PhasorIdx) = 1;
         continue
     end
     
@@ -46,6 +43,7 @@ for PhasorIdx = 1:NumPhasor
     % loop so that Data remains NaNs and Flags remain set.
     if isempty(SigIdxMag)
         warning(['Signal ' Parameters.phasor{PhasorIdx}.mag.Channel ' could not be found, returning NaN and setting Flags']);
+        ErrFlagUser(PhasorIdx) = 1;
         continue
     end
     
@@ -54,6 +52,7 @@ for PhasorIdx = 1:NumPhasor
     % loop so that Data remains NaNs and Flags remain set.
     if isempty(SigIdxAng)
         warning(['Signal ' Parameters.phasor{PhasorIdx}.ang.Channel ' could not be found, returning NaN and setting Flags']);
+        ErrFlagUser(PhasorIdx) = 1;
         continue
     end
     
@@ -61,6 +60,7 @@ for PhasorIdx = 1:NumPhasor
     % loop so that Data remains NaNs and Flags remain set.
     if ~size(PMUstruct(PMUidxMag).Data(:,SigIdxMag),1) == N
         warning([Parameters.phasor{PhasorIdx}.mag.Channel ' has a different length than the custom PMU Data field, returning NaN and setting Flags']);
+        ErrFlagUser(PhasorIdx) = 1;
         continue
     end
     
@@ -68,6 +68,7 @@ for PhasorIdx = 1:NumPhasor
     % loop so that Data remains NaNs and Flags remain set.
     if ~size(PMUstruct(PMUidxAng).Data(:,SigIdxAng),1) == N
         warning([Parameters.phasor{PhasorIdx}.ang.Channel ' has a different length than the custom PMU Data field, returning NaN and setting Flags']);
+        ErrFlagUser(PhasorIdx) = 1;
         continue
     end
     
@@ -126,12 +127,14 @@ for PhasorIdx = 1:NumPhasor
             % Magnitude type is not acceptable, skip the rest of the for
             % loop so that Data remains NaNs and Flags remain set.
             warning([Parameters.phasor{PhasorIdx}.mag.Channel ' is not a voltage or current magnitude, returning NaN and setting Flags']);
+            ErrFlagUser(PhasorIdx) = 1;
             continue
     end
     if ErrFlag
         % Angle type is not acceptable, skip the rest of the for
         % loop so that Data remains NaNs and Flags remain set.
         warning([Parameters.phasor{PhasorIdx}.ang.Channel ' is not a voltage or current angle or does not match magnitude, returning NaN and setting Flags']);
+        ErrFlagUser(PhasorIdx) = 1;
         continue
     end
     
@@ -140,25 +143,23 @@ for PhasorIdx = 1:NumPhasor
         case 'DEG'
             % Convert to radians
             SigAngle = (PMUstruct(PMUidxAng).Data(:,SigIdxAng))*pi/180;
-            FlagVec = PMUstruct(PMUidxAng).Flag(:,SigIdxAng);
+            FlagVec = sum(PMUstruct(PMUidxAng).Flag(:,SigIdxAng,:),3);
         case 'RAD'
             % Angle is already in radians, as desired
             SigAngle = PMUstruct(PMUidxAng).Data(:,SigIdxAng);
-            FlagVec = PMUstruct(PMUidxAng).Flag(:,SigIdxAng);
+            FlagVec = sum(PMUstruct(PMUidxAng).Flag(:,SigIdxAng,:),3);
         otherwise
             % Units are not correct, skip the rest of the for loop so that
             % the Data remains NaNs and Flags remain set.
             warning([Parameters.phasor{PhasorIdx}.ang.Channel ' does not have units of RAD or DEG, returning NaN and setting Flags.']);
+            ErrFlagUser(PhasorIdx) = 1;
             continue
     end
     
     SigMat(:,PhasorIdx) = PMUstruct(PMUidxMag).Data(:,SigIdxMag) .* exp(1i*SigAngle);
     
-    FlagVec = double((FlagVec>0) | (PMUstruct(PMUidxMag).Flag(:,SigIdxMag) > 0));
-    FlagVec(FlagVec==1) = FlagVal;
-    
-    % Set flags
-    FlagMat(:,PhasorIdx) = FlagVec;
+    FlagMat(:,PhasorIdx) = (FlagVec>0) | (sum(PMUstruct(PMUidxMag).Flag(:,SigIdxMag,:),3) > 0);   % Set flags 
+
     % Store SignalUnit
     SignalUnit{PhasorIdx} = PMUstruct(PMUidxMag).Signal_Unit{SigIdxMag};
     % Store SignalName
@@ -170,4 +171,21 @@ PMUstruct(custPMUidx).Signal_Name(NcustSigs+(1:NumPhasor)) = SignalName;
 PMUstruct(custPMUidx).Signal_Type(NcustSigs+(1:NumPhasor)) = SignalType;
 PMUstruct(custPMUidx).Signal_Unit(NcustSigs+(1:NumPhasor)) = SignalUnit;
 PMUstruct(custPMUidx).Data(:,NcustSigs+(1:NumPhasor)) = SigMat;
-PMUstruct(custPMUidx).Flag(:,NcustSigs+(1:NumPhasor)) = FlagMat;
+for PhasorIndex = 1:NumPhasor
+    if ErrFlagUser(PhasorIdx)
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+PhasorIndex,NFlags) = FlagMat(:,PhasorIndex);
+    else
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+PhasorIndex,NFlags-1) = FlagMat(:,PhasorIndex);
+    end
+end
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        

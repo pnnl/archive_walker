@@ -1,14 +1,9 @@
 function PMUstruct = DivisionCustomization(PMUstruct,custPMUidx,Parameters)
 
 SignalName = Parameters.SignalName;
-FlagVal = str2num(Parameters.FlagVal);
-if isempty(FlagVal)
-    warning(['Flag ' Parameters.FlagVal ' could not be converted to a number. Flags will be set to NaN.']);
-    FlagVal = NaN;
-end
-
-% Size of the current Data matrix for the custom PMU - N samples by NumSig signals
-[N,NumSig] = size(PMUstruct(custPMUidx).Data);
+% Size of the current Data matrix for the custom PMU - N samples by NumSig
+% signals by NFlags flags
+[N,NumSig,NFlags] = size(PMUstruct(custPMUidx).Flag);
 
 AvailablePMU = {PMUstruct.PMU_Name};
 
@@ -63,14 +58,13 @@ if (~isempty(SigIdxDend)) && (~isempty(SigIdxDisor))
     
     PMUstruct(custPMUidx).Data(:,NumSig+1) = PMUstruct(PMUidxDend).Data(:,SigIdxDend) ./ PMUstruct(PMUidxDisor).Data(:,SigIdxDisor);
     
-    FlagVec = double((PMUstruct(PMUidxDend).Flag(:,SigIdxDend) > 0) | (PMUstruct(PMUidxDisor).Flag(:,SigIdxDisor) > 0));
-    FlagVec(FlagVec==1) = FlagVal;
-    PMUstruct(custPMUidx).Flag(:,NumSig+1) = FlagVec;
+    FlagVec =sum(PMUstruct(PMUidxDend).Flag(:,SigIdxDend,:),3) > 0 | sum(PMUstruct(PMUidxDisor).Flag(:,SigIdxDisor,:),3) > 0;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags-1) = FlagVec; %flagged for flags in input signal
 else
     % Signals were not found
     warning('Signals were not found. Values were set to NaN and Flags set.');
     PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;
-    PMUstruct(custPMUidx).Flag(:,NumSig+1) = FlagVal;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags) = true; %flagged for error in user input
     PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
     PMUstruct(custPMUidx).Signal_Type{NumSig+1} = 'OTHER';
 end

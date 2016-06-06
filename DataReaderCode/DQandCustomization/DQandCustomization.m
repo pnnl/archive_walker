@@ -1,8 +1,8 @@
-function PMU = DQandCustomization(PMU,DataXML,NumStages)
+function PMU = DQandCustomization(PMU,DataXML,NumStages, Num_Flags)
 
 % Initialize the custom PMU sub-structure and add it to the PMU structure
 % using some of the fields from an existing PMU sub-structure.
-PMU = InitCustomPMU(PMU,PMU(1).File_Name,PMU(1).Time_Zone,PMU(1).Signal_Time,size(PMU(1).Data,1));
+PMU = InitCustomPMU(PMU,PMU(1).File_Name,PMU(1).Time_Zone,PMU(1).Signal_Time,size(PMU(1).Data,1), Num_Flags);
 custPMUidx = length(PMU);
 
 for StageIdx = 1:NumStages

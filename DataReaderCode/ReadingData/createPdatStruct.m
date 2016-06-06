@@ -4,7 +4,7 @@
 %
 
 % create PMU structure list
-function [PMU, tPMU] =  createPdatStruct(pdatFile,DataXML,flog)
+function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML,flog)
 
 [config, data]=pdatRead3(pdatFile,DataXML);
 
@@ -21,6 +21,47 @@ t = t + (0:1/60:(60-1/60))/3600/24;
 
 tPMU = t;
 t_str = datestr(t,'yyyy-mm-dd HH:MM:SS.FFF');
+
+   
+% flag
+%to determine maximum number of flags needed
+count = 0;
+NumStages = length(DataXML.Configuration.Stages);
+for StageId = 1:NumStages
+    if isfield(DataXML.Configuration.Stages{StageId},'Filter')
+        NumFilters = length(DataXML.Configuration.Stages{StageId}.Filter);
+        if NumFilters ==1
+            % By default, the contents of StageStruct.Customization
+            % would not be in a cell array because length is one. This
+            % makes it so the same indexing can be used in the following for loop.
+            DataXML.Configuration.Stages{StageId}.Filter = {DataXML.Configuration.Stages{StageId}.Filter};
+        end
+        for FilterIdx = 1:NumFilters
+            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBit')
+                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBit);
+                count = count + 1;
+            end
+        end
+    end
+%     if isfield(DataXML.Configuration.Stages{StageId},'Customization')
+%         NumCusts = length(DataXML.Configuration.Stages{StageId}.Customization);
+%         if NumCusts ==1
+%             % By default, the contents of StageStruct.Customization
+%             % would not be in a cell array because length is one. This
+%             % makes it so the same indexing can be used in the following for loop.
+%             DataXML.Configuration.Stages{StageId}.Customization = {DataXML.Configuration.Stages{StageId}.Customization};
+%         end
+%         for CustIdx = 1:NumCusts
+%             if isfield(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters,'FlagBit')
+%                 Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters.FlagBit);
+%                 count = count + 1;
+%             end
+%         end
+%     end
+end
+Num_Flags = max(Flag_Bit)+2; % '1' additional bit is flagged when the customized signal uses flagged input signal and the other additional input is if the customized signal was not created becasue of some error in user input.
+
+
 for i = 1:nPMU
    % for each PMU
    PMU(i).File_Name = pdatFile;   % file name
@@ -93,10 +134,8 @@ for i = 1:nPMU
        disp('Possible different number of data frames');
        
    end
-   
-   % flag 
-   [m,n] = size(dataVal);
-   Flag = zeros(m,n);
+   [m,n] = size(dataVal);   
+   Flag = false(m,n,Num_Flags);
    PMU(i).Flag = Flag;
    
 end

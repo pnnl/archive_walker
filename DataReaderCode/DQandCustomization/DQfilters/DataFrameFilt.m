@@ -1,9 +1,9 @@
-% function PMUstruct = DataFrameFilt(PMUstruct,SigsToFilt,PctThresh,SetToNaN,FlagVal)
+% function PMUstruct = DataFrameFilt(PMUstruct,SigsToFilt,PctThresh,SetToNaN,FlagBit)
 function PMUstruct = DataFrameFilt(PMUstruct,SigsToFilt,Parameters)
 
 PctThresh = str2num(Parameters.PercentBadThresh);
 SetToNaN = strcmp(Parameters.SetToNaN,'TRUE');
-FlagVal = str2num(Parameters.FlagVal);
+FlagBit = str2num(Parameters.FlagBit);
 
 if isempty(SigsToFilt)
     % If specific signals were not listed, get indices of all signals 
@@ -39,7 +39,7 @@ PctFlagged = sum(FlagBin,2)./NumSigs*100;
 FiltIdx = PctFlagged >= PctThresh;
 
 % Flag entire data frames corresponding to FiltIdx
-PMUstruct.Flag(FiltIdx,SigIdx) = FlagVal;
+PMUstruct.Flag(FiltIdx,SigIdx,FlagBit) = true;
 % If desired, set entire data frames corresponding to FiltIdx to NaN
 if SetToNaN
     PMUstruct.Data(FiltIdx,SigIdx) = NaN;

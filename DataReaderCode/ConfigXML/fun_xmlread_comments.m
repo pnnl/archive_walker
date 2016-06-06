@@ -1,5 +1,5 @@
 %Crude XML parsing function, which will dump it into a structure
-function structVal = fun_xmlread(XMLFileIn)
+function structVal = fun_xmlread_comments(XMLFileIn)
 % Parses a human-readable XML file into a structure
 % in MATLAB.
 %

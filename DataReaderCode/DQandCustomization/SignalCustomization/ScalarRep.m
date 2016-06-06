@@ -1,8 +1,8 @@
 % function custPMU = ScalarRep(custPMU,scalar,SignalName,SignalType,SignalUnit)
 function custPMU = ScalarRep(custPMU,Parameters)
 
-% Number of signals in the current custom PMU Data field
-[~,NumSig] = size(custPMU.Data);
+% Number of signals and flags in the current custom PMU Data field
+[~,NumSig,NFlags] = size(custPMU.Flag);
 
 SignalName = Parameters.SignalName;
 
@@ -30,17 +30,12 @@ end
 try
     scalar = str2num(Parameters.scalar);
     custPMU.Data(:,NumSig+1) = scalar;
-    custPMU.Flag(:,NumSig+1) = 0;
+    custPMU.Flag(:,NumSig+1,:) = false;
     custPMU.Signal_Name{NumSig+1} = SignalName;
 catch
     warning(['Scalar ' Parameters.scalar ' could not be converted to a scalar. Signal will be set to NaN and Flags set.']);
-    FlagVal = str2num(Parameters.FlagVal);
-    if isempty(FlagVal)
-        warning(['Flag ' Parameters.FlagVal ' could not be converted to a number. Flags will be set to NaN.']);
-        FlagVal = NaN;
-    end
     custPMU.Data(:,NumSig+1) = NaN;
-    custPMU.Flag(:,NumSig+1) = FlagVal;
+    custPMU.Flag(:,NumSig+1,NFlags) = true; %flagged for error in user input
     custPMU.Signal_Name{NumSig+1} = SignalName;
     custPMU.Signal_Type{NumSig+1} = 'SC';
     custPMU.Signal_Unit{NumSig+1} = 'SC';

@@ -3,14 +3,14 @@
 % SigsToFilt is cell array. Each cell is a string specifying a signal to be
 % filtered.
 
-% function PMUstruct = StaleFilt(PMUstruct,SigsToFilt,StaleThresh,FlagAllByFreq,SetToNaN,FlagVal,FlagValFreq)
+% function PMUstruct = StaleFilt(PMUstruct,SigsToFilt,StaleThresh,FlagAllByFreq,SetToNaN,FlagBit,FlagBitFreq)
 function PMUstruct = StaleFilt(PMUstruct,SigsToFilt,Parameters)
 
 StaleThresh = str2num(Parameters.StaleThresh);
 FlagAllByFreq = strcmp(Parameters.FlagAllByFreq,'TRUE');
 SetToNaN = strcmp(Parameters.SetToNaN,'TRUE');
-FlagVal = str2num(Parameters.FlagVal);
-FlagValFreq = str2num(Parameters.FlagValFreq);
+FlagBit = str2num(Parameters.FlagBit);
+FlagBitFreq = str2num(Parameters.FlagBitFreq);
 
 
 % If specific signals were not listed, apply to all signals except digitals
@@ -56,7 +56,7 @@ for SigIdx = 1:length(SigsToFilt)
         StaleIdx = delta0(StartIdx(BadGroupIdx)):delta0(EndIdx(BadGroupIdx))+1;
         
         % Flag stale data in the signal
-        PMUstruct.Flag(StaleIdx,ThisSig) = FlagVal;
+        PMUstruct.Flag(StaleIdx,ThisSig,FlagBit) = true;
         % If desired, set stale data to NaN
         if SetToNaN
             PMUstruct.Data(StaleIdx,ThisSig) = NaN;
@@ -65,7 +65,7 @@ for SigIdx = 1:length(SigsToFilt)
         % If this is a frequency signal and the function inputs indicate that all
         % signals should be flagged if the frequency is stale, then do so.
         if (strcmp(PMUstruct.Signal_Type{ThisSig},'F') && FlagAllByFreq)
-            PMUstruct.Flag(StaleIdx,:) = FlagValFreq;
+            PMUstruct.Flag(StaleIdx,:,FlagBitFreq) = true;
             % If desired, also set the data to NaN
             if SetToNaN
                 PMUstruct.Data(StaleIdx,:) = NaN;

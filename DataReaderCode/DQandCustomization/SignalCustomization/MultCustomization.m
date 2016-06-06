@@ -3,8 +3,7 @@ function PMUstruct = MultCustomization(PMUstruct,custPMUidx,Parameters)
 SignalName = Parameters.SignalName;
 
 % Size of the current Data matrix for the custom PMU - N samples by NumSig signals
-[N,NumSig] = size(PMUstruct(custPMUidx).Data);
-
+[N,NumSig,NFlags] = size(PMUstruct(custPMUidx).Flag);
 AvailablePMU = {PMUstruct.PMU_Name};
 
 NumFactors = length(Parameters.factor);
@@ -48,7 +47,7 @@ for FactorIdx = 1:NumFactors
         % This is the first factor. Other factors must have the same units to 
         % be included.
         CustSig = PMUstruct(PMUidx).Data(:,SigIdx);
-        FlagVec = PMUstruct(PMUidx).Flag(:,SigIdx) > 0;
+        FlagVec = sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3) > 0;
         SignalUnit = {PMUstruct(PMUidx).Signal_Unit{SigIdx}};
         SignalType = {PMUstruct(PMUidx).Signal_Type{SigIdx}};
     else
@@ -60,20 +59,14 @@ for FactorIdx = 1:NumFactors
         CustSig = CustSig .* PMUstruct(PMUidx).Data(:,SigIdx);
         
         % Check for flags
-        FlagVec = FlagVec | (PMUstruct(PMUidx).Flag(:,SigIdx) > 0);
+        FlagVec = FlagVec | (sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3) > 0);
     end
-end
-
-FlagVal = str2num(Parameters.FlagVal);
-if isempty(FlagVal)
-    warning(['Flag ' Parameters.FlagVal ' could not be converted to a number. Flags will be set to NaN.']);
-    FlagVal = NaN;
 end
 
 PMUstruct(custPMUidx).Signal_Name{NumSig+1} = SignalName;
 if ErrFlag
     PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;
-    PMUstruct(custPMUidx).Flag(:,NumSig+1) = FlagVal;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags) = true; %flagged fpr error in user input
     PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
     PMUstruct(custPMUidx).Signal_Type{NumSig+1} = 'OTHER';
 else
@@ -103,7 +96,5 @@ else
     % Add the custom signal and flags
     PMUstruct(custPMUidx).Data(:,NumSig+1) = CustSig;
     
-    FlagVec = double(FlagVec);
-    FlagVec(FlagVec==1) = FlagVal;
-    PMUstruct(custPMUidx).Flag(:,NumSig+1) = FlagVec;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags-1)= FlagVec; %flagged for error with input signal 
 end

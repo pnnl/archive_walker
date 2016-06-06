@@ -1,7 +1,7 @@
-% function PMUstruct = DropOutMissingFilt(PMUstruct,FlagVal)
+% function PMUstruct = DropOutMissingFilt(PMUstruct,FlagBit)
 function PMUstruct = DropOutMissingFilt(PMUstruct,Parameters)
 
-FlagVal = str2num(Parameters.FlagVal);
+FlagBit = str2num(Parameters.FlagBit);
 
 % Get the time arrays, Data matrix, Flag matrix, and stat vector from the 
 % PMU structure
@@ -30,7 +30,8 @@ t_datenumFix = t_datenum(1):TsHat:t_datenum(end);
 t_stringFix = cell(length(t_datenumFix),1);
 t_stringFix(:) = {NaN};
 DataFix = NaN*ones(length(t_datenumFix),size(Data,2));
-FlagFix = FlagVal*ones(length(t_datenumFix),size(Flag,2));
+FlagFix = false(length(t_datenumFix),size(Flag,2),size(Flag,3));%FlagBit*ones
+FlagFix(:,:,FlagBit) = true;
 StatFix = NaN*ones(length(t_datenumFix),1);
 
 % These adjustments make it so that the span from an AfterJump index to a 
@@ -53,7 +54,7 @@ for idx = 1:length(AfterJump)
     t_datenumFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1) = t_datenum(AfterJump(idx):BeforeJump(idx));
     t_stringFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1) = t_string(AfterJump(idx):BeforeJump(idx));
     DataFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1,:) = Data(AfterJump(idx):BeforeJump(idx),:);
-    FlagFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1,:) = Flag(AfterJump(idx):BeforeJump(idx),:);
+    FlagFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1,:,:) = Flag(AfterJump(idx):BeforeJump(idx),:,:);
     StatFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1) = Stat(AfterJump(idx):BeforeJump(idx));
 end
 

@@ -2,12 +2,6 @@
 
 function PMUstruct = PowCalcCustomization(PMUstruct,custPMUidx,Parameters)
 
-FlagVal = str2num(Parameters.FlagVal);
-if isempty(FlagVal)
-    warning(['Flag ' Parameters.FlagVal ' could not be converted to a number. Flags will be set to NaN.']);
-    FlagVal = NaN;
-end
-
 PowType = Parameters.PowType;
 
 AvailablePMU = {PMUstruct.PMU_Name};
@@ -42,7 +36,7 @@ for PowIdx = 1:NumPow
                 break
             end
             
-            [Signal,Flag,SignalType,SignalUnit] = PowCalcPhasor(VphasorStruct,IphasorStruct,PMUstruct,custPMUidx,FlagVal,PowType);
+            [Signal,Flag,SignalType,SignalUnit] = PowCalcPhasor(VphasorStruct,IphasorStruct,PMUstruct,custPMUidx,PowType);
         case 5
             % Should be voltage mag/ang - current mag/ang pair
             % Get the structures for each
@@ -75,14 +69,14 @@ for PowIdx = 1:NumPow
                 break
             end
             
-            [Signal,Flag,SignalType,SignalUnit] = PowCalcMagAng(VmagStruct,VangStruct,ImagStruct,IangStruct,PMUstruct,custPMUidx,FlagVal,PowType);
+            [Signal,Flag,SignalType,SignalUnit] = PowCalcMagAng(VmagStruct,VangStruct,ImagStruct,IangStruct,PMUstruct,custPMUidx,PowType);
         otherwise
             ErrFlag = 1;
     end
     end
     
-    % Size of the current Data matrix for the custom PMU - N samples by NcustSigs signals
-    [N,NcustSigs] = size(PMUstruct(custPMUidx).Data);
+    % Size of the current Data matrix and number of flags for the custom PMU - N samples by NcustSigs signals by NFLags flags
+    [N,NcustSigs,NFlags] = size(PMUstruct(custPMUidx).Flag);
     
     % Check error flag
     if ErrFlag
@@ -90,13 +84,17 @@ for PowIdx = 1:NumPow
         SignalType = 'OTHER';
         SignalUnit = 'O';
         Signal = NaN*ones(N,1);
-        Flag = FlagVal*ones(N,1);
+        Flag = true(N,1);
     end
     
     
     % Store results in custom PMU
     PMUstruct(custPMUidx).Data(:,NcustSigs+1) = Signal;
-    PMUstruct(custPMUidx).Flag(:,NcustSigs+1) = Flag;
+    if strcmp(SignalType, 'OTHER')
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags) = Flag; %indicating error in user input
+    else
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags-1) = Flag; %indicating error in input signal
+    end
     PMUstruct(custPMUidx).Signal_Name(NcustSigs+1) = {Parameters.power{PowIdx}.CustName};
     PMUstruct(custPMUidx).Signal_Type(NcustSigs+1) = {SignalType};
     PMUstruct(custPMUidx).Signal_Unit(NcustSigs+1) = {SignalUnit};

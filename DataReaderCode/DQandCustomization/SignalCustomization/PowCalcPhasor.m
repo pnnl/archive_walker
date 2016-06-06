@@ -1,11 +1,11 @@
-function [Signal,Flag,SignalType,SignalUnit] = PowCalcPhasor(VphasorStruct,IphasorStruct,PMUstruct,custPMUidx,FlagVal,PowType)
+function [Signal,Flag,SignalType,SignalUnit] = PowCalcPhasor(VphasorStruct,IphasorStruct,PMUstruct,custPMUidx,PowType)
 
 % Size of the current Data matrix for the custom PMU - N samples by NcustSigs signals
 [N,~] = size(PMUstruct(custPMUidx).Data);
 
 % If a problem is detected, the function returns these default values
 Signal = NaN*ones(N,1);
-Flag = FlagVal*ones(N,1);
+Flag = true(N,1);
 SignalType = 'OTHER';
 SignalUnit = 'O';
 
@@ -38,7 +38,7 @@ for StructIdx = 1:2
     SigType(StructIdx) = PMUstruct(PMUidx).Signal_Type(SigIdx);
     SigUnit(StructIdx) = PMUstruct(PMUidx).Signal_Unit(SigIdx);
     Sigs{StructIdx} = PMUstruct(PMUidx).Data(:,SigIdx);
-    Flags{StructIdx} = PMUstruct(PMUidx).Data(:,SigIdx);
+    Flags{StructIdx} = sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3);
     
     % Make sure signal length is appropriate
     if length(Sigs{StructIdx})~=N
@@ -68,8 +68,7 @@ end
 
 % Get a Flag vector. If any signal had a flag, it is flagged in the custom
 % signal
-FlagVec = double((Flags{1}~=0) | (Flags{2}~=0));
-FlagVec(FlagVec==1) = FlagVal;
+FlagVec = (Flags{1}~=0) | (Flags{2}~=0);
 
 % Convert V to kV if necessary
 if strcmp(SigUnit{1},'V')

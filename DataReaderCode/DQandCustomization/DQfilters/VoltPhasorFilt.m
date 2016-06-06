@@ -3,13 +3,13 @@
 % SigsToFilt is cell array. Each cell is a string specifying a signal to be
 % filtered.
 
-% function PMUstruct = VoltPhasorFilt(PMUstruct,SigsToFilt,VoltMin,VoltMax,SetToNaN,FlagVal)
+% function PMUstruct = VoltPhasorFilt(PMUstruct,SigsToFilt,VoltMin,VoltMax,SetToNaN,FlagBit)
 function PMUstruct = VoltPhasorFilt(PMUstruct,SigsToFilt,Parameters)
 
 VoltMin = str2num(Parameters.VoltMin);
 VoltMax = str2num(Parameters.VoltMax);
 SetToNaN = strcmp(Parameters.SetToNaN,'TRUE');
-FlagVal = str2num(Parameters.FlagVal);
+FlagBit = str2num(Parameters.FlagBit);
 
 % If specific signals were not listed, apply to all voltages
 if isempty(SigsToFilt)
@@ -42,19 +42,19 @@ for SigIdx = 1:length(SigsToFilt)
             % Nominal value is in kV, adjust if signal is in V
             if strcmp(PMUstruct.Signal_Unit{ThisSig}, 'V')
                 % Convert to V from kV
-                NomVoltage = NomVoltage*1000;
+                NomVoltage = NomVoltage*1000/sqrt(3);
             end
         end
         
         OutIdx = find((PMUstruct.Data(:,ThisSig) > VoltMax*NomVoltage) | (PMUstruct.Data(:,ThisSig) < VoltMin*NomVoltage));
-        PMUstruct.Flag(OutIdx,ThisSig) = FlagVal;
+        PMUstruct.Flag(OutIdx,ThisSig,FlagBit) = true;
         if SetToNaN
             PMUstruct.Data(OutIdx,ThisSig) = NaN;
         end
         
         % Flag corresponding angles
         if ~isempty(ThisSigAng)
-            PMUstruct.Flag(OutIdx,ThisSigAng) = FlagVal;
+            PMUstruct.Flag(OutIdx,ThisSigAng,FlagBit) = true;
             if SetToNaN
                 PMUstruct.Data(OutIdx,ThisSigAng) = NaN;
             end
