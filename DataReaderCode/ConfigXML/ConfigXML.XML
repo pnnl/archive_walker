@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration>
 	<ReaderProperties>
-		<FileDirectory>C:\Users\agra307\Documents\Task_05_23_2016\Master copy\Archive_Walker\DataReaderCode\OriginalData</FileDirectory>
+		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
         <Mnemonic>WISPDitt</Mnemonic>
         <!--
         <Mode>
