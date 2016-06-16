@@ -1,5 +1,17 @@
-%% get Pdat files that need to be processed in the archive mode
+% function fileList = getArchivedFiles(FileDirectory, DateTimeStart, DateTimeEnd)
+% This function gets Pdat files that need to be processed in the archive mode
 %
+% Inputs:
+	% FileDirectory: Filepath to the PMU data file 
+    % DateTimeStart: a string specifying start date and time of PMU data to
+    % be analyzed
+    % DateTimeEnd:  a string specifying end date and time of PMU data to be
+    % analyzed
+%
+% Outputs:
+    % fileList: Name of the files consisting of data to be analyzed
+%   
+%Created by 
 
 function fileList = getArchivedFiles(FileDirectory, DateTimeStart, DateTimeEnd)
  

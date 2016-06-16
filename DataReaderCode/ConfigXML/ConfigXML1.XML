@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration>
 	<ReaderProperties>
-		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
+		<FileDirectory>C:\Users\agra307\Documents\Task_05_23_2016\Master copy\Archive_Walker\DataReaderCode\OriginalData</FileDirectory>
         <Mnemonic>WISPDitt</Mnemonic>
         <!--
         <Mode>
@@ -113,6 +113,9 @@
             <Name>DropOutZeroFilt</Name>
             <PMU>
                 <Name>ALSN 500 A1 SA  </Name>
+                <Channel>
+					<Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+				</Channel>
             </PMU>
             <PMU>
                 <Name>JDAY 500  A1 SA </Name>
@@ -144,7 +147,7 @@
             <Parameters>
                 <VoltMin>0.7</VoltMin>
                 <VoltMax>1.3</VoltMax>
-                <SetToNaN>FALSE</SetToNaN>
+                <SetToNaN>TRUE</SetToNaN>
                 <FlagBit>4</FlagBit>
             </Parameters>
         </Filter>
@@ -165,26 +168,6 @@
                 <FlagBitSamp>6</FlagBitSamp>
             </Parameters>
         </Filter>
-	<Filter>
-            <Name>OutlierFilt</Name>
-	    <!-- 
-            This is an outlier filter, detection is dependednt on std. deviation value, which is to be provided by user.
-            -->
-            <PMU>
-                <Name>ALSN 500 A1 SA  </Name>
-            </PMU>
-            <PMU>
-                <Name>JDAY 500  A1 SA </Name>
-                <Channel>
-					<Name>JDAY 500  A1 SA .B500EAST_____1VP.MAG</Name>
-				</Channel>
-            </PMU>
-            <Parameters>
-		<StdDevMult>10</StdDevMult>
-                <SetToNaN>TRUE</SetToNaN>
-                <FlagBit>7</FlagBit>
-            </Parameters>
-        </Filter>
         <Filter>
             <Name>StaleFilt</Name>
             <PMU>
@@ -194,8 +177,8 @@
                 <FlagAllByFreq>TRUE</FlagAllByFreq>
                 <StaleThresh>60</StaleThresh>
                 <SetToNaN>TRUE</SetToNaN>
-                <FlagBit>8</FlagBit>
-                <FlagBitFreq>9</FlagBitFreq>
+                <FlagBit>7</FlagBit>
+                <FlagBitFreq>8</FlagBitFreq>
             </Parameters>
         </Filter>
         <Filter>
@@ -203,7 +186,7 @@
             <Parameters>
                 <PercentBadThresh>25</PercentBadThresh>
                 <SetToNaN>TRUE</SetToNaN>
-                <FlagBit>10</FlagBit>
+                <FlagBit>9</FlagBit>
             </Parameters>
         </Filter>
         <Filter>
@@ -211,7 +194,7 @@
             <Parameters>
                 <PercentBadThresh>25</PercentBadThresh>
                 <SetToNaN>TRUE</SetToNaN>
-                <FlagBit>11</FlagBit>
+                <FlagBit>10</FlagBit>
             </Parameters>
         </Filter>
         <Filter>
@@ -219,7 +202,7 @@
             <Parameters>
                 <PercentBadThresh>25</PercentBadThresh>
                 <SetToNaN>TRUE</SetToNaN>
-                <FlagBit>12</FlagBit>
+                <FlagBit>11</FlagBit>
             </Parameters>
         </Filter>
         <!--
@@ -230,34 +213,16 @@
         <Customization>
             <Name>ScalarRep</Name>
             <Parameters>
-                <scalar>340</scalar>
-                <SignalName>ScalarSig.M500</SignalName>
-                <SignalType>VMP</SignalType>
-                <SignalUnit>kV</SignalUnit>
-            </Parameters>
-        </Customization>
-	<Customization>
-            <Name>ScalarRep</Name>
-            <Parameters>
                 <scalar>7</scalar>
-                <SignalName>ScalarSig1.M500</SignalName>
+                <SignalName>ScalarSig</SignalName>
                 <SignalType>VMP</SignalType>
                 <SignalUnit>kV</SignalUnit>
-            </Parameters>
-        </Customization>
-	<Customization>
-            <Name>ScalarRep</Name>
-            <Parameters>
-                <scalar>60</scalar>
-                <SignalName>Freq_CusSig</SignalName>
-                <SignalType>F</SignalType>
-                <SignalUnit>Hz</SignalUnit>
             </Parameters>
         </Customization>
         <Customization>
             <Name>Addition</Name>
             <Parameters>
-                <SignalName>Add3sigs.M500</SignalName>
+                <SignalName>Add3sigs</SignalName>
                 <term>
                     <PMU>ALSN 500 A1 SA  </PMU>
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
@@ -275,7 +240,7 @@
         <Customization>
             <Name>Subtraction</Name>
             <Parameters>
-                <SignalName>SubtractionSig.M500</SignalName>
+                <SignalName>SubtractionSig</SignalName>
                 <minuend>
                     <PMU>ALSN 500 A1 SA  </PMU>
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
@@ -354,7 +319,7 @@
                 <signal>
                     <PMU>ALSN 500 A1 SA  </PMU>
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
-                    <CustName>Sig1SignRev1.M500</CustName>
+                    <CustName>Sig1SignRev</CustName>
                 </signal>
                 <signal>
                     <PMU>JDAY 500  A1 SA </PMU>
@@ -374,12 +339,12 @@
                 <signal>
                     <PMU>ALSN 500 A1 SA  </PMU>
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
-                    <CustName>Sig1SignRev2.M500</CustName>
+                    <CustName>Sig1SignRev</CustName>
                 </signal>
                 <signal>
                     <PMU>Custom Signals</PMU>
                     <Channel>DivisionSig</Channel>
-                    <CustName>Sig3SignRev1</CustName>
+                    <CustName>Sig3SignRev</CustName>
                 </signal>
             </Parameters>
         </Customization>
@@ -389,12 +354,12 @@
                 <signal>
                     <PMU>ALSN 500 A1 SA  </PMU>
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
-                    <CustName>Sig1SignRev3.M500</CustName>
+                    <CustName>Sig1SignRev</CustName>
                 </signal>
                 <signal>
                     <PMU>Custom Signals</PMU>
                     <Channel>DivisionSig</Channel>
-                    <CustName>Sig3SignRev2</CustName>
+                    <CustName>Sig3SignRev</CustName>
                 </signal>
             </Parameters>
         </Customization>
@@ -404,12 +369,12 @@
                 <signal>
                     <PMU>ALSN 500 A1 SA  </PMU>
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
-                    <CustName>Sig1SignRev4.M500</CustName>
+                    <CustName>Sig1SignRev</CustName>
                 </signal>
                 <signal>
                     <PMU>Custom Signals</PMU>
                     <Channel>DivisionSig</Channel>
-                    <CustName>Sig3SignRev3</CustName>
+                    <CustName>Sig3SignRev</CustName>
                 </signal>
             </Parameters>
         </Customization>
@@ -419,12 +384,12 @@
                 <signal>
                     <PMU>ALSN 500 A1 SA  </PMU>
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
-                    <CustName>Sig1SignRev5.M500</CustName>
+                    <CustName>Sig1SignRev</CustName>
                 </signal>
                 <signal>
                     <PMU>Custom Signals</PMU>
                     <Channel>DivisionSig</Channel>
-                    <CustName>Sig3SignRev4</CustName>
+                    <CustName>Sig3SignRev</CustName>
                 </signal>
             </Parameters>
         </Customization>
@@ -433,7 +398,7 @@
             <Parameters>
                 <signal>
                     <PMU>ALSN 500 A1 SA  </PMU>
-                    <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
+                    <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
                     <CustName>Sig1Angle</CustName>
                 </signal>
                 <signal>
@@ -455,7 +420,7 @@
                         <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
                     </ang>
-                    <CustName>Sig1Phasor.M500</CustName>
+                    <CustName>Sig1Phasor</CustName>
                 </phasor>
                 <phasor>
                     <mag>
@@ -466,7 +431,7 @@
                         <PMU>JDAY 500  A1 SA </PMU>
                         <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                     </ang>
-                    <CustName>VoltagePhasor.M500</CustName>
+                    <CustName>VoltagePhasor</CustName>
                 </phasor>
                 <phasor>
                     <mag>
@@ -508,7 +473,7 @@
                 <power>
                     <Vphasor>
                         <PMU>Custom Signals</PMU>
-                        <Channel>Sig1Phasor.M500</Channel>
+                        <Channel>VoltagePhasor</Channel>
                     </Vphasor>
                     <Iphasor>
                         <PMU>Custom Signals</PMU>
@@ -524,7 +489,7 @@
                 <SigType>IMP</SigType>
                 <SigUnit>A</SigUnit>
                 <PMU>Custom Signals</PMU>
-                <Channel>Add3sigs.M500</Channel>
+                <Channel>Add3sigs</Channel>
                 <!-- CustName is optional. If excluded, replaces input signal -->
                 <CustName>Sig2TypeUnit</CustName>
             </Parameters>
@@ -537,7 +502,7 @@
                     <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
                     <NewUnit>kV</NewUnit>
                     <!-- CustName is optional. If excluded, replaces input signal -->
-                    <CustName>Sig2metric.M500</CustName>
+                    <CustName>Sig2metric</CustName>
                 </ToConvert>
                 <ToConvert>
                     <PMU>JDAY 500  A1 SA </PMU>
@@ -574,105 +539,20 @@
         **********************
         -->
         <Filter>
-            <Name>DropOutZeroFilt</Name>
-            <PMU>
-                <Name>Custom Signals</Name>
-            </PMU>
-            <Parameters>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBit>2</FlagBit>
-            </Parameters>
-        </Filter>
-        <Filter>
-            <Name>VoltPhasorFilt</Name>
-	    <PMU>
-                <Name>Custom Signals</Name>
-            </PMU>
-            <Parameters>
-                <VoltMin>0.7</VoltMin>
-                <VoltMax>1.3</VoltMax>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBit>4</FlagBit>
-            </Parameters>
-        </Filter>
-        <Filter>
-            <Name>FreqFilt</Name>
-	    <PMU>
-                <Name>Custom Signals</Name>
-            </PMU>
+            <Name>PMUflagFilt</Name>
             <!-- 
-            This one is always applied to the frequency channels in a PMU, 
-            so channels are not specified.
-            -->
-            <Parameters>
-                <FreqMinChan>59.9</FreqMinChan>
-                <FreqMaxChan>60.1</FreqMaxChan>
-                <FreqPctChan>45</FreqPctChan>
-                <FreqMinSamp>59</FreqMinSamp>
-                <FreqMaxSamp>61</FreqMaxSamp>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBitChan>5</FlagBitChan>
-                <FlagBitSamp>6</FlagBitSamp>
-            </Parameters>
-        </Filter>
-	<Filter>
-            <Name>OutlierFilt</Name>
-	    <!-- 
-            This is an outlier filter, detection is dependednt on std. deviation value, which is to be provided by user.
+            This one can only be applied to entire PMUs, not individual 
+            channels.
             -->
             <PMU>
-                <Name>Custom Signals</Name>
+                <Name>ALSN 500 A1 SA  </Name>
             </PMU>
-            <Parameters>
-		<StdDevMult>10</StdDevMult>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBit>7</FlagBit>
-            </Parameters>
-        </Filter>
-	<Filter>
-            <Name>StaleFilt</Name>
             <PMU>
-                <Name>Custom Signals</Name>
+                <Name>JDAY 500  A1 SA </Name>
             </PMU>
             <Parameters>
-                <FlagAllByFreq>TRUE</FlagAllByFreq>
-                <StaleThresh>60</StaleThresh>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBit>8</FlagBit>
-                <FlagBitFreq>9</FlagBitFreq>
-            </Parameters>
-        </Filter>
-        <Filter>
-            <Name>DataFrameFilt</Name>
-	    <PMU>
-                <Name>Custom Signals</Name>
-            </PMU>
-            <Parameters>
-                <PercentBadThresh>25</PercentBadThresh>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBit>10</FlagBit>
-            </Parameters>
-        </Filter>
-        <Filter>
-            <Name>PMUchanFilt</Name>
-	    <PMU>
-                <Name>Custom Signals</Name>
-            </PMU>
-            <Parameters>
-                <PercentBadThresh>25</PercentBadThresh>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBit>11</FlagBit>
-            </Parameters>
-        </Filter>
-        <Filter>
-            <Name>PMUallFilt</Name>
-	    <PMU>
-                <Name>Custom Signals</Name>
-            </PMU>
-            <Parameters>
-                <PercentBadThresh>25</PercentBadThresh>
-                <SetToNaN>nTRUE</SetToNaN>
-                <FlagBit>12</FlagBit>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>1</FlagBit>
             </Parameters>
         </Filter>
     </Stages>

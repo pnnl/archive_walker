@@ -1,5 +1,14 @@
-% Read C37.118 Configuration Frame and create PDC object
-% Config frame is double array, each element=1 byte
+% function config = readConfigFrame(configFrame)
+% This function reads C37.118 Configuration Frame and creates PDC object
+% 
+% Inputs:
+	% configFrame: ConfigFrame is double array, each element=1 byte
+% 
+% Outputs:
+    % config: PDC object 
+%    
+%Created by 
+
 function config = readConfigFrame(configFrame)
 
 config=struct;

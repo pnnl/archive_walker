@@ -1,6 +1,13 @@
-%% get the file time in Matlab datenum for an input pdat file
-%
-%
+% function timeNum = getPdatFileTime(inFile)
+% This function gets the file time in Matlab datenum for an input pdat file
+% 
+% Inputs:
+	% inFile: Name of file containing PMU data
+%     
+% Outputs:
+    % timeNum: Numerical array representing time-stamp of PMU data
+%    
+% Created by 
 
 function timeNum = getPdatFileTime(inFile)
 k1 = strfind(inFile,'_');

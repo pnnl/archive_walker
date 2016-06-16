@@ -1,3 +1,50 @@
+% function PMUstruct = ExpCustomization(PMUstruct,custPMUidx,Parameters)
+% This function creates customized signal(s) by performing exponentiation
+% operation on given signal(s) with given integer exponent
+% 
+% Inputs:
+	% PMUstruct: structure in the common format for all PMUs (size: 1 by Number
+	% of PMUs)
+        % PMUstruct(i).Signal_Type: a cell array containing strings
+        % specifying signal(s) type in the i^th PMU
+                                    %size: 1 by Number of data channel in the i^th PMU
+        % PMUstruct(i).Signal_Name: a cell array containing strings
+        % specifying name of signal(s) in the i^th PMU
+                                    %size: 1 by Number of data channel in the i^th PMU
+        % PMUstruct(i).Signal_Unit: a cell array containing strings
+        % specifying unit of signal(s) in the PMU
+                                    %size: 1 by Number of data channel in the i^th PMU
+        % PMUstruct(i).Data: Matrix consisting of measurements by i^th PMU
+                                %size: Number of data points by number of channels                              
+        % PMUstruct(i).Flag: 3-dimensional matrix indicating i^th PMU
+        % measurement flagged by different filter operation
+                                %size: number of data points by number of channels by number of flag bits
+        % PMUstruct.PMU_Name: a cell array containing strings specifying
+        % name of PMUs
+                                % size: Number of PMUs by 1
+    % Parameters: structure containing user provided information to
+    % create customized signal(s)
+        % Parameters.exponent: integer exponent        
+        % Parameters.signal: a struct array consisting of information on 
+        % signals required to calculate customized signals. (size: 1 by
+        % number of signals to be customized)
+                    % Parameters.signal{i}.PMU: a string specifying
+                    % name of the PMU consisting of i^th signal to be
+                    % customized
+                    % Parameters.signal{i}.Channel: a string specifying
+                    % the channel of PMU that represents i^th signal to be customized   
+                    % Parameters.signal{i}.CustName: a string specifying name for the i^th customized
+    % custPMUidx: numerical identifier for PMU that would store customized signal
+% 
+% Outputs:
+    % PMUstruct: 
+%     
+%Created by: Jim Follum (james.follum@pnnl.gov)
+%Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Changed the flag matrix from a 2 dimensional double matrix to a 3
+%dimensional logical matrix (3rd dimension represents flag bit)
+
+
 function PMUstruct = ExpCustomization(PMUstruct,custPMUidx,Parameters)
 
 exponent = str2num(Parameters.exponent);

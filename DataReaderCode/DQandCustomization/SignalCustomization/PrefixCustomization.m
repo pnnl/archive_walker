@@ -1,3 +1,50 @@
+% function PMUstruct = PrefixCustomization(PMUstruct,custPMUidx,Parameters)
+% This function changes metric prefix of the unit of given signal(s).
+% 
+% Inputs:
+	% PMUstruct: structure in the common format for all PMUs (size: 1 by Number
+	% of PMUs)
+        % PMUstruct(i).Signal_Type: a cell array containing strings
+        % specifying signal(s) type in the i^th PMU
+                                    %size: 1 by Number of data channel in the i^th PMU
+        % PMUstruct(i).Signal_Name: a cell array containing strings
+        % specifying name of signal(s) in the i^th PMU
+                                    %size: 1 by Number of data channel in the i^th PMU
+        % PMUstruct(i).Signal_Unit: a cell array containing strings
+        % specifying unit of signal(s) in the PMU
+                                    %size: 1 by Number of data channel in the i^th PMU
+        % PMUstruct(i).Data: Matrix consisting of measurements by i^th PMU
+                                %size: Number of data points by number of channels                              
+        % PMUstruct(i).Flag: 3-dimensional matrix indicating i^th PMU
+        % measurement flagged by different filter operation
+                                %size: number of data points by number of channels by number of flag bits
+        % PMUstruct.PMU_Name: a cell array containing strings specifying
+        % name of PMUs
+                                % size: Number of PMUs by 1
+    % Parameters: structure containing user provided information to
+    % create customized signal(s)      
+        % Parameters.ToConvert: a struct array containing information on 
+        % signals whose unit's metric prefix is to be converted . (size: 1 by
+        % number of signals to be converted)
+                    % Parameters.ToConvert{i}.PMU: a string specifying
+                    % name of the PMU consisting of i^th signal to be
+                    % converted
+                    % Parameters.ToConvert{i}.Channel: a string specifying
+                    % the channel of PMU that represents i^th signal to be converted   
+                    % Parameters.ToConvert{i}.CustName: a string specifying
+                    % name for the i^th customized signal
+                    % Parameters.ToConvert{i}.NewUnit: a string specifying
+                    % new unit for the i^th customized signal
+    % custPMUidx: numerical identifier for PMU that would store customized signal
+% 
+% Outputs:
+    % PMUstruct
+%     
+%Created by: Jim Follum (james.follum@pnnl.gov)
+%Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Changed the flag matrix from a 2 dimensional double matrix to a 3
+%dimensional logical matrix (3rd dimension represents flag bit)
+
 function PMUstruct = PrefixCustomization(PMUstruct,custPMUidx,Parameters)
 
 AvailablePMU = {PMUstruct.PMU_Name};
@@ -43,7 +90,7 @@ for ToConvertIdx = 1:NumToConvert
             case 'V'
                 % From V to NewUnit
                 if strcmp(NewUnit,'kV')
-                    PMUstruct(custPMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                    PMUstruct(custPMUidx).Data(:,NcustSigs+1) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
                 elseif strcmp(NewUnit,'V')
                     ErrFlagIdentical = 1;
                 else
@@ -52,7 +99,7 @@ for ToConvertIdx = 1:NumToConvert
             case 'kV'
                 % From kV to NewUnit
                 if strcmp(NewUnit,'V')
-                    PMUstruct(custPMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                    PMUstruct(custPMUidx).Data(:,NcustSigs+1) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
                 elseif strcmp(NewUnit,'kV')
                     ErrFlagIdentical = 1;
                 else
@@ -61,7 +108,7 @@ for ToConvertIdx = 1:NumToConvert
             case 'A'
                 % From A to NewUnit
                 if strcmp(NewUnit,'kA')
-                    PMUstruct(custPMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                    PMUstruct(custPMUidx).Data(:,NcustSigs+1) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
                 elseif strcmp(NewUnit,'A')
                     ErrFlagIdentical = 1;
                 else
@@ -70,7 +117,7 @@ for ToConvertIdx = 1:NumToConvert
             case 'kA'
                 % From kA to NewUnit
                 if strcmp(NewUnit,'A')
-                    PMUstruct(custPMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                    PMUstruct(custPMUidx).Data(:,NcustSigs+1) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
                 elseif strcmp(NewUnit,'kA')
                     ErrFlagIdentical = 1;
                 else
@@ -79,7 +126,7 @@ for ToConvertIdx = 1:NumToConvert
             case 'mHz/sec'
                 % From Hz/sec to NewUnit
                 if strcmp(NewUnit,'Hz/sec')
-                    PMUstruct(custPMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                    PMUstruct(custPMUidx).Data(:,NcustSigs+1) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
                 elseif strcmp(NewUnit,'mHz/sec')
                     ErrFlagIdentical = 1;
                 else
@@ -88,7 +135,7 @@ for ToConvertIdx = 1:NumToConvert
             case 'Hz/sec'
                 % From mHz/sec to NewUnit
                 if strcmp(NewUnit,'mHz/sec')
-                    PMUstruct(custPMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                    PMUstruct(custPMUidx).Data(:,NcustSigs+1) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
                 elseif strcmp(NewUnit,'Hz/sec')
                     ErrFlagIdentical = 1;
                 else
@@ -121,8 +168,6 @@ for ToConvertIdx = 1:NumToConvert
         % All checks passed, set type and unit for input signal or create a new
         % custom signal with the type and unit
         
-        
-        PMUstruct(custPMUidx).Data(:,NcustSigs+1) = PMUstruct(PMUidx).Data(:,SigIdx);
         PMUstruct(custPMUidx).Flag(:,NcustSigs+1,:) = PMUstruct(PMUidx).Flag(:,SigIdx,:);
         FlagVec = sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3)>0;
         PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags-1) = FlagVec;
