@@ -1,16 +1,5 @@
-% function decision = CheckTypeAndUnits(Type,Units)
-% This function checks if the signal type and units are matched
-% 
-% Inputs:
-	% Type: Signal type
-    % Units: Signal Unit
-% 
-% Outputs:
-    % decision: logical output (true or false)
-%     
-%Created by: 
-
 function decision = CheckTypeAndUnits(Type,Units)
+
 %% Voltage Magnitudes
 
 Acceptable(1).Type = 'VMP';

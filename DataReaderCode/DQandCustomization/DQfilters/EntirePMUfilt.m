@@ -1,47 +1,10 @@
-% function [PMUstruct,setNaNMatrix] = EntirePMUfilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix)
-% This function flags entire PMU data if the number of flagged data points
-% exceeds a user specified threshold 
-% 
-% Inputs:	
-	% PMUstruct: structure in the common format for a single PMU
-        % PMUstruct.Signal_Type: a cell array of strings specifying
-        % signal(s) type in the PMU (size:1 by number of data channel)
-        % PMUstruct.Signal_Name: a cell array of strings specifying name of
-        % signal(s) in the PMU (size:1 by number of data channel)
-        % PMUstruct.Signal_Unit: a cell array of strings specifying unit of
-        % signal(s) in the PMU (size:1 by number of data channel)
-        % PMUstruct.Data: Matrix containing PMU measurements (size:
-        % number of data points by number of channels in the PMU)
-        % PMUstruct.Flag: 3-dimensional matrix indicating PMU
-        % measurements flagged by different filter operation (size: number 
-        % of data points by number of channels by number of flag bits)                     
-    % SigsToFilt: a cell array of strings specifying name of signals to be
-    % filtered
-    % Parameters: a struct array containing user provided information to
-    % check data quality
-        % Parameters.PercentBadThresh: Threshold for number of flagged data
-        % points in the entire PMU, if exceeded then data is flagged
-        % Parameters.SetToNaN: If TRUE, flagged data are set to NaN
-        % Parameters.FlagBit: Flag bit for this filter operation.
-    % setNaNMatrix: Matrix of size: number of data points by number of
-    % channels in a PMU. '0' indicates data is not to be set to NaN after
-    % filter operation, any other value indicates data should be set to NaN
-%
-% Outputs:
-    % PMUstruct
-    % setNaNMatrix
-%     
-%Created by: Jim Follum(james.follum@pnnl.gov)
-%Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
-    %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
-    %2. data are set to NaN after carrying out all filter operation instead of setting data to NaN after each filter operation
-
-function [PMUstruct,setNaNMatrix] = EntirePMUfilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix)
+% function PMUstruct = EntirePMUfilt(PMUstruct,SigsToFilt,PctThresh,SetToNaN,FlagBit)
+function PMUstruct = EntirePMUfilt(PMUstruct,SigsToFilt,Parameters)
 
 PctThresh = str2num(Parameters.PercentBadThresh);
 SetToNaN = strcmp(Parameters.SetToNaN,'TRUE');
 FlagBit = str2num(Parameters.FlagBit);
-setNaNmatrixIni = zeros(size(setNaNMatrix));
+
 if isempty(SigsToFilt)
     % If specific signals were not listed, get indices of all signals 
     % except digitals and scalars
@@ -79,7 +42,6 @@ if PctFlagged >= PctThresh
     PMUstruct.Flag(:,SigIdx,FlagBit) = true;
     % If desired, set entire PMU to NaN
     if SetToNaN
-        setNaNmatrixIni(:,SigIdx) = 1;
+        PMUstruct.Data(:,SigIdx) = NaN;
     end
 end
-setNaNMatrix = setNaNMatrix + setNaNmatrixIni;

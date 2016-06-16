@@ -1,15 +1,14 @@
-% function [config, data]=pdatRead3(pdatFile,DataXML)
-% This function reads .pdat file, send config and data into matlab workspace
-% 
-% Inputs:
-	% DataXML: structure containing configuration from the input XML file
-    % pdatFile: Filepath to the PMU data file 
-%     
-% Outputs:
-    % config: configuration information, as reported by C37.118 config frame
-    % data: PMU data, as reported by C37.118 data frames
-%    
-%Created by
+%**************************************************************************
+%
+% pdatRead.m - read .pdat file, send config and data into matlab workspace
+%
+% DataXML - structure containing configuration from the input XML file
+%
+% config - configuration information, as reported by C37.118 config frame
+% data - PMU data, as reported by C37.118 data frames
+%
+%
+%**************************************************************************
 
 function [config, data]=pdatRead3(pdatFile,DataXML)
 

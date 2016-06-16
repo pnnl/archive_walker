@@ -1,32 +1,4 @@
-% function PMUstruct = DropOutMissingFilt(PMUstruct,Parameters)
-% This function locates missing data frame and flags the corresponding data
-% frame and sets to NaN.
-% 
-% Inputs:
-	% PMUstruct: structure in the common format for a single PMU
-        % PMUstruct.Stat: A vector containing status of the PMU
-        % (size: number of data points by 1)
-        % PMUstruct.Data: Matrix containing PMU measurements (size:
-        % number of data points by number of channels in the PMU)
-        % PMUstruct.Flag: 3-dimensional matrix indicating PMU
-        % measurements flagged by different filter operation (size: number 
-        % of data points by number of channels by number of flag bits)  
-        % PMUstruct.Signal_Time.Time_String: a cell array of strings specifying
-        % signal's time-stamp (size: number of data points by 1) 
-        % PMUstruct.Signal_Time.Signal_datenum: Numeric array representing
-        % PMUstruct.Signal_Time.Time_String (size: number of data points by 1)
-    % Parameters: a struct array containing user provided information to
-    % check data quality
-        % Parameters.FlagBit: Flag bit for this filter operation.
-%  
-% Outputs:
-    % PMUstruct
-%     
-%Created by: Jim Follum(james.follum@pnnl.gov)
-%Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
-    %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
-    %2. data are set to NaN after carrying out all filter operation instead of setting data to NaN after each filter operation
-
+% function PMUstruct = DropOutMissingFilt(PMUstruct,FlagBit)
 function PMUstruct = DropOutMissingFilt(PMUstruct,Parameters)
 
 FlagBit = str2num(Parameters.FlagBit);

@@ -1,31 +1,3 @@
-% function PMU = CustomizationStep(PMU,custPMUidx,StageStruct)
-% This function creates customized signal using PMU measurements specified
-% in XML files
-%
-% Inputs:
-	% PMU: a struct array of dimension 1 by Number of PMUs      
-        % PMU(i).PMU_Name: a string specifying name of i^th PMU
-        % PMU(i).Data: Matrix containing data measured by the i^th PMU
-        % PMU(i).Flag: 3-dimensional matrix indicating i^th PMU
-        % measurement flagged by different filter operation (size: number
-        % of data points by number of channels by number of flag bits)
-    % StageStruct: struct array containing information on data quality filters and customization
-    % operation to be carried out for a single stage
-        % StageStruct.Customization: struct array containing information on different
-        % customization operation (size: 1 by number of customization
-        % operation)
-            % StageStruct.Customization{i}.Name: a string specifying type of i^th customization operation
-            % StageStruct.Customization{i}.Parameters: a struct array
-            % containing user-specified parameters for i^th customization operation          
-    % custPMUidx: numerical identifier for PMU that would store customized signal
-%
-% Outputs:
-    % PMU
-%    
-%Created by: Jim Follum(james.follum@pnnl.gov)
-%Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
-    %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
-
 function PMU = CustomizationStep(PMU,custPMUidx,StageStruct)
 
 NumCusts = length(StageStruct.Customization);

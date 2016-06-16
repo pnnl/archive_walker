@@ -1,41 +1,10 @@
-% function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
-% This function creates PMU structure list using pdat reader output
+%% test function to convert pdat reader output into a Matlab structure
 %
-% Inputs:
-	% pdatFile: Filepath to the PMU data file including file name
-    % DataXML: structure containing configuration from the input XML file
-        % DataXML.Configuration.Stages: struct array containing
-        % information on filter and customization operation in each stage
-        % (dimension is 1 by number of stages)
-            % DataXML.Configuration.Stages{i}.Filter: array of struct consisting of
-            % information on filter and customization operation in each stage
-            % (dimension is 1 by number of stages)
-                % DataXML.Configuration.Stages{i}.Filter{j}.Parameters.FlagBit:
-                % a string specifying bit to be flagged for j^th filter
-                % operation in i^th stage
+% last update: 5/5/2016
 %
-% Outputs:
-    % PMU: struct array of dimension 1 by Number of PMUs
-        % PMU(i).File_Name: a string specifying file name containing i^th PMU data        
-        % PMU(i).PMU_Name: a string specifying name of i^th PMU
-        % PMU(i).Time_zone:  a string specifying time-zone from where data are recorded
-        % PMU(i).Signal_Time: a string specifying time stamp of i^th PMU data
-        % PMU(i).Signal_Name: a cell array of strings specifying name of Signals in i^th PMU
-        % PMU(i).Signal_Type: a cell array of strings specifying type of Signals in i^th PMU
-        % PMU(i).Signal_Unit: a cell array of strings specifying unit of Signals in i^th PMU
-        % PMU(i).Stat: Numerical array specifying status of i^th PMU
-        % PMU(i).Data: Numerical matrix containing data measured by the i^th PMU
-        % PMU(i).Flag: 3-dimensional matrix providing information on the
-        % i^th PMU data that are flagged by different filters
-    % tPMU: numerical array representing time stamp of PMU measurements
-    % Num_Flags: Number of flag bits
-%   
-%Created by 
-%Modified on May 5, 2016
-%Modified on June 6, 2016 by Urmila Agrawal (urmila.agrawal@pnnl.gov):
-%Function now calculates and returns total number of flag bits needed for different data quality  check filter operation
 
-function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
+% create PMU structure list
+function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML,flog)
 
 [config, data]=pdatRead3(pdatFile,DataXML);
 

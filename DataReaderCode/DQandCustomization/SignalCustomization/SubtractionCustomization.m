@@ -1,51 +1,3 @@
-% function PMUstruct = SubtractionCustomization(PMUstruct,custPMUidx,Parameters)
-% This function creates a customized signal by subtracting two given signals.
-% 
-% Inputs:
-	% PMUstruct: structure in the common format for all PMUs (size: 1 by Number
-	% of PMUs)
-        % PMUstruct(i).Signal_Type: a cell array containing strings
-        % specifying signal(s) type in the i^th PMU
-                                    %size: 1 by Number of data channel in the i^th PMU
-        % PMUstruct(i).Signal_Name: a cell array consiting of strings
-        % specifying name of signal(s) in the i^th PMU
-                                    %size: 1 by Number of data channel in the i^th PMU
-        % PMUstruct(i).Signal_Unit: a cell array containing strings
-        % specifying unit of signal(s) in the PMU
-                                    %size: 1 by Number of data channel in the i^th PMU
-        % PMUstruct(i).Data: Matrix consisting of measurements by i^th PMU
-                                %size: Number of data points by number of channels                              
-        % PMUstruct(i).Flag: 3-dimensional matrix indicating i^th PMU
-        % measurement flagged by different filter operation
-                                %size: number of data points by number of channels by number of flag bits
-        % PMUstruct.PMU_Name: a cell array containing strings specifying
-        % name of PMUs
-                                % size: Number of PMUs by 1
-    % Parameters: structure containing user provided information to
-    % create customized signal(s)
-        % Parameters.SignalName: a string specifying name for the customized
-        % signal
-        % Parameters.minuend: a struct array containing information on
-        % minuend signal
-            % Parameters.minuend.PMU: a string specifying name of the PMU
-            % containing signal representing minuend
-            % Parameters.minuend.Channel: a string specifying name of the channel 
-            % that represents minuend signal
-        % Parameters.subtrahend: a struct array containing information on
-        % subtrahend signal
-            % Parameters.subtrahend.PMU:  a string specifying name of the PMU
-            % containing signal representing subtrahend        
-            % Parameters.subtrahend.Channel: a string specifying name of the channel 
-            % that represents subtrahend signal        
-    % custPMUidx: numerical identifier for PMU that would store customized signal
-% 
-% Outputs:
-    % PMUstruct
-%     
-%Created by: Jim Follum (james.follum@pnnl.gov)
-%Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
-%Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix.
-
 function PMUstruct = SubtractionCustomization(PMUstruct,custPMUidx,Parameters)
 
 SignalName = Parameters.SignalName;
@@ -93,7 +45,7 @@ if (~isempty(SigIdxMin)) && (~isempty(SigIdxSub))
         
         % Set flags
         FlagVec = sum(PMUstruct(PMUidxMin).Flag(:,SigIdxMin,:),3) > 0 | sum(PMUstruct(PMUidxSub).Flag(:,SigIdxSub,:),3) > 0; % if any of the data channel is flgged then the custom signal is flagged with flag for custom signal
-
+%         FlagVec(FlagVec==1) = FlagBit;
         PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags-1) = FlagVec;
         
         % Set units

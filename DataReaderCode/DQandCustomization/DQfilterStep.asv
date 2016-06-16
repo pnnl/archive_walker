@@ -98,4 +98,4 @@ for FiltIdx = 1:NumFilts
             end
     end    
 end
-PMU(PMUstructIdx(PMUidx)) = set2NaNfilt(PMU,StageStruct.Filter);
+PMU(PMUstructIdx(PMUidx)) = set2NaNfilt(PMU),StageStruct.Filter);
