@@ -1,11 +1,55 @@
+% function PMU = DQfilterStep(PMU,StageStruct)
+% This function carries out filter operation on PMU measurements specified
+% in XML file
+%
+% Inputs:
+	% PMU: a struct array of dimension 1 by Number of PMUs      
+        % PMU(i).PMU_Name: a string specifying name of i^th PMU
+        % PMU(i).Data: Matrix containing data measured by the i^th PMU
+        % PMU(i).Flag: 3-dimensional matrix indicating i^th PMU
+        % measurement flagged by different filter operation (size: number
+        % of data points by number of channels by number of flag bits)
+    % StageStruct: struct array containing information on data quality filters and customization
+    % operation to be carried out for a single stage
+        % StageStruct.Filter: struct array containing information on different
+        % filter operation (size: 1 by number of filter
+        % operation)
+            % StageStruct.Filter{i}.Name: a string specifying type of i^th filter operation
+            % StageStruct.Filter{i}.Parameters: a struct array containing
+            % user-specified parameters for i^th filter operation
+            % StageStruct.Filter{i}.PMU: struct array containing
+            % information on PMUs of dimension 1 by number of PMUs
+                %StageStruct.Filter{i}.PMU{j}.Name: a string specifying
+                % name of j^th PMU whose data is to be filtered
+                % StageStruct.Filter{i}.PMU{j}.Channel: a struct array
+                % containing information on data channels in j^th PMU whose data is to be filtered
+                    % StageStruct.Filter{i}.PMU{j}.Channel{k}.Name: a
+                    % string specifying name of k^th data channel in j^th
+                    % PMU for i^th filter operation
+%
+% Outputs:
+    % PMU
+%    
+%Created by: Jim Follum(james.follum@pnnl.gov)
+%Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+    %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
+    %2. data are set to NaN after carrying out all filter operation instead of setting data to NaN after each filter operation
+    
 function PMU = DQfilterStep(PMU,StageStruct)
 
 NumFilts = length(StageStruct.Filter);
+%defining a matrix whose values are set to 1 if the the content is to be
+%set to NaN after filtering operation
+
 if NumFilts == 1
-    % By default, the con tents of StageStruct.Filter
+    % By default, the contents of StageStruct.Filter
     % would not be in a cell array because length is one. This 
     % makes it so the same indexing can be used in the following for loop.
     StageStruct.Filter = {StageStruct.Filter};
+end
+for PMUidx = 1:length(PMU)
+    [n,nm] = size(PMU(PMUidx).Data);
+    setNaNMatrix{PMUidx} = zeros(n,nm);
 end
 for FiltIdx = 1:NumFilts
     % Parameters for the filter - the structure contents are
@@ -62,11 +106,11 @@ for FiltIdx = 1:NumFilts
     switch StageStruct.Filter{FiltIdx}.Name
         case 'PMUflagFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = PMUflagFilt(PMU(PMUstructIdx(PMUidx)),Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = PMUflagFilt(PMU(PMUstructIdx(PMUidx)),Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
         case 'DropOutZeroFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = DropOutZeroFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = DropOutZeroFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
         case 'DropOutMissingFilt'
             for PMUidx = 1:NumPMU
@@ -74,28 +118,36 @@ for FiltIdx = 1:NumFilts
             end
         case 'VoltPhasorFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = VoltPhasorFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = VoltPhasorFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
         case 'FreqFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = FreqFilt(PMU(PMUstructIdx(PMUidx)),Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = FreqFilt(PMU(PMUstructIdx(PMUidx)),Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
+            end
+        case 'OutlierFilt'
+            for PMUidx = 1:NumPMU
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = OutlierFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
         case 'StaleFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = StaleFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = StaleFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
         case 'DataFrameFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = DataFrameFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = DataFrameFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
         case 'PMUchanFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = ChanFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = ChanFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
         case 'PMUallFilt'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx)) = EntirePMUfilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = EntirePMUfilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
     end    
 end
-PMU(PMUstructIdx(PMUidx)) = set2NaNfilt(PMU,StageStruct.Filter);
+for PMUidx = 1:NumPMU
+    NaNM = setNaNMatrix{PMUidx};
+    NaNid = find(NaNM >0);
+    PMU(PMUidx).Data(NaNid) = NaN;
+end

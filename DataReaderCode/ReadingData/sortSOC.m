@@ -1,3 +1,21 @@
+% function timeArr=sortSOC(SOC,fracSec,timeBase,dataRate)
+% This function reads date and time information and returns time
+% array sorted in ascending order
+% 
+% Inputs:
+	% SOC: second of century taken as reference point for calculating
+	% numerical value representing timstamp of PMU data
+    % fracSec: an integer number representing fraction of a second
+    % timeBase: fracSec divided by this number gives the true fraction of a
+    % second
+    % dataRate: Data reporting time
+%     
+% Outputs:
+    % timeArr: Array dimension number of data points by 3, each column
+    % representing SOC, fracSec, and indices of sorted data
+%    
+%Created by 
+
 function timeArr=sortSOC(SOC,fracSec,timeBase,dataRate)
 
 timeArr=[SOC fracSec];

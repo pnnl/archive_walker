@@ -1,3 +1,23 @@
+% function PMUstruct = SetNameAndUnit_PDAT(PMUstruct)
+% This function checks and sets name and unit of signals measured by PMU
+% 
+% Inputs:
+	% PMUstruct: structure in the common format for all PMUs in XML file
+        % PMUstruct(i).Signal_Type: a cell array of strings specifying
+        % signal(s) type in the i^th PMU
+                                    %size: 1 by number of data channel
+        % PMUstruct(i).Signal_Name: a cell array of strings specifying
+        % name of signal(s) in the i^th PMU
+                                    %size: 1 by number of data channel
+        % PMUstruct(i).Signal_Unit: a cell array of strings specifying
+        % unit of signal(s) in the i^th PMU
+                                    %size: 1 by number of data channel  
+%     
+% Outputs:
+    % PMUstruct
+%    
+%Created by
+
 function PMUstruct = SetNameAndUnit_PDAT(PMUstruct)
 
 NumPMU = length(PMUstruct);
