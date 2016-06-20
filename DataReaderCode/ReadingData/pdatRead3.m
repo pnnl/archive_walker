@@ -2,7 +2,6 @@
 % This function reads .pdat file, send config and data into matlab workspace
 % 
 % Inputs:
-	% DataXML: structure containing configuration from the input XML file
     % pdatFile: Filepath to the PMU data file 
 %     
 % Outputs:
@@ -11,7 +10,7 @@
 %    
 %Created by
 
-function [config, data]=pdatRead3(pdatFile,DataXML)
+function [config, data]=pdatRead3(pdatFile)
 
 % Read file in both signed and unsigned int format
 m = memmapfile(pdatFile,'format','int8');
@@ -115,23 +114,6 @@ data.timeArr((data.timeArr(:,1)==4294967295),1)=nan;
 data.timeArr((data.timeArr(:,2)==4294967295),2)=nan;
 rawArr = reshape(intData(offsetToData+1:end),config.dataFrameSize,[])';
 
-% Keep only the PMUs listed in DataXML
-if nargin == 2
-    KeepIdxPMU = [];
-    for idxPMU = 1:length(DataXML.Configuration.SignalSelection.PMU)
-        PMUname = DataXML.Configuration.SignalSelection.PMU{idxPMU}.Name;
-        ThisPMU = find(strcmp(PMUname,config.pmuNames));
-        if length(ThisPMU) == 1
-            KeepIdxPMU = [KeepIdxPMU ThisPMU];
-        elseif length(ThisPMU) > 1
-            error('Multiple PMUs in the file have the same name.');
-        end
-    end
-    config.pmuNames = config.pmuNames(KeepIdxPMU);
-    config.pmuIDs = config.pmuIDs(KeepIdxPMU);
-    config.pmu = config.pmu(KeepIdxPMU);
-    config.numPMUs = length(KeepIdxPMU);
-end
 
 % Read data for each PMU
 for ind=1:config.numPMUs

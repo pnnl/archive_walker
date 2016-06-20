@@ -37,7 +37,7 @@
 
 function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
 
-[config, data]=pdatRead3(pdatFile,DataXML);
+[config, data]=pdatRead3(pdatFile);
 
 nPMU = config.numPMUs;  %number of PMUs
 pmuNames = config.pmuNames; % PMU names

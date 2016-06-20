@@ -15,9 +15,9 @@
         % PMU(i).Data: Numerical matrix containing data measured by the i^th PMU
         % PMU(i).Flag: 3-dimensional matrix providing information on the
         % i^th PMU data that are flagged by different filters
-    % Stages: array of struct containing information on DQ filter and 
-        % customization operation in each stage. This array is part of
-        % the DataXML structure accessed as DataXML.Configuration.Stages.
+    % DataXML: structure containing configuration from the input XML file
+        % DataXML.Configuration.Stages: struct array containing
+        % information on filter and customization operation in each stage
         % (dimension is 1 by number of stages)
     % NumStages: Number of stages
     % Num_Flags: Total number of flag bits
@@ -25,7 +25,7 @@
 % Outputs:
     % PMU
     
-function PMU = DQandCustomization(PMU,Stages,NumStages, Num_Flags)
+function PMU = DQandCustomization(PMU,DataXML,NumStages, Num_Flags)
 
 % Initialize the custom PMU sub-structure and add it to the PMU structure
 % using some of the fields from an existing PMU sub-structure.
@@ -34,12 +34,17 @@ custPMUidx = length(PMU);
 
 for StageIdx = 1:NumStages
     % Data Quality Filtering step (if included in this stage)
-    if isfield(Stages{StageIdx},'Filter')
-        PMU = DQfilterStep(PMU,Stages{StageIdx});
+    if isfield(DataXML.Configuration.Stages{StageIdx},'Filter')
+        PMU = DQfilterStep(PMU,DataXML.Configuration.Stages{StageIdx});
     end
     
     % Signal Customization step (if included in this stage)
-    if isfield(Stages{StageIdx},'Customization')
-        PMU = CustomizationStep(PMU,custPMUidx,Stages{StageIdx});
+    if isfield(DataXML.Configuration.Stages{StageIdx},'Customization')
+        PMU = CustomizationStep(PMU,custPMUidx,DataXML.Configuration.Stages{StageIdx});
     end
+end
+
+% If no signals were added to the custom PMU, remove it.
+if size(PMU(custPMUidx).Data,2) == 0
+    PMU(custPMUidx) = [];
 end

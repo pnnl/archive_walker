@@ -5,9 +5,13 @@ clear all;
 
 %XML file
 XMLFile='ConfigXML.xml';
-
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
+
+%XML file
+XMLFile='ProcessXML.xml';
+% Parse XML file to MATLAB structure
+ProcessXML = fun_xmlread_comments(XMLFile);
 
 % DQ and customization are done in stages. Each stage is composed of a DQ
 % step and a customization step.
@@ -29,8 +33,15 @@ FileName = [FilePath FileDate '.pdat'];
 % This takes in the full path to the file and the XML structure and
 % produces a Matlab structure in the common format. 
 % All PMUs retained
-% PMU = createPdatStruct(FileName);
-% Only PMUs listed in DataXML are stored. 
 [PMU, ~, Num_Flags] = createPdatStruct(FileName,DataXML);
 
 PMU = DQandCustomization(PMU,DataXML,NumStages,Num_Flags);
+
+PMU = GetOutputSignals(PMU,DataXML);
+
+%% Detection
+
+% Processing (need to code)
+
+% Limit PMUs and channels to those desired
+PMU = GetOutputSignals(PMU,ProcessXML);
