@@ -42,9 +42,8 @@
 %Changed the flag matrix from a 2 dimensional double matrix to a 3
 %dimensional logical matrix (3rd dimension represents flag bit)
 function PMUstruct = AddCustomization(PMUstruct,custPMUidx,Parameters)
-
 SignalName = Parameters.SignalName;
-
+CheckSignalNameError(SignalName, PMUstruct(custPMUidx).Signal_Name);
 % Size of the current Data matrix for the custom PMU - N samples by NumSig signals
 [N,NumSig,NFlags] = size(PMUstruct(custPMUidx).Flag);
 

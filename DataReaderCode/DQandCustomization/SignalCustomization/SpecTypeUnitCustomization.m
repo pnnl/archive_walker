@@ -49,6 +49,7 @@ function PMUstruct = SpecTypeUnitCustomization(PMUstruct,custPMUidx,Parameters)
 [~,NcustSigs,NFlags] = size(PMUstruct(custPMUidx).Flag);
 
 if isfield(Parameters,'CustName')
+    CheckSignalNameError(Parameters.CustName, PMUstruct(custPMUidx).Signal_Name);
     % Make sure the specified signal type and unit are compatible
     if ~CheckTypeAndUnits(Parameters.SigType,Parameters.SigUnit)
         % Not compatible

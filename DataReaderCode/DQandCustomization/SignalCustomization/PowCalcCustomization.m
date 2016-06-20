@@ -94,6 +94,7 @@ if NumPow == 1
 end
 
 for PowIdx = 1:NumPow
+    CheckSignalNameError(Parameters.power{PowIdx}.CustName, PMUstruct(custPMUidx).Signal_Name);    
     ErrFlag = 0; % Error flag
     for junkIdx = 1:1  % Allows break from nested switch
     switch length(fieldnames(Parameters.power{PowIdx}))

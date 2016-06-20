@@ -72,6 +72,7 @@ SignalUnit = cell(1,NumPhasor);
 SignalName = cell(1,NumPhasor);
 ErrFlagUser = zeros(NumPhasor,1);
 for PhasorIdx = 1:NumPhasor
+    CheckSignalNameError(Parameters.phasor{PhasorIdx}.CustName, PMUstruct(custPMUidx).Signal_Name);
     PMUidxMag = find(strcmp(Parameters.phasor{PhasorIdx}.mag.PMU,AvailablePMU));
     % If the specified PMU is not in PMUstruct, skip the rest of the for 
     % loop so that Data remains NaNs and Flags remain set.

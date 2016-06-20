@@ -50,6 +50,7 @@
 function PMUstruct = DivisionCustomization(PMUstruct,custPMUidx,Parameters)
 
 SignalName = Parameters.SignalName;
+CheckSignalNameError(SignalName, PMUstruct(custPMUidx).Signal_Name);
 % Size of the current Data matrix for the custom PMU - N samples by NumSig
 % signals by NFlags flags
 [~,NumSig,NFlags] = size(PMUstruct(custPMUidx).Flag);

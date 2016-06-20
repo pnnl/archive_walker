@@ -49,7 +49,7 @@
 function PMUstruct = SubtractionCustomization(PMUstruct,custPMUidx,Parameters)
 
 SignalName = Parameters.SignalName;
-
+CheckSignalNameError(SignalName, PMUstruct(custPMUidx).Signal_Name);
 % Size of the current Data matrix and number of flags for the custom PMU - N samples by NumSig signals by NumFlags Flags
 [~,NumSig, NFlags] = size(PMUstruct(custPMUidx).Flag);
 

@@ -62,6 +62,7 @@ for ToConvertIdx = 1:NumToConvert
     % PMU - N samples by NcustSigs signals by NFlags flags
     [~,NcustSigs,NFlags] = size(PMUstruct(custPMUidx).Flag);
     if isfield(Parameters.ToConvert{ToConvertIdx},'CustName')
+        CheckSignalNameError(Parameters.ToConvert{ToConvertIdx}.CustName, PMUstruct(custPMUidx).Signal_Name);
         % A custom signal name was provided, so instead of replacing the input
         % signal add a new signal to the custom signal PMU
         PMUidx = find(strcmp(Parameters.ToConvert{ToConvertIdx}.PMU,AvailablePMU));

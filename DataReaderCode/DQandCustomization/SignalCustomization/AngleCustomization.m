@@ -61,6 +61,7 @@ SignalType = cell(1,NumSigs);
 SignalName = cell(1,NumSigs);
 ErrFlag = zeros(NumSigs,1);
 for SigCount = 1:NumSigs
+    CheckSignalNameError( Parameters.signal{SigCount}.CustName, PMUstruct(custPMUidx).Signal_Name);
     PMUidx = find(strcmp(Parameters.signal{SigCount}.PMU,AvailablePMU));
     % If the specified PMU is not in PMUstruct, skip the rest of the for 
     % loop so that Data remains NaNs and Flags remain set.

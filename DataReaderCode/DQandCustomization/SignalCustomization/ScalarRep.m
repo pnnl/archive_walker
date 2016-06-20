@@ -40,6 +40,7 @@ function custPMU = ScalarRep(custPMU,Parameters)
 [~,NumSig,NFlags] = size(custPMU.Flag);
 
 SignalName = Parameters.SignalName;
+CheckSignalNameError(SignalName, custPMU.Signal_Name);
 
 % If the SignalType is not provided, set to scalar
 if isfield(Parameters,'SignalType')
