@@ -46,6 +46,7 @@ PMU = GetOutputSignals(PMU,DataXML);
 %% Detection
 
 % Processing (need to code)
+PMU = Processing(PMU,
 
 % Limit PMUs and channels to those desired
 PMU = GetOutputSignals(PMU,ProcessXML);

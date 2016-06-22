@@ -78,7 +78,7 @@ if isfield(SignalSelection,'SignalType')
     SignalTypesToKeep = cellfun(@getfield,SignalSelection.SignalType,TypeCell,'UniformOutput',false);
 else
     % Signal types were not specified, so set the list of signal types to
-    % keep to empty
+    % keep to empty. Signal types will not be considered.
     SignalTypesToKeep = {};
 end
 
