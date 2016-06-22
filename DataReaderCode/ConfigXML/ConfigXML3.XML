@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+	<ReaderProperties>
+		<FileDirectory>C:\Users\foll154\Documents\BPA Oscillation App\ToGit\OriginalData</FileDirectory>
+        <Mnemonic>WISPDitt</Mnemonic>
+        <!--
+        <Mode>
+            <Name>RealTime</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <NoFutureWait>60</NoFutureWait>
+                <MaxNoFutureCount>10</MaxNoFutureCount>
+                <FutureWait>60</FutureWait>
+                <MaxFutureCount>10</MaxFutureCount>
+            </Params>
+        </Mode>
+        -->
+        <!--
+        <Mode>
+            <Name>Hybrid</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <NoFutureWait>60</NoFutureWait>
+                <MaxNoFutureCount>10</MaxNoFutureCount>
+                <FutureWait>60</FutureWait>
+                <MaxFutureCount>10</MaxFutureCount>
+                <RealTimeRange>60</RealTimeRange>
+            </Params>
+        </Mode>
+        -->
+        <Mode>
+            <Name>Archive</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <DateTimeEnd>2015-10-17 12:35:00 GMT</DateTimeEnd>
+            </Params>
+        </Mode>
+	</ReaderProperties>
+	<SignalSelection>
+        <SignalType>
+            <Type>VAP</Type>
+        </SignalType>
+	</SignalSelection>
+    <!-- 
+    Each stage is composed of data quality filters and customizations. 
+    Filters are always applied first, then the customizations. The 
+    stages are carried out in sequential order. 
+    
+    For all filters, if PMU isn't included, the filter is applied to all 
+    PMUs. Under PMU, if Channel isn't included, the filter is applied for
+    all appropriate channels in the specified PMUs. 
+    -->
+    <!--
+    *******
+    Stage 1
+    *******
+    -->
+    <Stages>
+        <!--
+        **********************
+        Stage 1 - DQ Filtering
+        **********************
+        -->
+        <Filter>
+            <Name>PMUflagFilt</Name>
+            <!-- 
+            This one can only be applied to entire PMUs, not individual 
+            channels.
+            -->
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>1</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>DropOutZeroFilt</Name>
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>2</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>FreqFilt</Name>
+            <!-- 
+            This one is always applied to the frequency channels in a PMU, 
+            so channels are not specified.
+            -->
+            <Parameters>
+                <FreqMinChan>59.9</FreqMinChan>
+                <FreqMaxChan>60.1</FreqMaxChan>
+                <FreqPctChan>45</FreqPctChan>
+                <FreqMinSamp>59</FreqMinSamp>
+                <FreqMaxSamp>61</FreqMaxSamp>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBitChan>3</FlagBitChan>
+                <FlagBitSamp>4</FlagBitSamp>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>DataFrameFilt</Name>
+            <Parameters>
+                <PercentBadThresh>75</PercentBadThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>5</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>PMUallFilt</Name>
+            <Parameters>
+                <PercentBadThresh>75</PercentBadThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>6</FlagBit>
+            </Parameters>
+        </Filter>
+    </Stages>
+</Configuration>
+		

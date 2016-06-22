@@ -91,11 +91,9 @@ for PMUidx = 1:length(PMU)
     % Initialize a vector to store indices for the signals to be kept
     KeepIdxSignal = zeros(1,length(Signal_Name));
     
-    % If the PMU field was specified in the configuration XML, further 
-    % checks are needed. If not, then all channels are kept.
+    % If the Channels field was specified in the configuration XML,
+    % keep only the specified signals. If not, keep all the signals.
     if isfield(SignalSelection,'PMU')
-        % If the Channels field was specified in the configuration XML,
-        % keep only the specified signals. If not, keep all the signals.
         if isfield(SignalSelection.PMU{PMUidx},'Channels')
             if length(SignalSelection.PMU{PMUidx}.Channels.Channel) == 1
                 % By default, the contents of SignalSelection.PMU{PMUidx}.Channels.Channel would not be
@@ -103,20 +101,20 @@ for PMUidx = 1:length(PMU)
                 % indexing can be used regardless of the length.
                 SignalSelection.PMU{PMUidx}.Channels.Channel = {SignalSelection.PMU{PMUidx}.Channels.Channel};
             end
-            
+
             % Get all the names of signals to be kept from the SignalSelection
             % structure
             NameCell    = cell(1, length(SignalSelection.PMU{PMUidx}.Channels.Channel));
             NameCell(:) = {'Name'};
             SignalNamesToKeep = cellfun(@getfield,SignalSelection.PMU{PMUidx}.Channels.Channel,NameCell,'UniformOutput',false);
-            
+
             % For each signal that is to be kept based on its name
             for SigNameIdx = 1:length(SignalNamesToKeep)
                 % Set KeepIdxSignal to 1 where the Signal_Name cell array matches
                 % the current SignalNamesToKeep
                 KeepIdxSignal = KeepIdxSignal | strcmp(Signal_Name,SignalNamesToKeep{SigNameIdx});
             end
-            
+
             % For each signal type that is to be kept
             for SigTypeIdx = 1:length(SignalTypesToKeep)
                 % Set KeepIdxSignal to 1 where the Signal_Type cell array matches
@@ -124,12 +122,34 @@ for PMUidx = 1:length(PMU)
                 KeepIdxSignal = KeepIdxSignal | strcmp(Signal_Type,SignalTypesToKeep{SigTypeIdx});
             end
         else
-            % Signals were not specified, so keep all channels
-            KeepIdxSignal(:) = 1;
+            % Signals were not specified, so keep all channels of the specified
+            % types
+            if isempty(SignalTypesToKeep)
+                % Types were not specified, so keep all channels
+                KeepIdxSignal(:) = 1;
+            else
+                % For each signal type that is to be kept
+                for SigTypeIdx = 1:length(SignalTypesToKeep)
+                    % Set KeepIdxSignal to 1 where the Signal_Type cell array matches
+                    % the current SignalTypesToKeep
+                    KeepIdxSignal = KeepIdxSignal | strcmp(Signal_Type,SignalTypesToKeep{SigTypeIdx});
+                end
+            end
         end
     else
-        % PMUs were not specified, so keep all channels
-        KeepIdxSignal(:) = 1;
+        % Signals were not specified, so keep all channels of the specified
+        % types
+        if isempty(SignalTypesToKeep)
+            % Types were not specified, so keep all channels
+            KeepIdxSignal(:) = 1;
+        else
+            % For each signal type that is to be kept
+            for SigTypeIdx = 1:length(SignalTypesToKeep)
+                % Set KeepIdxSignal to 1 where the Signal_Type cell array matches
+                % the current SignalTypesToKeep
+                KeepIdxSignal = KeepIdxSignal | strcmp(Signal_Type,SignalTypesToKeep{SigTypeIdx});
+            end
+        end
     end
     
     % Keep only the signals that are of the correct type or have been

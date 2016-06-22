@@ -16,12 +16,34 @@ clc;
 
 %XML file
 %XMLFile='ConfigXML2_Hybrid.xml';
-XMLFile = 'ConfigXML2_RealTime.xml';
+% XMLFile = 'ConfigXML2_RealTime.xml';
 %XMLFile = 'ConfigXML2_Archive.xml';
-
-
 % Parse XML file to MATLAB structure
-DataXML = fun_xmlread(XMLFile);
+XMLFile = 'ConfigXML3.xml';
+DataXML = fun_xmlread_comments(XMLFile);
+
+%XML file
+XMLFile='ProcessXML.xml';
+% Parse XML file to MATLAB structure
+ProcessXML = fun_xmlread_comments(XMLFile);
+
+% DQ and customization are done in stages. Each stage is composed of a DQ
+% step and a customization step.
+if isfield(DataXML.Configuration,'Stages')
+    NumStages = length(DataXML.Configuration.Stages);
+    if NumStages == 1
+        % By default, the contents of DataXML.Configuration.Stages would not be
+        % in a cell array because length is one. This makes it so the same
+        % indexing can be used in the following for loop.
+        DataXML.Configuration.Stages = {DataXML.Configuration.Stages};
+    end
+else
+    NumStages = 0;
+end
+
+
+
+
 
 % Get parameters for the operation mode
 if strcmp(DataXML.Configuration.ReaderProperties.Mode.Name, 'Archive')
@@ -171,7 +193,35 @@ while(~done)
                % pause 0.5 seconds when the file is still being written
                pause(0.5);
            end
-           [PMU,tPMU] = createPdatStruct(focusFile,DataXML);
+           
+           % ***********
+           % Data Reader
+           % ***********
+           % Create the PMU structure
+           [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
+           % Apply data quality filters and signal customizations
+           PMU = DQandCustomization(PMU,DataXML,NumStages,Num_Flags);
+           % Return only the desired PMUs and signals
+           PMU = GetOutputSignals(PMU,DataXML);
+           
+           % **********************
+           % Collect PMU Structures
+           % **********************
+           % We need to pass PMU structures as a cell array to the
+           % processing function below for concatenation. Something along
+           % the lines of:
+           %    PMUall{2:end} = PMUall{1:end-1};
+           %    PMUall{1} = PMU;
+           
+           % *********
+           % Detection
+           % *********
+           % Processing (need to code)
+           %    PMUall = ProcessFunction(PMUall,ProcessXML) GOES HERE
+           % Return only the desired PMUs and signals
+           PMUall = GetOutputSignals(PMUall,ProcessXML);
+           % Detection (need to code)
+           
            % update some information
            DataInfo.tPMU = tPMU;
            timeNum = getPdatFileTime(focusFile);
@@ -185,7 +235,7 @@ while(~done)
            % failed to process the focus file
            DataInfo.processedFileList = [DataInfo.processedFileList;focusFile];
            DataInfo.processedFileFlag = [DataInfo.processedFileFlag;-1];                     
-           fprintf(flog, 'Could not process the current PMU dta file: %s\n',currFile);
+           fprintf(flog, 'Could not process the current PMU dta file: %s\n',focusFile);
        end
    end   
 end
@@ -193,13 +243,3 @@ end
 fprintf(flog, '\nFinished processing files\n');
 fprintf(flog, '********************************************************\n');
 fprintf(flog,'\n');
-
-
-
-
-
-
-
-
-
-
