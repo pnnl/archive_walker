@@ -23,9 +23,11 @@
         </Interpolate>
         <Filter>
             <Type>HighPass</Type>
-            <Order>1</Order>
-            <Cutoff>0.1</Cutoff>
-            <ZeroPhase>FALSE</ZeroPhase>
+	    <Parameters>
+            	<Order>1</Order>
+            	<Cutoff>0.1</Cutoff>
+            	<ZeroPhase>FALSE</ZeroPhase>
+	    </Parameters>
             <PMU>
                 <Name>ALSN 500 A1 SA  </Name>
                 <Channels>
@@ -46,41 +48,53 @@
             <PMU>
                 <Name>JDAY 500  A1 SA </Name>
             </PMU>
+	    <!--
             <PMU>
                 <Name>Custom Signals</Name>
             </PMU>
+	    -->
         </Filter>
         <Filter>
             <Type>LowPass</Type>
-            <PassRipple>0.1</PassRipple>
-            <StopRipple>50</StopRipple>
-            <PassCutoff>1.5</PassCutoff>
-            <StopCutoff>2.5</StopCutoff>
-            <ZeroPhase>FALSE</ZeroPhase>
+	    <Parameters>
+            	<PassRipple>0.1</PassRipple>
+            	<StopRipple>50</StopRipple>
+            	<PassCutoff>1.5</PassCutoff>
+            	<StopCutoff>2.5</StopCutoff>
+            	<ZeroPhase>FALSE</ZeroPhase>
+	    </Parameters>
         </Filter>
         <Filter>
             <Type>Rational</Type>
-            <Numerator>1,7,-10</Numerator>
-            <Denominator>1,3,2,-3,4</Denominator>
-            <ZeroPhase>TRUE</ZeroPhase>
+	    <Parameters>
+            	<Numerator>1,.5,-.25</Numerator>
+            	<Denominator>1,.75,.5,-.2,.05</Denominator>
+            	<ZeroPhase>TRUE</ZeroPhase>
+	    </Parameters>
         </Filter>
         <Filter>
             <Type>Median</Type>
-            <Order>5</Order>
-            <Endpoints>zeropad</Endpoints><!--Alternative is 'truncate'-->
-            <HandleNaN>includenan</HandleNaN><!--Alternative is 'omitnan'-->
+	    <Parameters>
+            	<Order>5</Order>
+            	<Endpoints>zeropad</Endpoints><!--Alternative is 'truncate'-->
+            	<HandleNaN>includenan</HandleNaN><!--Alternative is 'omitnan'-->
+	    </Parameters>
         </Filter>
         <Multirate>
-            <MultiRatePMU>ALSN5</MultiRatePMU>
-            <NewRate>5</NewRate>
+	    <Parameters>
+            	<MultiRatePMU>ALSN5</MultiRatePMU>
+            	<NewRate>5</NewRate>
+	    </Parameters>
             <PMU>
                 <Name>ALSN 500 A1 SA  </Name>
             </PMU>
         </Multirate>
         <Multirate>
-            <MultiRatePMU>JDAY4</MultiRatePMU>
-            <p>2</p>
-            <q>15</q>
+	    <Parameters>
+            	<MultiRatePMU>JDAY4</MultiRatePMU>
+            	<p>2</p>
+            	<q>15</q>
+	    </Parameters>
             <PMU>
                 <Name>JDAY 500  A1 SA </Name>
             </PMU>
