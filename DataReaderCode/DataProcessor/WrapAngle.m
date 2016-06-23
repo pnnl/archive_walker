@@ -1,35 +1,26 @@
-% function [PMUstruct,setNaNMatrix] = ChanFilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix)
-% This function flags PMU data of an entire data channel if the number of flagged data points
-% in that channel exceeds a user specified threshold 
+% function PMU = WrapAngle(PMU,SigsToFilt)
+% This function wraps the angle measurements in a signal.
 % 
 % Inputs:
-	% PMUstruct: structure in the common format for a single PMU
-        % PMUstruct.Signal_Type: a cell array of strings specifying
+	% PMU: structure in the common format for a single PMU
+        % PMU.Signal_Type: a cell array of strings specifying
         % signal(s) type in the PMU (size:1 by number of data channel)
-        % PMUstruct.Signal_Name: a cell array of strings specifying name of
+        % PMU.Signal_Name: a cell array of strings specifying name of
         % signal(s) in the PMU (size:1 by number of data channel)
-        % PMUstruct.Flag: 3-dimensional matrix indicating PMU
+        % PMU.Signal_Unit: a cell array of strings specifying unit of
+        % signal(s) in the PMU (size:1 by number of data channel)
+        % PMU.Data: Matrix containing PMU measurements (size:
+        % number of data points by number of channels in the PMU)
+        % PMU.Flag: 3-dimensional matrix indicating PMU
         % measurements flagged by different filter operation (size: number 
-        % of data points by number of channels by number of flag bits) 
-    % Parameters: a struct array containing user provided information to
-    % check data quality
-        % Parameters.PercentBadThresh: Threshold for number of flagged data
-        % points in a data channel, if exceeded then entire data channel is
-        % flagged
-        % Parameters.SetToNaN: If TRUE, flagged data are set to NaN
-        % Parameters.FlagBit: Flag bit for this filter operation.
-    % setNaNMatrix: Matrix of size: number of data points by number of
-    % channels in a PMU. '0' indicates data is not to be set to NaN after
-    % filter operation, any other value indicates data should be set to NaN
-%  
+        % of data points by number of channels by number of flag bits)        
+    % SigsToFilt: a cell array of strings specifying name of signals to be
+    % filtered
+%
 % Outputs:
-    % PMUstruct
-    % setNaNMatrix
+    % PMU
 %     
-%Created by: Jim Follum(james.follum@pnnl.gov)
-%Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
-    %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
-    %2. data are set to NaN after carrying out all filter operation instead of setting data to NaN after each filter operation
+%Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
 function PMU = WrapAngle(PMU,SigsToFilt)
 

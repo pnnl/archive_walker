@@ -1,5 +1,34 @@
+% function PMUstruct = interpo(PMUstruct,Interpolate)
+% This function interpolates missing data, and flagged data only if user
+% specifies.
+% 
+% Inputs:
+	% PMU: structure in the common format for a single PMU
+        % PMU.Signal_Type: a cell array of strings specifying
+        % signal(s) type in the PMU (size:1 by number of data channel)
+        % PMU.Signal_Name: a cell array of strings specifying name of
+        % signal(s) in the PMU (size:1 by number of data channel)
+        % PMU.Signal_Unit: a cell array of strings specifying unit of
+        % signal(s) in the PMU (size:1 by number of data channel)
+        % PMU.Data: Matrix containing PMU measurements (size:
+        % number of data points by number of channels in the PMU)
+        % PMU.Flag: 3-dimensional matrix indicating PMU
+        % measurements flagged by different filter operation (size: number 
+        % of data points by number of channels by number of flag bits)        
+    % Interpolate: a cell array of user provided information
+        % Interpolate.Type: Type of interpolation
+        % Interpolate_limit: Limit on the maximmum numebr of consecutive
+        % missing data to be interpolated
+        % Interpolate.FlagInterp = if TRUE, flagged data are interpolated
+        % as well.
+%
+% Outputs:
+    % PMU
+%     
+%Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
+
 function PMUstruct = interpo(PMUstruct,Interpolate)
-Interpolate_type = 'Constant';%Interpolate.Type;
+Interpolate_type = Interpolate.Type;
 Interpolate_limit = Interpolate.Limit;
 FlagInterp = Interpolate.FlagInterp;
 FlaBit_Iterp = 2;

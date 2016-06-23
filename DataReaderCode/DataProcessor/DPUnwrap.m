@@ -1,39 +1,31 @@
-% function PMU = DQfilterStep(PMU,StageStruct)
-% This function carries out filter operation on PMU measurements specified
+% function PMUstruct = DPUnwrap(PMUstruct,ProcessWrap)
+% This function performs angle unwraping operation on angle measurements specified
 % in XML file
 %
 % Inputs:
-	% PMU: a struct array of dimension 1 by Number of PMUs      
-        % PMU(i).PMU_Name: a string specifying name of i^th PMU
-        % PMU(i).Data: Matrix containing data measured by the i^th PMU
-        % PMU(i).Flag: 3-dimensional matrix indicating i^th PMU
-        % measurement flagged by different filter operation (size: number
-        % of data points by number of channels by number of flag bits)
-    % StageStruct: struct array containing information on data quality filters and customization
-    % operation to be carried out for a single stage
-        % StageStruct.Filter: struct array containing information on different
-        % filter operation (size: 1 by number of filter
-        % operation)
-            % StageStruct.Filter{i}.Name: a string specifying type of i^th filter operation
-            % StageStruct.Filter{i}.Parameters: a struct array containing
-            % user-specified parameters for i^th filter operation
-            % StageStruct.Filter{i}.PMU: struct array containing
-            % information on PMUs of dimension 1 by number of PMUs
-                %StageStruct.Filter{i}.PMU{j}.Name: a string specifying
-                % name of j^th PMU whose data is to be filtered
-                % StageStruct.Filter{i}.PMU{j}.Channel: a struct array
-                % containing information on data channels in j^th PMU whose data is to be filtered
-                    % StageStruct.Filter{i}.PMU{j}.Channel{k}.Name: a
-                    % string specifying name of k^th data channel in j^th
-                    % PMU for i^th filter operation
+	% PMUstruct: a struct array containing PMU structures     
+        % PMUstruct.PMU.PMU_Name: a string specifying name of PMUs
+        % PMUstruct.PMU(i).Data: Matrix containing data measured by the i^th PMU
+        % PMUstruct.PMU(i).Flag: 3-dimensional matrix indicating i^th PMU
+        % measurement flagged(size: number of data points by number of
+        % channels by number of flag bits)
+    % ProcessUnwrap: struct array containing information on angle unwraping operation
+    % (size: 1 by number of filter operation)
+        % ProcessUnwrap{i}.PMU: struct array containing information on PMUs
+        % of dimension 1 by number of PMUs
+            %ProcessUnwrap{i}.PMU{j}.Name: a string specifying
+            % name of j^th PMU 
+            % ProcessUnwrap{i}.PMU{j}.Channels: a struct array
+            % containing information on data channels in j^th PMU for
+            % carrying out angle unwraping operation
+                % ProcessUnwrap{i}.PMU{j}.Channels.Channel{k}.Name: a
+                % string specifying name of k^th data channel in j^th
+                % PMU for i^th angle unwraping operation
 %
 % Outputs:
-    % PMU
+    % PMUstruct
 %    
-%Created by: Jim Follum(james.follum@pnnl.gov)
-%Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
-    %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
-    %2. data are set to NaN after carrying out all filter operation instead of setting data to NaN after each filter operation
+%Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
     
 function PMUstruct = DPUnwrap(PMUstruct,ProcessUnwrap)
 NumUnwraps = length(ProcessUnwrap);
