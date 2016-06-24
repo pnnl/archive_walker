@@ -159,5 +159,5 @@ for PMUidx = 1:length(PMU)
     PMU(PMUidx).Signal_Type = PMU(PMUidx).Signal_Type(KeepIdxSignal);
     PMU(PMUidx).Signal_Unit = PMU(PMUidx).Signal_Unit(KeepIdxSignal);
     PMU(PMUidx).Data = PMU(PMUidx).Data(:,KeepIdxSignal);
-    PMU(PMUidx).Flag = PMU(PMUidx).Flag(:,KeepIdxSignal);
+    PMU(PMUidx).Flag = PMU(PMUidx).Flag(:,KeepIdxSignal,:);
 end

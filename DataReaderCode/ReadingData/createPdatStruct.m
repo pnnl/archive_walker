@@ -34,6 +34,9 @@
 %Modified on May 5, 2016
 %Modified on June 6, 2016 by Urmila Agrawal (urmila.agrawal@pnnl.gov):
 %Function now calculates and returns total number of flag bits needed for different data quality  check filter operation
+%
+% updated on June 24, 2016 by Tao Fu
+%   add one flag for missing file in Num_Flags
 
 function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
 
@@ -90,8 +93,13 @@ for StageId = 1:NumStages
 %         end
 %     end
 end
-Num_Flags = max(Flag_Bit)+2; % '1' additional bit is flagged when the customized signal uses flagged input signal and the other additional input is if the customized signal was not created becasue of some error in user input.
 
+% add 3 extra flags
+% the first additional bit is flagged when the customized signal uses flagged input signal
+% the second additional input is if the customized signal was not created becasue of some error in user input.
+% the third additional flag is used when the file is missing
+
+Num_Flags = max(Flag_Bit)+3; 
 
 for i = 1:nPMU
    % for each PMU
