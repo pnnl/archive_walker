@@ -1,11 +1,18 @@
 % Simple XML read of the simple XML demo file
 % for Archive Walker reading
 %
+% This is the main script for the project. 
+%
 % Created April 29, 2016 by Frank Tuffner
 %
 % Updated June 21, 2016 by Tao Fu
 %   update it to be the BAWS main script
 %
+% Updated June 24, 2016 by Tao Fu
+%   1. added debugMode to write the output log file
+%   2. removed fields that keeps processed data information in the DataInfo struture; 
+%   3. added functions to put output PMU structure in a cell array
+%   
 
 
 %prepare workspace
@@ -13,13 +20,14 @@ close all;
 clear all;
 clc;
 
+debugMode = 1; 
 
 %XML file
 %XMLFile='ConfigXML2_Hybrid.xml';
 % XMLFile = 'ConfigXML2_RealTime.xml';
-%XMLFile = 'ConfigXML2_Archive.xml';
+%XMLFile = 'D:\BAWS\codes\New folder\ConfigXML2_Archive.xml';
 % Parse XML file to MATLAB structure
-XMLFile = 'ConfigXML3.xml';
+XMLFile = 'D:\BAWS\BAWS_GIT\DataReaderCode\ConfigXML\ConfigXML3.xml';
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
@@ -61,7 +69,7 @@ elseif (strcmp(DataXML.Configuration.ReaderProperties.Mode.Name, 'RealTime') || 
     if(strcmp(DataXML.Configuration.ReaderProperties.Mode.Name,'Hybrid'))
         DateTimeStart = DataXML.Configuration.ReaderProperties.Mode.Params.DateTimeStart;
     else
-       % we will use the current time as the start time
+       % we will use the current time as the start time; still need to consider time zone
        currT = now;
        DateTimeStart = datestr(currT,'yyyy-mm-dd HH:MM:SS');        
     end
@@ -96,7 +104,7 @@ FilePath = [FileDirectory '\' FileMnemonic];
 FileDate = datestr(DateTimeStart(1:19),'_yyyymmdd_HHMMSS');
 FileName = [FilePath FileDate '.pdat'];
 
-%% put data into a strucutre, we may not need this for now, just in case we want to convert codes into functions
+%% put data into a strucutre
 flog = fopen('BAWS_processing_log.txt','w');
 fprintf(flog, '********************************************************\n');
 DataInfo.mode = DataXML.Configuration.ReaderProperties.Mode.Name;
@@ -109,6 +117,13 @@ if(strcmp(DataInfo.mode, 'Archive'))
     DataInfo.DateTimeEnd = DateTimeEnd(1:19);
     fprintf(flog, 'DateTimeStart =  %s\n',DataInfo.DateTimeStart);
     fprintf(flog, 'DateTimeEnd  =   %s\n',DataInfo.DateTimeEnd);
+    
+    % set some wait parameters for archive mode
+    DataInfo.NoFutureWait = 0;
+    DataInfo.MaxNoFutureCount = 1;
+    
+    DataInfo.FutureWait = 0;
+    DataInfo.MaxFutureCount = 1;
 else
     % RealTime or Hybrid
     if strcmp(DataInfo.mode, 'Hybrid')
@@ -116,7 +131,7 @@ else
     else
         fprintf(flog,'Mode  = Real Time\n');
     end
-    DataInfo.DateTimeStart = DateTimeStart(1:19);  % why do we have a DataTimeStart in the real time mode?
+    DataInfo.DateTimeStart = DateTimeStart(1:19);  
     DataInfo.NoFutureWait = NoFutureWait;
     DataInfo.MaxNoFutureCount = MaxNoFutureCount;
     
@@ -141,101 +156,100 @@ fprintf(flog,'\n');
 %%
 done = 0;
 
-%% get the list of available file.
-% these files will be processed in archive mode
-if(strcmp(DataInfo.mode, 'Archive'))
-    %archive node
-    DateTimeStart = DataInfo.DateTimeStart;
-    DateTimeEnd = DataInfo.DateTimeEnd;
-elseif(strcmp(DataInfo.mode, 'Hybrid'))
+%% set DateTimeEnd for real time mode and hybrid mode
+if(strcmp(DataInfo.mode, 'Hybrid'))
     % Hybrid Mode
-    DateTimeStart = DataInfo.DateTimeStart;
     currT = now;    % current time
-    DateTimeEnd = datestr(currT-DataInfo.RealTimeRange/60/24);   %RealTimeRang is converted from minutes to day
+    DataInfo.DateTimeEnd = datestr(currT-DataInfo.RealTimeRange/60/24);   %RealTimeRang is converted from minutes to day
 elseif(strcmp(DataInfo.mode, 'RealTime'))
     % realtime mode
-    DateTimeStart = DataInfo.DateTimeStart;
-    DateTimeEnd = [];
+    DataInfo.DateTimeEnd = [];
 end
 
-if(~isempty(DateTimeEnd))
-    %get current available files in archive mode and hybrid mode
-    availableFiles = getArchivedFiles(FileDirectory,DateTimeStart,DateTimeEnd);
-    if(~isempty(availableFiles))
-        flagAvailableFiles = zeros(length(availableFiles),1);
-    else
-        flagAvailableFiles = [];
-    end
-else
-    availableFiles = {};
-    flagAvailableFiles = [];
-end
-DataInfo.availableFiles = availableFiles;
-DataInfo.flagAvailableFiles = flagAvailableFiles;
 
-% flag for processed files
-DataInfo.processedFileList = {};
-DataInfo.processedFileFlag = [];
-DataInfo.lastFileTime = '';
+%% flag for processed files
 DataInfo.tPMU = 0;  % time of the last measurement in the last processed file
+DataInfo.lastFocusFile = ''; % last focus file
+DataInfo.secondesToConcat = str2double(ProcessXML.Configuration.Processing.SecondsToConcat);
+PMUall = {};
+oneMinuteEmptyPMU = [];
+emptyPMUexist = 0;
 
 %% processing files
 while(~done)
-   [focusFile,done,outDataInfo] = getNextFocusFile(DataInfo,flog);
+   [focusFile,done,outDataInfo] = getNextFocusFile(DataInfo,flog,debugMode);
    DataInfo = outDataInfo;
    if(~done)
        % focusFile is available
-       fprintf(flog,'\nThe current PMU file is: %s\n', focusFile);
+       if(debugMode)
+           fprintf(flog,'\nThe current PMU file is: %s\n', focusFile);
+       end
        try
            % make sure focusFile is written
            [stat,attr] = fileattrib(focusFile);
            while(~attr.UserWrite)
                % pause 0.5 seconds when the file is still being written
                pause(0.5);
+               [stat,attr] = fileattrib(focusFile);
            end
            
            % ***********
            % Data Reader
            % ***********
            % Create the PMU structure
+           DataInfo.lastFocusFile = focusFile;
+           DataInfo.tPMU = 0;
            [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
            % Apply data quality filters and signal customizations
-           PMU = DQandCustomization(PMU,DataXML,NumStages,Num_Flags);
+            PMU = DQandCustomization(PMU,DataXML,NumStages,Num_Flags);
            % Return only the desired PMUs and signals
            PMU = GetOutputSignals(PMU,DataXML);
            
-           % **********************
-           % Collect PMU Structures
-           % **********************
-           % We need to pass PMU structures as a cell array to the
-           % processing function below for concatenation. Something along
-           % the lines of:
-           %    PMUall{2:end} = PMUall{1:end-1};
-           %    PMUall{1} = PMU;
+           % Create an empty one minute PMU data structure for later use
+           % after processing the first file
+           % this only need to be called onece
+           if(~emptyPMUexist)                  
+               oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
+               emptyPMUexist = 1;
+           end
            
+           % **********************
+           % Collect PMU Structures according to specified seconds 
+           % **********************
+            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
+            
+            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
+            concatPMU = ConcatenatePMU(PMUall);            
+            
            % *********
            % Detection
            % *********
            % Processing (need to code)
            %    PMUall = ProcessFunction(PMUall,ProcessXML) GOES HERE
            % Return only the desired PMUs and signals
-           PMUall = GetOutputSignals(PMUall,ProcessXML);
+           %% PMUall = GetOutputSignals(PMUall,ProcessXML);
            % Detection (need to code)
            
-           % update some information
+           %% update some information
            DataInfo.tPMU = tPMU;
-           timeNum = getPdatFileTime(focusFile);
-           DataInfo.lastFileTime = datestr(timeNum,'yyyy-mm-dd HH:MM:SS');
-           DataInfo.processedFileList = [DataInfo.processedFileList;focusFile];
-           DataInfo.processedFileFlag = [DataInfo.processedFileFlag;1];
-           fprintf(flog, 'Number of PMUs in the file: %f\n',length(PMU));
-           fprintf(flog, 'PMU start Time:  %s\n', datestr(tPMU(1),'mm/dd/yyyy HH:MM:SS:FFF'));
-           fprintf(flog, 'PMU end Time:    %s\n', datestr(tPMU(end),'mm/dd/yyyy HH:MM:SS:FFF'));
-       catch
-           % failed to process the focus file
-           DataInfo.processedFileList = [DataInfo.processedFileList;focusFile];
-           DataInfo.processedFileFlag = [DataInfo.processedFileFlag;-1];                     
+           if(debugMode)
+               fprintf(flog, 'Number of PMUs in the file: %f\n',length(PMU));
+               fprintf(flog, 'PMU start Time:  %s\n', datestr(tPMU(1),'mm/dd/yyyy HH:MM:SS:FFF'));
+               fprintf(flog, 'PMU end Time:    %s\n', datestr(tPMU(end),'mm/dd/yyyy HH:MM:SS:FFF'));
+           end
+       catch msg1
+           % failed to process the focus file           
            fprintf(flog, 'Could not process the current PMU dta file: %s\n',focusFile);
+           fprintf(flog, '    %s\n',msg1.message);           
+           
+           % stop processing files
+           done = 1;
+           
+           % throw the error message
+           str = ['Could not process the current PMU dta file: ',focusFile];
+           disp(str);           
+           error(msg1.message);
+           
        end
    end   
 end
