@@ -19,7 +19,7 @@
     % SigsToFilt: a cell array of strings specifying name of signals to be
     % filtered
     % Parameters: a struct array containing user defined paramters for
-    % rational filter
+    % lowpass filter
         % Parameters.PassRipple: Passband ripple in dB
         % Parameters.StopRipple: Stopband ripple in dB     
         % Parameters.PassCutoff: Passband-edge frequency in Hz
@@ -39,16 +39,20 @@ StopRipple  = str2num(Parameters.StopRipple);
 PassCutoff  = str2num(Parameters.PassCutoff);
 StopCutoff  = str2num(Parameters.StopCutoff);
 SetZeroPhase  = Parameters.ZeroPhase;
-CutoffFreq = [PassCutoff StopCutoff];
+CutoffFreq = [PassCutoff StopCutoff]; % in Hz
 
 t = PMU.Signal_Time.Time_String;
 t1 = t{1};
 Ind1 = findstr(t1, '.');
 T1 = str2num(t1(Ind1:end));
-t11 = t{11};
-Ind11 = findstr(t11, '.');
-T11 = str2num(t11(Ind1:end));
-fs = round(10/(T11 - T1));
+t5 = t{5};
+Ind5 = findstr(t5, '.');
+T5 = str2num(t5(Ind5:end));
+fs = round(4/(T5 - T1));
+
+if StopCutoff>fs
+    error('Cut-off frequencies exceed folding frequency.');
+end
 
 a=[1 0];
 dev = [(10^(PassRipple/20)-1)/(10^(PassRipple/20)+1)  10^(-StopRipple/20)];
@@ -56,12 +60,12 @@ dev = [(10^(PassRipple/20)-1)/(10^(PassRipple/20)+1)  10^(-StopRipple/20)];
 b = firpm(nLP,fo,ao,w);
 
 % If specific signals were not listed, apply to all signals except 
-% digitals, scalars, and rocof
+% digitals
 if isempty(SigsToFilt)
     SigIdx = find(~strcmp(PMU.Signal_Type, 'D'));
     SigsToFilt = PMU.Signal_Name(SigIdx);
 end
-
+% freqz(b,1,1024,fs)
 for SigIdx = 1:length(SigsToFilt)
     ThisSig = find(strcmp(PMU.Signal_Name,SigsToFilt{SigIdx}));
     
@@ -72,8 +76,9 @@ for SigIdx = 1:length(SigsToFilt)
         continue
     end
     
+    % apply filter operation here
     if strcmp(SetZeroPhase,'TRUE')
-        PMU.Data(:,ThisSig) = filfilt(b,a,PMU.Data(:,ThisSig));
+        PMU.Data(:,ThisSig) = filtfilt(b,a,PMU.Data(:,ThisSig));
     else
         PMU.Data(:,ThisSig) = filter(b,a,PMU.Data(:,ThisSig));
     end  

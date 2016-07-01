@@ -11,26 +11,52 @@
         If channels are not specified for wrap and unwrap operations, they
         are applied to all angle signals in the PMUs.
         -->
-        <SecondsToConcat>600</SecondsToConcat>
+        <SecondsToConcat>600</SecondsToConcat>    
+        <Unwrap>
+             <!-- 
+            Without any fields, unwrap should be applied to all angle signals
+            in all PMUs
+            -->
+        </Unwrap>
         <Interpolate>
-            <Limit>10</Limit>
-            <Type>Linear</Type>
             <!--
             NaN values will always be interpolated. If TRUE, values that 
             are flagged will also be interpolated.
             -->
-            <FlagInterp>FALSE</FlagInterp>
-        </Interpolate>
-        <Filter>
-            <Type>HighPass</Type>
-	    <Parameters>
-            	<Order>1</Order>
-            	<Cutoff>0.1</Cutoff>
-            	<ZeroPhase>FALSE</ZeroPhase>
-	    </Parameters>
+            <Parameters>
+                <Limit>100</Limit>
+                <Type>Linear</Type>
+                <FlagInterp>FALSE</FlagInterp>
+            </Parameters>
             <PMU>
                 <Name>ALSN 500 A1 SA  </Name>
-                <Channels>
+                <Channel>
+                    <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+                </Channel>
+                <Channel>
+                    <Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+                </Channel>
+                <Channel>
+                    <Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
+                </Channel>
+                <Channel>
+                    <Name>ALSN 500 A1 SA  .A500NAPAVINE_1MW</Name>
+                </Channel>
+            </PMU>
+            <PMU>
+                <Name>JDAY 500  A1 SA </Name>
+            </PMU>
+        </Interpolate>
+        <Stages>
+            <Filter>
+                <Type>HighPass</Type>
+                <Parameters>
+                    <Order>1</Order>
+                    <Cutoff>0.1</Cutoff>
+                    <ZeroPhase>TRUE</ZeroPhase>
+                </Parameters>
+                <PMU>
+                    <Name>ALSN 500 A1 SA  </Name>
                     <Channel>
                         <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
                     </Channel>
@@ -43,68 +69,120 @@
                     <Channel>
                         <Name>ALSN 500 A1 SA  .A500NAPAVINE_1MW</Name>
                     </Channel>
-                </Channels>
-            </PMU>
-            <PMU>
-                <Name>JDAY 500  A1 SA </Name>
-            </PMU>
-	    <!--
-            <PMU>
-                <Name>Custom Signals</Name>
-            </PMU>
-	    -->
-        </Filter>
-        <Filter>
-            <Type>LowPass</Type>
-	    <Parameters>
-            	<PassRipple>0.1</PassRipple>
-            	<StopRipple>50</StopRipple>
-            	<PassCutoff>1.5</PassCutoff>
-            	<StopCutoff>2.5</StopCutoff>
-            	<ZeroPhase>FALSE</ZeroPhase>
-	    </Parameters>
-        </Filter>
-        <Filter>
-            <Type>Rational</Type>
-	    <Parameters>
-            	<Numerator>1,.5,-.25</Numerator>
-            	<Denominator>1,.75,.5,-.2,.05</Denominator>
-            	<ZeroPhase>TRUE</ZeroPhase>
-	    </Parameters>
-        </Filter>
-        <Filter>
-            <Type>Median</Type>
-	    <Parameters>
-            	<Order>5</Order>
-            	<Endpoints>zeropad</Endpoints><!--Alternative is 'truncate'-->
-            	<HandleNaN>includenan</HandleNaN><!--Alternative is 'omitnan'-->
-	    </Parameters>
-        </Filter>
-        <Multirate>
-	    <Parameters>
-            	<MultiRatePMU>ALSN5</MultiRatePMU>
-            	<NewRate>5</NewRate>
-	    </Parameters>
-            <PMU>
-                <Name>ALSN 500 A1 SA  </Name>
-            </PMU>
-        </Multirate>
-        <Multirate>
-	    <Parameters>
-            	<MultiRatePMU>JDAY4</MultiRatePMU>
-            	<p>2</p>
-            	<q>15</q>
-	    </Parameters>
-            <PMU>
-                <Name>JDAY 500  A1 SA </Name>
-            </PMU>
-        </Multirate>
-        <!-- 
-        Without any fields, unwrap should be applied to all angle signals
-        in all PMUs
-        -->
-        <Unwrap>
-        </Unwrap>
+                </PMU>
+                <PMU>
+                    <Name>JDAY 500  A1 SA </Name>
+                </PMU>
+                <PMU>
+                    <Name>Custom Signals</Name>
+                </PMU>
+            </Filter>
+            <Filter>
+                <Type>LowPass</Type>
+                <Parameters>
+                    <PassRipple>0.1</PassRipple>
+                    <StopRipple>50</StopRipple>
+                    <PassCutoff>1.5</PassCutoff>
+                    <StopCutoff>2.5</StopCutoff>
+                    <ZeroPhase>TRUE</ZeroPhase>
+                </Parameters>
+                <PMU>
+                    <Name>ALSN 500 A1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .A500NAPAVINE_1MW</Name>
+                    </Channel>
+                </PMU>
+            </Filter>
+            <Filter>
+                <Type>Rational</Type>
+                <Parameters>
+                    <Numerator>1,.5,-.25</Numerator>
+                    <Denominator>1,.75,.5,-.2,.05</Denominator>
+                    <ZeroPhase>TRUE</ZeroPhase>
+                </Parameters>
+                <PMU>
+                    <Name>ALSN 500 A1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .A500NAPAVINE_1MW</Name>
+                    </Channel>
+                </PMU>
+            </Filter>
+            <Filter>
+                <Type>Median</Type>
+                <Parameters>
+                    <Order>5</Order>
+                    <Endpoints>zeropad</Endpoints><!--Alternative is 'truncate'-->
+                    <HandleNaN>includenan</HandleNaN><!--Alternative is 'omitnan'-->
+                </Parameters>
+                <PMU>
+                    <Name>ALSN 500 A1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .A500NAPAVINE_1MW</Name>
+                    </Channel>
+                </PMU>
+            </Filter>
+            <Multirate>
+                <Parameters>
+                    <MultiRatePMU>ALSN5</MultiRatePMU>
+                    <NewRate>5</NewRate>
+                </Parameters>
+                <PMU>
+                    <Name>ALSN 500 A1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .T500BANK1____1IP.ANG</Name>
+                    </Channel>
+                </PMU>
+            </Multirate>
+            <Multirate>
+                <Parameters>
+                    <MultiRatePMU>JDAY4</MultiRatePMU>
+                    <p>2</p>
+                    <q>15</q>
+                </Parameters>
+                <PMU>
+                    <Name>ALSN 500 A1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+                    </Channel>
+                    <Channel>
+                        <Name>ALSN 500 A1 SA  .T500BANK1____1IP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>JDAY 500  A1 SA </Name>
+                </PMU>
+            </Multirate>
+        </Stages>            
         <!--
         Apply wrap to all angles in the JDAY PMU
         -->
@@ -113,24 +191,18 @@
                 <Name>JDAY 500  A1 SA </Name>
             </PMU>
         </Wrap>
-        <!--
-        Apply wrap to the specified channels
-        -->
         <Wrap>
             <PMU>
                 <Name>ALSN 500 A1 SA  </Name>
                 <Channel>
-                    <Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+                    <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
                 </Channel>
                 <Channel>
                     <Name>ALSN 500 A1 SA  .T500BANK1____1IP.ANG</Name>
                 </Channel>
             </PMU>
         </Wrap>
-    </Processing>
-    <!--
-    Specify changes to signal names, types, and units
-    -->
+    </Processing>     
     <NameTypeUnit>
         <PMU>
             <Name>ALSN 500 A1 SA  </Name>
@@ -144,42 +216,38 @@
     Specify the signals for output
     -->
     <SignalSelection>
-		<PMU>
-			<Name>ALSN 500 A1 SA  </Name>
-			<Channels>
-				<Channel>
-					<Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
-				</Channel>
-                <Channel>
-					<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
-				</Channel>
-                <Channel>
-					<Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
-				</Channel>
-                <Channel>
-					<Name>ALSN new</Name>
-				</Channel>
-			</Channels>
-		</PMU>
-		<PMU>
-			<Name>JDAY 500  A1 SA </Name>
-			<Channels>
-				<Channel>
-					<Name>JDAY 500  A1 SA .B500EAST_____1VP.MAG</Name>
-				</Channel>
-                <Channel>
-					<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
-				</Channel>
-                <Channel>
-					<Name>JDAY 500  A1 SA .B500EAST_____1VA.MAG</Name>
-				</Channel>
-				<Channel>
-					<Name>ALSN new</Name>
-				</Channel>
-			</Channels>
-		</PMU>
+        <PMU>
+            <Name>ALSN 500 A1 SA  </Name>
+            <Channel>
+                <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+            </Channel>
+            <Channel>
+                <Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+            </Channel>
+            <Channel>
+                <Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
+            </Channel>
+            <Channel>
+                <Name>ALSN new</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>JDAY 500  A1 SA </Name>
+            <Channel>
+                <Name>JDAY 500  A1 SA .B500EAST_____1VP.MAG</Name>
+            </Channel>
+            <Channel>
+                <Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+            </Channel>
+            <Channel>
+                <Name>JDAY 500  A1 SA .B500EAST_____1VA.MAG</Name>
+            </Channel>
+            <Channel>
+                <Name>ALSN new</Name>
+            </Channel>
+        </PMU>
         <PMU>
             <Name>Custom Signals</Name>
         </PMU>
-	</SignalSelection>
+    </SignalSelection>
 </Configuration>

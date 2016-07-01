@@ -17,7 +17,7 @@
     % SigsToFilt: a cell array of strings specifying name of signals to be
     % filtered
     % Parameters: a struct array containing user defined paramters for
-    % rational filter
+    % median filter
         % Parameters.Order: Order of filter
         % Parameters.Endpoints: Gives information on handing
         % endpoints(either truncates or zeropads endpoints)        
@@ -36,7 +36,7 @@ Endpoints  = Parameters.Endpoints;
 HandleNaN  = Parameters.HandleNaN;
 
 % If specific signals were not listed, apply to all signals except 
-% digitals, scalars, and rocof
+% digitals
 if isempty(SigsToFilt)
     SigIdx = find(~strcmp(PMU.Signal_Type, 'D'));
     SigsToFilt = PMU.Signal_Name(SigIdx);
@@ -44,6 +44,10 @@ end
 
 for SigIdx = 1:length(SigsToFilt)
     ThisSig = find(strcmp(PMU.Signal_Name,SigsToFilt{SigIdx}));
+    if imag(PMU.Data(:,ThisSig))~=0
+        warning(['Signal ' SigsToFilt{SigIdx} ' is complex valued. Median filter is not applied. Data not changed.']);
+        continue
+    end
     
     % If the specified signal is not in PMUstruct, skip the rest of the
     % code and go to the next SigIdx.
@@ -51,6 +55,6 @@ for SigIdx = 1:length(SigsToFilt)
         warning(['Signal ' SigsToFilt{SigIdx} ' could not be found.']);
         continue
     end
-    
+    % apply filter operation here
     PMU.Data(:,ThisSig) = medfilt1(PMU.Data(:,ThisSig),FiltOrder, HandleNaN, Endpoints);
 end

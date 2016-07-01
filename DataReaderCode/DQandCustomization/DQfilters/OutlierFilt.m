@@ -1,5 +1,7 @@
 % function [PMUstruct,setNaNMatrix] = OutlierFilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix)
-% This function detects and flags outlier in a signal.
+% This function detects and flags outlier in a signal excluding angle
+% measurements. Angle measurements of a signal are flagged corresponding to the
+% magnitude measurements of the same signal.
 % 
 % Inputs:
 	% 
@@ -32,9 +34,6 @@
     % setNaNMatrix
 %     
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
-%Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
-    %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
-    %2. data are set to NaN after carrying out all filter operation instead of setting data to NaN after each filter operation
 
 function [PMUstruct,setNaNMatrix] = OutlierFilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix)
 
@@ -64,40 +63,6 @@ for SigIdx = 1:length(SigsToFilt)
     end
     OutIdx = [];
     if ~strcmp(PMUstruct.Signal_Unit(ThisSig),'DEG') || strcmp(PMUstruct.Signal_Unit(ThisSig),'RAD')
-%         Sig = diff(unwrap(PMUstruct.Data(:,ThisSig)));
-%         OutIdx = [];
-%         OutIdxDiff = abs(Sig) > AngleDev; % Find outlier idx
-%         if ~isempty(OutIdxDiff)
-%             OutlierDiff = Sig(OutIdxDiff);
-%             OutlierDiffLen = length(OutlierDiff);
-%             IndCurr = OutIdxDiff(1);
-%             IndBefore = 1;
-%             while(IndCurr <= OutIdxDiff(end))
-%                 if Sig(IndCurr) < 0
-%                     OutIdx = [OutIdx; IndBefore:IndCurr];
-%                     IndBefore = IndCurr;
-%                     if IndCurr ~= OutIdxDiff(end)
-%                         IndCurr = OutIdxDiff(find(OutlierDiff == IndCurr) + 1);
-%                     else 
-%                         IndCurr = OutIdxDiff(end) + 1;
-%                     end
-%                 else
-%                     NegIdx = find(OutlierDiff<0);
-%                     NegIdx1 = min(find(OutIdxDiff(NegIdx) > IndCurr));
-%                     if ~isempty(NegIdx1)
-%                         OutIdx = [OutIdx; IndCurr:OutIdxDiff(NegIdx1)];
-%                         IndBefore = OutIdxDiff(NegIdx1)+1;
-%                         IndCurr = OutIdxDiff(find(OutlierDiff == NegIdx) + 1);
-%                     else
-%                         OutIdx = [OutIdx; IndCurr:length(Sig)];
-%                         IndCurr = OutIdxDiff(end) + 1;
-%                     end
-%                 end
-%             end
-%         end
-%         %         OutIdx2 = Sig < -AngleDev; % Find outlier idx
-%         
-%     else
         OutIdx = find(abs(PMUstruct.Data(:,ThisSig) - median(PMUstruct.Data(:,ThisSig))) > StdDevMult*std(PMUstruct.Data(:,ThisSig))); % Find outlier idx
         if strcmp(PMUstruct.Signal_Type{ThisSig}(1:end-1), 'VM') || strcmp(PMUstruct.Signal_Type{ThisSig}(1:end-1), 'IM')
             ThisSigAng = find(strcmp(PMUstruct.Signal_Name,strrep(SigsToFilt{SigIdx},'.MAG','.ANG')));

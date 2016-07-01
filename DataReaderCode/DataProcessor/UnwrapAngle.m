@@ -14,37 +14,37 @@
         % PMU.Flag: 3-dimensional matrix indicating PMU
         % measurements flagged by different filter operation (size: number 
         % of data points by number of channels by number of flag bits)        
-    % SigsToFilt: a cell array of strings specifying name of signals to be
-    % filtered
+    % SigsToProc: a cell array of strings specifying name of signals to be
+    % processed
 %
 % Outputs:
     % PMU
 %     
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
-function PMU = UnwrapAngle(PMU,SigsToFilt)
+function PMU = UnwrapAngle(PMU,SigsToProc)
 
 % If specific signals were not listed, apply to all signals 
-if isempty(SigsToFilt)
+if isempty(SigsToProc)
     SigIdx = find(strcmp(PMU.Signal_Unit, 'DEG') | strcmp(PMU.Signal_Unit, 'RAD'));
-    SigsToFilt = PMU.Signal_Name(SigIdx);
+    SigsToProc = PMU.Signal_Name(SigIdx);
 end
 
-for SigIdx = 1:length(SigsToFilt)
-    ThisSig = find(strcmp(PMU.Signal_Name,SigsToFilt{SigIdx}));
+for SigIdx = 1:length(SigsToProc)
+    ThisSig = find(strcmp(PMU.Signal_Name,SigsToProc{SigIdx}));
     % If the specified signal is not in PMUstruct, skip the rest of the
     % code and go to the next SigIdx.
     if isempty(ThisSig)
-        warning(['Signal ' SigsToFilt{SigIdx} ' could not be found.']);
+        warning(['Signal ' SigsToProc{SigIdx} ' could not be found.']);
         continue
     end
     
     if strcmp(PMU.Signal_Unit(ThisSig),'DEG')        
-        PMU.Data(:,ThisSig) = unwrap(PMU.Data(:,ThisSig)*pi/180)*180/pi;
+        PMU.Data(:,ThisSig) = (unwrap(PMU.Data(:,ThisSig)*pi/180))*180/pi;
     elseif strcmp(PMU.Signal_Unit(ThisSig),'RAD') 
         PMU.Data(:,ThisSig) = unwrap(PMU.Data(:,ThisSig));
     else 
-        warning(['Signal ' SigsToFilt{SigIdx} ' is not an angle signal.']);
+        warning(['Signal ' SigsToProc{SigIdx} ' is not an angle signal.']);
         continue
     end       
 end

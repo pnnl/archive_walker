@@ -43,9 +43,8 @@ end
 
 SetZeroPhase  = Parameters.ZeroPhase;
 
-
 % If specific signals were not listed, apply to all signals except 
-% digitals, scalars, and rocof
+% digitals
 if isempty(SigsToFilt)
     SigIdx = find(~strcmp(PMU.Signal_Type, 'D'));
     SigsToFilt = PMU.Signal_Name(SigIdx);
@@ -61,11 +60,10 @@ for SigIdx = 1:length(SigsToFilt)
         continue
     end
     
+    % apply filter operation here
     if strcmp(SetZeroPhase,'TRUE')
         PMU.Data(:,ThisSig) = filtfilt(b,a,PMU.Data(:,ThisSig));
     else
         PMU.Data(:,ThisSig) = filter(b,a,PMU.Data(:,ThisSig));
-    end  
-    
-
+    end
 end

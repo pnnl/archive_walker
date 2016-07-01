@@ -40,7 +40,10 @@
     %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
     %2. data are set to NaN after carrying out all filter operation instead of setting data to NaN after each filter operation
 % Modified June 28, 2016 by Jim Follum:
-    % Added the ability to filter voltage phasors
+    % Added the ability to filter voltage phasors    
+% Modified June 28, 2016 by Urmila Agrawal:
+    % fixed a minor bug for finding the indices of voltage magnitude and
+    % voltage phasor signals
 
 function [PMUstruct,setNaNMatrix] = VoltPhasorFilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix)
 
@@ -51,8 +54,8 @@ FlagBit = str2double(Parameters.FlagBit);
 setNaNmatrixIni = zeros(size(setNaNMatrix));
 % If specific signals were not listed, apply to all voltages
 if isempty(SigsToFilt)
-    VmagIdx = strcmp(cellfun(@GetFirstTwo,PMUstruct.Signal_Type,'UniformOutput',false),'VM');
-    VphasorIdx = strcmp(cellfun(@GetFirstTwo,PMUstruct.Signal_Type,'UniformOutput',false),'VP');
+    VmagIdx = find(strcmp(cellfun(@GetFirstTwo,PMUstruct.Signal_Type,'UniformOutput',false),'VM')); 
+    VphasorIdx = find(strcmp(cellfun(@GetFirstTwo,PMUstruct.Signal_Type,'UniformOutput',false),'VP'));
     SigsToFilt = PMUstruct.Signal_Name([VmagIdx VphasorIdx]);
 end
 
@@ -64,8 +67,7 @@ for SigIdx = 1:length(SigsToFilt)
     if isempty(ThisSig)
         warning(['Signal ' SigsToFilt{SigIdx} ' could not be found.']);
         continue
-    end
-    
+    end    
     
     % Make sure signal is a voltage magnitude or phasor. If not, throw an error.
     if strcmp(PMUstruct.Signal_Type{ThisSig}(1:2), 'VM') || strcmp(PMUstruct.Signal_Type{ThisSig}(1:2), 'VP')

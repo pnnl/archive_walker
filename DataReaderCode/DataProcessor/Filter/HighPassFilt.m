@@ -19,7 +19,7 @@
     % SigsToFilt: a cell array of strings specifying name of signals to be
     % filtered
     % Parameters: a struct array containing user defined paramters for
-    % rational filter
+    % highpass filter
         % Parameters.Order: Order of filter   
         % Parameters.Cutoff: Cutoff frequency in Hz
         % Parameters.ZeroPhase: if TRUE, the output of filter has zero
@@ -39,14 +39,14 @@ t = PMU.Signal_Time.Time_String;
 t1 = t{1};
 Ind1 = findstr(t1, '.');
 T1 = str2num(t1(Ind1:end));
-t11 = t{11};
-Ind11 = findstr(t11, '.');
-T11 = str2num(t11(Ind1:end));
-fs = round(10/(T11 - T1));
-[b,a] = butter(FiltOrder,FiltCutoff/fs,'high');
+t5 = t{5};
+Ind5 = findstr(t5, '.');
+T5 = str2num(t5(Ind5:end));
+fs = round(4/(T5 - T1)); %calculating frequency of signal using time indices of 1st and 5th data point.
+[b,a] = butter(FiltOrder,FiltCutoff/(fs/2),'high');
 
 % If specific signals were not listed, apply to all signals except 
-% digitals, scalars, and rocof
+% digitals
 if isempty(SigsToFilt)
     SigIdx = find(~strcmp(PMU.Signal_Type, 'D'));
     SigsToFilt = PMU.Signal_Name(SigIdx);
@@ -61,9 +61,11 @@ for SigIdx = 1:length(SigsToFilt)
         warning(['Signal ' SigsToFilt{SigIdx} ' could not be found.']);
         continue
     end
+    
+    % apply filter operation here
     if strcmp(SetZeroPhase,'TRUE')
         PMU.Data(:,ThisSig) = filtfilt(b,a,PMU.Data(:,ThisSig));
-    % apply filter operation here
+
     else
         PMU.Data(:,ThisSig) = filter(b,a,PMU.Data(:,ThisSig));
     end 

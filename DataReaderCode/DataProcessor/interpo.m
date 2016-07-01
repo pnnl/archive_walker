@@ -1,9 +1,9 @@
 % function PMUstruct = interpo(PMUstruct,Interpolate)
 % This function interpolates missing data, and flagged data only if user
 % specifies.
-% 
+%
 % Inputs:
-	% PMU: structure in the common format for a single PMU
+    % PMU: structure in the common format for a single PMU
         % PMU.Signal_Type: a cell array of strings specifying
         % signal(s) type in the PMU (size:1 by number of data channel)
         % PMU.Signal_Name: a cell array of strings specifying name of
@@ -13,79 +13,81 @@
         % PMU.Data: Matrix containing PMU measurements (size:
         % number of data points by number of channels in the PMU)
         % PMU.Flag: 3-dimensional matrix indicating PMU
-        % measurements flagged by different filter operation (size: number 
-        % of data points by number of channels by number of flag bits)        
+        % measurements flagged by different filter operation (size: number
+        % of data points by number of channels by number of flag bits)
     % Interpolate: a cell array of user provided information
         % Interpolate.Type: Type of interpolation
         % Interpolate_limit: Limit on the maximmum numebr of consecutive
         % missing data to be interpolated
         % Interpolate.FlagInterp = if TRUE, flagged data are interpolated
         % as well.
+    % SigsToProc: a cell array of strings specifying name of signals to be
+    % finterpolated        
+    % FlagBitInterpo: Flag bit indicating interpolated data
 %
 % Outputs:
     % PMU
-%     
+%
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
-function PMUstruct = interpo(PMUstruct,Interpolate)
-Interpolate_type = Interpolate.Type;
-Interpolate_limit = Interpolate.Limit;
-FlagInterp = Interpolate.FlagInterp;
-FlaBit_Iterp = 2;
-NumPMU = length(PMUstruct.PMU);
+function PMU = interpo(PMU,SigsToInterpo,Parameters,FlagBitInterpo)
+Interpolate_type = Parameters.Type;
+Interpolate_limit = str2num(Parameters.Limit);
+FlagInterp = Parameters.FlagInterp;
 
-for PMUidx = 1:NumPMU
-    [N,NumChan] = size(PMUstruct.PMU(PMUidx).Data);    
-    %     NaNData = find(isnan(PMU(PMUidx).Data));
-    for ChanIdx = 1:NumChan
-        if strcmp(FlagInterp, 'TRUE')
-            InterDataIdx = find(sum(PMUstruct.PMU(PMUidx).Flag(:,ChanIdx,:),3) > 0 | isnan(PMUstruct.PMU(PMUidx).Data(:,ChanIdx)));
-        else 
-            InterDataIdx = find(isnan(PMUstruct.PMU(PMUidx).Data(:,ChanIdx)));
-        end
-%         NaNdata = find(isnan(PMU(PMUidx).Data(:,ChanIdx)));
-%         if isempty(NaNdata)
-%             NaNdata = false(N,1);
-%         end
-%         InterDataIdx = find((NaNdata+FlaggedData)>0);
-        GoodDataIdx = setdiff(1:N,InterDataIdx);
-        %to check the limit
-        % Find the difference between each sequential measurement
-        delta = diff(InterDataIdx);
-        % Find where the difference between measurements was zero, indicating
-        % stale data
-        delta0 = find(delta==1);
-        if ~isempty(delta0)
-            % Find the differences between the (almost) indices of stale data. This
-            % helps identify separate groups of stale data.
-            delta2 = diff(delta0);
-            % Indices of the indices of the start of stale data
-            StartIdx = ([1; find(delta2>1)+1]);
-            % Indices of the indices of the end of stale data (almost)
-            EndIdx = ([find(delta2>1); length(delta0)]);
-            % Duration of the stale data
-            Dur = EndIdx - StartIdx + 1 + 1;
-            LimitIdx = [];
-            for BadGroupIdx = 1:length(Dur)
-                if Dur(BadGroupIdx) > Interpolate_limit
-                    % Indices of continous missing data that exceeds limit
-                    IndExceed = delta0(StartIdx(BadGroupIdx)):delta0(EndIdx(BadGroupIdx))+1;
-                    LimitIdx = [LimitIdx IndExceed];      
-                end
-            end
-            InterDataIdx = setdiff(InterDataIdx, InterDataIdx(LimitIdx));
-        end
-        % Flag missing data that has been interpolated
-        PMU(PMUidx).Flag(InterDataIdx,ChanIdx,FlaBit_Iterp) = true;
-        
-        if strcmp(Interpolate_type,'Linear') && ~isempty(InterDataIdx)
-            PMUstruct.PMU(PMUidx).Data(InterDataIdx,ChanIdx) = interp1(GoodDataIdx, PMU(PMUidx).Data(GoodDataIdx,ChanIdx), InterDataIdx, 'linear');
-            %carry out linear interpolation
-        elseif strcmp(Interpolate_type,'Constant') && ~isempty(InterDataIdx)
-            %carry out constant interpolation
-            PMUstruct.PMU(PMUidx).Data(InterDataIdx,ChanIdx) = interp1(GoodDataIdx, PMU(PMUidx).Data(GoodDataIdx,ChanIdx), InterDataIdx,  'nearest');
-        end
+N = size(PMU.Data,1);
+
+if isempty(SigsToInterpo)
+    SigIdx = find(~strcmp(PMU.Signal_Type, 'D'));
+    SigsToInterpo = PMU.Signal_Name(SigIdx);
+end
+
+for SigIdx = 1:length(SigsToInterpo)
+    ThisSig = find(strcmp(PMU.Signal_Name,SigsToInterpo{SigIdx}));
+    PMUdata = PMU.Data(:,ThisSig);
+    if strcmp(FlagInterp, 'TRUE')
+        InterDataIdx = find(sum(PMU.Flag(:,ThisSig,:),3) > 0 | isnan(PMU.Data(:,ThisSig)));
+    else
+        InterDataIdx = find(isnan(PMU.Data(:,ThisSig)));
     end
+    GoodDataIdx = setdiff(1:N,InterDataIdx);
+    delta = diff(InterDataIdx);
+    % Find where the difference between measurements was zero, indicating
+    % stale data
+    delta0 = find(delta==1);
+    if ~isempty(delta0)
+        delta2 = diff(delta0);
+        % Indices of the indeices of the start of data to be interpolated present in
+        % continous timeframe
+        StartIdx = ([1; find(delta2>1)+1]);
+        % Indices of the indices of the end of data to be interpolated present in
+        % continous timeframe
+        EndIdx = ([find(delta2>1); length(delta0)]);
+        % Duration of the data to be interpolated present in
+        % continous timeframe
+        Dur = EndIdx - StartIdx + 1 + 1;
+        LimitIdx = [];
+        for BadGroupIdx = 1:length(Dur)
+            if Dur(BadGroupIdx) > Interpolate_limit
+                % Indices of data to be interpolated present in continous timeframe that exceeds limit
+                IndExceed = delta0(StartIdx(BadGroupIdx)):delta0(EndIdx(BadGroupIdx))+1;
+                LimitIdx = [LimitIdx IndExceed];
+            end
+        end
+        InterDataIdx = setdiff(InterDataIdx, InterDataIdx(LimitIdx));
+    end
+       
+    if strcmp(Interpolate_type,'Linear') && ~isempty(InterDataIdx)
+        PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'linear');
+        %carry out linear interpolation
+    elseif strcmp(Interpolate_type,'Constant') && ~isempty(InterDataIdx)
+        %carry out constant interpolation
+        PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'nearest');
+    end
+    InterDataInd = find(PMUdata ~= PMU.Data(:,ThisSig) & ~isnan(PMU.Data(:,ThisSig)));
+    
+    % Flag missing data that has been interpolated
+    PMU.Flag(InterDataInd,ThisSig,FlagBitInterpo) = true;    
 end
 end
 

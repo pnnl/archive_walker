@@ -4,13 +4,13 @@
 %
 % Inputs:
 	% PMUstruct: a struct array containing PMU structures     
-        % PMUstruct.PMU.PMU_Name: a string specifying name of PMUs
+        % PMUstruct.PMU.PMU_Name: a cell array of string specifying name of PMUs
         % PMUstruct.PMU(i).Data: Matrix containing data measured by the i^th PMU
         % PMUstruct.PMU(i).Flag: 3-dimensional matrix indicating i^th PMU
         % measurement flagged(size: number of data points by number of
         % channels by number of flag bits)
     % ProcessUnwrap: struct array containing information on angle unwraping operation
-    % (size: 1 by number of filter operation)
+    % (size: 1 by number of angle unwrap operation)
         % ProcessUnwrap{i}.PMU: struct array containing information on PMUs
         % of dimension 1 by number of PMUs
             %ProcessUnwrap{i}.PMU{j}.Name: a string specifying
@@ -27,23 +27,20 @@
 %    
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
     
-function PMUstruct = DPUnwrap(PMUstruct,ProcessUnwrap)
+function PMU = DPUnwrap(PMU,ProcessUnwrap)
 NumUnwraps = length(ProcessUnwrap);
 
-if NumUnwraps == 0
-    NumPMU = length(PMUstruct.PMU);
+if NumUnwraps == 0 % Perform angle wraping operation on all signals in all PMUs
+    NumPMU = length(PMU);
     PMUchans = struct('ChansToFilt',cell(NumPMU,1));
     PMUstructIdx = 1:NumPMU;
     
     for PMUidx = 1:NumPMU
-        PMUstruct.PMU(PMUstructIdx(PMUidx))= UnwrapAngle(PMUstruct.PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt);
+        PMU(PMUstructIdx(PMUidx))= UnwrapAngle(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt);
     end    
 end
         
 if NumUnwraps == 1
-    % By default, the contents of StageStruct.Filter
-    % would not be in a cell array because length is one. This 
-    % makes it so the same indexing can be used in the following for loop.
     ProcessUnwrap = {ProcessUnwrap};
 end
 
@@ -53,30 +50,22 @@ for UnwrapIdx = 1:NumUnwraps
         % Get list of PMUs to apply filter to
         NumPMU = length(ProcessUnwrap{UnwrapIdx}.PMU);
         if NumPMU == 1
-            % By default, the contents of StageStruct.Filter.PMU
-            % would not be in a cell array because length is one. This 
-            % makes it so the same indexing can be used in the following for loop.
             ProcessUnwrap{UnwrapIdx}.PMU = {ProcessUnwrap{UnwrapIdx}.PMU};
         end
         
         PMUstructIdx = zeros(1,NumPMU);
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         for PMUidx = 1:NumPMU
-            % Add the PMU to the list of PMUs to be passed to the
-            % filter.
-            PMUstructIdx(PMUidx) = find(strcmp(ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Name, {PMUstruct.PMU.PMU_Name}));
+           
+            PMUstructIdx(PMUidx) = find(strcmp(ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Name, {PMU.PMU_Name}));
 
             % Get ChansToFilt for this PMU
             % If channels aren't specified, PMUchans(PMUidx).ChansToFilt
             % is left empty to indicate that all channels should be
-            % filtered (appropriate channels are selected within the 
-            % individual filter code)
+            % filtered
             if isfield(ProcessUnwrap{UnwrapIdx}.PMU{PMUidx},'Channel')
                 NumChan = length(ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Channel);
                 if NumChan == 1
-                    % By default, the contents of StageStruct.Filter.PMU.Channel
-                    % would not be in a cell array because length is one. This 
-                    % makes it so the same indexing can be used in the following for loop.
                     ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Channel = {ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Channel};
                 end
 
@@ -87,14 +76,14 @@ for UnwrapIdx = 1:NumUnwraps
             end
         end
     else
-        % Apply this filter to all signals in all PMUs
+        % Perform angle wraping operation on all signals in all PMUs
         NumPMU = length(PMU);
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         PMUstructIdx = 1:NumPMU;
     end
 
     for PMUidx = 1:NumPMU
-        PMUstruct.PMU(PMUstructIdx(PMUidx))= UnwrapAngle(PMUstruct.PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt);
+        PMU(PMUstructIdx(PMUidx))= UnwrapAngle(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt);
     end
     
 end
