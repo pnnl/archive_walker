@@ -179,13 +179,17 @@ for i = 1:nPMU
    
 end
 
-if strcmp(pdatFile(end-3:end),'pdat')
-    % PDAT file
-    PMU = SetNameAndUnit_PDAT(PMU);
-elseif strcmp(pdatFile(end-3:end),'.csv')
-    % CSV file
-%     PMU = SetNameAndUnit_CSV(PMU);
-end
+% This only operates on PDAT (as the name already implied), so there's no
+% need to check. JSIS-CSV are handled by JSIS_CSV_2_Mat.m.
+PMU = SetNameAndUnit_PDAT(PMU);
+
+% if strcmp(pdatFile(end-3:end),'pdat')
+%     % PDAT file
+%     PMU = SetNameAndUnit_PDAT(PMU);
+% elseif strcmp(pdatFile(end-3:end),'.csv')
+%     % CSV file
+% %     PMU = SetNameAndUnit_CSV(PMU);
+% end
 
 
 end

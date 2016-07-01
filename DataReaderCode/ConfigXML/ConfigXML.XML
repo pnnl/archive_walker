@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration>
 	<ReaderProperties>
+        <!--
 		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
+        -->
+        <FileDirectory>C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
         <Mnemonic>WISPDitt</Mnemonic>
         <!--
         <Mode>

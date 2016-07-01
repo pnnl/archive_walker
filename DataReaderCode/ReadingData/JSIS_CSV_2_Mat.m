@@ -223,7 +223,10 @@ PMU.Data = signalData;
 Flag = zeros(m,n,Num_Flags);
 PMU.Flag = Flag;
 
-PMU = SetNameAndUnit_PDAT(PMU); 
+% Unnecessary here, signal types and units are already set. Left over from
+% original PDAT code. (Jim Follum 7/1/16)
+% PMU = SetNameAndUnit_PDAT(PMU); 
+
 %t2 = now;
 %dt = t2-t1;
 % 
