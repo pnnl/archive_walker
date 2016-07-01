@@ -22,17 +22,37 @@ if(isempty(PMUall))
     return;
 end
 
+%% return the input PMU if it already contains needed data time
+T = PMU(1).Signal_Time.Signal_datenum;
+dt = T(end)-T(1);
+dt = dt*24*3600;
+if(dt > secondsNeeded)
+    PMUall{1} = PMU;
+    outPMUall = PMUall;
+    return;
+end
+
+%% return the input PMU if the needed time will not include the last processed PMU
+lastPMU = PMUall{end};
+prevEndT = lastPMU(1).Signal_Time.Signal_datenum(end); % ending time of last processed PMU
+thisEndT = PMU(1).Signal_Time.Signal_datenum(end);     % starting time of this PMU
+dt = thisEndT-prevEndT;
+dt = dt*24*3600;
+if(dt >= secondsNeeded)
+    PMUall{1} = PMU;
+    outPMUall = PMUall;
+    return;
+end
+
 %% add the current PMU to the list, also need to take care of missing files
 % add possible missing files
-lastPMU = PMUall{end};
-lastT = lastPMU(1).Signal_Time.Signal_datenum(end); % ending time of last processed PMU
-thisT = PMU(1).Signal_Time.Signal_datenum(1);     % starting time of this PMU
+thisStartT = PMU(1).Signal_Time.Signal_datenum(1);     % starting time of this PMU
 
-dt = thisT-lastT;
+dt = thisStartT-prevEndT;
 dt = dt*24*3600;
 if(dt > 1) 
     % has more than 1s time gap
-    missingT = (lastT*24*3600:1/60:thisT*24*3600);    
+    missingT = (prevEndT*24*3600:1/60:thisStartT*24*3600);    
     missingT = missingT(2:end-1)/24/3600;
     missingT = missingT';
     missingT_str = datestr(missingT,'yyyy-mm-dd HH:MM:SS.FFF');

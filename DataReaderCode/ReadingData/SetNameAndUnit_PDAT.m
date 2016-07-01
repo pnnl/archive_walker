@@ -112,21 +112,21 @@ for PMUidx = 1:NumPMU
                     if length(SigName{2}) ~= 16
                         warning(['Signal name ' SigName{2} ' does not match convention. Setting signal type to OTHER.']);
                         SigType = 'OTHER';
-                        SigUnit = 'O';
-                    end
-                    
-                    if strcmp(SigName{2}(15:16),'MW')
-                        % Active power
-                        SigType = 'P';
-                        SigUnit = 'MW';
-                    elseif strcmp(SigName{2}(15:16),'MV')
-                        % Reactive power
-                        SigType = 'Q';
-                        SigUnit = 'MVAR';
+                        SigUnit = 'O';                    
                     else
-                        warning(['Signal name ' SigName{2} ' does not match convention. Setting signal type to OTHER.']);
-                        SigType = 'OTHER';
-                        SigUnit = 'O';
+                        if strcmp(SigName{2}(15:16),'MW')
+                            % Active power
+                            SigType = 'P';
+                            SigUnit = 'MW';
+                        elseif strcmp(SigName{2}(15:16),'MV')
+                            % Reactive power
+                            SigType = 'Q';
+                            SigUnit = 'MVAR';
+                        else
+                            warning(['Signal name ' SigName{2} ' does not match convention. Setting signal type to OTHER.']);
+                            SigType = 'OTHER';
+                            SigUnit = 'O';
+                        end
                     end
             end
         else

@@ -1,9 +1,88 @@
 %% convert JSIS-CSV format files to a common matlab structure
+% Inputs:
+	% inFile: input CSV file name
+    % DataXML: structure containing configuration from the input XML file
+        % DataXML.Configuration.Stages: struct array containing
+        % information on filter and customization operation in each stage
+        % (dimension is 1 by number of stages)
+            % DataXML.Configuration.Stages{i}.Filter: array of struct consisting of
+            % information on filter and customization operation in each stage
+            % (dimension is 1 by number of stages)
+                % DataXML.Configuration.Stages{i}.Filter{j}.Parameters.FlagBit:
+                % a string specifying bit to be flagged for j^th filter
+                % operation in i^th stage
 %
+% Outputs:
+    % PMU: struct array of dimension 1 by Number of PMUs
+        % PMU(i).File_Name: a string specifying file name containing i^th PMU data        
+        % PMU(i).PMU_Name: a string specifying name of i^th PMU
+        % PMU(i).Time_zone:  a string specifying time-zone from where data are recorded
+        % PMU(i).Signal_Time: a string specifying time stamp of i^th PMU data
+        % PMU(i).Signal_Name: a cell array of strings specifying name of Signals in i^th PMU
+        % PMU(i).Signal_Type: a cell array of strings specifying type of Signals in i^th PMU
+        % PMU(i).Signal_Unit: a cell array of strings specifying unit of Signals in i^th PMU
+        % PMU(i).Stat: Numerical array specifying status of i^th PMU
+        % PMU(i).Data: Numerical matrix containing data measured by the i^th PMU
+        % PMU(i).Flag: 3-dimensional matrix providing information on the
+        % i^th PMU data that are flagged by different filters
+    % tPMU: numerical array representing time stamp of PMU measurements
+    % Num_Flags: Number of flag bits
+    
 
-function PMU = JSIS_CSV_2_Mat(inFile)
+ % created on June 30, 2016 by Tao Fu
+ % 
+ % Need to do: need a SetNameAndUnit() function for JSIS_CSV input files 
+
+function [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(inFile,DataXML)
+
+   
+% flag
+%to determine maximum number of flags needed
+count = 0;
+NumStages = length(DataXML.Configuration.Stages);
+for StageId = 1:NumStages
+    if isfield(DataXML.Configuration.Stages{StageId},'Filter')
+        NumFilters = length(DataXML.Configuration.Stages{StageId}.Filter);
+        if NumFilters ==1
+            % By default, the contents of StageStruct.Customization
+            % would not be in a cell array because length is one. This
+            % makes it so the same indexing can be used in the following for loop.
+            DataXML.Configuration.Stages{StageId}.Filter = {DataXML.Configuration.Stages{StageId}.Filter};
+        end
+        for FilterIdx = 1:NumFilters
+            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBit')
+                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBit);
+                count = count + 1;
+            end
+        end
+    end
+%     if isfield(DataXML.Configuration.Stages{StageId},'Customization')
+%         NumCusts = length(DataXML.Configuration.Stages{StageId}.Customization);
+%         if NumCusts ==1
+%             % By default, the contents of StageStruct.Customization
+%             % would not be in a cell array because length is one. This
+%             % makes it so the same indexing can be used in the following for loop.
+%             DataXML.Configuration.Stages{StageId}.Customization = {DataXML.Configuration.Stages{StageId}.Customization};
+%         end
+%         for CustIdx = 1:NumCusts
+%             if isfield(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters,'FlagBit')
+%                 Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters.FlagBit);
+%                 count = count + 1;
+%             end
+%         end
+%     end
+end
+
+% add 3 extra flags
+% the first additional bit is flagged when the customized signal uses flagged input signal
+% the second additional input is if the customized signal was not created becasue of some error in user input.
+% the third additional flag is used when the file is missing
+
+Num_Flags = max(Flag_Bit)+3; 
+
+
 %% read in headers
-t1 = now;
+%t1 = now;
 fid = fopen(inFile);
 signalNameStr = fgetl(fid);
 signalTypeStr = fgetl(fid);
@@ -39,6 +118,8 @@ elseif(timeFormat == 0)
         disp('Incorrect JSIS_CSV file name format');              
     end        
 end
+
+tPMU = timeNum;
 
 %% get signal Name, signal type, signal unit, and data
 k = strfind(signalNameStr,',');
@@ -135,15 +216,16 @@ PMU.Signal_Type = signalTypes;
 PMU.Signal_Unit = signalUnits;
 
 % PMU data
-PMU.data = signalData;
+PMU.Data = signalData;
 
 % flag
 [m,n] = size(signalData);
-Flag = zeros(m,n);
+Flag = zeros(m,n,Num_Flags);
 PMU.Flag = Flag;
 
-t2 = now;
-dt = t2-t1;
+PMU = SetNameAndUnit_PDAT(PMU); 
+%t2 = now;
+%dt = t2-t1;
 % 
 
 % outFile = [inFile(1:end-4),'.mat'];

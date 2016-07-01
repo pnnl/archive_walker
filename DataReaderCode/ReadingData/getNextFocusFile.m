@@ -26,6 +26,13 @@
 function [focusFile,done,DataInfo] = getNextFocusFile(DataInfo,flog,debugMode)
 done = 0; % used as a flag to identify the prcessing should be ended
 
+% file type
+if(strcmpi(DataInfo.FileType,'pdat'))
+    fileType = 1;
+elseif(strcmpi(DataInfo.FileType,'csv'))
+    fileType = 2;
+end
+
 % get the next focus file time
 tPMU = DataInfo.tPMU;
 if(tPMU ~= 0)
@@ -53,7 +60,7 @@ if(~strcmp(DataInfo.mode, 'RealTime'))
             % finish processing data, no need to continue
             done = 1;
         elseif(strcmp(DataInfo.mode, 'Hybrid'))
-            % swithch to real time mode
+            % switch to real time mode
             DataInfo.DateTimeEnd = [];
         end
     end
@@ -63,7 +70,13 @@ end
 
      
 % find the name and folder of the focus file
-[focusFileFolder,focusFile] = getPdatFileFolder(DataInfo.FileDirectory,DataInfo.FileMnemonic,focusFileTime);
+if(fileType == 1)
+    % pdat files
+    [focusFileFolder,focusFile] = getPdatFileFolder(DataInfo.FileDirectory,DataInfo.FileMnemonic,focusFileTime);
+elseif(fileType == 2)
+    % csv files
+    [focusFileFolder,focusFile] = getCSVFileFolder(DataInfo.FileDirectory,DataInfo.FileMnemonic,focusFileTime);
+end
 if(debugMode)
     fprintf(flog, 'The next focus file should be: %s\n',focusFile);
     fprintf(flog, 'The next focus file folder should be %s\n', focusFileFolder);
@@ -152,65 +165,80 @@ while(checking == 1)
             % check if future files exist
             % files in the focus folder
             if(exist(focusFileFolder,'dir'))
-                files1 = dir([focusFileFolder,'*.pdat']);
+                if(fileType == 1)
+                    files1 = dir([focusFileFolder,'*.pdat']);
+                elseif(fileType == 2)
+                    files1 = dir([focusFileFolder,'*.csv']);
+                end
                 if(~isempty(files1))
                     files1 = {files1.name};
-                    for i = 1:length(files1)
-                        files1{i} = [focusFileFolder,files1{i}];
-                    end
+                    %for i = 1:length(files1)
+                    %    files1{i} = [focusFileFolder,files1{i}];
+                    %end
+                    files1 = strcat(focusFileFolder,'\',files1); % this is supposed to be faster than a loop
                 else
                     files1 = {};
                 end
-                % files in the next day folder
-                nextDayTime = focusFileTime+1;
-                nextFileFolder = getPdatFileFolder(DataInfo.FileDirectory,DataInfo.FileMnemonic,nextDayTime);
-                files2 = {};
-                if(exist(nextFileFolder,'dir'))
+            else
+                files1 = {};
+            end
+            % files in the next available day folder
+            % nextDayTime = focusFileTime+1;
+            % nextFileFolder = getPdatFileFolder(DataInfo.FileDirectory,DataInfo.FileMnemonic,nextDayTime);
+            nextFileFolder = getNextFutureDayFolder(focusFileFolder,fileType);
+            files2 = {};
+            if(exist(nextFileFolder,'dir'))
+                if(fileType == 1)
                     files2 = dir([nextFileFolder,'*.pdat']);
-                    if(~isempty(files2))
-                        files2 = {files2.name};
-                        for i = 1:length(files2)
-                            files2{i} = [nextFileFolder,files2{i}];
+                elseif(fileType == 2)
+                    files2 = dir([nextFileFolder,'*.csv']);
+                end
+                if(~isempty(files2))
+                    files2 = {files2.name};
+                    %for i = 1:length(files2)
+                    %    files2{i} = [nextFileFolder,files2{i}];
+                    %end
+                    files2 = strcat(nextFileFolder,'\',files2); % this is supposed to be faster than a loop
+                else
+                    files2 = {};
+                end
+            else
+                files2 = {};
+            end
+            files = [files1,files2];
+            if(~isempty(files))
+                % has files in the folder
+                % check if future files exist
+                fileTimes = zeros(1,length(files));
+                for i = 1:length(files)
+                    fileTimes(i) = getPdatFileTime(files{i});
+                end
+                k = find(fileTimes >= focusFileTime);
+                if(~isempty(k))
+                    % future files availabe
+                    futureFileList = files(k);
+                    % start future file count
+                    if(debugMode)
+                        fprintf(flog,'\nFound Future Files - Start FutureCount\n');
+                    end
+                    if(isempty(DataInfo.DateTimeEnd))
+                        pause(FutureWait); % pause in real time mode
+                        if(debugMode)
+                            fprintf(flog, 'in real time mode, paused %f secondes\n',FutureWait);
                         end
                     else
-                        files2 = {};
-                    end
-                end
-                files = [files1,files2];
-                if(~isempty(files))
-                    % has files in the folder
-                    % check if future files exist
-                    fileTimes = zeros(1,length(files));
-                    for i = 1:length(files)
-                        fileTimes(i) = getPdatFileTime(files{i});
-                    end
-                    k = find(fileTimes >= focusFileTime);
-                    if(~isempty(k))
-                        % future files availabe
-                        futureFileList = files(k);
-                        % start future file count
+                        % still in archive mode, no pause
                         if(debugMode)
-                            fprintf(flog,'\nFound Future Files - Start FutureCount\n');
-                        end
-                        if(isempty(DataInfo.DateTimeEnd))
-                            pause(FutureWait); % pause in real time mode
-                            if(debugMode)
-                                fprintf(flog, 'in real time mode, paused %f secondes\n',FutureWait);
-                            end
-                        else
-                            % still in archive mode, no pause
-                            if(debugMode)
-                                fprintf(flog,'In Archive Mode, No pause...\n');
-                            end
-                        end                        
-                        FutureCount = 1;
-                        NoFutureCount = 0;  % set NoFutureCount to 0
-                        if(debugMode)
-                            fprintf(flog,'FutureCount = %d\n',FutureCount);
+                            fprintf(flog,'In Archive Mode, No pause...\n');
                         end
                     end
+                    FutureCount = 1;
+                    NoFutureCount = 0;  % set NoFutureCount to 0
+                    if(debugMode)
+                        fprintf(flog,'FutureCount = %d\n',FutureCount);
+                    end
                 end
-            end
+            end            
         end
         
         %% no future files available

@@ -22,12 +22,17 @@ clc;
 
 debugMode = 1; 
 
+% add several file paths
+addpath('..\ConfigXML');
+addpath('..\DataProcessor');
+addpath('..\DQandCustomization');
+addpath('..\DQandCustomization\DQfilters');
 %XML file
 %XMLFile='ConfigXML2_Hybrid.xml';
 % XMLFile = 'ConfigXML2_RealTime.xml';
 %XMLFile = 'D:\BAWS\codes\New folder\ConfigXML2_Archive.xml';
 % Parse XML file to MATLAB structure
-XMLFile = 'D:\BAWS\BAWS_GIT\DataReaderCode\ConfigXML\ConfigXML3.xml';
+XMLFile = 'ConfigXML_CSV.xml';
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
@@ -99,10 +104,10 @@ end
 
 FileDirectory = DataXML.Configuration.ReaderProperties.FileDirectory;
 FileMnemonic = DataXML.Configuration.ReaderProperties.Mnemonic;
-FilePath = [FileDirectory '\' FileMnemonic];
+% FilePath = [FileDirectory '\' FileMnemonic];
 
-FileDate = datestr(DateTimeStart(1:19),'_yyyymmdd_HHMMSS');
-FileName = [FilePath FileDate '.pdat'];
+% FileDate = datestr(DateTimeStart(1:19),'_yyyymmdd_HHMMSS');
+% FileName = [FilePath FileDate '.pdat'];
 
 %% put data into a strucutre
 flog = fopen('BAWS_processing_log.txt','w');
@@ -110,6 +115,7 @@ fprintf(flog, '********************************************************\n');
 DataInfo.mode = DataXML.Configuration.ReaderProperties.Mode.Name;
 DataInfo.FileDirectory = FileDirectory;
 DataInfo.FileMnemonic = FileMnemonic;
+DataInfo.FileType = DataXML.Configuration.ReaderProperties.FileType;
 
 if(strcmp(DataInfo.mode, 'Archive'))
     fprintf(flog,'Mode = Archive\n');
@@ -199,7 +205,12 @@ while(~done)
            % Create the PMU structure
            DataInfo.lastFocusFile = focusFile;
            DataInfo.tPMU = 0;
-           [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
+           if(strcmpi(DataInfo.FileType, 'pdat'))
+               % pdat format                  
+               [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
+           elseif(strcmpi(DataInfo.FileType, 'csv'))
+               [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
+           end
            % Apply data quality filters and signal customizations
             PMU = DQandCustomization(PMU,DataXML,NumStages,Num_Flags);
            % Return only the desired PMUs and signals
