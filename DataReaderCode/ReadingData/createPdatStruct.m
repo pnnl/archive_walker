@@ -37,6 +37,12 @@
 %
 % updated on June 24, 2016 by Tao Fu
 %   add one flag for missing file in Num_Flags
+%
+% updted on 7/5, 2016 by Tao Fu
+%   added one flag for non-value data points in the input file, which was
+%   only seen in JSIS-CSV input files
+%
+
 
 function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
 
@@ -97,9 +103,10 @@ end
 % add 3 extra flags
 % the first additional bit is flagged when the customized signal uses flagged input signal
 % the second additional input is if the customized signal was not created becasue of some error in user input.
-% the third additional flag is used when the file is missing
+% the third additional flag is used when data points are not values
+% the forth additional flag is used when the file is missing
 
-Num_Flags = max(Flag_Bit)+3; 
+Num_Flags = max(Flag_Bit)+4; 
 
 for i = 1:nPMU
    % for each PMU
