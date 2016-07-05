@@ -32,6 +32,11 @@
  % created on June 30, 2016 by Tao Fu
  % 
  % Need to do: need a SetNameAndUnit() function for JSIS_CSV input files 
+ 
+ % updated on July 5, 2016 by Tao Fu
+ %  1. added one flag bit for non-value data points
+ %  2. modified the code to speed up data reading
+ %
 
 function [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(inFile,DataXML)
 
@@ -76,9 +81,10 @@ end
 % add 3 extra flags
 % the first additional bit is flagged when the customized signal uses flagged input signal
 % the second additional input is if the customized signal was not created becasue of some error in user input.
-% the third additional flag is used when the file is missing
+% the third additional flag is used when data points are not values
+% the forth additional flag is used when the file is missing
 
-Num_Flags = max(Flag_Bit)+3; 
+Num_Flags = max(Flag_Bit)+4; 
 
 
 %% read in headers
@@ -91,7 +97,7 @@ signalDespStr = fgetl(fid);
 
 
 %% read in data
-data = readtable(inFile,'HeaderLines',3);
+data = readtable(inFile,'HeaderLines',3,'TreatAsEmpty',{'.','NA','N/A','#VALUE!'} );
 
 %% identify the format of time and get time information
 T1 = data{1,1};
@@ -222,6 +228,17 @@ PMU.Data = signalData;
 [m,n] = size(signalData);
 Flag = zeros(m,n,Num_Flags);
 PMU.Flag = Flag;
+
+% update flag if there are data points that were set to strings or empty
+[row, col] = find(isnan(signalData));
+if(~isempty(row))
+    % has data points that were set to strings or empty
+    flag = zeros(m,n);
+    idx = sub2ind(size(flag), row, col);  % convert row and col to matlab linear indices
+    flag(idx) = 1;
+    PMU.Flag(:,:,end-1) = flag;      
+end
+    
 
 % Unnecessary here, signal types and units are already set. Left over from
 % original PDAT code. (Jim Follum 7/1/16)

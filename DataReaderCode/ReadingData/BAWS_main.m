@@ -27,6 +27,7 @@ addpath('..\ConfigXML');
 addpath('..\DataProcessor');
 addpath('..\DQandCustomization');
 addpath('..\DQandCustomization\DQfilters');
+addpath('..\');
 %XML file
 %XMLFile='ConfigXML2_Hybrid.xml';
 % XMLFile = 'ConfigXML2_RealTime.xml';
