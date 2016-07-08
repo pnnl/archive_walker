@@ -65,15 +65,15 @@ end
 % Processing is done in stages. Each stage is composed of a filtering step
 % and a multirate step.
 if isfield(ProcessXML.Configuration.Processing,'Stages')
-    NumProcessingStages = length(ProcessXML.Configuration.Processing.Stages);
-    if NumProcessingStages == 1
-        % By default, the contents of ProcessXML.Configuration.Processing.Stages would not be
+    NumDQandCustomStages = length(DataXML.Configuration.Stages);
+    if NumDQandCustomStages == 1
+        % By default, the contents of DataXML.Configuration.Stages would not be
         % in a cell array because length is one. This makes it so the same
         % indexing can be used in the following for loop.
-        ProcessXML.Configuration.Processing.Stages = {ProcessXML.Configuration.Processing.Stages};
+        DataXML.Configuration.Stages = {DataXML.Configuration.Stages};
     end
 else
-    NumProcessingStages = 0;
+    NumDQandCustomStages = 0;
 end
 
 % Get parameters for the operation mode
@@ -250,17 +250,14 @@ while(~done)
             % Concatenate all the PMU structures on the list into one PMU structure for prcessing
             concatPMU = ConcatenatePMU(PMUall);            
             
-           % **********
-           % Processing
-           % **********
-           concatPMU = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo);
-           % Return only the desired PMUs and signals
-           concatPMU = GetOutputSignals(concatPMU,ProcessXML);
-           
            % *********
            % Detection
            % *********
-           DetectionResults = RunDetection(concatPMU,DetectorXML);
+           % Processing (need to code)
+           concatPMU = DataProcessor(concatPMU, ProcessXML, NumDQandCustomStages,FlagBitInterpo);
+           % Return only the desired PMUs and signals
+           PMUall = GetOutputSignals(PMUall,ProcessXML);
+           % Detection (need to code)
            
            %% update some information
            DataInfo.tPMU = tPMU;
