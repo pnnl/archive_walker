@@ -16,11 +16,9 @@
 
 
 %prepare workspace
-% close all;
-% clear all;
-% clc;
-
-clear;
+close all;
+clear all;
+clc;
 
 debugMode = 1; 
 
@@ -260,7 +258,7 @@ while(~done)
            % *********
            % Detection
            % *********
-           DetectionResults = RunDetection(concatPMU,DetectorXML);
+%            DetectionResults = RunDetection(concatPMU,DetectorXML);
            
            %% update some information
            DataInfo.tPMU = tPMU;
