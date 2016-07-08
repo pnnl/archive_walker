@@ -1,0 +1,10 @@
+Package: FODetection
+Type: Package
+Title: FODetection
+Version: 2016.06.06
+Date: 2016-06-06
+Author: Jim Follum
+Maintainer: Jim Follum <james.follum@pnnl.gov>
+Description: FO Detection
+License: PNNL 
+Roxygen: list(wrap = FALSE)
