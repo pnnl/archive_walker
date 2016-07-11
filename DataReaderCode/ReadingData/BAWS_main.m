@@ -34,7 +34,7 @@ addpath('..\DQandCustomization\DQfilters');
 addpath('..\');
 
 %XML file
-XMLFile = 'ConfigXML3.xml';
+XMLFile = 'ConfigXML.xml';
 %XMLFile = 'ConfigXML_CSV.xml';
 
 % Parse XML file to MATLAB structure
@@ -259,7 +259,7 @@ while(~done)
            % **********
            concatPMU = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo);
            % Return only the desired PMUs and signals
-           concatPMU = GetOutputSignals(concatPMU,ProcessXML);
+           concatPMU = GetOutputSignals(concatPMU.PMU,ProcessXML);
            
            % *********
            % Detection

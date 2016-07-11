@@ -218,36 +218,40 @@
     <SignalSelection>
         <PMU>
             <Name>ALSN 500 A1 SA  </Name>
-            <Channel>
-                <Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
-            </Channel>
-            <Channel>
-                <Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
-            </Channel>
-            <Channel>
-                <Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
-            </Channel>
-            <Channel>
-                <Name>ALSN new</Name>
-            </Channel>
+            <Channels>
+		<Channel>
+                	<Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+            	</Channel>
+            	<Channel>
+                	<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+            	</Channel>
+            	<Channel>
+                	<Name>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Name>
+            	</Channel>
+            </Channels>
         </PMU>
         <PMU>
             <Name>JDAY 500  A1 SA </Name>
-            <Channel>
-                <Name>JDAY 500  A1 SA .B500EAST_____1VP.MAG</Name>
-            </Channel>
-            <Channel>
-                <Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
-            </Channel>
-            <Channel>
-                <Name>JDAY 500  A1 SA .B500EAST_____1VA.MAG</Name>
-            </Channel>
-            <Channel>
-                <Name>ALSN new</Name>
-            </Channel>
+            <Channels>
+            	<Channel>
+                	<Name>JDAY 500  A1 SA .B500EAST_____1VP.MAG</Name>
+            	</Channel>
+            	<Channel>
+                	<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+            	</Channel>
+            	<Channel>
+                	<Name>JDAY 500  A1 SA .B500EAST_____1VA.MAG</Name>
+            	</Channel>
+            </Channels>
         </PMU>
         <PMU>
             <Name>Custom Signals</Name>
+        </PMU>
+	<PMU>
+            <Name>ALSN5</Name>
+        </PMU>
+	<PMU>
+            <Name>JDAY4</Name>
         </PMU>
     </SignalSelection>
 </Configuration>
