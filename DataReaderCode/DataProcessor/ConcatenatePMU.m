@@ -14,14 +14,18 @@
 % Modified on June 24, 2016 by Tao Fu
 %   modified to use a PMU strucuture cell list as input 
 %
+% Modified on July 11, 2016 by Tao Fu
+%   deleted the added part when NUMPMUstrucutre = 1 to match output data
+%   strucuter format
+%
 
 function ConcateStruct = ConcatenatePMU(DataProcessorStruct,FlagBitInput,NumFlags)
 NumPMUstruct = length(DataProcessorStruct);
-if(NumPMUstruct == 1)
-    % only 1 PMU structure array in the list
-    ConcateStruct = DataProcessorStruct;
-    return;
-end
+% if(NumPMUstruct == 1)
+%     % only 1 PMU structure array in the list
+%     ConcateStruct = DataProcessorStruct;
+%     return;
+% end
 
 NumPMU = length(DataProcessorStruct{1});
 %% Concatenating PMU structure

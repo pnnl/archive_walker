@@ -13,6 +13,10 @@
 %   2. removed fields that keeps processed data information in the DataInfo struture; 
 %   3. added functions to put output PMU structure in a cell array
 %   
+% Updated July 11, 2016 by Urmila Agrawal
+%   added 3 variables: flagBitInput, FlagBitInterpo, and NumFlags, which
+%   would bed used by concatenatePMU() and DataProcessor()
+%
 
 
 %prepare workspace
@@ -28,12 +32,12 @@ addpath('..\DataProcessor');
 addpath('..\DQandCustomization');
 addpath('..\DQandCustomization\DQfilters');
 addpath('..\');
+
 %XML file
-%XMLFile='ConfigXML2_Hybrid.xml';
-% XMLFile = 'ConfigXML2_RealTime.xml';
-%XMLFile = 'D:\BAWS\codes\New folder\ConfigXML2_Archive.xml';
+XMLFile = 'ConfigXML3.xml';
+%XMLFile = 'ConfigXML_CSV.xml';
+
 % Parse XML file to MATLAB structure
-XMLFile = 'ConfigXML_CSV.xml';
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
@@ -196,7 +200,9 @@ DataInfo.secondesToConcat = str2double(ProcessXML.Configuration.Processing.Secon
 PMUall = {};
 oneMinuteEmptyPMU = [];
 emptyPMUexist = 0;
-
+FlagBitInput = 1; %Bit used to indicate flagged input data to be processed
+FlagBitInterpo = 2; %Bit used to indicate data is interpolated
+NumFlags = 2; % Number of bits used to indicate processed data that has been flagged
 %% processing files
 while(~done)
    [focusFile,done,outDataInfo] = getNextFocusFile(DataInfo,flog,debugMode);
@@ -246,7 +252,7 @@ while(~done)
             PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
             
             % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-            concatPMU = ConcatenatePMU(PMUall);            
+            concatPMU = ConcatenatePMU(PMUall,FlagBitInput,NumFlags);            
             
            % **********
            % Processing
