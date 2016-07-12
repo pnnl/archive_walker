@@ -17,6 +17,10 @@
     % PMUstruct
 %    
 %Created by
+%
+% Updated on July 11, 2016 by Tao Fu
+%   updated the code to handle more than one digital signals with signal names dig1, dig2, ...   
+%
 
 function PMUstruct = SetNameAndUnit_PDAT(PMUstruct)
 
@@ -94,40 +98,39 @@ for PMUidx = 1:NumPMU
             end
         elseif length(SigName) == 2
             % Not a phasor
-            switch SigName{2}
-                case 'frq'
-                    % Frequency signal
-                    SigType = 'F';
-                    SigUnit = 'Hz';
-                case 'rocof'
-                    % Rate of change of frequency signal
-                    SigType = 'RCF';
-                    SigUnit = 'mHz/sec';
-                case 'dig'
+            if(strcmp(SigName{2}, 'frq'))
+                % Frequency signal
+                SigType = 'F';
+                SigUnit = 'Hz';
+            elseif(strcmp(SigName{2},'rocof'))
+                % Rate of change of frequency signal
+                SigType = 'RCF';
+                SigUnit = 'mHz/sec';
+            elseif(strfind(SigName{2}, 'dig'))
                     % Digital signal
                     SigType = 'D';
                     SigUnit = 'D';
-                otherwise
-                    % Analog - either active or reactive power
-                    if length(SigName{2}) ~= 16
+            else
+                % Analog - either active or reactive power
+                if length(SigName{2}) ~= 16
+                    warning(['Signal name ' SigName{2} ' does not match convention. Setting signal type to OTHER.']);
+                    SigType = 'OTHER';
+                    SigUnit = 'O';
+                else
+                    if strcmp(SigName{2}(15:16),'MW')
+                        % Active power
+                        SigType = 'P';
+                        SigUnit = 'MW';
+                    elseif strcmp(SigName{2}(15:16),'MV')
+                        % Reactive power
+                        SigType = 'Q';
+                        SigUnit = 'MVAR';
+                    else
                         warning(['Signal name ' SigName{2} ' does not match convention. Setting signal type to OTHER.']);
                         SigType = 'OTHER';
-                        SigUnit = 'O';                    
-                    else
-                        if strcmp(SigName{2}(15:16),'MW')
-                            % Active power
-                            SigType = 'P';
-                            SigUnit = 'MW';
-                        elseif strcmp(SigName{2}(15:16),'MV')
-                            % Reactive power
-                            SigType = 'Q';
-                            SigUnit = 'MVAR';
-                        else
-                            warning(['Signal name ' SigName{2} ' does not match convention. Setting signal type to OTHER.']);
-                            SigType = 'OTHER';
-                            SigUnit = 'O';
-                        end
+                        SigUnit = 'O';
                     end
+                end
             end
         else
             warning(['Signal name ' PMUstruct(PMUidx).Signal_Name{SigIdx} ' does not match convention. Setting signal type to OTHER.']);

@@ -31,6 +31,8 @@ addpath('..\ConfigXML');
 addpath('..\DataProcessor');
 addpath('..\DQandCustomization');
 addpath('..\DQandCustomization\DQfilters');
+addpath('..\DataProcessor\Filter');
+addpath('..\DQandCustomization\SignalCustomization');
 addpath('..\');
 
 %XML file
@@ -259,7 +261,7 @@ while(~done)
            % **********
            concatPMU = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo);
            % Return only the desired PMUs and signals
-           concatPMU = GetOutputSignals(concatPMU.PMU,ProcessXML);
+           % concatPMU = GetOutputSignals(concatPMU.PMU,ProcessXML);
            
            % *********
            % Detection

@@ -42,7 +42,10 @@
 %   added one flag for non-value data points in the input file, which was
 %   only seen in JSIS-CSV input files
 %
-
+% Updated on July 11, 2016 by Tao Fu
+%   modified to handle the case that there are more than 1 digital signal in a PMM
+%   digital signals are names as dig1, dig2, ...
+%
 
 function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
 
@@ -164,10 +167,12 @@ for i = 1:nPMU
    end
    
    % set digital signal type and unit
-   idx = nSignals.phsr+nSignals.anlg+1;     % index for the digital signal column
-   PMU(i).Signal_Type{idx} = 'D';
-   PMU(i).Signal_Unit{idx} = 'D';
-      
+   for m = 1:nSignals.dig
+       idx = nSignals.phsr+nSignals.anlg+m;     % index for the digital signal column
+       PMU(i).Signal_Type{idx} = 'D';
+       PMU(i).Signal_Unit{idx} = 'D';
+   end
+   
    % get frequency and rocof
    freqData = currPMUData.frq;
    rocofData = currPMUData.rocof;
@@ -247,7 +252,13 @@ if(isfield(currPMUConfig,'dig'))
     
 %    end
     % used one name for digital signal
-    digNames = {[currPMUName,'.dig']};
+    % digNames = {[currPMUName,'.dig']};
+    
+    % give name to each digital signal
+    for i = 1:length(dig)
+       digNames{i} = [currPMUName,'.dig',num2str(i)]; 
+    end
+    
 else
     digNames = {};
 end
