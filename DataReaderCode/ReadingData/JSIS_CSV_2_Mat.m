@@ -29,63 +29,29 @@
     % Num_Flags: Number of flag bits
     
 
- % created on June 30, 2016 by Tao Fu
- % 
- % Need to do: need a SetNameAndUnit() function for JSIS_CSV input files 
+% created on June 30, 2016 by Tao Fu
+% 
+% Need to do: need a SetNameAndUnit() function for JSIS_CSV input files 
  
- % updated on July 5, 2016 by Tao Fu
- %  1. added one flag bit for non-value data points
- %  2. modified the code to speed up data reading
- %  3. fixed PMU name
- %
+% updated on July 5, 2016 by Tao Fu
+%  1. added one flag bit for non-value data points
+%  2. modified the code to speed up data reading
+%  3. fixed PMU name
+%
+% updated July 12, 2016 by Tao Fu
+%   deleted counting the maximum number of flags that will be needed
+%   (Flag_Bit), which is implemented in BAWS_main() now.
+%
+
 
 function [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(inFile,DataXML)
 
-   
-% flag
-%to determine maximum number of flags needed
-count = 0;
-NumStages = length(DataXML.Configuration.Stages);
-for StageId = 1:NumStages
-    if isfield(DataXML.Configuration.Stages{StageId},'Filter')
-        NumFilters = length(DataXML.Configuration.Stages{StageId}.Filter);
-        if NumFilters ==1
-            % By default, the contents of StageStruct.Customization
-            % would not be in a cell array because length is one. This
-            % makes it so the same indexing can be used in the following for loop.
-            DataXML.Configuration.Stages{StageId}.Filter = {DataXML.Configuration.Stages{StageId}.Filter};
-        end
-        for FilterIdx = 1:NumFilters
-            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBit')
-                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBit);
-                count = count + 1;
-            end
-        end
-    end
-%     if isfield(DataXML.Configuration.Stages{StageId},'Customization')
-%         NumCusts = length(DataXML.Configuration.Stages{StageId}.Customization);
-%         if NumCusts ==1
-%             % By default, the contents of StageStruct.Customization
-%             % would not be in a cell array because length is one. This
-%             % makes it so the same indexing can be used in the following for loop.
-%             DataXML.Configuration.Stages{StageId}.Customization = {DataXML.Configuration.Stages{StageId}.Customization};
-%         end
-%         for CustIdx = 1:NumCusts
-%             if isfield(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters,'FlagBit')
-%                 Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters.FlagBit);
-%                 count = count + 1;
-%             end
-%         end
-%     end
-end
-
-% add 3 extra flags
+% add 4 extra flags
 % the first additional bit is flagged when the customized signal uses flagged input signal
 % the second additional input is if the customized signal was not created becasue of some error in user input.
 % the third additional flag is used when data points are not values
 % the forth additional flag is used when the file is missing
-
-Num_Flags = max(Flag_Bit)+4; 
+Num_Flags = max(DataXML.Flag_Bit)+4; 
 
 
 %% read in headers
