@@ -288,13 +288,8 @@ while(~done)
            % **********************
            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
             
-<<<<<<< HEAD
            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-           concatPMU = ConcatenatePMU(PMUall);            
-=======
-            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-            concatPMU = ConcatenatePMU(PMUall,FlagBitInput,NumFlags);            
->>>>>>> 4b240b37399d4c35e627a3d1dbe58dc82ce4ec8b
+           concatPMU = ConcatenatePMU(PMUall,FlagBitInput,NumFlags);            
             
            % **********
            % Processing
