@@ -13,6 +13,14 @@
 %   2. removed fields that keeps processed data information in the DataInfo struture; 
 %   3. added functions to put output PMU structure in a cell array
 %   
+% Updated July 11, 2016 by Urmila Agrawal
+%   added 3 variables: flagBitInput, FlagBitInterpo, and NumFlags, which
+%   would bed used by concatenatePMU() and DataProcessor()
+%
+% Updated July 12, 2016 by Tao Fu
+%   moved counting the maximum number of flags that will be needed
+%   (Flag_Bit) from createPdatStruct() and JSIS_CSV_2_Mat() to this script
+% 
 
 
 %prepare workspace
@@ -27,13 +35,15 @@ addpath('..\ConfigXML');
 addpath('..\DataProcessor');
 addpath('..\DQandCustomization');
 addpath('..\DQandCustomization\DQfilters');
+addpath('..\DataProcessor\Filter');
+addpath('..\DQandCustomization\SignalCustomization');
 addpath('..\');
+
 %XML file
-%XMLFile='ConfigXML2_Hybrid.xml';
-% XMLFile = 'ConfigXML2_RealTime.xml';
-%XMLFile = 'D:\BAWS\codes\New folder\ConfigXML2_Archive.xml';
+XMLFile = 'ConfigXML.xml';
+%XMLFile = 'ConfigXML_CSV.xml';
+
 % Parse XML file to MATLAB structure
-XMLFile = 'ConfigXML_CSV.xml';
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
@@ -125,7 +135,35 @@ FileMnemonic = DataXML.Configuration.ReaderProperties.Mnemonic;
 % FileDate = datestr(DateTimeStart(1:19),'_yyyymmdd_HHMMSS');
 % FileName = [FilePath FileDate '.pdat'];
 
-%% put data into a strucutre
+%% identify the maximum number of flags that will be needed
+
+% set the counter
+count = 0;
+% get the number of filtering stages
+NumStages = length(DataXML.Configuration.Stages);
+for StageId = 1:NumStages
+    if isfield(DataXML.Configuration.Stages{StageId},'Filter')
+        % number of filters used in this stage
+        NumFilters = length(DataXML.Configuration.Stages{StageId}.Filter);
+        if NumFilters ==1
+            % By default, the contents of StageStruct.Customization
+            % would not be in a cell array because length is one. This
+            % makes it so the same indexing can be used in the following for loop.
+            DataXML.Configuration.Stages{StageId}.Filter = {DataXML.Configuration.Stages{StageId}.Filter};
+        end
+        for FilterIdx = 1:NumFilters
+            % count filters that used FlagBit as a parameter
+            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBit')
+                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBit);
+                count = count + 1;
+            end
+        end
+    end
+end
+% save Flag_Bit information into DataXML structure
+DataXML.Flag_Bit = Flag_Bit;
+
+%% put some DATAXML information into a strucutre, which will be used in looking for the next focus file
 flog = fopen('BAWS_processing_log.txt','w');
 fprintf(flog, '********************************************************\n');
 DataInfo.mode = DataXML.Configuration.ReaderProperties.Mode.Name;
@@ -192,10 +230,13 @@ end
 %% flag for processed files
 DataInfo.tPMU = 0;  % time of the last measurement in the last processed file
 DataInfo.lastFocusFile = ''; % last focus file
-DataInfo.secondesToConcat = str2double(ProcessXML.Configuration.Processing.SecondsToConcat);
-PMUall = {};
-oneMinuteEmptyPMU = [];
-emptyPMUexist = 0;
+DataInfo.secondesToConcat = str2double(ProcessXML.Configuration.Processing.SecondsToConcat);    % seconds of PMUs that need to be concatenated
+PMUall = {}; % used to hold PMUs for concatenation
+oneMinuteEmptyPMU = []; % a one minute empty PMU used for missing minutes
+emptyPMUexist = 0;   % a flag used to identify if oneMinuteEmptyPMU exists
+FlagBitInput = 1; %Bit used to indicate flagged input data to be processed
+FlagBitInterpo = 2; %Bit used to indicate data is interpolated
+NumFlags = 2; % Number of bits used to indicate processed data that has been flagged
 
 %% processing files
 while(~done)
@@ -212,6 +253,7 @@ while(~done)
            while(~attr.UserWrite)
                % pause 0.5 seconds when the file is still being written
                pause(0.5);
+               % check if the file is ready for reading
                [stat,attr] = fileattrib(focusFile);
            end
            
@@ -225,6 +267,7 @@ while(~done)
                % pdat format                  
                [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
            elseif(strcmpi(DataInfo.FileType, 'csv'))
+               % JSIS_CSV format
                [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
            end
            % Apply data quality filters and signal customizations
@@ -234,7 +277,7 @@ while(~done)
            
            % Create an empty one minute PMU data structure for later use
            % after processing the first file
-           % this only need to be called onece
+           % this only needs to be called once
            if(~emptyPMUexist)                  
                oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
                emptyPMUexist = 1;
@@ -245,15 +288,20 @@ while(~done)
            % **********************
            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
             
+<<<<<<< HEAD
            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
            concatPMU = ConcatenatePMU(PMUall);            
+=======
+            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
+            concatPMU = ConcatenatePMU(PMUall,FlagBitInput,NumFlags);            
+>>>>>>> 4b240b37399d4c35e627a3d1dbe58dc82ce4ec8b
             
            % **********
            % Processing
            % **********
            concatPMU = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo);
            % Return only the desired PMUs and signals
-           concatPMU = GetOutputSignals(concatPMU,ProcessXML);
+           concatPMU = GetOutputSignals(concatPMU.PMU,ProcessXML);
            
            % *********
            % Detection
@@ -280,14 +328,14 @@ while(~done)
            end
        catch msg1
            % failed to process the focus file           
-           fprintf(flog, 'Could not process the current PMU dta file: %s\n',focusFile);
+           fprintf(flog, 'Could not process the current PMU data file: %s\n',focusFile);
            fprintf(flog, '    %s\n',msg1.message);           
            
            % stop processing files
            done = 1;
            
            % throw the error message
-           str = ['Could not process the current PMU dta file: ',focusFile];
+           str = ['Could not process the current PMU data file: ',focusFile];
            disp(str);           
            error(msg1.message);
            

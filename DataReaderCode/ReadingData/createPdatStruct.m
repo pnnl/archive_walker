@@ -42,6 +42,14 @@
 %   added one flag for non-value data points in the input file, which was
 %   only seen in JSIS-CSV input files
 %
+% Updated on July 11, 2016 by Tao Fu
+%   modified to handle the case that there are more than 1 digital signal in a PMM
+%   digital signals are names as dig1, dig2, ...
+%
+% updated July 12, 2016 by Tao Fu
+%   deleted counting the maximum number of flags that will be needed
+%   (Flag_Bit), which is implemented in BAWS_main() now.
+%
 
 
 function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
@@ -51,62 +59,23 @@ function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
 nPMU = config.numPMUs;  %number of PMUs
 pmuNames = config.pmuNames; % PMU names
 
-% get time 
+% get time of 
 t = (data.SOC+data.fracSec/config.timeBase)/86400 + datenum(1970,1,1); 
 
-N = length(pdatFile);
-t = datenum(str2num(pdatFile(N-19:N-16)),str2num(pdatFile(N-15:N-14)),str2num(pdatFile(N-13:N-12)),...
-    str2num(pdatFile(N-10:N-9)),str2num(pdatFile(N-8:N-7)),str2num(pdatFile(N-6:N-5)));
-t = t + (0:1/60:(60-1/60))/3600/24;
+% N = length(pdatFile);
+% t = datenum(str2num(pdatFile(N-19:N-16)),str2num(pdatFile(N-15:N-14)),str2num(pdatFile(N-13:N-12)),...
+%     str2num(pdatFile(N-10:N-9)),str2num(pdatFile(N-8:N-7)),str2num(pdatFile(N-6:N-5)));
+% t = t + (0:1/60:(60-1/60))/3600/24;
 
 tPMU = t;
 t_str = datestr(t,'yyyy-mm-dd HH:MM:SS.FFF');
 
-   
-% flag
-%to determine maximum number of flags needed
-count = 0;
-NumStages = length(DataXML.Configuration.Stages);
-for StageId = 1:NumStages
-    if isfield(DataXML.Configuration.Stages{StageId},'Filter')
-        NumFilters = length(DataXML.Configuration.Stages{StageId}.Filter);
-        if NumFilters ==1
-            % By default, the contents of StageStruct.Customization
-            % would not be in a cell array because length is one. This
-            % makes it so the same indexing can be used in the following for loop.
-            DataXML.Configuration.Stages{StageId}.Filter = {DataXML.Configuration.Stages{StageId}.Filter};
-        end
-        for FilterIdx = 1:NumFilters
-            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBit')
-                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBit);
-                count = count + 1;
-            end
-        end
-    end
-%     if isfield(DataXML.Configuration.Stages{StageId},'Customization')
-%         NumCusts = length(DataXML.Configuration.Stages{StageId}.Customization);
-%         if NumCusts ==1
-%             % By default, the contents of StageStruct.Customization
-%             % would not be in a cell array because length is one. This
-%             % makes it so the same indexing can be used in the following for loop.
-%             DataXML.Configuration.Stages{StageId}.Customization = {DataXML.Configuration.Stages{StageId}.Customization};
-%         end
-%         for CustIdx = 1:NumCusts
-%             if isfield(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters,'FlagBit')
-%                 Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Customization{CustIdx}.Parameters.FlagBit);
-%                 count = count + 1;
-%             end
-%         end
-%     end
-end
-
-% add 3 extra flags
+% add 4 extra flags
 % the first additional bit is flagged when the customized signal uses flagged input signal
 % the second additional input is if the customized signal was not created becasue of some error in user input.
 % the third additional flag is used when data points are not values
 % the forth additional flag is used when the file is missing
-
-Num_Flags = max(Flag_Bit)+4; 
+Num_Flags = max(DataXML.Flag_Bit)+4; 
 
 for i = 1:nPMU
    % for each PMU
@@ -164,10 +133,12 @@ for i = 1:nPMU
    end
    
    % set digital signal type and unit
-   idx = nSignals.phsr+nSignals.anlg+1;     % index for the digital signal column
-   PMU(i).Signal_Type{idx} = 'D';
-   PMU(i).Signal_Unit{idx} = 'D';
-      
+   for m = 1:nSignals.dig
+       idx = nSignals.phsr+nSignals.anlg+m;     % index for the digital signal column
+       PMU(i).Signal_Type{idx} = 'D';
+       PMU(i).Signal_Unit{idx} = 'D';
+   end
+   
    % get frequency and rocof
    freqData = currPMUData.frq;
    rocofData = currPMUData.rocof;
@@ -247,7 +218,13 @@ if(isfield(currPMUConfig,'dig'))
     
 %    end
     % used one name for digital signal
-    digNames = {[currPMUName,'.dig']};
+    % digNames = {[currPMUName,'.dig']};
+    
+    % give name to each digital signal
+    for i = 1:length(dig)
+       digNames{i} = [currPMUName,'.dig',num2str(i)]; 
+    end
+    
 else
     digNames = {};
 end
