@@ -1,8 +1,1 @@
 ********************************************************
-Mode = Archive
-DateTimeStart =  2015-10-17 12:30:00
-DateTimeEnd  =   2015-10-17 12:35:00
-********************************************************
-
-
-The current PMU file is: C:\Users\foll154\Documents\BPA Oscillation App\ToGit\OriginalData\2015\151017\WISPDitt_20151017_123000.pdat

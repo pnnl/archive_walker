@@ -24,9 +24,10 @@
 
 
 %prepare workspace
-close all;
-clear all;
-clc;
+% close all;
+% clear all;
+% clc;
+clear;
 
 debugMode = 1; 
 

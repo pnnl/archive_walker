@@ -4,13 +4,19 @@ function [DetectionResults, AdditionalOutput] = OutOfRangeVoltageDetector(PMUstr
 % stored in cell arrays. Also returns a time vector t with units of seconds
 % and the sampling rate fs.
 try
-    [Data, DataPMU, DataChannel, t, fs] = ExtractData(PMUstruct,Parameters);
+    [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs] = ExtractData(PMUstruct,Parameters);
 catch
     warning('Input data for the periodogram detector could not be used.');
     DetectionResults = struct([]);
     AdditionalOutput = struct([]);
     return
 end
+
+% Using the outputs from ExtractData(), make sure that NaN values are
+% handled appropriately and that signal types and units are appropriate.
+% This comment is general for all detectors, write code specific to the
+% detector you're working on.
+
 
 %% Get detector parameters
 

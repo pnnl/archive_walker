@@ -1,8 +1,10 @@
-function [Data, DataPMU, DataChannel, t, fs] = ExtractData(PMUstruct,Parameters)
+function [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs] = ExtractData(PMUstruct,Parameters)
 
 Data = [];
 DataPMU = {};
 DataChannel = {};
+DataType = {};
+DataUnit = {};
 if isfield(Parameters,'PMU')
     % PMUs are specified - add their names to the list
     NumPMU = length(Parameters.PMU);
@@ -36,6 +38,8 @@ if isfield(Parameters,'PMU')
                 Data = [Data PMUstruct(PMUstructIdx).Data(:,ChannelStructIdx)];
                 DataPMU = [DataPMU PMUstruct(PMUstructIdx).PMU_Name];
                 DataChannel = [DataChannel PMUstruct(PMUstructIdx).Signal_Name{ChannelIdx}];
+                DataType = [DataType PMUstruct(PMUstructIdx).Signal_Type{ChannelIdx}];
+                DataUnit = [DataUnit PMUstruct(PMUstructIdx).Signal_Unit{ChannelIdx}];
             end
         else
             % Channels are not specified - use all of them in this PMU
@@ -48,6 +52,8 @@ if isfield(Parameters,'PMU')
             DataPMU = [DataPMU, DataPMUtemp];
             % Add the channel names to the cell array
             DataChannel = [DataChannel PMUstruct(PMUstructIdx).Signal_Name];
+            DataType = [DataType PMUstruct(PMUstructIdx).Signal_Type];
+            DataUnit = [DataUnit PMUstruct(PMUstructIdx).Signal_Unit];
         end
     end
 else
@@ -63,6 +69,8 @@ else
         DataPMU = [DataPMU, DataPMUtemp];
         % Add the channel names to the cell array
         DataChannel = [DataChannel PMUstruct(PMUparamIdx).Signal_Name];
+        DataType = [DataType PMUstruct(PMUparamIdx).Signal_Type];
+        DataUnit = [DataUnit PMUstruct(PMUparamIdx).Signal_Unit];
     end
 end
 
