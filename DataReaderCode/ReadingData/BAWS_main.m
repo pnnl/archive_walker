@@ -228,7 +228,7 @@ while(~done)
                [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
            end
            % Apply data quality filters and signal customizations
-            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
+           PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
            % Return only the desired PMUs and signals
            PMU = GetOutputSignals(PMU,DataXML);
            
@@ -243,10 +243,10 @@ while(~done)
            % **********************
            % Collect PMU Structures according to specified seconds 
            % **********************
-            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
+           PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
             
-            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-            concatPMU = ConcatenatePMU(PMUall);            
+           % Concatenate all the PMU structures on the list into one PMU structure for prcessing
+           concatPMU = ConcatenatePMU(PMUall);            
             
            % **********
            % Processing
@@ -258,7 +258,18 @@ while(~done)
            % *********
            % Detection
            % *********
-%            DetectionResults = RunDetection(concatPMU,DetectorXML);
+           % Implementation Note:
+           % The ringdown detector slides a window across the data and
+           % calculates energy. After adding a new minute of data, many of
+           % these energy calculations will be redone for certain (but
+           % common) parameter setups. To avoid this, the energies and 
+           % other necessary information could be stored in 
+           % AdditionalOutput. After being returned here, they could be 
+           % stored as extra information in DetectorXML for use by the
+           % detector the next time it is called to reduce computations. A 
+           % similar strategy could be useful when implementing the other 
+           % detectors too.
+           [DetectionResults, AdditionalOutput] = RunDetection(concatPMU,DetectorXML);
            
            %% update some information
            DataInfo.tPMU = tPMU;

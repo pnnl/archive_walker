@@ -137,14 +137,12 @@
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
         <AnalysisLength>3600</AnalysisLength>
-        <!-- The delay in samples used to calculate the self-GMSC. If 
-        omitted, the default is floor(AnalysisLength/10)-->
+        <!-- The delay in samples used to calculate the self-GMSC -->
         <Delay>600</Delay>
         <!-- Number of delays in the self-GMSC. Must be an integer greater than
         or equal to 2. If omitted, default is 2. -->
         <NumberDelays>3</NumberDelays>
-        <!-- Scaling factor to establish the detection threshold. If omitted,
-        default is 3.-->
+        <!-- Scaling factor to establish the detection threshold -->
         <ThresholdScale>3</ThresholdScale>
         <!-- Type of window used for the self-GMSC. Options are rectangular, 
         bartlett, hann, hamming, and blackman. If omitted, default is hann. -->

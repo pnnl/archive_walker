@@ -16,11 +16,9 @@
 
 
 %prepare workspace
-% close all;
-% clear all;
-% clc;
-
-clear;
+close all;
+clear all;
+clc;
 
 debugMode = 1; 
 
@@ -65,15 +63,15 @@ end
 % Processing is done in stages. Each stage is composed of a filtering step
 % and a multirate step.
 if isfield(ProcessXML.Configuration.Processing,'Stages')
-    NumDQandCustomStages = length(DataXML.Configuration.Stages);
-    if NumDQandCustomStages == 1
-        % By default, the contents of DataXML.Configuration.Stages would not be
+    NumProcessingStages = length(ProcessXML.Configuration.Processing.Stages);
+    if NumProcessingStages == 1
+        % By default, the contents of ProcessXML.Configuration.Processing.Stages would not be
         % in a cell array because length is one. This makes it so the same
         % indexing can be used in the following for loop.
-        DataXML.Configuration.Stages = {DataXML.Configuration.Stages};
+        ProcessXML.Configuration.Processing.Stages = {ProcessXML.Configuration.Processing.Stages};
     end
 else
-    NumDQandCustomStages = 0;
+    NumProcessingStages = 0;
 end
 
 % Get parameters for the operation mode
@@ -230,7 +228,7 @@ while(~done)
                [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
            end
            % Apply data quality filters and signal customizations
-            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
+           PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
            % Return only the desired PMUs and signals
            PMU = GetOutputSignals(PMU,DataXML);
            
@@ -245,19 +243,32 @@ while(~done)
            % **********************
            % Collect PMU Structures according to specified seconds 
            % **********************
-            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
+           PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
             
-            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-            concatPMU = ConcatenatePMU(PMUall);            
+           % Concatenate all the PMU structures on the list into one PMU structure for prcessing
+           concatPMU = ConcatenatePMU(PMUall);            
             
+           % **********
+           % Processing
+           % **********
+           concatPMU = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo);
+           % Return only the desired PMUs and signals
+           concatPMU = GetOutputSignals(concatPMU,ProcessXML);
+           
            % *********
            % Detection
            % *********
-           % Processing (need to code)
-           concatPMU = DataProcessor(concatPMU, ProcessXML, NumDQandCustomStages,FlagBitInterpo);
-           % Return only the desired PMUs and signals
-           PMUall = GetOutputSignals(PMUall,ProcessXML);
-           % Detection (need to code)
+           % Implementation Note:
+           % The ringdown detector slides a window across the data and
+           % calculates energy. After adding a new minute of data, many of
+           % these energy calculations will be redone for certain (but
+           % common) parameter setups. To avoid this, the energies and 
+           % other necessary information could be
+           % stored in AdditionalOutput. After being returned here, they
+           % can be stored as extra information in DetectorXML for use by
+           % the detector  to reduce computations. A similar strategy could
+           % be useful when implementing the other detectors too.
+           [DetectionResults, AdditionalOutput] = RunDetection(concatPMU,DetectorXML);
            
            %% update some information
            DataInfo.tPMU = tPMU;

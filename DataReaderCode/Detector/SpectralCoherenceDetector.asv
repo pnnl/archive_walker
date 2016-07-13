@@ -1,0 +1,12 @@
+function DetectionResults = SpectralCoherenceDetector(PMUstruct,Parameters)
+
+% Initialize structure to output detection results
+if strcmp(Parameters.Mode,'SingleChannel')
+    DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[]);
+else
+    DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[],'TestStatistic',[]);
+end
+
+
+disp(Parameters.Delay);
+disp(PMUstruct(1).PMU_Name);

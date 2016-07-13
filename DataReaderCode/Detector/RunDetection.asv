@@ -1,0 +1,106 @@
+% function DetectionResults = RunDetection(PMUstruct,DetectorXML)
+%
+% This function implements all of the application's detectors:
+%   Periodogram method for forced oscillation detection by calling the
+%   PeriodogramDetector(PMUstruct,Parameters) function
+%
+%   Spectral coherence method for forced oscillation detection by calling
+%   the SpectralCoherenceDetector(PMUstruct,Parameters) function
+%
+%   Ringdown detection by calling the RingdownDetector(PMUstruct,Parameters)
+%   function
+%
+%   General out-of-range event detector by calling the 
+%   OutOfRangeGeneralDetector(PMUstruct,Parameters) function
+%
+%   Out-of-range voltage detector by calling the 
+%   OutOfRangeVoltageDetector(PMUstruct,Parameters) function
+%
+%   Out-of-range frequency detector by calling the
+%   OutOfRangeFrequencyDetector(PMUstruct,Parameters) function
+%
+%   Wind ramp detector by calling the WIndRampDetector(PMUstruct,Parameters)
+%   function
+%
+%
+% All detection results are stored in a structure adhering the the
+% specifications provided in the event detection specifications document.
+%
+%
+% Inputs:
+%   PMUstruct: structure in the common format for PMU data. See the
+%              specifications for the data reader.
+%   DetectorXML: structure containing information from the detector's
+%                configuration XML file.
+%   TimeStamp:  The time stamp as a string that should be applied to the
+%               detection results. If omitted, the default is the final 
+%               time stamp from the first PMU:
+%               PMUstruct(1).Signal_Time.Time_String{end}
+%   AdditionalInput: structure containing additional information for the
+%                    detection methods. This input is used to streamline
+%                    implementation. For example, if a method depends on
+%                    some variable that was calculated during the previous 
+%                    call, that variable could be passed into the function
+%                    instead of performing the calculation again. This
+%                    input is passed directly to all detection functions.
+%                    It is not described in the specifications document, 
+%                    but it should be structured similarly to 
+%                    DetectionResults with the following fields: 
+%                    Periodogram, SpectralCoherence, Ringdown,
+%                    OutOfRangeGeneral, OutOfRangeVoltage,
+%                    OutOfRangeFrequency
+%
+% Outputs:
+%   DetectionResults: structure containing all detection results. See the
+%                     event detection specifications document.
+%   AdditionalOutput: structure containing additional information from the
+%                     detection methods. A similar structure to
+%                     DetectionResults is used, but it is not included in
+%                     the specifications document. This output is intended
+%                     to provide flexibility for algorithm implementation
+%                     and the ability to pass variables for plotting, etc.
+%        
+% Created by: Jim Follum (james.follum@pnnl.gov) on 07/08/2016
+% Completed with initial testing by Jim Follum on 7/11/2016
+
+function [DetectionResults, AdditionalOutput] = RunDetection(PMUstruct,DetectorXML,AdditionalInput,TimeStamp)
+
+% If TimeStamp was not included, set it to the default value
+if ~exist('TimeStamp','var')
+    TimeStamp = PMUstruct(1).Signal_Time.Time_String{end};
+end
+
+% Initialize the detection results and addition information structures
+DetectionResults = struct('TimeStamp',TimeStamp);
+AdditionalOutput = struct('TimeStamp',TimeStamp);
+
+for DetectorType = {'Periodogram', 'SpectralCoherence', 'Ringdown',...
+        'OutOfRangeGeneral', 'OutOfRangeVoltage', 'OutOfRangeFrequency',...
+        'WindRamp'}
+    
+    % Note that the {1} following each DetectorType is necessary.
+    % DetectorType on its own is a cell. Adding the {1} accesses the string
+    % within the cell.
+    
+    % Check if the current DetectorType was included in the detector's
+    % configuration file. If so, run the detector.
+    if isfield(DetectorXML.Configuration,DetectorType{1})
+        % Find the number of separate instances of this detector type.
+        NumDetectors = length(DetectorXML.Configuration.(DetectorType{1}));
+        if NumDetectors == 1
+            % By default, the contents of DetectorXML.Configuration.(DetectorType{1}) would not be
+            % in a cell array because length is one. This makes it so the same
+            % indexing can be used in the following for loop.
+            DetectorXML.Configuration.(DetectorType{1}) = {DetectorXML.Configuration.(DetectorType{1})};
+        end
+        
+        % Implement each instance of this detector type
+        for DetectorIndex = 1:NumDetectors
+            % Implement the detector. For the periodogram detector, the 
+            % following code is equivalent to the contents of eval():
+            % PeriodogramDetector(PMUstruct,DetectorXML.Configuration.Periodogram{DetectorIndex})
+            [DetectionResults(DetectorIndex).(DetectorType{1}), AdditionalOutput(DetectorIndex).(DetectorType{1})]...
+                = eval([DetectorType{1} 'Detector(PMUstruct,DetectorXML.Configuration.(DetectorType{1}){DetectorIndex},AdditionalInput)']);
+        end
+    end
+end
