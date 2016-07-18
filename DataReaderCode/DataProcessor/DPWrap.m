@@ -27,8 +27,12 @@
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
 function PMU = DPWrap(PMU,ProcessWrap)
+
+%Gives number of angle wraping operation specified in XML file
 NumWraps = length(ProcessWrap);
 
+% NumWraps = 0 incase there is no field specified under this operation in XML
+% file
 if NumWraps == 0 % Perform angle wraping operation on all signals in all PMUs
     NumPMU = length(PMU);
     PMUchans = struct('ChansToFilt',cell(NumPMU,1));
@@ -41,6 +45,9 @@ if NumWraps == 0 % Perform angle wraping operation on all signals in all PMUs
 end
 
 if NumWraps == 1
+    % By default, the contents of ProcessWrap would not be in a cell array
+    % because length is one. This makes it so the same indexing can be used
+    % in the following for loop.
     ProcessWrap = {ProcessWrap};
 end
 
@@ -62,6 +69,11 @@ for WrapIdx = 1:NumWraps
             % Add the PMU to the list of PMUs to be passed
             PMUstructIdx(PMUidx) = find(strcmp(ProcessWrap{WrapIdx}.PMU{PMUidx}.Name, {PMU.PMU_Name}));
 
+            % Get ChansToFilt for this PMU
+            % If channels aren't specified, PMUchans(PMUidx).ChansToFilt
+            % is left empty to indicate that all channels should be
+            % filtered (appropriate channels are selected within the 
+            % individual filter code)
             if isfield(ProcessWrap{WrapIdx}.PMU{PMUidx},'Channel')
                 NumChan = length(ProcessWrap{WrapIdx}.PMU{PMUidx}.Channel);
                 if NumChan == 1
@@ -78,14 +90,13 @@ for WrapIdx = 1:NumWraps
             end
         end
     else
-        % Apply this filter to all signals in all PMUs
+        % Apply this operation to all angle signals in all PMUs
         NumPMU = length(PMU);
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         PMUstructIdx = 1:NumPMU;
     end
-
+    % Apply angle wraping operation to each of the specified PMUs and channels
     for PMUidx = 1:NumPMU
        PMU(PMUstructIdx(PMUidx))= WrapAngle(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt);
-    end
-    
+    end    
 end

@@ -24,7 +24,7 @@
 
 function PMU = UnwrapAngle(PMU,SigsToProc)
 
-% If specific signals were not listed, apply to all signals 
+% If specific signals were not listed, apply to all angle signals 
 if isempty(SigsToProc)
     SigIdx = find(strcmp(PMU.Signal_Unit, 'DEG') | strcmp(PMU.Signal_Unit, 'RAD'));
     SigsToProc = PMU.Signal_Name(SigIdx);
@@ -39,6 +39,7 @@ for SigIdx = 1:length(SigsToProc)
         continue
     end
     
+    %Unwraps angle measurements
     if strcmp(PMU.Signal_Unit(ThisSig),'DEG')        
         PMU.Data(:,ThisSig) = (unwrap(PMU.Data(:,ThisSig)*pi/180))*180/pi;
     elseif strcmp(PMU.Signal_Unit(ThisSig),'RAD') 

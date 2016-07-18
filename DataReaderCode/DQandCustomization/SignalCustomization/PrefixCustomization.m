@@ -35,7 +35,12 @@
                     % name for the i^th customized signal
                     % Parameters.ToConvert{i}.NewUnit: a string specifying
                     % new unit for the i^th customized signal
-    % custPMUidx: numerical identifier for PMU that would store customized signal
+    % custPMUidx: numerical identifier for PMU that would store customized signall
+    % FlagBitCust: Flag bits reserved for flagging new customized signal
+        % FlagBitCust(1): Indicates error associated with user specified
+        % parameters for creating a customized signal
+        % FlagBitCust(2): Indicates data points in customized signal that
+        % used flagged input data points 
 % 
 % Outputs:
     % PMUstruct
@@ -44,8 +49,9 @@
 %Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
 %Changed the flag matrix from a 2 dimensional double matrix to a 3
 %dimensional logical matrix (3rd dimension represents flag bit)
-
-function PMUstruct = PrefixCustomization(PMUstruct,custPMUidx,Parameters)
+%Modified on July 13, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Includes FlagBitCust variable
+function PMUstruct = PrefixCustomization(PMUstruct,custPMUidx,Parameters,FlagBitCust)
 
 AvailablePMU = {PMUstruct.PMU_Name};
 
@@ -60,7 +66,7 @@ end
 for ToConvertIdx = 1:NumToConvert
     % Size of the current Data matrix and number of Flags for the custom
     % PMU - N samples by NcustSigs signals by NFlags flags
-    [~,NcustSigs,NFlags] = size(PMUstruct(custPMUidx).Flag);
+    NcustSigs = size(PMUstruct(custPMUidx).Data,2);
     if isfield(Parameters.ToConvert{ToConvertIdx},'CustName')
         CheckSignalNameError(Parameters.ToConvert{ToConvertIdx}.CustName, PMUstruct(custPMUidx).Signal_Name);
         % A custom signal name was provided, so instead of replacing the input
@@ -70,7 +76,7 @@ for ToConvertIdx = 1:NumToConvert
         if isempty(PMUidx)
             warning(['PMU ' Parameters.ToConvert{ToConvertIdx}.PMU ' could not be found. Values were set to NaN and Flags set.']);
             PMUstruct(custPMUidx).Data(:,NcustSigs+1) = NaN;
-            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags) = true; %flags is set for customized signal for error in user input
+            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,FlagBitCust(2)) = true; %flags is set for customized signal for error in user input
             continue
         end
         
@@ -79,7 +85,7 @@ for ToConvertIdx = 1:NumToConvert
         if isempty(SigIdx)
             warning(['Signal ' Parameters.ToConvert{ToConvertIdx}.Channel ' could not be found. Values were set to NaN and Flags set.']);
             PMUstruct(custPMUidx).Data(:,NcustSigs+1) = NaN;
-            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags) = true; %flags is set for customized signal for error in user input
+            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,FlagBitCust(2)) = true; %flags is set for customized signal for error in user input
             continue
         end
         % This coding approach is bulky, but it will allow for expansion to
@@ -145,21 +151,21 @@ for ToConvertIdx = 1:NumToConvert
             otherwise
                 warning([PMUstruct(custPMUidx).Signal_Unit{SigIdx} ' is an unacceptable input unit. Values were set to NaN and Flags set.']);
                 PMUstruct(custPMUidx).Data(:,NcustSigs+1) = NaN;
-                PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags) = true; %flags is set for customized signal for error in user input
+                PMUstruct(custPMUidx).Flag(:,NcustSigs+1,FlagBitCust(2)) = true; %flags is set for customized signal for error in user input
                 continue
         end
         
         if ErrFlagIdentical
             warning(['Old and new unit for ' Parameters.ToConvert{ToConvertIdx}.Channel ' are identical. Values were set to NaN and Flags set.']);
             PMUstruct(custPMUidx).Data(:,NcustSigs+1) = NaN;
-            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags) = true;
+            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,FlagBitCust(2)) = true;
             continue
         end
         
         if ErrFlagIncompatible
             warning(['Old and new unit for ' Parameters.ToConvert{ToConvertIdx}.Channel ' are incompatible. Values were set to NaN and Flags set.']);
             PMUstruct(custPMUidx).Data(:,NcustSigs+1) = NaN;
-            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags) = true;
+            PMUstruct(custPMUidx).Flag(:,NcustSigs+1,FlagBitCust(2)) = true;
             continue
         end
         
@@ -171,8 +177,8 @@ for ToConvertIdx = 1:NumToConvert
         
         PMUstruct(custPMUidx).Flag(:,NcustSigs+1,:) = PMUstruct(PMUidx).Flag(:,SigIdx,:);
         FlagVec = sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3)>0;
-        PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags-1) = FlagVec;
-        PMUstruct(custPMUidx).Flag(:,NcustSigs+1,NFlags) = false;
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+1,FlagBitCust(1)) = FlagVec;
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+1,FlagBitCust(2)) = false;
         PMUstruct(custPMUidx).Signal_Type{NcustSigs+1} = PMUstruct(PMUidx).Signal_Type{SigIdx};
         PMUstruct(custPMUidx).Signal_Unit{NcustSigs+1} = Parameters.ToConvert{ToConvertIdx}.NewUnit;
         PMUstruct(custPMUidx).Signal_Name{NcustSigs+1} = Parameters.ToConvert{ToConvertIdx}.CustName;

@@ -31,12 +31,17 @@
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
 function PMU = interpo(PMU,SigsToInterpo,Parameters,FlagBitInterpo)
+
+%User-specified parameters
 Interpolate_type = Parameters.Type;
 Interpolate_limit = str2num(Parameters.Limit);
 FlagInterp = Parameters.FlagInterp;
 
+%Gives number of data points in each PMU channel
 N = size(PMU.Data,1);
 
+% If specific signals were not listed, apply to all signals except Digital
+% signals
 if isempty(SigsToInterpo)
     SigIdx = find(~strcmp(PMU.Signal_Type, 'D'));
     SigsToInterpo = PMU.Signal_Name(SigIdx);
@@ -46,14 +51,20 @@ for SigIdx = 1:length(SigsToInterpo)
     ThisSig = find(strcmp(PMU.Signal_Name,SigsToInterpo{SigIdx}));
     PMUdata = PMU.Data(:,ThisSig);
     if strcmp(FlagInterp, 'TRUE')
+        %includes flagged data indices to interpolate data
         InterDataIdx = find(sum(PMU.Flag(:,ThisSig,:),3) > 0 | isnan(PMU.Data(:,ThisSig)));
     else
+        %includes only missing data indices
         InterDataIdx = find(isnan(PMU.Data(:,ThisSig)));
     end
+    %Data indices that are used to interpolate missing and flagged data
     GoodDataIdx = setdiff(1:N,InterDataIdx);
+    
+    %Calculates difference between consecutive indices of data to be
+    %interpolated
     delta = diff(InterDataIdx);
-    % Find where the difference between measurements was zero, indicating
-    % stale data
+    % Finds where the difference between measurements is '1', indicating
+    % consecutive data points that are to be interpolated
     delta0 = find(delta==1);
     if ~isempty(delta0)
         delta2 = diff(delta0);
@@ -74,16 +85,21 @@ for SigIdx = 1:length(SigsToInterpo)
                 LimitIdx = [LimitIdx IndExceed];
             end
         end
+        %Removes indices of continous data to be interpolated if it exceeds
+        %the limit of maximum number of consecutive data points to be
+        %interpolated
         InterDataIdx = setdiff(InterDataIdx, InterDataIdx(LimitIdx));
     end
        
     if strcmp(Interpolate_type,'Linear') && ~isempty(InterDataIdx)
+        %carries out linear interpolation   
         PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'linear');
-        %carry out linear interpolation
+
     elseif strcmp(Interpolate_type,'Constant') && ~isempty(InterDataIdx)
-        %carry out constant interpolation
+        %carries out constant interpolation
         PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'nearest');
     end
+    %Gives the indices of data that are interpoalted
     InterDataInd = find(PMUdata ~= PMU.Data(:,ThisSig) & ~isnan(PMU.Data(:,ThisSig)));
     
     % Flag missing data that has been interpolated

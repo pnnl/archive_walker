@@ -114,6 +114,10 @@ for SigIdx = 1:length(SigsToFilt)
         error('Only voltage magnitudes and phasors can be filtered');
     end
 end
+%setNaNmatrixIni has element '1' for the current PMU which
+%is to be set to NaN for the current filter operation
+%setNaNMatrix has non-zero positive elements for the current PMU which
+%is to be set to NaN after all filter operation that has been carried out
 setNaNMatrix = setNaNMatrix + setNaNmatrixIni;
 end
 

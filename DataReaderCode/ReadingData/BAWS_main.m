@@ -41,14 +41,14 @@ addpath('..\DQandCustomization\SignalCustomization');
 addpath('..\');
 
 %XML file
-XMLFile = 'ConfigXML.xml';
+XMLFile = 'ConfigXML_Test.xml';
 %XMLFile = 'ConfigXML_CSV.xml';
 
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='ProcessXML.xml';
+XMLFile='ProcessXML_Test.xml';
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
@@ -271,6 +271,11 @@ while(~done)
                % JSIS_CSV format
                [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
            end
+           
+%            PMU(1).Data(2:11,1) = 200000 + randn(10,1);
+           PMU(1).Data(21:100,1) = 100000;
+%            PMU(1).Data(135:140,1) = 0;
+           
            % Apply data quality filters and signal customizations
            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
            % Return only the desired PMUs and signals

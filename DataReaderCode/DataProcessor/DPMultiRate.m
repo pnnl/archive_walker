@@ -45,16 +45,15 @@ function PMU = DPMultiRate(PMU,ProcessMultiRate)
 
 NumMultiRate = length(ProcessMultiRate);
 
-%calculating frequency of signal
+%calculates signal's sampling frequency using time string of 1st and 5th sample to increase accuracy
 t = PMU(1).Signal_Time.Time_String;
-Ndata = length(t);
 t1 = t{1};
 Ind1 = findstr(t1, '.');
 T1 = str2num(t1(Ind1:end));
 t5 = t{5};
 Ind5 = findstr(t5, '.');
 T5 = str2num(t5(Ind5:end));
-FsOld = round(4/(T5 - T1)); %calculating frequency using time index of 1st and 5th sample to increase accuracy
+FsOld = round(4/(T5 - T1)); 
 
 if NumMultiRate == 1
     % By default, the contents of ProcessMultiRate
@@ -64,7 +63,8 @@ if NumMultiRate == 1
 end
 
 for MultiRateIdx = 1:NumMultiRate
-    
+    % Parameters for the MultiRate - the structure contents are
+    % specific to the eaach MultiRate operation
     Parameters = ProcessMultiRate{MultiRateIdx}.Parameters;
     NewPMUidx = length(PMU) + 1;
     
@@ -74,7 +74,7 @@ for MultiRateIdx = 1:NumMultiRate
         error('PMU name must be assigned by user when changing data rate.');
     end
     
-    
+    % Initializing new PMU for storing data after multi-rate operation
     PMU(NewPMUidx).PMU_Name = PMUName;   % PMU name
     PMU(NewPMUidx).Time_Zone = PMU(1).Time_Zone;         % time zone; for now this is just the PST time
     PMU(NewPMUidx).Signal_Name = cell(1,0);
@@ -84,6 +84,8 @@ for MultiRateIdx = 1:NumMultiRate
     PMU(NewPMUidx).Data = [];  
     PMU(NewPMUidx).Flag = false();
     
+    % Checks given user-specified parameters and then calculates the
+    % upsampling and downsampling rate
     if isfield(Parameters,'NewRate')
         FsNew = str2num(Parameters.NewRate);
         [p,q] = rat(FsNew / FsOld);        
@@ -96,15 +98,16 @@ for MultiRateIdx = 1:NumMultiRate
     elseif ~isfield(Parameters,'p') && isfield(Parameters,'q')
         q = str2num(Parameters.q);
         p = [];        
-    elseif ~isfield(Parameters,'p') && ~isfield(Parameters,'q')
-        warning('Parameters for changing data rate not provided');
-        continue;
+%     elseif ~isfield(Parameters,'p') && ~isfield(Parameters,'q')
+%         warning('Parameters for changing data rate not provided');
+%         continue;
     end
+    
+    %Gets timestring and dateNumArray for data after multirate
+    %operation
     [TimeString,DateNumArray] = GetNewTime(PMU(1).Signal_Time.Signal_datenum,p,q);
     PMU(NewPMUidx).Signal_Time.Time_String = TimeString;
-    PMU(NewPMUidx).Signal_Time.Signal_datenum = DateNumArray;
-    %PMU(NewPMUidx).Flag = false(floor(Ndata*p/q),0,2);
-    
+    PMU(NewPMUidx).Signal_Time.Signal_datenum = DateNumArray;    
     
     if isfield(ProcessMultiRate{MultiRateIdx},'PMU')
         % Get list of PMUs to apply filter to
@@ -129,7 +132,10 @@ for MultiRateIdx = 1:NumMultiRate
             % included
             if isfield(ProcessMultiRate{MultiRateIdx}.PMU{PMUidx},'Channel')
                 NumChan = length(ProcessMultiRate{MultiRateIdx}.PMU{PMUidx}.Channel);
-                if NumChan == 1                 
+                if NumChan == 1   
+                    % By default, the contents of ProcessMultiRate{MultiRateIdx}.PMU{PMUidx}.Channel
+                    % would not be in a cell array because length is one. This
+                    % makes it so the same indexing can be used in the following for loop.
                     ProcessMultiRate{MultiRateIdx}.PMU{PMUidx}.Channel = {ProcessMultiRate{MultiRateIdx}.PMU{PMUidx}.Channel};
                 end
                 
@@ -147,13 +153,13 @@ for MultiRateIdx = 1:NumMultiRate
     end
     
     for PMUidx = 1:NumPMU
-        if PMUstructIdx(PMUidx) == NewPMUidx
+        if PMUstructIdx(PMUidx) == NewPMUidx %this is to make sure that the new PMU is not included in the PMU list whose data is to be upsampled and downsampled
             continue
-        elseif size(PMU(PMUstructIdx(PMUidx)).Data,1) ~= size(PMU(PMUstructIdx(1)).Data,1)
+        elseif size(PMU(PMUstructIdx(PMUidx)).Data,1) ~= size(PMU(PMUstructIdx(1)).Data,1) %checks that the number of data points for all PMUs is same
             warning('At least one PMU size does not match')
             continue
         else
-            PMU(NewPMUidx)= MultiRate(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,p,q,PMU(NewPMUidx));
+            PMU(NewPMUidx)= MultiRate(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,p,q,PMU(NewPMUidx)); %if all conditions are satisfied, then calls function to change data rate
         end
     end
     
@@ -167,25 +173,38 @@ end
 
 function [TimeString,DateNumArray] = GetNewTime(Signal_datenum,p,q)
 
+%dateNUmArray of first and last sample to interpolate datenumArray for in
+%between data points
 SigDate = [Signal_datenum(1) ;Signal_datenum(end)];
 
 N_old = length(Signal_datenum);
 if ~isempty(p)
+    
+    %Gives number of data points lying between the SigDate time
     N_new = N_old*p-(p-1);
     NSamp = N_new - 1;
+    
+    %Gives difference of dateNumArray between consecutive data points
     SampleDiff = diff(SigDate)'/(NSamp);
+    
+    %calculated dateNumArray for all data points
     DateNumArray =  SigDate(1) + (0:NSamp)*SampleDiff;
+    
+    %adds dateNumArray for last (p-1) samples
     for AddTim= 1:p-1
         DateNumArray = [DateNumArray DateNumArray(end) + SampleDiff;];
     end
+    %if 'q' is not empty, then downsamples dateNumArray
     if ~isempty(q)
         DateNumArray = downsample(DateNumArray,q);
     end
 end
+%if 'q' is not empty and 'p' is empty, then downsamples dateNumArray
 if ~isempty(q) && isempty(p)
     DateNumArray = downsample(Signal_datenum,q);
 end
 
+%Changes dateNumArray to time string in standard format
 TimeString = cellstr(datestr(DateNumArray, 'yyyy-mm-dd HH:MM:SS.FFF'));
 
 end

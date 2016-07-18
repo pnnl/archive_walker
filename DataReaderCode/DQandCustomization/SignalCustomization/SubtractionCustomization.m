@@ -38,6 +38,11 @@
             % Parameters.subtrahend.Channel: a string specifying name of the channel 
             % that represents subtrahend signal        
     % custPMUidx: numerical identifier for PMU that would store customized signal
+    % FlagBitCust: Flag bits reserved for flagging new customized signal
+        % FlagBitCust(1): Indicates error associated with user specified
+        % parameters for creating a customized signal
+        % FlagBitCust(2): Indicates data points in customized signal that
+        % used flagged input data points 
 % 
 % Outputs:
     % PMUstruct
@@ -45,13 +50,15 @@
 %Created by: Jim Follum (james.follum@pnnl.gov)
 %Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
 %Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix.
+%Modified on July 13, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Includes FlagBitCust variable
 
-function PMUstruct = SubtractionCustomization(PMUstruct,custPMUidx,Parameters)
+function PMUstruct = SubtractionCustomization(PMUstruct,custPMUidx,Parameters,FlagBitCust)
 
 SignalName = Parameters.SignalName;
 CheckSignalNameError(SignalName, PMUstruct(custPMUidx).Signal_Name);
-% Size of the current Data matrix and number of flags for the custom PMU - N samples by NumSig signals by NumFlags Flags
-[~,NumSig, NFlags] = size(PMUstruct(custPMUidx).Flag);
+% Size of the current Data matrix for the custom PMU - N samples by NumSig signals
+NumSig = size(PMUstruct(custPMUidx).Data,2);
 
 AvailablePMU = {PMUstruct.PMU_Name};
 
@@ -94,7 +101,7 @@ if (~isempty(SigIdxMin)) && (~isempty(SigIdxSub))
         % Set flags
         FlagVec = sum(PMUstruct(PMUidxMin).Flag(:,SigIdxMin,:),3) > 0 | sum(PMUstruct(PMUidxSub).Flag(:,SigIdxSub,:),3) > 0; % if any of the data channel is flgged then the custom signal is flagged with flag for custom signal
 
-        PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags-1) = FlagVec;
+        PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(1)) = FlagVec;
         
         % Set units
         PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = SignalUnitMin;
@@ -102,14 +109,14 @@ if (~isempty(SigIdxMin)) && (~isempty(SigIdxSub))
         % Units do not agree
         warning('Signal units did not agree. Values were set to NaN and Flags set.');
         PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;
-        PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags) = true;
+        PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(2)) = true;
         PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
     end
 else
     % Signals were not found
     warning('Signals were not found. Values were set to NaN and Flags set.');
     PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;
-    PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags) = true;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(2)) = true;
     PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
     PMUstruct(custPMUidx).Signal_Type{NumSig+1} = 'OTHER';
 end

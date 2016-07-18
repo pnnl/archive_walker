@@ -35,29 +35,43 @@ function PMU = DPinterpolation(PMU,ProcessInterpolate,FlagBitInterpo)
 NumInterp = length(ProcessInterpolate);
 
 if NumInterp == 1
+    % By default, the contents of ProcessInterpolate would not be in a cell array
+    % because length is one. This makes it so the same indexing can be used
+    % in the following for loop.
     ProcessInterpolate = {ProcessInterpolate};
 end
 
 for InterpIdx = 1:NumInterp 
-    
+    % Parameters for the interpolation - the structure contents are
+    % specific to each interpolation operation
     Parameters = ProcessInterpolate{InterpIdx}.Parameters;
     if isfield(ProcessInterpolate{InterpIdx},'PMU')
         % Get list of PMUs 
         NumPMU = length(ProcessInterpolate{InterpIdx}.PMU);
         if NumPMU == 1
-            % By default, the contents would not be in a cell array because
-            % length is one. This makes it so the same indexing can be used
-            % in the following for loop.
+            % By default, the contents of ProcessFilter{FiltIdx}.PMU
+            % would not be in a cell array because length is one. This
+            % makes it so the same indexing can be used in the following for loop.
             ProcessInterpolate{InterpIdx}.PMU = {ProcessInterpolate{InterpIdx}.PMU};
         end
         
         PMUstructIdx = zeros(1,NumPMU);
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         for PMUidx = 1:NumPMU
+            % Add the PMU to the list of PMUs to be passed to the
+            % filter.
             PMUstructIdx(PMUidx) = find(strcmp(ProcessInterpolate{InterpIdx}.PMU{PMUidx}.Name, {PMU.PMU_Name}));
+            % Get ChansToFilt for this PMU
+            % If channels aren't specified, PMUchans(PMUidx).ChansToFilt
+            % is left empty to indicate that all channels should be
+            % filtered (appropriate channels are selected within the 
+            % individual filter code)
             if isfield(ProcessInterpolate{InterpIdx}.PMU{PMUidx},'Channel')
                 NumChan = length(ProcessInterpolate{InterpIdx}.PMU{PMUidx}.Channel);
                 if NumChan == 1
+                    % By default, the contents of ProcessInterpolate{InterpIdx}.PMU{PMUidx}.Channel
+                    % would not be in a cell array because length is one. This 
+                    % makes it so the same indexing can be used in the following for loop.
                     ProcessInterpolate{InterpIdx}.PMU{PMUidx}.Channel = {ProcessInterpolate{InterpIdx}.PMU{PMUidx}.Channel};
                 end
 
@@ -68,11 +82,12 @@ for InterpIdx = 1:NumInterp
             end
         end
     else
+        % Apply this operation to all signals in all PMUs
         NumPMU = length(PMU);
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         PMUstructIdx = 1:NumPMU;
     end
-    
+    % Interpolate data in each of the specified PMUs and channels
     for PMUidx = 1:NumPMU
         PMU(PMUstructIdx(PMUidx))= interpo(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,FlagBitInterpo);
     end

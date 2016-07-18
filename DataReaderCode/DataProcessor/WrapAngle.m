@@ -24,7 +24,7 @@
 
 function PMU = WrapAngle(PMU,SigsToProc)
 
-% If specific signals were not listed, apply to all signals 
+% If specific signals were not listed, apply to all angle signals 
 if isempty(SigsToProc)
     SigIdx = find(strcmp(PMU.Signal_Unit, 'DEG') | strcmp(PMU.Signal_Unit, 'RAD'));
     SigsToProc = PMU.Signal_Name(SigIdx);
@@ -38,7 +38,7 @@ for SigIdx = 1:length(SigsToProc)
         warning(['Signal ' SigsToProc{SigIdx} ' could not be found.']);
         continue
     end
-    
+    % Wraps angle measurements
     if strcmp(PMU.Signal_Unit(ThisSig),'DEG')
         PMU.Data(:,ThisSig) = wrapTo180(PMU.Data(:,ThisSig));
     elseif strcmp(PMU.Signal_Unit(ThisSig),'RAD')

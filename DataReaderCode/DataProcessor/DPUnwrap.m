@@ -28,8 +28,12 @@
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
     
 function PMU = DPUnwrap(PMU,ProcessUnwrap)
+
+%Gives number of angle unwraping operation specified in XML file
 NumUnwraps = length(ProcessUnwrap);
 
+% NumUnwraps = 0 incase there is no field specified under this operation in XML
+% file
 if NumUnwraps == 0 % Perform angle wraping operation on all signals in all PMUs
     NumPMU = length(PMU);
     PMUchans = struct('ChansToFilt',cell(NumPMU,1));
@@ -41,6 +45,9 @@ if NumUnwraps == 0 % Perform angle wraping operation on all signals in all PMUs
 end
         
 if NumUnwraps == 1
+    % By default, the contents of ProcessUnwrap would not be in a cell array
+    % because length is one. This makes it so the same indexing can be used
+    % in the following for loop.
     ProcessUnwrap = {ProcessUnwrap};
 end
 
@@ -50,13 +57,16 @@ for UnwrapIdx = 1:NumUnwraps
         % Get list of PMUs to apply filter to
         NumPMU = length(ProcessUnwrap{UnwrapIdx}.PMU);
         if NumPMU == 1
+            % By default, the contents of ProcessUnwrap{UnwrapIdx}.PMU would
+            % not be in a cell array because length is one. This makes it
+            % so the same indexing can be used in the following for loop.
             ProcessUnwrap{UnwrapIdx}.PMU = {ProcessUnwrap{UnwrapIdx}.PMU};
         end
         
         PMUstructIdx = zeros(1,NumPMU);
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         for PMUidx = 1:NumPMU
-           
+            % Add the PMU to the list of PMUs to be passed
             PMUstructIdx(PMUidx) = find(strcmp(ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Name, {PMU.PMU_Name}));
 
             % Get ChansToFilt for this PMU
@@ -66,6 +76,9 @@ for UnwrapIdx = 1:NumUnwraps
             if isfield(ProcessUnwrap{UnwrapIdx}.PMU{PMUidx},'Channel')
                 NumChan = length(ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Channel);
                 if NumChan == 1
+                    % By default, the contents of ProcessUnwrap{WrapIdx}.PMU{PMUidx}.Channel
+                    % would not be in a cell array because length is one. This 
+                    % makes it so the same indexing can be used in the following for loop.
                     ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Channel = {ProcessUnwrap{UnwrapIdx}.PMU{PMUidx}.Channel};
                 end
 
@@ -76,14 +89,13 @@ for UnwrapIdx = 1:NumUnwraps
             end
         end
     else
-        % Perform angle wraping operation on all signals in all PMUs
+        % Perform angle wraping operation on all angle signals in all PMUs
         NumPMU = length(PMU);
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         PMUstructIdx = 1:NumPMU;
     end
-
+    % Apply angle wraping operation to each of the specified PMUs and channels
     for PMUidx = 1:NumPMU
         PMU(PMUstructIdx(PMUidx))= UnwrapAngle(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt);
-    end
-    
+    end    
 end

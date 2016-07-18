@@ -19,6 +19,8 @@
         % DataXML.Configuration.Stages: struct array containing
         % information on filter and customization operation in each stage
         % (dimension is 1 by number of stages)
+        % DataXML.Flag_Bit: Cotains information on flag bits used by
+        % different data quality check filters
     % NumStages: Number of stages
     % Num_Flags: Total number of flag bits
 %
@@ -40,7 +42,7 @@ for StageIdx = 1:NumStages
     
     % Signal Customization step (if included in this stage)
     if isfield(DataXML.Configuration.Stages{StageIdx},'Customization')
-        PMU = CustomizationStep(PMU,custPMUidx,DataXML.Configuration.Stages{StageIdx});
+        PMU = CustomizationStep(PMU,custPMUidx,DataXML.Configuration.Stages{StageIdx},DataXML.Flag_Bit);
     end
 end
 

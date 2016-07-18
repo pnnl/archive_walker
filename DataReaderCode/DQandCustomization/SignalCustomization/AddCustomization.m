@@ -33,6 +33,11 @@
                     % Parameters.term{i}.Channel: a string specifying
                     % the channel of PMU that represents i^th signal to be added      
     % custPMUidx: numerical identifier for PMU that would store customized signal
+    % FlagBitCust: Flag bits reserved for flagging new customized signal
+        % FlagBitCust(1): Indicates error associated with user specified
+        % parameters for creating a customized signal
+        % FlagBitCust(2): Indicates data points in customized signal that
+        % used flagged input data points 
 % 
 % Outputs:
     % PMUstruct: 
@@ -41,11 +46,13 @@
 %Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
 %Changed the flag matrix from a 2 dimensional double matrix to a 3
 %dimensional logical matrix (3rd dimension represents flag bit)
-function PMUstruct = AddCustomization(PMUstruct,custPMUidx,Parameters)
+%Modified on July 13, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Includes FlagBitCust variable
+function PMUstruct = AddCustomization(PMUstruct,custPMUidx,Parameters,FlagBitCust)
 SignalName = Parameters.SignalName;
 CheckSignalNameError(SignalName, PMUstruct(custPMUidx).Signal_Name);
 % Size of the current Data matrix for the custom PMU - N samples by NumSig signals
-[N,NumSig,NFlags] = size(PMUstruct(custPMUidx).Flag);
+[N,NumSig] = size(PMUstruct(custPMUidx).Data);
 
 AvailablePMU = {PMUstruct.PMU_Name};
 
@@ -119,7 +126,7 @@ end
 PMUstruct(custPMUidx).Signal_Name{NumSig+1} = SignalName;
 if ErrFlag
     PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;    
-    PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags) = true; %flagged for error in user input
+    PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(2)) = true; %flagged for error in user input
     PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
     PMUstruct(custPMUidx).Signal_Type{NumSig+1} = 'OTHER';
 else
@@ -135,6 +142,6 @@ else
 
     % Add the custom signal and set associated flags
     PMUstruct(custPMUidx).Data(:,NumSig+1) = CustSig;
-    PMUstruct(custPMUidx).Flag(:,NumSig+1,NFlags-1) = FlagVec;
+    PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(1)) = FlagVec;
 end
 

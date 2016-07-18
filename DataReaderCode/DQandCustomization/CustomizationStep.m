@@ -18,6 +18,7 @@
             % StageStruct.Customization{i}.Parameters: a struct array
             % containing user-specified parameters for i^th customization operation          
     % custPMUidx: numerical identifier for PMU that would store customized signal
+    % Flag_Bit: Cotains information on flag bits used by different data quality check filters
 %
 % Outputs:
     % PMU
@@ -26,7 +27,13 @@
 %Modified on June 7, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
     %1. Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix
 
-function PMU = CustomizationStep(PMU,custPMUidx,StageStruct)
+function PMU = CustomizationStep(PMU,custPMUidx,StageStruct,Flag_Bit)
+
+%The 2 bits next to the flag bits used by data quality check filter are
+%reserved for flagging customized signal. First bit is used to indicate if
+%there was any error from user side when creating a customized signal and
+%second bit is flagged to show that input data was flagged.
+FlagBitCust = [max(Flag_Bit) + 1;max(Flag_Bit) + 2]; 
 
 NumCusts = length(StageStruct.Customization);
 if NumCusts == 1
@@ -45,30 +52,30 @@ for CustIdx = 1:NumCusts
     % specified PMUs
     switch StageStruct.Customization{CustIdx}.Name
         case 'ScalarRep'
-            PMU(custPMUidx) = ScalarRep(PMU(custPMUidx),Parameters);
+            PMU(custPMUidx) = ScalarRep(PMU(custPMUidx),Parameters,FlagBitCust);
         case 'Addition'
-            PMU = AddCustomization(PMU,custPMUidx,Parameters);
+            PMU = AddCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'Subtraction'
-            PMU = SubtractionCustomization(PMU,custPMUidx,Parameters);
+            PMU = SubtractionCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'Multiplication'
-            PMU = MultCustomization(PMU,custPMUidx,Parameters);
+            PMU = MultCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'Division'
-            PMU = DivisionCustomization(PMU,custPMUidx,Parameters);
+            PMU = DivisionCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'Exponent'
-            PMU = ExpCustomization(PMU,custPMUidx,Parameters);
+            PMU = ExpCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case {'SignReversal' 'AbsVal' 'RealComponent' 'ImagComponent' 'ComplexConj'}
-            PMU = CommonCustomization(PMU,custPMUidx,Parameters,StageStruct.Customization{CustIdx}.Name);
+            PMU = CommonCustomization(PMU,custPMUidx,Parameters,StageStruct.Customization{CustIdx}.Name,FlagBitCust);
         case 'Angle'
-            PMU = AngleCustomization(PMU,custPMUidx,Parameters);
+            PMU = AngleCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'CreatePhasor'
-            PMU = CreatePhasorCustomization(PMU,custPMUidx,Parameters);
+            PMU = CreatePhasorCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'PowerCalc'
-            PMU = PowCalcCustomization(PMU,custPMUidx,Parameters);
+            PMU = PowCalcCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'SpecTypeUnit'
-            PMU = SpecTypeUnitCustomization(PMU,custPMUidx,Parameters);
+            PMU = SpecTypeUnitCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'MetricPrefix'
-            PMU = PrefixCustomization(PMU,custPMUidx,Parameters);
+            PMU = PrefixCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
         case 'AngleConversion'
-            PMU = AngleUnitCustomization(PMU,custPMUidx,Parameters);
+            PMU = AngleUnitCustomization(PMU,custPMUidx,Parameters,FlagBitCust);
     end
 end

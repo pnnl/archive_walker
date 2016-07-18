@@ -31,6 +31,7 @@
 
 function PMU = MedianFilt(PMU,SigsToFilt,Parameters)
 
+%User-specified parameters 
 FiltOrder  = str2num(Parameters.Order);
 Endpoints  = Parameters.Endpoints;
 HandleNaN  = Parameters.HandleNaN;
@@ -44,6 +45,9 @@ end
 
 for SigIdx = 1:length(SigsToFilt)
     ThisSig = find(strcmp(PMU.Signal_Name,SigsToFilt{SigIdx}));
+    
+    %If the signal has complex valued entries, skip the rest of the code
+    %and go to the next SigIdx
     if imag(PMU.Data(:,ThisSig))~=0
         warning(['Signal ' SigsToFilt{SigIdx} ' is complex valued. Median filter is not applied. Data not changed.']);
         continue

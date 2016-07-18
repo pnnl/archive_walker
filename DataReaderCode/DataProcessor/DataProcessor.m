@@ -24,15 +24,18 @@
 
 function PMUStruct = DataProcessor(PMUStruct, ProcessXML,NumStages,FlagBitInterpo)
 
-
+%data processor first carries out angle unwraping operation
 if isfield(ProcessXML.Configuration.Processing,'Unwrap')
     PMUStruct.PMU = DPUnwrap(PMUStruct.PMU,ProcessXML.Configuration.Processing.Unwrap);
 end
-
+%second, data processor then interpolates missing data, and flagged data if user
+%specifies
 if isfield(ProcessXML.Configuration.Processing,'Interpolate')
     PMUStruct.PMU = DPinterpolation(PMUStruct.PMU,ProcessXML.Configuration.Processing.Interpolate,FlagBitInterpo);
 end
 
+%Then, data processor carries out filter and multirate operation for
+%specified number of stages
 for StageIdx = 1:NumStages
     
     if isfield(ProcessXML.Configuration.Processing.Stages{StageIdx},'Filter')
@@ -43,7 +46,7 @@ for StageIdx = 1:NumStages
         PMUStruct.PMU= DPMultiRate(PMUStruct.PMU,ProcessXML.Configuration.Processing.Stages{StageIdx}.Multirate);
     end
 end
-
+%data processor carries out angle wraping operation at last
 if isfield(ProcessXML.Configuration.Processing,'Wrap')
     PMUStruct.PMU = DPWrap(PMUStruct.PMU,ProcessXML.Configuration.Processing.Wrap);
 end

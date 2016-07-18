@@ -33,16 +33,23 @@ function PMU = DPfilterStep(PMU,ProcessFilter)
 NumFilts = length(ProcessFilter);
 
 if NumFilts == 1
+    % By default, the contents of ProcessFilter would not be in a cell array
+    % because length is one. This makes it so the same indexing can be used
+    % in the following for loop.
     ProcessFilter = {ProcessFilter};
 end
 
 for FiltIdx = 1:NumFilts 
-    
+    % Parameters for the filter - the structure contents are
+    % specific to the filter
     Parameters = ProcessFilter{FiltIdx}.Parameters;
     if isfield(ProcessFilter{FiltIdx},'PMU')
         % Get list of PMUs to apply filter to
         NumPMU = length(ProcessFilter{FiltIdx}.PMU);
         if NumPMU == 1
+            % By default, the contents of ProcessFilter{FiltIdx}.PMU
+            % would not be in a cell array because length is one. This
+            % makes it so the same indexing can be used in the following for loop.
             ProcessFilter{FiltIdx}.PMU = {ProcessFilter{FiltIdx}.PMU};
         end
         
@@ -60,7 +67,10 @@ for FiltIdx = 1:NumFilts
             % individual filter code)
             if isfield(ProcessFilter{FiltIdx}.PMU{PMUidx},'Channel')
                 NumChan = length(ProcessFilter{FiltIdx}.PMU{PMUidx}.Channel);
-                if NumChan == 1                 
+                if NumChan == 1     
+                    % By default, the contents of ProcessFilter{FiltIdx}.PMU{PMUidx}.Channel 
+                    % would not be in a cell array because length is one. This 
+                    % makes it so the same indexing can be used in the following for loop.
                     ProcessFilter{FiltIdx}.PMU{PMUidx}.Channel = {ProcessFilter{FiltIdx}.PMU{PMUidx}.Channel};
                 end
 
@@ -77,8 +87,8 @@ for FiltIdx = 1:NumFilts
         PMUstructIdx = 1:NumPMU;
     end
 
-    % Find the appropriate filter and apply it for each of the
-    % specified PMUs
+    % Find the appropriate filter and apply it to each of the
+    % specified PMUs and channels
     switch ProcessFilter{FiltIdx}.Type
         case 'HighPass'
             for PMUidx = 1:NumPMU

@@ -25,6 +25,11 @@
         % customized signal
         % Parameters.Scalar: scalar value used to create a matrix by
         % replicating this value
+    % FlagBitCust: Flag bits reserved for flagging new customized signal
+        % FlagBitCust(1): Indicates error associated with user specified
+        % parameters for creating a customized signal
+        % FlagBitCust(2): Indicates data points in customized signal that
+        % used flagged input data points 
 % 
 % Outputs:
     % custPMU
@@ -33,11 +38,13 @@
 %Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov): 
 %Changed the flag matrix from a 2 dimensional double matrix to a 3 
 %dimensional logical matrix (3rd dimension represents flag bit)
+%Modified on July 13, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Includes FlagBitCust variable
 
-function custPMU = ScalarRep(custPMU,Parameters)
+function custPMU = ScalarRep(custPMU,Parameters,FlagBitCust)
 
-% Number of signals and flags in the current custom PMU Data field
-[~,NumSig,NFlags] = size(custPMU.Flag);
+% Size of the current Data matrix for the custom PMU - N samples by NumSig signals
+NumSig = size(custPMU.Data,2);
 
 SignalName = Parameters.SignalName;
 CheckSignalNameError(SignalName, custPMU.Signal_Name);
@@ -71,7 +78,7 @@ try
 catch
     warning(['Scalar ' Parameters.scalar ' could not be converted to a scalar. Signal will be set to NaN and Flags set.']);
     custPMU.Data(:,NumSig+1) = NaN;
-    custPMU.Flag(:,NumSig+1,NFlags) = true; %flagged for error in user input
+    custPMU.Flag(:,NumSig+1,FlagBitCust(2)) = true; %flagged for error in user input
     custPMU.Signal_Name{NumSig+1} = SignalName;
     custPMU.Signal_Type{NumSig+1} = 'SC';
     custPMU.Signal_Unit{NumSig+1} = 'SC';

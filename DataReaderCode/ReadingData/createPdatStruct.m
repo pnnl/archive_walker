@@ -13,6 +13,8 @@
                 % DataXML.Configuration.Stages{i}.Filter{j}.Parameters.FlagBit:
                 % a string specifying bit to be flagged for j^th filter
                 % operation in i^th stage
+        % DataXML.Flag_Bit: Consists of flag bits used by different data
+        % quality check filters
 %
 % Outputs:
     % PMU: struct array of dimension 1 by Number of PMUs

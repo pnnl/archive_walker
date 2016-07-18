@@ -31,6 +31,8 @@
 
 function PMU = RationalFilt(PMU,SigsToFilt,Parameters)
 
+%Numerator and denominator of filter coefficients corresponding to
+% the given user specified parameters
 b_char = strsplit(Parameters.Numerator,',');
 for nb = 1:length(b_char)
     b(nb) = str2num(b_char{nb});

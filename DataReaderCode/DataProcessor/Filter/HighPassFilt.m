@@ -32,9 +32,13 @@
 
 function PMU = HighPassFilt(PMU,SigsToFilt,Parameters)
 
+%User-specified parameters 
 FiltOrder  = str2num(Parameters.Order);
 FiltCutoff  = str2num(Parameters.Cutoff);
 SetZeroPhase  = Parameters.ZeroPhase;
+
+%calculates signal's sampling frequency using time string for 1st and 5th
+%data points.
 t = PMU.Signal_Time.Time_String;
 t1 = t{1};
 Ind1 = findstr(t1, '.');
@@ -42,7 +46,10 @@ T1 = str2num(t1(Ind1:end));
 t5 = t{5};
 Ind5 = findstr(t5, '.');
 T5 = str2num(t5(Ind5:end));
-fs = round(4/(T5 - T1)); %calculating frequency of signal using time indices of 1st and 5th data point.
+fs = round(4/(T5 - T1)); 
+
+%gives numerator and denominator of filter coefficients corresponding to
+%given user specified parameters
 [b,a] = butter(FiltOrder,FiltCutoff/(fs/2),'high');
 
 % If specific signals were not listed, apply to all signals except 

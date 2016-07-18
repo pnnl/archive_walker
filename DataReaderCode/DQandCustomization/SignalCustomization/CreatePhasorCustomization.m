@@ -41,7 +41,12 @@
                     % Parameters.phasor{i}.ang.Channel: a string specifying
                     % the channel of PMU that represents angle signal               
                 %   Parameters.phasor{i}.CustName: a string specifying name for the i^th customized signal               
-    % custPMUidx: numerical identifier for PMU that would store customized signal
+    % custPMUidx: numerical identifier for PMU that would store customized signall
+    % FlagBitCust: Flag bits reserved for flagging new customized signal
+        % FlagBitCust(1): Indicates error associated with user specified
+        % parameters for creating a customized signal
+        % FlagBitCust(2): Indicates data points in customized signal that
+        % used flagged input data points 
 % 
 % Outputs:
     % PMUstruct: 
@@ -49,12 +54,13 @@
 %Created by: Jim Follum (james.follum@pnnl.gov)
 %Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
 %Changed the flag matrix from a 2 dimensional double matrix to a 3 dimensional logical matrix.
-
-function PMUstruct = CreatePhasorCustomization(PMUstruct,custPMUidx,Parameters)
+%Modified on July 13, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Includes FlagBitCust variable
+function PMUstruct = CreatePhasorCustomization(PMUstruct,custPMUidx,Parameters,FlagBitCust)
 
 % Size of the current Data matrix for the custom PMU - N samples by NumSig
-% signals by NFlags flags
-[N,NcustSigs,NFlags] = size(PMUstruct(custPMUidx).Flag);
+% signals
+[N,NcustSigs] = size(PMUstruct(custPMUidx).Data);
 AvailablePMU = {PMUstruct.PMU_Name};
 
 NumPhasor = length(Parameters.phasor);
@@ -64,7 +70,7 @@ if NumPhasor == 1
     % indexing can be used in the following for loop.
     Parameters.phasor = {Parameters.phasor};
 end
-% [~,~,NumFlag] = size(PMUstruct(custPMUidx).Flag);
+
 SigMat = NaN*ones(N,NumPhasor);
 FlagMat = true(N,NumPhasor);
 SignalType = cell(1,NumPhasor);
@@ -100,7 +106,7 @@ for PhasorIdx = 1:NumPhasor
         continue
     end
     
-    SigIdxAng = find(strcmp(Parameters.phasor{PhasorIdx}.ang.Channel,PMUstruct(PMUidxMag).Signal_Name));
+    SigIdxAng = find(strcmp(Parameters.phasor{PhasorIdx}.ang.Channel,PMUstruct(PMUidxAng).Signal_Name));
     % If the specified signal is not in PMUstruct, skip the rest of the for 
     % loop so that Data remains NaNs and Flags remain set.
     if isempty(SigIdxAng)
@@ -226,9 +232,9 @@ PMUstruct(custPMUidx).Signal_Unit(NcustSigs+(1:NumPhasor)) = SignalUnit;
 PMUstruct(custPMUidx).Data(:,NcustSigs+(1:NumPhasor)) = SigMat;
 for PhasorIndex = 1:NumPhasor
     if ErrFlagUser(PhasorIdx)
-        PMUstruct(custPMUidx).Flag(:,NcustSigs+PhasorIndex,NFlags) = FlagMat(:,PhasorIndex);
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+PhasorIndex,FlagBitCust(2)) = FlagMat(:,PhasorIndex);
     else
-        PMUstruct(custPMUidx).Flag(:,NcustSigs+PhasorIndex,NFlags-1) = FlagMat(:,PhasorIndex);
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+PhasorIndex,FlagBitCust(1)) = FlagMat(:,PhasorIndex);
     end
 end
         

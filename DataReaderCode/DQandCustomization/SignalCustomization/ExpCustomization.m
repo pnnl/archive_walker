@@ -34,7 +34,12 @@
                     % Parameters.signal{i}.Channel: a string specifying
                     % the channel of PMU that represents i^th signal to be customized   
                     % Parameters.signal{i}.CustName: a string specifying name for the i^th customized
-    % custPMUidx: numerical identifier for PMU that would store customized signal
+    % custPMUidx: numerical identifier for PMU that would store customized signall
+    % FlagBitCust: Flag bits reserved for flagging new customized signal
+        % FlagBitCust(1): Indicates error associated with user specified
+        % parameters for creating a customized signal
+        % FlagBitCust(2): Indicates data points in customized signal that
+        % used flagged input data points 
 % 
 % Outputs:
     % PMUstruct: 
@@ -43,9 +48,10 @@
 %Modified on June 3, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
 %Changed the flag matrix from a 2 dimensional double matrix to a 3
 %dimensional logical matrix (3rd dimension represents flag bit)
+%Modified on July 13, 2016 by Urmila Agrawal(urmila.agrawal@pnnl.gov):
+%Includes FlagBitCust variable
 
-
-function PMUstruct = ExpCustomization(PMUstruct,custPMUidx,Parameters)
+function PMUstruct = ExpCustomization(PMUstruct,custPMUidx,Parameters,FlagBitCust)
 
 exponent = str2num(Parameters.exponent);
 if isempty(exponent)
@@ -53,9 +59,8 @@ if isempty(exponent)
     exponent = NaN;
 end
 
-% Size of the current Data matrix and number of flags for the custom PMU -
-% N samples by NcustSigs signals by NFlags flags
-[N,NcustSigs,NFlags] = size(PMUstruct(custPMUidx).Flag);
+% Size of the current Data matrix for the custom PMU - N samples by NcustSigs signals
+[N,NcustSigs] = size(PMUstruct(custPMUidx).Data);
 
 AvailablePMU = {PMUstruct.PMU_Name};
 
@@ -67,7 +72,7 @@ if NumSigs == 1
     Parameters.signal = {Parameters.signal};
 end
 SigMat = NaN*ones(N,NumSigs);
-FlagMat = true(N,NcustSigs);
+FlagMat = true(N,NumSigs);
 SignalType = cell(1,NumSigs);
 SignalUnit = cell(1,NumSigs);
 SignalName = cell(1,NumSigs);
@@ -131,8 +136,8 @@ PMUstruct(custPMUidx).Signal_Unit(NcustSigs+(1:NumSigs)) = SignalUnit;
 PMUstruct(custPMUidx).Data(:,NcustSigs+(1:NumSigs)) = SigMat;
 for SigInd = 1:NumSigs
     if ErrFlag(SigInd)
-        PMUstruct(custPMUidx).Flag(:,NcustSigs+SigInd,NFlags) = FlagMat(:,SigInd); %flag for error in user input
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+SigInd,FlagBitCust(2)) = FlagMat(:,SigInd); %flag for error in user input
     else
-        PMUstruct(custPMUidx).Flag(:,NcustSigs+SigInd,NFlags-1) = FlagMat(:,SigInd); %flag for error in input signal
+        PMUstruct(custPMUidx).Flag(:,NcustSigs+SigInd,FlagBitCust(1)) = FlagMat(:,SigInd); %flag for error in input signal
     end
 end

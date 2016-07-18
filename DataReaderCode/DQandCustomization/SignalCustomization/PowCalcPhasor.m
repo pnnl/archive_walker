@@ -43,7 +43,7 @@
 function [Signal,Flag,SignalType,SignalUnit] = PowCalcPhasor(VphasorStruct,IphasorStruct,PMUstruct,custPMUidx,PowType)
 
 % Size of the current Data matrix for the custom PMU - N samples by NcustSigs signals
-[N,~] = size(PMUstruct(custPMUidx).Data);
+N= size(PMUstruct(custPMUidx).Data,1);
 
 % If a problem is detected, the function returns these default values
 Signal = NaN*ones(N,1);

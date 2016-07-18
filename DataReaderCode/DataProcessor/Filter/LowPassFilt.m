@@ -34,6 +34,7 @@
 
 function PMU = LowPassFilt(PMU,SigsToFilt,Parameters)
 
+%User-specified parameters 
 PassRipple  = str2num(Parameters.PassRipple);
 StopRipple  = str2num(Parameters.StopRipple);
 PassCutoff  = str2num(Parameters.PassCutoff);
@@ -41,6 +42,8 @@ StopCutoff  = str2num(Parameters.StopCutoff);
 SetZeroPhase  = Parameters.ZeroPhase;
 CutoffFreq = [PassCutoff StopCutoff]; % in Hz
 
+%calculates signal's sampling frequency using time string for 1st and 5th
+%data points.
 t = PMU.Signal_Time.Time_String;
 t1 = t{1};
 Ind1 = findstr(t1, '.');
@@ -54,6 +57,8 @@ if StopCutoff>fs
     error('Cut-off frequencies exceed folding frequency.');
 end
 
+%gives numerator and denominator of filter coefficients corresponding to
+%the given user specified parameters
 a=[1 0];
 dev = [(10^(PassRipple/20)-1)/(10^(PassRipple/20)+1)  10^(-StopRipple/20)];
 [nLP,fo,ao,w] = firpmord(CutoffFreq,a,dev,fs);
@@ -78,7 +83,7 @@ for SigIdx = 1:length(SigsToFilt)
     
     % apply filter operation here
     if strcmp(SetZeroPhase,'TRUE')
-        PMU.Data(:,ThisSig) = filtfilt(b,a,PMU.Data(:,ThisSig));
+        PMU.Data(:,ThisSig) = filtfilt(b,a,PMU.Data(:,ThisSig)); 
     else
         PMU.Data(:,ThisSig) = filter(b,a,PMU.Data(:,ThisSig));
     end  

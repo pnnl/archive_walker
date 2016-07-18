@@ -25,7 +25,7 @@
         % Parameters.FlagBit: Flag bit for this filter operation.
     % setNaNMatrix: Matrix of size: number of data points by number of
     % channels in a PMU. '0' indicates data is not to be set to NaN after
-    % filter operation, any other value indicates data should be set to NaN
+    % filter operation, any other positive value indicates data should be set to NaN
 %
 % Outputs:
     % PMUstruct
@@ -82,4 +82,8 @@ if PctFlagged >= PctThresh
         setNaNmatrixIni(:,SigIdx) = 1;
     end
 end
-setNaNMatrix = setNaNMatrix + setNaNmatrixIni;
+%setNaNmatrixIni has element '1' for the current PMU which
+%is to be set to NaN for the current filter operation
+%setNaNMatrix has non-zero positive elements for the current PMU which
+%is to be set to NaN after all filter operation that has been carried out
+setNaNMatrix = setNaNMatrix + setNaNmatrixIni; 
