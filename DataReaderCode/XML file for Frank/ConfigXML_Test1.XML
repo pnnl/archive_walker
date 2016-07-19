@@ -5,7 +5,7 @@
 		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
         -->
         <FileDirectory>C:\Users\agra307\Documents\Task_05_23_2016\Master copy\Archive_Walker\DataReaderCode\OriginalData</FileDirectory>
-        <FileAType>PDAT</FileType>
+        <FileType>PDAT</FileType>
         <Mnemonic>WISPDitt</Mnemonic>
         <!--
         <Mode>
@@ -197,8 +197,8 @@
             <Parameters>
                 <scalar>2*pi</scalar>
                 <SignalName>ScalarSig_2pi</SignalName>
-                <SignalType>Others</SignalType>
-                <SignalUnit>O</SignalUnit>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
             </Parameters>
         </Customization>
         <Customization>
@@ -206,8 +206,8 @@
             <Parameters>
                 <scalar>60</scalar>
                 <SignalName>DeltaT_inv</SignalName>
-                <SignalType>F</SignalType>
-                <SignalUnit>Hz</SignalUnit>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
             </Parameters>
         </Customization>
         <Customization>
@@ -215,18 +215,8 @@
             <Parameters>
                 <scalar>3</scalar>
                 <SignalName>Scalar_3</SignalName>
-                <SignalType>Others</SignalType>
-                <SignalUnit>O</SignalUnit>
-            </Parameters>
-        </Customization>
-        <Customization>
-            <Name>SignReversal</Name>
-            <Parameters>
-                <signal>
-                    <PMU>ALSN 500 A1 SA  </PMU>
-                    <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
-                    <CustName>Sig1SignRev.M500</CustName>
-                </signal>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
             </Parameters>
         </Customization>
         <Customization>
@@ -234,8 +224,8 @@
             <Parameters>
                 <phasor>
                     <mag>
-                        <PMU>Custom Signals </PMU>
-                        <Channel>Sig1SignRev.M500</Channel>
+                        <PMU>ALSN 500 A1 SA  </PMU>
+                    	<Channel>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Channel>
                     </mag>
                     <ang>
                         <PMU>ALSN 500 A1 SA  </PMU>
@@ -271,13 +261,23 @@
                 </signal>
             </Parameters>
         </Customization>
+	<Customization>
+            <Name>SignReversal</Name>
+            <Parameters>
+                <signal>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>Sig1Angle</Channel>
+                    <CustName>Sig1AngleSignRev</CustName>
+                </signal>
+            </Parameters>
+        </Customization>
         <Customization>
             <Name>Addition</Name>
             <Parameters>
                 <SignalName>AngleDiffSignal</SignalName>
                 <term>
                     <PMU>Custom Signals</PMU>
-                    <Channel>Sig1Angle</Channel>
+                    <Channel>Sig1AngleSignRev</Channel>
                 </term>
                 <term>
                     <PMU>Custom Signals</PMU>
@@ -341,7 +341,7 @@
                 </minuend>
                 <subtrahend>
                     <PMU>Custom Signals</PMU>
-                    <Channel>AngleSignal2/Channel>
+                    <Channel>AngleSignal2</Channel>
                 </subtrahend>
             </Parameters>
         </Customization>
@@ -464,11 +464,11 @@
                         <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
                     </Vang>
                     <Imag>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Channel>
                     </Imag>
                     <Iang>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.ANG</Channel>
                     </Iang>
                     <CustName>ComplexPower1</CustName>
@@ -501,11 +501,11 @@
                         <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
                     </Vang>
                     <Imag>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Channel>
                     </Imag>
                     <Iang>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.ANG</Channel>
                     </Iang>
                     <CustName>ApparentPower1</CustName>
@@ -538,11 +538,11 @@
                         <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
                     </Vang>
                     <Imag>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Channel>
                     </Imag>
                     <Iang>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.ANG</Channel>
                     </Iang>
                     <CustName>ActivePower1</CustName>
@@ -575,11 +575,11 @@
                         <Channel>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Channel>
                     </Vang>
                     <Imag>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.MAG</Channel>
                     </Imag>
                     <Iang>
-                        <PMU>ALSN 500 A1 SA </PMU>
+                        <PMU>ALSN 500 A1 SA  </PMU>
                         <Channel>ALSN 500 A1 SA  .T500BANK1____1IP.ANG</Channel>
                     </Iang>
                     <CustName>ReactivePower1</CustName>
@@ -678,7 +678,7 @@
                 <SigType>Q</SigType>
                 <SigUnit>MVAR</SigUnit>
                 <PMU>Custom Signals</PMU>
-                <Channel>ActivePower3</Channel>
+                <Channel>ReactivePower3</Channel>
             </Parameters>
         </Customization>  
         <Customization>
@@ -694,12 +694,6 @@
         </Customization>	
     </Stages>
     <SignalSelection>
-        <SignalType>
-            <Type>RCF</Type>
-        </SignalType>
-        <SignalType>
-            <Type>VAP</Type>
-        </SignalType>
 		<PMU>
 			<Name>ALSN 500 A1 SA  </Name>
 			<Channels>
