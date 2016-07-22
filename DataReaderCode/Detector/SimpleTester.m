@@ -4,18 +4,19 @@ clear;
 
 % Make changes to DetectorConfig.XML to check your coding and different
 % options.
-DetectorXMLfile = 'C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\ConfigXML\DetectorConfig.XML';
+DetectorXMLfile = 'C:\Users\wang690\Desktop\projects\detector\DataReaderCode\ConfigXML\DetectorConfig.XML';
 
 % Don't worry about what's inside this XML, just specify the filepath 
-DataReadXMLfile = 'C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\ConfigXML\ConfigXML.XML';
+DataReadXMLfile = 'C:\Users\wang690\Desktop\projects\detector\DataReaderCode\ConfigXML\ConfigXML.XML';
 % Don't worry about looking at different minutes of data, just get the code
 % to work
-PMUfilePath = 'C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123000.pdat';
+PMUfilePath = 'C:\Users\wang690\Desktop\projects\detector\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123000.pdat';
 
 % Choose the detector type you're working on:
-DetectorType = 'OutOfRangeGeneral';
+% DetectorType = 'OutOfRangeGeneral';
+% DetectorType = 'Periodogram';
 % DetectorType = 'Ringdown';
-% DetectorType = 'OutOfRangeFrequency';
+DetectorType = 'OutOfRangeFrequency';
 % DetectorType = 'OutOfRangeVoltage';
 
 % You can add multiples of each detector to DetectorConfig.XML to try out

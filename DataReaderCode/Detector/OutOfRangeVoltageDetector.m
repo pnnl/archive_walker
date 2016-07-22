@@ -28,16 +28,53 @@ end
 ExtractedParameters = ExtractParameters(Parameters);
 
 % Store the parameters in variables for easier access
-
+Max = ExtractedParameters.Max;
+Min = ExtractedParameters.Min;
+Duration = ExtractedParameters.Duration;
 
 %% Based on the specified parameters, initialize useful variables
 
 
 
 %% Perform detection
-
+% nominalVoltage = strsplit(PMUstruct.Signal_Name{ThisSig},'.');
+%             nominalVoltage = str2double(nominalVoltage{2}(2:4)); 
+            
 % Initialize structure to output detection results
-DetectionResults = struct([]);
+DetectionResults = struct('PMU',[],'Channel',[],'Max',[],'Min',[],'Duration',[],'Response',[]);
+
+% counter for the number of out of range signal detected
+signalDetected = 0;
+% Loop throught each signal
+for index = 1:size(Data,2)
+    % find the nominal value of the voltage signal, in unit of kV
+    % and convert from phase-to-phase to phase-to-neutral
+    splitedSignalName = strsplit(DataChannel{index},'.');
+    nominalVoltage = str2double(splitedSignalName{2}(2:4)) / sqrt(3);
+    upperVoltageLimit = Max * nominalVoltage;
+    lowerVoltageLimit = Min * nominalVoltage;
+    currentSignal = Data(:,index);
+    % convert signal to kV if it's in V
+    if strcmp(DataUnit(index), 'V')
+        currentSignal=currentSignal/1000;
+    end
+    aboveUpperLimitIndices = currentSignal > upperVoltageLimit;
+    belowLowerLimitIndices = currentSignal < lowerVoltageLimit;
+    outOfRangeIndices = aboveUpperLimitIndices | belowLowerLimitIndices;
+    % find upper and lower extreme
+    upperExtreme = max(currentSignal(aboveUpperLimitIndices));
+    lowerExtreme = min(currentSignal(belowLowerLimitIndices));
+    totalTimeOutsideRange = size(currentSignal(outOfRangeIndices),1) * diff(t(1:2));
+    % if total time exceeds the Duration threshold, detected!
+    if totalTimeOutsideRange > Duration
+        signalDetected = signalDetected + 1;
+        DetectionResults(signalDetected).PMU = DataPMU(index);
+        DetectionResults(signalDetected).Channel = DataChannel(index);
+        DetectionResults(signalDetected).Max = upperExtreme;
+        DetectionResults(signalDetected).Min = lowerExtreme;
+        DetectionResults(signalDetected).Duration = totalTimeOutsideRange;
+    end
+end
 
 % Initialize structure for additional outputs
 AdditionalOutput = struct([]);
@@ -52,7 +89,29 @@ end
 % such as the length of the input data or the sampling rate, can be added
 % as necessary. 
 function ExtractedParameters = ExtractParameters(Parameters)
-
-ExtractedParameters = struct();
-
+    % Upper threshold
+if isfield(Parameters,'Max')
+    % Use specified Max, upper threshold
+    Max = str2double(Parameters.Max);
+else
+    % Upper threshold is not considered 
+    Max = NaN;
+end
+% Lower threshold
+if isfield(Parameters,'Min')
+    % Use specified Min, lower threshold
+    Min = str2double(Parameters.Min);
+else
+    % Lower threshold is not considered 
+    Min = NaN;
+end
+% Duration threshold
+if isfield(Parameters,'Duration')
+    % Use specified Duration threshold
+    Duration = str2double(Parameters.Duration);
+else
+    % Duration threshold is set to zero 
+    Duration = 0;
+end
+ExtractedParameters = struct('Max',Max,'Min',Min,'Duration',Duration);
 end

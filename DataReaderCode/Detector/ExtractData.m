@@ -37,9 +37,9 @@ if isfield(Parameters,'PMU')
                 
                 Data = [Data PMUstruct(PMUstructIdx).Data(:,ChannelStructIdx)];
                 DataPMU = [DataPMU PMUstruct(PMUstructIdx).PMU_Name];
-                DataChannel = [DataChannel PMUstruct(PMUstructIdx).Signal_Name{ChannelIdx}];
-                DataType = [DataType PMUstruct(PMUstructIdx).Signal_Type{ChannelIdx}];
-                DataUnit = [DataUnit PMUstruct(PMUstructIdx).Signal_Unit{ChannelIdx}];
+                DataChannel = [DataChannel PMUstruct(PMUstructIdx).Signal_Name{ChannelStructIdx}];
+                DataType = [DataType PMUstruct(PMUstructIdx).Signal_Type{ChannelStructIdx}];
+                DataUnit = [DataUnit PMUstruct(PMUstructIdx).Signal_Unit{ChannelStructIdx}];
             end
         else
             % Channels are not specified - use all of them in this PMU

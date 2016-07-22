@@ -114,18 +114,18 @@
     <Ringdown>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
         If omitted, default is single channel.-->
-        <Mode>SingleChannel</Mode>
+        <Mode>MultiChannel</Mode>
         <!-- Length of segments in samples for the energy detector -->
-        <SegmentLength>1800</SegmentLength>
+        <SegmentLength>800</SegmentLength>
         <!-- Delay between evaluated segments in samples. This can be 
         thought of as the time-resolution of the detector. -->
-        <SegmentDelay>100</SegmentDelay>
+        <SegmentDelay>10</SegmentDelay>
         <!-- Number of segments to evaluate. 
         SegmentLength+SegmentNumber*SegmentDelay must not exceed the length
         of the input signal -->
         <SegmentNumber>200</SegmentNumber>
         <!-- Scaling factor to establish the detection threshold -->
-        <EnergyThresholdScale>3</EnergyThresholdScale>
+        <EnergyThresholdScale>1.5</EnergyThresholdScale>
         <!-- 
         The ringdown detector utilizes the spectral coherence based 
         forced oscillation detector. The parameters for this detector 
@@ -180,21 +180,109 @@
         considered. -->
         <Min>500</Min>
         <!-- Duration threshold in samples. If omitted, it is set to zero. -->
+        <Duration>6</Duration>
+    </OutOfRangeGeneral>
+	<!-- Out-of-range event detector for general signals -->
+    <OutOfRangeGeneral>
+        <PMU>
+            <Name>ALVY 500 A1 SA  </Name>
+            <Channel>
+                <Name>ALVY 500 A1 SA  .L500DIXONVLL_1VB.MAG</Name>
+            </Channel>
+            <Channel>
+                <Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <!-- Upper threshold for the normal range. If omitted, it is not 
+        considered. -->
+        <Max>1000</Max>
+        <!-- Lower threshold for the normal range. If omitted, it is not 
+        considered. -->
+        <Min>500</Min>
+        <!-- Duration threshold in samples. If omitted, it is set to zero. -->
+        <Duration>600</Duration>
+    </OutOfRangeGeneral>
+    <!-- Out-of-range event detector for general signals -->
+    <OutOfRangeGeneral>
+        <PMU>
+            <Name>ALSN 500 A1 SA  </Name>
+            <Channel>
+                <Name>Current Signal 1</Name>
+            </Channel>
+            <Channel>
+                <Name>ALVY 500 A1 SA  .L500MARION___1VP.MAG</Name>
+            </Channel>
+        </PMU>
+        <!-- Upper threshold for the normal range. If omitted, it is not 
+        considered. -->
+        <Max>300</Max>
+        <!-- Lower threshold for the normal range. If omitted, it is not 
+        considered. -->
+        <Min>200</Min>
+        <!-- Duration threshold in samples. If omitted, it is set to zero. -->
         <Duration>600</Duration>
     </OutOfRangeGeneral>
     <!-- Out-of-range event detector for voltage signals -->
     <OutOfRangeVoltage>
+		<PMU>
+            <Name>ALVY 500 A1 SA  </Name>
+            <Channel>
+                <Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.MAG</Name>
+            </Channel>
+			<Channel>
+                <Name>ALVY 500 A1 SA  .L500DIXONVLL_1VA.MAG</Name>
+            </Channel>
+			<Channel>
+                <Name>ALVY 500 A1 SA  .L500DIXONVLL_1VB.MAG</Name>
+            </Channel>
+			<Channel>
+                <Name>ALVY 500 A1 SA  .L500DIXONVLL_1VC.MAG</Name>
+            </Channel>
+			<Channel>
+                <Name>ALVY 500 A1 SA  .L500MARION___1VP.MAG</Name>
+            </Channel>
+        </PMU>
+	    <PMU>
+            <Name>ALSN 500 A1 SA  </Name>
+            <Channel>
+                <Name>ALSN 500 A1 SA  .B500SOUTH____1VC.MAG</Name>
+            </Channel>
+        </PMU>
+	    <PMU>
+            <Name>ASHE 500 A1 SA  </Name>
+            <Channel>
+                <Name>ASHE 500 A1 SA  .B500NORTH____1VB.MAG</Name>
+            </Channel>
+        </PMU>
         <!-- Upper threshold for the normal range as percentage of nominal.
         If omitted, it is not considered. -->
-        <Max>1.3</Max>
+        <Max>1.1</Max>
         <!-- Lower threshold for the normal range as percentage of nominal.
         If omitted, it is not considered. -->
-        <Min>0.7</Min>
+        <Min>0.9</Min>
         <!-- Duration threshold in samples. If omitted, it is set to zero. -->
-        <Duration>600</Duration>
+        <Duration>1</Duration>
     </OutOfRangeVoltage>
     <!-- Out-of-range event detector for frequency signals -->
     <OutOfRangeFrequency>
+	    <PMU>
+            <Name>ALVY 500 A1 SA  </Name>
+            <Channel>
+                <Name>ALVY 500 A1 SA  .frq</Name>
+            </Channel>
+        </PMU>
+	    <PMU>
+            <Name>ALSN 500 A1 SA  </Name>
+            <Channel>
+                <Name>ALSN 500 A1 SA  .frq</Name>
+            </Channel>
+        </PMU>
+	    <PMU>
+            <Name>ASHE 500 A1 SA  </Name>
+            <Channel>
+                <Name>ASHE 500 A1 SA  .frq</Name>
+            </Channel>
+        </PMU>
         <!-- If TRUE, the frequency response measures are returned. If 
         FALSE or omitted, the measures are not returned -->
         <FrequencyResponse>TRUE</FrequencyResponse>
