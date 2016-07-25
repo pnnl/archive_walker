@@ -41,8 +41,29 @@ Duration = ExtractedParameters.Duration;
 % Initialize structure to output detection results
 DetectionResults = struct('PMU',[],'Channel',[],'Max',[],'Min',[],'Duration',[],'Response',[]);
 
-% counter for the number of out of range signal detected
-signalDetected = 0;
+% % counter for the number of out of range signal detected
+% signalDetected = 0;
+% % Loop throught each signal
+% for index = 1:size(Data,2)
+%     currentSignal = Data(:,index);
+%     aboveUpperLimitIndices = currentSignal > Max;
+%     belowLowerLimitIndices = currentSignal < Min;
+%     outOfRangeIndices = aboveUpperLimitIndices | belowLowerLimitIndices;
+%     % find upper and lower extreme
+%     upperExtreme = max(currentSignal(aboveUpperLimitIndices));
+%     lowerExtreme = min(currentSignal(belowLowerLimitIndices));
+%     totalTimeOutsideRange = size(currentSignal(outOfRangeIndices),1) * diff(t(1:2));
+%     % if total time exceeds the Duration threshold, detected!
+%     if totalTimeOutsideRange > Duration
+%         signalDetected = signalDetected + 1;
+%         DetectionResults(signalDetected).PMU = DataPMU(index);
+%         DetectionResults(signalDetected).Channel = DataChannel(index);
+%         DetectionResults(signalDetected).Max = upperExtreme;
+%         DetectionResults(signalDetected).Min = lowerExtreme;
+%         DetectionResults(signalDetected).Duration = totalTimeOutsideRange;
+%     end
+% end
+
 % Loop throught each signal
 for index = 1:size(Data,2)
     currentSignal = Data(:,index);
@@ -54,16 +75,24 @@ for index = 1:size(Data,2)
     lowerExtreme = min(currentSignal(belowLowerLimitIndices));
     totalTimeOutsideRange = size(currentSignal(outOfRangeIndices),1) * diff(t(1:2));
     % if total time exceeds the Duration threshold, detected!
+    DetectionResults(index).PMU = DataPMU(index);
+    DetectionResults(index).Channel = DataChannel(index);
+    if isempty(upperExtreme)
+        DetectionResults(index).Max = NaN;
+    else
+        DetectionResults(index).Max = upperExtreme;
+    end
+    if isempty(lowerExtreme)
+        DetectionResults(index).Min = NaN;
+    else
+        DetectionResults(index).Min = lowerExtreme;
+    end
     if totalTimeOutsideRange > Duration
-        signalDetected = signalDetected + 1;
-        DetectionResults(signalDetected).PMU = DataPMU(index);
-        DetectionResults(signalDetected).Channel = DataChannel(index);
-        DetectionResults(signalDetected).Max = upperExtreme;
-        DetectionResults(signalDetected).Min = lowerExtreme;
-        DetectionResults(signalDetected).Duration = totalTimeOutsideRange;
+        DetectionResults(index).Duration = totalTimeOutsideRange;
+    else        
+        DetectionResults(index).Duration = NaN;
     end
 end
-
 
 % Initialize structure for additional outputs
 AdditionalOutput = struct([]);
