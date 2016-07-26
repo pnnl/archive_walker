@@ -15,13 +15,12 @@
 %   
 % Updated July 11, 2016 by Urmila Agrawal
 %   added 3 variables: flagBitInput, FlagBitInterpo, and NumFlags, which
-%   would bed used by concatenatePMU() and DataProcessor()
+%   would be used by concatenatePMU() and DataProcessor()
 %
 % Updated July 12, 2016 by Tao Fu
 %   moved counting the maximum number of flags that will be needed
 %   (Flag_Bit) from createPdatStruct() and JSIS_CSV_2_Mat() to this script
 % 
-
 
 %prepare workspace
 % close all;
@@ -38,17 +37,20 @@ addpath('..\DQandCustomization');
 addpath('..\DQandCustomization\DQfilters');
 addpath('..\DataProcessor\Filter');
 addpath('..\DQandCustomization\SignalCustomization');
+addpath('..\Detector');
+% addpath('..\Detector\PeriodogramDetector');
+% addpath('..\Detector\SpectralCoherenceDetector');
 addpath('..\');
 
 %XML file
-XMLFile = 'ConfigXML_Test.xml';
+XMLFile = 'ConfigXML_Test1.xml';
 %XMLFile = 'ConfigXML_CSV.xml';
 
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='ProcessXML_Test.xml';
+XMLFile='ProcessXML_Test1.xml';
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
@@ -158,6 +160,21 @@ for StageId = 1:NumStages
                 Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBit);
                 count = count + 1;
             end
+            % counts filter that used FlagBitChan as a parameter
+            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBitChan')
+                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBitChan);
+                count = count + 1;
+            end
+            % count filter that used FlagBitSamp as a parameter
+            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBitSamp')
+                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBitSamp);
+                count = count + 1;
+            end
+            % count filter that used FlagBitFreq as a parameter
+            if isfield(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters,'FlagBitFreq')
+                Flag_Bit(count+1) = str2num(DataXML.Configuration.Stages{StageId}.Filter{FilterIdx}.Parameters.FlagBitFreq);
+                count = count + 1;
+            end
         end
     end
 end
@@ -237,7 +254,7 @@ oneMinuteEmptyPMU = []; % a one minute empty PMU used for missing minutes
 emptyPMUexist = 0;   % a flag used to identify if oneMinuteEmptyPMU exists
 FlagBitInput = 1; %Bit used to indicate flagged input data to be processed
 FlagBitInterpo = 2; %Bit used to indicate data is interpolated
-NumFlags = 2; % Number of bits used to indicate processed data that has been flagged
+NumFlagsProcessor = 2; % Number of bits used to indicate processed data that has been flagged
 
 %% processing files
 while(~done)
@@ -270,15 +287,15 @@ while(~done)
            elseif(strcmpi(DataInfo.FileType, 'csv'))
                % JSIS_CSV format
                [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
-           end
+           end             
            
 %            PMU(1).Data(2:11,1) = 200000 + randn(10,1);
-           PMU(1).Data(21:100,1) = 100000;
-%            PMU(1).Data(135:140,1) = 0;
-           
-           % Apply data quality filters and signal customizations
+%            PMU(1).Data(21:100,1) = 100000;
+%            PMU(2).Data(135:140,1) = 0;
+
+%            Apply data quality filters and signal customizations
            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
-           % Return only the desired PMUs and signals
+%            Return only the desired PMUs and signals
            PMU = GetOutputSignals(PMU,DataXML);
            
            % Create an empty one minute PMU data structure for later use
@@ -295,14 +312,14 @@ while(~done)
            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
             
            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-           concatPMU = ConcatenatePMU(PMUall,FlagBitInput,NumFlags);            
+           concatPMU = ConcatenatePMU(PMUall);            
             
            % **********
            % Processing
            % **********
-           concatPMU = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo);
+           PMU_ProcessorOutput = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor);
            % Return only the desired PMUs and signals
-           concatPMU = GetOutputSignals(concatPMU.PMU,ProcessXML);
+           PMU_ProcessorOutput = GetOutputSignals(PMU_ProcessorOutput,ProcessXML);
            
            % *********
            % Detection
@@ -318,7 +335,7 @@ while(~done)
            % detector the next time it is called to reduce computations. A 
            % similar strategy could be useful when implementing the other 
            % detectors too.
-           [DetectionResults, AdditionalOutput] = RunDetection(concatPMU,DetectorXML);
+%            [DetectionResults, AdditionalOutput] = RunDetection(concatPMU,DetectorXML);
            
            %% update some information
            DataInfo.tPMU = tPMU;
