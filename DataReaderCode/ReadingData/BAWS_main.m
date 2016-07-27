@@ -21,7 +21,9 @@
 %   moved counting the maximum number of flags that will be needed
 %   (Flag_Bit) from createPdatStruct() and JSIS_CSV_2_Mat() to this script
 % 
-
+% Updated on July 26, 2016 by Tao Fu
+%   added secondsNeeded as an input to ConcatenatePMU() function
+%
 %prepare workspace
 % close all;
 % clear all;
@@ -312,7 +314,7 @@ while(~done)
            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
             
            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-           concatPMU = ConcatenatePMU(PMUall);            
+           concatPMU = ConcatenatePMU(PMUall,DataInfo.secondesToConcat);            
             
            % **********
            % Processing

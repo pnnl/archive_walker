@@ -5,7 +5,7 @@
         % DataProcessStruct: Strucutre consisting of different PMU
         % structure to be concatenated Dimension: 1 by number of PMU
         % strucutres to be concatenated
-%        
+%       % secondsNeeds: time duration of needed PMU data in seconds
 % Output:
         % ConcateStruct: Concatenated PMU Strucutre consisting of one PMU
         % structure
@@ -17,9 +17,11 @@
 % Modified on July 11, 2016 by Tao Fu
 %   deleted the added part when NUMPMUstrucutre = 1 to match output data
 %   strucuter format
+% Modified on July 26, 2016 by Tao Fu
+%   Added secondsNeeded as an input
 %
 
-function PMU= ConcatenatePMU(DataProcessorStruct)
+function PMU= ConcatenatePMU(DataProcessorStruct,secondsNeeded)
 NumPMUstruct = length(DataProcessorStruct);
 
 NumPMU = length(DataProcessorStruct{1});
@@ -57,4 +59,35 @@ PMU(PMUind).Signal_Time.Time_String = PMU(PMUind).Signal_Time.Time_String(Ind);
 PMU(PMUind).Stat = PMU(PMUind).Stat(Ind);
 PMU(PMUind).Data = PMU(PMUind).Data(Ind,:);
 PMU(PMUind).Flag = PMU(PMUind).Flag(Ind,:,:);
+
+%% check and extract needed time length
+for i = 1:length(PMU)
+    % for each PMU
+    currPMU = PMU(i);
+    t = currPMU.Signal_Time.Signal_datenum; % signal time
+    deltaT = t(end)-t(end-1); % time interval
+    T_end = t(end)+deltaT; % ending time of PMU;
+    dt = T_end-t;
+    dt = dt*24*3600; % day to seconds
+    if(dt(1) > secondsNeeded)
+        % has more data than we needed
+        % remove some rounding errors
+        dt = round(dt*1000)/1000;
+        % select needed time 
+        k = find(dt <= secondsNeeded);
+        k1 = k(1); % starting index
+        currPMU.Signal_Time.Signal_datenum = currPMU.Signal_Time.Signal_datenum(k1:end);
+        currPMU.Signal_Time.Time_String = currPMU.Signal_Time.Time_String(k1:end);
+        currPMU.Stat = currPMU.Stat(k1:end,:);
+        currPMU.Data = currPMU.Data(k1:end,:);
+        currPMU.Flag = currPMU.Flag(k1:end,:);
+        PMU(i) = currPMU;
+    end
+    
 end
+    
+
+end
+
+
+
