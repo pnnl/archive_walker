@@ -17,9 +17,13 @@
 % Modified on July 11, 2016 by Tao Fu
 %   deleted the added part when NUMPMUstrucutre = 1 to match output data
 %   strucuter format
+%Modified on Jul 22 by Urmila Agrawal
+%   Flags are copied from source to destination PMU as it is.
 % Modified on July 26, 2016 by Tao Fu
 %   Added secondsNeeded as an input
-%
+% Modified on July 27 , 2016 by Urmila Agrawal
+%   Fixed a minor bug. When checking for needed time length , Flags were
+%   copied as 2-dimensional quantity, corrected it.
 
 function PMU= ConcatenatePMU(DataProcessorStruct,secondsNeeded)
 NumPMUstruct = length(DataProcessorStruct);
@@ -80,7 +84,7 @@ for i = 1:length(PMU)
         currPMU.Signal_Time.Time_String = currPMU.Signal_Time.Time_String(k1:end);
         currPMU.Stat = currPMU.Stat(k1:end,:);
         currPMU.Data = currPMU.Data(k1:end,:);
-        currPMU.Flag = currPMU.Flag(k1:end,:);
+        currPMU.Flag = currPMU.Flag(k1:end,:,:);
         PMU(i) = currPMU;
     end
     
