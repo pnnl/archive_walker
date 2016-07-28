@@ -49,7 +49,7 @@ FrequencyTolerance = ExtractedParameters.FrequencyTolerance;
 %% Based on the specified parameters, initialize useful variables
 
 % should be SegmentLength + ( SegmentNumber - 1 ) * SegmentDelay
-if SegmentLength+SegmentNumber*SegmentDelay > size(Data,1)
+if SegmentLength+(SegmentNumber-1)*SegmentDelay > size(Data,1)
     throw(MException('','SegmentLength+SegmentNumber*SegmentDelay must not exceed the length of the input signal'));
 end
 
@@ -57,7 +57,17 @@ if SegmentLength+SegmentNumber*SegmentDelay ~= AnalysisLength+NumberDelays*Delay
     warning('SegmentLength+SegmentNumber*SegmentDelay should equal AnalysisLength+NumberDelays*Delay');
 end
 
+
+
 %% Perform detection
+
+% check signal type
+Units = strcmp(DataType,'P')|strcmp(DataType,'F')|strcmp(DataType,'OTHER');
+if any(~Units)
+    warning(['Unaccepted signal type(s) in input signal(s). ',...
+        'Appropriate signal types for the ringdown detector are active power, frequency, and other.']);
+end
+Data(:,Units==0)=NaN;
 
 % Initialize structure to output detection results
 
@@ -68,45 +78,54 @@ for segment = 1:SegmentNumber
     allEnergyChannels(segment,:) = sum((currentSegment-ones(size(currentSegment,1),1)*yHat).^2,1);
 end
 
-
-% A = allEnergyChannels > threshold;
-% segmentDistance = SegmentLength / SegmentDelay;
+timePoints = PMUstruct.Signal_Time.Time_String(1:SegmentDelay:SegmentDelay*(SegmentNumber - 1)+1)';
 
 % single channel
 if strcmp(Mode,'SingleChannel')
     DetectionResults = struct('PMU',[],'Channel',[],'RingStart',[],'RingEnd',[],'EnergyChannel',[]);
-    numberOfRingDownSignals = 0;
     % loop through each signal
     for index = 1:size(allEnergyChannels,2)
-        currentSignal = allEnergyChannels(:,index);
+        currentEnergyChannel = allEnergyChannels(:,index);
         % ?_e=e×median{E_m[n]}
-        threshold = EnergyThresholdScale * median(currentSignal);
+        threshold = EnergyThresholdScale * median(currentEnergyChannel);
         % find all peaks K samples apart and larger than threshold
-        [peaks, locations] = findpeaks(currentSignal, 'MinPeakDistance',SegmentLength/SegmentDelay,'MinPeakHeight',threshold);
+        [peaks, locations] = findpeaks(currentEnergyChannel, 'MinPeakDistance',SegmentLength/SegmentDelay,'MinPeakHeight',threshold);
         RingStart = [];
         RingEnd = [];
         % find ringstart and ringend for all peaks
         for peakIndex = 1:length(peaks)
             startIndex = locations(peakIndex)*SegmentDelay+1;
             endIndex = locations(peakIndex)*SegmentDelay+SegmentLength;
-            RingStart = [RingStart, t(startIndex)];
-            RingEnd = [RingEnd, t(endIndex)];
+            RingStart = [RingStart; PMUstruct.Signal_Time.Time_String(startIndex)];
+            RingEnd = [RingEnd; PMUstruct.Signal_Time.Time_String(endIndex)];
         end
         % add signal to detected results
-        if ~isempty(peaks)
-            numberOfRingDownSignals = numberOfRingDownSignals + 1;
-            DetectionResults(numberOfRingDownSignals).PMU = DataPMU(index);
-            DetectionResults(numberOfRingDownSignals).Channel = DataChannel(index);
-            DetectionResults(numberOfRingDownSignals).RingStart = RingStart;
-            DetectionResults(numberOfRingDownSignals).RingEnd = RingEnd;
-            DetectionResults(numberOfRingDownSignals).EnergyChannel = peaks;
+        DetectionResults(index).PMU = DataPMU(index);
+        DetectionResults(index).Channel = DataChannel(index);
+        if isempty(RingStart)
+            DetectionResults(index).RingStart = NaN;
+        else
+            DetectionResults(index).RingStart = RingStart;
         end
+        if isempty(RingEnd)
+            DetectionResults(index).RingEnd = NaN;
+        else
+            DetectionResults(index).RingEnd = RingEnd;
+        end
+        if isempty(peaks)
+            DetectionResults(index).EnergyChannel = NaN;
+        else
+            DetectionResults(index).EnergyChannel = peaks;
+        end
+        AdditionalOutput(index).threshold = threshold;
+        AdditionalOutput(index).EnergyChannelTimeSeries = currentEnergyChannel;
+        AdditionalOutput(index).TimePoints = timePoints;
     end
 % multiple channels
 else
     DetectionResults = struct('PMU',[],'Channel',[],'RingStart',[],'RingEnd',[],'EnergyChannel',[],'EnergyTotal',[]);
     % E[n]
-    totalEnergyAcrossChannels = sum(allEnergyChannels,2);
+    totalEnergyAcrossChannels = nansum(allEnergyChannels,2);
     % ?_e=e×median{E[n]}
     threshold = EnergyThresholdScale * median(totalEnergyAcrossChannels);
     % find all peaks K samples apart and larger than threshold
@@ -119,22 +138,35 @@ else
     for peakIndex = 1:length(peaks)
         startIndex = locations(peakIndex)*SegmentDelay+1;
         endIndex = locations(peakIndex)*SegmentDelay+SegmentLength;
-        RingStart = [RingStart, t(startIndex)];
-        RingEnd = [RingEnd, t(endIndex)];
-        EnergyChannel = [EnergyChannel; allEnergyChannels(locations,:)];
+        RingStart = [RingStart; PMUstruct.Signal_Time.Time_String(startIndex)];
+        RingEnd = [RingEnd; PMUstruct.Signal_Time.Time_String(endIndex)];
+        EnergyChannel = [EnergyChannel; allEnergyChannels(locations(peakIndex),:)];
     end
     % add signal to detected results
-    if ~isempty(peaks)
-        DetectionResults.PMU = DataPMU;
-        DetectionResults.Channel = DataChannel;
+    DetectionResults.PMU = DataPMU;
+    DetectionResults.Channel = DataChannel;
+    if isempty(RingStart)
+        DetectionResults.RingStart = NaN;
+    else
         DetectionResults.RingStart = RingStart;
+    end
+    if isempty(RingEnd)
+        DetectionResults.RingEnd = NaN;
+    else
         DetectionResults.RingEnd = RingEnd;
+    end
+    if isempty(EnergyChannel)
+        DetectionResults.EnergyChannel = NaN;
+        DetectionResults.EnergyTotal = NaN;
+    else
         DetectionResults.EnergyChannel = EnergyChannel;
-        DetectionResults.EnergyTotal = sum(EnergyChannel,2);
+        DetectionResults.EnergyTotal = nansum(EnergyChannel,2);
     end    
+    AdditionalOutput.threshold = threshold;
+    AdditionalOutput.EnergyTotalTimeSeries = totalEnergyAcrossChannels;
+    AdditionalOutput.TimePoints = timePoints;
 end
 % Initialize structure for additional outputs
-AdditionalOutput = struct([]);
 
 end
 

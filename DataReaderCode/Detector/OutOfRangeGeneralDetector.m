@@ -34,6 +34,9 @@ Duration = ExtractedParameters.Duration;
 
 %% Based on the specified parameters, initialize useful variables
 
+upperExtreme = [];
+lowerExtreme = [];
+totalTimeOutsideRange = [];
 
 
 %% Perform detection

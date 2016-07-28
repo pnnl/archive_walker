@@ -33,7 +33,9 @@ Min = ExtractedParameters.Min;
 Duration = ExtractedParameters.Duration;
 
 %% Based on the specified parameters, initialize useful variables
-
+upperExtreme = [];
+lowerExtreme = [];
+totalTimeOutsideRange = [];
 
 
 %% Perform detection
@@ -44,35 +46,49 @@ Duration = ExtractedParameters.Duration;
 DetectionResults = struct('PMU',[],'Channel',[],'Max',[],'Min',[],'Duration',[],'Response',[]);
 
 % counter for the number of out of range signal detected
-signalDetected = 0;
 % Loop throught each signal
 for index = 1:size(Data,2)
-    % find the nominal value of the voltage signal, in unit of kV
-    % and convert from phase-to-phase to phase-to-neutral
-    splitedSignalName = strsplit(DataChannel{index},'.');
-    nominalVoltage = str2double(splitedSignalName{2}(2:4)) / sqrt(3);
-    upperVoltageLimit = Max * nominalVoltage;
-    lowerVoltageLimit = Min * nominalVoltage;
-    currentSignal = Data(:,index);
-    % convert signal to kV if it's in V
-    if strcmp(DataUnit(index), 'V')
-        currentSignal=currentSignal/1000;
+    if strcmp(DataUnit(index),'V')|strcmp(DataUnit(index),'kV')
+        % find the nominal value of the voltage signal, in unit of kV
+        % and convert from phase-to-phase to phase-to-neutral
+        splitedSignalName = strsplit(DataChannel{index},'.');
+        nominalVoltage = str2double(splitedSignalName{2}(2:4)) / sqrt(3);
+        upperVoltageLimit = Max * nominalVoltage;
+        lowerVoltageLimit = Min * nominalVoltage;
+        currentSignal = Data(:,index);
+        % convert signal to kV if it's in V
+        if strcmp(DataUnit(index), 'V')
+            currentSignal=currentSignal/1000;
+        end
+        aboveUpperLimitIndices = currentSignal > upperVoltageLimit;
+        belowLowerLimitIndices = currentSignal < lowerVoltageLimit;
+        outOfRangeIndices = aboveUpperLimitIndices | belowLowerLimitIndices;
+        % find upper and lower extreme
+        upperExtreme = max(currentSignal(aboveUpperLimitIndices));
+        lowerExtreme = min(currentSignal(belowLowerLimitIndices));
+        totalTimeOutsideRange = size(currentSignal(outOfRangeIndices),1) * diff(t(1:2));
+    else
+        warning(['Wrong signal type for the out of range voltage detector!'...
+            'Only voltage magnitude and voltage phasor allowed, but input is'...
+            'type %s of PMU %s, channel %s.',DataType(index),DataPMU(index),DataChannel(index)]);
     end
-    aboveUpperLimitIndices = currentSignal > upperVoltageLimit;
-    belowLowerLimitIndices = currentSignal < lowerVoltageLimit;
-    outOfRangeIndices = aboveUpperLimitIndices | belowLowerLimitIndices;
-    % find upper and lower extreme
-    upperExtreme = max(currentSignal(aboveUpperLimitIndices));
-    lowerExtreme = min(currentSignal(belowLowerLimitIndices));
-    totalTimeOutsideRange = size(currentSignal(outOfRangeIndices),1) * diff(t(1:2));
     % if total time exceeds the Duration threshold, detected!
+    DetectionResults(index).PMU = DataPMU(index);
+    DetectionResults(index).Channel = DataChannel(index);
+    if isempty(upperExtreme)        
+        DetectionResults(index).Max = NaN;
+    else
+        DetectionResults(index).Max = upperExtreme;
+    end
+    if isempty(lowerExtreme)
+        DetectionResults(index).Min = NaN;
+    else
+        DetectionResults(index).Min = lowerExtreme;
+    end
     if totalTimeOutsideRange > Duration
-        signalDetected = signalDetected + 1;
-        DetectionResults(signalDetected).PMU = DataPMU(index);
-        DetectionResults(signalDetected).Channel = DataChannel(index);
-        DetectionResults(signalDetected).Max = upperExtreme;
-        DetectionResults(signalDetected).Min = lowerExtreme;
-        DetectionResults(signalDetected).Duration = totalTimeOutsideRange;
+        DetectionResults(index).Duration = totalTimeOutsideRange;
+    else
+        DetectionResults(index).Duration = NaN;        
     end
 end
 

@@ -15,8 +15,8 @@ PMUfilePath = 'C:\Users\wang690\Desktop\projects\detector\DataReaderCode\Origina
 % Choose the detector type you're working on:
 % DetectorType = 'OutOfRangeGeneral';
 % DetectorType = 'Periodogram';
-% DetectorType = 'Ringdown';
-DetectorType = 'OutOfRangeFrequency';
+DetectorType = 'Ringdown';
+% DetectorType = 'OutOfRangeFrequency';
 % DetectorType = 'OutOfRangeVoltage';
 
 % You can add multiples of each detector to DetectorConfig.XML to try out
