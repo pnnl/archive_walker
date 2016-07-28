@@ -24,6 +24,9 @@
 % Updated on July 26, 2016 by Tao Fu
 %   added secondsNeeded as an input to ConcatenatePMU() function
 %
+% Updated on July 28, 2016 by Urmila Agrawal
+%   added DataInfo.FileTypeas an an input to DQandCustomization() function
+%
 %prepare workspace
 % close all;
 % clear all;
@@ -46,14 +49,14 @@ addpath('..\');
 
 %XML file
 XMLFile = 'ConfigXML_Test.xml';
-% XMLFile = 'ConfigXML_CSV.xml';
+%XMLFile = 'ConfigXML_CSV.xml';
 
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
 XMLFile='ProcessXML_Test.xml';
-% XMLFile='ProcessXML_CSV.xml';
+%XMLFile='ProcessXML_CSV.xml';
 
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
@@ -295,7 +298,7 @@ while(~done)
 %             PMU(1).Data(21:100,1) = 100000;
             
 %           Apply data quality filters and signal customizations
-            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
+            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags,DataInfo.FileType);
             %            Return only the desired PMUs and signals
             PMU = GetOutputSignals(PMU,DataXML);
             

@@ -23,11 +23,16 @@
         % different data quality check filters
     % NumStages: Number of stages
     % Num_Flags: Total number of flag bits
+    % FileType: Data file type (csv or PDAT)
 %
 % Outputs:
     % PMU
-    
-function PMU = DQandCustomization(PMU,DataXML,NumStages, Num_Flags)
+% Modified July 28, 2016 by Urmila Agrawal:
+% Added filetype input parameter to be used by voltage quality check filter
+% as voltage quantity given in pdat file is per phase and that in csv file
+% is line-to-line
+
+function PMU = DQandCustomization(PMU,DataXML,NumStages, Num_Flags,FileType)
 
 % Initialize the custom PMU sub-structure and add it to the PMU structure
 % using some of the fields from an existing PMU sub-structure.
@@ -37,7 +42,7 @@ custPMUidx = length(PMU);
 for StageIdx = 1:NumStages
     % Data Quality Filtering step (if included in this stage)
     if isfield(DataXML.Configuration.Stages{StageIdx},'Filter')
-        PMU = DQfilterStep(PMU,DataXML.Configuration.Stages{StageIdx});
+        PMU = DQfilterStep(PMU,DataXML.Configuration.Stages{StageIdx},FileType);
     end
     
     % Signal Customization step (if included in this stage)

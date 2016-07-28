@@ -55,7 +55,7 @@
             <Type>IAP</Type>
         </SignalType>
         <SignalType>
-            <Type>IMP</Type>
+            <Type>SC</Type>
         </SignalType>
 	</SignalSelection>
     <!-- 
@@ -149,7 +149,7 @@
             <Parameters>
                 <FlagAllByFreq>FALSE</FlagAllByFreq>
                 <StaleThresh>60</StaleThresh>
-                <SetToNaN>False</SetToNaN>
+                <SetToNaN>TRUE</SetToNaN>
                 <FlagBit>8</FlagBit>
                 <FlagBitFreq>9</FlagBitFreq>
             </Parameters>
@@ -197,8 +197,8 @@
             <Parameters>
                 <scalar>7</scalar>
                 <SignalName>ScalarSig1.M500</SignalName>
-                <SignalType>VMP</SignalType>
-                <SignalUnit>kV</SignalUnit>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
             </Parameters>
         </Customization>
         <Customization>
@@ -206,8 +206,8 @@
             <Parameters>
                 <scalar>60</scalar>
                 <SignalName>Freq_CusSig</SignalName>
-                <SignalType>F</SignalType>
-                <SignalUnit>Hz</SignalUnit>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
             </Parameters>
         </Customization>
     </Stages>
