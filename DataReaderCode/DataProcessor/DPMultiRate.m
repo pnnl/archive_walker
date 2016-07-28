@@ -45,15 +45,16 @@ function PMU = DPMultiRate(PMU,ProcessMultiRate)
 
 NumMultiRate = length(ProcessMultiRate);
 
-%calculates signal's sampling frequency using time string of 1st and 5th sample to increase accuracy
+%calculates signal's sampling frequency using time string of 1st and 6th sample to increase accuracy
+
 t = PMU(1).Signal_Time.Time_String;
 t1 = t{1};
 Ind1 = findstr(t1, '.');
 T1 = str2num(t1(Ind1:end));
-t5 = t{5};
-Ind5 = findstr(t5, '.');
-T5 = str2num(t5(Ind5:end));
-FsOld = round(4/(T5 - T1)); 
+t6 = t{6};
+Ind6 = findstr(t6, '.');
+T6 = str2num(t6(Ind6:end));
+FsOld = round(5/(T6 - T1)); 
 
 if NumMultiRate == 1
     % By default, the contents of ProcessMultiRate

@@ -78,7 +78,12 @@ for SigIdx = 1:length(SigsToFilt)
         else
             % The nominal voltage must be extracted from the signal name
             NomVoltage = strsplit(PMUstruct.Signal_Name{ThisSig},'.');
-            NomVoltage = str2double(NomVoltage{2}(2:4));
+            SignalLen = length( NomVoltage{1});
+            if SignalLen >= 8
+                NomVoltage = str2double(NomVoltage{1}(6:8));
+            else
+                NomVoltage = str2double(NomVoltage{1}(end-2:end));
+            end
         end
 
         % Transform rating from line-to-line to line-to-neutral

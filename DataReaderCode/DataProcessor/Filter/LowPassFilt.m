@@ -42,16 +42,16 @@ StopCutoff  = str2num(Parameters.StopCutoff);
 SetZeroPhase  = Parameters.ZeroPhase;
 CutoffFreq = [PassCutoff StopCutoff]; % in Hz
 
-%calculates signal's sampling frequency using time string for 1st and 5th
+%calculates signal's sampling frequency using time string for 1st and 6th
 %data points.
 t = PMU.Signal_Time.Time_String;
 t1 = t{1};
 Ind1 = findstr(t1, '.');
 T1 = str2num(t1(Ind1:end));
-t5 = t{5};
-Ind5 = findstr(t5, '.');
-T5 = str2num(t5(Ind5:end));
-fs = round(4/(T5 - T1));
+t6 = t{6};
+Ind6 = findstr(t6, '.');
+T6 = str2num(t6(Ind6:end));
+fs = round(5/(T6 - T1)); 
 
 if StopCutoff>fs
     error('Cut-off frequencies exceed folding frequency.');

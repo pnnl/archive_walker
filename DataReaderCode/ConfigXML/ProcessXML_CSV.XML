@@ -11,37 +11,18 @@
         If channels are not specified for wrap and unwrap operations, they
         are applied to all angle signals in the PMUs.
         -->
-        <SecondsToConcat>300</SecondsToConcat>    
+        <SecondsToConcat>1240</SecondsToConcat>    
         <Unwrap>
             <PMU>
                 <Name>Custom Signals</Name>
-                 <Channel>
-                    <Name>ScaledAngleDiffSignal2</Name>
-                </Channel>
-                <Channel>
-                    <Name>ScaledAngleDiffSignal1</Name>
-                </Channel>
             </PMU>              
         </Unwrap>
         <Interpolate>
             <Parameters>
                 <Limit>100</Limit>
-                <Type>Constant</Type>
-                <FlagInterp>TRUE</FlagInterp>
-            </Parameters>    
-            <PMU>
-                <Name>Custom Signals</Name>
-                <Channel>
-                    <Name>ScaledAngleDiffSignal1</Name>
-                </Channel>
-            </PMU>        
-        </Interpolate>
-        <Interpolate>
-            <Parameters>
-                <Limit>100</Limit>
                 <Type>Linear</Type>
                 <FlagInterp>TRUE</FlagInterp>
-            </Parameters>
+            </Parameters>            
         </Interpolate>
         <Stages>
             <Filter>
@@ -49,16 +30,10 @@
                 <Parameters>
                     <Numerator>1,-1</Numerator>
                     <Denominator>1</Denominator>
-                    <ZeroPhase>nTRUE</ZeroPhase>
+                    <ZeroPhase>TRUE</ZeroPhase>
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal2</Name>
-                    </Channel>
                 </PMU> 
             </Filter>
             <Filter>
@@ -70,12 +45,6 @@
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal2</Name>
-                    </Channel>
                 </PMU>                
             </Filter>
             <Filter>
@@ -89,37 +58,8 @@
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal2</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
                 </PMU> 
             </Filter>            
-            <Filter>
-                <Type>Median</Type>
-                <Parameters>
-                    <Order>5</Order>
-                    <Endpoints>zeropad</Endpoints><!--Alternative is 'truncate'-->
-                    <HandleNaN>includenan</HandleNaN><!--Alternative is 'omitnan'-->
-                </Parameters>
-                <PMU>
-                    <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ComplexPower1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ApparentPower1</Name>
-                    </Channel>
-                     <Channel>
-                        <Name>ActivePower1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ReactivePower1</Name>
-                    </Channel>
-                </PMU> 
-            </Filter>
             <Multirate>
                 <Parameters>
                     <MultiRatePMU>Custom Signals2</MultiRatePMU>
@@ -127,12 +67,6 @@
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
                 </PMU> 
             </Multirate>
             <Multirate>
@@ -143,12 +77,6 @@
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal2</Name>
-                    </Channel>
                 </PMU>
             </Multirate>
             <Multirate>
@@ -158,12 +86,6 @@
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal2</Name>
-                    </Channel>
                 </PMU>
             </Multirate>
             <Multirate>
@@ -173,12 +95,6 @@
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal2</Name>
-                    </Channel>
                 </PMU> 
             </Multirate>
             <Multirate>
@@ -188,40 +104,19 @@
                 </Parameters>
                 <PMU>
                     <Name>Custom Signals</Name>
-                     <Channel>
-                        <Name>ScaledAngleDiffSignal1</Name>
-                    </Channel>
-                    <Channel>
-                        <Name>ScaledAngleDiffSignal2</Name>
-                    </Channel>
                 </PMU>
             </Multirate>
         </Stages>            
         <Wrap>
             <PMU>
-                <Name>JDAY 500  A1 SA </Name>
+                <Name>Custom Signals</Name>
             </PMU>
         </Wrap>
     </Processing>     
-    <NameTypeUnit>
-        <PMU>
-            <Name>ALSN 500 A1 SA  </Name>
-            <CurrentChannel>ALSN 500 A1 SA  .A500NAPAVINE_1MW</CurrentChannel>
-            <NewChannel>ALSN new</NewChannel>
-            <NewUnit>kV</NewUnit>
-            <NewType>VMP</NewType>
-        </PMU>
-    </NameTypeUnit>
     <!--
     Specify the signals for output
     -->
     <SignalSelection>
-        <PMU>
-            <Name>ALSN 500 A1 SA  </Name>            
-        </PMU>
-        <PMU>
-            <Name>JDAY 500  A1 SA </Name>            
-        </PMU>
         <PMU>
             <Name>Custom Signals</Name>
         </PMU>

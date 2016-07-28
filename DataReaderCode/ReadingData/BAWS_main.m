@@ -1,7 +1,7 @@
 % Simple XML read of the simple XML demo file
 % for Archive Walker reading
 %
-% This is the main script for the project. 
+% This is the main script for the project.
 %
 % Created April 29, 2016 by Frank Tuffner
 %
@@ -10,9 +10,9 @@
 %
 % Updated June 24, 2016 by Tao Fu
 %   1. added debugMode to write the output log file
-%   2. removed fields that keeps processed data information in the DataInfo struture; 
+%   2. removed fields that keeps processed data information in the DataInfo struture;
 %   3. added functions to put output PMU structure in a cell array
-%   
+%
 % Updated July 11, 2016 by Urmila Agrawal
 %   added 3 variables: flagBitInput, FlagBitInterpo, and NumFlags, which
 %   would be used by concatenatePMU() and DataProcessor()
@@ -20,7 +20,7 @@
 % Updated July 12, 2016 by Tao Fu
 %   moved counting the maximum number of flags that will be needed
 %   (Flag_Bit) from createPdatStruct() and JSIS_CSV_2_Mat() to this script
-% 
+%
 % Updated on July 26, 2016 by Tao Fu
 %   added secondsNeeded as an input to ConcatenatePMU() function
 %
@@ -30,7 +30,7 @@
 % clc;
 clear;
 
-debugMode = 1; 
+debugMode = 1;
 
 % add several file paths
 addpath('..\ConfigXML');
@@ -45,14 +45,16 @@ addpath('..\Detector');
 addpath('..\');
 
 %XML file
-XMLFile = 'ConfigXML_Test1.xml';
-%XMLFile = 'ConfigXML_CSV.xml';
+XMLFile = 'ConfigXML_Test.xml';
+% XMLFile = 'ConfigXML_CSV.xml';
 
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='ProcessXML_Test1.xml';
+XMLFile='ProcessXML_Test.xml';
+% XMLFile='ProcessXML_CSV.xml';
+
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
@@ -92,7 +94,7 @@ end
 % Get parameters for the operation mode
 if strcmp(DataXML.Configuration.ReaderProperties.Mode.Name, 'Archive')
     % Archive-walker mode
-        
+    
     % Start time for processing
     DateTimeStart = DataXML.Configuration.ReaderProperties.Mode.Params.DateTimeStart;
     % End time for processing
@@ -105,17 +107,17 @@ elseif (strcmp(DataXML.Configuration.ReaderProperties.Mode.Name, 'RealTime') || 
     if(strcmp(DataXML.Configuration.ReaderProperties.Mode.Name,'Hybrid'))
         DateTimeStart = DataXML.Configuration.ReaderProperties.Mode.Params.DateTimeStart;
     else
-       % we will use the current time as the start time; still need to consider time zone
-       currT = now;
-       DateTimeStart = datestr(currT,'yyyy-mm-dd HH:MM:SS');        
+        % we will use the current time as the start time; still need to consider time zone
+        currT = now;
+        DateTimeStart = datestr(currT,'yyyy-mm-dd HH:MM:SS');
     end
-
+    
     % Wait time when no future data is available (seconds)
     NoFutureWait = str2num(DataXML.Configuration.ReaderProperties.Mode.Params.NoFutureWait);
     % Number of times to wait NoFutureWait seconds before stopping
     % execution because no data is available.
     MaxNoFutureCount = str2num(DataXML.Configuration.ReaderProperties.Mode.Params.MaxNoFutureCount);
-
+    
     % Wait time when future data is available (seconds)
     FutureWait = str2num(DataXML.Configuration.ReaderProperties.Mode.Params.FutureWait);
     % Number of times to wait FutureWait seconds before jumping to the
@@ -211,7 +213,7 @@ else
     else
         fprintf(flog,'Mode  = Real Time\n');
     end
-    DataInfo.DateTimeStart = DateTimeStart(1:19);  
+    DataInfo.DateTimeStart = DateTimeStart(1:19);
     DataInfo.NoFutureWait = NoFutureWait;
     DataInfo.MaxNoFutureCount = MaxNoFutureCount;
     
@@ -232,7 +234,6 @@ end
 fprintf(flog, '********************************************************\n');
 fprintf(flog,'\n');
 
-
 %%
 done = 0;
 
@@ -245,7 +246,6 @@ elseif(strcmp(DataInfo.mode, 'RealTime'))
     % realtime mode
     DataInfo.DateTimeEnd = [];
 end
-
 
 %% flag for processed files
 DataInfo.tPMU = 0;  % time of the last measurement in the last processed file
@@ -260,107 +260,106 @@ NumFlagsProcessor = 2; % Number of bits used to indicate processed data that has
 
 %% processing files
 while(~done)
-   [focusFile,done,outDataInfo] = getNextFocusFile(DataInfo,flog,debugMode);
-   DataInfo = outDataInfo;
-   if(~done)
-       % focusFile is available
-       if(debugMode)
-           fprintf(flog,'\nThe current PMU file is: %s\n', focusFile);
-       end
-       try
-           % make sure focusFile is written
-           [stat,attr] = fileattrib(focusFile);
-           while(~attr.UserWrite)
-               % pause 0.5 seconds when the file is still being written
-               pause(0.5);
-               % check if the file is ready for reading
-               [stat,attr] = fileattrib(focusFile);
-           end
-           
-           % ***********
-           % Data Reader
-           % ***********
-           % Create the PMU structure
-           DataInfo.lastFocusFile = focusFile;
-           DataInfo.tPMU = 0;
-           if(strcmpi(DataInfo.FileType, 'pdat'))
-               % pdat format                  
-               [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
-           elseif(strcmpi(DataInfo.FileType, 'csv'))
-               % JSIS_CSV format
-               [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
-           end             
-           
-%            PMU(1).Data(2:11,1) = 200000 + randn(10,1);
-%            PMU(1).Data(21:100,1) = 100000;
-%            PMU(2).Data(135:140,1) = 0;
-
-%            Apply data quality filters and signal customizations
-           PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
-%            Return only the desired PMUs and signals
-           PMU = GetOutputSignals(PMU,DataXML);
-           
-           % Create an empty one minute PMU data structure for later use
-           % after processing the first file
-           % this only needs to be called once
-           if(~emptyPMUexist)                  
-               oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
-               emptyPMUexist = 1;
-           end
-           
-           % **********************
-           % Collect PMU Structures according to specified seconds 
-           % **********************
-           PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);               
+    [focusFile,done,outDataInfo] = getNextFocusFile(DataInfo,flog,debugMode);
+    DataInfo = outDataInfo;
+    if(~done)
+        % focusFile is available
+        if(debugMode)
+            fprintf(flog,'\nThe current PMU file is: %s\n', focusFile);
+        end
+        try
+            % make sure focusFile is written
+            [stat,attr] = fileattrib(focusFile);
+            while(~attr.UserWrite)
+                % pause 0.5 seconds when the file is still being written
+                pause(0.5);
+                % check if the file is ready for reading
+                [stat,attr] = fileattrib(focusFile);
+            end
             
-           % Concatenate all the PMU structures on the list into one PMU structure for prcessing
-           concatPMU = ConcatenatePMU(PMUall,DataInfo.secondesToConcat);            
+            % ***********
+            % Data Reader
+            % ***********
+            % Create the PMU structure
+            DataInfo.lastFocusFile = focusFile;
+            DataInfo.tPMU = 0;
+            if(strcmpi(DataInfo.FileType, 'pdat'))
+                % pdat format
+                [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
+            elseif(strcmpi(DataInfo.FileType, 'csv'))
+                % JSIS_CSV format
+                [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
+            end
             
-           % **********
-           % Processing
-           % **********
-           PMU_ProcessorOutput = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor);
-           % Return only the desired PMUs and signals
-           PMU_ProcessorOutput = GetOutputSignals(PMU_ProcessorOutput,ProcessXML);
-           
-           % *********
-           % Detection
-           % *********
-           % Implementation Note:
-           % The ringdown detector slides a window across the data and
-           % calculates energy. After adding a new minute of data, many of
-           % these energy calculations will be redone for certain (but
-           % common) parameter setups. To avoid this, the energies and 
-           % other necessary information could be stored in 
-           % AdditionalOutput. After being returned here, they could be 
-           % stored as extra information in DetectorXML for use by the
-           % detector the next time it is called to reduce computations. A 
-           % similar strategy could be useful when implementing the other 
-           % detectors too.
-%            [DetectionResults, AdditionalOutput] = RunDetection(concatPMU,DetectorXML);
-           
-           %% update some information
-           DataInfo.tPMU = tPMU;
-           if(debugMode)
-               fprintf(flog, 'Number of PMUs in the file: %f\n',length(PMU));
-               fprintf(flog, 'PMU start Time:  %s\n', datestr(tPMU(1),'mm/dd/yyyy HH:MM:SS:FFF'));
-               fprintf(flog, 'PMU end Time:    %s\n', datestr(tPMU(end),'mm/dd/yyyy HH:MM:SS:FFF'));
-           end
-       catch msg1
-           % failed to process the focus file           
-           fprintf(flog, 'Could not process the current PMU data file: %s\n',focusFile);
-           fprintf(flog, '    %s\n',msg1.message);           
-           
-           % stop processing files
-           done = 1;
-           
-           % throw the error message
-           str = ['Could not process the current PMU data file: ',focusFile];
-           disp(str);           
-           error(msg1.message);
-           
-       end
-   end   
+%             PMU(1).Data(2:11,1) = 200000 + randn(10,1);
+%             PMU(1).Data(21:100,1) = 100000;
+            
+%           Apply data quality filters and signal customizations
+            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags);
+            %            Return only the desired PMUs and signals
+            PMU = GetOutputSignals(PMU,DataXML);
+            
+            % Create an empty one minute PMU data structure for later use
+            % after processing the first file
+            % this only needs to be called once
+            if(~emptyPMUexist)
+                oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
+                emptyPMUexist = 1;
+            end
+            
+            % **********************
+            % Collect PMU Structures according to specified seconds
+            % **********************
+            PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,DataInfo.secondesToConcat);
+            
+            % Concatenate all the PMU structures on the list into one PMU structure for prcessing
+            concatPMU = ConcatenatePMU(PMUall,DataInfo.secondesToConcat);
+            
+            % **********
+            % Processing
+            % **********
+            PMU_ProcessorOutput = DataProcessor(concatPMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor);
+            % Return only the desired PMUs and signals
+            PMU_ProcessorOutput = GetOutputSignals(PMU_ProcessorOutput,ProcessXML);
+            
+            % *********
+            % Detection
+            % *********
+            % Implementation Note:
+            % The ringdown detector slides a window across the data and
+            % calculates energy. After adding a new minute of data, many of
+            % these energy calculations will be redone for certain (but
+            % common) parameter setups. To avoid this, the energies and
+            % other necessary information could be stored in
+            % AdditionalOutput. After being returned here, they could be
+            % stored as extra information in DetectorXML for use by the
+            % detector the next time it is called to reduce computations. A
+            % similar strategy could be useful when implementing the other
+            % detectors too.
+            %            [DetectionResults, AdditionalOutput] = RunDetection(concatPMU,DetectorXML);
+            
+            %% update some information
+            DataInfo.tPMU = tPMU;
+            if(debugMode)
+                fprintf(flog, 'Number of PMUs in the file: %f\n',length(PMU));
+                fprintf(flog, 'PMU start Time:  %s\n', datestr(tPMU(1),'mm/dd/yyyy HH:MM:SS:FFF'));
+                fprintf(flog, 'PMU end Time:    %s\n', datestr(tPMU(end),'mm/dd/yyyy HH:MM:SS:FFF'));
+            end
+        catch msg1
+            % failed to process the focus file
+            fprintf(flog, 'Could not process the current PMU data file: %s\n',focusFile);
+            fprintf(flog, '    %s\n',msg1.message);
+            
+            % stop processing files
+            done = 1;
+            
+            % throw the error message
+            str = ['Could not process the current PMU data file: ',focusFile];
+            disp(str);
+            error(msg1.message);
+            
+        end
+    end
 end
 
 fprintf(flog, '\nFinished processing files\n');

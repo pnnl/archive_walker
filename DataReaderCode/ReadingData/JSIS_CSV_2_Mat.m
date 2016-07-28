@@ -42,6 +42,9 @@
 %   deleted counting the maximum number of flags that will be needed
 %   (Flag_Bit), which is implemented in BAWS_main() now.
 %
+% modified on 27th July,2016 by Urmila Agrawal
+%   Changed PMU.Signal_Time.Signal_datenum from column to row vector
+%   changed PMU.Flag matrix from double to logical matrix
 
 
 function [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(inFile,DataXML)
@@ -183,7 +186,7 @@ PMU.Time_Zone = '-08:00';         % time zone; for now this is just the PST time
 
 % signal time
 PMU.Signal_Time.Time_String = cellstr(timeStr);
-PMU.Signal_Time.Signal_datenum = timeNum;
+PMU.Signal_Time.Signal_datenum = timeNum(:)';
 
 % variable names
 PMU.Signal_Name = signalNames;
@@ -192,24 +195,28 @@ PMU.Signal_Name = signalNames;
 PMU.Signal_Type = signalTypes;
 PMU.Signal_Unit = signalUnits;
 
-% PMU data
-PMU.Data = signalData;
+
 
 % flag
 [m,n] = size(signalData);
-Flag = zeros(m,n,Num_Flags);
+Flag = false(m,n,Num_Flags);
 PMU.Flag = Flag;
+
+% PMU data and Stat
+PMU.Data = signalData;
+PMU.Stat = zeros(m,1);
 
 % update flag if there are data points that were set to strings or empty
 [row, col] = find(isnan(signalData));
 if(~isempty(row))
     % has data points that were set to strings or empty
-    flag = zeros(m,n);
+    flag = false(m,n);
     idx = sub2ind(size(flag), row, col);  % convert row and col to matlab linear indices
-    flag(idx) = 1;
+    flag(idx) = true;
     PMU.Flag(:,:,end-1) = flag;      
 end
-    
+
+
 
 % Unnecessary here, signal types and units are already set. Left over from
 % original PDAT code. (Jim Follum 7/1/16)

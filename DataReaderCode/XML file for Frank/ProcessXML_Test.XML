@@ -11,7 +11,7 @@
         If channels are not specified for wrap and unwrap operations, they
         are applied to all angle signals in the PMUs.
         -->
-        <SecondsToConcat>300</SecondsToConcat>    
+        <SecondsToConcat>290</SecondsToConcat>    
         <Unwrap>
             <PMU>
                 <Name>Custom Signals</Name>

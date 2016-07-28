@@ -56,13 +56,15 @@ for PMUind = 1:NumPMU
         PMU(PMUind).Data((PMUStructInd-1)*NData+1:PMUStructInd*NData,:) = DataProcessorStruct{PMUStructInd}(PMUind).Data;
         PMU(PMUind).Flag((PMUStructInd-1)*NData+1:PMUStructInd*NData,:,:) = DataProcessorStruct{PMUStructInd}(PMUind).Flag;
     end
+    %Sorts PMU data based on datenum value and also removes duplicate value
+    %(needed for CSV files)
+    [PMU(PMUind).Signal_Time.Signal_datenum,Ind] = unique(sort(PMU(PMUind).Signal_Time.Signal_datenum,'ascend')); 
+    PMU(PMUind).Signal_Time.Time_String = PMU(PMUind).Signal_Time.Time_String(Ind);
+    PMU(PMUind).Stat = PMU(PMUind).Stat(Ind);
+    PMU(PMUind).Data = PMU(PMUind).Data(Ind,:);
+    PMU(PMUind).Flag = PMU(PMUind).Flag(Ind,:,:);
+    
 end
-%Sorts PMU data based on datenum value and also removes duplicate value
-[PMU(PMUind).Signal_Time.Signal_datenum,Ind] = unique(sort(PMU(PMUind).Signal_Time.Signal_datenum,'ascend')); %sorts in ascending order with respect to time array and then removes duplicate rows
-PMU(PMUind).Signal_Time.Time_String = PMU(PMUind).Signal_Time.Time_String(Ind);
-PMU(PMUind).Stat = PMU(PMUind).Stat(Ind);
-PMU(PMUind).Data = PMU(PMUind).Data(Ind,:);
-PMU(PMUind).Flag = PMU(PMUind).Flag(Ind,:,:);
 
 %% check and extract needed time length
 for i = 1:length(PMU)

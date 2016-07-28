@@ -26,6 +26,8 @@
     % PMU: struct array of PMUs containing processed data
 %        
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov) on 06/22/2016
+% Modified on 22 July, 2016 by Urmila Agrawal
+%   Number of flags in the output PMU strucutre is reduced to 2
 
 function PMU= DataProcessor(PMUstruct, ProcessXML,NumStages,FlagBitInterpo,FlagBitInput,NumFlags)
 
