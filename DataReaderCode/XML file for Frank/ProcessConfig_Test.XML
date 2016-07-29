@@ -205,11 +205,18 @@
     </Processing>     
     <NameTypeUnit>
         <PMU>
-            <Name>ALSN 500 A1 SA  </Name>
-            <CurrentChannel>ALSN 500 A1 SA  .A500NAPAVINE_1MW</CurrentChannel>
-            <NewChannel>ALSN new</NewChannel>
-            <NewUnit>kV</NewUnit>
-            <NewType>VMP</NewType>
+            <Name>Custom Signals</Name>
+            <CurrentChannel>ScaledAngleDiffSignal1</CurrentChannel>
+            <NewChannel>FrequencySignal1</NewChannel>
+            <NewUnit>Hz</NewUnit>
+            <NewType>F</NewType>
+        </PMU>
+        <PMU>
+            <Name>Custom Signals</Name>
+            <CurrentChannel>ScaledAngleDiffSignal2</CurrentChannel>
+            <NewChannel>FrequencySignal2</NewChannel>
+            <NewUnit>Hz</NewUnit>
+            <NewType>F</NewType>
         </PMU>
     </NameTypeUnit>
     <!--
