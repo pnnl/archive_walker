@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+	<ReaderProperties>
+        <!--
+		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
+        -->
+        <FileDirectory>C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
+        <FileType>PDAT</FileType>
+        <Mnemonic>WISPDitt</Mnemonic>
+        <!--
+        <Mode>
+            <Name>RealTime</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <NoFutureWait>60</NoFutureWait>
+                <MaxNoFutureCount>10</MaxNoFutureCount>
+                <FutureWait>60</FutureWait>
+                <MaxFutureCount>10</MaxFutureCount>
+            </Params>
+        </Mode>
+        <Mode>
+            <Name>Hybrid</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <NoFutureWait>60</NoFutureWait>
+                <MaxNoFutureCount>10</MaxNoFutureCount>
+                <FutureWait>60</FutureWait>
+                <MaxFutureCount>10</MaxFutureCount>
+                <RealTimeRange>60</RealTimeRange>
+            </Params>
+        </Mode>
+        -->
+        <Mode>
+            <Name>Archive</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <DateTimeEnd>2015-10-17 12:45:00 GMT</DateTimeEnd>
+            </Params>
+        </Mode>
+	</ReaderProperties>
+    <!-- 
+    Each stage is composed of data quality filters and customizations. 
+    Filters are always applied first, then the customizations. The 
+    stages are carried out in sequential order. 
+    
+    For all filters, if PMU isn't included, the filter is applied to all 
+    PMUs. Under PMU, if Channel isn't included, the filter is applied for
+    all appropriate channels in the specified PMUs. 
+    -->
+    <!--
+    *******
+    Stage 1
+    *******
+    -->
+    <Stages>
+        <!--
+        **********************
+        Stage 1 - DQ Filtering
+        **********************
+        -->
+        <Filter>
+            <Name>PMUflagFilt</Name>
+            <!-- 
+            This one can only be applied to entire PMUs, not individual 
+            channels.
+            -->
+            <PMU>
+                <Name>MALN 500  A1 SA </Name>
+            </PMU>
+            <PMU>
+                <Name>JDAY 500  A1 SA </Name>
+            </PMU>
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>1</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>DropOutZeroFilt</Name>
+            <PMU>
+                <Name>MALN 500  A1 SA </Name>
+                <Channel>
+					<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+				</Channel>
+            </PMU>
+            <PMU>
+                <Name>JDAY 500  A1 SA </Name>
+                <Channel>
+					<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+				</Channel>
+            </PMU>
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>2</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>VoltPhasorFilt</Name>
+            <PMU>
+                <Name>MALN 500  A1 SA </Name>
+                <Channel>
+					<Name>MALN 500  A1 SA .B500NORTH____1VP.MAG</Name>
+				</Channel>
+            </PMU>
+            <PMU>
+                <Name>JDAY 500  A1 SA </Name>
+                <Channel>
+					<Name>JDAY 500  A1 SA .B500EAST_____1VP.MAG</Name>
+				</Channel>
+            </PMU>
+            <Parameters>
+                <VoltMin>0.7</VoltMin>
+                <VoltMax>1.3</VoltMax>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>4</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>StaleFilt</Name>
+            <PMU>
+                <Name>MALN 500  A1 SA </Name>
+                <Channel>
+					<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+				</Channel>
+            </PMU>
+            <PMU>
+                <Name>JDAY 500  A1 SA </Name>
+                <Channel>
+					<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+				</Channel>
+            </PMU>
+            <Parameters>
+                <FlagAllByFreq>FALSE</FlagAllByFreq>
+                <StaleThresh>60</StaleThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>8</FlagBit>
+                <FlagBitFreq>9</FlagBitFreq>
+            </Parameters>
+        </Filter>
+        <!--
+        ***********************
+        Stage 1 - Customization
+        ***********************
+        -->
+        <!-- 
+            Customization for signal-1
+        -->
+        <Customization>
+            <Name>ScalarRep</Name>
+            <Parameters>
+                <scalar>1</scalar>
+                <SignalName>fsOver360</SignalName>
+                <SignalType>SC</SignalType>
+                <SignalUnit>SC</SignalUnit>
+            </Parameters>
+        </Customization>
+        <Customization>
+            <Name>Multiplication</Name>
+            <Parameters>
+                <SignalName>JDAY</SignalName>
+                <factor>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>fsOver360</Channel>
+                </factor>
+                <factor>
+                    <PMU>JDAY 500  A1 SA </PMU>
+                    <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
+                </factor>
+            </Parameters>
+        </Customization>
+        <Customization>
+            <Name>Multiplication</Name>
+            <Parameters>
+                <SignalName>MALN</SignalName>
+                <factor>
+                    <PMU>Custom Signals</PMU>
+                    <Channel>fsOver360</Channel>
+                </factor>
+                <factor>
+                    <PMU>MALN 500  A1 SA </PMU>
+                    <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
+                </factor>
+            </Parameters>
+        </Customization>
+        <!--
+        <Customization>
+            <Name>SpecTypeUnit</Name>
+            <Parameters>
+                <SigType>F</SigType>
+                <SigUnit>Hz</SigUnit>
+                <PMU>Custom Signals</PMU>
+                <Channel>MALN</Channel>
+            </Parameters>
+        </Customization>
+        <Customization>
+            <Name>SpecTypeUnit</Name>
+            <Parameters>
+                <SigType>OTHER</SigType>
+                <SigUnit>O</SigUnit>
+                <PMU>Custom Signals</PMU>
+                <Channel>JDAY</Channel>
+            </Parameters>
+        </Customization>
+        -->
+    </Stages>
+    <SignalSelection>
+		<PMU>
+			<Name>Custom Signals</Name>
+			<Channels>
+				<Channel>
+					<Name>MALN</Name>
+				</Channel>
+                <Channel>
+					<Name>JDAY</Name>
+				</Channel>
+			</Channels>
+		</PMU>
+	</SignalSelection>
+</Configuration>
+		

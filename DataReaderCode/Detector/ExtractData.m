@@ -1,4 +1,4 @@
-function [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs] = ExtractData(PMUstruct,Parameters)
+function [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString] = ExtractData(PMUstruct,Parameters)
 
 Data = [];
 DataPMU = {};
@@ -72,6 +72,14 @@ else
         DataType = [DataType PMUstruct(PMUparamIdx).Signal_Type];
         DataUnit = [DataUnit PMUstruct(PMUparamIdx).Signal_Unit];
     end
+end
+
+% All included PMUs have to have the same signal lengths, so just use the
+% first one to get the time stamps as strings
+if ~isempty(PMUstructIdxList)
+    TimeString = PMUstruct(PMUstructIdxList(1)).Signal_Time.Time_String;
+else
+    TimeString = {};
 end
 
 % Get the sampling rate. Try for each PMU that was included until it is

@@ -23,7 +23,7 @@
     <Periodogram>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
         If omitted, default is single channel.-->
-        <Mode>SingleChannel</Mode>
+        <Mode>MultiChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
         <AnalysisLength>36000</AnalysisLength>
@@ -63,16 +63,13 @@
         FrequencyMin. -->
         <FrequencyTolerance>0.05</FrequencyTolerance>
     </Periodogram>
-    <!-- Periodogram-based forced oscillation detector - all defaults -->
-    <Periodogram>
-    </Periodogram>
     <!--
     -->
     <!-- Spectral coherence based forced oscillation detector -->
     <SpectralCoherence>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
         If omitted, default is single channel.-->
-        <Mode>SingleChannel</Mode>
+        <Mode>MultiChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
         <AnalysisLength>3600</AnalysisLength>
@@ -114,18 +111,18 @@
     <Ringdown>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
         If omitted, default is single channel.-->
-        <Mode>SingleChannel</Mode>
+        <Mode>MultiChannel</Mode>
         <!-- Length of segments in samples for the energy detector -->
-        <SegmentLength>1800</SegmentLength>
+        <SegmentLength>500</SegmentLength>
         <!-- Delay between evaluated segments in samples. This can be 
         thought of as the time-resolution of the detector. -->
-        <SegmentDelay>100</SegmentDelay>
+        <SegmentDelay>10</SegmentDelay>
         <!-- Number of segments to evaluate. 
         SegmentLength+SegmentNumber*SegmentDelay must not exceed the length
         of the input signal -->
-        <SegmentNumber>200</SegmentNumber>
+        <SegmentNumber>600</SegmentNumber>
         <!-- Scaling factor to establish the detection threshold -->
-        <EnergyThresholdScale>3</EnergyThresholdScale>
+        <EnergyThresholdScale>6</EnergyThresholdScale>
         <!-- 
         The ringdown detector utilizes the spectral coherence based 
         forced oscillation detector. The parameters for this detector 
@@ -137,12 +134,14 @@
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
         <AnalysisLength>3600</AnalysisLength>
-        <!-- The delay in samples used to calculate the self-GMSC -->
+        <!-- The delay in samples used to calculate the self-GMSC. If 
+        omitted, the default is floor(AnalysisLength/10)-->
         <Delay>600</Delay>
         <!-- Number of delays in the self-GMSC. Must be an integer greater than
         or equal to 2. If omitted, default is 2. -->
         <NumberDelays>3</NumberDelays>
-        <!-- Scaling factor to establish the detection threshold -->
+        <!-- Scaling factor to establish the detection threshold. If omitted,
+        default is 3.-->
         <ThresholdScale>3</ThresholdScale>
         <!-- Type of window used for the self-GMSC. Options are rectangular, 
         bartlett, hann, hamming, and blackman. If omitted, default is hann. -->
@@ -167,62 +166,4 @@
         width of the self-GMSC window and 2) half of FrequencyMin. -->
         <FrequencyTolerance>0.05</FrequencyTolerance>
     </Ringdown>
-    <!--
-    -->
-    <!-- Out-of-range event detector for general signals -->
-    <OutOfRangeGeneral>
-        <!-- Upper threshold for the normal range. If omitted, it is not 
-        considered. -->
-        <Max>1000</Max>
-        <!-- Lower threshold for the normal range. If omitted, it is not 
-        considered. -->
-        <Min>500</Min>
-        <!-- Duration threshold in samples. If omitted, it is set to zero. -->
-        <Duration>600</Duration>
-    </OutOfRangeGeneral>
-    <!-- Out-of-range event detector for voltage signals -->
-    <OutOfRangeVoltage>
-        <!-- Upper threshold for the normal range as percentage of nominal.
-        If omitted, it is not considered. -->
-        <Max>1.3</Max>
-        <!-- Lower threshold for the normal range as percentage of nominal.
-        If omitted, it is not considered. -->
-        <Min>0.7</Min>
-        <!-- Duration threshold in samples. If omitted, it is set to zero. -->
-        <Duration>600</Duration>
-    </OutOfRangeVoltage>
-    <!-- Out-of-range event detector for frequency signals -->
-    <OutOfRangeFrequency>
-        <!-- If TRUE, the frequency response measures are returned. If 
-        FALSE or omitted, the measures are not returned -->
-        <FrequencyResponse>TRUE</FrequencyResponse>
-        <!--
-        Loose limits based on duration.
-        -->
-        <!-- Upper threshold for the normal range as percentage of nominal.
-        If omitted, it is not considered. -->
-        <DurationMax>1.3</DurationMax>
-        <!-- Lower threshold for the normal range as percentage of nominal.
-        If omitted, it is not considered. -->
-        <DurationMin>0.7</DurationMin>
-        <!-- Duration threshold in samples. If omitted, it is set to zero. -->
-        <Duration>600</Duration>
-        <!--
-        Tight limits based on rate-of-change
-        -->
-        <!-- Upper threshold for the normal range as percentage of nominal.
-        If omitted, it is not considered. -->
-        <RateOfChangeMax>1.05</RateOfChangeMax>
-        <!-- Lower threshold for the normal range as percentage of nominal.
-        If omitted, it is not considered. -->
-        <RateOfChangeMin>0.95</RateOfChangeMin>
-        <!-- Rate-of-change threshold in Hz/sample. If omitted, this part
-        of the detector is not implemented.-->
-        <RateOfChange>1</RateOfChange>
-    </OutOfRangeFrequency>
-    <!--
-    -->
-    <!-- Wind ramp detector -->
-    <WindRamp>
-    </WindRamp>
 </Configuration>

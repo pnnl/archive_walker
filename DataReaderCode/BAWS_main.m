@@ -48,21 +48,21 @@ addpath('..\Detector');
 addpath('..\');
 
 %XML file
-ConfigFile = 'DataConfig_Test.xml';
+ConfigFile = 'DataConfig_JSIS.xml';
 %XMLFile = 'DataConfig_CSV.xml';
 
 % Parse XML file to MATLAB structure
 DataConfig = fun_xmlread_comments(ConfigFile);
 
 %XML file
-ConfigFile='ProcessConfig_Test.xml';
+ConfigFile='ProcessConfig_JSIS.xml';
 %XMLFile='ProcessConfig_CSV.xml';
 
 % Parse XML file to MATLAB structure
 ProcessConfig = fun_xmlread_comments(ConfigFile);
 
 %XML file
-ConfigFile='DetectorConfig.xml';
+ConfigFile='DetectorConfig_JSIS.xml';
 % Parse XML file to MATLAB structure
 DetectorConfig = fun_xmlread_comments(ConfigFile);
 
@@ -325,6 +325,9 @@ while(~done)
             % Return only the desired PMUs and signals
             PMU_ProcessorOutput = GetOutputSignals(PMU_ProcessorOutput,ProcessConfig);
             
+            ttt = (1:size(PMU_ProcessorOutput.Data,1))/60;
+            figure, plot(ttt,PMU_ProcessorOutput.Data);
+            
             % *********
             % Detection
             % *********
@@ -339,7 +342,7 @@ while(~done)
             % detector the next time it is called to reduce computations. A
             % similar strategy could be useful when implementing the other
             % detectors too.
-%             [DetectionResults, AdditionalOutput] = RunDetection(concatPMU,DetectorConfig);
+            [DetectionResults, AdditionalOutput] = RunDetection(PMU_ProcessorOutput,DetectorConfig);
             
             %% update some information
             DataInfo.tPMU = tPMU;

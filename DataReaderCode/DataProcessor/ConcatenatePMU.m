@@ -42,7 +42,7 @@ for PMUind = 1:NumPMU
     PMU(PMUind).Data = zeros(NumPMUstruct*NData,NChan);
     PMU(PMUind).Flag = false(NumPMUstruct*NData,NChan,NumFlags); %flag matrix
     PMU(PMUind).Signal_Time.Time_String = cell(NumPMUstruct*NData,1);
-    PMU(PMUind).Signal_Time.Signal_datenum = zeros(1,NumPMUstruct*NData);
+    PMU(PMUind).Signal_Time.Signal_datenum = zeros(NumPMUstruct*NData,1);
     for PMUStructInd = 1:NumPMUstruct
         
         % If the size of data file to be concatenated is different, throws
@@ -89,10 +89,34 @@ for i = 1:length(PMU)
         currPMU.Flag = currPMU.Flag(k1:end,:,:);
         PMU(i) = currPMU;
     end
-    
 end
     
-
+%% Add NaN values if the concatenated PMUs are not secondsNeeded long
+for i = 1:length(PMU)
+    % for each PMU
+    currPMU = PMU(i);
+    t = currPMU.Signal_Time.Signal_datenum; % signal time
+    deltaT = t(end)-t(end-1); % time interval
+    T_end = t(end)+deltaT; % ending time of PMU;
+    dt = T_end-t;
+    dt = dt*24*3600; % day to seconds
+    if(dt(1) < secondsNeeded)
+        % has less data than we needed
+        % remove some rounding errors
+        dt = round(dt*1000)/1000;
+        
+        SecondsToAdd = secondsNeeded-dt(1);
+        SamplesToAdd = round(SecondsToAdd/(deltaT*24*3600));
+        
+        datenumToAdd = (currPMU.Signal_Time.Signal_datenum(1)-SecondsToAdd/3600/24:deltaT:currPMU.Signal_Time.Signal_datenum(1)-deltaT).';
+        currPMU.Signal_Time.Signal_datenum = [datenumToAdd; currPMU.Signal_Time.Signal_datenum];
+        currPMU.Signal_Time.Time_String = [cellstr(datestr(datenumToAdd,'yyyy-mm-dd HH:MM:SS.FFF')); currPMU.Signal_Time.Time_String];
+        currPMU.Stat = [NaN(SamplesToAdd,1); currPMU.Stat];
+        currPMU.Data = [NaN(SamplesToAdd,size(currPMU.Data,2)); currPMU.Data];
+        currPMU.Flag = [NaN(SamplesToAdd,size(currPMU.Flag,2),size(currPMU.Flag,3)); currPMU.Flag];
+        PMU(i) = currPMU;
+    end
+end
 end
 
 

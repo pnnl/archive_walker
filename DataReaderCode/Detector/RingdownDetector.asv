@@ -69,7 +69,7 @@ timePoints = TimeString(1:SegmentDelay:SegmentDelay*(SegmentNumber - 1)+1)';
 
 % Initialize structure to output detection results
 
-Data = Data(end-(SegmentLength + (SegmentNumber - 1)*SegmentDelay)+1:end,:);
+Data = Data(
 
 % calculate energy for all segments in all signals
 allEnergyChannels = zeros(SegmentNumber,size(Data,2));
