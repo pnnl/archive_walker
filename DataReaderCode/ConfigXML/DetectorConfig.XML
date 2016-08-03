@@ -23,10 +23,10 @@
     <Periodogram>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
         If omitted, default is single channel.-->
-        <Mode>SingleChannel</Mode>
+        <Mode>MultiChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
-        <AnalysisLength>36000</AnalysisLength>
+        <AnalysisLength>3600</AnalysisLength>
         <!-- Type of window used for the test statistic periodogram, 
         Daniell-Welch periodogram, and GMSC. Options are rectwin (rectangular), 
         bartlett, hann, hamming, and blackman. If omitted, default is hann. -->
@@ -34,20 +34,20 @@
         <!-- Zero padded length of the test statistic periodogram,
         Daniell-Welch periodogram, and GMSC. If omitted, no zero padding is
         implemented. -->
-        <ZeroPadding>48000</ZeroPadding>
+        <ZeroPadding>4800</ZeroPadding>
         <!-- Length of the sections for the Daniell-Welch periodogram and 
         GMSC. If omitted, default is 1/3 of AnalyisLength. -->
-        <WindowLength>12000</WindowLength>
+        <WindowLength>1200</WindowLength>
         <!-- Amount of overlap between sections for the Daniell-Welch 
         periodogram and GMSC. If omitted, default is half of WindowLength -->
-        <WindowOverlap>6000</WindowOverlap>
+        <WindowOverlap>600</WindowOverlap>
         <!-- Order for the median filter used in the Daniell-Welch periodogram.
         If omitted, the default is the smallest odd integer greater 
         than or equal to three times the main lobe width of the applied 
         window. If an even number, a number less than 3, or a non-integer 
         is specified, the smallest odd integer greater than or equal to 3
         and the specified value will be used. -->
-        <MedianFilterOrder>37</MedianFilterOrder>
+        <MedianFilterOrder>10</MedianFilterOrder>
         <!-- Probability of false alarm. With zero padding it becomes a 
         maximum. If omitted, the default of 0.01 is used. -->
         <Pfa>0.001</Pfa>
@@ -65,6 +65,7 @@
     </Periodogram>
     <!-- Periodogram-based forced oscillation detector - all defaults -->
     <Periodogram>
+	<Mode>SingleChannel</Mode>
     </Periodogram>
     <!--
     -->
@@ -72,7 +73,44 @@
     <SpectralCoherence>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
         If omitted, default is single channel.-->
-        <Mode>SingleChannel</Mode>
+        <Mode>MultiChannel</Mode>
+        <!-- Number of samples to use in the analysis. If omitted, default 
+        is the length of the input signals. -->
+        <AnalysisLength>3600</AnalysisLength>
+        <!-- The delay in samples used to calculate the self-GMSC. If 
+        omitted, the default is floor(AnalysisLength/10)-->
+        <Delay>600</Delay>
+        <!-- Number of delays in the self-GMSC. Must be an integer greater than
+        or equal to 2. If omitted, default is 2. -->
+        <NumberDelays>3</NumberDelays>
+        <!-- Scaling factor to establish the detection threshold. If omitted,
+        default is 3.-->
+        <ThresholdScale>3</ThresholdScale>
+        <!-- Type of window used for the self-GMSC. Options are rectangular, 
+        bartlett, hann, hamming, and blackman. If omitted, default is hann. -->
+        <WindowType>hamming</WindowType>
+        <!-- Zero padded length of the self-GMSC. If omitted, no zero 
+        padding is implemented. -->
+        <ZeroPadding>4800</ZeroPadding>
+        <!-- Length of the sections for the self-GMSC. If omitted, default 
+        is 1/5 of AnalyisLength. -->
+        <WindowLength>720</WindowLength>
+        <!-- Amount of overlap between sections for the self-GMSC. If 
+        omitted, default is half of WindowLength. -->
+        <WindowOverlap>360</WindowOverlap>
+        <!-- Minimum frequency to be considered. If omitted, the default is
+        zero, but in many cases this will cause excessive false alarms. -->
+        <FrequencyMin>0.1</FrequencyMin>
+        <!-- Maximum frequency to be considered. If omitted, the default is
+        the Nyquist frequency -->
+        <FrequencyMax>5</FrequencyMax>
+        <!-- Tolerance used to refine the frequency estimate.
+        If omitted, the default is the greater of 1) the main lobe 
+        width of the self-GMSC window and 2) half of FrequencyMin. -->
+        <FrequencyTolerance>0.05</FrequencyTolerance>
+    </SpectralCoherence>
+    <SpectralCoherence>
+	<Mode>SingleChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
         <AnalysisLength>3600</AnalysisLength>
