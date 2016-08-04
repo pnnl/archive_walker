@@ -56,12 +56,49 @@
         <FrequencyMin>0.1</FrequencyMin>
         <!-- Maximum frequency to be considered. If omitted, the default is
         the Nyquist frequency -->
-        <FrequencyMax>5</FrequencyMax>
+        <FrequencyMax>6</FrequencyMax>
         <!-- Tolerance used to refine the frequency estimate.
         If omitted, the default is the greater of 1) the main lobe 
         width of the test statistic periodogram's window and 2) half of 
         FrequencyMin. -->
         <FrequencyTolerance>0.05</FrequencyTolerance>
+        <!-- Select channels for analysis -->
+        <PMU>
+            <Name>BIGE 230 A1 SA  </Name>
+            <Channel>
+                <Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>CPJK 500  A1 SA </Name>
+            <Channel>
+                <Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>GARR 500  A1 SA </Name>
+            <Channel>
+                <Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>MCNY 230 A1 SA  </Name>
+            <Channel>
+                <Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>GCFI 500 A1 SA  </Name>
+            <Channel>
+                <Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>KEEL 230 A1 SA  </Name>
+            <Channel>
+                <Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+            </Channel>
+        </PMU>
     </Periodogram>
     <!--
     -->
@@ -72,10 +109,10 @@
         <Mode>MultiChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
-        <AnalysisLength>3000</AnalysisLength>
+        <AnalysisLength>3600</AnalysisLength>
         <!-- The delay in samples used to calculate the self-GMSC. If 
         omitted, the default is floor(AnalysisLength/10)-->
-        <Delay>600</Delay>
+        <Delay>1200</Delay>
         <!-- Number of delays in the self-GMSC. Must be an integer greater than
         or equal to 2. If omitted, default is 2. -->
         <NumberDelays>3</NumberDelays>
@@ -90,20 +127,57 @@
         <ZeroPadding>4800</ZeroPadding>
         <!-- Length of the sections for the self-GMSC. If omitted, default 
         is 1/5 of AnalyisLength. -->
-        <WindowLength>600</WindowLength>
+        <WindowLength>720</WindowLength>
         <!-- Amount of overlap between sections for the self-GMSC. If 
         omitted, default is half of WindowLength. -->
-        <WindowOverlap>300</WindowOverlap>
+        <WindowOverlap>360</WindowOverlap>
         <!-- Minimum frequency to be considered. If omitted, the default is
         zero, but in many cases this will cause excessive false alarms. -->
         <FrequencyMin>0.1</FrequencyMin>
         <!-- Maximum frequency to be considered. If omitted, the default is
         the Nyquist frequency -->
-        <FrequencyMax>5</FrequencyMax>
+        <FrequencyMax>6</FrequencyMax>
         <!-- Tolerance used to refine the frequency estimate.
         If omitted, the default is the greater of 1) the main lobe 
         width of the self-GMSC window and 2) half of FrequencyMin. -->
         <FrequencyTolerance>0.05</FrequencyTolerance>
+        <!-- Select channels for analysis -->
+        <PMU>
+            <Name>BIGE 230 A1 SA  </Name>
+            <Channel>
+                <Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>CPJK 500  A1 SA </Name>
+            <Channel>
+                <Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>GARR 500  A1 SA </Name>
+            <Channel>
+                <Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>MCNY 230 A1 SA  </Name>
+            <Channel>
+                <Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>GCFI 500 A1 SA  </Name>
+            <Channel>
+                <Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>KEEL 230 A1 SA  </Name>
+            <Channel>
+                <Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+            </Channel>
+        </PMU>
     </SpectralCoherence>
     <!--
     -->
@@ -116,11 +190,11 @@
         <SegmentLength>500</SegmentLength>
         <!-- Delay between evaluated segments in samples. This can be 
         thought of as the time-resolution of the detector. -->
-        <SegmentDelay>10</SegmentDelay>
+        <SegmentDelay>120</SegmentDelay>
         <!-- Number of segments to evaluate. 
         SegmentLength+SegmentNumber*SegmentDelay must not exceed the length
         of the input signal -->
-        <SegmentNumber>600</SegmentNumber>
+        <SegmentNumber>125</SegmentNumber>
         <!-- Scaling factor to establish the detection threshold -->
         <EnergyThresholdScale>6</EnergyThresholdScale>
         <!-- 
@@ -165,5 +239,42 @@
         If omitted, the default is the greater of 1) the main lobe 
         width of the self-GMSC window and 2) half of FrequencyMin. -->
         <FrequencyTolerance>0.05</FrequencyTolerance>
+        <!-- Select channels for analysis -->
+        <PMU>
+            <Name>BIGE 230 A1 SA  </Name>
+            <Channel>
+                <Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>CPJK 500  A1 SA </Name>
+            <Channel>
+                <Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>GARR 500  A1 SA </Name>
+            <Channel>
+                <Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>MCNY 230 A1 SA  </Name>
+            <Channel>
+                <Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>GCFI 500 A1 SA  </Name>
+            <Channel>
+                <Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+            </Channel>
+        </PMU>
+        <PMU>
+            <Name>KEEL 230 A1 SA  </Name>
+            <Channel>
+                <Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+            </Channel>
+        </PMU>
     </Ringdown>
 </Configuration>

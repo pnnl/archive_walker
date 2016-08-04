@@ -12,14 +12,6 @@ catch
     return
 end
 
-% NaN values in a channel are unacceptable. If a channel has any NaN
-% values, it is discarded from analysis.
-DiscardChannelIdx = find(sum(isnan(Data),1) > 0);
-
-% Only active power, frequency, and OTHER signal types are acceptable. If a
-% channel has any other type, it is discarded from analysis.
-DiscardChannelIdx = sort([DiscardChannelIdx find((~strcmp(DataType,'P')) & (~strcmp(DataType,'F')) & (~strcmp(DataType,'OTHER')))]);
-
 %% Get detector parameters
 
 % This function pulls the parameters out of the structure containing the
@@ -58,10 +50,10 @@ if SegmentLength + (SegmentNumber - 1)*SegmentDelay > size(Data,1)
     return
 end
 
-if SegmentLength+SegmentNumber*SegmentDelay ~= AnalysisLength+NumberDelays*Delay
-    warning('SegmentLength+SegmentNumber*SegmentDelay should equal AnalysisLength+NumberDelays*Delay');
-    warning('Actually I dont think that last warning is true, need to check it out though.');
-end
+% if SegmentLength+SegmentNumber*SegmentDelay ~= AnalysisLength+NumberDelays*Delay
+%     warning('SegmentLength+SegmentNumber*SegmentDelay should equal AnalysisLength+NumberDelays*Delay');
+%     warning('Actually I dont think that last warning is true, need to check it out though.');
+% end
 
 timePoints = TimeString(1:SegmentDelay:SegmentDelay*(SegmentNumber - 1)+1)';
 
@@ -69,7 +61,15 @@ timePoints = TimeString(1:SegmentDelay:SegmentDelay*(SegmentNumber - 1)+1)';
 
 % Initialize structure to output detection results
 
-Data = Data(
+Data = Data(end-(SegmentLength + (SegmentNumber - 1)*SegmentDelay)+1:end,:);
+
+% NaN values in a channel are unacceptable. If a channel has any NaN
+% values, it is discarded from analysis.
+DiscardChannelIdx = find(sum(isnan(Data),1) > 0);
+
+% Only active power, frequency, and OTHER signal types are acceptable. If a
+% channel has any other type, it is discarded from analysis.
+DiscardChannelIdx = sort([DiscardChannelIdx find((~strcmp(DataType,'P')) & (~strcmp(DataType,'F')) & (~strcmp(DataType,'OTHER')))]);
 
 % calculate energy for all segments in all signals
 allEnergyChannels = zeros(SegmentNumber,size(Data,2));
@@ -107,12 +107,14 @@ if strcmp(Mode,'SingleChannel')
             [peaks, locations] = findpeaks(currentEnergyChannel, 'MinPeakDistance',SegmentLength/SegmentDelay,'MinPeakHeight',threshold);
             RingStart = {};
             RingEnd = {};
+            DataRing = {};
             % find ringstart and ringend for all peaks
             for peakIndex = 1:length(peaks)
                 startIndex = locations(peakIndex)*SegmentDelay+1;
                 endIndex = locations(peakIndex)*SegmentDelay+SegmentLength;
                 RingStart = {RingStart, TimeString{startIndex}};
                 RingEnd = {RingEnd, TimeString{endIndex}};
+                DataRing{PeakIndex} = Data(startIndex:endIndex,index);
             end
             % add signal to detected results
             DetectionResults(index).RingStart = RingStart;
@@ -122,6 +124,7 @@ if strcmp(Mode,'SingleChannel')
             AdditionalOutput(index).threshold = threshold;
             AdditionalOutput(index).EnergyChannelTimeSeries = currentEnergyChannel;
             AdditionalOutput(index).TimePoints = timePoints;
+            AdditionalOutput(index).
         end
     end
 % multiple channels
@@ -137,6 +140,7 @@ else
     RingStart = {};
     RingEnd = {};
     EnergyChannel = [];
+    DataRing = {};
     % find ringstart and ringend for all peaks
     % find all peak energy for each channel
     for peakIndex = 1:length(peaks)
@@ -145,6 +149,7 @@ else
         RingStart = {RingStart, TimeString{startIndex}};
         RingEnd = {RingEnd, TimeString{endIndex}};
         EnergyChannel = [EnergyChannel; allEnergyChannels(locations,:)];
+        DataRing{PeakIndex} = Data(startIndex:endIndex,:);
     end
     % add signal to detected results
     if ~isempty(peaks)
@@ -159,6 +164,7 @@ else
     AdditionalOutput.threshold = threshold;
     AdditionalOutput.EnergyTotalTimeSeries = EnergyTotalTimeSeries;
     AdditionalOutput.TimePoints = timePoints;
+    AdditionalOutput.DataRing = DataRing;
 end
 
 

@@ -82,6 +82,8 @@ FrequencyMax = ExtractedParameters.FrequencyMax;
 FrequencyTolerance = ExtractedParameters.FrequencyTolerance;
 % WindowLength = floor((AnalysisLength)/8);
 % WindowOverlap = floor(WindowLength/2);
+
+Data = Data(end-(AnalysisLength+Delay*(NumberDelays-1))+1:end,:);
 %% Based on the specified parameters, initialize useful variables
 
 Window = eval([WindowType '(WindowLength)']);
@@ -108,7 +110,7 @@ if strcmp(Mode,'SingleChannel')
     AdditionalOutput = struct('SignalCoherenceSpectrum',[],'Threshold',[],'Frequency',[],'Mode',[]);
 else
     DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[],'TestStatistic',[]);
-    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'TestStatistic',[],'Threshold',[],'Frequency',[],'Mode',[];
+    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'TestStatistic',[],'Threshold',[],'Frequency',[],'Mode',[]);
 end
 
 % Initialize structure for additional outputs

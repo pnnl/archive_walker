@@ -48,21 +48,21 @@ addpath('..\Detector');
 addpath('..\');
 
 %XML file
-ConfigFile = 'DataConfig_JSIS.xml';
+ConfigFile = 'DataConfig_JSIS_RingCSV.xml';
 %XMLFile = 'DataConfig_CSV.xml';
 
 % Parse XML file to MATLAB structure
 DataConfig = fun_xmlread_comments(ConfigFile);
 
 %XML file
-ConfigFile='ProcessConfig_JSIS.xml';
+ConfigFile='ProcessConfig_JSIS_RingCSV.xml';
 %XMLFile='ProcessConfig_CSV.xml';
 
 % Parse XML file to MATLAB structure
 ProcessConfig = fun_xmlread_comments(ConfigFile);
 
 %XML file
-ConfigFile='DetectorConfig_JSIS.xml';
+ConfigFile='DetectorConfig_JSIS_RingCSV.xml';
 % Parse XML file to MATLAB structure
 DetectorConfig = fun_xmlread_comments(ConfigFile);
 
@@ -325,8 +325,8 @@ while(~done)
             % Return only the desired PMUs and signals
             PMU_ProcessorOutput = GetOutputSignals(PMU_ProcessorOutput,ProcessConfig);
             
-            ttt = (1:size(PMU_ProcessorOutput.Data,1))/60;
-            figure, plot(ttt,PMU_ProcessorOutput.Data);
+%             ttt = (1:size(PMU_ProcessorOutput.Data,1))/60;
+%             figure, plot(ttt,PMU_ProcessorOutput.Data);
             
             % *********
             % Detection
@@ -343,6 +343,25 @@ while(~done)
             % similar strategy could be useful when implementing the other
             % detectors too.
             [DetectionResults, AdditionalOutput] = RunDetection(PMU_ProcessorOutput,DetectorConfig);
+            
+            disp('yep');
+            
+%             R = AdditionalOutput.SpectralCoherence;
+%             figure(1), subplot(1,3,1); 
+%             plot(R.Frequency,R.TestStatistic,R.Frequency,R.Threshold*ones(size(R.Frequency)),'r')
+%             ylim([0 1]);
+%             
+%             R = AdditionalOutput.Periodogram;
+%             figure(1), subplot(1,3,2); 
+%             plot(R.Frequency,R.TestStatistic,'b',R.Frequency,R.Threshold,'r')
+            
+%             R = AdditionalOutput.Ringdown;
+%             figure(2), %subplot(1,3,3); 
+%             plot(R.EnergyTotalTimeSeries); 
+%             hold on; plot(R.threshold*ones(size(R.EnergyTotalTimeSeries)),'r'); hold off;
+%             ylim([0 max([R.threshold; R.EnergyTotalTimeSeries; 0.0001])*1.1]);
+%             
+%             drawnow
             
             %% update some information
             DataInfo.tPMU = tPMU;

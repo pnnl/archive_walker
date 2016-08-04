@@ -100,17 +100,22 @@ for i = 1:length(PMU)
     T_end = t(end)+deltaT; % ending time of PMU;
     dt = T_end-t;
     dt = dt*24*3600; % day to seconds
+    % remove some rounding errors
+    dt = round(dt*10000)/10000;
     if(dt(1) < secondsNeeded)
         % has less data than we needed
-        % remove some rounding errors
-        dt = round(dt*1000)/1000;
+        
         
         SecondsToAdd = secondsNeeded-dt(1);
         SamplesToAdd = round(SecondsToAdd/(deltaT*24*3600));
         
         datenumToAdd = (currPMU.Signal_Time.Signal_datenum(1)-SecondsToAdd/3600/24:deltaT:currPMU.Signal_Time.Signal_datenum(1)-deltaT).';
+        if ~exist('TimeString','var')
+            TimeString = cellstr(datestr(datenumToAdd,'yyyy-mm-dd HH:MM:SS.FFF'));
+        end
+        
         currPMU.Signal_Time.Signal_datenum = [datenumToAdd; currPMU.Signal_Time.Signal_datenum];
-        currPMU.Signal_Time.Time_String = [cellstr(datestr(datenumToAdd,'yyyy-mm-dd HH:MM:SS.FFF')); currPMU.Signal_Time.Time_String];
+        currPMU.Signal_Time.Time_String = [TimeString; currPMU.Signal_Time.Time_String];
         currPMU.Stat = [NaN(SamplesToAdd,1); currPMU.Stat];
         currPMU.Data = [NaN(SamplesToAdd,size(currPMU.Data,2)); currPMU.Data];
         currPMU.Flag = [NaN(SamplesToAdd,size(currPMU.Flag,2),size(currPMU.Flag,3)); currPMU.Flag];

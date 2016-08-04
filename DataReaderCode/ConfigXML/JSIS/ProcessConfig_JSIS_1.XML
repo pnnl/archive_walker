@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+    <Processing>
+        <!--
+        For interpolation, filtering, and sampling-rate conversion, if the 
+        PMU element is omitted the process is applied to all signals in all
+        PMUs. If the Channels element within a PMU element is omitted the 
+        process is applied to all signals in that PMU. Otherwise, the 
+        process is applied to the specific PMUs and signals listed in the
+        elements.
+        If channels are not specified for wrap and unwrap operations, they
+        are applied to all angle signals in the PMUs.
+        -->
+        <SecondsToConcat>630</SecondsToConcat>    
+        <Unwrap>
+        </Unwrap>
+        <Interpolate>
+            <Parameters>
+                <Limit>100</Limit>
+                <Type>Linear</Type>
+                <FlagInterp>TRUE</FlagInterp>
+            </Parameters>          
+        </Interpolate>
+        <Stages>
+            <Filter>
+                <Type>Rational</Type>
+                <Parameters>
+                    <Numerator>1,-1</Numerator>
+                    <Denominator>1</Denominator>
+                    <ZeroPhase>FALSE</ZeroPhase>
+                </Parameters>
+            </Filter>
+        </Stages>            
+    </Processing>   
+    <NameTypeUnit>
+        <NewUnit>Hz</NewUnit>
+        <NewType>F</NewType>
+        <!--
+        <PMU>
+            <Name>Custom Signals</Name>
+            <CurrentChannel>MALN</CurrentChannel>
+            <NewChannel>MALN</NewChannel>
+            <NewUnit>Hz</NewUnit>
+            <NewType>F</NewType>
+        </PMU>
+        <PMU>
+            <Name>Custom Signals</Name>
+            <CurrentChannel>JDAY</CurrentChannel>
+            <NewChannel>JDAY</NewChannel>
+            <NewUnit>Hz</NewUnit>
+            <NewType>F</NewType>
+        </PMU>
+        -->
+    </NameTypeUnit>
+    <!--
+    Specify the signals for output
+    -->
+    <SignalSelection>
+    </SignalSelection>
+</Configuration>

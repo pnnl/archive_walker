@@ -83,5 +83,5 @@ end
 
 % Change names, types, and units of signals
 if isfield(ProcessXML.Configuration,'NameTypeUnit')
-    PMU = ChangeNameTypeUnit(PMU,ProcessXML.Configuration.NameTypeUnit.PMU);
+    PMU = ChangeNameTypeUnit(PMU,ProcessXML.Configuration.NameTypeUnit);
 end

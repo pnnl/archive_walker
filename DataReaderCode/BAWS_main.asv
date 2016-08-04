@@ -325,8 +325,8 @@ while(~done)
             % Return only the desired PMUs and signals
             PMU_ProcessorOutput = GetOutputSignals(PMU_ProcessorOutput,ProcessConfig);
             
-            ttt = (1:size(PMU_ProcessorOutput.Data,1))/60;
-            figure, plot(ttt,PMU_ProcessorOutput.Data);
+%             ttt = (1:size(PMU_ProcessorOutput.Data,1))/60;
+%             figure, plot(ttt,PMU_ProcessorOutput.Data);
             
             % *********
             % Detection
@@ -342,7 +342,13 @@ while(~done)
             % detector the next time it is called to reduce computations. A
             % similar strategy could be useful when implementing the other
             % detectors too.
-%             [DetectionResults, AdditionalOutput] = RunDetection(PMU_ProcessorOutput,DetectorConfig);
+            [DetectionResults, AdditionalOutput] = RunDetection(PMU_ProcessorOutput,DetectorConfig);
+            
+            R = AdditionalOutput.SpectralCoherence;
+            figure(1), plot(R.Frequency,R.SignalCoherenceSpectrum,R.Frequency,R.Threshold*ones(size(R.Frequency)),'r')
+            ylim([0 1]);
+            
+            R = AdditionalOutput.Periodogram;
             
             %% update some information
             DataInfo.tPMU = tPMU;
