@@ -112,9 +112,9 @@ if strcmp(Mode,'SingleChannel')
             for peakIndex = 1:length(peaks)
                 startIndex = locations(peakIndex)*SegmentDelay+1;
                 endIndex = locations(peakIndex)*SegmentDelay+SegmentLength;
-                RingStart = {RingStart, TimeString{startIndex}};
-                RingEnd = {RingEnd, TimeString{endIndex}};
-                DataRing{peakIndex} = Data(startIndex:endIndex,index);
+                RingStart{peakIndex} = TimeString{startIndex};
+                RingEnd{peakIndex} = TimeString{endIndex};
+                DataRing{peakIndex} = Data(startIndex:endIndex,:);
             end
             % add signal to detected results
             DetectionResults(index).RingStart = RingStart;
@@ -139,18 +139,17 @@ else
     [peaks, locations] = findpeaks(EnergyTotalTimeSeries, 'MinPeakDistance',SegmentLength/SegmentDelay,'MinPeakHeight',threshold);
     RingStart = {};
     RingEnd = {};
-    EnergyChannel = [];
     DataRing = {};
     % find ringstart and ringend for all peaks
     % find all peak energy for each channel
     for peakIndex = 1:length(peaks)
         startIndex = locations(peakIndex)*SegmentDelay+1;
         endIndex = locations(peakIndex)*SegmentDelay+SegmentLength;
-        RingStart = {RingStart, TimeString{startIndex}};
-        RingEnd = {RingEnd, TimeString{endIndex}};
-        EnergyChannel = [EnergyChannel; allEnergyChannels(locations,:)];
-        DataRing{peakIndex} = Data(startIndex:endIndex,:);
+        RingStart{peakIndex,1} = TimeString{startIndex};
+        RingEnd{peakIndex,1} = TimeString{endIndex};
+        DataRing{peakIndex,1} = Data(startIndex:endIndex,:);
     end
+    EnergyChannel = allEnergyChannels(locations,:);
     % add signal to detected results
     if ~isempty(peaks)
         DetectionResults.PMU = DataPMU;
