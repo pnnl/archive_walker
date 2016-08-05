@@ -19,6 +19,7 @@
         </Channel>
     </PMU>
     -->
+    <ResultsPath>C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\DetectionResults</ResultsPath>
     <!-- Periodogram-based forced oscillation detector -->
     <Periodogram>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.

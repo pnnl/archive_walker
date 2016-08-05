@@ -343,8 +343,9 @@ while(~done)
             % similar strategy could be useful when implementing the other
             % detectors too.
             [DetectionResults, AdditionalOutput] = RunDetection(PMU_ProcessorOutput,DetectorConfig);
+            save([DetectorConfig.Configuration.ResultsPath '\Results'],'DetectionResults','AdditionalOutput');
             
-            disp('yep');
+%             disp('yep');
             
 %             R = AdditionalOutput.SpectralCoherence;
 %             figure(1), subplot(1,3,1); 

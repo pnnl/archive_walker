@@ -19,6 +19,7 @@
         </Channel>
     </PMU>
     -->
+    <ResultsPath>C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\DetectionResults</ResultsPath>
     <!-- Ringdown detector -->
     <Ringdown>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
