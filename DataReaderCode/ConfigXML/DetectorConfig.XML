@@ -19,6 +19,7 @@
         </Channel>
     </PMU>
     -->
+    <ResultUpdateInterval>10</ResultUpdateInterval>
     <!-- Periodogram-based forced oscillation detector -->
     <Periodogram>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
@@ -26,28 +27,6 @@
         <Mode>MultiChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
-        <AnalysisLength>3600</AnalysisLength>
-        <!-- Type of window used for the test statistic periodogram, 
-        Daniell-Welch periodogram, and GMSC. Options are rectwin (rectangular), 
-        bartlett, hann, hamming, and blackman. If omitted, default is hann. -->
-        <WindowType>hamming</WindowType>
-        <!-- Zero padded length of the test statistic periodogram,
-        Daniell-Welch periodogram, and GMSC. If omitted, no zero padding is
-        implemented. -->
-        <ZeroPadding>4800</ZeroPadding>
-        <!-- Length of the sections for the Daniell-Welch periodogram and 
-        GMSC. If omitted, default is 1/3 of AnalyisLength. -->
-        <WindowLength>1200</WindowLength>
-        <!-- Amount of overlap between sections for the Daniell-Welch 
-        periodogram and GMSC. If omitted, default is half of WindowLength -->
-        <WindowOverlap>600</WindowOverlap>
-        <!-- Order for the median filter used in the Daniell-Welch periodogram.
-        If omitted, the default is the smallest odd integer greater 
-        than or equal to three times the main lobe width of the applied 
-        window. If an even number, a number less than 3, or a non-integer 
-        is specified, the smallest odd integer greater than or equal to 3
-        and the specified value will be used. -->
-        <MedianFilterOrder>10</MedianFilterOrder>
         <!-- Probability of false alarm. With zero padding it becomes a 
         maximum. If omitted, the default of 0.01 is used. -->
         <Pfa>0.001</Pfa>
