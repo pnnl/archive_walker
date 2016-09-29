@@ -33,7 +33,8 @@
         <WindowType>hamming</WindowType>
         <!-- Zero padded length of the test statistic periodogram,
         Daniell-Welch periodogram, and GMSC. If omitted, no zero padding is
-        implemented. -->
+        implemented for the test statistic periodogram, i.e., the default 
+        is AnalysisLength. -->
         <ZeroPadding>4800</ZeroPadding>
         <!-- Length of the sections for the Daniell-Welch periodogram and 
         GMSC. If omitted, default is 1/3 of AnalyisLength. -->
@@ -75,10 +76,10 @@
         If omitted, default is single channel.-->
         <Mode>MultiChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
-        is the length of the input signals. -->
+        is 60 seconds. -->
         <AnalysisLength>3600</AnalysisLength>
         <!-- The delay in samples used to calculate the self-GMSC. If 
-        omitted, the default is floor(AnalysisLength/10)-->
+        omitted, the default is floor(AnalysisLength/5)-->
         <Delay>600</Delay>
         <!-- Number of delays in the self-GMSC. Must be an integer greater than
         or equal to 2. If omitted, default is 2. -->
@@ -89,11 +90,11 @@
         <!-- Type of window used for the self-GMSC. Options are rectangular, 
         bartlett, hann, hamming, and blackman. If omitted, default is hann. -->
         <WindowType>hamming</WindowType>
-        <!-- Zero padded length of the self-GMSC. If omitted, no zero 
-        padding is implemented. -->
+        <!-- Zero padded length of the self-GMSC. If omitted, default is
+        AnalysisLength-->
         <ZeroPadding>4800</ZeroPadding>
         <!-- Length of the sections for the self-GMSC. If omitted, default 
-        is 1/5 of AnalyisLength. -->
+        is 1/8 of AnalyisLength. -->
         <WindowLength>720</WindowLength>
         <!-- Amount of overlap between sections for the self-GMSC. If 
         omitted, default is half of WindowLength. -->
@@ -110,7 +111,7 @@
         <FrequencyTolerance>0.05</FrequencyTolerance>
     </SpectralCoherence>
     <SpectralCoherence>
-	<Mode>SingleChannel</Mode>
+        <Mode>SingleChannel</Mode>
         <!-- Number of samples to use in the analysis. If omitted, default 
         is the length of the input signals. -->
         <AnalysisLength>3600</AnalysisLength>

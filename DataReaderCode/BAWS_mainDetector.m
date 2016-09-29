@@ -45,20 +45,20 @@ addpath('..\Detector\SpectralCoherenceDetector');
 addpath('..\');
 
 %XML file
-XMLFile = 'DataConfigDetector.xml';
+XMLFile = 'DataConfig_JSIS_FO.xml';
 % XMLFile = 'ConfigXML_CSV.xml';
 
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='ProcessConfigDetector.xml';
+XMLFile='ProcessConfig_JSIS_FO.xml';
 % XMLFile = 'ProcessXML_CSV.xml';
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='DetectorConfig.xml';
+XMLFile='DetectorConfig_JSIS_FO.xml';
 % Parse XML file to MATLAB structure
 DetectorXML = fun_xmlread_comments(XMLFile);
 
