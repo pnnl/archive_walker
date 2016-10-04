@@ -224,8 +224,8 @@ if isfield(Parameters,'AnalysisLength')
     % Use specified value
     AnalysisLength = str2double(Parameters.AnalysisLength);
 else
-    % Use default value (length of the input signals)
-    AnalysisLength = ceil(SignalLength);
+    % Use default value (60 seconds)
+    AnalysisLength = fs*60;
 end
 
 % delay in samples used to calculate self-GMC
@@ -280,8 +280,8 @@ else
     ZeroPadding = AnalysisLength;
 end
 
-% Length of the sections for the Daniell-Welch periodogram and GMSC. If 
-% omitted, default is 1/3 of K (AnalyisLength).
+% Length of the sections for the self-GMSC. If 
+% omitted, default is 1/8 of K (AnalyisLength).
 if isfield(Parameters,'WindowLength')
     % Use specified window length
     WindowLength = str2double(Parameters.WindowLength);
@@ -290,7 +290,7 @@ else
     WindowLength = floor(AnalysisLength/8);
 end
 
-% Amount of overlapbetween sections for the self-GMSC. If omitted, default
+% Amount of overlap between sections for the self-GMSC. If omitted, default
 % is half of WindowLength.
 if isfield(Parameters,'WindowOverlap')
     % Use specified window overlap

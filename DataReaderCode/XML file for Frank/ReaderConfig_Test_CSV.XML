@@ -4,7 +4,7 @@
         <!--
 		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
         -->
-        <FileDirectory>C:\Users\agra307\Documents\Task_05_23_2016\Master copy\Archive_Walker\DataReaderCode\OriginalData</FileDirectory>
+        <FileDirectory>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
         <Mnemonic>ModeMeterSignals</Mnemonic>
         <FileType>csv</FileType>
         <!--

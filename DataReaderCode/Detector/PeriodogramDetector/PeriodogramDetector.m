@@ -241,7 +241,7 @@ if isfield(Parameters,'ZeroPadding')
     % Use specified zero padding
     ZeroPadding = str2double(Parameters.ZeroPadding);
 else
-    % Use default zero padding (none)
+    % Use default zero padding (none for the test statistic periodogram)
     ZeroPadding = AnalysisLength;
 end
 

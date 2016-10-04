@@ -4,7 +4,7 @@
         <!--
 		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
         -->
-        <FileDirectory>C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
+        <FileDirectory>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
         <FileType>PDAT</FileType>
         <Mnemonic>WISPDitt</Mnemonic>
         <!--

@@ -1,19 +1,10 @@
 ********************************************************
 Mode = Archive
-DateTimeStart =  2015-06-17 09:12:00
-DateTimeEnd  =   2015-06-17 09:12:00
+DateTimeStart =  2015-06-17 08:00:00
+DateTimeEnd  =   2015-06-17 08:36:00
 ********************************************************
 
-The next focus file should be: C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_091200.csv
-The next focus file folder should be C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_080000.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
 
-The current PMU file is: C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_091200.csv
-Number of PMUs in the file: 1.000000
-PMU start Time:  06/17/2015 09:12:00:000
-PMU end Time:    06/17/2015 09:30:00:000
-The next focus file should be: C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_093000.csv
-The next focus file folder should be C:\Users\foll154\Documents\BPA Oscillation App\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
-
-Finished processing files
-********************************************************
-
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_080000.csv

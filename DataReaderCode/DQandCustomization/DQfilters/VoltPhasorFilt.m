@@ -82,9 +82,9 @@ for SigIdx = 1:length(SigsToFilt)
         else
             % The nominal voltage must be extracted from the signal name
             NomVoltage = strsplit(PMUstruct.Signal_Name{ThisSig},'.');
-            if strcmp(FileType,'csv')
+            if strcmpi(FileType,'csv')
                 NomVoltage = str2double(NomVoltage{1}(end-2:end));
-            elseif strcmp(FileType,'PDAT')
+            elseif strcmpi(FileType,'pdat')
                 NomVoltage = str2double(NomVoltage{1}(6:8));
                 % Transform rating from line-to-line to line-to-neutral
                 NomVoltage = NomVoltage/sqrt(3);
