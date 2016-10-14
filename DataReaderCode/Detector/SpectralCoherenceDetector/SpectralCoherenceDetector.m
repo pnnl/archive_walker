@@ -274,15 +274,6 @@ else
     WindowType = 'hann';
 end
 
-% % Zero padded length of the self_GMC. If omitted, no zero padding is implemented.
-% if isfield(Parameters,'ZeroPadding')
-%     % Use specified zero padding
-%     ZeroPadding = str2double(Parameters.ZeroPadding);
-% else
-%     % Use default zero padding (none)
-%     ZeroPadding = AnalysisLength;
-% end
-
 % Zero padded length of the test statistic periodogram, Daniell-Welch
 % periodogram, and GMSC. If omitted, no zero padding is implemented.
 if isfield(Parameters,'FrequencyInterval')
