@@ -20,5 +20,13 @@
     </PMU>
     -->
     <!-- Periodogram-based forced oscillation detector -->
-    <ResultUpdateInterval>60</ResultUpdateInterval>
+    <OutOfRangeGeneral>
+        <PMU>
+            <Name>MultiRate Custom</Name>
+        </PMU>
+        <Max>0.1</Max>
+        <Min>-0.1</Min>
+        <Duration>3</Duration>
+    </OutOfRangeGeneral>
+    <ResultUpdateInterval>10</ResultUpdateInterval>
 </Configuration>

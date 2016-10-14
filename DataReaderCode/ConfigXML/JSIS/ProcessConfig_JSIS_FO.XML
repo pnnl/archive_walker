@@ -11,7 +11,7 @@
         If channels are not specified for wrap and unwrap operations, they
         are applied to all angle signals in the PMUs.
         -->
-        <SecondsToConcat>630</SecondsToConcat>    
+        <SecondsToConcat>150</SecondsToConcat>    
         <Unwrap>
         </Unwrap>
         <Interpolate>
@@ -30,6 +30,15 @@
                     <ZeroPhase>FALSE</ZeroPhase>
                 </Parameters>
             </Filter>
+            <Multirate>
+                <PMU>
+                    <Name>ALSN 500 A1 SA  </Name>
+                </PMU>
+                <Parameters>
+                    <MultiRatePMU>MultiRate Custom</MultiRatePMU>
+                    <NewRate>5</NewRate>
+                </Parameters>
+            </Multirate>
         </Stages>            
     </Processing>   
     <NameTypeUnit>

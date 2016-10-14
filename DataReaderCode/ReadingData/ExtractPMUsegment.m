@@ -52,7 +52,11 @@ for i = 1:length(PMU)
     
     PMUsegment(i).Signal_Time.Signal_datenum = currPMU.Signal_Time.Signal_datenum(PMUsegmentIndex);
     PMUsegment(i).Signal_Time.Time_String = currPMU.Signal_Time.Time_String(PMUsegmentIndex);
-    PMUsegment(i).Stat = currPMU.Stat(PMUsegmentIndex,:);
+    if isempty(currPMU.Stat)
+        PMUsegment(i).Stat = [];
+    else
+        PMUsegment(i).Stat = currPMU.Stat(PMUsegmentIndex,:);
+    end
     PMUsegment(i).Data = currPMU.Data(PMUsegmentIndex,:);
     PMUsegment(i).Flag = currPMU.Flag(PMUsegmentIndex,:,:);    
     

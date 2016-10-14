@@ -32,6 +32,19 @@
 %              specifications for the data reader.
 %   DetectorXML: structure containing information from the detector's
 %                configuration XML file.
+%   DetectorTypes:  Cell array listing the detectors to be implemented (if
+%                   included in DetectorXML). Options are:
+%                       Periodogram
+%                       SpectralCoherence
+%                       Ringdown
+%                       OutOfRangeGeneral
+%                       OutOfRangeVoltage
+%                       OutOfRangeFrequency
+%                       WindRamp
+%   PastAdditionalOutput:   Allows the AdditionalOutput output from
+%                           previous calls to be passed into the current
+%                           call to the detector so that values, such as
+%                           initial conditions for filters, can be used.
 %   TimeStamp:  The time stamp as a string that should be applied to the
 %               detection results. If omitted, the default is the final 
 %               time stamp from the first PMU:
@@ -50,7 +63,7 @@
 % Created by: Jim Follum (james.follum@pnnl.gov) on 07/08/2016
 % Completed with initial testing by Jim Follum on 7/11/2016
 
-function [DetectionResults, AdditionalOutput] = RunDetection(PMUstruct,DetectorXML,TimeStamp)
+function [DetectionResults, AdditionalOutput] = RunDetection(PMUstruct,DetectorXML,DetectorTypes,PastAdditionalOutput,TimeStamp)
 
 % If TimeStamp was not included, set it to the default value
 if ~exist('TimeStamp','var')
@@ -61,9 +74,7 @@ end
 DetectionResults = struct('TimeStamp',TimeStamp);
 AdditionalOutput = struct('TimeStamp',TimeStamp);
 
-for DetectorType = {'Periodogram', 'SpectralCoherence', 'Ringdown',...
-        'OutOfRangeGeneral', 'OutOfRangeVoltage', 'OutOfRangeFrequency',...
-        'WindRamp'}
+for DetectorType = DetectorTypes
     
     % Note that the {1} following each DetectorType is necessary.
     % DetectorType on its own is a cell. Adding the {1} accesses the string
@@ -86,8 +97,16 @@ for DetectorType = {'Periodogram', 'SpectralCoherence', 'Ringdown',...
             % Implement the detector. For the periodogram detector, the 
             % following code is equivalent to the contents of eval():
             % PeriodogramDetector(PMUstruct,DetectorXML.Configuration.Periodogram{DetectorIndex})
+            if ~isfield(PastAdditionalOutput,DetectorType{1})
+                eval('PastAdditionalOutput(DetectorIndex).(DetectorType{1}) = [];');
+            end
+            
+            if DetectorIndex > length(PastAdditionalOutput)
+                eval('PastAdditionalOutput(DetectorIndex).(DetectorType{1}) = [];');
+            end
+            
             [DetectionResults(DetectorIndex).(DetectorType{1}), AdditionalOutput(DetectorIndex).(DetectorType{1})]...
-                = eval([DetectorType{1} 'Detector(PMUstruct,DetectorXML.Configuration.(DetectorType{1}){DetectorIndex})']);
+                = eval([DetectorType{1} 'Detector(PMUstruct,DetectorXML.Configuration.(DetectorType{1}){DetectorIndex}, PastAdditionalOutput(DetectorIndex).(DetectorType{1}))']);
         end
     end
 end

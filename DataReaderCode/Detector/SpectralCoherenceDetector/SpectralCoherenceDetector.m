@@ -20,6 +20,10 @@
 %               Delay = delay in samples used to calculate the self-GMSC
 %               NumberDelays =  Number of delays in the self-GMSC
 %               ThresholdScale = Scaling factor to establish the detection threshold
+%           PastAdditionalOutput: past AdditionalOutput outputs from this
+%                                 function that can be used for various
+%                                 purposes.
+%
 %   Outputs:
 %           DetectionResults: Struct Array containing information on PMU and Channel of
 %           signal used for analysis along with estimates of frequency and
@@ -38,7 +42,7 @@
 % interest iii. Check Data quality and Signal type iv. Initialization v.
 % Perform detection
 
-function [DetectionResults, AdditionalOutput] = SpectralCoherenceDetector(PMUstruct,Parameters)
+function [DetectionResults, AdditionalOutput] = SpectralCoherenceDetector(PMUstruct,Parameters,PastAdditionalOutput)
 
 %% Store the channels for analysis in a matrix. PMU and channel names are
 % stored in cell arrays. Also returns a time vector t with units of seconds

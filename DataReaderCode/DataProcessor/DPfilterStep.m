@@ -29,7 +29,7 @@
 %    
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
     
-function PMU = DPfilterStep(PMU,ProcessFilter)
+function [PMU, FinalCondos] = DPfilterStep(PMU,ProcessFilter, InitialCondos)
 NumFilts = length(ProcessFilter);
 
 if NumFilts == 1
@@ -39,6 +39,10 @@ if NumFilts == 1
     ProcessFilter = {ProcessFilter};
 end
 
+FinalCondos = cell(1,NumFilts);
+if isempty(InitialCondos)
+    InitialCondos = cell(1,NumFilts);
+end
 for FiltIdx = 1:NumFilts 
     % Parameters for the filter - the structure contents are
     % specific to the filter
@@ -92,15 +96,15 @@ for FiltIdx = 1:NumFilts
     switch ProcessFilter{FiltIdx}.Type
         case 'HighPass'
             for PMUidx = 1:NumPMU
-               PMU(PMUstructIdx(PMUidx))= HighPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+               [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}] = HighPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx});
             end
         case 'LowPass'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx))= LowPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}] = LowPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx});
             end
         case 'Rational'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx))= RationalFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}] = RationalFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx});
             end
         case 'Median'
             for PMUidx = 1:NumPMU

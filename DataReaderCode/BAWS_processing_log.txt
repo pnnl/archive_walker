@@ -1,7 +1,7 @@
 ********************************************************
 Mode = Archive
 DateTimeStart =  2015-06-17 08:00:00
-DateTimeEnd  =   2015-06-17 08:36:00
+DateTimeEnd  =   2015-06-17 09:12:00
 ********************************************************
 
 The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_080000.csv

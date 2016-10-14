@@ -24,6 +24,9 @@
 %                       FrequencyMax = Maximum frequency to be considered
 %                       FrequencyTolerance = Tolerance used to refine the
 %                       frequency estimate
+%           PastAdditionalOutput: past AdditionalOutput outputs from this
+%                                 function that can be used for various
+%                                 purposes.
 %
 %   Outputs:
 %           DetectionResults: Struct Array containing information on PMU and Channel of
@@ -42,7 +45,7 @@
 % wrote code under section: i. Frequency of interest ii. Check Data quality
 % and Signal type iii. Initialization iv. Perform detection
 
-function [DetectionResults, AdditionalOutput] = PeriodogramDetector(PMUstruct,Parameters)
+function [DetectionResults, AdditionalOutput] = PeriodogramDetector(PMUstruct,Parameters,PastAdditionalOutput)
 
 %% Store the channels for analysis in a matrix. PMU and channel names are
 % stored in cell arrays. Also returns a time vector t with units of seconds

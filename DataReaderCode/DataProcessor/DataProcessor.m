@@ -29,7 +29,7 @@
 % Modified on 22 July, 2016 by Urmila Agrawal
 %   Number of flags in the output PMU strucutre is reduced to 2
 
-function PMU= DataProcessor(PMUstruct, ProcessXML,NumStages,FlagBitInterpo,FlagBitInput,NumFlags)
+function [PMU, FinalCondos, FinalAngles] = DataProcessor(PMUstruct, ProcessXML,NumStages,FlagBitInterpo,FlagBitInput,NumFlags,InitialCondos,PastAngles)
 
 NumPMU = length(PMUstruct);
 PMU = PMUstruct;
@@ -55,8 +55,11 @@ for PMUind = 1:NumPMU
 end
 
 %data processor first carries out angle unwraping operation
+if isempty(PastAngles)
+    PastAngles = [];
+end
 if isfield(ProcessXML.Configuration.Processing,'Unwrap')
-    PMU = DPUnwrap(PMU,ProcessXML.Configuration.Processing.Unwrap);
+    [PMU, FinalAngles] = DPUnwrap(PMU,ProcessXML.Configuration.Processing.Unwrap,PastAngles);
 end
 %second, data processor then interpolates missing data, and flagged data if user
 %specifies
@@ -66,10 +69,18 @@ end
 
 %Then, data processor carries out filter and multirate operation for
 %specified number of stages
+%
+% Create structure to store the final conditions of each filter. The
+% structure has as many elements as there are stages, even if some stages
+% don't have filters.
+FinalCondos = cell(1,NumStages);
+if isempty(InitialCondos)
+    InitialCondos = cell(1,NumStages);
+end
 for StageIdx = 1:NumStages
     
     if isfield(ProcessXML.Configuration.Processing.Stages{StageIdx},'Filter')
-        PMU = DPfilterStep(PMU,ProcessXML.Configuration.Processing.Stages{StageIdx}.Filter);
+        [PMU, FinalCondos{StageIdx}] = DPfilterStep(PMU,ProcessXML.Configuration.Processing.Stages{StageIdx}.Filter, InitialCondos{StageIdx});
     end
     
     if isfield(ProcessXML.Configuration.Processing.Stages{StageIdx},'Multirate')

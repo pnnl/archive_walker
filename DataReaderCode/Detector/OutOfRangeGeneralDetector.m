@@ -1,4 +1,8 @@
-function [DetectionResults, AdditionalOutput] = OutOfRangeGeneralDetector(PMUstruct,Parameters)
+%           PastAdditionalOutput: past AdditionalOutput outputs from this
+%                                 function that can be used for various
+%                                 purposes.
+
+function [DetectionResults, AdditionalOutput] = OutOfRangeGeneralDetector(PMUstruct,Parameters,PastAdditionalOutput)
 
 %% Store the channels for analysis in a matrix. PMU and channel names are
 % stored in cell arrays. Also returns a time vector t with units of seconds

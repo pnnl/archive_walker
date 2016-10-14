@@ -32,7 +32,7 @@
 %     
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
-function PMU = LowPassFilt(PMU,SigsToFilt,Parameters)
+function [PMU, FinalCondos] = LowPassFilt(PMU,SigsToFilt,Parameters, InitialCondos)
 
 %User-specified parameters 
 PassRipple  = str2num(Parameters.PassRipple);
@@ -71,6 +71,14 @@ if isempty(SigsToFilt)
     SigsToFilt = PMU.Signal_Name(SigIdx);
 end
 % freqz(b,1,1024,fs)
+
+FinalCondos = cell(1,length(SigsToFilt));
+if isempty(InitialCondos)
+    InitialCondos = cell(1,length(SigsToFilt));
+    for SigIdx = 1:length(SigsToFilt)
+        InitialCondos{SigIdx} = struct('Name',[],'delays',[]);
+    end
+end
 for SigIdx = 1:length(SigsToFilt)
     ThisSig = find(strcmp(PMU.Signal_Name,SigsToFilt{SigIdx}));
     
@@ -85,7 +93,12 @@ for SigIdx = 1:length(SigsToFilt)
     if strcmp(SetZeroPhase,'TRUE')
         PMU.Data(:,ThisSig) = filtfilt(b,a,PMU.Data(:,ThisSig)); 
     else
-        PMU.Data(:,ThisSig) = filter(b,a,PMU.Data(:,ThisSig));
-    end  
-
+        % Only use the initial conditions if the name of the channel is
+        % correct
+        if ~strcmp(SigsToFilt{SigIdx}, InitialCondos{SigIdx}.Name)
+            InitialCondos{SigIdx}.delays = [];
+        end
+        FinalCondos{SigIdx}.Name = SigsToFilt{SigIdx};
+        [PMU.Data(:,ThisSig), FinalCondos{SigIdx}.delays] = filter(b,a,PMU.Data(:,ThisSig), InitialCondos{SigIdx}.delays);
+    end
 end

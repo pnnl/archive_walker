@@ -68,6 +68,7 @@ signalDespStr = fgetl(fid);
 
 %% read in data
 data = readtable(inFile,'HeaderLines',3,'TreatAsEmpty',{'.','NA','N/A','#VALUE!'} );
+data = data(2:end,:);
 
 %% identify the format of time and get time information
 T1 = data{1,1};
