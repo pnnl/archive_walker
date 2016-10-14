@@ -68,7 +68,12 @@ signalDespStr = fgetl(fid);
 
 %% read in data
 data = readtable(inFile,'HeaderLines',3,'TreatAsEmpty',{'.','NA','N/A','#VALUE!'} );
-data = data(2:end,:);
+
+% The CSVs we have repeat a value from one file to the next. If the number 
+% of samples is odd, assume this is the case and drop the first sample.
+if mod(size(data,1),2) == 1
+    data = data(2:end,:);
+end
 
 %% identify the format of time and get time information
 T1 = data{1,1};

@@ -49,17 +49,17 @@ debugMode = 1;
 
 %XML file
 
-XMLFile = '1_DataConfig_JSIS_RingCSV.XML';
+XMLFile = '1_DataConfig_JSIS_FO.XML';
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='2_ProcessConfig_JSIS_RingCSV.xml';
+XMLFile='2_ProcessConfig_JSIS_FO.xml';
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='3_DetectorConfig_JSIS_RingCSV.xml';
+XMLFile='3_DetectorConfig_JSIS_FO.xml';
 % Parse XML file to MATLAB structure
 DetectorXML = fun_xmlread_comments(XMLFile);
 
@@ -259,21 +259,46 @@ end
 %% flag for processed files
 DataInfo.tPMU = 0;  % time of the last measurement in the last processed file
 DataInfo.lastFocusFile = ''; % last focus file
-DataInfo.secondsToConcat = str2double(ProcessXML.Configuration.Processing.SecondsToConcat);    % seconds of PMUs that need to be concatenated
 PMUall = {}; % used to hold PMUs for concatenation
-oneMinuteEmptyPMU = []; % a one minute empty PMU used for missing minutes
-emptyPMUexist = 0;   % a flag used to identify if oneMinuteEmptyPMU exists
+PMURem = [];
 FlagBitInput = 1; %Bit used to indicate flagged input data to be processed
 FlagBitInterpo = 2; %Bit used to indicate data is interpolated
 NumFlagsProcessor = 2; % Number of bits used to indicate processed data that has been flagged for different cases
-ResultUpdateInterval = [];
 AdditionalOutput = [];
+
+%% 
+
+%User-defined input for updating results after certain interval
+if isfield(DetectorXML.Configuration,'ResultUpdateInterval')
+    ResultUpdateInterval = str2double(DetectorXML.Configuration.ResultUpdateInterval);
+    SecondsToConcat = ResultUpdateInterval;
+    
+    if isfield(DetectorXML.Configuration,'Periodogram')
+        if isfield(DetectorXML.Configuration.Periodogram,'AnalysisLength')
+            SecondsToConcat = max([SecondsToConcat str2double(DetectorXML.Configuration.Periodogram.AnalysisLength)]);
+        else
+            error('AnalysisLength must be specified for the Periodogram-based forced oscillation detector.');
+        end
+    end
+    
+    if isfield(DetectorXML.Configuration,'SpectralCoherence')
+        if isfield(DetectorXML.Configuration.SpectralCoherence,'AnalysisLength')
+            SecondsToConcat = max([SecondsToConcat str2double(DetectorXML.Configuration.SpectralCoherence.AnalysisLength)]);
+        else
+            error('AnalysisLength must be specified for the spectral coherence based forced oscillation detector.');
+        end
+    end
+else
+    ResultUpdateInterval = [];
+    SecondsToConcat = [];
+end
+
 %% processing files
 
 % % Instead of specifying the number of seconds to concatenate in the XML,
 % % choose it based on the update interval and analysis window lengths of the
 % % FO detectors.
-% DataInfo.secondsToConcat = max([str2double(DetectorXML.Configuration.ResultUpdateInterval)...
+% SecondsToConcat = max([str2double(DetectorXML.Configuration.ResultUpdateInterval)...
 %     str2double(DetectorXML.Configuration.Periodogram.AnalysisLength)...
 %     str2double(DetectorXML.Configuration.SpectralCoherence.AnalysisLength)]);
 
@@ -298,6 +323,7 @@ while(~done)
                 [stat,attr] = fileattrib(focusFile);
             end
             
+            
             % ***********
             % Data Reader
             % ***********
@@ -320,91 +346,45 @@ while(~done)
             
             
             
+            % **********
+            % Processing
+            % **********
             
             [PMU, InitialCondos, FinalAngles] = DataProcessor(PMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor,InitialCondos,FinalAngles);
             % Return only the desired PMUs and signals
             PMU = GetOutputSignals(PMU, ProcessXML);
             
+            % Create an empty one minute PMU data structure for later use
+            % after processing the first file
+            % this only needs to be called once
+            if exist('oneMinuteEmptyPMU','var') == 0
+                oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
+            end
             
+            
+            
+            % *********
+            % Detection
+            % *********
+            
+            % Perform event detection on data from most recently loaded
+            % file
             [DetectionResults, AdditionalOutput] = RunDetection(PMU,DetectorXML,EventDetectors,AdditionalOutput);
-            'hey';
             
-            
-            
-%             % Create an empty one minute PMU data structure for later use
-%             % after processing the first file
-%             % this only needs to be called once
-%             if(~emptyPMUexist)
-%                 oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
-%                 emptyPMUexist = 1;
-%             end            
-%             
-%             % **********************
-%             % Collect PMU Structures according to specified seconds
-%             % **********************
-%             if isempty(ResultUpdateInterval)
-%                 % This if statement corresponds to the first few seconds
-%                 % (or minutes) until enough files are concatenated for
-%                 % further processing
-%                 PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU);
-%             else
-%                 % Once the processing starts, PMURem contains remaining data from previous processed data
-%                 % file(data corresponds to time duration(SecondsToConcat-ResultUpdateInterval)
-%                 PMU_rem{1} = PMURem;
-%                 PMUall = preparePMUList(PMU_rem,PMU,oneMinuteEmptyPMU);
-%             end
-%             
-%             % Concatenate all the PMU structures on the list into one PMU
-%             % structure for analysis
-%             [PMURem,FlagContinue] = ConcatenatePMU(PMUall,DataInfo.secondsToConcat);
-%             if FlagContinue ==1
-%                 %Incase concatenated data file do not have enough data, then
-%                 %it skips other processes and continues with next iteration
-%                 continue;
-%             end
-%             %User-defined input for updating results after certain interval
-%             ResultUpdateInterval = str2num(DetectorXML.Configuration.ResultUpdateInterval);
-%             if ResultUpdateInterval > DataInfo.secondsToConcat
-%                 error('Result update interval cannot exceed seconds to concatenate');
-%             end
-%             
-%             % n is the number of times an analysis window of length DataInfo.secondsToConcat
-%             % can slide ResultUpdateInterval seconds within the
-%             % concatenated data.
-%             n = floor((size(PMURem(1).Data,1)-DataInfo.secondsToConcat*60)/(ResultUpdateInterval*60));
-%             % PMUsegmentAll is the collection of all data that will be
-%             % analyzed as the analysis window slides as many times as it
-%             % can
-%             PMUsegmentAll = ExtractPMUsegment(PMURem,DataInfo.secondsToConcat+n*ResultUpdateInterval,ResultUpdateInterval);
-%             % PMURem is the data that will be concatenated with the next
-%             % file loaded to continue processing. 
-%             [~, PMURem] = ExtractPMUsegment(PMURem,DataInfo.secondsToConcat,(n+1)*ResultUpdateInterval);  
-%             
-%             
-%             
-%             
-% 
-%             for nn = 1:n+1
-%                 %This function extracts data segment corresponding to
-%                 %SecondsToConcat for further processing
-%                 [PMUsegment, PMUsegmentAll] = ExtractPMUsegment(PMUsegmentAll,DataInfo.secondsToConcat,ResultUpdateInterval);
-%                 
-%                 % *********
-%                 % Detection
-%                 % *********
-%                 % Implementation Note:
-%                 % The ringdown detector slides a window across the data and
-%                 % calculates energy. After adding a new minute of data, many of
-%                 % these energy calculations will be redone for certain (but
-%                 % common) parameter setups. To avoid this, the energies and
-%                 % other necessary information could be stored in
-%                 % AdditionalOutput. After being returned here, they could be
-%                 % stored as extra information in DetectorXML for use by the
-%                 % detector the next time it is called to reduce computations. A
-%                 % similar strategy could be useful when implementing the other
-%                 % detectors too.
-%                 [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,FOdetectors);
-%             end
+            % Retrieve the segment of data that will be examined for forced
+            % oscillations. A window of length SecondsToConcat slides
+            % across this segment, advancing ResultUpdateInterval seconds
+            % each step.
+            [PMUall,PMURem,PMUsegmentAll,n] = RetrieveBlock(PMU,oneMinuteEmptyPMU,PMUall,PMURem,ResultUpdateInterval,SecondsToConcat);
+            % Perform forced oscillation detection for each time that the
+            % block can slide within the current segment of data
+            for nn = 1:n+1
+                %This function extracts data segment corresponding to
+                %SecondsToConcat for further processing
+                [PMUsegment, PMUsegmentAll] = ExtractPMUsegment(PMUsegmentAll,SecondsToConcat,ResultUpdateInterval);
+                
+                [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,FOdetectors,AdditionalOutput);
+            end
             
             
             %% update some information

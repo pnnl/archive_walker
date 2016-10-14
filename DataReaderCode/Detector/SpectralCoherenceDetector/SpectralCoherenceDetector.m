@@ -69,7 +69,7 @@ end
 % default values for parameters that were not specified. 
 % Additional inputs, such as the length of the input data or the sampling 
 % rate, can be added as necessary. 
-ExtractedParameters = ExtractParameters(Parameters,size(Data,1),fs);
+ExtractedParameters = ExtractParameters(Parameters,fs);
 
 % Store the parameters in variables for easier access
 Mode = ExtractedParameters.Mode;
@@ -212,7 +212,7 @@ end
 % such as the length of the input data or the sampling rate, can be added
 % as necessary. 
 % Created by: Jim Follum (james.follum@pnnl.gov)
-function ExtractedParameters = ExtractParameters(Parameters,SignalLength,fs)
+function ExtractedParameters = ExtractParameters(Parameters,fs)
 
 % Mode of operation - 'SingleChannel' or 'MultiChannel'
 if isfield(Parameters,'Mode')
@@ -226,16 +226,15 @@ end
 % Number of samples to use in the analysis
 if isfield(Parameters,'AnalysisLength')
     % Use specified value
-    AnalysisLength = str2double(Parameters.AnalysisLength);
+    AnalysisLength = str2double(Parameters.AnalysisLength)*fs;
 else
-    % Use default value (60 seconds)
-    AnalysisLength = fs*60;
+    error('AnalysisLength must be specified for the spectral coherence based forced oscillation detector.');
 end
 
 % delay in samples used to calculate self-GMC
 if isfield(Parameters,'Delay')
     % Use specified value
-    Delay = ceil(str2double(Parameters.Delay));
+    Delay = ceil(str2double(Parameters.Delay))*fs;
 else
     % Use default value (length of the input signals)
     Delay = floor(AnalysisLength/5);
@@ -275,20 +274,31 @@ else
     WindowType = 'hann';
 end
 
-% Zero padded length of the self_GMC. If omitted, no zero padding is implemented.
-if isfield(Parameters,'ZeroPadding')
+% % Zero padded length of the self_GMC. If omitted, no zero padding is implemented.
+% if isfield(Parameters,'ZeroPadding')
+%     % Use specified zero padding
+%     ZeroPadding = str2double(Parameters.ZeroPadding);
+% else
+%     % Use default zero padding (none)
+%     ZeroPadding = AnalysisLength;
+% end
+
+% Zero padded length of the test statistic periodogram, Daniell-Welch
+% periodogram, and GMSC. If omitted, no zero padding is implemented.
+if isfield(Parameters,'FrequencyInterval')
     % Use specified zero padding
-    ZeroPadding = str2double(Parameters.ZeroPadding);
+    FrequencyInterval = str2double(Parameters.FrequencyInterval);
+    ZeroPadding = round(fs/FrequencyInterval);
 else
-    % Use default zero padding (none)
-    ZeroPadding = AnalysisLength;
+    % Use default zero padding (none for the test statistic periodogram)
+    ZeroPadding = AnalysisLength*fs;
 end
 
 % Length of the sections for the self-GMSC. If 
 % omitted, default is 1/8 of K (AnalyisLength).
 if isfield(Parameters,'WindowLength')
     % Use specified window length
-    WindowLength = str2double(Parameters.WindowLength);
+    WindowLength = str2double(Parameters.WindowLength)*fs;
 else
     % Use default window length
     WindowLength = floor(AnalysisLength/8);
@@ -298,7 +308,7 @@ end
 % is half of WindowLength.
 if isfield(Parameters,'WindowOverlap')
     % Use specified window overlap
-    WindowOverlap = str2double(Parameters.WindowOverlap);
+    WindowOverlap = str2double(Parameters.WindowOverlap)*fs;
 else
     % Use default window overlap
     WindowOverlap = floor(WindowLength/2);

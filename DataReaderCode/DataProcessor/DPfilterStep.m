@@ -90,21 +90,26 @@ for FiltIdx = 1:NumFilts
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         PMUstructIdx = 1:NumPMU;
     end
+    
+    FinalCondos{FiltIdx} = cell(1,NumPMU);
+    if isempty(InitialCondos{FiltIdx})
+        InitialCondos{FiltIdx} = cell(1,NumPMU);
+    end
 
     % Find the appropriate filter and apply it to each of the
     % specified PMUs and channels
     switch ProcessFilter{FiltIdx}.Type
         case 'HighPass'
             for PMUidx = 1:NumPMU
-               [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}] = HighPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx});
+               [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = HighPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
             end
         case 'LowPass'
             for PMUidx = 1:NumPMU
-                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}] = LowPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx});
+                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = LowPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
             end
         case 'Rational'
             for PMUidx = 1:NumPMU
-                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}] = RationalFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx});
+                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = RationalFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
             end
         case 'Median'
             for PMUidx = 1:NumPMU

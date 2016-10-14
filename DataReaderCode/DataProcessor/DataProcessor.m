@@ -55,11 +55,13 @@ for PMUind = 1:NumPMU
 end
 
 %data processor first carries out angle unwraping operation
-if isempty(PastAngles)
-    PastAngles = [];
-end
+% if isempty(PastAngles)
+%     PastAngles = [];
+% end
 if isfield(ProcessXML.Configuration.Processing,'Unwrap')
     [PMU, FinalAngles] = DPUnwrap(PMU,ProcessXML.Configuration.Processing.Unwrap,PastAngles);
+else
+    FinalAngles = [];
 end
 %second, data processor then interpolates missing data, and flagged data if user
 %specifies

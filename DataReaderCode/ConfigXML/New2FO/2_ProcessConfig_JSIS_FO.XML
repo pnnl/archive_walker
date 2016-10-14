@@ -11,6 +11,7 @@
         If channels are not specified for wrap and unwrap operations, they
         are applied to all angle signals in the PMUs.
         -->
+        <SecondsToConcat>630</SecondsToConcat>
         <Unwrap>
             <MaxNaN>1</MaxNaN>
         </Unwrap>
@@ -30,25 +31,7 @@
                     <ZeroPhase>FALSE</ZeroPhase>
                 </Parameters>
             </Filter>
-            <Filter>
-                <Type>HighPass</Type>
-                <Parameters>
-                    <Order>1</Order>
-                    <Cutoff>0.1</Cutoff>
-                    <ZeroPhase>FALSE</ZeroPhase>
-                </Parameters>
-            </Filter>
-            <Filter>
-                <Type>LowPass</Type>
-                <Parameters>
-                    <PassRipple>0.1</PassRipple>
-                    <StopRipple>50</StopRipple>
-                    <PassCutoff>1.5</PassCutoff>
-                    <StopCutoff>2.5</StopCutoff>
-                    <ZeroPhase>FALSE</ZeroPhase>
-                </Parameters>
-            </Filter>
-        </Stages>
+        </Stages>    
     </Processing>   
     <NameTypeUnit>
         <NewUnit>Hz</NewUnit>
@@ -74,34 +57,5 @@
     Specify the signals for output
     -->
     <SignalSelection>
-        <PMU>
-            <Name>ModeMeterSignals</Name>
-            <Channels>
-            	<Channel>
-                	<Name>MALIN500.VPA</Name>
-            	</Channel>
-            	<Channel>
-                	<Name>CJK500.VPA</Name>
-            	</Channel>
-            	<Channel>
-                	<Name>JDA500.VPA</Name>
-            	</Channel>
-                <Channel>
-                	<Name>BIGED500.VPA</Name>
-            	</Channel>
-                <Channel>
-                	<Name>MONROE500.VPA</Name>
-            	</Channel>
-                <Channel>
-                	<Name>CUSTER500.VPA</Name>
-            	</Channel>
-                <Channel>
-                	<Name>GARRISON500.VPA</Name>
-            	</Channel>
-                <Channel>
-                	<Name>CHJ500.VPA</Name>
-            	</Channel>
-            </Channels>
-        </PMU>
     </SignalSelection>
 </Configuration>
