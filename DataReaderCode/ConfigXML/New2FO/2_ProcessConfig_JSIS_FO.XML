@@ -11,7 +11,6 @@
         If channels are not specified for wrap and unwrap operations, they
         are applied to all angle signals in the PMUs.
         -->
-        <SecondsToConcat>630</SecondsToConcat>
         <Unwrap>
             <MaxNaN>1</MaxNaN>
         </Unwrap>

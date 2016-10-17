@@ -295,13 +295,6 @@ end
 
 %% processing files
 
-% % Instead of specifying the number of seconds to concatenate in the XML,
-% % choose it based on the update interval and analysis window lengths of the
-% % FO detectors.
-% SecondsToConcat = max([str2double(DetectorXML.Configuration.ResultUpdateInterval)...
-%     str2double(DetectorXML.Configuration.Periodogram.AnalysisLength)...
-%     str2double(DetectorXML.Configuration.SpectralCoherence.AnalysisLength)]);
-
 InitialCondos = [];
 FinalAngles = [];
 
@@ -327,6 +320,7 @@ while(~done)
             % ***********
             % Data Reader
             % ***********
+            
             % Create the PMU structure
             DataInfo.lastFocusFile = focusFile;
             DataInfo.tPMU = 0;
