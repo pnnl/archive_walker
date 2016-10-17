@@ -4,7 +4,7 @@
         <!--
 		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
         -->
-        <FileDirectory>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
+        <FileDirectory> D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\OriginalData</FileDirectory>
         <FileType>csv</FileType>
         <Mnemonic>ModeMeterSignals</Mnemonic>
         <!--
@@ -82,6 +82,14 @@
                 <SetToNaN>TRUE</SetToNaN>
                 <FlagBit>8</FlagBit>
                 <FlagBitFreq>9</FlagBitFreq>
+            </Parameters>
+        </Filter>
+		<Filter>
+            <Name>WrappingFailureFilt</Name>
+            <Parameters>
+                <AngleThresh>90</AngleThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>10</FlagBit>
             </Parameters>
         </Filter>
     </Stages>
