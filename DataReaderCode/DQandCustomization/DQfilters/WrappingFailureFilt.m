@@ -149,6 +149,5 @@ end
 % plot(checkData,'*-');
 
 
-
 end
 
