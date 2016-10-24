@@ -149,7 +149,11 @@ for FiltIdx = 1:NumFilts
             for PMUidx = 1:NumPMU
                 [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = EntirePMUfilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
             end
-    end    
+        case 'WrappingFailureFilt'
+            for PMUidx = 1:NumPMU
+                [PMU(PMUstructIdx(PMUidx)),setNaNMatrix{PMUstructIdx(PMUidx)}] = WrappingFailureFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters,setNaNMatrix{PMUstructIdx(PMUidx)});
+            end
+    end
 end
 %setNaNMatrix{i} has non-zero positive elements for the elements in i^th PMU that is to be
 %set NaN

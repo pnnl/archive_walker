@@ -19,7 +19,7 @@
         </Channel>
     </PMU>
     -->
-    <ResultsPath>D:\BAWS\BAWS_GIT_1\DataReaderCode\DetectionResults</ResultsPath>
+    <ResultsPath>D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\DetectionResults</ResultsPath>
     <ResultUpdateInterval>60</ResultUpdateInterval>
     <!-- Ringdown detector -->
     <Ringdown>
