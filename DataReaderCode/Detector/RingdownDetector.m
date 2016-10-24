@@ -108,8 +108,7 @@ for index = 1:size(Data2,2)
         if sum(DetectionIdx) > 0
             % Ringdown was detected
             
-            % Start and end of ringdown. Probably want to adjust this by
-            % accounting for the filter delay
+            % Start and end of ringdown (later adjusted for filter delay)
             Starts = find(diff([0; DetectionIdx]) == 1);
             Ends = find(diff(DetectionIdx) == -1);
             

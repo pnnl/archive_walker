@@ -192,4 +192,10 @@
             </Channel>
         </PMU>
     </SpectralCoherence>
+    <OutOfRangeGeneral>
+        <Max>0.12</Max>
+        <Min>-0.15</Min>
+        <AnalysisWindow>10</AnalysisWindow>
+        <Duration>2</Duration>
+    </OutOfRangeGeneral>
 </Configuration>
