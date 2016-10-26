@@ -198,4 +198,14 @@
         <AnalysisWindow>10</AnalysisWindow>
         <Duration>2</Duration>
     </OutOfRangeGeneral>
+    <OutOfRangeFrequency>
+        <DurationMax>0.05</DurationMax>
+        <DurationMin>-0.05</DurationMin>
+        <AnalysisWindow>10</AnalysisWindow>
+        <Duration>4</Duration>
+        <RateOfChangeMax>0.05</RateOfChangeMax>
+        <RateOfChangeMin>-0.05</RateOfChangeMin>
+        <RateOfChange>0.001</RateOfChange>
+        <FrequencyResponse>FALSE</FrequencyResponse>
+    </OutOfRangeFrequency>
 </Configuration>

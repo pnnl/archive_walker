@@ -23,33 +23,14 @@ end
 % default values for parameters that were not specified. 
 % Additional inputs, such as the length of the input data or the sampling 
 % rate, can be added as necessary. 
-ExtractedParameters = ExtractParameters(Parameters,size(Data,1),fs);
+ExtractedParameters = ExtractParameters(Parameters,fs);
 
 % Store the parameters in variables for easier access
-Mode = ExtractedParameters.Mode;
-SegmentLength = ExtractedParameters.SegmentLength;
-SegmentDelay = ExtractedParameters.SegmentDelay;
-SegmentNumber = ExtractedParameters.SegmentNumber;
-EnergyThresholdScale = ExtractedParameters.EnergyThresholdScale;
-
 RMSlength = ExtractedParameters.RMSlength;
 ForgetFactor = ExtractedParameters.ForgetFactor;
 RingThresholdScale = ExtractedParameters.RingThresholdScale;
 MaxDuration = ExtractedParameters.MaxDuration;
 
-AnalysisLength = ExtractedParameters.AnalysisLength;
-Delay = ExtractedParameters.Delay;
-NumberDelays = ExtractedParameters.NumberDelays;
-ThresholdScale = ExtractedParameters.ThresholdScale;
-WindowType = ExtractedParameters.WindowType;
-ZeroPadding = ExtractedParameters.ZeroPadding;
-WindowLength = ExtractedParameters.WindowLength;
-WindowOverlap = ExtractedParameters.WindowOverlap;
-FrequencyMin = ExtractedParameters.FrequencyMin;
-FrequencyMax = ExtractedParameters.FrequencyMax;
-FrequencyTolerance = ExtractedParameters.FrequencyTolerance;
-
-N = RMSlength*fs;
 
 %% New RMS energy based detector
 
@@ -85,7 +66,7 @@ for index = 1:size(Data2,2)
             InitConditions = PastAdditionalOutput(index).FilterConditions;
         end
         
-        [RMS, AdditionalOutput(index).FilterConditions] = filter(ones(1,N)/N,1,Data2(:,index),InitConditions);
+        [RMS, AdditionalOutput(index).FilterConditions] = filter(ones(1,RMSlength)/RMSlength,1,Data2(:,index),InitConditions);
         RMS = sqrt(RMS);
         
         if isempty(PastAdditionalOutput)
@@ -117,8 +98,8 @@ for index = 1:size(Data2,2)
             end
             
             % Adjust for filter delay, but don't let them be less than 0
-            Starts = Starts - floor((N-1)/2);
-            Ends = Ends - floor((N-1)/2);
+            Starts = Starts - floor((RMSlength-1)/2);
+            Ends = Ends - floor((RMSlength-1)/2);
             Starts(Starts<1) = 1;
             Ends(Ends<1) = 1;
             
@@ -160,11 +141,17 @@ end
 % default values for parameters that were not specified. Additional inputs,
 % such as the length of the input data or the sampling rate, can be added
 % as necessary. 
-function ExtractedParameters = ExtractParameters(Parameters,SignalLength,fs)
+function ExtractedParameters = ExtractParameters(Parameters,fs)
 % Maximum duration
 if isfield(Parameters,'MaxDuration')
     % Use specified maximum duration
     MaxDuration = str2double(Parameters.MaxDuration);
+    
+    if isnan(MaxDuration)
+        % str2double sets the value to NaN when it can't make it a number
+        warning('MaxDuration is not a number. Default of 90 will be used.');
+        MaxDuration = 90;
+    end
 else
     % Use default maximum duration
     MaxDuration = 90;
@@ -173,16 +160,33 @@ end
 % Length for RMS calculation
 if isfield(Parameters,'RMSlength')
     % Use specified length
-    RMSlength = str2double(Parameters.RMSlength);
+    RMSlength = str2double(Parameters.RMSlength)*fs;
+    
+    if isnan(RMSlength)
+        % str2double sets the value to NaN when it can't make it a number
+        warning('RMSlength is not a number. Default of 15 will be used.');
+        RMSlength = 15*fs;
+    end
 else
     % Use default length
-    RMSlength = 15;
+    RMSlength = 15*fs;
 end
 
 % Forgetting factor for threshold
 if isfield(Parameters,'ForgetFactor')
     % Use specified forgetting factor
     ForgetFactor = str2double(Parameters.ForgetFactor);
+    
+    if isnan(ForgetFactor)
+        % str2double sets the value to NaN when it can't make it a number
+        warning('ForgetFactor is not a number. Default of 0.9 will be used.');
+        ForgetFactor = 0.9;
+    end
+    
+    if (ForgetFactor<0) || (ForgetFactor>1)
+        warning('ForgetFactor is not between 0 and 1. Default of 0.9 will be used.');
+        ForgetFactor = 0.9;
+    end
 else
     % Use default forgetting factor
     ForgetFactor = 0.9;
@@ -192,188 +196,23 @@ end
 if isfield(Parameters,'RingThresholdScale')
     % Use specified scaling term
     RingThresholdScale = str2double(Parameters.RingThresholdScale);
+    
+    if isnan(RingThresholdScale)
+        % str2double sets the value to NaN when it can't make it a number
+        warning('RingThresholdScale is not a number. Default of 3 will be used.');
+        RingThresholdScale = 3;
+    end
+    
+    if RingThresholdScale < 0
+        warning('RingThresholdScale cannot be negative. Default of 3 will be used.');
+        RingThresholdScale = 3;
+    end
 else
     % Use default scaling term
     RingThresholdScale = 3;
 end
 
-% Mode of operation - 'SingleChannel' or 'MultiChannel'
-if isfield(Parameters,'Mode')
-    % Use specified mode
-    Mode = Parameters.Mode;
-else
-    % Use default mode: single channel
-    Mode = 'SingleChannel';
-end
 
-% Length of segments in samples for the energy detector
-if isfield(Parameters,'SegmentLength')
-    % Use specified segment length
-    SegmentLength = str2double(Parameters.SegmentLength);
-else
-    % is there any default value?
-    throw(MException('','User input for segment length required!'));
-end
-
-% Delay between evaluated segments in samples. This can be thought of as the time-resolution of the detector.
-if isfield(Parameters,'SegmentDelay')
-    % Use specified segment delay
-    SegmentDelay = str2double(Parameters.SegmentDelay);
-else
-    % is there any default value?
-    throw(MException('','User input for segment dalay required!'));
-end
-
-% Number of segments to evaluate. SegmentLength+SegmentNumber*SegmentDelay must not exceed the length of the input signal
-if isfield(Parameters,'SegmentNumber')
-    % Use specified segment number
-    SegmentNumber = str2double(Parameters.SegmentNumber);
-else
-    % is there any default value?
-    throw(MException('','User input  for segment number required'));
-end
-
-% Scaling factor to establish the detection threshold
-if isfield(Parameters,'EnergyThresholdScale')
-    % Use specified value
-    EnergyThresholdScale = str2double(Parameters.EnergyThresholdScale);
-else
-    % use default
-    throw(MException('','User input for energy threshold scaling factor is required.'));
-end
-
-% Number of samples to use in the analysis
-if isfield(Parameters,'AnalysisLength')
-    % Use specified value
-    AnalysisLength = str2double(Parameters.AnalysisLength);
-else
-    % Use default value (length of the input signals)
-    AnalysisLength = SignalLength;
-end
-
-% The delay in samples used to calculate the self-GMSC. If omitted, the default is floor(AnalysisLength/10)
-if isfield(Parameters,'Delay')
-    % Use specified value
-    Delay = str2double(Parameters.Delay);
-else
-    % Use default, floor(AnalysisLength/10)
-    Delay = floor(AnalysisLength/10);
-end
-
-% Number of delays in the self-GMSC. Must be an integer greater than or equal to 2. If omitted, default is 2
-if isfield(Parameters,'NumberDelays')
-    % Use specified value
-    NumberDelays = str2double(Parameters.Delay);
-else
-    % Use default value 2.
-    NumberDelays = 2;
-end
-
-% Scaling factor to establish the detection threshold. If omitted, default is 3
-if isfield(Parameters,'ThresholdScale')
-    % Use specified value
-    ThresholdScale = str2double(Parameters.ThresholdScale);
-else
-    % Use default value, 3.
-    ThresholdScale = 3;
-end
-
-% Type of window used for the test statistic periodogram, Daniell-Welch 
-% periodogram, and GMSC. Options are rectwin, bartlett, hann, hamming, and 
-% blackman. If omitted, default is hann.
-if isfield(Parameters,'WindowType')
-    % Use specified window
-    WindowType = Parameters.WindowType;
-else
-    % Use default window
-    WindowType = 'hann';
-end
-
-% Zero padded length of the test statistic periodogram, Daniell-Welch 
-% periodogram, and GMSC. If omitted, no zero padding is implemented.
-if isfield(Parameters,'ZeroPadding')
-    % Use specified zero padding
-    ZeroPadding = str2double(Parameters.ZeroPadding);
-else
-    % Use default zero padding (none)
-    ZeroPadding = AnalysisLength;
-end
-
-% Length of the sections for the Daniell-Welch periodogram and GMSC. If 
-% omitted, default is 1/5 of K (AnalyisLength).
-if isfield(Parameters,'WindowLength')
-    % Use specified window length
-    WindowLength = str2double(Parameters.WindowLength);
-else
-    % Use default window length, default is 1/5 of AnalyisLength
-    WindowLength = floor(AnalysisLength/5);
-end
-
-% Amount of overlap between sections for the Daniell-Welch periodogram and 
-% GMSC. If omitted, default is half of WindowLength
-if isfield(Parameters,'WindowOverlap')
-    % Use specified window overlap
-    WindowOverlap = str2double(Parameters.WindowOverlap);
-else
-    % Use default window overlap
-    WindowOverlap = floor(WindowLength/2);
-end
-
-% Minimum frequency to be considered. If omitted, the default is zero, but 
-% in many cases this will cause excessive false alarms.
-if isfield(Parameters,'FrequencyMin')
-    % Use specified minimum frequency
-    FrequencyMin = str2num(Parameters.FrequencyMin);
-else
-    % Use default minimum frequency
-    FrequencyMin = 0;
-end
-
-% Maximum frequency to be considered. If omitted, the default is the 
-% Nyquist frequency
-if isfield(Parameters,'FrequencyMax')
-    % Use specified maximum frequency
-    FrequencyMax = str2num(Parameters.FrequencyMax);
-else
-    % Use default maximum frequency
-    FrequencyMax = fs/2;
-end
-
-% Tolerance used to refine the frequency estimate. If omitted, the default 
-% is the greater of 1) the main lobe width of the test statistic 
-% periodogram's window and 2) half of FrequencyMin.
-if isfield(Parameters,'FrequencyTolerance')
-    % Use specified frequency tolerance
-    FrequencyTolerance = str2num(Parameters.FrequencyTolerance);
-else
-    % Use default frequency tolerance
-    % First term in max() is the minimum frequency divided by 2. The second
-    % term is the sampling rate times the main lobe width in radians per
-    % sample. The result is the main lobe width in Hz. The full expression
-    % is included in the comments, but a reduced expression is used to
-    % avoid numerical errors introduced by multiplying and dividing by pi.
-    switch WindowType
-        case 'rectwin'
-            FrequencyTolerance = max([FrequencyMin/2, (2*fs/WindowLength)]); % max([FrequencyMin/2, (fs * 4*pi/WindowLength / (2*pi))]);
-        case 'bartlett'
-            FrequencyTolerance = max([FrequencyMin/2, (4*fs/WindowLength)]); % max([FrequencyMin/2, (fs * 8*pi/WindowLength / (2*pi))]);
-        case 'hann'
-            FrequencyTolerance = max([FrequencyMin/2, (4*fs/WindowLength)]); % max([FrequencyMin/2, (fs * 8*pi/WindowLength / (2*pi))]);
-        case 'hamming'
-            FrequencyTolerance = max([FrequencyMin/2, (4*fs/WindowLength)]); % max([FrequencyMin/2, (fs * 8*pi/WindowLength / (2*pi))]);
-        case 'blackman'
-            FrequencyTolerance = max([FrequencyMin/2, (6*fs/WindowLength)]); % max([FrequencyMin/2, (fs * 12*pi/WindowLength / (2*pi))]);
-    end
-end
-
-ExtractedParameters = struct('Mode',Mode,'SegmentLength',SegmentLength,...
-    'SegmentDelay',SegmentDelay, 'SegmentNumber',SegmentNumber,...
-    'EnergyThresholdScale',EnergyThresholdScale,'AnalysisLength',AnalysisLength,...
-    'Delay',Delay,'NumberDelays',NumberDelays,'ThresholdScale',ThresholdScale,...
-    'WindowType',WindowType,'ZeroPadding',ZeroPadding,...
-    'WindowLength',WindowLength,'WindowOverlap',WindowOverlap,...
-    'FrequencyMin',FrequencyMin,'FrequencyMax',FrequencyMax,...
-    'FrequencyTolerance',FrequencyTolerance,'RingThresholdScale',RingThresholdScale,...
+ExtractedParameters = struct('RingThresholdScale',RingThresholdScale,...
     'RMSlength',RMSlength,'ForgetFactor',ForgetFactor,'MaxDuration',MaxDuration);
-
 end

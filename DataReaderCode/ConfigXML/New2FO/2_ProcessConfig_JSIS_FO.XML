@@ -25,7 +25,7 @@
             <Filter>
                 <Type>Rational</Type>
                 <Parameters>
-                    <Numerator>1,-1</Numerator>
+                    <Numerator>1/6,-1/6</Numerator>
                     <Denominator>1</Denominator>
                     <ZeroPhase>FALSE</ZeroPhase>
                 </Parameters>
