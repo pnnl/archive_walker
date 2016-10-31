@@ -245,7 +245,7 @@ if isfield(Parameters,'FrequencyInterval')
     ZeroPadding = round(fs/FrequencyInterval);
 else
     % Use default zero padding (none for the test statistic periodogram)
-    ZeroPadding = AnalysisLength*fs;
+    ZeroPadding = AnalysisLength;
     FrequencyInterval = fs/ZeroPadding;
 end
 
