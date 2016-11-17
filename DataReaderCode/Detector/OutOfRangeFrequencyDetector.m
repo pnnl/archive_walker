@@ -70,7 +70,7 @@ end
 %% Perform detection
 
 % Initialize structure to output detection results
-DetectionResults = struct('PMU',[],'Channel',[],'OutStart',[],'OutEnd',[]);
+DetectionResults = struct('PMU',[],'Channel',[],'DurationOutStart',[],'DurationOutEnd',[],'RateOfChangeOutStart',[],'RateOfChangeOutEnd',[]);
 
 % Initialize structure for additional outputs
 AdditionalOutput = struct('FilterConditions',[]);

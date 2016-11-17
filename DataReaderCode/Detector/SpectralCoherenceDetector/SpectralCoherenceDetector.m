@@ -48,7 +48,7 @@ function [DetectionResults, AdditionalOutput] = SpectralCoherenceDetector(PMUstr
 % stored in cell arrays. Also returns a time vector t with units of seconds
 % and the sampling rate fs.
 try
-    [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs] = ExtractData(PMUstruct,Parameters);
+    [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString] = ExtractData(PMUstruct,Parameters);
 catch
     warning('Input data for the spectral coherence detector could not be used.');
     DetectionResults = struct([]);
@@ -111,10 +111,10 @@ LengthFreqInterest = length(FreqInterest); %Number of frequency bins of interest
 % Initialize structure to output detection results
 if strcmp(Mode,'SingleChannel')
     DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[]);
-    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'Threshold',[],'Frequency',[],'Mode',[]);
+    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'Threshold',[],'Frequency',[],'Mode',[],'fs',fs,'Start',TimeString{end-size(Data,1)+1},'End',TimeString{end});
 else
     DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[],'TestStatistic',[]);
-    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'TestStatistic',[],'Threshold',[],'Frequency',[],'Mode',[]);
+    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'TestStatistic',[],'Threshold',[],'Frequency',[],'Mode',[],'fs',fs,'Start',TimeString{end-size(Data,1)+1},'End',TimeString{end});
 end
 
 % Initialize structure for additional outputs

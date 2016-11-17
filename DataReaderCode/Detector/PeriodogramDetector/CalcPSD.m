@@ -33,12 +33,13 @@ for m = 1:M
     %gives windowed signal for calculating m^th PSD
     signal_w = Data(DataWinInd,:).*win;
     if isempty(MedFiltOrd)
-        % if Median filter order is empty, PSd is obtained without any
+        % if Median filter order is empty, PSD is obtained without any
         % median filtering operation
         PSD = PSD + 1/(M*L*U)*abs(fft(signal_w,ZeroPaddingLen)).^2;
     else
         %applied median filter to the estimated PSD.
-        PSD = PSD + 1/(M*L*U)*medfilt1(abs(fft(signal_w,ZeroPaddingLen)).^2,MedFiltOrd)/log(2);
+        Q = sum(((MedFiltOrd+1)/2:MedFiltOrd).^-1);
+        PSD = PSD + 1/(M*L*U)*medfilt1(abs(fft(signal_w,ZeroPaddingLen)).^2,MedFiltOrd)/Q;
     end
 end
 %gives frequency vector for whch PSD is estimated

@@ -55,8 +55,8 @@ for index = 1:size(Data2,2)
     % Check if channel is to be included
     if ismember(index,DiscardChannelIdx)
         % This channel is not to be included - set to NaN
-        DetectionResults(index).RingStart = {NaN};
-        DetectionResults(index).RingEnd = {NaN};
+        DetectionResults(index).RingStart = NaN;
+        DetectionResults(index).RingEnd = NaN;
     else
         % This channel is okay to be included
         if isempty(PastAdditionalOutput)

@@ -1,73 +1,38 @@
 ********************************************************
 Mode = Archive
-DateTimeStart =  2015-10-17 12:30:00
-DateTimeEnd  =   2015-10-17 12:45:00
+DateTimeStart =  2015-06-17 08:00:00
+DateTimeEnd  =   2015-06-17 09:12:00
 ********************************************************
 
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123000.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_080000.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
 
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123000.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:30:00:000
-PMU end Time:    10/17/2015 12:30:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123100.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_080000.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  06/17/2015 08:00:00:017
+PMU end Time:    06/17/2015 08:18:00:000
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_081800.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
 
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123100.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:31:00:000
-PMU end Time:    10/17/2015 12:31:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123200.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_081800.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  06/17/2015 08:18:00:017
+PMU end Time:    06/17/2015 08:36:00:000
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_083600.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
 
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123200.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:32:00:000
-PMU end Time:    10/17/2015 12:32:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123300.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_083600.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  06/17/2015 08:36:00:017
+PMU end Time:    06/17/2015 08:54:00:000
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_085400.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
 
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123300.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:33:00:000
-PMU end Time:    10/17/2015 12:33:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123400.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_085400.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  06/17/2015 08:54:00:017
+PMU end Time:    06/17/2015 09:12:00:000
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_091200.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\
 
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123400.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:34:00:000
-PMU end Time:    10/17/2015 12:34:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123500.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
-
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123500.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:35:00:000
-PMU end Time:    10/17/2015 12:35:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123600.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
-
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123600.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:36:00:000
-PMU end Time:    10/17/2015 12:36:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123700.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
-
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123700.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:37:00:000
-PMU end Time:    10/17/2015 12:37:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123800.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
-
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123800.pdat
-Number of PMUs in the file: 55.000000
-PMU start Time:  10/17/2015 12:38:00:000
-PMU end Time:    10/17/2015 12:38:59:983
-The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123900.pdat
-The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\
-
-The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\151017\WISPDitt_20151017_123900.pdat
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData\2015\150617\ModeMeterSignals_20150617_091200.csv

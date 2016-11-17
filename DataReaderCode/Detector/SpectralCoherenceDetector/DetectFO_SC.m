@@ -26,37 +26,18 @@ if isempty(Freq_FO)
     Frequency_est = NaN;
     Freq_FO_Refined = [];
     return;
-else    
-    % carries out frequency estimates refining if at least one frequency exists for which TestStatistic exceeds
-    % Threshold
-    count = 1;
-    initialInd = 1; 
-    while(1)
-        % calculates difference of frequencies with the initialInd of
-        % frequency vector
-        Freq_FODiff = Freq_FO(initialInd:end) - Freq_FO(initialInd);
-        %finds indices of Freq_FO which is to be refined
-        Ind = find(Freq_FODiff < FrequencyTolerance);
-        %finds the index of Freq_FO falling in one group for which
-        %TestStatistic has maximum value
-        IndInterest = initialInd + Ind-1;
-        Freq_FO_Refined(count) = Freq_FOind(IndInterest(find(TestStatistic(Freq_FOind(IndInterest)) == max(TestStatistic(Freq_FOind(IndInterest))))));
-        % If last index of ind matches with the length of Freq_FODiff, it
-        % means all frequency estimates are refined
-        if Ind(end)  == length(Freq_FODiff)
-            break
-        else
-            % if more frequencies are left to be refined, then changes
-            % initialInd value to the first index of remaining group of frequencies to be
-            % refined
-            initialInd = initialInd + Ind(end);
-        end
-        %gives count of frequency estimates which are refined
-        count = count+1;
+else
+    % Breaks frequency bins with detections into groups separated by at least tol Hz
+    Loc = [0, find(diff(Freq_FO) > FrequencyTolerance), length(Freq_FO)];
+
+    Frequency_est = zeros(1,length(Loc)-1); % Refined frequency vector
+    Freq_FO_Refined = zeros(1,length(Loc)-1); % indices of the refined frequencies
+
+    for L = 1:(length(Loc)-1) % For each group
+        Lidx = (Loc(L)+1):Loc(L+1);
+        MaxIdx = find(TestStatistic(Freq_FOind(Lidx)) == max(TestStatistic(Freq_FOind(Lidx))));
+        Frequency_est(L) = Freq_FO(Lidx(MaxIdx));
+        Freq_FO_Refined(L) = Freq_FOind(Lidx(MaxIdx));  % Indices of f that correspond to refined frequency estimates
     end
-%     Freq_FO_Refined = Freq_FOind(Freq_FO_Refined);
-    %Gives estimates of refined frequencies of FO
-    Frequency_est = FreqInterest(Freq_FO_Refined);
-    
 end
 end

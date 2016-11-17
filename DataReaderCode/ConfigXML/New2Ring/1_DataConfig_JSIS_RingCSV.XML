@@ -4,7 +4,10 @@
         <!--
 		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
         -->
+        <!--
         <FileDirectory> D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\OriginalData</FileDirectory>
+        -->
+        <FileDirectory>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
         <FileType>csv</FileType>
         <Mnemonic>ModeMeterSignals</Mnemonic>
         <!--

@@ -34,32 +34,17 @@ if isempty(Freq_FO)
     Frequency_est = NaN;
     return;
 else    
-    % carries out frequency estimates refining if at least one frequency exists for which TestStatistic exceeds
-    % Threshold
-    count = 1;
-    initialInd = 1; 
-    while(1)
-        % calculates difference of frequencies with the initialInd of
-        % frequency vector
-        Freq_FODiff = Freq_FO(initialInd:end) - Freq_FO(initialInd);
-        %finds indices of Freq_FO which is to be refined
-        Ind = find(Freq_FODiff < FrequencyTolerance);
-        %finds the index of Freq_FO falling in one group for which
-        %TestStatistic has maximum value
-        IndInterest = initialInd + Ind-1;
-        Freq_FO_Refined(count) = IndInterest(find(TestStatistic(Freq_FOind(IndInterest)) == max(TestStatistic(Freq_FOind(IndInterest)))));
-        % If last index of ind matches with the length of Freq_FODiff, it
-        % means all frequency estimates are refined
-        if Ind(end)  == length(Freq_FODiff)
-            break
-        else
-            % if more frequencies are left to be refined, then changes
-            % initialInd value to the first index of remaining group of frequencies to be
-            % refined
-            initialInd = initialInd + Ind(end);
-        end
-        %gives count of frequency estimates which are refined
-        count = count+1;
+    % Breaks frequency bins with detections into groups separated by at least tol Hz
+    Loc = [0, find(diff(Freq_FO) > FrequencyTolerance), length(Freq_FO)];
+
+    Frequency_est = zeros(1,length(Loc)-1); % Refined frequency vector
+    Freq_FO_Refined = zeros(1,length(Loc)-1); % indices of the refined frequencies
+
+    for L = 1:(length(Loc)-1) % For each group
+        Lidx = (Loc(L)+1):Loc(L+1);
+        MaxIdx = find(TestStatistic(Freq_FOind(Lidx)) == max(TestStatistic(Freq_FOind(Lidx))));
+        Frequency_est(L) = Freq_FO(Lidx(MaxIdx));
+        Freq_FO_Refined(L) = Freq_FOind(Lidx(MaxIdx));  % Indices of f that correspond to refined frequency estimates
     end
     
     % gives length of window used to calculate periodogram of signal    
@@ -69,16 +54,8 @@ else
     % gives coherent gain of window used to calculate periodogram of signal   
     CG = 1/N*abs(sum(Window));
     
-    Freq_IndRefined = Freq_FOind(Freq_FO_Refined);
     % gives an estimates of amplitude of FOs
-    Amplitude_est = sqrt((SignalPSD(Freq_IndRefined,:) - AmbientNoisePSD(Freq_IndRefined,:))*4*U/N/CG^2);    
-    
-    %Finds the indices for which signal spectrum is smaller than noise
-    %spectrum and assigns NaN value to the corresponding amplitude estimate
-    SignalPSDSmallInd = find(SignalPSD(Freq_IndRefined,:) < AmbientNoisePSD(Freq_IndRefined,:));    
-    Amplitude_est(SignalPSDSmallInd) = NaN;  
-    
-    %Gives estimates of refined frequencies of FO
-    Frequency_est = FreqInterest(Freq_IndRefined);
+    Amplitude_est = sqrt((SignalPSD(Freq_FO_Refined,:) - AmbientNoisePSD(Freq_FO_Refined,:))*4*U/N/CG^2); 
+    Amplitude_est(imag(Amplitude_est) ~= 0) = NaN;
 end
 end

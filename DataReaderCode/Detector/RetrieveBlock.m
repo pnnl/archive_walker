@@ -19,10 +19,17 @@ if isempty(PMURem)
     % further processing
     PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU);
 else
-    % Once the processing starts, PMURem contains remaining data from previous processed data
-    % file(data corresponds to time duration(SecondsToConcat-ResultUpdateInterval)
-    PMU_rem{1} = PMURem;
-    PMUall = preparePMUList(PMU_rem,PMU,oneMinuteEmptyPMU);
+    if isempty(PMURem.Data)
+        % No data was left over from previous file
+        PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU);
+    else
+        % Data was left over from previous file
+        
+        % Once the processing starts, PMURem contains remaining data from previous processed data
+        % file(data corresponds to time duration(SecondsToConcat-ResultUpdateInterval)
+        PMU_rem{1} = PMURem;
+        PMUall = preparePMUList(PMU_rem,PMU,oneMinuteEmptyPMU);
+    end
 end
 
 % Concatenate all the PMU structures on the list into one PMU
