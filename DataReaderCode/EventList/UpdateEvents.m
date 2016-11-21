@@ -1,7 +1,7 @@
 
 % Created by: Jim Follum (james.follum@pnnl.gov) on 11/10/2016
 
-function EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,DetectorTypes,EventList)
+function EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmParams,DetectorTypes,EventList)
 
 for DetectorType = DetectorTypes
     
@@ -50,7 +50,7 @@ for DetectorType = DetectorTypes
             
             if ~isempty(DetectionResults(DetectorIndex).(DetectorType{1}))
                 eval(['EventList.' FieldName...
-                    '=' FunctionName '(DetectionResults(DetectorIndex).(DetectorType{1}), AdditionalOutput(DetectorIndex).(DetectorType{1}), EventList.' FieldName ', DetectorXML.Configuration.(DetectorType{1}){DetectorIndex});'])
+                    '=' FunctionName '(DetectionResults(DetectorIndex).(DetectorType{1}), AdditionalOutput(DetectorIndex).(DetectorType{1}), EventList.' FieldName ', DetectorXML.Configuration.(DetectorType{1}){DetectorIndex}, AlarmParams.(DetectorType{1}) );'])
             end
         end
     end

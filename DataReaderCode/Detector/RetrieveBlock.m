@@ -19,7 +19,7 @@ if isempty(PMURem)
     % further processing
     PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU);
 else
-    if isempty(PMURem.Data)
+    if isempty(PMURem(1).Data)
         % No data was left over from previous file
         PMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU);
     else

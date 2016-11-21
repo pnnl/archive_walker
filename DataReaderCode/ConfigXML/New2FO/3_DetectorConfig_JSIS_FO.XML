@@ -365,6 +365,52 @@
     </SpectralCoherence>
     <!--
     -->
+    <Alarming>
+        <SpectralCoherence>
+            <!-- An alarm will be set for any detection with a coherence 
+            greater than CoherenceAlarm -->
+            <CoherenceAlarm>0.9</CoherenceAlarm>
+            <!-- Alarms will not be set for any detection with a coherence less
+            than CoherenceMin, no matter how long they persist. -->
+            <CoherenceMin>0.5</CoherenceMin>
+            <!-- Detected forced oscillations must persist for TimeMin seconds
+            before an alarm will be set (unless the coherence is greater than
+            CoherenceAlarm -->
+            <TimeMin>120</TimeMin>
+            <!-- Specifies the coherence component of an ordered pair that is 
+            located on the alarming curve. The ordered pair specifies the shape
+            of the curve. -->
+            <CoherenceCorner>0.6</CoherenceCorner>
+            <!-- Specifies the time component of an ordered pair that is 
+            located on the alarming curve. The ordered pair specifies the shape
+            of the curve. -->
+            <TimeCorner>145</TimeCorner>
+        </SpectralCoherence>
+        <!--
+        -->
+        <Periodogram>
+            <!-- An alarm will be set for any detection with an SNR 
+            greater than SNRalarm -->
+            <SNRalarm>0.9</SNRalarm>
+            <!-- Alarms will not be set for any detection with an SNR less
+            than SNRmin no matter how long they persist. -->
+            <SNRmin>0.5</SNRmin>
+            <!-- Detected forced oscillations must persist for TimeMin seconds
+            before an alarm will be set (unless the SNR is greater than
+            SNRalarm -->
+            <TimeMin>120</TimeMin>
+            <!-- Specifies the SNR component of an ordered pair that is 
+            located on the alarming curve. The ordered pair specifies the shape
+            of the curve. -->
+            <SNRcorner>0.6</SNRcorner>
+            <!-- Specifies the time component of an ordered pair that is 
+            located on the alarming curve. The ordered pair specifies the shape
+            of the curve. -->
+            <TimeCorner>145</TimeCorner>
+        </Periodogram>
+    </Alarming>
+    <!--
+    -->
     <OutOfRangeGeneral>
         <Max>0.02</Max>
         <Min>-0.02</Min>

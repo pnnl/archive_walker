@@ -20,7 +20,7 @@
 %
 % Created by Urmila Agrawal (urmila.agrawal@pnnl.gov) on 07/18/2016
 
-function [Frequency_est, Amplitude_est] = DetectFO(TestStatistic, Threshold, SignalPSD, AmbientNoisePSD, FrequencyTolerance, Window, FreqInterest)
+function [Frequency_est, Amplitude_est, SNR_est] = DetectFO(TestStatistic, Threshold, SignalPSD, AmbientNoisePSD, FrequencyTolerance, Window, FreqInterest)
 
 %finds indices of frequency for which TestStatistic exceeds Threshold
 Freq_FOind = find(TestStatistic > Threshold);
@@ -31,6 +31,7 @@ Freq_FO = FreqInterest(Freq_FOind);
 % rerurns NaN value as estimates
 if isempty(Freq_FO)
     Amplitude_est = NaN*ones(1,size(SignalPSD,2));
+    SNR_est = NaN*ones(1,size(SignalPSD,2));
     Frequency_est = NaN;
     return;
 else    
@@ -57,5 +58,9 @@ else
     % gives an estimates of amplitude of FOs
     Amplitude_est = sqrt((SignalPSD(Freq_FO_Refined,:) - AmbientNoisePSD(Freq_FO_Refined,:))*4*U/N/CG^2); 
     Amplitude_est(imag(Amplitude_est) ~= 0) = NaN;
+    
+    RMSnoise = ones(length(Freq_FO_Refined),1)*sqrt(mean(AmbientNoisePSD));
+    RMSsignal = Amplitude_est/sqrt(2);
+    SNR_est = 20*log10(RMSsignal./RMSnoise);
 end
 end

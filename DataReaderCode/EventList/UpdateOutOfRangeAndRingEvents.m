@@ -1,4 +1,4 @@
-function EventList = UpdateOutOfRangeAndRingEvents(DetectionResults, ~, EventList, ~)
+function EventList = UpdateOutOfRangeAndRingEvents(DetectionResults, ~, EventList, ~, ~)
 
 % Separate the detections from all the different channels into groups that
 % overlap. The start and end of each of these groups will be compared to

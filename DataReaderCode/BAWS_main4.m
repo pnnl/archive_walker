@@ -49,20 +49,20 @@ debugMode = 1;
 
 %XML file
 
-% XMLFile = '1_DataConfig_JSIS_FO.XML';
-XMLFile = '1_DataConfig_JSIS_RingCSV.XML';
+XMLFile = '1_DataConfig_JSIS_FO.XML';
+% XMLFile = '1_DataConfig_JSIS_RingCSV.XML';
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-% XMLFile='2_ProcessConfig_JSIS_FO.xml';
-XMLFile='2_ProcessConfig_JSIS_RingCSV.xml';
+XMLFile='2_ProcessConfig_JSIS_FO.xml';
+% XMLFile='2_ProcessConfig_JSIS_RingCSV.xml';
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-% XMLFile='3_DetectorConfig_JSIS_FO.xml';
-XMLFile='3_DetectorConfig_JSIS_RingCSV.xml';
+XMLFile='3_DetectorConfig_JSIS_FO.xml';
+% XMLFile='3_DetectorConfig_JSIS_RingCSV.xml';
 % Parse XML file to MATLAB structure
 DetectorXML = fun_xmlread_comments(XMLFile);
 
@@ -71,7 +71,7 @@ DetectorXML = fun_xmlread_comments(XMLFile);
 % operate on a block of data sliding through time, while the event
 % detectors operate on data as if it were streaming.
 FOdetectors = {'Periodogram', 'SpectralCoherence'};
-EventDetectors = {'Ringdown', 'OutOfRangeGeneral', 'OutOfRangeVoltage',...
+EventDetectors = {'Ringdown', 'OutOfRangeGeneral',...
     'OutOfRangeFrequency', 'WindRamp'};
 
 % DQ and customization are done in stages. Each stage is composed of a DQ
@@ -308,6 +308,23 @@ else
     SecondsToConcat = [];
 end
 
+
+%% Extract alarming parameters
+AlarmingParams = struct('Periodogram',[],'SpectralCoherence',[],...
+    'Ringdown',[],'OutOfRangeGeneral',[],'OutOfRangeFrequency',[],...
+    'WindRamp',[]);
+if isfield(DetectorXML.Configuration.Alarming,'Periodogram')
+    AlarmingParams.Periodogram = ExtractAlarmingParamsPer(DetectorXML.Configuration.Alarming.Periodogram);
+else
+    AlarmingParams.Periodogram = ExtractAlarmingParamsPer(struct());
+end
+if isfield(DetectorXML.Configuration.Alarming,'SpectralCoherence')
+    AlarmingParams.SpectralCoherence = ExtractAlarmingParamsSC(DetectorXML.Configuration.Alarming.SpectralCoherence);
+else
+    AlarmingParams.SpectralCoherence = ExtractAlarmingParamsSC(struct());
+end
+
+
 %% processing files
 
 InitialCondos = [];
@@ -323,7 +340,7 @@ while(~done)
         if(debugMode)
             fprintf(flog,'\nThe current PMU file is: %s\n', focusFile);
         end
-        try
+%         try
             % make sure focusFile is written
             [stat,attr] = fileattrib(focusFile);
             while(~attr.UserWrite)
@@ -381,7 +398,7 @@ while(~done)
             % Perform event detection on data from most recently loaded
             % file
             [DetectionResults, AdditionalOutput] = RunDetection(PMU,DetectorXML,EventDetectors,AdditionalOutput);
-            EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,EventDetectors,EventList);
+            EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,EventDetectors,EventList);
             
             % Retrieve the segment of data that will be examined for forced
             % oscillations. A window of length SecondsToConcat slides
@@ -396,10 +413,8 @@ while(~done)
                 [PMUsegment, PMUsegmentAll] = ExtractPMUsegment(PMUsegmentAll,SecondsToConcat,ResultUpdateInterval);
                 
                 [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,FOdetectors,AdditionalOutput);
-                EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,FOdetectors,EventList);
+                EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,FOdetectors,EventList);
             end
-            
-%             Alarms = GenerateAlarms(EventList);
             
             
             %% update some information
@@ -408,20 +423,20 @@ while(~done)
                 fprintf(flog, 'PMU start Time:  %s\n', datestr(tPMU(1),'mm/dd/yyyy HH:MM:SS:FFF'));
                 fprintf(flog, 'PMU end Time:    %s\n', datestr(tPMU(end),'mm/dd/yyyy HH:MM:SS:FFF'));
             end
-        catch msg1
-            % failed to process the focus file
-            fprintf(flog, 'Could not process the current PMU data file: %s\n',focusFile);
-            fprintf(flog, '    %s\n',msg1.message);
-            
-            % stop processing files
-            done = 1;
-            
-            % throw the error message
-            str = ['Could not process the current PMU data file: ',focusFile];
-            disp(str);
-            error(msg1.message);
-            
-        end
+%         catch msg1
+%             % failed to process the focus file
+%             fprintf(flog, 'Could not process the current PMU data file: %s\n',focusFile);
+%             fprintf(flog, '    %s\n',msg1.message);
+%             
+%             % stop processing files
+%             done = 1;
+%             
+%             % throw the error message
+%             str = ['Could not process the current PMU data file: ',focusFile];
+%             disp(str);
+%             error(msg1.message);
+%             
+%         end
     end
 end
 
