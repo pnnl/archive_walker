@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration>
-    <!-- Was having trouble pushing commits, this is for a test -->
     <!-- Channels are specified identically for all detectors. If no PMU 
     element is included, all channels from all PMUs are included. If Channel 
     elements are not included within a PMU element, all channels for 
