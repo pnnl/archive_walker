@@ -20,7 +20,6 @@
     </PMU>
     -->
     <ResultsPath>D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\DetectionResults</ResultsPath>
-    <ResultUpdateInterval>60</ResultUpdateInterval>
     <!-- Ringdown detector -->
     <Ringdown>
         <RMSlength>15</RMSlength>
@@ -84,4 +83,7 @@
         width of the self-GMSC window and 2) half of FrequencyMin. -->
         <FrequencyTolerance>0.05</FrequencyTolerance>
     </Ringdown>
+    <!-- Alarming info (not needed for ringdowns) -->
+    <Alarming>
+    </Alarming>
 </Configuration>
