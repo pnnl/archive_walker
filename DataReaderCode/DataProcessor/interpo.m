@@ -91,13 +91,16 @@ for SigIdx = 1:length(SigsToInterpo)
         InterDataIdx = setdiff(InterDataIdx, InterDataIdx(LimitIdx));
     end
        
-    if strcmp(Interpolate_type,'Linear') && ~isempty(InterDataIdx)
-        %carries out linear interpolation   
-        PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'linear');
+    % Can only interpolate if some good data exists
+    if ~isempty(GoodDataIdx)
+        if strcmp(Interpolate_type,'Linear') && ~isempty(InterDataIdx)
+            %carries out linear interpolation
+            PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'linear');
 
-    elseif strcmp(Interpolate_type,'Constant') && ~isempty(InterDataIdx)
-        %carries out constant interpolation
-        PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'nearest');
+        elseif strcmp(Interpolate_type,'Constant') && ~isempty(InterDataIdx)
+            %carries out constant interpolation
+            PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'nearest');
+        end
     end
     %Gives the indices of data that are interpoalted
     InterDataInd = find(PMUdata ~= PMU.Data(:,ThisSig) & ~isnan(PMU.Data(:,ThisSig)));

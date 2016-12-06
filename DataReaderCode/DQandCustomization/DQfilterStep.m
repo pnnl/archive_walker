@@ -39,6 +39,10 @@
 % Added file type input parameter to be used by voltage quality check
 % filter as voltage quantity given in pdat file is per phase and that in
 % csv file is line-to-line
+%
+% Modified December 1, 2016 by Jim Follum:
+% Commented out the check for NumFilts == 1 because it is already performed
+% in the main script.
     
 function PMU = DQfilterStep(PMU,StageStruct,FileType)
 
@@ -46,12 +50,14 @@ NumFilts = length(StageStruct.Filter);
 %defining a matrix whose values are set to 1 if the the content is to be
 %set to NaN after filtering operation
 
-if NumFilts == 1
-    % By default, the contents of StageStruct.Filter
-    % would not be in a cell array because length is one. This 
-    % makes it so the same indexing can be used in the following for loop.
-    StageStruct.Filter = {StageStruct.Filter};
-end
+% This check is now performed in the main script, so I'm commenting it out
+% on 12-1-2016 - Jim.
+% if NumFilts == 1
+%     % By default, the contents of StageStruct.Filter
+%     % would not be in a cell array because length is one. This 
+%     % makes it so the same indexing can be used in the following for loop.
+%     StageStruct.Filter = {StageStruct.Filter};
+% end
 for PMUidx = 1:length(PMU)
     [n,nm] = size(PMU(PMUidx).Data);
     setNaNMatrix{PMUidx} = zeros(n,nm);

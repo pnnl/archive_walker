@@ -67,7 +67,9 @@ signalDespStr = fgetl(fid);
 
 
 %% read in data
+warning('off','MATLAB:table:ModifiedVarnames');
 data = readtable(inFile,'HeaderLines',3,'TreatAsEmpty',{'.','NA','N/A','#VALUE!'} );
+warning('on','MATLAB:table:ModifiedVarnames');
 
 % The CSVs we have repeat a value from one file to the next. If the number 
 % of samples is odd, assume this is the case and drop the first sample.

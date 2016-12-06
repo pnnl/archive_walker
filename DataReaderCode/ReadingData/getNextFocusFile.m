@@ -23,7 +23,7 @@
 %   3. modifed the code after DataInfo doesn't have a list of files that should be processed in the archive mode
 %
 %%
-function [focusFile,done,DataInfo] = getNextFocusFile(DataInfo,flog,debugMode)
+function [focusFile,done,DataInfo,SkippedFiles] = getNextFocusFile(DataInfo,flog,debugMode)
 done = 0; % used as a flag to identify the prcessing should be ended
 
 % file type
@@ -35,15 +35,17 @@ end
 
 % get the next focus file time
 tPMU = DataInfo.tPMU;
-if(tPMU ~= 0)
+if(tPMU(end) ~= 0)
     % tPMU is from the last processed focus file
     focusFileTime = ceil(tPMU(end)*24*3600)/24/3600; 
+    FileLength = round((tPMU(end)-tPMU(1) + tPMU(2)-tPMU(1))*24*60*60);
 else
     if(isempty(DataInfo.lastFocusFile))
         % no last focus file, this is at the beginning of processing
         focusFileTime = datenum(DataInfo.DateTimeStart);
     else
         % last focus file was found.
+        error('This code is specific to PDATs and needs to be replaced.');
         lastFocusFileTime = getPdatFileTime(DataInfo.lastFocusFile);
         defaultFileInt = 1/60/24;  % default file interval is 1 minute
         focusFileTime = lastFocusFileTime+defaultFileInt;
@@ -276,8 +278,26 @@ while(checking == 1)
 end
 
 
+if exist('FileLength','var');
+    k1 = strfind(focusFile,'_');
+    k2 = strfind(focusFile,'.');
+
+    dayStr = focusFile(k1(end-1)+1:k1(end)-1);
+    timeStr = focusFile(k1(end)+1:k2-1);
 
 
+    year = str2num(dayStr(1:4));
+    month = str2num(dayStr(5:6));
+    day = str2num(dayStr(7:8));
+
+    hour = str2num(timeStr(1:2));
+    minute = str2num(timeStr(3:4));
+    second = str2num(timeStr(5:6));
+
+    SkippedFiles = round(((datenum([year month day hour minute second]) - focusFileTime)*24*60*60)/FileLength);
+else
+    SkippedFiles = 0;
+end
 
 end
 

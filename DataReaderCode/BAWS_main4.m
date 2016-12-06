@@ -49,20 +49,23 @@ debugMode = 1;
 
 %XML file
 
-XMLFile = '1_DataConfig_JSIS_FO.XML';
+% XMLFile = '1_DataConfig_JSIS_FO.XML';
 % XMLFile = '1_DataConfig_JSIS_RingCSV.XML';
+XMLFile = '1_DataConfig_Wind.XML';
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='2_ProcessConfig_JSIS_FO.xml';
+% XMLFile='2_ProcessConfig_JSIS_FO.xml';
 % XMLFile='2_ProcessConfig_JSIS_RingCSV.xml';
+XMLFile='2_ProcessConfig_Wind.xml';
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-XMLFile='3_DetectorConfig_JSIS_FO.xml';
+% XMLFile='3_DetectorConfig_JSIS_FO.xml';
 % XMLFile='3_DetectorConfig_JSIS_RingCSV.xml';
+XMLFile='3_DetectorConfig_Wind.xml';
 % Parse XML file to MATLAB structure
 DetectorXML = fun_xmlread_comments(XMLFile);
 
@@ -333,7 +336,7 @@ FinalAngles = [];
 EventList = struct();
 
 while(~done)
-    [focusFile,done,outDataInfo] = getNextFocusFile(DataInfo,flog,debugMode);
+    [focusFile,done,outDataInfo,SkippedFiles] = getNextFocusFile(DataInfo,flog,debugMode);
     DataInfo = outDataInfo;
     if(~done)
         % focusFile is available
@@ -341,87 +344,109 @@ while(~done)
             fprintf(flog,'\nThe current PMU file is: %s\n', focusFile);
         end
 %         try
-            % make sure focusFile is written
-            [stat,attr] = fileattrib(focusFile);
-            while(~attr.UserWrite)
-                % pause 0.5 seconds when the file is still being written
-                pause(0.5);
-                % check if the file is ready for reading
-                [stat,attr] = fileattrib(focusFile);
-            end
             
-            
-            % ***********
-            % Data Reader
-            % ***********
-            
-            % Create the PMU structure
-            DataInfo.lastFocusFile = focusFile;
-            DataInfo.tPMU = 0;
-            if(strcmpi(DataInfo.FileType, 'pdat'))
-                % pdat format
-                [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
-            elseif(strcmpi(DataInfo.FileType, 'csv'))
-                % JSIS_CSV format
-                [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
-            end
-            DataInfo.tPMU = tPMU;
-            %            Apply data quality filters and signal customizations
-            PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags, DataInfo.FileType);
-            %            Return only the desired PMUs and signals
-            PMU = GetOutputSignals(PMU,DataXML);
-            
-            
-            
-            
-            % **********
-            % Processing
-            % **********
-            
-            [PMU, InitialCondos, FinalAngles] = DataProcessor(PMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor,InitialCondos,FinalAngles);
-            % Return only the desired PMUs and signals
-            PMU = GetOutputSignals(PMU, ProcessXML);
-            
-            % Create an empty one minute PMU data structure for later use
-            % after processing the first file
-            % this only needs to be called once
-            if exist('oneMinuteEmptyPMU','var') == 0
-                oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
-            end
-            
-            
-            
-            % *********
-            % Detection
-            % *********
-            
-            % Perform event detection on data from most recently loaded
-            % file
-            [DetectionResults, AdditionalOutput] = RunDetection(PMU,DetectorXML,EventDetectors,AdditionalOutput);
-            EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,EventDetectors,EventList);
-            
-            % Retrieve the segment of data that will be examined for forced
-            % oscillations. A window of length SecondsToConcat slides
-            % across this segment, advancing ResultUpdateInterval seconds
-            % each step.
-            [PMUall,PMURem,PMUsegmentAll,n] = RetrieveBlock(PMU,oneMinuteEmptyPMU,PMUall,PMURem,ResultUpdateInterval,SecondsToConcat);
-            % Perform forced oscillation detection for each time that the
-            % block can slide within the current segment of data
-            for nn = 1:n+1
-                %This function extracts data segment corresponding to
-                %SecondsToConcat for further processing
-                [PMUsegment, PMUsegmentAll] = ExtractPMUsegment(PMUsegmentAll,SecondsToConcat,ResultUpdateInterval);
-                
-                [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,FOdetectors,AdditionalOutput);
-                EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,FOdetectors,EventList);
-            end
-            
-            
-            %% update some information
-            if(debugMode)
-                fprintf(flog, 'Number of PMUs in the file: %f\n',length(PMU));
-                fprintf(flog, 'PMU start Time:  %s\n', datestr(tPMU(1),'mm/dd/yyyy HH:MM:SS:FFF'));
-                fprintf(flog, 'PMU end Time:    %s\n', datestr(tPMU(end),'mm/dd/yyyy HH:MM:SS:FFF'));
+            for FileIdx = 1:(SkippedFiles+1)
+                if FileIdx < SkippedFiles+1
+                    % Must generate a PMU structure filled with NaNs to
+                    % represent the skipped file
+                    PMU = basePMU;
+                    for pmuIdx = 1:length(PMU)
+                        PMU(pmuIdx).File_Name = 'Missing';
+                        PMU(pmuIdx).Flag(:) = 1;
+                        PMU(pmuIdx).Data(:) = NaN;
+                        PMU(pmuIdx).Stat(:) = NaN;
+                        tt = PMU(pmuIdx).Signal_Time.Signal_datenum;
+                        PMU(pmuIdx).Signal_Time.Signal_datenum = tt + tt(end) + tt(2)-tt(1);
+                        PMU(pmuIdx).Signal_Time.Time_String = {datestr(PMU(pmuIdx).Signal_Time.Signal_datenum,'mm/dd/yy HH:MM:SS.FFF')};
+                    end
+                    tPMU = PMU(pmuIdx).Signal_Time.Signal_datenum;
+                else
+                    % Proceed like normal and load the focus file
+                    
+                    % make sure focusFile is written
+                    [stat,attr] = fileattrib(focusFile);
+                    while(~attr.UserWrite)
+                        % pause 0.5 seconds when the file is still being written
+                        pause(0.5);
+                        % check if the file is ready for reading
+                        [stat,attr] = fileattrib(focusFile);
+                    end
+
+
+                    % ***********
+                    % Data Reader
+                    % ***********
+
+                    % Create the PMU structure
+                    DataInfo.lastFocusFile = focusFile;
+                    DataInfo.tPMU = 0;
+                    if(strcmpi(DataInfo.FileType, 'pdat'))
+                        % pdat format
+                        [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
+                    elseif(strcmpi(DataInfo.FileType, 'csv'))
+                        % JSIS_CSV format
+                        [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
+                    end
+                    basePMU = PMU;
+                end
+                DataInfo.tPMU = tPMU;
+                %            Apply data quality filters and signal customizations
+                PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags, DataInfo.FileType);
+                %            Return only the desired PMUs and signals
+                PMU = GetOutputSignals(PMU,DataXML);
+
+
+
+
+                % **********
+                % Processing
+                % **********
+
+                [PMU, InitialCondos, FinalAngles] = DataProcessor(PMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor,InitialCondos,FinalAngles);
+                % Return only the desired PMUs and signals
+                PMU = GetOutputSignals(PMU, ProcessXML);
+
+                % Create an empty one minute PMU data structure for later use
+                % after processing the first file
+                % this only needs to be called once
+                if exist('oneMinuteEmptyPMU','var') == 0
+                    oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
+                end
+
+
+
+                % *********
+                % Detection
+                % *********
+
+                % Perform event detection on data from most recently loaded
+                % file
+                [DetectionResults, AdditionalOutput] = RunDetection(PMU,DetectorXML,EventDetectors,AdditionalOutput);
+                EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,EventDetectors,EventList);
+
+                % Retrieve the segment of data that will be examined for forced
+                % oscillations. A window of length SecondsToConcat slides
+                % across this segment, advancing ResultUpdateInterval seconds
+                % each step.
+                [PMUall,PMURem,PMUsegmentAll,n] = RetrieveBlock(PMU,oneMinuteEmptyPMU,PMUall,PMURem,ResultUpdateInterval,SecondsToConcat);
+                % Perform forced oscillation detection for each time that the
+                % block can slide within the current segment of data
+                for nn = 1:n+1
+                    %This function extracts data segment corresponding to
+                    %SecondsToConcat for further processing
+                    [PMUsegment, PMUsegmentAll] = ExtractPMUsegment(PMUsegmentAll,SecondsToConcat,ResultUpdateInterval);
+
+                    [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,FOdetectors,AdditionalOutput);
+                    EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,FOdetectors,EventList);
+                end
+
+
+                %% update some information
+                if(debugMode)
+                    fprintf(flog, 'Number of PMUs in the file: %f\n',length(PMU));
+                    fprintf(flog, 'PMU start Time:  %s\n', datestr(tPMU(1),'mm/dd/yyyy HH:MM:SS:FFF'));
+                    fprintf(flog, 'PMU end Time:    %s\n', datestr(tPMU(end),'mm/dd/yyyy HH:MM:SS:FFF'));
+                end
             end
 %         catch msg1
 %             % failed to process the focus file
