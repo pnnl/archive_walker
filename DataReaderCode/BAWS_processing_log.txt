@@ -1,1 +1,341 @@
 ********************************************************
+Mode = Archive
+DateTimeStart =  2013-05-29 18:45:00
+DateTimeEnd  =   2013-05-29 19:31:00
+********************************************************
+
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184500.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184500.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:45:00:000
+PMU end Time:    05/29/2013 18:45:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184600.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184600.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:46:00:000
+PMU end Time:    05/29/2013 18:46:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184700.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184700.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:47:00:000
+PMU end Time:    05/29/2013 18:47:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184800.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184800.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:48:00:000
+PMU end Time:    05/29/2013 18:48:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184900.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_184900.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:49:00:000
+PMU end Time:    05/29/2013 18:49:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185000.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185000.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:50:00:000
+PMU end Time:    05/29/2013 18:50:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185100.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185100.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:51:00:000
+PMU end Time:    05/29/2013 18:51:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185200.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185200.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:52:00:000
+PMU end Time:    05/29/2013 18:52:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185300.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185300.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:53:00:000
+PMU end Time:    05/29/2013 18:53:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185400.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185400.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:54:00:000
+PMU end Time:    05/29/2013 18:54:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185500.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185500.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:55:00:000
+PMU end Time:    05/29/2013 18:55:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185600.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185600.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:56:00:000
+PMU end Time:    05/29/2013 18:56:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185700.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185700.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:57:00:000
+PMU end Time:    05/29/2013 18:57:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185800.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185800.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:58:00:000
+PMU end Time:    05/29/2013 18:58:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185900.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_185900.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 18:59:00:000
+PMU end Time:    05/29/2013 18:59:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190000.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190000.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:00:00:000
+PMU end Time:    05/29/2013 19:00:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190100.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190100.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:01:00:000
+PMU end Time:    05/29/2013 19:01:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190200.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190200.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:02:00:000
+PMU end Time:    05/29/2013 19:02:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190300.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190300.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:03:00:000
+PMU end Time:    05/29/2013 19:03:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190400.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190400.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:04:00:000
+PMU end Time:    05/29/2013 19:04:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190500.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190500.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:05:00:000
+PMU end Time:    05/29/2013 19:05:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190600.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190600.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:06:00:000
+PMU end Time:    05/29/2013 19:06:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190700.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190700.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:07:00:000
+PMU end Time:    05/29/2013 19:07:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190800.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190800.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:08:00:000
+PMU end Time:    05/29/2013 19:08:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190900.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_190900.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:09:00:000
+PMU end Time:    05/29/2013 19:09:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191000.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191000.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:10:00:000
+PMU end Time:    05/29/2013 19:10:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191100.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191100.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:11:00:000
+PMU end Time:    05/29/2013 19:11:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191200.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191200.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:12:00:000
+PMU end Time:    05/29/2013 19:12:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191300.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191300.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:13:00:000
+PMU end Time:    05/29/2013 19:13:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191400.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191400.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:14:00:000
+PMU end Time:    05/29/2013 19:14:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191500.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191500.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:15:00:000
+PMU end Time:    05/29/2013 19:15:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191600.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191600.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:16:00:000
+PMU end Time:    05/29/2013 19:16:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191700.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191700.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:17:00:000
+PMU end Time:    05/29/2013 19:17:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191800.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191800.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:18:00:000
+PMU end Time:    05/29/2013 19:18:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191900.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_191900.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:19:00:000
+PMU end Time:    05/29/2013 19:19:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192000.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192000.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:20:00:000
+PMU end Time:    05/29/2013 19:20:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192100.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192100.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:21:00:000
+PMU end Time:    05/29/2013 19:21:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192200.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192200.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:22:00:000
+PMU end Time:    05/29/2013 19:22:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192300.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192300.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:23:00:000
+PMU end Time:    05/29/2013 19:23:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192400.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192400.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:24:00:000
+PMU end Time:    05/29/2013 19:24:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192500.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192500.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:25:00:000
+PMU end Time:    05/29/2013 19:25:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192600.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192600.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:26:00:000
+PMU end Time:    05/29/2013 19:26:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192700.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192700.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:27:00:000
+PMU end Time:    05/29/2013 19:27:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192800.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192800.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:28:00:000
+PMU end Time:    05/29/2013 19:28:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192900.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_192900.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:29:00:000
+PMU end Time:    05/29/2013 19:29:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_193000.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_193000.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:30:00:000
+PMU end Time:    05/29/2013 19:30:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_193100.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+The current PMU file is: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_193100.csv
+Number of PMUs in the file: 1.000000
+PMU start Time:  05/29/2013 19:31:00:000
+PMU end Time:    05/29/2013 19:31:59:983
+The next focus file should be: C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\WindOscillation_BPAm_20130529_193200.csv
+The next focus file folder should be C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv\2013\130529\
+
+Finished processing files
+********************************************************
+

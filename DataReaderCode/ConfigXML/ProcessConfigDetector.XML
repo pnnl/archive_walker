@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+    <Processing>
+        <!--
+        For interpolation, filtering, and sampling-rate conversion, if the 
+        PMU element is omitted the process is applied to all signals in all
+        PMUs. If the Channels element within a PMU element is omitted the 
+        process is applied to all signals in that PMU. Otherwise, the 
+        process is applied to the specific PMUs and signals listed in the
+        elements.
+        If channels are not specified for wrap and unwrap operations, they
+        are applied to all angle signals in the PMUs.
+        -->
+        <SecondsToConcat>600</SecondsToConcat>    
+    </Processing>
+    <!--
+    Specify the signals for output
+    -->
+    <SignalSelection>
+        <!--
+        <PMU>
+            <Name>ALSN 500 A1 SA  </Name>            
+        </PMU>
+        <PMU>
+            <Name>JDAY 500  A1 SA </Name>            
+        </PMU>
+        <PMU>
+            <Name>Custom Signals</Name>
+        </PMU>
+        <PMU>
+            <Name>Custom Signals2</Name>
+        </PMU>
+        <PMU>
+            <Name>Custom Signals3</Name>
+        </PMU>
+        <PMU>
+            <Name>Custom Signals4</Name>
+        </PMU>
+        <PMU>
+            <Name>Custom Signals5</Name>
+        </PMU>
+        <PMU>
+            <Name>Custom Signals6</Name>
+        </PMU>
+        -->
+    </SignalSelection>
+</Configuration>

@@ -1,4 +1,4 @@
-function [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs] = ExtractData(PMUstruct,Parameters)
+function [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString] = ExtractData(PMUstruct,Parameters)
 
 Data = [];
 DataPMU = {};
@@ -74,6 +74,14 @@ else
     end
 end
 
+% All included PMUs have to have the same signal lengths, so just use the
+% first one to get the time stamps as strings
+if ~isempty(PMUstructIdxList)
+    TimeString = PMUstruct(PMUstructIdxList(1)).Signal_Time.Time_String;
+else
+    TimeString = {};
+end
+
 % Get the sampling rate. Try for each PMU that was included until it is
 % found
 fs = [];
@@ -82,7 +90,7 @@ for PMUstructIdx = PMUstructIdxList
     % Try to calculate the sampling rate. It may fail if something was
     % wrong with the input data
     try
-        fs = round(1/(diff(PMUstruct(PMUstructIdx).Signal_Time.Signal_datenum(1:2))*24*60*60));
+        fs = round(1/mean((diff(PMUstruct(PMUstructIdx).Signal_Time.Signal_datenum)*24*60*60)));
     end
 
     % If fs was created and is not NaN, stop trying to calculate it

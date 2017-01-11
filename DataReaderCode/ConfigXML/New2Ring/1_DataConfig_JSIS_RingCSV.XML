@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+	<ReaderProperties>
+        <!--
+		<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
+        -->
+        <!--
+        <FileDirectory> D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\OriginalData</FileDirectory>
+        -->
+        <FileDirectory>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\OriginalData</FileDirectory>
+        <FileType>csv</FileType>
+        <Mnemonic>ModeMeterSignals</Mnemonic>
+        <!--
+        <Mode>
+            <Name>RealTime</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <NoFutureWait>60</NoFutureWait>
+                <MaxNoFutureCount>10</MaxNoFutureCount>
+                <FutureWait>60</FutureWait>
+                <MaxFutureCount>10</MaxFutureCount>
+            </Params>
+        </Mode>
+        <Mode>
+            <Name>Hybrid</Name>
+            <Params>
+                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+                <NoFutureWait>60</NoFutureWait>
+                <MaxNoFutureCount>10</MaxNoFutureCount>
+                <FutureWait>60</FutureWait>
+                <MaxFutureCount>10</MaxFutureCount>
+                <RealTimeRange>60</RealTimeRange>
+            </Params>
+        </Mode>
+        -->
+        <Mode>
+            <Name>Archive</Name>
+            <Params>
+                <DateTimeStart>2015-06-17 08:00:00 GMT</DateTimeStart>
+                <DateTimeEnd>2015-06-17 09:12:00 GMT</DateTimeEnd>
+            </Params>
+        </Mode>
+	</ReaderProperties>
+    <!-- 
+    Each stage is composed of data quality filters and customizations. 
+    Filters are always applied first, then the customizations. The 
+    stages are carried out in sequential order. 
+    
+    For all filters, if PMU isn't included, the filter is applied to all 
+    PMUs. Under PMU, if Channel isn't included, the filter is applied for
+    all appropriate channels in the specified PMUs. 
+    -->
+    <!--
+    *******
+    Stage 1
+    *******
+    -->
+    <Stages>
+        <!--
+        **********************
+        Stage 1 - DQ Filtering
+        **********************
+        -->
+        <Filter>
+            <Name>DropOutZeroFilt</Name>
+            <Parameters>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>2</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>VoltPhasorFilt</Name>
+            <Parameters>
+                <VoltMin>0.7</VoltMin>
+                <VoltMax>1.3</VoltMax>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>4</FlagBit>
+            </Parameters>
+        </Filter>
+        <Filter>
+            <Name>StaleFilt</Name>
+            <Parameters>
+                <FlagAllByFreq>FALSE</FlagAllByFreq>
+                <StaleThresh>60</StaleThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>8</FlagBit>
+                <FlagBitFreq>9</FlagBitFreq>
+            </Parameters>
+        </Filter>
+		<Filter>
+            <Name>WrappingFailureFilt</Name>
+            <Parameters>
+                <AngleThresh>90</AngleThresh>
+                <SetToNaN>TRUE</SetToNaN>
+                <FlagBit>10</FlagBit>
+            </Parameters>
+        </Filter>
+    </Stages>
+    <SignalSelection>
+        <SignalType>
+            <Type>VAP</Type>
+        </SignalType>
+	</SignalSelection>
+</Configuration>
+		

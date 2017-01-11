@@ -46,7 +46,7 @@ Tsteps = diff(t_datenum);
 TsHat = min(Tsteps);
 % Adjust to a reporting interval corresponding to an integer number of
 % frames per second
-TsHat = (1/round(1/(TsHat*24*3600)))/(24*3600);
+TsHat = (1/round(1/(TsHat*24*3600*10)))/(24*3600*10);
 
 % Indices of samples located before missing data begins
 BeforeJump = find(Tsteps > 1.5*TsHat);

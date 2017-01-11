@@ -1,5 +1,5 @@
 %% 
-% create a cell array of PMU structure that will be sued for concatenation
+% create a cell array of PMU structure that will be used for concatenation
 %
 % Input:
 %   PMUall: a cell array of PMUs that was created before
@@ -11,10 +11,22 @@
 %   PMUall:  a created cell array of PMUs that will be used for concatenation detecitons
 %
 % Created on 6/23/2016 by Tao Fu
+%
+% Updated on 7/26/2016 by Tao Fu
+%   some minor fix for selected needed PMU structures
 % 
+% Updated on 25th August 2016 by Urmila Agrawal
+%    This file returns input PMU in the output PMU list if it's the first
+%    file. Otherwise, it always adds the new PMU to the input PMU list.
+%    This function no more needs secondsNeeded as an Input parameter.
 
-function outPMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU,secondsNeeded)
+function outPMUall = preparePMUList(PMUall,PMU,oneMinuteEmptyPMU)
 
+% if isempty(WindowSlidingInterval)
+%     secondsNeeded = SecondsToConcate;
+% else
+%     secondsNeeded = WindowSlidingInterval;
+% end
 %% in case this is the first PMU
 if(isempty(PMUall))
     PMUall{1} = PMU;
@@ -23,26 +35,28 @@ if(isempty(PMUall))
 end
 
 %% return the input PMU if it already contains needed data time
-T = PMU(1).Signal_Time.Signal_datenum;
-dt = T(end)-T(1);
-dt = dt*24*3600;
-if(dt > secondsNeeded)
-    PMUall{1} = PMU;
-    outPMUall = PMUall;
-    return;
-end
+% T = PMU(1).Signal_Time.Signal_datenum;
+% dt = T(end)-T(1);
+% dt = dt*24*3600;
+% if(dt > secondsNeeded)
+%     PMUall{1} = PMU;
+%     outPMUall = PMUall;
+%     return;
+% end
 
 %% return the input PMU if the needed time will not include the last processed PMU
 lastPMU = PMUall{end};
-prevEndT = lastPMU(1).Signal_Time.Signal_datenum(end); % ending time of last processed PMU
-thisEndT = PMU(1).Signal_Time.Signal_datenum(end);     % starting time of this PMU
-dt = thisEndT-prevEndT;
-dt = dt*24*3600;
-if(dt >= secondsNeeded)
-    PMUall{1} = PMU;
-    outPMUall = PMUall;
-    return;
-end
+prevStartT = lastPMU(1).Signal_Time.Signal_datenum(1); % startinging time of the last processed PMU
+prevEndT = lastPMU(1).Signal_Time.Signal_datenum(end); % ending time of the last processed PMU
+thisEndT = PMU(1).Signal_Time.Signal_datenum(end);     % ending time of this PMU
+deltaT = PMU(1).Signal_Time.Signal_datenum(2)-PMU(1).Signal_Time.Signal_datenum(1); % delta t between every two consecutive data rows
+% dt = thisEndT-prevEndT;
+% dt = dt*24*3600;
+% if(dt >= secondsNeeded)
+%     PMUall{1} = PMU;
+%     outPMUall = PMUall;
+%     return;
+% end
 
 %% add the current PMU to the list, also need to take care of missing files
 % add possible missing files
@@ -50,6 +64,7 @@ thisStartT = PMU(1).Signal_Time.Signal_datenum(1);     % starting time of this P
 
 dt = thisStartT-prevEndT;
 dt = dt*24*3600;
+dt = dt-deltaT*24*3600; % compare with the PMU time interval
 if(dt > 1) 
     % has more than 1s time gap
     missingT = (prevEndT*24*3600:1/60:thisStartT*24*3600);    
@@ -101,8 +116,8 @@ PMUall = [PMUall, PMU];
 n = length(PMUall);
 idx = n;
 flag = zeros(n,1);
-enoughData = 0;
-while(idx > 0 && ~enoughData)
+% enoughData = 0;
+while(idx > 0)
     currPMU = PMUall{idx};
     flag(idx) = 1; % the current PMU will be output anyway
     
@@ -115,10 +130,12 @@ while(idx > 0 && ~enoughData)
     
     dt = endT - startT;
     dt = dt*24*3600; % day to seconds
+    dt = dt+deltaT*24*3600; % add the covered time for the last PMU data row
     
-    if(dt >= secondsNeeded)
-        enoughData = 1;
-    end
+%     if(dt >= secondsNeeded)
+%         % has enough data to cover required time
+%         enoughData = 1;
+%     end
     idx = idx-1; % move 1 PMU back
 end
 

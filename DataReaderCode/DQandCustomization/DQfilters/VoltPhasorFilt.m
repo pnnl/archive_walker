@@ -30,6 +30,7 @@
     % setNaNMatrix: Matrix of size: number of data points by number of
     % channels in a PMU. '0' indicates data is not to be set to NaN after
     % filter operation, any other value indicates data should be set to NaN
+    % FileType: Data file type (csv or PDAT)
 % 
 % Outputs:
     % PMUstruct
@@ -44,8 +45,11 @@
 % Modified June 28, 2016 by Urmila Agrawal:
     % fixed a minor bug for finding the indices of voltage magnitude and
     % voltage phasor signals
+% Modified July 28, 2016 by Urmila Agrawal:
+    % added file type input parameter as voltage quantity given in pdat
+    % file is per phase and that in csv file is line-to-line.% 
 
-function [PMUstruct,setNaNMatrix] = VoltPhasorFilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix)
+function [PMUstruct,setNaNMatrix] = VoltPhasorFilt(PMUstruct,SigsToFilt,Parameters,setNaNMatrix,FileType)
 
 VoltMin = str2num(Parameters.VoltMin);
 VoltMax = str2num(Parameters.VoltMax);
@@ -78,11 +82,15 @@ for SigIdx = 1:length(SigsToFilt)
         else
             % The nominal voltage must be extracted from the signal name
             NomVoltage = strsplit(PMUstruct.Signal_Name{ThisSig},'.');
-            NomVoltage = str2double(NomVoltage{2}(2:4));
+            if strcmpi(FileType,'csv')
+                NomVoltage = str2double(NomVoltage{1}(end-2:end));
+            elseif strcmpi(FileType,'pdat')
+                NomVoltage = str2double(NomVoltage{1}(6:8));
+                % Transform rating from line-to-line to line-to-neutral
+                NomVoltage = NomVoltage/sqrt(3);
+            end
         end
-
-        % Transform rating from line-to-line to line-to-neutral
-        NomVoltage = NomVoltage/sqrt(3);
+        
         % Nominal value is in kV, adjust if signal is in V
         if strcmp(PMUstruct.Signal_Unit{ThisSig}, 'V')
             % Convert to V from kV

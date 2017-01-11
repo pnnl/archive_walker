@@ -29,7 +29,7 @@
 %    
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
     
-function PMU = DPfilterStep(PMU,ProcessFilter)
+function [PMU, FinalCondos] = DPfilterStep(PMU,ProcessFilter, InitialCondos)
 NumFilts = length(ProcessFilter);
 
 if NumFilts == 1
@@ -39,6 +39,10 @@ if NumFilts == 1
     ProcessFilter = {ProcessFilter};
 end
 
+FinalCondos = cell(1,NumFilts);
+if isempty(InitialCondos)
+    InitialCondos = cell(1,NumFilts);
+end
 for FiltIdx = 1:NumFilts 
     % Parameters for the filter - the structure contents are
     % specific to the filter
@@ -86,21 +90,26 @@ for FiltIdx = 1:NumFilts
         PMUchans = struct('ChansToFilt',cell(NumPMU,1));
         PMUstructIdx = 1:NumPMU;
     end
+    
+    FinalCondos{FiltIdx} = cell(1,NumPMU);
+    if isempty(InitialCondos{FiltIdx})
+        InitialCondos{FiltIdx} = cell(1,NumPMU);
+    end
 
     % Find the appropriate filter and apply it to each of the
     % specified PMUs and channels
     switch ProcessFilter{FiltIdx}.Type
         case 'HighPass'
             for PMUidx = 1:NumPMU
-               PMU(PMUstructIdx(PMUidx))= HighPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+               [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = HighPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
             end
         case 'LowPass'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx))= LowPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = LowPassFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
             end
         case 'Rational'
             for PMUidx = 1:NumPMU
-                PMU(PMUstructIdx(PMUidx))= RationalFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters);
+                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = RationalFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
             end
         case 'Median'
             for PMUidx = 1:NumPMU

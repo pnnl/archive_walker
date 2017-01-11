@@ -32,7 +32,7 @@
 %     
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
-function PMU = LowPassFilt(PMU,SigsToFilt,Parameters)
+function [PMU, FinalCondos] = LowPassFilt(PMU,SigsToFilt,Parameters, InitialCondos)
 
 %User-specified parameters 
 PassRipple  = str2num(Parameters.PassRipple);
@@ -42,16 +42,16 @@ StopCutoff  = str2num(Parameters.StopCutoff);
 SetZeroPhase  = Parameters.ZeroPhase;
 CutoffFreq = [PassCutoff StopCutoff]; % in Hz
 
-%calculates signal's sampling frequency using time string for 1st and 5th
+%calculates signal's sampling frequency using time string for 1st and 6th
 %data points.
 t = PMU.Signal_Time.Time_String;
 t1 = t{1};
 Ind1 = findstr(t1, '.');
 T1 = str2num(t1(Ind1:end));
-t5 = t{5};
-Ind5 = findstr(t5, '.');
-T5 = str2num(t5(Ind5:end));
-fs = round(4/(T5 - T1));
+t6 = t{6};
+Ind6 = findstr(t6, '.');
+T6 = str2num(t6(Ind6:end));
+fs = round(5/(T6 - T1)); 
 
 if StopCutoff>fs
     error('Cut-off frequencies exceed folding frequency.');
@@ -71,6 +71,14 @@ if isempty(SigsToFilt)
     SigsToFilt = PMU.Signal_Name(SigIdx);
 end
 % freqz(b,1,1024,fs)
+
+FinalCondos = cell(1,length(SigsToFilt));
+if isempty(InitialCondos)
+    InitialCondos = cell(1,length(SigsToFilt));
+    for SigIdx = 1:length(SigsToFilt)
+        InitialCondos{SigIdx} = struct('Name',[],'delays',[]);
+    end
+end
 for SigIdx = 1:length(SigsToFilt)
     ThisSig = find(strcmp(PMU.Signal_Name,SigsToFilt{SigIdx}));
     
@@ -85,7 +93,12 @@ for SigIdx = 1:length(SigsToFilt)
     if strcmp(SetZeroPhase,'TRUE')
         PMU.Data(:,ThisSig) = filtfilt(b,a,PMU.Data(:,ThisSig)); 
     else
-        PMU.Data(:,ThisSig) = filter(b,a,PMU.Data(:,ThisSig));
-    end  
-
+        % Only use the initial conditions if the name of the channel is
+        % correct
+        if ~strcmp(SigsToFilt{SigIdx}, InitialCondos{SigIdx}.Name)
+            InitialCondos{SigIdx}.delays = [];
+        end
+        FinalCondos{SigIdx}.Name = SigsToFilt{SigIdx};
+        [PMU.Data(:,ThisSig), FinalCondos{SigIdx}.delays] = filter(b,a,PMU.Data(:,ThisSig), InitialCondos{SigIdx}.delays);
+    end
 end

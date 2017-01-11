@@ -22,7 +22,7 @@
 %     
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
-function PMU = UnwrapAngle(PMU,SigsToProc)
+function [PMU, FinalAngles] = UnwrapAngle(PMU,SigsToProc, PastAngles, MaxNaN)
 
 % If specific signals were not listed, apply to all angle signals 
 if isempty(SigsToProc)
@@ -30,6 +30,16 @@ if isempty(SigsToProc)
     SigsToProc = PMU.Signal_Name(SigIdx);
 end
 
+FinalAngles = cell(1,length(SigsToProc));
+for SigIdx = 1:length(SigsToProc)
+    FinalAngles{SigIdx} = struct('SignalName',[],'angle',[]);
+end
+if isempty(PastAngles)
+    PastAngles = cell(1,length(SigsToProc));
+    for SigIdx = 1:length(SigsToProc)
+        PastAngles{SigIdx} = struct('SignalName',[],'angle',[]);
+    end
+end
 for SigIdx = 1:length(SigsToProc)
     ThisSig = find(strcmp(PMU.Signal_Name,SigsToProc{SigIdx}));
     % If the specified signal is not in PMUstruct, skip the rest of the
@@ -39,13 +49,37 @@ for SigIdx = 1:length(SigsToProc)
         continue
     end
     
+    % If the duration of any group of NaN's is too long, set all
+    % measurements afterward to NaN because they are unreliable.
+    NaNloc = isnan(PMU.Data(:,ThisSig));
+    Starts = find(diff([0; NaNloc]) == 1);
+    Ends = find(diff(NaNloc) == -1);
+    if length(Starts) > length(Ends)
+        Ends = [Ends; length(PMU.Data(:,ThisSig))];
+    end
+    KillAfter = min(Ends(Ends - Starts + 1 > MaxNaN));
+    % If KillAfter is empty, the following line won't do anything
+    PMU.Data(KillAfter:end,ThisSig) = NaN;
+    
+    B4 = PMU.Data(end,ThisSig);
+    
     %Unwraps angle measurements
-    if strcmp(PMU.Signal_Unit(ThisSig),'DEG')        
-        PMU.Data(:,ThisSig) = (unwrap(PMU.Data(:,ThisSig)*pi/180))*180/pi;
+    if strcmp(PMU.Signal_Unit(ThisSig),'DEG') 
+        PMU.Data(:,ThisSig) = unwrap(PMU.Data(:,ThisSig)*pi/180)*180/pi;
     elseif strcmp(PMU.Signal_Unit(ThisSig),'RAD') 
         PMU.Data(:,ThisSig) = unwrap(PMU.Data(:,ThisSig));
     else 
         warning(['Signal ' SigsToProc{SigIdx} ' is not an angle signal.']);
-        continue
-    end       
+    end
+    
+    
+    if ((~isempty(PastAngles{SigIdx}.angle)) && (strcmp(SigsToProc{SigIdx}, PastAngles{SigIdx}.SignalName)))
+        PMU.Data(:,ThisSig) = PMU.Data(:,ThisSig) + PastAngles{SigIdx}.angle;
+    end
+    
+    FinalAngles{SigIdx}.angle = PMU.Data(end,ThisSig) - B4;
+    if isnan(FinalAngles{SigIdx}.angle)
+        FinalAngles{SigIdx}.angle = [];
+    end
+    FinalAngles{SigIdx}.SignalName = SigsToProc{SigIdx};
 end
