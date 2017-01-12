@@ -29,7 +29,10 @@ end
 % default values for parameters that were not specified. 
 % Additional inputs, such as the length of the input data or the sampling 
 % rate, can be added as necessary. 
-ExtractedParameters = ExtractParameters(Parameters,fs);
+persistent ExtractedParameters
+if isempty(ExtractedParameters)
+    ExtractedParameters = ExtractParameters(Parameters,fs);
+end
 
 % Store the parameters in variables for easier access
 Max = ExtractedParameters.Max;

@@ -68,7 +68,18 @@ if(~foundFolder)
     yearFolders = {yearFolders.name};
     if(length(yearFolders) > 2) % there are always '.' and '..' subfolders
         yearFolders = yearFolders(3:end);
-        yearFolders_num = cellfun(@str2num,yearFolders);
+        %yearFolders_num = cellfun(@str2num,yearFolders); %sometimes, there are hidden files in the folder, which makes this command not working
+        yearFolders_num = zeros(1,length(yearFolders));
+        for m = 1:length(yearFolders)
+            currFolder = yearFolders{m};
+            strFolder = [generalFolder,currFolder];
+            if(isdir(strFolder))
+                currFolderNum = str2num(currFolder);
+                if(~isempty(currFolderNum))
+                    yearFolders_num(m) = currFolderNum;
+                end
+            end
+        end
         k = find(yearFolders_num > currYear);
         if(~isempty(k))
             % has folders for later years

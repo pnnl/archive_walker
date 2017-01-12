@@ -90,7 +90,8 @@ for PMUstructIdx = PMUstructIdxList
     % Try to calculate the sampling rate. It may fail if something was
     % wrong with the input data
     try
-        fs = round(1/mean((diff(PMUstruct(PMUstructIdx).Signal_Time.Signal_datenum)*24*60*60)));
+        % Rounds to the nearest 0.1 Hz
+        fs = round(1/mean((diff(PMUstruct(PMUstructIdx).Signal_Time.Signal_datenum)*24*60*60))*10)/10;
     end
 
     % If fs was created and is not NaN, stop trying to calculate it

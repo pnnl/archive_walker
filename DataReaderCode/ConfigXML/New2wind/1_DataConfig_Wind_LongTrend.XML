@@ -36,8 +36,8 @@
         <Mode>
             <Name>Archive</Name>
             <Params>
-                <DateTimeStart>2013-05-29 18:59:00 GMT</DateTimeStart>
-                <DateTimeEnd>2013-05-29 19:28:00 GMT</DateTimeEnd>
+                <DateTimeStart>2013-05-29 15:00:00 GMT</DateTimeStart>
+                <DateTimeEnd>2013-05-30 06:59:00 GMT</DateTimeEnd>
             </Params>
         </Mode>
 	</ReaderProperties>
@@ -75,21 +75,6 @@
             <Channels>
             	<Channel>
                 	<Name>ROCKCK230TX1MW</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK230TX1MVAR</Name>
-            	</Channel>
-            	<Channel>
-                	<Name>ROCKCK230V</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK500TX1MW</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK500TX1MVAR</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK500V</Name>
             	</Channel>
             </Channels>
         </PMU>

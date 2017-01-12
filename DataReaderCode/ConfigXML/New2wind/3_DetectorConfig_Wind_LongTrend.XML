@@ -19,17 +19,24 @@
         </Channel>
     </PMU>
     -->
-    <ResultsPath>D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\DetectionResults</ResultsPath>
-    <!-- Ringdown detector -->
-    <Ringdown>
-        <RMSlength>15</RMSlength>
-        <ForgetFactor>0.98</ForgetFactor>
-        <RingThresholdScale>3</RingThresholdScale>
-    </Ringdown>
-    <!-- Alarming info (not needed for ringdowns) -->
+    <!-- WindRamp Detector -->
+    <WindRamp>
+        <PMU>
+            <Name>WindOscillation2</Name>
+            <Channel>
+                <Name>ROCKCK230TX1MW</Name>
+            </Channel>
+        </PMU>
+        <Fpass>0.00005</Fpass>
+        <Fstop>0.0002</Fstop>
+        <Apass>1</Apass>
+        <Astop>60</Astop>
+        <ValMin>400</ValMin>
+        <TimeMin>14400</TimeMin>
+        <ValMax>1000</ValMax>
+        <TimeMax>45000</TimeMax>
+    </WindRamp>
+    <!-- Alarming info -->
     <Alarming>
-        <Ringdown>
-            <MaxDuration>90</MaxDuration>
-        </Ringdown>
     </Alarming>
 </Configuration>

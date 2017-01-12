@@ -69,7 +69,10 @@ end
 % default values for parameters that were not specified. 
 % Additional inputs, such as the length of the input data or the sampling 
 % rate, can be added as necessary. 
-ExtractedParameters = ExtractFOdetectionParamsSC(Parameters,fs);
+persistent ExtractedParameters
+if isempty(ExtractedParameters)
+    ExtractedParameters = ExtractFOdetectionParamsSC(Parameters,fs);
+end
 
 % Store the parameters in variables for easier access
 Mode = ExtractedParameters.Mode;
@@ -108,17 +111,7 @@ LengthFreqInterest = length(FreqInterest); %Number of frequency bins of interest
 
 %% Initialization
 
-% Initialize structure to output detection results
-if strcmp(Mode,'SingleChannel')
-    DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[]);
-    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'Threshold',[],'Frequency',[],'Mode',[],'fs',fs,'Start',TimeString{end-size(Data,1)+1},'End',TimeString{end});
-else
-    DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[],'TestStatistic',[]);
-    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'TestStatistic',[],'Threshold',[],'Frequency',[],'Mode',[],'fs',fs,'Start',TimeString{end-size(Data,1)+1},'End',TimeString{end});
-end
-
-% Initialize structure for additional outputs
-
+% Initialize structures to output detection results and additional outputs
 
 %all appropriate fields are assigned NaN value so that NaN value is returned if none of the signal is selected for signal analysis
 if strcmp(Mode,'MultiChannel')
@@ -132,7 +125,12 @@ if strcmp(Mode,'MultiChannel')
     AdditionalOutput.TestStatistic = NaN*ones(LengthFreqInterest,1);
     AdditionalOutput.Frequency = FreqInterest;
     AdditionalOutput.Mode = Mode;    
+    AdditionalOutput.fs = fs;
+    AdditionalOutput.Start = TimeString{end-size(Data,1)+1};
+    AdditionalOutput.End = TimeString{end};
 else
+    DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Coherence',[]);
+    AdditionalOutput = struct('SignalCoherenceSpectrum',[],'Threshold',[],'Frequency',[],'Mode',[],'fs',[],'Start',[],'End',[]);
     for ChannelIdx = 1:length(DataChannel)
         DetectionResults(ChannelIdx).PMU = DataPMU(ChannelIdx);
         DetectionResults(ChannelIdx).Channel = DataChannel(ChannelIdx);
@@ -141,7 +139,10 @@ else
         AdditionalOutput(ChannelIdx).Threshold = NaN;
         AdditionalOutput(ChannelIdx).SignalCoherenceSpectrum = NaN*ones(LengthFreqInterest,1);  
         AdditionalOutput(ChannelIdx).Frequency = FreqInterest;
-        AdditionalOutput(ChannelIdx).Mode = Mode;    
+        AdditionalOutput(ChannelIdx).Mode = Mode;  
+        AdditionalOutput(ChannelIdx).fs = fs;
+        AdditionalOutput(ChannelIdx).Start = TimeString{end-size(Data,1)+1};
+        AdditionalOutput(ChannelIdx).End = TimeString{end};
     end
 end
 if isempty(SelectedDataTypeInd)
@@ -183,7 +184,6 @@ if strcmp(Mode,'MultiChannel')
     AdditionalOutput.Threshold = Threshold;
     AdditionalOutput.SignalCoherenceSpectrum(:,SelectedDataTypeInd) = GMSC_est;
     AdditionalOutput.TestStatistic = TestStatistic;
-    AdditionalOutput.Data = SelectedData; 
 else %analyses signal for single channel mode
     for ChannelIdx = 1:length(SelectedDataTypeInd)
         %gives test statistic for detecting FO

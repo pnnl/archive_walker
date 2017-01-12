@@ -29,7 +29,7 @@
 % Modified on 22 July, 2016 by Urmila Agrawal
 %   Number of flags in the output PMU strucutre is reduced to 2
 
-function [PMU, FinalCondos, FinalAngles] = DataProcessor(PMUstruct, ProcessXML,NumStages,FlagBitInterpo,FlagBitInput,NumFlags,InitialCondos,PastAngles)
+function [PMU, FinalCondosFilter, FinalCondosMultiRate, FinalAngles] = DataProcessor(PMUstruct, ProcessXML,NumStages,FlagBitInterpo,FlagBitInput,NumFlags,InitialCondosFilter,InitialCondosMultiRate,PastAngles)
 
 NumPMU = length(PMUstruct);
 PMU = PMUstruct;
@@ -75,18 +75,22 @@ end
 % Create structure to store the final conditions of each filter. The
 % structure has as many elements as there are stages, even if some stages
 % don't have filters.
-FinalCondos = cell(1,NumStages);
-if isempty(InitialCondos)
-    InitialCondos = cell(1,NumStages);
+FinalCondosFilter = cell(1,NumStages);
+FinalCondosMultiRate = cell(1,NumStages);
+if isempty(InitialCondosFilter)
+    InitialCondosFilter = cell(1,NumStages);
+end
+if isempty(InitialCondosMultiRate)
+    InitialCondosMultiRate = cell(1,NumStages);
 end
 for StageIdx = 1:NumStages
     
     if isfield(ProcessXML.Configuration.Processing.Stages{StageIdx},'Filter')
-        [PMU, FinalCondos{StageIdx}] = DPfilterStep(PMU,ProcessXML.Configuration.Processing.Stages{StageIdx}.Filter, InitialCondos{StageIdx});
+        [PMU, FinalCondosFilter{StageIdx}] = DPfilterStep(PMU,ProcessXML.Configuration.Processing.Stages{StageIdx}.Filter, InitialCondosFilter{StageIdx});
     end
     
     if isfield(ProcessXML.Configuration.Processing.Stages{StageIdx},'Multirate')
-        PMU= DPMultiRate(PMU,ProcessXML.Configuration.Processing.Stages{StageIdx}.Multirate);
+        [PMU, FinalCondosMultiRate{StageIdx}] = DPMultiRate(PMU,ProcessXML.Configuration.Processing.Stages{StageIdx}.Multirate, InitialCondosMultiRate{StageIdx});
     end
 end
 %data processor carries out angle wraping operation at last

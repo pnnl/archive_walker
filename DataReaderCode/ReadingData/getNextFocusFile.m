@@ -52,6 +52,9 @@ else
     end
 end
 
+DataInfo.LastFocusFileTime = DataInfo.FocusFileTime;
+DataInfo.FocusFileTime = focusFileTime;
+
 % check focus file time
 if(~strcmp(DataInfo.mode, 'RealTime'))
     % in archive mode or hybrid mode

@@ -45,27 +45,34 @@
 % clc;
 clear;
 
+% Clear all functions that use persistent variables
+clear WindRampDetector RingdownDetector OutOfRangeGeneralDetector...
+    OutOfRangeFrequencyDetector SpectralCoherenceDetector PeriodogramDetector
+
 debugMode = 1;
 
 %XML file
 
-% XMLFile = '1_DataConfig_JSIS_FO.XML';
+XMLFile = '1_DataConfig_JSIS_FO.XML';
 % XMLFile = '1_DataConfig_JSIS_RingCSV.XML';
-XMLFile = '1_DataConfig_Wind.XML';
+% XMLFile = '1_DataConfig_Wind_LongTrend.XML';
+% XMLFile = '1_DataConfig_Wind.XML';
 % Parse XML file to MATLAB structure
 DataXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-% XMLFile='2_ProcessConfig_JSIS_FO.xml';
+XMLFile='2_ProcessConfig_JSIS_FO.xml';
 % XMLFile='2_ProcessConfig_JSIS_RingCSV.xml';
-XMLFile='2_ProcessConfig_Wind.xml';
+% XMLFile='2_ProcessConfig_Wind_LongTrend.xml';
+% XMLFile='2_ProcessConfig_Wind.xml';
 % Parse XML file to MATLAB structure
 ProcessXML = fun_xmlread_comments(XMLFile);
 
 %XML file
-% XMLFile='3_DetectorConfig_JSIS_FO.xml';
+XMLFile='3_DetectorConfig_JSIS_FO.xml';
 % XMLFile='3_DetectorConfig_JSIS_RingCSV.xml';
-XMLFile='3_DetectorConfig_Wind.xml';
+% XMLFile='3_DetectorConfig_Wind_LongTrend.xml';
+% XMLFile='3_DetectorConfig_Wind.xml';
 % Parse XML file to MATLAB structure
 DetectorXML = fun_xmlread_comments(XMLFile);
 
@@ -155,6 +162,9 @@ FileMnemonic = DataXML.Configuration.ReaderProperties.Mnemonic;
 
 % FileDate = datestr(DateTimeStart(1:19),'_yyyymmdd_HHMMSS');
 % FileName = [FilePath FileDate '.pdat'];
+
+
+PathEventXML = DetectorXML.Configuration.EventPath;
 
 %% identify the maximum number of flags that will be needed
 
@@ -265,12 +275,13 @@ end
 %% flag for processed files
 DataInfo.tPMU = 0;  % time of the last measurement in the last processed file
 DataInfo.lastFocusFile = ''; % last focus file
+DataInfo.LastFocusFileTime = [];    % Stores the datenum associated with the last focus file
+DataInfo.FocusFileTime = [];    % Stores the datenum of the current focus file
 PMUall = {}; % used to hold PMUs for concatenation
 PMURem = [];
 FlagBitInput = 1; %Bit used to indicate flagged input data to be processed
 FlagBitInterpo = 2; %Bit used to indicate data is interpolated
 NumFlagsProcessor = 2; % Number of bits used to indicate processed data that has been flagged for different cases
-AdditionalOutput = [];
 
 %% 
 
@@ -326,18 +337,45 @@ if isfield(DetectorXML.Configuration.Alarming,'SpectralCoherence')
 else
     AlarmingParams.SpectralCoherence = ExtractAlarmingParamsSC(struct());
 end
+if isfield(DetectorXML.Configuration.Alarming,'Ringdown')
+    AlarmingParams.Ringdown = ExtractAlarmingParamsRingdown(DetectorXML.Configuration.Alarming.Ringdown);
+else
+    AlarmingParams.Ringdown = ExtractAlarmingParamsRingdown(struct());
+end
 
 
 %% processing files
 
-InitialCondos = [];
+InitialCondosFilter = [];
+InitialCondosMultiRate = [];
 FinalAngles = [];
+AdditionalOutput = [];
+AdditionalOutputCondos = [];
 
 EventList = struct();
 
+PMUStruct = []; % used to store constant fields for PMU data structure after reading the 1st file
+signalCounts = []; % used to store the number of signals in each PMU;
 while(~done)
     [focusFile,done,outDataInfo,SkippedFiles] = getNextFocusFile(DataInfo,flog,debugMode);
     DataInfo = outDataInfo;
+    
+    % If the last focus file time is available
+    %   AND
+    % If the day of the last focus file is different than the day of the
+    % current focus file
+    %   THEN
+    % Update the event list and store events that are over
+    if (~isempty(DataInfo.LastFocusFileTime)) && ~strcmp(datestr(DataInfo.FocusFileTime,'yyyymmdd'),datestr(DataInfo.LastFocusFileTime,'yyyymmdd'))
+        EventList = StoreEventList(EventList,PMU,DetectorXML,AdditionalOutput);
+    end
+    WriteEventListXML(EventList,[PathEventXML '\EventList_Current.XML'],0);
+    WriteEventListXML(EventList,[PathEventXML '\EventList_Current_Bkup.XML'],0);
+    
+%     if (~isempty(DataInfo.LastFocusFileTime))
+%         EventList = StoreEventList(EventList,PMU,DetectorXML,AdditionalOutput);
+%     end
+    
     if(~done)
         % focusFile is available
         if(debugMode)
@@ -382,7 +420,12 @@ while(~done)
                     DataInfo.tPMU = 0;
                     if(strcmpi(DataInfo.FileType, 'pdat'))
                         % pdat format
-                        [PMU,tPMU,Num_Flags] = createPdatStruct(focusFile,DataXML);
+                        [PMU,tPMU,Num_Flags,outStruct,outSignalCounts] = createPdatStruct(focusFile,DataXML,PMUStruct,signalCounts);
+                        if(isempty(PMUStruct))
+                            % initialize PMU structure fixed fields after reading the 1st file
+                            PMUStruct = outStruct;
+                            signalCounts = outSignalCounts;
+                        end
                     elseif(strcmpi(DataInfo.FileType, 'csv'))
                         % JSIS_CSV format
                         [PMU,tPMU,Num_Flags] = JSIS_CSV_2_Mat(focusFile,DataXML);
@@ -394,15 +437,32 @@ while(~done)
                 PMU = DQandCustomization(PMU,DataXML,NumDQandCustomStages,Num_Flags, DataInfo.FileType);
                 %            Return only the desired PMUs and signals
                 PMU = GetOutputSignals(PMU,DataXML);
-
-
-
-
+                
+                
+                
+                if isempty(AdditionalOutput)
+                    if exist(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-1)) 'Initialization_' focusFile(strfind(focusFile,FileMnemonic)+length(FileMnemonic)+(0:15)) '.mat'],'file') == 2
+                        load(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-1)) 'Initialization_' focusFile(strfind(focusFile,FileMnemonic)+length(FileMnemonic)+(0:15))])
+                        AdditionalOutput = AdditionalOutputCondos;
+                    end
+                end
+                
+                if ~exist(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-2))],'dir')
+                    mkdir(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-2))]);
+                end
+                save(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-1)) 'Initialization_' focusFile(strfind(focusFile,FileMnemonic)+length(FileMnemonic)+(0:15))],...
+                    'AdditionalOutputCondos','InitialCondosFilter','InitialCondosMultiRate','FinalAngles','DataXML','ProcessXML','DetectorXML');
+                
+                
+                
+                
+                
+                
                 % **********
                 % Processing
                 % **********
-
-                [PMU, InitialCondos, FinalAngles] = DataProcessor(PMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor,InitialCondos,FinalAngles);
+                
+                [PMU, InitialCondosFilter, InitialCondosMultiRate, FinalAngles] = DataProcessor(PMU, ProcessXML, NumProcessingStages, FlagBitInterpo,FlagBitInput,NumFlagsProcessor,InitialCondosFilter,InitialCondosMultiRate,FinalAngles);
                 % Return only the desired PMUs and signals
                 PMU = GetOutputSignals(PMU, ProcessXML);
 
@@ -423,7 +483,7 @@ while(~done)
                 % file
                 [DetectionResults, AdditionalOutput] = RunDetection(PMU,DetectorXML,EventDetectors,AdditionalOutput);
                 EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,EventDetectors,EventList);
-
+                
                 % Retrieve the segment of data that will be examined for forced
                 % oscillations. A window of length SecondsToConcat slides
                 % across this segment, advancing ResultUpdateInterval seconds
@@ -439,7 +499,24 @@ while(~done)
                     [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,FOdetectors,AdditionalOutput);
                     EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,FOdetectors,EventList);
                 end
-
+                
+                
+                
+                %% Clean AdditionalOutput to contain only initialization info
+                AdditionalOutputCondos = AdditionalOutput;
+                %
+                if isfield(AdditionalOutputCondos,'Ringdown')
+                    FN = fieldnames(AdditionalOutputCondos.Ringdown);
+                    AdditionalOutputCondos.Ringdown = rmfield(AdditionalOutputCondos.Ringdown,FN(~(strcmp(FN,'FilterConditions') | strcmp(FN,'NextThreshold'))));
+                end
+                %
+                if isfield(AdditionalOutputCondos,'Periodogram')
+                    AdditionalOutputCondos = rmfield(AdditionalOutputCondos,'Periodogram');
+                end
+                %
+                if isfield(AdditionalOutputCondos,'SpectralCoherence')
+                    AdditionalOutputCondos = rmfield(AdditionalOutputCondos,'SpectralCoherence');
+                end
 
                 %% update some information
                 if(debugMode)

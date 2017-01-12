@@ -1,3 +1,88 @@
+% function EventList = UpdateForcedOscillationEvents(DetectionResults, AdditionalOutput, EventList, Params, AlarmParams)
+%
+% This function updates a list of forced oscillation events based on new detection
+% results. For example, if an oscillation is detected in two adjacent sets of
+% data, this function judges whether they are the same oscillation and
+% lists them as such.
+%
+% Inputs:
+%   DetectionResults = Detection results from the forced oscillation 
+%                      detectors. See PeriodogramDetector.m and
+%                      SpectralCoherenceDetector.m for specifications.
+%   AdditionalOutput = additional output from the forced oscillation 
+%                      detectors. See PeriodogramDetector.m and
+%                      SpectralCoherenceDetector.m for specifications. The
+%                      sampling rate, start time of the analysis window,
+%                      and end time of the analysis window are used in this
+%                      function.
+%   EventList = A structure array containing the current list of events.
+%               Each entry in the array contains a separate event. Each
+%               field is a vector (with the exception of Channel, which is
+%               a cell array) with length equal to the number of
+%               occurrences of the forced oscillation. These fields are: 
+%                   ID = a unique numeric identifier for each occurrence
+%                   Frequency = the mean of the frequency estimates
+%                               obtained during detection for each
+%                               occurrence.
+%                   Start = the datenum value corresponding to the earliest
+%                           sample where the forced oscillation was
+%                           detected for each occurrence
+%                   End = the datenum value corresponding to the latest
+%                         sample where the forced oscillation was
+%                         detected for each occurrence
+%                   Persistence = the number of seconds that the forced
+%                                 oscillation has persisted during each
+%                                 occurrence.
+%                   Channel = a cell array of strings specifying the
+%                             channels where the forced oscillation was
+%                             detected for each occurrence.
+%                   Amplitude = the largest estimated amplitude of the
+%                               oscillation for each occurrence.
+%                   SNR = the largest estimated SNR of the oscillation for
+%                         each occurrence.
+%                   Coherence = the largest coherence calculated during
+%                               detection for each occurrence.
+%   Params = parameters specified in the detection XML. In this function,
+%            the frequency tolerance used to distinguish between forced
+%            oscillations in each detector is needed.
+%   AlarmParams = structure array of parameters specified in the detector
+%                 XML to govern when an alarm is set for a forced
+%                 oscillation. The fields that are common for the
+%                 periodogram and spectral coherence methods are:
+%                       TimeMin = minimum time in seconds that an
+%                                 oscillation must persist for an alarm to
+%                                 be set, unless it exceeds
+%                                 SNRalarm (CoherenceAlarm).
+%                       TimeCorner = Along with SNRcorner
+%                                    (CoherenceCorner), specifies a point
+%                                    on the alarm curve to adjust the shape
+%                                    of the curve.
+%                 The fields are different for the periodogram and spectral
+%                 coherence methods are:
+%                   Periodogram:
+%                       SNRalarm = SNR at which an alarm will be set,
+%                                  regardless of duration
+%                       SNRmin = minimum SNR required for an alarm to be
+%                                set, regardless of duration
+%                       SNRcorner = Along with TimeCorner, specifies a
+%                                   point on the alarm curve to adjust the
+%                                   shape of the curve
+%                   Spectral Coherence:
+%                       CoherenceAlarm = Coherence at which an alarm will 
+%                                        be set, regardless of duration
+%                       CoherenceMin = minimum Coherence required for an
+%                                      alarm to be set, regardless of
+%                                      duration 
+%                       CoherenceCorner = Along with TimeCorner, specifies
+%                                   a point on the alarm curve to adjust
+%                                   the shape of the curve
+%   
+% Outputs:
+%   EventList = updated event list. See EventList in the list of Inputs
+%               for specifications.
+%
+% Created by Jim Follum (james.follum@pnnl.gov) in November, 2016.
+
 function EventList = UpdateForcedOscillationEvents(DetectionResults, AdditionalOutput, EventList, Params, AlarmParams)
 
 
@@ -48,11 +133,12 @@ for DetIdx = 1:length(DetectionResults)
                 % Not close to any recorded frequencies - a new event
                 EventIdx = length(EventList) + 1;
                 UpdatedEventList = [UpdatedEventList EventIdx];
+                EventList(EventIdx).ID = AssignEventID();
                 EventList(EventIdx).Frequency = DetectionResults(DetIdx).Frequency(FreqIdx);
                 EventList(EventIdx).Start = datenum(AdditionalOutput(1).Start);
                 EventList(EventIdx).End = datenum(AdditionalOutput(1).End);
                 EventList(EventIdx).Persistence = 0;
-                EventList(EventIdx).Channel = DetectionResults(DetIdx).Channel;
+                EventList(EventIdx).OccurrenceID = {AssignEventID()};
                 if length(DetectionResults(DetIdx).Channel) == 1
                     EventList(EventIdx).Channel = {DetectionResults(DetIdx).Channel};
                 else
@@ -146,6 +232,7 @@ for DetIdx = 1:length(DetectionResults)
                     EventList(EventIdx).Start = [EventList(EventIdx).Start, datenum(AdditionalOutput(1).Start)];
                     EventList(EventIdx).End = [EventList(EventIdx).End, datenum(AdditionalOutput(1).End)];
                     EventList(EventIdx).Persistence = [EventList(EventIdx).Persistence, 0];
+                    EventList(EventIdx).OccurrenceID = [EventList(EventIdx).OccurrenceID, AssignEventID()];
                     if length(DetectionResults(DetIdx).Channel) == 1
                         EventList(EventIdx).Channel = [EventList(EventIdx).Channel, {DetectionResults(DetIdx).Channel}];
                     else
@@ -168,10 +255,12 @@ for DetIdx = 1:length(DetectionResults)
         else
             % No FOs have yet been detected - begin the list with this one
             UpdatedEventList = [UpdatedEventList 1];
+            EventList(1).ID = AssignEventID();
             EventList(1).Frequency = DetectionResults(DetIdx).Frequency(FreqIdx);
             EventList(1).Start = datenum(AdditionalOutput(1).Start);
             EventList(1).End = datenum(AdditionalOutput(1).End);
             EventList(1).Persistence = 0;
+            EventList(1).OccurrenceID = {AssignEventID()};
             if length(DetectionResults(DetIdx).Channel) == 1
                 EventList(1).Channel = {DetectionResults(DetIdx).Channel};
             else
@@ -196,6 +285,22 @@ end
 for EventIdx = 1:length(FrequenciesToAdd)
     if ~isempty(FrequenciesToAdd{EventIdx})
         EventList(EventIdx).Frequency(end) = mean([EventList(EventIdx).Frequency(end) mean(FrequenciesToAdd{EventIdx})]);
+    end
+end
+
+% Update the OverallStart and OverallEnd fields of the EventList, which
+% track the earliest and latest the FO was detected across all occurrences
+for EventIdx = 1:length(EventList)
+    if isfield(EventList(EventIdx),'OverallStart')
+        EventList(EventIdx).OverallStart = min([EventList(EventIdx).OverallStart min(EventList(EventIdx).Start)]);
+    else
+        EventList(EventIdx).OverallStart = min(EventList(EventIdx).Start);
+    end
+    
+    if isfield(EventList(EventIdx),'OverallEnd')
+        EventList(EventIdx).OverallEnd = max([EventList(EventIdx).OverallEnd max(EventList(EventIdx).End)]);
+    else
+        EventList(EventIdx).OverallEnd = max(EventList(EventIdx).End);
     end
 end
 

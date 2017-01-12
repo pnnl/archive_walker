@@ -71,7 +71,10 @@ end
 % This function pulls the parameters out of the structure containing the
 % XML information. It turns strings into numbers as necessary and sets
 % default values for parameters that were not specified.
-ExtractedParameters = ExtractFOdetectionParamsPer(Parameters,fs);
+persistent ExtractedParameters
+if isempty(ExtractedParameters)
+    ExtractedParameters = ExtractFOdetectionParamsPer(Parameters,fs);
+end
 
 % Store the parameters in variables for easier access
 Mode = ExtractedParameters.Mode;
@@ -109,10 +112,7 @@ LengthFreqInterest = length(FreqInterest); %Number of frequency bins of interest
 
 %% Initialization
 
-% Initialize structure to output detection results
-DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Amplitude',[],'SNR',[]);
-% Initialize structure for additional outputs
-AdditionalOutput = struct('SignalPSD',[], 'AmbientNoiseSpectrum', [], 'TestStatistic', [],'Threshold',[],'Frequency',[],'Mode',[],'fs',fs,'Start',TimeString{end-size(SelectedData,1)+1},'End',TimeString{end});
+% Initialize structures to output detection results and additional outputs
 
 %all appropriate fields are assigned NaN value so that NaN value is returned if none of the signal is selected for signal analysis
 if strcmp(Mode,'MultiChannel')
@@ -126,9 +126,14 @@ if strcmp(Mode,'MultiChannel')
     AdditionalOutput.TestStatistic = NaN*ones(LengthFreqInterest,1);
     AdditionalOutput.Threshold = NaN*ones(LengthFreqInterest,1);
     AdditionalOutput.Frequency = FreqInterest;
-    AdditionalOutput.Mode = Mode;    
-    
+    AdditionalOutput.Mode = Mode;   
+    AdditionalOutput.fs = fs;
+    AdditionalOutput.Start = TimeString{end-size(SelectedData,1)+1};
+    AdditionalOutput.End = TimeString{end};
 else
+    DetectionResults = struct('PMU',[],'Channel',[],'Frequency',[],'Amplitude',[],'SNR',[]);
+    AdditionalOutput = struct('SignalPSD',[], 'AmbientNoiseSpectrum', [], 'TestStatistic', [],'Threshold',[],'Frequency',[],'Mode',[],'fs',fs,'Start',TimeString{end-size(SelectedData,1)+1},'End',TimeString{end});
+
     for ChannelIdx = 1:length(DataChannel)
         DetectionResults(ChannelIdx).PMU = DataPMU(ChannelIdx);
         DetectionResults(ChannelIdx).Channel = DataChannel(ChannelIdx);
@@ -141,6 +146,9 @@ else
         AdditionalOutput(ChannelIdx).Threshold = NaN*ones(LengthFreqInterest,1);
         AdditionalOutput(ChannelIdx).Frequency = FreqInterest;
         AdditionalOutput(ChannelIdx).Mode = Mode;   
+        AdditionalOutput(ChannelIdx).fs = fs;
+        AdditionalOutput(ChannelIdx).Start = TimeString{end-size(SelectedData,1)+1};
+        AdditionalOutput(ChannelIdx).End = TimeString{end};
     end
 end
 

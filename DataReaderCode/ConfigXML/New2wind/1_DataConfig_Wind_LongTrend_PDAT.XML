@@ -7,9 +7,9 @@
         <!--
         <FileDirectory> D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\OriginalData</FileDirectory>
         -->
-        <FileDirectory>C:\Users\foll154\Documents\BPAoscillationApp\WindRampInit\WindRamp_2013_JSIScsv</FileDirectory>
-        <FileType>csv</FileType>
-        <Mnemonic>WindOscillation_BPAm</Mnemonic>
+        <FileDirectory>E:\Alberta tie in-out\Munro</FileDirectory>
+        <FileType>pdat</FileType>
+        <Mnemonic>WISPMunro</Mnemonic>
         <!--
         <Mode>
             <Name>RealTime</Name>
@@ -36,8 +36,8 @@
         <Mode>
             <Name>Archive</Name>
             <Params>
-                <DateTimeStart>2013-05-29 18:59:00 GMT</DateTimeStart>
-                <DateTimeEnd>2013-05-29 19:28:00 GMT</DateTimeEnd>
+                <DateTimeStart>2016-08-21 00:00:00 GMT</DateTimeStart>
+                <DateTimeEnd>2016-08-24 23:59:00 GMT</DateTimeEnd>
             </Params>
         </Mode>
 	</ReaderProperties>
@@ -71,25 +71,10 @@
     </Stages>
     <SignalSelection>
         <PMU>
-            <Name>WindOscillation</Name>
+            <Name>RKCR 230 B1 SA  </Name>
             <Channels>
             	<Channel>
-                	<Name>ROCKCK230TX1MW</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK230TX1MVAR</Name>
-            	</Channel>
-            	<Channel>
-                	<Name>ROCKCK230V</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK500TX1MW</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK500TX1MVAR</Name>
-            	</Channel>
-                <Channel>
-                	<Name>ROCKCK500V</Name>
+                	<Name>RKCR 230 B1 SA  .A230BANK1____1MW</Name>
             	</Channel>
             </Channels>
         </PMU>

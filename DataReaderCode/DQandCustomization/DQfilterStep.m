@@ -163,7 +163,7 @@ for FiltIdx = 1:NumFilts
 end
 %setNaNMatrix{i} has non-zero positive elements for the elements in i^th PMU that is to be
 %set NaN
-for PMUidx = 1:NumPMU
+for PMUidx = 1:length(PMU)
     NaNM = setNaNMatrix{PMUidx};
     NaNid = find(NaNM >0);
     PMU(PMUidx).Data(NaNid) = NaN;

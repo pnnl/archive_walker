@@ -103,7 +103,8 @@ function outIdx = checkFailureAngle(checkData,thresholdDeg)
 diffData = abs(diff(checkData));
 
 % set threshold degree
-k = find(diffData > thresholdDeg);
+% Do not check final point to avoid an error in diffData(idx+1) below
+k = find(diffData(1:end-1) > thresholdDeg);
 
 % find data points that are discontinued with neighbor data points
 check = zeros(length(k),2);

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- **************** -->
+<!-- Wind Ramp Events -->
+<!-- **************** -->
+<WindRamp>
+	<ID>737161.49306292820</ID>
+	<PMU>WindOscillation</PMU>
+	<Channel>ROCKCK230TX1MW</Channel>
+	<TrendStart>05/29/13 18:59:35.831</TrendStart>
+	<TrendEnd>05/29/13 19:00:25.364</TrendEnd>
+	<TrendValue>207.8789</TrendValue>
+</WindRamp>
+<!-- -->
+<WindRamp>
+	<ID>737162.49306292820</ID>
+	<PMU>WindOscillation</PMU>
+	<Channel>ROCKCK500TX1MW</Channel>
+	<TrendStart>05/29/13 18:59:35.864</TrendStart>
+	<TrendEnd>05/29/13 19:00:25.364</TrendEnd>
+	<TrendValue>-207.8134</TrendValue>
+</WindRamp>
+<!-- -->
+<WindRamp>
+	<ID>737163.49317172449</ID>
+	<PMU>WindOscillation</PMU>
+	<Channel>ROCKCK230TX1MW</Channel>
+	<TrendStart>05/29/13 19:26:20.814</TrendStart>
+	<TrendEnd>05/29/13 19:27:31.698</TrendEnd>
+	<TrendValue>-335.9707</TrendValue>
+</WindRamp>
+<!-- -->
+<WindRamp>
+	<ID>737164.49317172449</ID>
+	<PMU>WindOscillation</PMU>
+	<Channel>ROCKCK500TX1MW</Channel>
+	<TrendStart>05/29/13 19:26:20.814</TrendStart>
+	<TrendEnd>05/29/13 19:27:31.681</TrendEnd>
+	<TrendValue>335.6106</TrendValue>
+</WindRamp>
+<!-- -->

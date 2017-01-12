@@ -1,3 +1,34 @@
+% function EventList = UpdateWindRampEvents(DetectionResults, ~, EventList, ~, ~)
+%
+% This function updates a list of wind ramp events based on new detection
+% results. For example, if a wind ramp is detected in two adjacent sets of
+% data, this function judges whether they constitute a single event and
+% lists them as such. Channels are considered separately, so overlap of
+% events on different channels is ignored.
+%
+% Inputs:
+%   DetectionResults = Detection results from the wind ramp detector. See
+%                      WindRampDetector.m for specifications.
+%   AdditionalOutput - Unused -> allows multiple functions to be called from UpdateEvents.m
+%   EventList = A structure array containing the current list of events.
+%               Each entry in the array contains a separate event. Fields are:
+%                   PMU = a string specifying the PMU associated with the channel
+%                   Channel = a string specifying the channel name
+%                   TrendStart = the datenum value corresponding to the
+%                                trend's start
+%                   TrendEnd = the datenum value corresponding to the
+%                              trend's end
+%                   TrendValue = the trend's value (change during the
+%                                trend)
+%   Params - Unused -> allows multiple functions to be called from UpdateEvents.m
+%   AlarmParams - Unused -> allows multiple functions to be called from UpdateEvents.m
+%   
+% Outputs:
+%   EventList = updated event list. See EventList in the list of Inputs
+%               for specifications.
+%
+% Created by Jim Follum (james.follum@pnnl.gov) in November, 2016.
+
 function EventList = UpdateWindRampEvents(DetectionResults, ~, EventList, ~, ~)
 
 for chan = 1:length(DetectionResults)
@@ -30,7 +61,8 @@ for chan = 1:length(DetectionResults)
                     EventIdx = MatchIdx(datenum(DetectionResults(chan).TrendStart{idx}) < datenum(EventEnds));
                     if isempty(EventIdx)
                         % This is a new event
-                        EventList(end+1).PMU = DetectionResults(chan).PMU;
+                        EventList(end+1).ID = AssignEventID();
+                        EventList(end).PMU = DetectionResults(chan).PMU;
                         EventList(end).Channel = DetectionResults(chan).Channel;
                         EventList(end).TrendStart = DetectionResults(chan).TrendStart{idx};
                         EventList(end).TrendEnd = DetectionResults(chan).TrendEnd{idx};
@@ -49,7 +81,8 @@ for chan = 1:length(DetectionResults)
                 else
                     % There isn't an event for this channel yet, so add the
                     % one from these detection results
-                    EventList(end+1).PMU = DetectionResults(chan).PMU;
+                    EventList(end+1).ID = AssignEventID();
+                    EventList(end).PMU = DetectionResults(chan).PMU;
                     EventList(end).Channel = DetectionResults(chan).Channel;
                     EventList(end).TrendStart = DetectionResults(chan).TrendStart{idx};
                     EventList(end).TrendEnd = DetectionResults(chan).TrendEnd{idx};
@@ -59,6 +92,7 @@ for chan = 1:length(DetectionResults)
             else
                 % Events have not yet been detected, so the detection results
                 % are definitely new events
+                EventList(1).ID = AssignEventID();
                 EventList(1).PMU = DetectionResults(chan).PMU;
                 EventList(1).Channel = DetectionResults(chan).Channel;
                 EventList(1).TrendStart = DetectionResults(chan).TrendStart{idx};

@@ -43,10 +43,12 @@ if FlagContinue ==1
     return;
 end
 
+% Sampling rate
+fs = round(1/mean((diff(PMURem(1).Signal_Time.Signal_datenum)*24*60*60)));
 % n is the number of times an analysis window of length SecondsToConcat
 % can slide ResultUpdateInterval seconds within the
 % concatenated data.
-n = floor((size(PMURem(1).Data,1)-SecondsToConcat*60)/(ResultUpdateInterval*60));
+n = floor((size(PMURem(1).Data,1)-SecondsToConcat*fs)/(ResultUpdateInterval*fs));
 % PMUsegmentAll is the collection of all data that will be
 % analyzed as the analysis window slides as many times as it
 % can

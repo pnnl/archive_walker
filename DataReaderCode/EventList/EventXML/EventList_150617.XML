@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- *************** -->
+<!-- Ringdown Events -->
+<!-- *************** -->
+<Ringdown>
+	<ID>737157.49204107642</ID>
+	<Start>06/17/15 09:13:54.325</Start>
+	<End>06/17/15 09:14:23.300</End>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>BIGED500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>CHJ500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>CJK500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>CUSTER500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>GARRISON500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>JDA500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>MALIN500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>MONROE500.VPA</Name>
+	</Channel>
+</Ringdown>
+<!-- -->
+<Ringdown>
+	<ID>737158.49204107642</ID>
+	<Start>06/17/15 09:23:54.841</Start>
+	<End>06/17/15 09:24:22.600</End>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>BIGED500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>CHJ500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>CJK500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>CUSTER500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>GARRISON500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>JDA500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>MALIN500.VPA</Name>
+	</Channel>
+	<Channel>
+		<PMU>ModeMeterSignals</PMU>
+		<Name>MONROE500.VPA</Name>
+	</Channel>
+</Ringdown>
+<!-- -->

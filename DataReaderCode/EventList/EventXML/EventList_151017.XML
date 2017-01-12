@@ -1,0 +1,3222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ************************* -->
+<!-- Forced Oscillation Events -->
+<!-- ************************* -->
+<ForcedOscillation>
+	<ID>738710.67237749998</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738711.67237752315</OccurrenceID>
+		<Frequency>1.0588</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:39:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.29544</Coherence>
+		</Channel>
+	</Occurrence>
+	<Occurrence>
+		<OccurrenceID>738756.67256038194</OccurrenceID>
+		<Frequency>1.0237</Frequency>
+		<Start>10/17/15 12:40:20.000</Start>
+		<End>10/17/15 12:41:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.4331</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738712.67237759253</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738713.67237761570</OccurrenceID>
+		<Frequency>2.4936</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:39:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.39017</Coherence>
+		</Channel>
+		<Channel>
+			<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.66472</Coherence>
+		</Channel>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.29135</Coherence>
+		</Channel>
+	</Occurrence>
+	<Occurrence>
+		<OccurrenceID>738758.67256114585</OccurrenceID>
+		<Frequency>2.4925</Frequency>
+		<Start>10/17/15 12:40:20.000</Start>
+		<End>10/17/15 12:41:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.31574</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738732.67237906251</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738733.67237909720</OccurrenceID>
+		<Frequency>1.7163</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:39:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.30183</Coherence>
+		</Channel>
+	</Occurrence>
+	<Occurrence>
+		<OccurrenceID>738757.67256084492</OccurrenceID>
+		<Frequency>1.7206</Frequency>
+		<Start>10/17/15 12:40:20.000</Start>
+		<End>10/17/15 12:41:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.30341</Coherence>
+		</Channel>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.25767</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738718.67237799766</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738719.67237803235</OccurrenceID>
+		<Frequency>3.1387</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:39:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.3097</Coherence>
+		</Channel>
+	</Occurrence>
+	<Occurrence>
+		<OccurrenceID>738777.67266494210</OccurrenceID>
+		<Frequency>3.1587</Frequency>
+		<Start>10/17/15 12:41:20.000</Start>
+		<End>10/17/15 12:42:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.41714</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738726.67237865739</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738727.67237868055</OccurrenceID>
+		<Frequency>1.6487</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:39:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.29122</Coherence>
+		</Channel>
+	</Occurrence>
+	<Occurrence>
+		<OccurrenceID>738768.67266362265</OccurrenceID>
+		<Frequency>1.6425</Frequency>
+		<Start>10/17/15 12:41:20.000</Start>
+		<End>10/17/15 12:42:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.31826</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738734.67237909720</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:42:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738735.67237912037</OccurrenceID>
+		<Frequency>1.9263</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:39:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.28556</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738738.67246854166</ID>
+	<OverallStart>10/17/15 12:39:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:42:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738739.67246858799</OccurrenceID>
+		<Frequency>2.3537</Frequency>
+		<Start>10/17/15 12:39:20.000</Start>
+		<End>10/17/15 12:40:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.29375</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738748.67246996530</ID>
+	<OverallStart>10/17/15 12:39:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:42:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738749.67246998847</OccurrenceID>
+		<Frequency>2.8613</Frequency>
+		<Start>10/17/15 12:39:20.000</Start>
+		<End>10/17/15 12:40:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.28154</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738746.67246961803</ID>
+	<OverallStart>10/17/15 12:39:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:43:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738747.67246964120</OccurrenceID>
+		<Frequency>4.0987</Frequency>
+		<Start>10/17/15 12:39:20.000</Start>
+		<End>10/17/15 12:40:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.31951</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738694.67237567133</ID>
+	<OverallStart>10/17/15 12:30:00.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738695.67237570602</OccurrenceID>
+		<Frequency>1.4288</Frequency>
+		<Start>10/17/15 12:30:00.000</Start>
+		<End>10/17/15 12:42:59.983</End>
+		<Persistence>180</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>2.2138e-05</Amplitude>
+			<SNR>-41.019</SNR>
+			<Coherence>0.42707</Coherence>
+		</Channel>
+		<Channel>
+			<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.47492</Coherence>
+		</Channel>
+		<Channel>
+			<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.41193</Coherence>
+		</Channel>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.33558</Coherence>
+		</Channel>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.34548</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738720.67237803235</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738721.67237805552</OccurrenceID>
+		<Frequency>3.3</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:39:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.286</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738730.67237902782</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738731.67237905087</OccurrenceID>
+		<Frequency>1.535</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:41:59.983</End>
+		<Persistence>120</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.25491</Coherence>
+		</Channel>
+		<Channel>
+			<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.28974</Coherence>
+		</Channel>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.25417</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738759.67256130790</ID>
+	<OverallStart>10/17/15 12:40:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738760.67256133107</OccurrenceID>
+		<Frequency>3.6888</Frequency>
+		<Start>10/17/15 12:40:20.000</Start>
+		<End>10/17/15 12:41:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.30758</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738773.67266439809</ID>
+	<OverallStart>10/17/15 12:41:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738774.67266442126</OccurrenceID>
+		<Frequency>2.0263</Frequency>
+		<Start>10/17/15 12:41:20.000</Start>
+		<End>10/17/15 12:42:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.35913</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738775.67266471067</ID>
+	<OverallStart>10/17/15 12:41:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:44:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738776.67266473384</OccurrenceID>
+		<Frequency>1.82</Frequency>
+		<Start>10/17/15 12:41:20.000</Start>
+		<End>10/17/15 12:42:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.35444</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738716.67237797449</ID>
+	<OverallStart>10/17/15 12:38:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738717.67237799766</OccurrenceID>
+		<Frequency>2.8925</Frequency>
+		<Start>10/17/15 12:38:20.000</Start>
+		<End>10/17/15 12:40:59.983</End>
+		<Persistence>60</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.31515</Coherence>
+		</Channel>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.35492</Coherence>
+		</Channel>
+		<Channel>
+			<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.40418</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738742.67246887728</ID>
+	<OverallStart>10/17/15 12:39:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738743.67246890045</OccurrenceID>
+		<Frequency>1.8886</Frequency>
+		<Start>10/17/15 12:39:20.000</Start>
+		<End>10/17/15 12:41:59.983</End>
+		<Persistence>60</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.41479</Coherence>
+		</Channel>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.31269</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738750.67247004632</ID>
+	<OverallStart>10/17/15 12:39:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738751.67247006949</OccurrenceID>
+		<Frequency>4.2637</Frequency>
+		<Start>10/17/15 12:39:20.000</Start>
+		<End>10/17/15 12:40:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.32238</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738754.67247025459</ID>
+	<OverallStart>10/17/15 12:39:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738755.67247027776</OccurrenceID>
+		<Frequency>5.7613</Frequency>
+		<Start>10/17/15 12:39:20.000</Start>
+		<End>10/17/15 12:40:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.33117</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738761.67256182875</ID>
+	<OverallStart>10/17/15 12:40:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738762.67256185180</OccurrenceID>
+		<Frequency>5.6188</Frequency>
+		<Start>10/17/15 12:40:20.000</Start>
+		<End>10/17/15 12:41:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.23898</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738766.67266340274</ID>
+	<OverallStart>10/17/15 12:41:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738767.67266342591</OccurrenceID>
+		<Frequency>2.9822</Frequency>
+		<Start>10/17/15 12:41:20.000</Start>
+		<End>10/17/15 12:43:59.983</End>
+		<Persistence>60</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.418</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738784.67277145828</ID>
+	<OverallStart>10/17/15 12:42:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738785.67277149309</OccurrenceID>
+		<Frequency>4.5538</Frequency>
+		<Start>10/17/15 12:42:20.000</Start>
+		<End>10/17/15 12:43:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.32806</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<ForcedOscillation>
+	<ID>738786.67277166666</ID>
+	<OverallStart>10/17/15 12:42:20.000</OverallStart>
+	<OverallEnd>10/17/15 12:45:59.983</OverallEnd>
+	<Occurrence>
+		<OccurrenceID>738787.67277168983</OccurrenceID>
+		<Frequency>3.5225</Frequency>
+		<Start>10/17/15 12:42:20.000</Start>
+		<End>10/17/15 12:43:59.983</End>
+		<Persistence>0</Persistence>
+		<AlarmFlag>0</AlarmFlag>
+		<Channel>
+			<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.35587</Coherence>
+		</Channel>
+		<Channel>
+			<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+			<Amplitude>NaN</Amplitude>
+			<SNR>NaN</SNR>
+			<Coherence>0.28659</Coherence>
+		</Channel>
+	</Occurrence>
+</ForcedOscillation>
+<!-- -->
+<!-- *************************** -->
+<!-- Out-of-Range General Events -->
+<!-- *************************** -->
+<OutOfRangeGeneral>
+	<ID>738678.67200231482</ID>
+	<Start>10/17/15 12:30:45.500</Start>
+	<End>10/17/15 12:31:19.500</End>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500MARION___1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT4____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .L500ALLSTON__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____2VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A1 SA  </PMU>
+		<Name>PAUL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A2 SA  </PMU>
+		<Name>PAUL 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .L230JUNPCYN1_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .L500WAUTOMA__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SUML 500 A1 SA  </PMU>
+		<Name>SUML 500 A1 SA  .L500GRIZZLY__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500DWORSHAK_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500HOT_SPRG_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+</OutOfRangeGeneral>
+<!-- -->
+<OutOfRangeGeneral>
+	<ID>738680.67211339122</ID>
+	<Start>10/17/15 12:33:39.667</Start>
+	<End>10/17/15 12:34:01.367</End>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500MARION___1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT4____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .L500ALLSTON__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____2VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A1 SA  </PMU>
+		<Name>PAUL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A2 SA  </PMU>
+		<Name>PAUL 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .L230JUNPCYN1_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .L500WAUTOMA__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SUML 500 A1 SA  </PMU>
+		<Name>SUML 500 A1 SA  .L500GRIZZLY__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500DWORSHAK_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500HOT_SPRG_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+</OutOfRangeGeneral>
+<!-- -->
+<OutOfRangeGeneral>
+	<ID>738682.67218991893</ID>
+	<Start>10/17/15 12:35:27.750</Start>
+	<End>10/17/15 12:35:56.633</End>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500MARION___1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT4____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .L500ALLSTON__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____2VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A1 SA  </PMU>
+		<Name>PAUL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A2 SA  </PMU>
+		<Name>PAUL 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .L230JUNPCYN1_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .L500WAUTOMA__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SUML 500 A1 SA  </PMU>
+		<Name>SUML 500 A1 SA  .L500GRIZZLY__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500DWORSHAK_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500HOT_SPRG_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+</OutOfRangeGeneral>
+<!-- -->
+<!-- ***************************** -->
+<!-- Out-of-Range Frequency Events -->
+<!-- ***************************** -->
+<OutOfRangeFrequency>
+	<ID>738679.67200552078</ID>
+	<Start>10/17/15 12:30:45.500</Start>
+	<End>10/17/15 12:31:19.500</End>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500MARION___1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT4____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .L500ALLSTON__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____2VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A1 SA  </PMU>
+		<Name>PAUL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A2 SA  </PMU>
+		<Name>PAUL 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .L230JUNPCYN1_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .L500WAUTOMA__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SUML 500 A1 SA  </PMU>
+		<Name>SUML 500 A1 SA  .L500GRIZZLY__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500DWORSHAK_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500HOT_SPRG_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+</OutOfRangeFrequency>
+<!-- -->
+<OutOfRangeFrequency>
+	<ID>738681.67211615737</ID>
+	<Start>10/17/15 12:33:39.667</Start>
+	<End>10/17/15 12:34:01.367</End>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500MARION___1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT4____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .L500ALLSTON__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____2VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A1 SA  </PMU>
+		<Name>PAUL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A2 SA  </PMU>
+		<Name>PAUL 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .L230JUNPCYN1_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .L500WAUTOMA__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SUML 500 A1 SA  </PMU>
+		<Name>SUML 500 A1 SA  .L500GRIZZLY__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500DWORSHAK_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500HOT_SPRG_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+</OutOfRangeFrequency>
+<!-- -->
+<OutOfRangeFrequency>
+	<ID>738683.67219267366</ID>
+	<Start>10/17/15 12:35:27.750</Start>
+	<End>10/17/15 12:35:56.633</End>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALSN 500 A1 SA  </PMU>
+		<Name>ALSN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500DIXONVLL_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ALVY 500 A1 SA  </PMU>
+		<Name>ALVY 500 A1 SA  .L500MARION___1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ASHE 500 A1 SA  </PMU>
+		<Name>ASHE 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A1 SA  </PMU>
+		<Name>BELL 230 A1 SA  .B230SECT4____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BELL 230 A2 SA  </PMU>
+		<Name>BELL 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A1 SA </PMU>
+		<Name>BGED 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BGED 500  A2 SA </PMU>
+		<Name>BGED 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A1 SA  </PMU>
+		<Name>BIGE 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>BIGE 230 A2 SA  </PMU>
+		<Name>BIGE 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CEFE 500 A1 SA  </PMU>
+		<Name>CEFE 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A1 SA  </PMU>
+		<Name>CHJO 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 230 A2 SA  </PMU>
+		<Name>CHJO 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CHJO 500 A1 SA  </PMU>
+		<Name>CHJO 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CPJK 500  A1 SA </PMU>
+		<Name>CPJK 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>CUST 500  A1 SA </PMU>
+		<Name>CUST 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>ECOL 500 A1 SA  </PMU>
+		<Name>ECOL 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GARR 500  A1 SA </PMU>
+		<Name>GARR 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A1 SA  </PMU>
+		<Name>GCFI 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GCFI 500 A2 SA  </PMU>
+		<Name>GCFI 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A1 SA  </PMU>
+		<Name>GRIZ 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRIZ 500 A2 SA  </PMU>
+		<Name>GRIZ 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A1 SA  </PMU>
+		<Name>GRTW 230 A1 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>GRTW 230 A2 SA  </PMU>
+		<Name>GRTW 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A1 SA </PMU>
+		<Name>JDAY 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDAY 500  A2 SA </PMU>
+		<Name>JDAY 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>JDTW 230  A1 SA </PMU>
+		<Name>JDTW 230  A1 SA .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A1 SA  </PMU>
+		<Name>KEEL 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 230 A2 SA  </PMU>
+		<Name>KEEL 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>KEEL 500 A1 SA  </PMU>
+		<Name>KEEL 500 A1 SA  .L500ALLSTON__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A1 SA </PMU>
+		<Name>LOMO 500  A1 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>LOMO 500  A2 SA </PMU>
+		<Name>LOMO 500  A2 SA .L500LOMON_PH_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A1 SA </PMU>
+		<Name>MALN 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MALN 500  A2 SA </PMU>
+		<Name>MALN 500  A2 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A1 SA  </PMU>
+		<Name>MARN 500 A1 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MARN 500 A2 SA  </PMU>
+		<Name>MARN 500 A2 SA  .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A1 SA  </PMU>
+		<Name>MCNY 230 A1 SA  .B230SECT1____2VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT2____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 230 A2 SA  </PMU>
+		<Name>MCNY 230 A2 SA  .B230SECT3____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MCNY 500  A1 SA </PMU>
+		<Name>MCNY 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>MONE 500  A1 SA </PMU>
+		<Name>MONE 500  A1 SA .B500SOUTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A1 SA  </PMU>
+		<Name>NBON 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>NBON 230 A2 SA  </PMU>
+		<Name>NBON 230 A2 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>OSTD 500  A1 SA </PMU>
+		<Name>OSTD 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A1 SA  </PMU>
+		<Name>PAUL 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PAUL 500 A2 SA  </PMU>
+		<Name>PAUL 500 A2 SA  .B500NORTH____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>PERL 500 A1 SA  </PMU>
+		<Name>PERL 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .L230JUNPCYN1_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 230 A1 SA  </PMU>
+		<Name>RKCR 230 A1 SA  .T230BANK1____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>RKCR 500 A1 SA  </PMU>
+		<Name>RKCR 500 A1 SA  .L500WAUTOMA__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A1 SA </PMU>
+		<Name>SHUL 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SHUL 500  A2 SA </PMU>
+		<Name>SHUL 500  A2 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 230 A1 SA  </PMU>
+		<Name>SLAT 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SLAT 500  A1 SA </PMU>
+		<Name>SLAT 500  A1 SA .B500WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>SUML 500 A1 SA  </PMU>
+		<Name>SUML 500 A1 SA  .L500GRIZZLY__1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500DWORSHAK_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TAFT 500 A1 SA  </PMU>
+		<Name>TAFT 500 A1 SA  .L500HOT_SPRG_1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>TROU 230 A1 SA  </PMU>
+		<Name>TROU 230 A1 SA  .B230WEST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500EAST_____1VP.ANG</Name>
+	</Channel>
+	<Channel>
+		<PMU>WAUT 500 A1 SA  </PMU>
+		<Name>WAUT 500 A1 SA  .B500WEST_____1VP.ANG</Name>
+	</Channel>
+</OutOfRangeFrequency>
+<!-- -->
