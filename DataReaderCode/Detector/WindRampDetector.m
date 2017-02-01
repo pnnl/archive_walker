@@ -57,7 +57,7 @@
 
 function [DetectionResults, AdditionalOutput] = WindRampDetector(PMUstruct,Parameters,PastAdditionalOutput)
 
-MakePlots = true;
+MakePlots = false;
 MakeGIF = false;
 FigNum = 21;
 
@@ -86,10 +86,7 @@ end
 % default values for parameters that were not specified. 
 % Additional inputs, such as the length of the input data or the sampling 
 % rate, can be added as necessary. 
-persistent ExtractedParameters
-if isempty(ExtractedParameters)
-    ExtractedParameters = ExtractParameters(Parameters);
-end
+ExtractedParameters = ExtractParameters(Parameters);
 
 % Store the parameters in variables for easier access
 Fpass = ExtractedParameters.Fpass;  % Passband frequency (Hz)
@@ -249,9 +246,9 @@ end
 
 % Initialize structure to output detection results
 DetectionResults = struct('PMU',[],'Channel',[],'TrendStart',[],'TrendEnd',[],'TrendValue',[]);
-if AdditionalOutput.ProcessedSamples >= AdditionalOutput.gd
+if AdditionalOutput.ProcessedSamples >= AdditionalOutput.gd*fs
     % Keep ProcessedSamples from growing without bound
-    AdditionalOutput.ProcessedSamples = AdditionalOutput.gd;
+    AdditionalOutput.ProcessedSamples = AdditionalOutput.gd*fs;
     for chan = 1:size(Data,2)
         % Store the PMU and channel name
         DetectionResults(chan).PMU = DataPMU{chan};

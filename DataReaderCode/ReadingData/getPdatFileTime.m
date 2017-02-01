@@ -14,7 +14,7 @@ k1 = strfind(inFile,'_');
 k2 = strfind(inFile,'.');
 
 dayStr = inFile(k1(end-1)+1:k1(end)-1);
-timeStr = inFile(k1(end)+1:k2-1);
+timeStr = inFile(k1(end)+1:k2(end)-1);
 
 
 year = str2num(dayStr(1:4));

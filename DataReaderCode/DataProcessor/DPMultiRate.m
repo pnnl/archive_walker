@@ -69,15 +69,6 @@ for MultiRateIdx = 1:NumMultiRate
         error('PMU name must be assigned by user when changing data rate.');
     end
     
-    % Initializing new PMU for storing data after multi-rate operation
-    PMU(NewPMUidx).PMU_Name = PMUName;   % PMU name
-    PMU(NewPMUidx).Time_Zone = PMU(1).Time_Zone;         % time zone; for now this is just the PST time
-    PMU(NewPMUidx).Signal_Name = cell(1,0);
-    PMU(NewPMUidx).Signal_Type = cell(1,0);
-    PMU(NewPMUidx).Signal_Unit = cell(1,0);
-    PMU(NewPMUidx).Stat = [];
-    PMU(NewPMUidx).Data = [];  
-    PMU(NewPMUidx).Flag = false();  
     
     if isfield(ProcessMultiRate{MultiRateIdx},'PMU')
         % Get list of PMUs to apply filter to
@@ -122,6 +113,7 @@ for MultiRateIdx = 1:NumMultiRate
         PMUstructIdx = 1:NumPMU;
     end
     
+    
     t = PMU(PMUstructIdx(1)).Signal_Time.Signal_datenum;
     FsOld = round(1/(mean(diff(t)*24*60*60)));
     
@@ -143,6 +135,16 @@ for MultiRateIdx = 1:NumMultiRate
 %         warning('Parameters for changing data rate not provided');
 %         continue;
     end
+    
+    % Initializing new PMU for storing data after multi-rate operation
+    PMU(NewPMUidx).PMU_Name = PMUName;   % PMU name
+    PMU(NewPMUidx).Time_Zone = PMU(1).Time_Zone;         % time zone; for now this is just the PST time
+    PMU(NewPMUidx).Signal_Name = cell(1,0);
+    PMU(NewPMUidx).Signal_Type = cell(1,0);
+    PMU(NewPMUidx).Signal_Unit = cell(1,0);
+    PMU(NewPMUidx).Stat = [];
+    PMU(NewPMUidx).Data = [];  
+    PMU(NewPMUidx).Flag = false(); 
     
     %Gets timestring and dateNumArray for data after multirate
     %operation

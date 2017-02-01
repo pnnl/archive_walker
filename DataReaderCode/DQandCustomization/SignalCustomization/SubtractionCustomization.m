@@ -66,12 +66,18 @@ AvailablePMU = {PMUstruct.PMU_Name};
 PMUidxMin = find(strcmp(Parameters.minuend.PMU,AvailablePMU));
 if ~isempty(PMUidxMin)
     SigIdxMin = find(strcmp(Parameters.minuend.Channel,PMUstruct(PMUidxMin).Signal_Name));
+else
+    % PMU was not found, so the signal index cannot be found
+    SigIdxMin = [];
 end
 
 % Get subtrahend (what you subtract)
 PMUidxSub = find(strcmp(Parameters.subtrahend.PMU,AvailablePMU));
 if ~isempty(PMUidxSub)
     SigIdxSub = find(strcmp(Parameters.subtrahend.Channel,PMUstruct(PMUidxSub).Signal_Name));
+else
+    % PMU was not found, so the signal index cannot be found
+    SigIdxSub = [];
 end
 
 PMUstruct(custPMUidx).Signal_Name{NumSig+1} = SignalName;

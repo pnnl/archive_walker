@@ -19,7 +19,7 @@
         </Channel>
     </PMU>
     -->
-    <ResultsPath>D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\DetectionResults</ResultsPath>
+    <EventPath>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\EventXML</EventPath>
     <!-- Ringdown detector -->
     <Ringdown>
         <RMSlength>15</RMSlength>

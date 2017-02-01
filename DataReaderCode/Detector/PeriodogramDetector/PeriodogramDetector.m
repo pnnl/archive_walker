@@ -71,10 +71,7 @@ end
 % This function pulls the parameters out of the structure containing the
 % XML information. It turns strings into numbers as necessary and sets
 % default values for parameters that were not specified.
-persistent ExtractedParameters
-if isempty(ExtractedParameters)
-    ExtractedParameters = ExtractFOdetectionParamsPer(Parameters,fs);
-end
+ExtractedParameters = ExtractFOdetectionParamsPer(Parameters,fs);
 
 % Store the parameters in variables for easier access
 Mode = ExtractedParameters.Mode;
@@ -167,48 +164,48 @@ end
 %% Perform detection
 
 %calculates power spectrum of selected signals
-SignalPSD = CalcPSD(SelectedData, ZeroPadding, 0, PeriodogramWindow, [], fs);
+SignalPSD = CalcPSD_OmegaB(SelectedData, ZeroPadding, 0, PeriodogramWindow, [], fs,OmegaB);
 %estimates power spectrum of ambient noise using power spectrum of selected signal
-AmbientNoisePSD = CalcPSD(SelectedData, ZeroPadding, WindowOverlap, GMSCandPSDwindow,MedianFilterOrder,fs);
+AmbientNoisePSD = CalcPSD_OmegaB(SelectedData, ZeroPadding, WindowOverlap, GMSCandPSDwindow,MedianFilterOrder,fs,OmegaB);
 if strcmp(Mode,'MultiChannel')
     %gives test statistic for detecting FO
-    TestStatistic = sum(2*SignalPSD(OmegaB,:)./AmbientNoisePSD(OmegaB,:),2);  % sum of the PSDs calculated for all channels
+    TestStatistic = sum(2*SignalPSD./AmbientNoisePSD,2);  % sum of the PSDs calculated for all channels
     %gives estimates of generalized magnitude squared coherence
-    GMSC_est = calcGMSC(SelectedData, ZeroPadding, WindowOverlap, GMSCandPSDwindow,OmegaB);
+    GMSC_est = calcGMSC(SelectedData, ZeroPadding, WindowOverlap, GMSCandPSDwindow,OmegaB,MedianFilterOrder);
     %gives threshold for detecting FO
     Threshold = CalcThreshold(GMSC_est, Pfa, LengthFreqInterest, length(SelectedDataTypeInd));
     % gives estimates of frequency and amplitude of forced oscillations
-    [Frequency_est, Amplitude_est, SNR_est] = DetectFO(TestStatistic, Threshold, SignalPSD(OmegaB,:), AmbientNoisePSD(OmegaB,:), FrequencyTolerance, PeriodogramWindow, FreqInterest);
+    [Frequency_est, Amplitude_est, SNR_est] = DetectFO(TestStatistic, Threshold, SignalPSD, AmbientNoisePSD, FrequencyTolerance, PeriodogramWindow, FreqInterest);
     %assignes calculated value to struct array containing detection results
     DetectionResults.Frequency = Frequency_est(:);
     DetectionResults.Amplitude = NaN*ones(length(Frequency_est),length(DataChannel));
     DetectionResults.Amplitude(:,SelectedDataTypeInd) = Amplitude_est;
     DetectionResults.SNR = NaN*ones(length(Frequency_est),length(DataChannel));
     DetectionResults.SNR(:,SelectedDataTypeInd) = SNR_est;
-    AdditionalOutput.SignalPSD(:,SelectedDataTypeInd) = SignalPSD(OmegaB,:);
-    AdditionalOutput.AmbientNoiseSpectrum(:,SelectedDataTypeInd) = AmbientNoisePSD(OmegaB,:);
+    AdditionalOutput.SignalPSD(:,SelectedDataTypeInd) = SignalPSD;
+    AdditionalOutput.AmbientNoiseSpectrum(:,SelectedDataTypeInd) = AmbientNoisePSD;
     AdditionalOutput.TestStatistic = TestStatistic;
     AdditionalOutput.Threshold = Threshold;
     
 else %analyses signal for single channel mode
     for ChannelIdx = 1:length(SelectedDataTypeInd)
         %gives test statistic for detecting FO
-        TestStatistic = SignalPSD(OmegaB,ChannelIdx);%./AmbientNoisePSD(OmegaB,ChannelIdx);
+        TestStatistic = SignalPSD(:,ChannelIdx);%./AmbientNoisePSD(OmegaB,ChannelIdx);
         %gives threshold for detecting FO
-        Threshold = -AmbientNoisePSD(OmegaB,ChannelIdx)*log(Pfa/LengthFreqInterest);
+        Threshold = -AmbientNoisePSD(:,ChannelIdx)*log(Pfa/LengthFreqInterest);
 %         figure;
 %         plot(Threshold); hold all; plot(TestStatistic);
 %         pfa = 1-(1-exp(-Threshold))^LengthFreqInterest;
         % gives estimates of frequency and amplitude of forced oscillations
-        [Frequency_est, Amplitude_est, SNR_est] = DetectFO(TestStatistic, Threshold, SignalPSD(OmegaB,ChannelIdx), AmbientNoisePSD(OmegaB,ChannelIdx), FrequencyTolerance, PeriodogramWindow, FreqInterest);
+        [Frequency_est, Amplitude_est, SNR_est] = DetectFO(TestStatistic, Threshold, SignalPSD(:,ChannelIdx), AmbientNoisePSD(:,ChannelIdx), FrequencyTolerance, PeriodogramWindow, FreqInterest);
         %assignes calculated value to struct array containing detection results
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).Frequency = Frequency_est(:);
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).Amplitude = NaN*ones(length(Frequency_est),1);
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).Amplitude = Amplitude_est;
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).SNR = NaN*ones(length(Frequency_est),1);
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).SNR = SNR_est;
-        AdditionalOutput(:,SelectedDataTypeInd(ChannelIdx)).SignalPSD = SignalPSD(OmegaB,ChannelIdx);
-        AdditionalOutput(:,SelectedDataTypeInd(ChannelIdx)).AmbientNoiseSpectrum = AmbientNoisePSD(OmegaB,ChannelIdx);
+        AdditionalOutput(:,SelectedDataTypeInd(ChannelIdx)).SignalPSD = SignalPSD(:,ChannelIdx);
+        AdditionalOutput(:,SelectedDataTypeInd(ChannelIdx)).AmbientNoiseSpectrum = AmbientNoisePSD(:,ChannelIdx);
         AdditionalOutput(SelectedDataTypeInd(ChannelIdx)).TestStatistic = TestStatistic;   
         AdditionalOutput(SelectedDataTypeInd(ChannelIdx)).Threshold = Threshold;
     end    
@@ -255,14 +252,3 @@ end
 %matrix consisting of appropriate data segment and signal type
 Data = Data(DataIntervalStart:end,AppropriateDataTypeInd);
 end
-
-
-
-
-
-
-
-
-
-
-

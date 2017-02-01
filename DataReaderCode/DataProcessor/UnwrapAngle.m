@@ -61,23 +61,30 @@ for SigIdx = 1:length(SigsToProc)
     % If KillAfter is empty, the following line won't do anything
     PMU.Data(KillAfter:end,ThisSig) = NaN;
     
-    B4 = PMU.Data(end,ThisSig);
-    
-    %Unwraps angle measurements
+    % The function unwrap assumes the angles are in radians. piScale is
+    % used to transform angles into radians. If already in radians, the
+    % scaling has no effect.
     if strcmp(PMU.Signal_Unit(ThisSig),'DEG') 
-        PMU.Data(:,ThisSig) = unwrap(PMU.Data(:,ThisSig)*pi/180)*180/pi;
+        piScale = 180;
     elseif strcmp(PMU.Signal_Unit(ThisSig),'RAD') 
-        PMU.Data(:,ThisSig) = unwrap(PMU.Data(:,ThisSig));
+        piScale = pi;
     else 
-        warning(['Signal ' SigsToProc{SigIdx} ' is not an angle signal.']);
+        error(['Signal ' SigsToProc{SigIdx} ' is not an angle signal.']);
     end
     
-    
+    % Unwrap the signal
+    % If the final measurement from the last file is available, start the
+    % unwrap with it to provide continuity.
     if ((~isempty(PastAngles{SigIdx}.angle)) && (strcmp(SigsToProc{SigIdx}, PastAngles{SigIdx}.SignalName)))
-        PMU.Data(:,ThisSig) = PMU.Data(:,ThisSig) + PastAngles{SigIdx}.angle;
+        Temp = unwrap([PastAngles{SigIdx}.angle; PMU.Data(:,ThisSig)]*pi/piScale)*piScale/pi;
+        PMU.Data(:,ThisSig) = Temp(2:end);
+    else
+        PMU.Data(:,ThisSig) = unwrap(PMU.Data(:,ThisSig)*pi/piScale)*piScale/pi;
     end
     
-    FinalAngles{SigIdx}.angle = PMU.Data(end,ThisSig) - B4;
+    % Store the final angle of the unwrapped signal for use when unwrapping
+    % the next file.
+    FinalAngles{SigIdx}.angle = PMU.Data(end,ThisSig);
     if isnan(FinalAngles{SigIdx}.angle)
         FinalAngles{SigIdx}.angle = [];
     end

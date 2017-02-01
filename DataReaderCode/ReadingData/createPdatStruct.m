@@ -56,7 +56,7 @@
 
 function [PMU, tPMU, Num_Flags,PMUStruct,signalCounts] =  createPdatStruct(pdatFile,DataXML,PMUStruct,signalCounts)
 
-[config, data]=pdatRead3(pdatFile);
+[config, data]=pdatRead(pdatFile);
 
 %%
 nPMU = config.numPMUs;  %number of PMUs

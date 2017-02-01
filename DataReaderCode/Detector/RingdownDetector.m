@@ -23,10 +23,7 @@ end
 % default values for parameters that were not specified. 
 % Additional inputs, such as the length of the input data or the sampling 
 % rate, can be added as necessary. 
-persistent ExtractedParameters
-if isempty(ExtractedParameters)
-    ExtractedParameters = ExtractParameters(Parameters,fs);
-end
+ExtractedParameters = ExtractParameters(Parameters,fs);
 
 % Store the parameters in variables for easier access
 RMSlength = ExtractedParameters.RMSlength;

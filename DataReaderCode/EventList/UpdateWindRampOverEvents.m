@@ -23,7 +23,7 @@ NumDetectors = length(DetectorXML.Configuration.(EventType));
 if NumDetectors == 1
     Hist = -(min(AdditionalOutput.(EventType).extremaLoc) - AdditionalOutput.(EventType).gd);
 else
-    Hist = -(min(AdditionalOutput.(EventType){DetectorIndex}.extremaLoc) - AdditionalOutput.(EventType).gd);
+    Hist = -(min(AdditionalOutput(DetectorIndex).(EventType).extremaLoc) - AdditionalOutput(DetectorIndex).(EventType).gd);
 end
 
 % Events ending before this time are considered over. Those

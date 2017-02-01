@@ -55,8 +55,8 @@ end
 % the struct with the event info. Save the struct as an XML, replacing the
 % original.
 for EventIdx = 1:length(OverEventList.(EventType))
-    st = datetime(datevec(OverEventList.(EventType)(EventIdx).OverallStart));
-    en = datetime(datevec(OverEventList.(EventType)(EventIdx).OverallEnd));
+    st = datetime(datevec(min(OverEventList.(EventType)(EventIdx).Start)));
+    en = datetime(datevec(max(OverEventList.(EventType)(EventIdx).End)));
     
     for t = unique(cellstr(datestr([(st:1:en) en],'yymmdd'))).'
         EventXMLfileName = [PathEventXML '\EventList_' t{1} '.XML'];

@@ -69,10 +69,7 @@ end
 % default values for parameters that were not specified. 
 % Additional inputs, such as the length of the input data or the sampling 
 % rate, can be added as necessary. 
-persistent ExtractedParameters
-if isempty(ExtractedParameters)
-    ExtractedParameters = ExtractFOdetectionParamsSC(Parameters,fs);
-end
+ExtractedParameters = ExtractFOdetectionParamsSC(Parameters,fs);
 
 % Store the parameters in variables for easier access
 Mode = ExtractedParameters.Mode;

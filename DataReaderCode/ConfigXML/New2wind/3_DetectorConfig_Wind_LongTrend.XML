@@ -19,6 +19,7 @@
         </Channel>
     </PMU>
     -->
+    <EventPath>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\EventXML</EventPath>
     <!-- WindRamp Detector -->
     <WindRamp>
         <PMU>

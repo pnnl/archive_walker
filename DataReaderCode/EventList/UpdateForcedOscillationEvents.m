@@ -115,14 +115,15 @@ end
 
 FrequenciesToAdd = {};
 UpdatedEventList = [];
+RevisitOccurrence = zeros(0,2);
 for DetIdx = 1:length(DetectionResults)
-    % If no FOs were detected, return the existing event list
+    % If no FOs were detected, move to next detection result
     if (length(DetectionResults(DetIdx).Frequency) == 1)
         if isnan(DetectionResults(DetIdx).Frequency)
-            return
+            continue
         end
     end
-
+    
     for FreqIdx = 1:length(DetectionResults(DetIdx).Frequency)
         if isfield(EventList,'Frequency')
             % FOs have been detected already
@@ -139,11 +140,12 @@ for DetIdx = 1:length(DetectionResults)
                 EventList(EventIdx).End = datenum(AdditionalOutput(1).End);
                 EventList(EventIdx).Persistence = 0;
                 EventList(EventIdx).OccurrenceID = {AssignEventID()};
-                if length(DetectionResults(DetIdx).Channel) == 1
-                    EventList(EventIdx).Channel = {DetectionResults(DetIdx).Channel};
-                else
-                    EventList(EventIdx).Channel = DetectionResults(DetIdx).Channel;
-                end
+%                 if length(DetectionResults(DetIdx).Channel) == 1
+%                     EventList(EventIdx).Channel = {DetectionResults(DetIdx).Channel};
+%                 else
+%                     EventList(EventIdx).Channel = DetectionResults(DetIdx).Channel;
+%                 end
+                EventList(EventIdx).Channel = {DetectionResults(DetIdx).Channel};
                 
                 if isfield(DetectionResults(DetIdx),'Amplitude')
                     % Periodogram
@@ -184,6 +186,12 @@ for DetIdx = 1:length(DetectionResults)
                     % analysis window lengths
                     if datenum(AdditionalOutput(1).Start) < EventList(EventIdx).Start(end)
                         EventList(EventIdx).Start(end) = datenum(AdditionalOutput(1).Start);
+                        
+                        % This may cause overlap with an earlier
+                        % occurrence, so add it to the list of occurrences
+                        % that need to be checked at the end of this
+                        % function
+                        RevisitOccurrence = [RevisitOccurrence; EventIdx length(EventList(EventIdx).Start)];
                     end
                     
                     % If a channel involved in detection was not previously
@@ -233,11 +241,12 @@ for DetIdx = 1:length(DetectionResults)
                     EventList(EventIdx).End = [EventList(EventIdx).End, datenum(AdditionalOutput(1).End)];
                     EventList(EventIdx).Persistence = [EventList(EventIdx).Persistence, 0];
                     EventList(EventIdx).OccurrenceID = [EventList(EventIdx).OccurrenceID, AssignEventID()];
-                    if length(DetectionResults(DetIdx).Channel) == 1
-                        EventList(EventIdx).Channel = [EventList(EventIdx).Channel, {DetectionResults(DetIdx).Channel}];
-                    else
-                        EventList(EventIdx).Channel = [EventList(EventIdx).Channel, DetectionResults(DetIdx).Channel];
-                    end
+%                     if length(DetectionResults(DetIdx).Channel) == 1
+%                         EventList(EventIdx).Channel = [EventList(EventIdx).Channel, {DetectionResults(DetIdx).Channel}];
+%                     else
+%                         EventList(EventIdx).Channel = [EventList(EventIdx).Channel, DetectionResults(DetIdx).Channel];
+%                     end
+                    EventList(EventIdx).Channel = [EventList(EventIdx).Channel, {DetectionResults(DetIdx).Channel}];
                     
                     if isfield(DetectionResults(DetIdx),'Amplitude')
                         % Periodogram
@@ -261,11 +270,12 @@ for DetIdx = 1:length(DetectionResults)
             EventList(1).End = datenum(AdditionalOutput(1).End);
             EventList(1).Persistence = 0;
             EventList(1).OccurrenceID = {AssignEventID()};
-            if length(DetectionResults(DetIdx).Channel) == 1
-                EventList(1).Channel = {DetectionResults(DetIdx).Channel};
-            else
-                EventList(1).Channel = DetectionResults(DetIdx).Channel;
-            end
+%             if length(DetectionResults(DetIdx).Channel) == 1
+%                 EventList(1).Channel = {DetectionResults(DetIdx).Channel};
+%             else
+%                 EventList(1).Channel = DetectionResults(DetIdx).Channel;
+%             end
+            EventList(1).Channel = {DetectionResults(DetIdx).Channel};
             
             if isfield(DetectionResults(DetIdx),'Amplitude')
                 % Periodogram
@@ -288,6 +298,92 @@ for EventIdx = 1:length(FrequenciesToAdd)
     end
 end
 
+% For each occurrence that had its start point moved earlier, check to see
+% if it now overlaps with another occurrence
+%
+% Structure array to contain all of the occurrences are merged and need to be
+% removed. The structure array index corresponds to the EventIdx
+KillList = struct('OverlapIdx',cell(1,max(RevisitOccurrence(:,1))));
+for idx = 1:size(RevisitOccurrence,1)
+    EventIdx = RevisitOccurrence(idx,1);
+    OccurIdx = RevisitOccurrence(idx,2);
+    
+    % Find indices of occurrences that overlap with the one being
+    % considered
+    OverlapIdx = find(EventList(EventIdx).Start(OccurIdx) < EventList(EventIdx).End);
+    % Remove the occurrence under consideration from the list
+    OverlapIdx = setdiff(OverlapIdx,OccurIdx);
+    % Add these occurrences, which are about to be merged, to the list of
+    % those for this event that need to be removed
+    KillList(EventIdx).OverlapIdx = [KillList(EventIdx).OverlapIdx OverlapIdx];
+    % If there are more occurrences that this one overlaps with, merge them
+    if ~isempty(OverlapIdx)
+        % The OccurrenceID is not updated
+        %
+        % OverallStart and OverallEnd will be updated in the next block of
+        % code
+        
+        % The new frequency is the average of the frequencies from each
+        % occurrence
+        EventList(EventIdx).Frequency(OccurIdx) = mean([EventList(EventIdx).Frequency(OccurIdx) EventList(EventIdx).Frequency(OverlapIdx)]);
+        % The new start time is the earliest start time from each
+        % occurrence
+        EventList(EventIdx).Start(OccurIdx) = min([EventList(EventIdx).Start(OccurIdx) EventList(EventIdx).Start(OverlapIdx)]);
+        % The new end time is the latest end time from each occurrence
+        EventList(EventIdx).End(OccurIdx) = max([EventList(EventIdx).End(OccurIdx) EventList(EventIdx).End(OverlapIdx)]);
+        % The new persistence is the maximum from each occurrence
+        EventList(EventIdx).Persistence(OccurIdx) = max([EventList(EventIdx).Persistence(OccurIdx) EventList(EventIdx).Persistence(OverlapIdx)]);
+        % The new alarm flag is an OR of the flags from each occurrence
+        EventList(EventIdx).AlarmFlag(OccurIdx) = max([EventList(EventIdx).AlarmFlag(OccurIdx) EventList(EventIdx).AlarmFlag(OverlapIdx)]);
+        
+        % Merge all the information related to individual channels - name,
+        % amplitude, SNR, coherence
+        CombinedChannel = {};
+        CombinedAmp = [];
+        CombinedSNR = [];
+        CombinedCohere = [];
+        for MergeIdx = OverlapIdx
+            CombinedChannel = [CombinedChannel EventList(EventIdx).Channel{MergeIdx}];
+            CombinedAmp = [CombinedAmp EventList(EventIdx).Amplitude{MergeIdx}];
+            CombinedSNR = [CombinedSNR EventList(EventIdx).SNR{MergeIdx}];
+            CombinedCohere = [CombinedCohere EventList(EventIdx).Coherence{MergeIdx}];
+        end
+        % New list of all channels involved from any of the occurrences
+        NewChannel = unique(CombinedChannel);
+        NewAmp = [];
+        NewSNR = [];
+        NewCohere = [];
+        % For each unique channel
+        for UniqueChannel = NewChannel
+            % Find the indices of the matching channels
+            ThisChannel = strcmp(UniqueChannel,CombinedChannel);
+            NewAmp = [NewAmp max(CombinedAmp)];
+            NewSNR = [NewSNR max(CombinedSNR)];
+            NewCohere = [NewCohere max(CombinedCohere)];
+        end
+        EventList(EventIdx).Channel{OccurIdx} = NewChannel;
+        EventList(EventIdx).Amplitude{OccurIdx} = NewAmp;
+        EventList(EventIdx).SNR{OccurIdx} = NewSNR;
+        EventList(EventIdx).Coherence{OccurIdx} = NewCohere;
+    end
+end
+% Remove the other occurrences that have been merged into the
+% newest one
+for EventIdx = 1:length(KillList)
+    if ~isempty(KillList(EventIdx).OverlapIdx)
+        EventList(EventIdx).Frequency(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).Start(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).End(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).Persistence(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).OccurrenceID(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).Channel(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).Amplitude(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).SNR(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).Coherence(KillList(EventIdx).OverlapIdx) = [];
+        EventList(EventIdx).AlarmFlag(KillList(EventIdx).OverlapIdx) = [];
+    end
+end
+
 % Update the OverallStart and OverallEnd fields of the EventList, which
 % track the earliest and latest the FO was detected across all occurrences
 for EventIdx = 1:length(EventList)
@@ -304,7 +400,10 @@ for EventIdx = 1:length(EventList)
     end
 end
 
-UpdatedEventList = unique(UpdatedEventList);
+
+if ~isempty(UpdatedEventList)
+    UpdatedEventList = unique(UpdatedEventList);
+end
 for EventIdx = UpdatedEventList
     MaxVal = cellfun(@max,EventList(EventIdx).(AlarmField));
     AlarmFlag = false(1,length(MaxVal));
@@ -323,43 +422,3 @@ for EventIdx = UpdatedEventList
         EventList(EventIdx).AlarmFlag = AlarmFlag;
     end
 end
-
-% if isfield(DetectionResults,'SNR')
-%     % Periodogram
-%     for EventIdx = UpdatedEventList
-%         MaxSNR = cellfun(@max,EventList(EventIdx).SNR);
-%         AlarmFlag = false(1,length(MaxSNR));
-%         AlarmFlag(MaxSNR > AlarmParams.SNRalarm) = true;
-%         N = (AlarmParams.TimeCorner-AlarmParams.TimeMin)*(AlarmParams.SNRcorner-AlarmParams.SNRmin);
-%         TimeThresh = N./(MaxSNR-AlarmParams.SNRmin) + AlarmParams.TimeMin;
-%         AlarmFlag((EventList(EventIdx).Persistence > TimeThresh) & (MaxSNR > AlarmParams.SNRmin)) = true;
-%         if isfield(EventList,'AlarmFlag')
-%             if isempty(EventList(EventIdx).AlarmFlag)
-%                 EventList(EventIdx).AlarmFlag = AlarmFlag;
-%             else
-%                 EventList(EventIdx).AlarmFlag = [EventList(EventIdx).AlarmFlag false(length(AlarmFlag)-length(EventList(EventIdx).AlarmFlag))] | AlarmFlag;
-%             end
-%         else
-%             EventList(EventIdx).AlarmFlag = AlarmFlag;
-%         end
-%     end
-% else
-%     % Spectral Coherence
-%     for EventIdx = UpdatedEventList
-%         MaxCoherence = cellfun(@max,EventList(EventIdx).Coherence);
-%         AlarmFlag = false(1,length(MaxCoherence));
-%         AlarmFlag(MaxCoherence > AlarmParams.CoherenceAlarm) = true;
-%         N = (AlarmParams.TimeCorner-AlarmParams.TimeMin)*(AlarmParams.CoherenceCorner-AlarmParams.CoherenceMin);
-%         TimeThresh = N./(MaxCoherence-AlarmParams.CoherenceMin) + AlarmParams.TimeMin;
-%         AlarmFlag((EventList(EventIdx).Persistence > TimeThresh) & (MaxCoherence > AlarmParams.CoherenceMin)) = true;
-%         if isfield(EventList,'AlarmFlag')
-%             if isempty(EventList(EventIdx).AlarmFlag)
-%                 EventList(EventIdx).AlarmFlag = AlarmFlag;
-%             else
-%                 EventList(EventIdx).AlarmFlag = [EventList(EventIdx).AlarmFlag false(length(AlarmFlag)-length(EventList(EventIdx).AlarmFlag))] | AlarmFlag;
-%             end
-%         else
-%             EventList(EventIdx).AlarmFlag = AlarmFlag;
-%         end
-%     end
-% end

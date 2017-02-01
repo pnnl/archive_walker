@@ -45,36 +45,22 @@
 % clc;
 clear;
 
-% Clear all functions that use persistent variables
-clear WindRampDetector RingdownDetector OutOfRangeGeneralDetector...
-    OutOfRangeFrequencyDetector SpectralCoherenceDetector PeriodogramDetector
-
 debugMode = 1;
 
 %XML file
-
-XMLFile = '1_DataConfig_JSIS_FO.XML';
-% XMLFile = '1_DataConfig_JSIS_RingCSV.XML';
-% XMLFile = '1_DataConfig_Wind_LongTrend.XML';
-% XMLFile = '1_DataConfig_Wind.XML';
-% Parse XML file to MATLAB structure
-DataXML = fun_xmlread_comments(XMLFile);
-
-%XML file
-XMLFile='2_ProcessConfig_JSIS_FO.xml';
-% XMLFile='2_ProcessConfig_JSIS_RingCSV.xml';
-% XMLFile='2_ProcessConfig_Wind_LongTrend.xml';
-% XMLFile='2_ProcessConfig_Wind.xml';
-% Parse XML file to MATLAB structure
-ProcessXML = fun_xmlread_comments(XMLFile);
-
-%XML file
-XMLFile='3_DetectorConfig_JSIS_FO.xml';
-% XMLFile='3_DetectorConfig_JSIS_RingCSV.xml';
-% XMLFile='3_DetectorConfig_Wind_LongTrend.xml';
-% XMLFile='3_DetectorConfig_Wind.xml';
-% Parse XML file to MATLAB structure
-DetectorXML = fun_xmlread_comments(XMLFile);
+% ConfigAll = fun_xmlread_comments('Config_JSIS_RingCSV.XML');
+% ConfigAll = fun_xmlread_comments('Config_JSIS_FO.XML');
+% ConfigAll = fun_xmlread_comments('Config_Wind.XML');
+% ConfigAll = fun_xmlread_comments('Config_Wind_LongTrend.XML');
+% ConfigAll = fun_xmlread_comments('Config_BigEdRing.XML');
+% ConfigAll = fun_xmlread_comments('Config_AB_in_out.XML');
+% ConfigAll = fun_xmlread_comments('Config_AB_in_out_ModeEst_NSB_LikeBPA.XML');
+% ConfigAll = fun_xmlread_comments('Config_TimeErrorHunt.XML');
+ConfigAll = fun_xmlread_comments('BPAinstallProto.XML');
+DataXML = ConfigAll.Config.DataConfig;
+ProcessXML = ConfigAll.Config.ProcessConfig;
+DetectorXML = ConfigAll.Config.DetectorConfig;
+clear Config
 
 % These lists are passed to the RunDetection function to tell it which
 % detectors to implement. The calls are separated because the FO detectors
@@ -129,8 +115,7 @@ elseif (strcmp(DataXML.Configuration.ReaderProperties.Mode.Name, 'RealTime') || 
         DateTimeStart = DataXML.Configuration.ReaderProperties.Mode.Params.DateTimeStart;
     else
         % we will use the current time as the start time; still need to consider time zone
-        currT = now;
-        DateTimeStart = datestr(currT,'yyyy-mm-dd HH:MM:SS');
+        DateTimeStart = datestr(datetime('now','TimeZone','UTC'),'yyyy-mm-dd HH:MM:00');
     end
     
     % Wait time when no future data is available (seconds)
@@ -163,8 +148,27 @@ FileMnemonic = DataXML.Configuration.ReaderProperties.Mnemonic;
 % FileDate = datestr(DateTimeStart(1:19),'_yyyymmdd_HHMMSS');
 % FileName = [FilePath FileDate '.pdat'];
 
+%% Store filepaths from the configuration XML
 
-PathEventXML = DetectorXML.Configuration.EventPath;
+try
+    PathEventXML = DetectorXML.Configuration.EventPath;
+catch
+    error('The event XML path must be specified in the configuration file.');
+end
+% If the directory doesn't yet exist, add it.
+if exist(PathEventXML,'dir') ~= 7
+    mkdir(PathEventXML);
+end
+
+try
+    InitializationPath = ProcessXML.Configuration.InitializationPath;
+catch
+    error('The initialization path must be specified in the configuration file.');
+end
+% If the directory doesn't yet exist, add it.
+if exist(InitializationPath,'dir') ~= 7
+    mkdir(InitializationPath);
+end
 
 %% identify the maximum number of flags that will be needed
 
@@ -265,8 +269,8 @@ done = 0;
 %% set DateTimeEnd for real time mode and hybrid mode
 if(strcmp(DataInfo.mode, 'Hybrid'))
     % Hybrid Mode
-    currT = now;    % current time
-    DataInfo.DateTimeEnd = datestr(currT-DataInfo.RealTimeRange/60/24);   %RealTimeRang is converted from minutes to day
+    %RealTimeRang is converted from minutes to day
+    DataInfo.DateTimeEnd = datestr(datetime('now','TimeZone','UTC')-DataInfo.RealTimeRange/60/24,'yyyy-mm-dd HH:MM:SS');
 elseif(strcmp(DataInfo.mode, 'RealTime'))
     % realtime mode
     DataInfo.DateTimeEnd = [];
@@ -439,23 +443,28 @@ while(~done)
                 PMU = GetOutputSignals(PMU,DataXML);
                 
                 
-                
+                % Save initialization information - filter conditions, etc.
+                % that can be used to pick up the analysis at this minute.
+                yyyymmdd = datestr(DataInfo.FocusFileTime,'yyyymmdd');
+                hhmmss = datestr(DataInfo.FocusFileTime,'HHMMSS');
+                InitializationFilePath = [InitializationPath yyyymmdd(1:4) '\' yyyymmdd(3:8) '\'];
+                InitializationFile = [InitializationFilePath 'Initialization_' yyyymmdd '_' hhmmss '.mat'];
+                % Only load an initialization file if this is the first
+                % file loaded (indicated by an empty AdditionalOutput
+                % structure)
                 if isempty(AdditionalOutput)
-                    if exist(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-1)) 'Initialization_' focusFile(strfind(focusFile,FileMnemonic)+length(FileMnemonic)+(0:15)) '.mat'],'file') == 2
-                        load(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-1)) 'Initialization_' focusFile(strfind(focusFile,FileMnemonic)+length(FileMnemonic)+(0:15))])
+                    if exist(InitializationFile,'file') == 2
+                        load(InitializationFile)
                         AdditionalOutput = AdditionalOutputCondos;
                     end
                 end
-                
-                if ~exist(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-2))],'dir')
-                    mkdir(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-2))]);
+                % If the directory for the files hasn't been established
+                % yet, add it.
+                if exist(InitializationFilePath,'dir') == 0
+                    mkdir(InitializationFilePath);
                 end
-                save(['C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Initialization' focusFile(strfind(focusFile,FileMnemonic)+(-13:-1)) 'Initialization_' focusFile(strfind(focusFile,FileMnemonic)+length(FileMnemonic)+(0:15))],...
+                save(InitializationFile,...
                     'AdditionalOutputCondos','InitialCondosFilter','InitialCondosMultiRate','FinalAngles','DataXML','ProcessXML','DetectorXML');
-                
-                
-                
-                
                 
                 
                 % **********
@@ -466,6 +475,13 @@ while(~done)
                 % Return only the desired PMUs and signals
                 PMU = GetOutputSignals(PMU, ProcessXML);
 
+                
+
+
+                % *********
+                % Detection
+                % *********
+                
                 % Create an empty one minute PMU data structure for later use
                 % after processing the first file
                 % this only needs to be called once
@@ -473,17 +489,11 @@ while(~done)
                     oneMinuteEmptyPMU = createOneMinuteEmptyPMU(PMU);
                 end
 
-
-
-                % *********
-                % Detection
-                % *********
-
                 % Perform event detection on data from most recently loaded
                 % file
                 [DetectionResults, AdditionalOutput] = RunDetection(PMU,DetectorXML,EventDetectors,AdditionalOutput);
                 EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,EventDetectors,EventList);
-                
+                                
                 % Retrieve the segment of data that will be examined for forced
                 % oscillations. A window of length SecondsToConcat slides
                 % across this segment, advancing ResultUpdateInterval seconds
@@ -501,21 +511,16 @@ while(~done)
                 end
                 
                 
-                
                 %% Clean AdditionalOutput to contain only initialization info
                 AdditionalOutputCondos = AdditionalOutput;
                 %
                 if isfield(AdditionalOutputCondos,'Ringdown')
-                    FN = fieldnames(AdditionalOutputCondos.Ringdown);
-                    AdditionalOutputCondos.Ringdown = rmfield(AdditionalOutputCondos.Ringdown,FN(~(strcmp(FN,'FilterConditions') | strcmp(FN,'NextThreshold'))));
-                end
-                %
-                if isfield(AdditionalOutputCondos,'Periodogram')
-                    AdditionalOutputCondos = rmfield(AdditionalOutputCondos,'Periodogram');
-                end
-                %
-                if isfield(AdditionalOutputCondos,'SpectralCoherence')
-                    AdditionalOutputCondos = rmfield(AdditionalOutputCondos,'SpectralCoherence');
+                    for DetIdx = 1:length(AdditionalOutputCondos)
+                        if ~isempty(AdditionalOutputCondos(DetIdx).Ringdown)
+                            FN = fieldnames(AdditionalOutputCondos(DetIdx).Ringdown);
+                            AdditionalOutputCondos(DetIdx).Ringdown = rmfield(AdditionalOutputCondos(DetIdx).Ringdown,FN(~(strcmp(FN,'FilterConditions') | strcmp(FN,'NextThreshold'))));
+                        end
+                    end
                 end
 
                 %% update some information
