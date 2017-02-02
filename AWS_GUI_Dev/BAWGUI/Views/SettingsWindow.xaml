@@ -1,0 +1,548 @@
+﻿<Window x:Class="SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:BAWGUI"
+        mc:Ignorable="d"
+        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        Title="SettingsWindow" Height="600" Width="1000">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type local:EnumerationManager}" x:Key="DataFileTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:DataFileType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type local:EnumerationManager}" x:Key="ModeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:ModeType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <local:EnumToStringConverter1 x:Key="EnumToStringConverter1"/>
+            <local:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
+            <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <local:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
+            <!--<Style TargetType="toolkit:DateTimePicker">
+               
+                <Style.Setters>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="toolkit:DateTimePicker">
+                                <ToggleButton>
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ToggleButton">
+                                                        <Grid SnapsToDevicePixels="True">
+                                                            <Image Source="../Images/calendar.png"/>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style.Setters>
+            </Style>-->
+            <!--<local:DateTimeZoneConverter x:Key="MyDateTimeZoneConverter"/>-->
+            <!--<Style TargetType="DataGridCell">
+                <Style.Setters>
+                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                </Style.Setters>
+            </Style>-->
+            <!--<Style x:Key="tabStripPlaceOnLeft" TargetType="{x:Type avalonDock:LayoutDocumentControl}">
+                <Style.Setters>
+                    <Setter Property="TabStripPlacement" Value="left"/>
+                </Style.Setters>
+            </Style>-->
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="2">
+            <Label Content="Config File:" />
+            <TextBox Text="{Binding ConfigFileName}" MinWidth="100" Margin="2"/>
+            <Button ToolTip="Open Config File" Width="25" Height="25" Margin="2" Command="{Binding OpenConfigFile}">
+                <Image Source="../Images/open.gif" Stretch="Uniform"/>
+            </Button>
+            <Button ToolTip="Save Config File" Width="25" Height="25" Margin="2">
+                <Image Source="../Images/Save24.png" Stretch="None"/>
+            </Button>
+            <Button ToolTip="Delete Config File" Width="25" Height="25" Margin="2">
+                <Image Source="../Images/delete.bmp" Stretch="None"/>
+            </Button>
+        </StackPanel>
+        <avalonDock:DockingManager Grid.Row="1" Margin="2" Name="dockManager">
+            <avalonDock:LayoutRoot>
+                <avalonDock:LayoutPanel>
+                    <!--<avalonDock:LayoutDocumentPaneGroup Orientation="Vertical">-->
+                    <avalonDock:LayoutDocumentPane DockMinWidth="100">
+                        <avalonDock:LayoutAnchorable Title="Reader Properties" CanClose="False" CanHide="False" CanAutoHide="True">
+                            <avalonDock:DockingManager AllowMixedOrientation="True">
+                                <avalonDock:LayoutRoot>
+                                    <avalonDock:LayoutPanel Orientation="Horizontal">
+                                        <avalonDock:LayoutAnchorablePane DockWidth="800">
+                                            <avalonDock:LayoutAnchorable Title="Reader Properties" CanHide="False" CanClose="False" AutoHideWidth="240">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+                                                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                                        <Label Content="File Directory:" Margin="2" Width="100"/>
+                                                        <TextBox Text="{Binding DataConfigure.ReaderProperty.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                        <Button Content="Browse" Width="100" Command="{Binding BrowseInputFileDir}" Margin="2"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                                        <Label Content="File Type:" Margin="2" Width="100"/>
+                                                        <ComboBox SelectedValue="{Binding DataConfigure.ReaderProperty.FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="SelectionChanged">
+                                                                    <i:InvokeCommandAction Command="{Binding FileTypeChanged}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                                        <Label Content="Mnemonic:" Margin="2" Width="100"/>
+                                                        <TextBox Text="{Binding DataConfigure.ReaderProperty.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                                        <Label Content="Mode:" Margin="2" Width="100"/>
+                                                        <ComboBox Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
+                                                    </StackPanel>
+                                                    <GroupBox Grid.Row="4" Header="Real-Time Mode Parameters" BorderBrush="#FF85DA89" BorderThickness="1" Visibility="{Binding DataConfigure.ReaderProperty.RealTimeModeVisibility}" Margin="2">
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="No Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.NoFutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Max No Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxNoFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.FutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Max Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </GroupBox>
+                                                    <GroupBox Grid.Row="4" Header="Hybrid Mode Parameters" BorderBrush="#FF85DA89" BorderThickness="1" Visibility="{Binding DataConfigure.ReaderProperty.HybridModeVisibility}" Margin="2,10">
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
+                                                                <StackPanel Orientation="Vertical" Margin="2">
+                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
+                                                                        <!--<CheckBox IsChecked="{Binding DataConfigure.ReaderProperty.SelectUTCTime}" VerticalAlignment="Center" Margin="2"/>-->
+                                                                        <!--IsEnabled="{Binding DataConfigure.ReaderProperty.SelectAlternateTimeZone, Converter={StaticResource InverseBooleanConverter}}"-->
+                                                                    <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                                                        <!--<Button Content="select" Margin="2"/>-->
+                                                                    <!--</StackPanel>-->
+                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2,4,2,2" MinWidth="170" HorizontalContentAlignment="Right" IsEnabled="{Binding DataConfigure.ReaderProperty.SelectAlternateTimeZone, Converter={StaticResource InverseBooleanConverter}}"/>-->
+                                                                </StackPanel>
+                                                                <StackPanel Orientation="Vertical" Margin="20,2">
+                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
+                                                                        <!--<CheckBox IsChecked="{Binding DataConfigure.ReaderProperty.SelectAlternateTimeZone}" VerticalAlignment="Center" Margin="2"/>-->
+                                                                        <!--IsEnabled="{Binding DataConfigure.ReaderProperty.SelectUTCTime, Converter={StaticResource InverseBooleanConverter}}"-->
+                                                                    <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                                                        <!--<Button Content="select" Margin="2"/>-->
+                                                                    <!--</StackPanel>-->
+                                                                    <!--<StackPanel Orientation="Vertical" Margin="2">-->
+                                                                    <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedIndex="10" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
+                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="150" HorizontalContentAlignment="Right" IsEnabled="{Binding DataConfigure.ReaderProperty.SelectUTCTime, Converter={StaticResource InverseBooleanConverter}}">-->
+                                                                            <!--<TextBox.Text>
+                                                                                <MultiBinding Converter="{StaticResource MyDateTimeZoneConverter}">
+                                                                                    <Binding Path="DataConfigure.ReaderProperty.DateTimeStart"/>
+                                                                                    <Binding Path="SelectedTimeZone"/>
+                                                                                </MultiBinding>
+                                                                            </TextBox.Text>-->
+                                                                        <!--</TextBox>-->
+                                                                    <!--</StackPanel>-->
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="No Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.NoFutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Max No Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxNoFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.FutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Max Future Wait" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Real Time Range" Width="220"/>
+                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.RealTimeRange}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </GroupBox>
+                                                    <GroupBox Grid.Row="4" Header="Archive Mode Parameters" BorderBrush="#FF85DA89" BorderThickness="1" Visibility="{Binding DataConfigure.ReaderProperty.ArchiveModeVisibility}">
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal" Margin="2">
+                                                                <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
+                                                                <StackPanel Orientation="Vertical" Margin="2">
+                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
+                                                                    <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                                                        <!--<Button Margin="2">
+                                                                            <Image Source="../Images/calendar.png" Stretch="Uniform" Height="20" Width="20">
+                                                                            </Image>
+                                                                        </Button>-->
+                                                                    <!--</StackPanel>-->
+                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2,4,2,2" MinWidth="170" HorizontalContentAlignment="Right"/>-->
+                                                                </StackPanel>
+                                                                <StackPanel Orientation="Vertical" Margin="20,2">
+                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
+                                                                    <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                                                        <!--<Button Content="select" Margin="2"/>-->
+                                                                    <!--</StackPanel>-->
+                                                                    <!--<StackPanel Orientation="Vertical" Margin="2">-->
+                                                                    <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedIndex="10" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
+                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                                                                        <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="150" HorizontalContentAlignment="Right"/>-->
+                                                                    <!--</StackPanel>-->
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Margin="2,40,2,2">
+                                                                <Label Content="End Time" Width="150" Margin="2" VerticalAlignment="Center"/>
+                                                                <StackPanel Orientation="Vertical" Margin="2">
+                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
+                                                                    <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                                                        <!--<Button Content="select" Margin="2"/>-->
+                                                                    <!--</StackPanel>-->
+                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeEnd}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.DateTimeEnd}" HorizontalAlignment="Right" Margin="2,4,2,2" MinWidth="170" HorizontalContentAlignment="Right"/>-->
+                                                                </StackPanel>
+                                                                <StackPanel Orientation="Vertical" Margin="20,2">
+                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
+                                                                        <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                                                        <!--<Button Content="select" Margin="2"/>
+                                                                    </StackPanel>-->
+                                                                    <!--<StackPanel Orientation="Vertical" Margin="2">-->
+                                                                        <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedIndex="10" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
+                                                                        <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedEndTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                                                                        <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.ConvertedEndTime}" HorizontalAlignment="Right" Margin="2" MinWidth="150" HorizontalContentAlignment="Right"/>-->
+                                                                    <!--</StackPanel>-->
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </GroupBox>
+                                                    <!--<DataGrid Grid.Row="4" ItemsSource="{Binding DataConfigure.ReaderProperty.ModeParams}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" BorderBrush="#FF85DA89" VerticalAlignment="Top" Margin="100,2,2,2" HorizontalAlignment="Left">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Header="Parameters" Binding="{Binding ParameterName}" IsReadOnly="True"/>
+                                                            <DataGridTextColumn Header="Values" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>-->
+                                                </Grid>
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutAnchorablePane>
+                                            <!--<avalonDock:LayoutAnchorablePane DockWidth="200">
+                                                <avalonDock:LayoutAnchorable Title="Signal Selection and Manipulation" CanHide="False" CanClose="False" AutoHideWidth="300">
+                                                    <TreeView>
+                                                        <TreeViewItem Header="step 1"/>
+                                                        <TreeViewItem Header="step 2"/>
+                                                        <TreeViewItem Header="step 3"/>
+                                                        <TreeViewItem Header="step 4"/>
+                                                        <TreeViewItem Header="step 5"/>
+                                                        <TreeViewItem Header="step 6"/>
+                                                        <TreeViewItem Header="step 7"/>
+                                                        <TreeViewItem Header="step 8"/>
+                                                        <TreeViewItem Header="step 9"/>
+                                                        <TreeViewItem Header="step 10"/>
+                                                    </TreeView>
+                                                </avalonDock:LayoutAnchorable>
+                                            </avalonDock:LayoutAnchorablePane>-->
+                                            <!--<avalonDock:LayoutAnchorablePaneGroup>
+                                                <avalonDock:LayoutAnchorablePane>
+                                                    <avalonDock:LayoutAnchorable Title="filters">
+                                                        <TextBox Text="List of filters in this stage, if click the customization tab, then List of customization" FontSize="36" TextWrapping="Wrap"/>
+                                                    </avalonDock:LayoutAnchorable>
+                                                    <avalonDock:LayoutAnchorable Title="Customizations">
+
+                                                    </avalonDock:LayoutAnchorable>
+                                                </avalonDock:LayoutAnchorablePane>
+                                            </avalonDock:LayoutAnchorablePaneGroup>-->
+                                        <avalonDock:LayoutDocumentPane DockWidth="200">
+                                            <avalonDock:LayoutAnchorable  Title="Input File Directory">
+                                                <TreeView ItemsSource="{Binding InputFileDirTree}">
+                                                    <TreeView.ItemTemplate>
+                                                        <HierarchicalDataTemplate ItemsSource="{Binding SubFolders}">
+                                                            <Border BorderBrush="AliceBlue" BorderThickness="1">
+                                                                <TextBlock Text="{Binding Name}"/>
+                                                            </Border>
+                                                        </HierarchicalDataTemplate>
+                                                    </TreeView.ItemTemplate>
+                                                </TreeView>
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutDocumentPane>
+                                    </avalonDock:LayoutPanel>
+                                </avalonDock:LayoutRoot>
+                            </avalonDock:DockingManager>
+                            <!--<avalonDock:DockingManager Margin="2">
+                                <avalonDock:LayoutRoot>
+                                    <avalonDock:LayoutPanel>
+                                        <avalonDock:LayoutDocumentPaneGroup Orientation="Horizontal">
+                                            <avalonDock:LayoutDocumentPane DockMinWidth="100">
+                                                <avalonDock:LayoutAnchorable Title="Reader Properties" CanClose="False" CanHide="False" CanAutoHide="True">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                                            <Label Content="File Directory:" Margin="2" Width="100"/>
+                                                            <TextBox Text="{Binding DataConfigure.ReaderProperty.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                                            <Label Content="File Type:" Margin="2" Width="100"/>
+                                                            <ComboBox Text="{Binding DataConfigure.ReaderProperty.FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}"/>
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                                            <Label Content="Mnemonic:" Margin="2" Width="100"/>
+                                                            <TextBox Text="{Binding DataConfigure.ReaderProperty.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                                            <Label Content="Mode:" Margin="2" Width="100"/>
+                                                            <ComboBox Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
+                                                        </StackPanel>
+                                                        <DataGrid Grid.Row="4" ItemsSource="{Binding DataConfigure.ReaderProperty.ModeParams}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" BorderBrush="#FF85DA89" VerticalAlignment="Top" Margin="100,2,2,2" HorizontalAlignment="Left">
+                                                            <DataGrid.Columns>
+                                                                <DataGridTextColumn Header="Parameters" Binding="{Binding Parameter}" IsReadOnly="True"/>
+                                                                <DataGridTextColumn Header="Values" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            </DataGrid.Columns>
+                                                        </DataGrid>
+                                                    </Grid>
+                                                </avalonDock:LayoutAnchorable>
+                                                <avalonDock:LayoutAnchorable Title="Other Properties" CanClose="False" CanHide="False" CanAutoHide="True">
+
+                                                </avalonDock:LayoutAnchorable>
+                                            </avalonDock:LayoutDocumentPane>
+                                        </avalonDock:LayoutDocumentPaneGroup>
+                                    </avalonDock:LayoutPanel>
+                                </avalonDock:LayoutRoot>
+                            </avalonDock:DockingManager>-->
+                            <!--<StackPanel Orientation="Vertical">
+                                <GroupBox Header="Reader Properties" Margin="2" BorderBrush="#FF85DA89">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                            <Label Content="File Directory:" Margin="2" Width="100"/>
+                                            <TextBox Text="{Binding DataConfigure.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                            <Label Content="File Type:" Margin="2" Width="100"/>
+                                            <TextBox Text="{Binding DataConfigure.FileType}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                            <Label Content="Mnemonic:" Margin="2" Width="100"/>
+                                            <TextBox Text="{Binding DataConfigure.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                            <Label Content="Mode:" Margin="2" Width="100"/>
+                                            <ComboBox Text="{Binding DataConfigure.Mode}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Header="Other Properties" Margin="2" BorderBrush="#FF85DA89">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                            <Label Content="property 1:" Margin="2" Width="100"/>
+                                            <TextBox Text="{Binding DataConfigure.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                            <Label Content="property 2:" Margin="2" Width="100"/>
+                                            <TextBox Text="{Binding DataConfigure.FileType}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                            <Label Content="property 3:" Margin="2" Width="100"/>
+                                            <TextBox Text="{Binding DataConfigure.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                            <Label Content="property 4:" Margin="2" Width="100"/>
+                                            <ComboBox Text="{Binding DataConfigure.Mode}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                            </StackPanel>-->
+                        </avalonDock:LayoutAnchorable>
+                        <avalonDock:LayoutAnchorable Title="Signal Selection and Manipulation" CanClose="False" CanHide="False" CanAutoHide="True">
+                            <avalonDock:DockingManager>
+                                <avalonDock:LayoutRoot>
+                                    <avalonDock:LayoutPanel Orientation="Horizontal">
+                                        <avalonDock:LayoutAnchorablePane DockMinWidth="800">
+                                            <avalonDock:LayoutAnchorable>
+                                                <ScrollViewer>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0" Margin="2">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="40"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Label Content="Signal Selection and Manipulation Steps" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                            <Button Name="AddStepButton" Click="Button_Click" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" HorizontalAlignment="Center" Grid.Column="1">
+                                                                <Image Source="../Images/CircledPlus.png"/>
+                                                                <Button.ContextMenu>
+                                                                    <ContextMenu>
+                                                                        <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}"/>
+                                                                        <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}"/>
+                                                                    </ContextMenu>
+                                                                </Button.ContextMenu>
+                                                                <!--<Button.Style>
+                                                                    <Style TargetType="{x:Type Button}">
+                                                                        <Style.Triggers>
+                                                                            <EventTrigger RoutedEvent="Click">
+                                                                                <EventTrigger.Actions>
+                                                                                    <BeginStoryboard>
+                                                                                        <Storyboard>
+                                                                                            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="ContextMenu.IsOpen">
+                                                                                                <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True"/>
+                                                                                            </BooleanAnimationUsingKeyFrames>
+                                                                                        </Storyboard>
+                                                                                    </BeginStoryboard>
+                                                                                </EventTrigger.Actions>
+                                                                            </EventTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Button.Style>-->
+                                                            </Button>
+                                                        </Grid>
+                                                        <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border Margin="2" BorderBrush="LightGray" BorderThickness="1">
+                                                                        <Grid Margin="2">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="30"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Expander Grid.Column="0">
+                                                                                <Expander.Header>
+                                                                                    <TextBlock>
+                                                                                        <TextBlock.Text>
+                                                                                            <MultiBinding Converter="{StaticResource ExpanderHeaderConverter}">
+                                                                                                <Binding Path="StepCounter"/>
+                                                                                                <Binding Path="Name"/>
+                                                                                            </MultiBinding>
+                                                                                        </TextBlock.Text>
+                                                                                    </TextBlock>
+                                                                                </Expander.Header>
+                                                                                <Grid>
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="6*"/>
+                                                                                        <ColumnDefinition Width="4*"/>
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                                                                                        <Label Content="Channels" Margin="2"/>
+                                                                                        <TextBlock Margin="2" Text="{Binding}"/>
+                                                                                        <ListBox Margin="2" ItemsSource="{Binding}"/>
+                                                                                    </StackPanel>
+                                                                                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                                                                                        <Label Content="Parameters:" Margin="2"/>
+                                                                                        <ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
+                                                                                            <ItemsControl.ItemTemplate>
+                                                                                                <DataTemplate>
+                                                                                                    <Grid>
+                                                                                                        <Grid.ColumnDefinitions>
+                                                                                                            <ColumnDefinition Width="6*"/>
+                                                                                                            <ColumnDefinition Width="4*"/>
+                                                                                                        </Grid.ColumnDefinitions>
+                                                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
+                                                                                                        <Label Grid.Column="0" Content="{Binding ParameterName}" Margin="2" Width="150" VerticalAlignment="Center"/>
+                                                                                                        <ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="1">
+                                                                                                            <ContentPresenter.Resources>
+                                                                                                                <DataTemplate DataType="{x:Type sys:Boolean}">
+                                                                                                                    <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
+                                                                                                                </DataTemplate>
+                                                                                                                <DataTemplate DataType="{x:Type sys:String}">
+                                                                                                                    <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                                                                </DataTemplate>
+                                                                                                            </ContentPresenter.Resources>
+                                                                                                        </ContentPresenter>
+                                                                                                    <!--</StackPanel>-->
+                                                                                                    </Grid>
+                                                                                                </DataTemplate>
+                                                                                            </ItemsControl.ItemTemplate>
+                                                                                        </ItemsControl>
+                                                                                    </StackPanel>
+                                                                                </Grid>
+                                                                            </Expander>
+                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top">
+                                                                                <Image Source="../Images/CircledMinus.png"/>
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Grid>
+                                                </ScrollViewer>
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutAnchorablePane>
+                                        <avalonDock:LayoutAnchorablePane>
+                                            <avalonDock:LayoutAnchorable>
+                                                
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutAnchorablePane>
+                                    </avalonDock:LayoutPanel>
+                                </avalonDock:LayoutRoot>
+                            </avalonDock:DockingManager>
+                        </avalonDock:LayoutAnchorable>
+                        <avalonDock:LayoutAnchorable Title="Process Config" CanClose="False" CanHide="False" CanAutoHide="True">
+
+                        </avalonDock:LayoutAnchorable>
+                        <avalonDock:LayoutAnchorable Title="Detector Config" CanClose="False" CanHide="False" CanAutoHide="True">
+
+                        </avalonDock:LayoutAnchorable>
+                    </avalonDock:LayoutDocumentPane>
+                    <!--</avalonDock:LayoutDocumentPaneGroup>-->
+                </avalonDock:LayoutPanel>
+            </avalonDock:LayoutRoot>
+        </avalonDock:DockingManager>
+    </Grid>
+</Window>
