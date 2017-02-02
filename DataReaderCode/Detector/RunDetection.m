@@ -72,7 +72,10 @@ end
 
 % Initialize the detection results and addition information structures
 DetectionResults = struct('TimeStamp',TimeStamp);
-AdditionalOutput = struct('TimeStamp',TimeStamp);
+% AdditionalOutput = struct('TimeStamp',TimeStamp);
+
+AdditionalOutput = PastAdditionalOutput;
+AdditionalOutput(1).TimeStamp = TimeStamp;
 
 for DetectorType = DetectorTypes
     

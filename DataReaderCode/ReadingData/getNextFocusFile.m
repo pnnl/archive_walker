@@ -52,6 +52,9 @@ else
     end
 end
 
+DataInfo.LastFocusFileTime = DataInfo.FocusFileTime;
+DataInfo.FocusFileTime = focusFileTime;
+
 % check focus file time
 if(~strcmp(DataInfo.mode, 'RealTime'))
     % in archive mode or hybrid mode
@@ -283,7 +286,7 @@ if exist('FileLength','var');
     k2 = strfind(focusFile,'.');
 
     dayStr = focusFile(k1(end-1)+1:k1(end)-1);
-    timeStr = focusFile(k1(end)+1:k2-1);
+    timeStr = focusFile(k1(end)+1:k2(end)-1);
 
 
     year = str2num(dayStr(1:4));

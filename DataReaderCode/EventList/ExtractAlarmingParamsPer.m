@@ -1,3 +1,35 @@
+% function ExtractedParameters = ExtractAlarmingParamsPer(Parameters)
+%
+% This function reads and sets defaults for parameters for
+% setting alarms based on forced oscillation detection results from the
+% periodogram method.
+%
+% Inputs:
+%   Parameters = structure array containing the parameters related to
+%                setting alarms based on forced oscillation detection
+%                results from the periodogram method. This is a portion of
+%                the structure array containing all the parameters from the
+%                detector XML.
+%
+% Outputs:
+%   ExtractedParameters = structure array containing the extracted
+%                parameters. Its fields are:
+%                   TimeMin = minimum time in seconds that an oscillation
+%                             must persist for an alarm to be set, unless
+%                             it exceeds SNRalarm (CoherenceAlarm).
+%                   TimeCorner = Along with SNRcorner (CoherenceCorner),
+%                                specifies a point on the alarm curve to
+%                                adjust the shape of the curve.
+%                   SNRalarm = SNR at which an alarm will be set,
+%                              regardless of duration 
+%                   SNRmin = minimum SNR required for an alarm to be
+%                            set, regardless of duration
+%                   SNRcorner = Along with TimeCorner, specifies a point on
+%                               the alarm curve to adjust the shape of the
+%                               curve
+%
+% Created by Jim Follum (james.follum@pnnl.gov) in November, 2016.
+
 function ExtractedParameters = ExtractAlarmingParamsPer(Parameters)
 
 % An alarm will be set for any detection with an SNR greater than SNRalarm

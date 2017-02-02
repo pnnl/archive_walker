@@ -64,6 +64,7 @@ signalNameStr = fgetl(fid);
 signalTypeStr = fgetl(fid);
 signalUnitStr = fgetl(fid);
 signalDespStr = fgetl(fid);
+fclose(fid);
 
 
 %% read in data

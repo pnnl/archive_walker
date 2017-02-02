@@ -19,26 +19,26 @@
         </Channel>
     </PMU>
     -->
-    <EventPath>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\EventXML</EventPath>
     <!-- WindRamp Detector -->
     <WindRamp>
         <PMU>
-            <Name>WindOscillation</Name>
+            <Name>WindOscillation2</Name>
             <Channel>
-                <Name>ROCKCK230TX1MW</Name>
-            </Channel>
-            <Channel>
-                <Name>ROCKCK500TX1MW</Name>
+                <Name>RKCR 230 B1 SA  .A230BANK1____1MW</Name>
             </Channel>
         </PMU>
-        <Fpass>0.03</Fpass>
-        <Fstop>0.05</Fstop>
+        <Fpass>0.00005</Fpass>
+        <Fstop>0.0002</Fstop>
+        <!--
+        <Fpass>0.002</Fpass>
+        <Fstop>0.01</Fstop>
+        -->
         <Apass>1</Apass>
         <Astop>60</Astop>
-        <ValMin>50</ValMin>
-        <TimeMin>30</TimeMin>
-        <ValMax>300</ValMax>
-        <TimeMax>300</TimeMax>
+        <ValMin>400</ValMin>
+        <TimeMin>14400</TimeMin>
+        <ValMax>1000</ValMax>
+        <TimeMax>45000</TimeMax>
     </WindRamp>
     <!-- Alarming info -->
     <Alarming>

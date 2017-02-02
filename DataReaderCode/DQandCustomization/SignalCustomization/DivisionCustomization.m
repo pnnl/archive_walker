@@ -67,12 +67,18 @@ AvailablePMU = {PMUstruct.PMU_Name};
 PMUidxDend = find(strcmp(Parameters.dividend.PMU,AvailablePMU));
 if ~isempty(PMUidxDend)
     SigIdxDend = find(strcmp(Parameters.dividend.Channel,PMUstruct(PMUidxDend).Signal_Name));
+else
+    % PMU was not found, so the signal index cannot be found
+    SigIdxDend = [];
 end
 
 % Get divisor (what you divide by)
 PMUidxDisor = find(strcmp(Parameters.divisor.PMU,AvailablePMU));
 if ~isempty(PMUidxDisor)
     SigIdxDisor = find(strcmp(Parameters.divisor.Channel,PMUstruct(PMUidxDisor).Signal_Name));
+else
+    % PMU was not found, so the signal index cannot be found
+    SigIdxDisor = [];
 end
 
 PMUstruct(custPMUidx).Signal_Name{NumSig+1} = SignalName;

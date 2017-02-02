@@ -37,16 +37,8 @@ FiltOrder  = str2num(Parameters.Order);
 FiltCutoff  = str2num(Parameters.Cutoff);
 SetZeroPhase  = Parameters.ZeroPhase;
 
-%calculates signal's sampling frequency using time string for 1st and 6th
-%data points.
-t = PMU.Signal_Time.Time_String;
-t1 = t{1};
-Ind1 = findstr(t1, '.');
-T1 = str2num(t1(Ind1:end));
-t6 = t{6};
-Ind6 = findstr(t6, '.');
-T6 = str2num(t6(Ind6:end));
-fs = round(5/(T6 - T1)); 
+%calculates signal's sampling rate
+fs = round(1/mean((diff(PMU.Signal_Time.Signal_datenum)*24*60*60)));
 
 %gives numerator and denominator of filter coefficients corresponding to
 %given user specified parameters
@@ -86,6 +78,13 @@ for SigIdx = 1:length(SigsToFilt)
             InitialCondos{SigIdx}.delays = [];
         end
         FinalCondos{SigIdx}.Name = SigsToFilt{SigIdx};
+        
+        % If no initial conditions are available, get some by filtering data with a 
+        % constant value equal to the first sample of Data.
+        if isempty(InitialCondos{SigIdx}.delays)
+            [~, InitialCondos{SigIdx}.delays] = filter(b,a,PMU.Data(1,ThisSig)*ones(ceil(max(grpdelay(b,a))),1));
+        end
+        
         [PMU.Data(:,ThisSig), FinalCondos{SigIdx}.delays] = filter(b,a,PMU.Data(:,ThisSig), InitialCondos{SigIdx}.delays);
     end 
 end

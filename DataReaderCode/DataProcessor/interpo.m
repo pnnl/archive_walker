@@ -95,11 +95,11 @@ for SigIdx = 1:length(SigsToInterpo)
     if ~isempty(GoodDataIdx)
         if strcmp(Interpolate_type,'Linear') && ~isempty(InterDataIdx)
             %carries out linear interpolation
-            PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'linear');
+            PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'linear','extrap');
 
         elseif strcmp(Interpolate_type,'Constant') && ~isempty(InterDataIdx)
             %carries out constant interpolation
-            PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'nearest');
+            PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'nearest','extrap');
         end
     end
     %Gives the indices of data that are interpoalted

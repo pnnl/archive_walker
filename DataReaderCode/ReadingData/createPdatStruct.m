@@ -54,10 +54,11 @@
 %
 
 
-function [PMU, tPMU, Num_Flags] =  createPdatStruct(pdatFile,DataXML)
+function [PMU, tPMU, Num_Flags,PMUStruct,signalCounts] =  createPdatStruct(pdatFile,DataXML,PMUStruct,signalCounts)
 
-[config, data]=pdatRead3(pdatFile);
+[config, data]=pdatRead(pdatFile);
 
+%%
 nPMU = config.numPMUs;  %number of PMUs
 pmuNames = config.pmuNames; % PMU names
 
@@ -71,6 +72,7 @@ t = (data.SOC+data.fracSec/config.timeBase)/86400 + datenum(1970,1,1);
 
 tPMU = t;
 t_str = datestr(t,'yyyy-mm-dd HH:MM:SS.FFF');
+nData = length(tPMU); % number of data in each channel
 
 % add 4 extra flags
 % the first additional bit is flagged when the customized signal uses flagged input signal
@@ -79,30 +81,49 @@ t_str = datestr(t,'yyyy-mm-dd HH:MM:SS.FFF');
 % the forth additional flag is used when the file is missing
 Num_Flags = max(DataXML.Flag_Bit)+4; 
 
+%%
+if(isempty(PMUStruct))    
+    % initalize an empty PMU structure
+    singlePMU = struct('File_Name',[],'PMU_Name',[], 'Time_Zone',[], 'Signal_Name',[], 'Signal_Type',[], 'Signal_Unit',[], 'Signal_Time', [], 'Stat', [], 'Data', [], 'Flag', []);
+    PMU = repmat(singlePMU, 1,nPMU);
+    PMUStruct = PMU;
+    setPMUStruct = 1; % need to set up PMU structure
+else
+    % initialize PMU with the input PMU structure
+    PMU = PMUStruct;
+    setPMUStruct = 0;  % no need to set up PMU structure
+end
+
 for i = 1:nPMU
    % for each PMU
-   PMU(i).File_Name = pdatFile;   % file name
-%    fprintf(flog,'%s\n',pdatFile);
-   currPMUName = pmuNames{i};   
-   PMU(i).PMU_Name = currPMUName;   % PMU name
-   PMU(i).Time_Zone = '-08:00';         % time zone; for now this is just the PST time 
+
+   if(setPMUStruct)
+       % read in all fixed fields for the 1st time
+       %    fprintf(flog,'%s\n',pdatFile);
+       currPMUName = pmuNames{i};
+       PMU(i).PMU_Name = currPMUName;   % PMU name
+       PMU(i).Time_Zone = '-08:00';         % time zone; for now this is just the PST time
+              
+       % get variable names
+       currPMUConfig = config.pmu{i};
+       [signalNames,nSignals] = getVarNames(currPMUConfig); % nSignals: 1x3 vector, number of signals of phasor, analog,  and digit
+       signalCounts{i} = nSignals;
+       
+       PMU(i).Signal_Name = signalNames;
+       
+       % Signal_Type and Signal_Unit are empty cells for now
+       % we will update them after the signal selection
+       PMU(i).Signal_Type = cell(1,length(signalNames));
+       PMU(i).Signal_Unit = cell(1,length(signalNames));          
+   end
    
-   %
-   PMU(i).Signal_Time.Time_String = cellstr(t_str);  
+   PMU(i).Signal_Time.Time_String = cellstr(t_str);
    PMU(i).Signal_Time.Signal_datenum = t;
    
-   % get variable names
-   currPMUConfig = config.pmu{i};
-   [signalNames,nSignals] = getVarNames(currPMUConfig); % nSignals: 1x3 vector, number of signals of phasor, analog,  and digit
+   nSignals = signalCounts{i};
    
-   
-   PMU(i).Signal_Name = signalNames;
-   
-   % Signal_Type and Signal_Unit are empty cells for now
-   % we will update them after the signal selection
-   PMU(i).Signal_Type = cell(1,length(signalNames));
-   PMU(i).Signal_Unit = cell(1,length(signalNames));
-      
+   PMU(i).File_Name = pdatFile;   % file name
+
    % get PMU data
    currPMUData = data.pmu{i};   
 
@@ -110,19 +131,19 @@ for i = 1:nPMU
    PMU(i).Stat = currPMUData.stat;
    
    % get phasor data
-   phsrData = getPhsrData(currPMUData);
+   phsrData = getPhsrData(currPMUData,nData);
 %    if(size(phsrData,2) ~= nSignals.phsr)
 %        fprintf(flog,'difference between number of phsr and number of phsr data\n');
 %    end
    
    % get analog data
-   anlgData = getAnlgData(currPMUData);
+   anlgData = getAnlgData(currPMUData,nData);
 %    if(size(anlgData,2) ~= nSignals.anlg)
 %        fprintf(flog,'difference between number of analog and number of analog data\n');
 %    end
    
    % get digit data
-   digitData = getDigitData(currPMUData);
+   digitData = getDigitData(currPMUData,nData);
    if(size(digitData,2) ~= nSignals.dig)
 %        fprintf(flog,'difference between number of digit and number of digit data\n');
        % this happens
@@ -134,11 +155,13 @@ for i = 1:nPMU
        end
    end
    
-   % set digital signal type and unit
-   for m = 1:nSignals.dig
-       idx = nSignals.phsr+nSignals.anlg+m;     % index for the digital signal column
-       PMU(i).Signal_Type{idx} = 'D';
-       PMU(i).Signal_Unit{idx} = 'D';
+   if(setPMUStruct)
+       % set digital signal type and unit
+       for m = 1:nSignals.dig
+           idx = nSignals.phsr+nSignals.anlg+m;     % index for the digital signal column
+           PMU(i).Signal_Type{idx} = 'D';
+           PMU(i).Signal_Unit{idx} = 'D';
+       end
    end
    
    % get frequency and rocof
@@ -161,7 +184,17 @@ end
 
 % This only operates on PDAT (as the name already implied), so there's no
 % need to check. JSIS-CSV are handled by JSIS_CSV_2_Mat.m.
-PMU = SetNameAndUnit_PDAT(PMU);
+if(setPMUStruct)
+    % set PMU Structure
+    PMU = SetNameAndUnit_PDAT(PMU);
+    PMUStruct = PMU;
+    for i = 1:length(PMUStruct)
+        PMUStruct(i).File_Name = [];
+        PMUStruct(i).Stat = [];
+        PMUStruct(i).Data = [];
+        PMUStruct(i).Flag = [];
+    end
+end
 
 % if strcmp(pdatFile(end-3:end),'pdat')
 %     % PDAT file
@@ -172,9 +205,10 @@ PMU = SetNameAndUnit_PDAT(PMU);
 % end
 
 
+
 end
 
-% get variable names for a PMU
+%% get variable names for a PMU
 function [signalNames,nSignals] = getVarNames(currPMUConfig)
 
 % PMU name
@@ -244,36 +278,41 @@ end
 
 %% funcitons to get data
 % get phasor data
-function phsrData = getPhsrData(currPMUData)
-phsrData = [];
+function phsrData = getPhsrData(currPMUData,nData)
 phsrDataList = currPMUData.phsr;
+phsrData = zeros(nData,2*length(phsrDataList));
 for i = 1:length(phsrDataList)
-    phsrData = [phsrData,phsrDataList{i}.mag];
-    phsrData = [phsrData,phsrDataList{i}.ang];
+    phsrData(:,2*i-1) = phsrDataList{i}.mag;
+    phsrData(:,2*i) = phsrDataList{i}.ang;
 end
 
 end
 
 % get analog data
-function anlgData = getAnlgData(currPMUData)
-anlgData = [];
-anlgDataList = currPMUData.anlg;
-for i = 1:length(anlgDataList)
-    anlgData = [anlgData,anlgDataList{i}.val];
+function anlgData = getAnlgData(currPMUData,nData)
+if isfield(currPMUData,'anlg')
+   anlgDataList = currPMUData.anlg;
+    anlgData = zeros(nData,length(anlgDataList));
+    for i = 1:length(anlgDataList)
+        anlgData(:,i) = anlgDataList{i}.val;
+    end
+else
+   anlgData = [];
 end
-
 
 end
 
 
 % get digit data
-function digitData = getDigitData(currPMUData)
-digitData = [];
+function digitData = getDigitData(currPMUData,nData)
 if(isfield(currPMUData,'dig'))
     digitDataList = currPMUData.dig;
+    digitData = zeros(nData,length(digitDataList));
     for i = 1:length(digitDataList)
-        digitData = [digitData,digitDataList{i}.val];
+        digitData(:,i) = digitDataList{i}.val;
     end
+else
+    digitData = [];
 end
 
 

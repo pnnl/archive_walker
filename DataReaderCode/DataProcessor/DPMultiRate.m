@@ -41,26 +41,20 @@
 %
 %Created by: Urmila Agrawal(urmila.agrawal@pnnl.gov)
 
-function PMU = DPMultiRate(PMU,ProcessMultiRate)
+function [PMU, FinalCondos] = DPMultiRate(PMU,ProcessMultiRate, InitialCondos)
 
 NumMultiRate = length(ProcessMultiRate);
-
-%calculates signal's sampling frequency using time string of 1st and 6th sample to increase accuracy
-
-t = PMU(1).Signal_Time.Time_String;
-t1 = t{1};
-Ind1 = findstr(t1, '.');
-T1 = str2num(t1(Ind1:end));
-t6 = t{6};
-Ind6 = findstr(t6, '.');
-T6 = str2num(t6(Ind6:end));
-FsOld = round(5/(T6 - T1)); 
 
 if NumMultiRate == 1
     % By default, the contents of ProcessMultiRate
     % would not be in a cell array because length is one. This
     % makes it so the same indexing can be used in the following for loop.
     ProcessMultiRate = {ProcessMultiRate};
+end
+
+FinalCondos = cell(1,NumMultiRate);
+if isempty(InitialCondos)
+    InitialCondos = cell(1,NumMultiRate);
 end
 
 for MultiRateIdx = 1:NumMultiRate
@@ -75,40 +69,6 @@ for MultiRateIdx = 1:NumMultiRate
         error('PMU name must be assigned by user when changing data rate.');
     end
     
-    % Initializing new PMU for storing data after multi-rate operation
-    PMU(NewPMUidx).PMU_Name = PMUName;   % PMU name
-    PMU(NewPMUidx).Time_Zone = PMU(1).Time_Zone;         % time zone; for now this is just the PST time
-    PMU(NewPMUidx).Signal_Name = cell(1,0);
-    PMU(NewPMUidx).Signal_Type = cell(1,0);
-    PMU(NewPMUidx).Signal_Unit = cell(1,0);
-    PMU(NewPMUidx).Stat = [];
-    PMU(NewPMUidx).Data = [];  
-    PMU(NewPMUidx).Flag = false();
-    
-    % Checks given user-specified parameters and then calculates the
-    % upsampling and downsampling rate
-    if isfield(Parameters,'NewRate')
-        FsNew = str2num(Parameters.NewRate);
-        [p,q] = rat(FsNew / FsOld);        
-    elseif isfield(Parameters,'p') && isfield(Parameters,'q')
-        p = str2num(Parameters.p);
-        q = str2num(Parameters.q);      
-    elseif isfield(Parameters,'p') && ~isfield(Parameters,'q')
-        p = str2num(Parameters.p);
-        q = [];
-    elseif ~isfield(Parameters,'p') && isfield(Parameters,'q')
-        q = str2num(Parameters.q);
-        p = [];        
-%     elseif ~isfield(Parameters,'p') && ~isfield(Parameters,'q')
-%         warning('Parameters for changing data rate not provided');
-%         continue;
-    end
-    
-    %Gets timestring and dateNumArray for data after multirate
-    %operation
-    [TimeString,DateNumArray] = GetNewTime(PMU(1).Signal_Time.Signal_datenum,p,q);
-    PMU(NewPMUidx).Signal_Time.Time_String = TimeString;
-    PMU(NewPMUidx).Signal_Time.Signal_datenum = DateNumArray;    
     
     if isfield(ProcessMultiRate{MultiRateIdx},'PMU')
         % Get list of PMUs to apply filter to
@@ -153,15 +113,66 @@ for MultiRateIdx = 1:NumMultiRate
         PMUstructIdx = 1:NumPMU;
     end
     
+    
+    t = PMU(PMUstructIdx(1)).Signal_Time.Signal_datenum;
+    FsOld = round(1/(mean(diff(t)*24*60*60)));
+    
+    % Checks given user-specified parameters and then calculates the
+    % upsampling and downsampling rate
+    if isfield(Parameters,'NewRate')
+        FsNew = str2num(Parameters.NewRate);
+        [p,q] = rat(FsNew / FsOld);        
+    elseif isfield(Parameters,'p') && isfield(Parameters,'q')
+        p = str2num(Parameters.p);
+        q = str2num(Parameters.q);      
+    elseif isfield(Parameters,'p') && ~isfield(Parameters,'q')
+        p = str2num(Parameters.p);
+        q = [];
+    elseif ~isfield(Parameters,'p') && isfield(Parameters,'q')
+        q = str2num(Parameters.q);
+        p = [];        
+%     elseif ~isfield(Parameters,'p') && ~isfield(Parameters,'q')
+%         warning('Parameters for changing data rate not provided');
+%         continue;
+    end
+    
+    % Initializing new PMU for storing data after multi-rate operation
+    PMU(NewPMUidx).PMU_Name = PMUName;   % PMU name
+    PMU(NewPMUidx).Time_Zone = PMU(1).Time_Zone;         % time zone; for now this is just the PST time
+    PMU(NewPMUidx).Signal_Name = cell(1,0);
+    PMU(NewPMUidx).Signal_Type = cell(1,0);
+    PMU(NewPMUidx).Signal_Unit = cell(1,0);
+    PMU(NewPMUidx).Stat = [];
+    PMU(NewPMUidx).Data = [];  
+    PMU(NewPMUidx).Flag = false(); 
+    
+    %Gets timestring and dateNumArray for data after multirate
+    %operation
+    [TimeString,DateNumArray] = GetNewTime(PMU(PMUstructIdx(1)).Signal_Time.Signal_datenum,p,q);
+    PMU(NewPMUidx).Signal_Time.Time_String = TimeString;
+    PMU(NewPMUidx).Signal_Time.Signal_datenum = DateNumArray; 
+    
+    FinalCondos{MultiRateIdx} = cell(1,NumPMU);
+    if isempty(InitialCondos{MultiRateIdx})
+        InitialCondos{MultiRateIdx} = cell(1,NumPMU);
+    end
+    
     for PMUidx = 1:NumPMU
-        if PMUstructIdx(PMUidx) == NewPMUidx %this is to make sure that the new PMU is not included in the PMU list whose data is to be upsampled and downsampled
-            continue
-        elseif size(PMU(PMUstructIdx(PMUidx)).Data,1) ~= size(PMU(PMUstructIdx(1)).Data,1) %checks that the number of data points for all PMUs is same
-            warning('At least one PMU size does not match')
-            continue
-        else
-            PMU(NewPMUidx)= MultiRate(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,p,q,PMU(NewPMUidx)); %if all conditions are satisfied, then calls function to change data rate
-        end
+%         if PMUstructIdx(PMUidx) == NewPMUidx %this is to make sure that the new PMU is not included in the PMU list whose data is to be upsampled and downsampled
+%             continue
+%         elseif size(PMU(PMUstructIdx(PMUidx)).Data,1) ~= size(PMU(PMUstructIdx(1)).Data,1) %checks that the number of data points for all PMUs is same
+%             warning('At least one PMU size does not match')
+%             continue
+%         else
+%             [PMU(NewPMUidx), FinalCondos{MultiRateIdx}{PMUidx}] = MultiRate(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,p,q,PMU(NewPMUidx), InitialCondos{MultiRateIdx}{PMUidx}); %if all conditions are satisfied, then calls function to change data rate
+%         end
+        
+        % Ignores the checks above. Note that the elseif statement is not a
+        % good way to check for the condition anyway. On 12-13-2016 I
+        % updated this code so that not all PMUs have to have the same
+        % sampling rate, only all the PMUs referenced in a single MultiRate
+        % element in the XML.
+        [PMU(NewPMUidx), FinalCondos{MultiRateIdx}{PMUidx}] = MultiRate(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,p,q,PMU(NewPMUidx), InitialCondos{MultiRateIdx}{PMUidx}); %if all conditions are satisfied, then calls function to change data rate
     end
     
 end

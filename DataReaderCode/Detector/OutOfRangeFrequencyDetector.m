@@ -154,12 +154,12 @@ if ~isnan(RateOfChange)
     OutOfBoundsRateOfChange = false(size(Data));
     % Set the matrix to true where Data goes above its upper detection
     % threshold. RateOfChangeMax is only NaN when it is not to be included.
-    if ~isnan(DurationMax)
+    if ~isnan(RateOfChangeMax)
         OutOfBoundsRateOfChange(Data > RateOfChangeMax) = true;
     end
     % Set the matrix to true where Data goes below its lower detection
     % threshold. RateOfChangeMin is only NaN when it is not to be included.
-    if ~isnan(DurationMin)
+    if ~isnan(RateOfChangeMin)
         OutOfBoundsRateOfChange(Data < RateOfChangeMin) = true;
     end
 
@@ -189,9 +189,7 @@ if ~isnan(RateOfChange)
         for OverRateIdx = OverRate.'
             ExtremeIdx(ExtremeLocs(OverRateIdx):ExtremeLocs(OverRateIdx+1)) = true;
         end
-    %     DetectionIdx = OutOfBoundsRateOfChange(:,index) & ExtremeIdx;
-
-        DetectionIdx = OutOfBoundsRateOfChange(:,index);
+        DetectionIdx = OutOfBoundsRateOfChange(:,index) & ExtremeIdx;
 
         OutStart = {};
         OutEnd = {};

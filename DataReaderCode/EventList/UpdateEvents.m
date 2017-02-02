@@ -1,4 +1,34 @@
-
+% function EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmParams,DetectorTypes,EventList)
+%
+% This function updates the event lists for each of the event and
+% oscillation detectors. The functions corresponding to each event and
+% oscillation detector are:
+%   Periodogram - UpdateForcedOscillationEvents
+%   Spectral Coherence - UpdateForcedOscillationEvents()
+%   Ringdown - UpdateOutOfRangeAndRingEvents()
+%   General out-of-range - UpdateOutOfRangeAndRingEvents()
+%   Frequency out-of-range - UpdateOutOfRangeAndRingEvents()
+%   Wind ramp - UpdateWindRampEvents()
+% These functions all have the same inputs and outputs. This function
+% simply calls these functions in sequence to update the lists.
+%
+% Inputs: (see functions listed above for further details)
+%   DetectionResults = Output from RunDetection() containing detection
+%                      results
+%   AdditionalOutput = Output from RunDetection() containing additional
+%                      information from the detectors
+%   DetectorXML = Structure array containing detection parameters specified
+%                 in the detector XML
+%   AlarmParams = Structure array of alarming parameters specified in the
+%                 detector XML
+%   DetectorTypes = Cell array containing strings describing which
+%                   detectors need to be updated
+%   EventList = Structure array containing a list of events from each
+%               detector.
+%
+% Outputs:
+%   EventList = Structure array containing the updated list of events.
+%
 % Created by: Jim Follum (james.follum@pnnl.gov) on 11/10/2016
 
 function EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmParams,DetectorTypes,EventList)
@@ -40,7 +70,7 @@ for DetectorType = DetectorTypes
                     FieldName = ['OutOfRangeFrequency_' num2str(DetectorIndex)];
                     FunctionName = 'UpdateOutOfRangeAndRingEvents';
                 case 'WindRamp'
-                    FieldName = 'WindRamp';
+                    FieldName = ['WindRamp_' num2str(DetectorIndex)];
                     FunctionName = 'UpdateWindRampEvents';
             end
             

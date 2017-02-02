@@ -14,7 +14,6 @@
         <Mode>
             <Name>RealTime</Name>
             <Params>
-                <DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
                 <NoFutureWait>60</NoFutureWait>
                 <MaxNoFutureCount>10</MaxNoFutureCount>
                 <FutureWait>60</FutureWait>

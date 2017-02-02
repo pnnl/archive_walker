@@ -19,8 +19,8 @@
         </Channel>
     </PMU>
     -->
-    <ResultsPath>D:\BAWS\BAWS_GIT_1\DataReaderCode\DetectionResults</ResultsPath>
     <ResultUpdateInterval>60</ResultUpdateInterval>
+    <EventPath>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\EventXML</EventPath>
     <!-- Periodogram-based forced oscillation detector -->
     <Periodogram>
         <!-- Mode of operation. Options are SingleChannel and MultiChannel.
@@ -60,7 +60,7 @@
         <MedianFilterFrequencyWidth>0.04625</MedianFilterFrequencyWidth>
         <!-- Probability of false alarm. With zero padding it becomes a 
         maximum. If omitted, the default of 0.01 is used. -->
-        <Pfa>0.001</Pfa>
+        <Pfa>0.01</Pfa>
         <!-- Minimum frequency to be considered. If omitted, the default is
         zero, but in many cases this will cause excessive false alarms. -->
         <FrequencyMin>0.1</FrequencyMin>
@@ -150,7 +150,7 @@
         <MedianFilterFrequencyWidth>0.04625</MedianFilterFrequencyWidth>
         <!-- Probability of false alarm. With zero padding it becomes a 
         maximum. If omitted, the default of 0.01 is used. -->
-        <Pfa>0.001</Pfa>
+        <Pfa>0.01</Pfa>
         <!-- Minimum frequency to be considered. If omitted, the default is
         zero, but in many cases this will cause excessive false alarms. -->
         <FrequencyMin>0.1</FrequencyMin>
@@ -427,6 +427,5 @@
         <!--
         <RateOfChange>0.001</RateOfChange>
         -->
-        <FrequencyResponse>FALSE</FrequencyResponse>
     </OutOfRangeFrequency>
 </Configuration>

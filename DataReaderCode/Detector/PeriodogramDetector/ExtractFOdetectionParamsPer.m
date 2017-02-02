@@ -18,7 +18,8 @@ if isfield(Parameters,'AnalysisLength')
     % Use specified value
     AnalysisLength = str2double(Parameters.AnalysisLength)*fs;
 else
-    error('AnalysisLength must be specified for the Periodogram-based forced oscillation detector.');
+    % Use default value of 10 minutes
+    AnalysisLength = 10*60*fs;
 end
 
 % Type of window used for the test statistic periodogram, Daniell-Welch

@@ -43,22 +43,22 @@ for SigIdx = 1:NSigs
     DataMat = squeeze(DataSegement(:,SigIdx,:));
     %calculates power spectrum of signal
     PSD = pwelch(DataMat,  Window, WindowOverlap, ZeroPaddingLen);
-    %initializing matrix for cross power spectrum density
-    CPSD = zeros(NumberDelays,NumberDelays,size(PSD,1));
+    %initializing matrix for magnitude squared coherence
+    MSCohere = zeros(NumberDelays,NumberDelays,size(PSD,1));
     for Sig1Ind = 1:NumberDelays
         for Sig2Ind = Sig1Ind:NumberDelays
-            %gives cross power spectrum density between signal-1 and signal-2
-            CPSD(Sig1Ind,Sig2Ind,:) = cpsd(DataMat(:,Sig1Ind), DataMat(:,Sig2Ind), Window, WindowOverlap, ZeroPaddingLen)./sqrt(PSD(:,Sig2Ind).*PSD(:,Sig1Ind));
-            % gives cross power spectrum density between  signal-2 and signal-1
-            CPSD(Sig2Ind,Sig1Ind,:) = conj(CPSD(Sig1Ind,Sig2Ind,:));
+            %gives magnitude squared coherence between signal-1 and signal-2
+            MSCohere(Sig1Ind,Sig2Ind,:) = cpsd(DataMat(:,Sig1Ind), DataMat(:,Sig2Ind), Window, WindowOverlap, ZeroPaddingLen)./sqrt(PSD(:,Sig2Ind).*PSD(:,Sig1Ind));
+            % gives magnitude squared coherence between  signal-2 and signal-1
+            MSCohere(Sig2Ind,Sig1Ind,:) = conj(MSCohere(Sig1Ind,Sig2Ind,:));
         end
     end   
 %     a = mscohere(DataMat(:,1), DataMat(:,2), Window, WindowOverlap, ZeroPaddingLen);
 %     GMSC_est(:,SigIdx)  = a(OmegaB);
     for FreqInd = 1:length(OmegaB)
-        %gives maximum eigen value of matrix containing cross-power spectrum
-        %density of signals for each frequency bin
-        EigMax = max(eig(CPSD(:,:,OmegaB(FreqInd))));
+        %gives maximum eigen value of matrix containing magnitude squared 
+        % coherence of signals for each frequency bin
+        EigMax = max(eig(MSCohere(:,:,OmegaB(FreqInd))));
         %gives estimate of GMSC for each frequency bin
         GMSC_est(FreqInd,SigIdx) = (1/(NumberDelays-1)*(EigMax-1))^2;
     end

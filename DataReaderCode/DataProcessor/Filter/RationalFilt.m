@@ -79,6 +79,13 @@ for SigIdx = 1:length(SigsToFilt)
             InitialCondos{SigIdx}.delays = [];
         end
         FinalCondos{SigIdx}.Name = SigsToFilt{SigIdx};
+        
+        % If no initial conditions are available, get some by filtering data with a 
+        % constant value equal to the first sample of Data.
+        if isempty(InitialCondos{SigIdx}.delays)
+            [~, InitialCondos{SigIdx}.delays] = filter(b,a,PMU.Data(1,ThisSig)*ones(ceil(max(grpdelay(b,a))),1));
+        end
+        
         [PMU.Data(:,ThisSig), FinalCondos{SigIdx}.delays] = filter(b,a,PMU.Data(:,ThisSig), InitialCondos{SigIdx}.delays);
     end
 end

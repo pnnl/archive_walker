@@ -29,7 +29,6 @@ ExtractedParameters = ExtractParameters(Parameters,fs);
 RMSlength = ExtractedParameters.RMSlength;
 ForgetFactor = ExtractedParameters.ForgetFactor;
 RingThresholdScale = ExtractedParameters.RingThresholdScale;
-MaxDuration = ExtractedParameters.MaxDuration;
 
 
 %% New RMS energy based detector
@@ -61,7 +60,9 @@ for index = 1:size(Data2,2)
         % This channel is okay to be included
         if isempty(PastAdditionalOutput)
             % PastAdditionalOutput isn't available
-            InitConditions = [];
+            % Get initial conditions by filtering data with a constant 
+            % value equal to the first sample of Data.
+            [~, InitConditions] = filter(ones(1,RMSlength)/RMSlength,1,Data2(1,index)*ones(ceil(RMSlength/2),1));
         else
             InitConditions = PastAdditionalOutput(index).FilterConditions;
         end
@@ -85,7 +86,6 @@ for index = 1:size(Data2,2)
         
         RingStart = {};
         RingEnd = {};
-        DataRing = {};
         if sum(DetectionIdx) > 0
             % Ringdown was detected
             
@@ -97,20 +97,15 @@ for index = 1:size(Data2,2)
                 Ends = [Ends; length(DetectionIdx)];
             end
             
-            % Adjust for filter delay, but don't let them be less than 0
-            Starts = Starts - floor((RMSlength-1)/2);
-            Ends = Ends - floor((RMSlength-1)/2);
-            Starts(Starts<1) = 1;
-            Ends(Ends<1) = 1;
-            
-            % Remove any detections where the duration is longer than the
-            % maximum. This helps make the detector specific to ringdowns
-            Starts(Ends-Starts+1 > MaxDuration*fs) = [];
-            
             for RingIdx = 1:length(Starts)
-                RingStart{RingIdx} = TimeString{Starts(RingIdx)};
+                % Store ring start and end points while accounting for
+                % filter delay in the starting point. Not accounting for
+                % the delay in the end point allows overlap in the
+                % detection results from adjacent files, which allows a
+                % single event occurring across files to be listed as a
+                % single event.
+                RingStart{RingIdx} = datestr(datenum(TimeString{Starts(RingIdx)})-((RMSlength-1)/2/fs)/(60*60*24),'yyyy-mm-dd HH:MM:SS.FFF');
                 RingEnd{RingIdx} = TimeString{Ends(RingIdx)};
-                DataRing{RingIdx} = Data(Starts(RingIdx):Ends(RingIdx),index);
             end
             
             % Ringdown was detected - do not update threshold
@@ -127,7 +122,6 @@ for index = 1:size(Data2,2)
         AdditionalOutput(index).threshold = ThisThreshold;
         AdditionalOutput(index).RMS = RMS;
         AdditionalOutput(index).TimePoints = TimeString;
-        AdditionalOutput(index).DataRing = DataRing;
     end
 end
 
@@ -142,20 +136,6 @@ end
 % such as the length of the input data or the sampling rate, can be added
 % as necessary. 
 function ExtractedParameters = ExtractParameters(Parameters,fs)
-% Maximum duration
-if isfield(Parameters,'MaxDuration')
-    % Use specified maximum duration
-    MaxDuration = str2double(Parameters.MaxDuration);
-    
-    if isnan(MaxDuration)
-        % str2double sets the value to NaN when it can't make it a number
-        warning('MaxDuration is not a number. Default of 90 will be used.');
-        MaxDuration = 90;
-    end
-else
-    % Use default maximum duration
-    MaxDuration = 90;
-end
 
 % Length for RMS calculation
 if isfield(Parameters,'RMSlength')
@@ -214,5 +194,5 @@ end
 
 
 ExtractedParameters = struct('RingThresholdScale',RingThresholdScale,...
-    'RMSlength',RMSlength,'ForgetFactor',ForgetFactor,'MaxDuration',MaxDuration);
+    'RMSlength',RMSlength,'ForgetFactor',ForgetFactor);
 end

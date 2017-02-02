@@ -1,4 +1,39 @@
-function EventList = UpdateOutOfRangeAndRingEvents(DetectionResults, ~, EventList, ~, ~)
+% function EventList = EventList = UpdateOutOfRangeAndRingEvents(DetectionResults, ~, EventList, ~, ~)
+%
+% This function updates a list of out-of-range and ringdown events based on
+% new detection results. For example, if a ringdown is detected in two
+% adjacent sets of  data, this function judges whether they are the same
+% event and lists them as such. The general out-of-range, frequency out-of-
+% range, and ringdown event lists are all managed using this function
+% because they have the lists are structured the same. Detection results
+% from these separate detectors do not influence each other.
+%
+% Inputs:
+%   DetectionResults = Detection results from the out-of-range and ringdown 
+%                      detectors. See OutOfRangeFrequencyDetector.m,
+%                      OutOfRangeGeneralDetector.m, and RingdownDetector.m
+%                      for specifications. 
+%   AdditionalOutput - Unused -> allows multiple functions to be called from UpdateEvents.m
+%   EventList = A structure array containing the current list of events.
+%               Each entry in the array contains a separate event and has
+%               the fields:
+%                   Start = datenum value for the start of the event
+%                   End = datenum value for the end of the event
+%                   Channel = cell array of strings specifying channels
+%                             involved in the event
+%                   PMU = cell array of strings specifying the PMUs
+%                         associated with the channels listed in Channel
+%   Params - Unused -> allows multiple functions to be called from UpdateEvents.m
+%   AlarmParams - Unused -> allows multiple functions to be called from UpdateEvents.m
+%   
+% Outputs:
+%   EventList = updated event list. See EventList in the list of Inputs
+%               for specifications.
+%
+% Created by Jim Follum (james.follum@pnnl.gov) in November, 2016.
+
+
+function EventList = UpdateOutOfRangeAndRingEvents(DetectionResults, ~, EventList, ~, AlarmParams)
 
 % Separate the detections from all the different channels into groups that
 % overlap. The start and end of each of these groups will be compared to
@@ -130,11 +165,12 @@ for GrpIdx = 1:length(Group)
         
         if isempty(EventIdx)
             % This is a newly detected event, add it to the list
-            EventList(end+1).Start = Group(GrpIdx).Start;
+            EventList(end+1).ID = AssignEventID();
+            EventList(end).Start = Group(GrpIdx).Start;
             EventList(end).End = Group(GrpIdx).End;
             EventList(end).Channel = [EventList(end).Channel DetectionResults(Group(GrpIdx).ChannelIdx).Channel];
             EventList(end).PMU = [EventList(end).PMU DetectionResults(Group(GrpIdx).ChannelIdx).PMU];
-            
+
             % Remove duplicate channel/PMU listings
             ChannelPMU = strcat(EventList(end).Channel,EventList(end).PMU);
             [~,Uidx] = unique(ChannelPMU);
@@ -181,6 +217,7 @@ for GrpIdx = 1:length(Group)
     else
         % Events have not yet been detected, so those in Group definitely
         % need to be added
+        EventList(1).ID = AssignEventID();
         EventList(1).Start = Group(GrpIdx).Start;
         EventList(1).End = Group(GrpIdx).End;
         EventList(1).Channel = [DetectionResults(Group(GrpIdx).ChannelIdx).Channel];
@@ -192,4 +229,20 @@ for GrpIdx = 1:length(Group)
         EventList(1).Channel = EventList(1).Channel(Uidx);
         EventList(1).PMU = EventList(1).PMU(Uidx);
     end
+end
+
+
+% For ringdown alarms, the user can set a maximum duration. Ringdowns
+% lasting longer than this are not considered ringdowns. The following
+% lines remove ringdown events with durations that exceed the limit.
+if isfield(AlarmParams,'MaxDuration')
+    % Cell arrays containing datenum values for the start and stop 
+    % times of all the currently stored events
+    EventStarts = [EventList.Start];
+    EventEnds = [EventList.End];
+    EventDuration = EventEnds - EventStarts;
+    
+    MaxDuration = AlarmParams.MaxDuration/(60*60*24);
+    
+    EventList = EventList(EventDuration < MaxDuration);
 end
