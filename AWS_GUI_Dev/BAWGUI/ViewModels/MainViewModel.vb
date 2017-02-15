@@ -1,16 +1,7 @@
 ﻿Imports System.ComponentModel
 
 Public Class MainViewModel
-    Implements INotifyPropertyChanged
-    ''' <summary>
-    ''' Raise property changed event
-    ''' </summary>
-    ''' <param name="sender">The event sender</param>
-    ''' <param name="e">The event</param>
-    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Private Sub OnPropertyChanged(ByVal info As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    End Sub
+    Inherits ViewModelBase
 
     Public Sub New()
         _showSettingsWindow = New DelegateCommand(AddressOf ShowSettings, AddressOf CanExecute)
@@ -30,7 +21,4 @@ Public Class MainViewModel
         settingsWin.DataContext = settingsVM
         settingsWin.Show()
     End Sub
-    Private Function CanExecute(ByVal param As Object) As Boolean
-        Return True
-    End Function
 End Class

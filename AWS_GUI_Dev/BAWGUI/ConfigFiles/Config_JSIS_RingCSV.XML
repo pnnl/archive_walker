@@ -10,7 +10,7 @@
 				<FileDirectory> D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\OriginalData</FileDirectory>
 				-->
 				<FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\DataReaderCode\OriginalData\2015</FileDirectory>
-				<FileType>csv</FileType>
+				<FileType>PDAT</FileType>
 				<Mnemonic>ModeMeterSignals</Mnemonic>
 				
 <!--  				<Mode>

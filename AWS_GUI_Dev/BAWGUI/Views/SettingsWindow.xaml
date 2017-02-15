@@ -414,7 +414,7 @@
                                         <avalonDock:LayoutAnchorablePane DockMinWidth="800">
                                             <avalonDock:LayoutAnchorable>
                                                 <ScrollViewer>
-                                                    <Grid>
+                                                    <Grid Name="abc">
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition Height="auto"/>
                                                             <RowDefinition Height="auto"/>
@@ -429,7 +429,15 @@
                                                                 <Image Source="../Images/CircledPlus.png"/>
                                                                 <Button.ContextMenu>
                                                                     <ContextMenu>
-                                                                        <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}"/>
+                                                                        <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}">
+                                                                            <MenuItem.ItemContainerStyle>
+                                                                                <Style>
+                                                                                    <Setter Property="MenuItem.Command" Value="{Binding Path=PlacementTarget.DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                                                    <!--<Setter Property="MenuItem.CommandParameter" Value="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>-->
+                                                                                    <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                                                                </Style>
+                                                                            </MenuItem.ItemContainerStyle>
+                                                                        </MenuItem>
                                                                         <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}"/>
                                                                     </ContextMenu>
                                                                 </Button.ContextMenu>
@@ -524,9 +532,53 @@
                                                 </ScrollViewer>
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
+                                        <avalonDock:LayoutPanel Orientation="Vertical">
+                                            <avalonDock:LayoutAnchorablePane DockMinWidth="200" Name="dee">
+                                                <avalonDock:LayoutAnchorable Title="Select Signal by Signal Type">
+                                                    <TreeView ItemsSource="{Binding GroupedSignalsByType}">
+                                                        <TreeView.ItemTemplate>
+                                                            <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
+                                                                <StackPanel Orientation="Horizontal" Margin="0">
+                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedTypeSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding SignalSignature}"/>
+                                                                    <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>                                                                    
+                                                                </StackPanel>
+                                                            </HierarchicalDataTemplate>
+                                                        </TreeView.ItemTemplate>
+                                                    </TreeView>
+                                                </avalonDock:LayoutAnchorable>
+                                            </avalonDock:LayoutAnchorablePane>
+                                            <avalonDock:LayoutAnchorablePane DockMinWidth="200">
+                                                <avalonDock:LayoutAnchorable Title="Select Signal by PMU">
+                                                    <TreeView ItemsSource="{Binding GroupedSignalsByPMU}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                        <TreeView.ItemTemplate>
+                                                            <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
+                                                                <StackPanel Orientation="Horizontal" Margin="0">
+                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.PMUSignalSelectionChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding SignalSignature}"/>
+                                                                    <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
+                                                                </StackPanel>
+                                                            </HierarchicalDataTemplate>
+                                                            <!--<HierarchicalDataTemplate ItemsSource="{Binding Value}">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0"/>
+                                                                    <TextBlock Text="{Binding Key}" Margin="0"/>
+                                                                </StackPanel>
+                                                                <HierarchicalDataTemplate.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0"/>
+                                                                            <TextBlock Text="{Binding SignalName}" Margin="0"/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </HierarchicalDataTemplate.ItemTemplate>
+                                                            </HierarchicalDataTemplate>-->
+                                                        </TreeView.ItemTemplate>
+                                                    </TreeView>
+                                                </avalonDock:LayoutAnchorable>
+                                            </avalonDock:LayoutAnchorablePane>
+                                        </avalonDock:LayoutPanel>
                                         <avalonDock:LayoutAnchorablePane>
                                             <avalonDock:LayoutAnchorable>
-                                                
+
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
                                     </avalonDock:LayoutPanel>

@@ -3,31 +3,35 @@ Imports System.ComponentModel
 Imports System.Globalization
 
 Public Class DataConfig
-    Implements INotifyPropertyChanged
-    ''' <summary>
-    ''' Raise property changed event
-    ''' </summary>
-    ''' <param name="sender">The event sender</param>
-    ''' <param name="e">The event</param>
-    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Private Sub OnPropertyChanged(ByVal info As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    End Sub
+    Inherits ViewModelBase
     Public Sub New()
         _readerProperty = New ReaderProperties
-        _dqfilterNameDictionary = New Dictionary(Of String, String) From {{"PMU Status Flags Data Quality Filter", "PMUflagFilt"},
-                            {"Replaced-by-Zero Dropout Data Quality Filter", "DropOutZeroFilt"},
-                            {"Replaced-by-Missing Dropout Data Quality Filter", "DropOutMissingFilt"},
-                            {"Nominal-Value Voltage Phasor Data Quality Filter", "VoltPhasorFilt"},
-                            {"Nominal-Value Frequency Data Quality Filter", "FreqFilt"},
-                            {"Outlier Data Quality Filter", "OutlierFilt"},
-                            {"Stale Measurements Data Quality Filter", "StaleFilt"},
-                            {"Measurement Frame Data Quality Filter", "DataFrameFilt"},
-                            {"Entire Channel Data Quality Filter", "PMUchanFilt"},
-                            {"Entire PMU Data Quality Filter", "PMUallFilt"},
-                            {"Angle Wrapping Failure Filter", "WrappingFailureFilt"}}
-        _dqfilterReverseNameDictionary = _dqfilterNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
-        _dqFilterList = _dqfilterNameDictionary.Keys.ToList
+        _dqFilterNameDictionary = New Dictionary(Of String, String) From {{"PMU Status Flags Data Quality Filter", "PMUflagFilt"},
+                                                                        {"Replaced-by-Zero Dropout Data Quality Filter", "DropOutZeroFilt"},
+                                                                        {"Replaced-by-Missing Dropout Data Quality Filter", "DropOutMissingFilt"},
+                                                                        {"Nominal-Value Voltage Phasor Data Quality Filter", "VoltPhasorFilt"},
+                                                                        {"Nominal-Value Frequency Data Quality Filter", "FreqFilt"},
+                                                                        {"Outlier Data Quality Filter", "OutlierFilt"},
+                                                                        {"Stale Measurements Data Quality Filter", "StaleFilt"},
+                                                                        {"Measurement Frame Data Quality Filter", "DataFrameFilt"},
+                                                                        {"Entire Channel Data Quality Filter", "PMUchanFilt"},
+                                                                        {"Entire PMU Data Quality Filter", "PMUallFilt"},
+                                                                        {"Angle Wrapping Failure Filter", "WrappingFailureFilt"}}
+        _dqFilterReverseNameDictionary = _dqFilterNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
+        _dqFilterList = _dqFilterNameDictionary.Keys.ToList
+
+        _dqFilterNameParametersDictionary = New Dictionary(Of String, List(Of String)) From {{"PMU Status Flags Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
+                                                                        {"Replaced-by-Zero Dropout Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
+                                                                        {"Replaced-by-Missing Dropout Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
+                                                                        {"Nominal-Value Voltage Phasor Data Quality Filter", {"SetToNaN", "FlagBit", "VoltMin", "VoltMax", "NomVoltage"}.ToList},
+                                                                        {"Nominal-Value Frequency Data Quality Filter", {"SetToNaN", "FlagBit", "FreqMinChan", "FreqMaxChan", "FreqPctChan", "FreqMinSamp", "FreqMaxSamp", "FlagBitChan", "FlagBitSamp"}.ToList},
+                                                                        {"Outlier Data Quality Filter", {"SetToNaN", "FlagBit", "StdDevMult"}.ToList},
+                                                                        {"Stale Measurements Data Quality Filter", {"SetToNaN", "FlagBit", "StaleThresh", "FlagAllByFreq", "FlagBitFreq"}.ToList},
+                                                                        {"Measurement Frame Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
+                                                                        {"Entire Channel Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
+                                                                        {"Entire PMU Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
+                                                                        {"Angle Wrapping Failure Filter", {"SetToNaN", "FlagBit", "AngleThresh"}.ToList}}
+
         _customizationList = {"Scalar Repetition Customization",
                                 "Addition Customization",
                                 "Subtraction Customization",
@@ -39,6 +43,7 @@ Public Class DataConfig
                                 "Specify Signal Type and Unit Customization",
                                 "Metric Prefix Customization",
                                 "Angle Conversion Customization"}.ToList
+        _collectionOfSteps = New ObservableCollection(Of SignalProcessStep)
     End Sub
 
     Private _readerProperty As ReaderProperties
@@ -76,17 +81,24 @@ Public Class DataConfig
         End Get
     End Property
 
-    Private ReadOnly _dqfilterNameDictionary As Dictionary(Of String, String)
+    Private ReadOnly _dqFilterNameDictionary As Dictionary(Of String, String)
     Public ReadOnly Property DQFilterNameDictionary As Dictionary(Of String, String)
         Get
-            Return _dqfilterNameDictionary
+            Return _dqFilterNameDictionary
         End Get
     End Property
 
-    Private ReadOnly _dqfilterReverseNameDictionary As Dictionary(Of String, String)
+    Private ReadOnly _dqFilterReverseNameDictionary As Dictionary(Of String, String)
     Public ReadOnly Property DQFilterReverseNameDictionary() As Dictionary(Of String, String)
         Get
-            Return _dqfilterReverseNameDictionary
+            Return _dqFilterReverseNameDictionary
+        End Get
+    End Property
+
+    Private ReadOnly _dqFilterNameParametersDictionary As Dictionary(Of String, List(Of String))
+    Public ReadOnly Property DQFilterNameParametersDictionary As Dictionary(Of String, List(Of String))
+        Get
+            Return _dqFilterNameParametersDictionary
         End Get
     End Property
 
@@ -122,16 +134,7 @@ End Enum
 ''' 
 ''' </summary>
 Public Class ReaderProperties
-    Implements INotifyPropertyChanged
-    ''' <summary>
-    ''' Raise property changed event
-    ''' </summary>
-    ''' <param name="sender">The event sender</param>
-    ''' <param name="e">The event</param>
-    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Private Sub OnPropertyChanged(ByVal info As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    End Sub
+    Inherits ViewModelBase
     Public Sub New()
         _mode = New Dictionary(Of ModeType, Dictionary(Of String, String))
         '_modeParams = New ObservableCollection(Of ParameterValuePair)
@@ -520,20 +523,13 @@ Public Class DQFilter
             OnPropertyChanged("PMUs")
         End Set
     End Property
+
+
+
 End Class
 
 Public Class Customization
     Inherits SignalProcessStep
-    'Implements INotifyPropertyChanged
-    '''' <summary>
-    '''' Raise property changed event
-    '''' </summary>
-    '''' <param name="sender">The event sender</param>
-    '''' <param name="e">The event</param>
-    'Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    'Private Sub OnPropertyChanged(ByVal info As String)
-    '    RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    'End Sub
     Public Sub New()
         _customizationParams = New ObservableCollection(Of ParameterValuePair)
     End Sub
@@ -545,7 +541,7 @@ Public Class Customization
         End Get
         Set(ByVal value As String)
             _customizationName = value
-            OnPropertyChanged("CustomizationName")
+            OnPropertyChanged()
         End Set
     End Property
     Private _name As String
@@ -555,7 +551,7 @@ Public Class Customization
         End Get
         Set(value As String)
             _name = value
-            OnPropertyChanged("Name")
+            OnPropertyChanged()
         End Set
     End Property
     Private _parameters As ObservableCollection(Of ParameterValuePair)
@@ -565,7 +561,7 @@ Public Class Customization
         End Get
         Set(ByVal value As ObservableCollection(Of ParameterValuePair))
             _parameters = value
-            OnPropertyChanged("Parameters")
+            OnPropertyChanged()
         End Set
     End Property
     Private _customizationParams As ObservableCollection(Of ParameterValuePair)
@@ -575,7 +571,7 @@ Public Class Customization
         End Get
         Set(ByVal value As ObservableCollection(Of ParameterValuePair))
             _customizationParams = value
-            OnPropertyChanged("CustomizationParams")
+            OnPropertyChanged()
         End Set
     End Property
 

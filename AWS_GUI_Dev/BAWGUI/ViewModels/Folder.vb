@@ -3,21 +3,14 @@ Imports System.ComponentModel
 Imports System.IO
 
 Public Class Folder
-    Implements INotifyPropertyChanged
-    ''' <summary>
-    ''' Raise property changed event
-    ''' </summary>
-    ''' <param name="sender">The event sender</param>
-    ''' <param name="e">The event</param>
-    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Private Sub OnPropertyChanged(ByVal info As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    End Sub
-    Public Sub New(filename, filetype)
+    Inherits ViewModelBase
+    Public Sub New(filename, filetype, ByRef firstFile)
         _name = Path.GetFileName(filename)
+        _fullName = filename
         'what If type Is nothing?
         _type = filetype
-        _buildDirTree(filename)
+        'firstFile = Nothing
+        _buildDirTree(filename, firstFile)
     End Sub
     Private _type As String
     Private _name As String
@@ -27,7 +20,17 @@ Public Class Folder
         End Get
         Set(ByVal value As String)
             _name = value
-            OnPropertyChanged("Name")
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _fullName As String
+    Public Property FullName As String
+        Get
+            Return _fullName
+        End Get
+        Set(ByVal value As String)
+            _fullName = value
+            OnPropertyChanged()
         End Set
     End Property
     Private _subFolders As ObservableCollection(Of Folder)
@@ -37,21 +40,26 @@ Public Class Folder
         End Get
         Set(ByVal value As ObservableCollection(Of Folder))
             _subFolders = value
-            OnPropertyChanged("SubFolders")
+            OnPropertyChanged()
         End Set
     End Property
-    Private Sub _buildDirTree(filename)
+    Private Sub _buildDirTree(filename, ByRef firstFile)
         If File.Exists(filename) Then
-
+            If String.IsNullOrEmpty(firstFile) Then
+                firstFile = filename
+            End If
+            'If firstFile IsNot Nothing Then
+            '    firstFile = filename
+            'End If
         ElseIf Directory.Exists(filename) Then
             _subFolders = New ObservableCollection(Of Folder)
             For Each path In Directory.GetDirectories(filename)
-                _subFolders.Add(New Folder(path, _type))
+                _subFolders.Add(New Folder(path, _type, firstFile))
             Next
             For Each file In Directory.GetFiles(filename)
                 'what If type Is nothing?
                 If Path.GetExtension(file).Substring(1) = _type Then
-                    _subFolders.Add(New Folder(file, _type))
+                    _subFolders.Add(New Folder(file, _type, firstFile))
                 End If
             Next
         Else

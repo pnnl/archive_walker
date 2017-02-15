@@ -1,7 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 
-Public Class ParameterValuePair
+Public Class ViewModelBase
     Implements INotifyPropertyChanged
     ''' <summary>
     ''' Raise property changed event
@@ -9,13 +9,20 @@ Public Class ParameterValuePair
     ''' <param name="sender">The event sender</param>
     ''' <param name="e">The event</param>
     Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Private Sub OnPropertyChanged(ByVal info As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
+    Protected Overridable Sub OnPropertyChanged(<Runtime.CompilerServices.CallerMemberName> Optional propertyName As String = Nothing)
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
     End Sub
+    Protected Overridable Function CanExecute(ByVal param As Object) As Boolean
+        Return True
+    End Function
+End Class
+
+Public Class ParameterValuePair
+    Inherits ViewModelBase
     Public Sub New()
 
     End Sub
-    Public Sub New(para As String, value As String)
+    Public Sub New(para As String, value As Object)
         _parameterName = para
         _value = value
     End Sub
@@ -26,7 +33,7 @@ Public Class ParameterValuePair
         End Get
         Set(ByVal value As String)
             _parameterName = value
-            OnPropertyChanged("ParameterName")
+            OnPropertyChanged()
         End Set
     End Property
     Private _value As Object
@@ -36,7 +43,7 @@ Public Class ParameterValuePair
         End Get
         Set(ByVal value As Object)
             _value = value
-            OnPropertyChanged("Value")
+            OnPropertyChanged()
         End Set
     End Property
     'Private _value As String
@@ -54,16 +61,7 @@ End Class
 ''''''''''''''''''''''''''''''''Class PMU''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Class PMU
-    Implements INotifyPropertyChanged
-    ''' <summary>
-    ''' Raise property changed event
-    ''' </summary>
-    ''' <param name="sender">The event sender</param>
-    ''' <param name="e">The event</param>
-    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Private Sub OnPropertyChanged(ByVal info As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    End Sub
+    Inherits ViewModelBase
     Public Sub New()
         _channels = New ObservableCollection(Of String)
     End Sub
@@ -74,7 +72,7 @@ Public Class PMU
         End Get
         Set(ByVal value As String)
             _PMUName = value
-            OnPropertyChanged("PMUName")
+            OnPropertyChanged()
         End Set
     End Property
     Private _channels As ObservableCollection(Of String)
@@ -84,7 +82,7 @@ Public Class PMU
         End Get
         Set(ByVal value As ObservableCollection(Of String))
             _channels = value
-            OnPropertyChanged("Channels")
+            OnPropertyChanged()
         End Set
     End Property
 End Class
@@ -94,16 +92,6 @@ End Class
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Class Filter
     Inherits SignalProcessStep
-    'Implements INotifyPropertyChanged
-    '''' <summary>
-    '''' Raise property changed event
-    '''' </summary>
-    '''' <param name="sender">The event sender</param>
-    '''' <param name="e">The event</param>
-    'Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    'Protected Sub OnPropertyChanged(ByVal info As String)
-    '    RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    'End Sub
     Public Sub New()
         _filterParameters = New ObservableCollection(Of ParameterValuePair)
         _parameters = New ObservableCollection(Of ParameterValuePair)
@@ -115,7 +103,7 @@ Public Class Filter
         End Get
         Set(value As String)
             _name = value
-            OnPropertyChanged("Name")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -126,7 +114,7 @@ Public Class Filter
         End Get
         Set(ByVal value As String)
             _filterName = value
-            OnPropertyChanged("FilterName")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -137,7 +125,7 @@ Public Class Filter
         End Get
         Set(ByVal value As ObservableCollection(Of ParameterValuePair))
             _parameters = value
-            OnPropertyChanged("Parameters")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -148,22 +136,13 @@ Public Class Filter
         End Get
         Set(ByVal value As ObservableCollection(Of ParameterValuePair))
             _filterParameters = value
-            OnPropertyChanged("FilterParameters")
+            OnPropertyChanged()
         End Set
     End Property
 End Class
 
 Public MustInherit Class SignalProcessStep
-    Implements INotifyPropertyChanged
-    ''' <summary>
-    ''' Raise property changed event
-    ''' </summary>
-    ''' <param name="sender">The event sender</param>
-    ''' <param name="e">The event</param>
-    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Protected Sub OnPropertyChanged(ByVal info As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-    End Sub
+    Inherits ViewModelBase
 
     Public MustOverride Property Name As String
     Public MustOverride Property Parameters As ObservableCollection(Of ParameterValuePair)
@@ -174,7 +153,7 @@ Public MustInherit Class SignalProcessStep
         End Get
         Set(ByVal value As Integer)
             _stepCounter = value
-            OnPropertyChanged("StepCounter")
+            OnPropertyChanged()
         End Set
     End Property
 End Class
