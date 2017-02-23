@@ -243,5 +243,10 @@
     <Resource Include="Images\CircledMinus.png" />
     <Resource Include="Images\CircledPlus.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ConfigFiles\Config_MultFileTest_Customizations_2custPMU.XML">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -95,6 +95,8 @@ Public Class Filter
     Public Sub New()
         _filterParameters = New ObservableCollection(Of ParameterValuePair)
         _parameters = New ObservableCollection(Of ParameterValuePair)
+        InputChannels = New ObservableCollection(Of SignalSignatures)
+        ThisStepAsSignalHerachy = New SignalTypeHierachy(New SignalSignatures)
     End Sub
     Private _name As String
     Public Overrides Property Name As String
@@ -153,6 +155,82 @@ Public MustInherit Class SignalProcessStep
         End Get
         Set(ByVal value As Integer)
             _stepCounter = value
+
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _isStepSelected As Boolean
+    Public Property IsStepSelected As Boolean
+        Get
+            Return _isStepSelected
+        End Get
+        Set(ByVal value As Boolean)
+            _isStepSelected = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    'Private _areSignalSelected As Boolean
+    'Public Property AreSignalSelected As Boolean
+    '    Get
+    '        Return _areSignalSelected
+    '    End Get
+    '    Set(ByVal value As Boolean)
+    '        _areSignalSelected = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
+
+    Private _inputChannels As ObservableCollection(Of SignalSignatures)
+    Public Property InputChannels As ObservableCollection(Of SignalSignatures)
+        Get
+            Return _inputChannels
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalSignatures))
+            _inputChannels = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    'Private _inputChannelsSortedByType As ObservableCollection(Of SignalTypeHierachy)
+    'Public Property InputChannelsSortedByType As ObservableCollection(Of SignalTypeHierachy)
+    '    Get
+    '        Return _inputChannelsSortedByType
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+    '        _inputChannelsSortedByType = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
+    Private _thisStepAsSignalHierachy As SignalTypeHierachy
+    Public Property ThisStepAsSignalHerachy As SignalTypeHierachy
+        Get
+            Return _thisStepAsSignalHierachy
+        End Get
+        Set(ByVal value As SignalTypeHierachy)
+            _thisStepAsSignalHierachy = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _inputSignalFromPreviousStepOutput As ObservableCollection(Of String)
+    Public Property InputSignalFromPreviousStepOutput As ObservableCollection(Of String)
+        Get
+            Return _inputSignalFromPreviousStepOutput
+        End Get
+        Set(ByVal value As ObservableCollection(Of String))
+            _inputSignalFromPreviousStepOutput = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _outputChannels As ObservableCollection(Of String)
+    Public Property OutputChannels As ObservableCollection(Of String)
+        Get
+            Return _outputChannels
+        End Get
+        Set(ByVal value As ObservableCollection(Of String))
+            _outputChannels = value
             OnPropertyChanged()
         End Set
     End Property

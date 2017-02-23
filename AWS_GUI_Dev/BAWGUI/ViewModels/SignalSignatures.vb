@@ -6,16 +6,6 @@ Public Class SignalTypeHierachy
         _signalSignature = signature
         _signalList = New ObservableCollection(Of SignalTypeHierachy)
     End Sub
-    'Private _name As String
-    'Public Property Name As String
-    '    Get
-    '        Return _name
-    '    End Get
-    '    Set(ByVal value As String)
-    '        _name = value
-    '        OnPropertyChanged()
-    '    End Set
-    'End Property
     Private _signalSignature As SignalSignatures
     Public Property SignalSignature As SignalSignatures
         Get

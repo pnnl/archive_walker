@@ -1,6 +1,8 @@
-﻿Imports System.ComponentModel
+﻿Imports System.Collections.ObjectModel
+Imports System.ComponentModel
 Imports System.Globalization
 Imports System.Reflection
+Imports System.Linq
 
 Public Class EnumerationManager
     Public Shared Function GetValues(enumeration As Type) As Array
@@ -77,21 +79,21 @@ Public Class EnumToStringConverter2
     End Function
 End Class
 
-'Public Class DateTimeZoneConverter
-'    Implements IValueConverter
+Public Class SelectionStatusBackgroundConverter
+    Implements IValueConverter
 
-'    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-'        Dim selectedTimeZone As TimeZoneInfo = DirectCast(parameter, TimeZoneInfo)
-'        Dim originalTime As DateTime = DateTime.Parse(value)
-'        Return TimeZoneInfo.ConvertTimeFromUtc(originalTime, selectedTimeZone)
-'    End Function
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        If value Then
+            Return "LightSkyBlue"
+        Else
+            Return "AliceBlue"
+        End If
+    End Function
 
-'    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
-'        Dim selectedTimeZone As TimeZoneInfo = DirectCast(parameter, TimeZoneInfo)
-'        Dim originalTime As DateTime = DateTime.Parse(value)
-'        Return TimeZoneInfo.ConvertTimeToUtc(originalTime, selectedTimeZone)
-'    End Function
-'End Class
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+End Class
 
 Public Class ExpanderHeaderConverter
     Implements IMultiValueConverter
@@ -113,5 +115,22 @@ Public Class InverseBooleanConverter
 
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
         Return Not value
+    End Function
+End Class
+
+Public Class SignalSignatureListStringConverter
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        'Dim b = New ObservableCollection(Of SignalSignatures)(value)
+        Dim a = New List(Of String)
+        For Each item In value
+            a.Add(item.SignalName)
+        Next
+        Return String.Join(Of String)(vbCrLf, a)
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
     End Function
 End Class

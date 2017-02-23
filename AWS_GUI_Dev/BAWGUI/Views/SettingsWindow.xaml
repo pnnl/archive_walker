@@ -27,6 +27,8 @@
             <local:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <local:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
+            <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <local:SignalSignatureListStringConverter x:Key="SignalSignatureListStringConverter"/>
             <!--<Style TargetType="toolkit:DateTimePicker">
                
                 <Style.Setters>
@@ -414,18 +416,24 @@
                                         <avalonDock:LayoutAnchorablePane DockMinWidth="800">
                                             <avalonDock:LayoutAnchorable>
                                                 <ScrollViewer>
-                                                    <Grid Name="abc">
+                                                    <Grid>
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition Height="auto"/>
                                                             <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="*"/>
                                                         </Grid.RowDefinitions>
                                                         <Grid Grid.Row="0" Margin="2">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="40"/>
+                                                                <ColumnDefinition Width="50"/>
                                                             </Grid.ColumnDefinitions>
                                                             <Label Content="Signal Selection and Manipulation Steps" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                            <Button Name="AddStepButton" Click="Button_Click" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" HorizontalAlignment="Center" Grid.Column="1">
+                                                            <!--<Button Name="AddStepButton" Click="Button_Click" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" HorizontalAlignment="Center" Grid.Column="1">
                                                                 <Image Source="../Images/CircledPlus.png"/>
                                                                 <Button.ContextMenu>
                                                                     <ContextMenu>
@@ -433,7 +441,7 @@
                                                                             <MenuItem.ItemContainerStyle>
                                                                                 <Style>
                                                                                     <Setter Property="MenuItem.Command" Value="{Binding Path=PlacementTarget.DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                                                                    <!--<Setter Property="MenuItem.CommandParameter" Value="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>-->
+                                                                                    <Setter Property="MenuItem.CommandParameter" Value="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                                                                                     <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
                                                                                 </Style>
                                                                             </MenuItem.ItemContainerStyle>
@@ -441,7 +449,7 @@
                                                                         <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}"/>
                                                                     </ContextMenu>
                                                                 </Button.ContextMenu>
-                                                                <!--<Button.Style>
+                                                                <Button.Style>
                                                                     <Style TargetType="{x:Type Button}">
                                                                         <Style.Triggers>
                                                                             <EventTrigger RoutedEvent="Click">
@@ -457,13 +465,41 @@
                                                                             </EventTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </Button.Style>-->
-                                                            </Button>
+                                                                </Button.Style>
+                                                            </Button>-->
+                                                            <Menu Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Grid.Column="1" Margin="0">
+                                                                <MenuItem HorizontalAlignment="Right" Width="50" Margin="0">
+                                                                    <MenuItem.Header>
+                                                                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                                                            <Image Width="19" Height="19" Source="../Images/CircledPlus.png" HorizontalAlignment="Right" Margin="0"/>
+                                                                            <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
+                                                                        </StackPanel>
+                                                                    </MenuItem.Header>
+                                                                    <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}">
+                                                                        <MenuItem.ItemContainerStyle>
+                                                                            <Style>
+                                                                                <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                                                                <!--<Setter Property="MenuItem.CommandParameter" Value="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type MenuItem}}}"/>-->
+                                                                                <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                                                            </Style>
+                                                                        </MenuItem.ItemContainerStyle>
+                                                                    </MenuItem>
+                                                                    <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}"/>
+                                                                </MenuItem>
+                                                            </Menu>
                                                         </Grid>
                                                         <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2">
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
-                                                                    <Border Margin="2" BorderBrush="LightGray" BorderThickness="1">
+                                                                    <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+                                                                        <i:Interaction.Triggers>
+                                                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                                            </i:EventTrigger>
+                                                                            <i:EventTrigger EventName="GotFocus">
+                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                                            </i:EventTrigger>
+                                                                        </i:Interaction.Triggers>
                                                                         <Grid Margin="2">
                                                                             <Grid.ColumnDefinitions>
                                                                                 <ColumnDefinition Width="*"/>
@@ -486,9 +522,15 @@
                                                                                         <ColumnDefinition Width="4*"/>
                                                                                     </Grid.ColumnDefinitions>
                                                                                     <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
-                                                                                        <Label Content="Channels" Margin="2"/>
-                                                                                        <TextBlock Margin="2" Text="{Binding}"/>
-                                                                                        <ListBox Margin="2" ItemsSource="{Binding}"/>
+                                                                                        <!--<Label Content="Channels" Margin="2"/>-->
+                                                                                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat='Channels (\{0\}):'}"/>
+                                                                                        <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                                            <ListView.ItemTemplate>
+                                                                                                <DataTemplate>
+                                                                                                    <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                                                </DataTemplate>
+                                                                                            </ListView.ItemTemplate>
+                                                                                        </ListView>
                                                                                     </StackPanel>
                                                                                     <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                                                         <Label Content="Parameters:" Margin="2"/>
@@ -509,6 +551,7 @@
                                                                                                                 </DataTemplate>
                                                                                                                 <DataTemplate DataType="{x:Type sys:String}">
                                                                                                                     <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                                                                    <!--<TextBlock Text="{Binding Path=.}" VerticalAlignment="Center" Width="100" Margin="8"/>-->
                                                                                                                 </DataTemplate>
                                                                                                             </ContentPresenter.Resources>
                                                                                                         </ContentPresenter>
@@ -520,26 +563,34 @@
                                                                                     </StackPanel>
                                                                                 </Grid>
                                                                             </Expander>
-                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top">
-                                                                                <Image Source="../Images/CircledMinus.png"/>
+                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                <Image Source="../Images/CircledMinus.png" HorizontalAlignment="Stretch"/>
                                                                             </Button>
                                                                         </Grid>
                                                                     </Border>
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
+                                                        <Border Grid.Row="2" Margin="2">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                            <TextBlock>                </TextBlock>
+                                                        </Border>
                                                     </Grid>
                                                 </ScrollViewer>
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
                                         <avalonDock:LayoutPanel Orientation="Vertical">
-                                            <avalonDock:LayoutAnchorablePane DockMinWidth="200" Name="dee">
+                                            <avalonDock:LayoutAnchorablePane DockMinWidth="200">
                                                 <avalonDock:LayoutAnchorable Title="Select Signal by Signal Type">
                                                     <TreeView ItemsSource="{Binding GroupedSignalsByType}">
                                                         <TreeView.ItemTemplate>
                                                             <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
                                                                 <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedTypeSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding SignalSignature}"/>
+                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>                                                                    
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
@@ -549,11 +600,11 @@
                                             </avalonDock:LayoutAnchorablePane>
                                             <avalonDock:LayoutAnchorablePane DockMinWidth="200">
                                                 <avalonDock:LayoutAnchorable Title="Select Signal by PMU">
-                                                    <TreeView ItemsSource="{Binding GroupedSignalsByPMU}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                    <TreeView ItemsSource="{Binding GroupedSignalsByPMU}">
                                                         <TreeView.ItemTemplate>
                                                             <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
                                                                 <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.PMUSignalSelectionChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding SignalSignature}"/>
+                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
@@ -578,7 +629,78 @@
                                         </avalonDock:LayoutPanel>
                                         <avalonDock:LayoutAnchorablePane>
                                             <avalonDock:LayoutAnchorable>
-
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto"/>
+                                                        <RowDefinition Height="auto"/>
+                                                        <RowDefinition Height="*"/>
+                                                        <!--<RowDefinition Height="auto"/>-->
+                                                    </Grid.RowDefinitions>
+                                                    <Label Grid.Row="0" Content="{Binding}"/>
+                                                    <ComboBox Name="signalGroupMethodCombobox" Grid.Row="1" ItemsSource="{Binding SelectSignalMethods}" SelectedValue="{Binding SelectedSelectionMethod}" Margin="2"/>
+                                                    <!--<TreeView Grid.Row="2" ItemsSource="{Binding DataConfigure.CollectionOfSteps}">
+                                                        <TreeView.ItemTemplate>
+                                                            <HierarchicalDataTemplate ItemsSource="{Binding InputChannels}">
+                                                                <StackPanel Orientation="Horizontal" Margin="0">
+                                                                    <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.PMUSignalSelectionChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
+                                                                    <TextBlock Text="{Binding Name}" Margin="0"/>
+                                                                </StackPanel>
+                                                                <HierarchicalDataTemplate.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Orientation="Horizontal" Margin="0">
+                                                                            <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.PMUSignalSelectionChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
+                                                                            <TextBlock Text="{Binding SignalName}" Margin="0"/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </HierarchicalDataTemplate.ItemTemplate>
+                                                            </HierarchicalDataTemplate>
+                                                            <HierarchicalDataTemplate ItemsSource="{Binding InputChannelsSortedByType}">
+                                                                <StackPanel Orientation="Horizontal" Margin="0">
+                                                                    <CheckBox IsChecked="{Binding AreSignalSelected}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SignalSelectedFromThisStep, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
+                                                                    <TextBlock Text="{Binding Name}" Margin="0"/>
+                                                                </StackPanel>
+                                                                <HierarchicalDataTemplate.ItemTemplate>
+                                                                    <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
+                                                                        <StackPanel Orientation="Horizontal" Margin="0">
+                                                                            <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
+                                                                            <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
+                                                                        </StackPanel>
+                                                                    </HierarchicalDataTemplate>
+                                                                </HierarchicalDataTemplate.ItemTemplate>
+                                                            </HierarchicalDataTemplate>
+                                                        </TreeView.ItemTemplate>
+                                                    </TreeView>-->
+                                                    <TreeView Grid.Row="2" Margin="2">
+                                                        <TreeView.Style>
+                                                            <Style TargetType="TreeView">
+                                                                <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Raw Input Channels by Signal Type">
+                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Raw Input Channels by PMU">
+                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByPMU}"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step">
+                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalByStepsInput}"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="OutPut Channels by Step">
+                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TreeView.Style>
+                                                        <TreeView.ItemTemplate>
+                                                            <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
+                                                                <StackPanel Orientation="Horizontal" Margin="0">
+                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
+                                                                    <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
+                                                                </StackPanel>
+                                                            </HierarchicalDataTemplate>
+                                                        </TreeView.ItemTemplate>
+                                                    </TreeView>
+                                                    <!--<Button Grid.Row="3" Content="add selected signals" Command="{Binding AddSelectedSignalToStep}"/>-->
+                                                </Grid>
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
                                     </avalonDock:LayoutPanel>

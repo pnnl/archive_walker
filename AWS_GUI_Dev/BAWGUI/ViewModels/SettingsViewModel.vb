@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.Windows.Forms
+Imports BAWGUI
 Imports PDAT_Reader
 'Imports BAWGUI.DataConfig
 
@@ -19,13 +20,20 @@ Public Class SettingsViewModel
         _browseInputFileDir = New DelegateCommand(AddressOf _browseInputFileFolder, AddressOf CanExecute)
         _fileTypeChanged = New DelegateCommand(AddressOf _buildInputFileFolderTree, AddressOf CanExecute)
         _dqfilterSelected = New DelegateCommand(AddressOf _dqfilterSelection, AddressOf CanExecute)
-        _selectedTypeSignalChanged = New DelegateCommand(AddressOf _changeSignalSelectionByType, AddressOf CanExecute)
-        _pmuSignalSelectionChanged = New DelegateCommand(AddressOf _changeSignalSelectionByPMU, AddressOf CanExecute)
+        _selectedSignalChanged = New DelegateCommand(AddressOf _changeSignalSelection, AddressOf CanExecute)
+        _stepSelected = New DelegateCommand(AddressOf _stepSelectedToEdit, AddressOf CanExecute)
+        _stepDeSelected = New DelegateCommand(AddressOf _deSelectAllSteps, AddressOf CanExecute)
+
 
         _inputFileDirTree = New ObservableCollection(Of Folder)
 
         _timezoneList = TimeZoneInfo.GetSystemTimeZones
-        '_selectedTimeZone = TimeZoneInfo.Utc.ToString
+
+        _selectSignalMethods = {"All Raw Input Channels by Signal Type",
+                                "All Raw Input Channels by PMU",
+                                "Input Channels by Step",
+                                "OutPut Channels by Step"}.ToList
+        _selectedSelectionMethod = "All Raw Input Channels by Signal Type"
     End Sub
 
     Private _sampleFile As String
@@ -86,9 +94,18 @@ Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private Sub _sortSignals()
+    Private _groupedSignalByStepsInput As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedSignalByStepsInput As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _groupedSignalByStepsInput
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _groupedSignalByStepsInput = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private Sub _tagSignals()
         Dim signalList As New ObservableCollection(Of SignalSignatures)
-        Dim signalTypeTree As New ObservableCollection(Of SignalTypeHierachy)
         For Each name In _signalList
             Dim signal As New SignalSignatures
             signal.SignalName = name
@@ -127,17 +144,12 @@ Public Class SettingsViewModel
             signalList.Add(signal)
         Next
         TaggedSignals = signalList
-        PMUSignalDictionary = signalList.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
-        Dim pmuSignalTree = New ObservableCollection(Of SignalTypeHierachy)
-        For Each group In PMUSignalDictionary
-            Dim newGroup = New SignalTypeHierachy(New SignalSignatures(group.Key))
-            'newGroup.SignalSignature.PMUName = group.Key
-            For Each signal In group.Value
-                newGroup.SignalList.Add(New SignalTypeHierachy(signal))
-            Next
-            pmuSignalTree.Add(newGroup)
-        Next
-        GroupedSignalsByPMU = pmuSignalTree
+        GroupedSignalsByPMU = SortSignalByPMU(signalList)
+        GroupedSignalsByType = SortSignalByType(signalList)
+    End Sub
+
+    Private Function SortSignalByType(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
+        Dim signalTypeTree As New ObservableCollection(Of SignalTypeHierachy)
         Dim signalTypeDictionary = signalList.GroupBy(Function(x) x.TypeAbbreviation.ToArray(0).ToString).ToDictionary(Function(x) x.Key, Function(x) New ObservableCollection(Of SignalSignatures)(x.ToList))
         For Each signalType In signalTypeDictionary
             Select Case signalType.Key
@@ -358,8 +370,21 @@ Public Class SettingsViewModel
                     Throw New Exception("Error! Invalid signal type found: " & signalType.Key)
             End Select
         Next
-        GroupedSignalsByType = signalTypeTree
-    End Sub
+        Return signalTypeTree
+    End Function
+
+    Private Function SortSignalByPMU(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
+        PMUSignalDictionary = signalList.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+        Dim pmuSignalTree = New ObservableCollection(Of SignalTypeHierachy)
+        For Each group In PMUSignalDictionary
+            Dim newGroup = New SignalTypeHierachy(New SignalSignatures(group.Key))
+            For Each signal In group.Value
+                newGroup.SignalList.Add(New SignalTypeHierachy(signal))
+            Next
+            pmuSignalTree.Add(newGroup)
+        Next
+        Return pmuSignalTree
+    End Function
 
     Private Function _readFirstDataFile() As List(Of String)
         If System.IO.Path.GetExtension(_sampleFile).Substring(1) = "csv" Then
@@ -512,6 +537,7 @@ Public Class SettingsViewModel
         End Select
 
         Dim CollectionOfSteps As New ObservableCollection(Of SignalProcessStep)
+        Dim stepsAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
         Dim stepCounter As Integer = 0
         Dim stages = From el In _configData.<Config>.<DataConfig>.<Configuration>.Elements Where el.Name = "Stages" Select el
         For Each el In stages
@@ -524,6 +550,7 @@ Public Class SettingsViewModel
                     aStep = New Customization
                 End If
                 aStep.Name = DataConfigure.DQFilterReverseNameDictionary(element.<Name>.Value)
+                aStep.ThisStepAsSignalHerachy.SignalSignature.SignalName = aStep.Name
                 Dim params = From ps In element.<Parameters>.Elements Select ps
                 For Each pair In params
                     Dim aPair As New ParameterValuePair
@@ -540,9 +567,11 @@ Public Class SettingsViewModel
                 stepCounter += 1
                 aStep.StepCounter = stepCounter
                 CollectionOfSteps.Add(aStep)
+                stepsAsSignalHierachy.Add(aStep.ThisStepAsSignalHerachy)
             Next
         Next
         DataConfigure.CollectionOfSteps = CollectionOfSteps
+        GroupedSignalByStepsInput = stepsAsSignalHierachy
         'Dim results = From el In _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.Elements Select el
         'Dim newParams = New ObservableCollection(Of ParameterValuePair)
         'For Each el In results
@@ -607,7 +636,7 @@ Public Class SettingsViewModel
         End Try
         Try
             _signalList = _readFirstDataFile()
-            _sortSignals()
+            _tagSignals()
         Catch ex As Exception
             MessageBox.Show("Error sampling input data file!" & Environment.NewLine & ex.Message, "Error!", MessageBoxButtons.OK)
         End Try
@@ -638,78 +667,109 @@ Public Class SettingsViewModel
         DataConfigure.CollectionOfSteps.Add(newFilter)
     End Sub
 
-    Private _selectedTypeSignalChanged As ICommand
-    Public Property SelectedTypeSignalChanged As ICommand
+    Private _selectedSignalChanged As ICommand
+    Public Property SelectedSignalChanged As ICommand
         Get
-            Return _selectedTypeSignalChanged
+            Return _selectedSignalChanged
         End Get
         Set(ByVal value As ICommand)
-            _selectedTypeSignalChanged = value
+            _selectedSignalChanged = value
         End Set
     End Property
     ''' <summary>
     ''' This sub is called when user select signals in the group by type signal tree
     ''' </summary>
     ''' <param name="obj"></param>
-    Private Sub _changeSignalSelectionByType(obj As SignalSignatures)
-        If Not String.IsNullOrEmpty(obj.PMUName) Then
-            ' test for all parent, this must be leaf node in the tree, so check both pmu parent tree and type parent tree to change parent's check status
+    'Private Sub _changeSignalSelectionByType(obj As SignalSignatures)
+    '    If _currentSelectedStep IsNot Nothing Then
+    '        If Not String.IsNullOrEmpty(obj.PMUName) Then
+    '            ' test for all parent, this must be leaf node in the tree, so check both pmu parent tree and type parent tree to change parent's check status
+    '            Try
+    '                _checkParentStatus(obj)
+    '                _checkPMUParentStaus(obj)
+
+    '                _addOrDeleteSignal(obj, obj.IsChecked)
+    '                'If _currentSelectedStep IsNot Nothing Then
+    '                '    _currentSelectedStep.InputChannels.Add(obj)
+    '                'End If
+    '            Catch ex As Exception
+    '                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+    '            End Try
+    '        ElseIf obj.TypeAbbreviation.Length = 1 Then
+    '            ' check all children, this must be the top most node of the type tree, so only need to check children, no parent
+    '            Try
+    '                For Each group In GroupedSignalsByType
+    '                    If group.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation Then
+    '                        _checkAllChildren(group, obj.IsChecked)
+    '                    End If
+    '                Next
+    '            Catch ex As Exception
+    '                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+    '            End Try
+    '        ElseIf obj.TypeAbbreviation.Length = 2 Then
+    '            ' check all children and test all parents, this must be the 2nd level (M or A) node of V and I
+    '            Try
+    '                For Each group In GroupedSignalsByType
+    '                    If group.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation.First Then
+    '                        For Each subgroup In group.SignalList
+    '                            If subgroup.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation Then
+    '                                _checkAllChildren(subgroup, obj.IsChecked)
+    '                            End If
+    '                        Next
+    '                    End If
+    '                Next
+    '                ' after check/uncheck all children recursively, need to change its parent check/uncheck status only in the type tree
+    '                _checkParentStatus(obj)
+    '            Catch ex As Exception
+    '                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+    '            End Try
+    '        ElseIf obj.TypeAbbreviation.Length = 3 Then
+    '            ' check all children and test all parents, this is the 3rd level (P, A, B or C) node of V and I
+    '            Try
+    '                For Each group In GroupedSignalsByType
+    '                    If group.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation.First Then
+    '                        For Each subgroup In group.SignalList
+    '                            If subgroup.SignalSignature.TypeAbbreviation.ToArray(1) = obj.TypeAbbreviation.ToArray(1) Then
+    '                                For Each subsubgroup In subgroup.SignalList
+    '                                    If subsubgroup.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation Then
+    '                                        _checkAllChildren(subsubgroup, obj.IsChecked)
+    '                                    End If
+    '                                Next
+    '                            End If
+    '                        Next
+    '                    End If
+    '                Next
+    '                _checkParentStatus(obj)
+    '            Catch ex As Exception
+    '                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+    '            End Try
+    '        Else
+    '            MessageBox.Show("Error! Unknown information about the checked item!" & Environment.NewLine & "Name: " & obj.SignalName & Environment.NewLine & "Type: " & obj.TypeAbbreviation & Environment.NewLine & "PMU: " & obj.PMUName, "Error!", MessageBoxButtons.OK)
+    '        End If
+    '    Else
+    '        obj.IsChecked = False
+    '        MessageBox.Show("Please select a step first!", "Error!", MessageBoxButtons.OK)
+    '    End If
+    'End Sub
+
+    Private Sub _changeSignalSelection(obj As SignalTypeHierachy)
+        If _currentSelectedStep IsNot Nothing Then
             Try
-                _checkParentStatus(obj)
-                _checkPMUParentStaus(obj)
+                _checkAllChildren(obj, obj.SignalSignature.IsChecked)
+                _addOrDeleteSignal(obj, obj.SignalSignature.IsChecked)
+                _currentSelectedStep.ThisStepAsSignalHerachy.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+                _determineAllParentNodeStatus()
             Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+                obj.SignalSignature.IsChecked = False
+                MessageBox.Show("Error with selected Item!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
             End Try
-        ElseIf obj.TypeAbbreviation.Length = 1 Then
-            ' check all children, this must be the top most node of the type tree, so only need to check children, no parent
-            Try
-                For Each group In GroupedSignalsByType
-                    If group.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation Then
-                        _checkAllChildren(group, obj.IsChecked)
-                    End If
-                Next
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
-            End Try
-        ElseIf obj.TypeAbbreviation.Length = 2 Then
-            ' check all children and test all parents, this must be the 2nd level (M or A) node of V and I
-            Try
-                For Each group In GroupedSignalsByType
-                    If group.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation.First Then
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation Then
-                                _checkAllChildren(subgroup, obj.IsChecked)
-                            End If
-                        Next
-                    End If
-                Next
-                ' after check/uncheck all children recursively, need to change its parent check/uncheck status only in the type tree
-                _checkParentStatus(obj)
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
-            End Try
-        ElseIf obj.TypeAbbreviation.Length = 3 Then
-            ' check all children and test all parents, this is the 3rd level (P, A, B or C) node of V and I
-            Try
-                For Each group In GroupedSignalsByType
-                    If group.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation.First Then
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.TypeAbbreviation.ToArray(1) = obj.TypeAbbreviation.ToArray(1) Then
-                                For Each subsubgroup In subgroup.SignalList
-                                    If subsubgroup.SignalSignature.TypeAbbreviation = obj.TypeAbbreviation Then
-                                        _checkAllChildren(subsubgroup, obj.IsChecked)
-                                    End If
-                                Next
-                            End If
-                        Next
-                    End If
-                Next
-                _checkParentStatus(obj)
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
-            End Try
+            'If Not String.IsNullOrEmpty(obj.SignalSignature.TypeAbbreviation) Then
+            '    _checkParentStatus(obj.SignalSignature)
+            'End If
+            '_checkPMUParentStaus(obj.SignalSignature)
         Else
-            MessageBox.Show("Error! Unknown information about the checked item!" & Environment.NewLine & "Name: " & obj.SignalName & Environment.NewLine & "Type: " & obj.TypeAbbreviation & Environment.NewLine & "PMU: " & obj.PMUName, "Error!", MessageBoxButtons.OK)
+            obj.SignalSignature.IsChecked = False
+            MessageBox.Show("Please select a step first!", "Error!", MessageBoxButtons.OK)
         End If
     End Sub
     ''' <summary>
@@ -725,7 +785,12 @@ Public Class SettingsViewModel
                 _checkAllChildren(child, isChecked)
             Next
         Else ' if a leaf node, then check the pmu parent tree
-            _checkPMUParentStaus(node.SignalSignature)
+            '_checkPMUParentStaus(node.SignalSignature)
+
+            '_addOrDeleteSignal(node.SignalSignature, isChecked)
+            'If _currentSelectedStep IsNot Nothing Then
+            '    _currentSelectedStep.InputChannels.Add(node.SignalSignature)
+            'End If
         End If
     End Sub
     ''' <summary>
@@ -780,62 +845,34 @@ Public Class SettingsViewModel
     ''' </summary>
     ''' <param name="group"></param>
     Private Sub _determineParentCheckStatus(group As SignalTypeHierachy)
-        Dim hasCheckedItem = False
-        Dim hasUnCheckedItem = False
-        For Each subgroup In group.SignalList
-            If subgroup.SignalSignature.IsChecked Is Nothing Then
-                hasCheckedItem = True
-                hasUnCheckedItem = True
-                Exit For
-            End If
-            If subgroup.SignalSignature.IsChecked And Not hasCheckedItem Then
-                hasCheckedItem = True
-                Continue For
-            End If
-            If subgroup.SignalSignature.IsChecked = False And Not hasUnCheckedItem Then
-                hasUnCheckedItem = True
-            End If
+        If group.SignalList.Count > 0 Then
+            Dim hasCheckedItem = False
+            Dim hasUnCheckedItem = False
+            For Each subgroup In group.SignalList
+                If subgroup.SignalSignature.IsChecked Is Nothing Then
+                    hasCheckedItem = True
+                    hasUnCheckedItem = True
+                    Exit For
+                End If
+                If subgroup.SignalSignature.IsChecked And Not hasCheckedItem Then
+                    hasCheckedItem = True
+                    Continue For
+                End If
+                If subgroup.SignalSignature.IsChecked = False And Not hasUnCheckedItem Then
+                    hasUnCheckedItem = True
+                End If
+                If hasCheckedItem And hasUnCheckedItem Then
+                    Exit For
+                End If
+            Next
             If hasCheckedItem And hasUnCheckedItem Then
-                Exit For
+                group.SignalSignature.IsChecked = Nothing
+            Else
+                group.SignalSignature.IsChecked = hasCheckedItem
             End If
-        Next
-        If hasCheckedItem And hasUnCheckedItem Then
-            group.SignalSignature.IsChecked = Nothing
-        Else
-            group.SignalSignature.IsChecked = hasCheckedItem
         End If
     End Sub
 
-    Private _pmuSignalSelectionChanged As ICommand
-    Public Property PMUSignalSelectionChanged As ICommand
-        Get
-            Return _pmuSignalSelectionChanged
-        End Get
-        Set(ByVal value As ICommand)
-            _pmuSignalSelectionChanged = value
-        End Set
-    End Property
-    ''' <summary>
-    ''' This sub is called when user change signal selection using the signals grouped by PMU.
-    ''' </summary>
-    ''' <param name="obj"></param>
-    Private Sub _changeSignalSelectionByPMU(obj As SignalSignatures)
-        If String.IsNullOrEmpty(obj.TypeAbbreviation) Then
-            ' check all children, but do not call the recursive function to avoid infinite loop, check the type parent tree after check each children
-            For Each group In GroupedSignalsByPMU
-                If group.SignalSignature.SignalName = obj.SignalName Then
-                    For Each child In group.SignalList
-                        child.SignalSignature.IsChecked = obj.IsChecked
-                        _checkParentStatus(child.SignalSignature)
-                    Next
-                End If
-            Next
-        Else
-            ' test parent, need to test both parent tree
-            _checkPMUParentStaus(obj)
-            _checkParentStatus(obj)
-        End If
-    End Sub
     ''' <summary>
     ''' This sub check the pmu parent tree
     ''' </summary>
@@ -847,5 +884,219 @@ Public Class SettingsViewModel
             End If
         Next
     End Sub
+
+    'Private _addSelectedSignalToStep As ICommand
+    'Public Property AddSelectedSignalToStep As ICommand
+    '    Get
+    '        Return _addSelectedSignalToStep
+    '    End Get
+    '    Set(ByVal value As ICommand)
+    '        _addSelectedSignalToStep = value
+    '    End Set
+    'End Property
+
+    'Private Sub _addSelectedSignal(obj As Object)
+    '    If _currentSelectedStep IsNot Nothing Then
+    '        '_currentSelectedStep.InputChannels.Clear()
+    '        Dim a = New ObservableCollection(Of SignalSignatures)
+    '        For Each signal In TaggedSignals
+    '            If signal.IsChecked Then
+    '                a.Add(signal)
+    '            End If
+    '        Next
+    '        _currentSelectedStep.InputChannels = a
+    '    End If
+    'End Sub
+
+    Private _stepSelected As ICommand
+    Public Property StepSelected As ICommand
+        Get
+            Return _stepSelected
+        End Get
+        Set(ByVal value As ICommand)
+            _stepSelected = value
+        End Set
+    End Property
+
+    Private _currentSelectedStep As SignalProcessStep
+
+    Private Sub _stepSelectedToEdit(processStep As SignalProcessStep)
+        ' if processStep is already selected, then the selection is not changed, nothing needs to be done.
+        ' however, if processStep is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
+        If Not processStep.IsStepSelected Then
+            'Dim isFirstSelection = True
+            For Each stp In DataConfigure.CollectionOfSteps
+                If stp.IsStepSelected Then
+                    'isFirstSelection = False
+                    stp.IsStepSelected = False
+                    For Each signal In stp.InputChannels
+                        signal.IsChecked = False
+                        ' these might not be necessary
+                        '_checkParentStatus(signal)
+                        '_checkPMUParentStaus(signal)
+                    Next
+                End If
+            Next
+            processStep.IsStepSelected = True
+            For Each signal In processStep.InputChannels
+                signal.IsChecked = True
+                '_checkParentStatus(signal)
+                '_checkPMUParentStaus(signal)
+            Next
+            _determineAllParentNodeStatus()
+            _currentSelectedStep = processStep
+        End If
+    End Sub
+
+    Private Sub _determineParentGroupedByTypeNodeStatus(groups As ObservableCollection(Of SignalTypeHierachy))
+        For Each group In groups
+            ' if has children, then its status depends on children status
+            If group.SignalList.Count > 0 Then
+                For Each subgroup In group.SignalList
+                    If subgroup.SignalList.Count > 0 Then
+                        For Each subsubgroup In subgroup.SignalList
+                            If subsubgroup.SignalList.Count > 0 Then
+                                _determineParentCheckStatus(subsubgroup)
+                            End If
+                        Next
+                        _determineParentCheckStatus(subgroup)
+                    End If
+                Next
+                _determineParentCheckStatus(group)
+                ' else, no children, status must be false, this only applies top level nodes, since leaf node won't have children at all
+            Else
+                group.SignalSignature.IsChecked = False
+            End If
+        Next
+    End Sub
+
+    Private Sub _determineAllParentNodeStatus()
+        _determineParentGroupedByTypeNodeStatus(GroupedSignalsByType)
+        For Each group In GroupedSignalsByPMU
+            _determineParentCheckStatus(group)
+        Next
+        For Each stepInput In GroupedSignalByStepsInput
+            If stepInput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+                _determineParentCheckStatus(stepInput)
+            Else
+                stepInput.SignalSignature.IsChecked = False
+            End If
+        Next
+    End Sub
+
+    Private _stepDeSelected As ICommand
+    Public Property StepDeSelected As ICommand
+        Get
+            Return _stepDeSelected
+        End Get
+        Set(ByVal value As ICommand)
+            _stepDeSelected = value
+        End Set
+    End Property
+
+    Private Sub _changeCheckStatusAllParentsOfGroupedSignal(groups As ObservableCollection(Of SignalTypeHierachy), checkStatus As Boolean)
+        For Each node In groups
+            node.SignalSignature.IsChecked = checkStatus
+            For Each child In node.SignalList
+                child.SignalSignature.IsChecked = checkStatus
+                For Each grandChild In child.SignalList
+                    grandChild.SignalSignature.IsChecked = checkStatus
+                    For Each greatGrandChild In grandChild.SignalList
+                        greatGrandChild.SignalSignature.IsChecked = checkStatus
+                    Next
+                Next
+            Next
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' When user click outside the step list and none of the steps should be selected, then we need to uncheck all checkboxes
+    ''' </summary>
+    ''' <param name="obj"></param>
+    Private Sub _deSelectAllSteps(obj As Object)
+        If _currentSelectedStep IsNot Nothing Then
+            For Each signal In _currentSelectedStep.InputChannels
+                signal.IsChecked = False
+            Next
+            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByStepsInput, False)
+            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalsByPMU, False)
+            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalsByType, False)
+            _currentSelectedStep.IsStepSelected = False
+            _currentSelectedStep = Nothing
+        End If
+    End Sub
+
+    'Private Sub _addOrDeleteSignal(obj As SignalSignatures, isChecked As Boolean)
+    '    If isChecked Then
+    '        If _currentSelectedStep IsNot Nothing Then
+    '            _currentSelectedStep.InputChannels.Add(obj)
+    '            _currentSelectedStep.InputChannelsSortedByType = SortSignalByType(_currentSelectedStep.InputChannels)
+    '        End If
+    '    Else
+    '        _currentSelectedStep.InputChannels.Remove(obj)
+    '        _currentSelectedStep.InputChannelsSortedByType = SortSignalByType(_currentSelectedStep.InputChannels)
+    '    End If
+    'End Sub
+    Private Sub _addOrDeleteSignal(obj As SignalTypeHierachy, isChecked As Boolean)
+        If _currentSelectedStep IsNot Nothing Then
+            If obj.SignalList.Count > 0 Then
+                For Each signal In obj.SignalList
+                    _addOrDeleteSignal(signal, isChecked)
+                Next
+            Else
+                ' This happens when user check a input grouped by steps, but that step has no input signals thus has no child
+                If obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing Then
+                    Throw New Exception("Item is not a valid signal, or contains no valid signal, nothing to be added or removed!")
+                Else
+                    If isChecked Then
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    Else
+                        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                    End If
+                End If
+            End If
+        End If
+    End Sub
+
+    Private _signalSelectedFromThisStep As ICommand
+    Public Property SignalSelectedFromThisStep As ICommand
+        Get
+            Return _signalSelectedFromThisStep
+        End Get
+        Set(ByVal value As ICommand)
+            _signalSelectedFromThisStep = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    'Private Sub _addSignalFromThisStepToCurrentStep(obj As SignalProcessStep)
+    '    For Each hierachy In obj.InputChannelsSortedByType
+    '        hierachy.SignalSignature.IsChecked = obj.AreSignalSelected
+    '        _changeSignalSelection(hierachy)
+    '    Next
+    'End Sub
+
+    Private _selectSignalMethods As List(Of String)
+    Public Property SelectSignalMethods As List(Of String)
+        Get
+            Return _selectSignalMethods
+        End Get
+        Set(ByVal value As List(Of String))
+            _selectSignalMethods = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _selectedSelectionMethod As String
+    Public Property SelectedSelectionMethod As String
+        Get
+            Return _selectedSelectionMethod
+        End Get
+        Set(ByVal value As String)
+            _selectedSelectionMethod = value
+            OnPropertyChanged()
+        End Set
+    End Property
 
 End Class
