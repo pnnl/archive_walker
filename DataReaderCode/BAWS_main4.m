@@ -56,7 +56,7 @@ debugMode = 1;
 % ConfigAll = fun_xmlread_comments('Config_AB_in_out.XML');
 % ConfigAll = fun_xmlread_comments('Config_AB_in_out_ModeEst_NSB_LikeBPA.XML');
 % ConfigAll = fun_xmlread_comments('Config_TimeErrorHunt.XML');
-ConfigAll = fun_xmlread_comments('BPAinstallProto.XML');
+ConfigAll = fun_xmlread_comments('C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\ConfigFiles\Config_MultFileTest_Customizations_2custPMU.XML');
 DataXML = ConfigAll.Config.DataConfig;
 ProcessXML = ConfigAll.Config.ProcessConfig;
 DetectorXML = ConfigAll.Config.DetectorConfig;
@@ -157,7 +157,7 @@ catch
 end
 % If the directory doesn't yet exist, add it.
 if exist(PathEventXML,'dir') ~= 7
-    mkdir(PathEventXML);
+%     mkdir(PathEventXML);
 end
 
 try
@@ -167,13 +167,14 @@ catch
 end
 % If the directory doesn't yet exist, add it.
 if exist(InitializationPath,'dir') ~= 7
-    mkdir(InitializationPath);
+%     mkdir(InitializationPath);
 end
 
 %% identify the maximum number of flags that will be needed
 
 % set the counter
 count = 0;
+Flag_Bit=[];
 % get the number of filtering stages
 NumStages = length(DataXML.Configuration.Stages);
 for StageId = 1:NumStages
@@ -373,9 +374,9 @@ while(~done)
     if (~isempty(DataInfo.LastFocusFileTime)) && ~strcmp(datestr(DataInfo.FocusFileTime,'yyyymmdd'),datestr(DataInfo.LastFocusFileTime,'yyyymmdd'))
         EventList = StoreEventList(EventList,PMU,DetectorXML,AdditionalOutput);
     end
-    WriteEventListXML(EventList,[PathEventXML '\EventList_Current.XML'],0);
-    WriteEventListXML(EventList,[PathEventXML '\EventList_Current_Bkup.XML'],0);
-    
+%     WriteEventListXML(EventList,[PathEventXML '\EventList_Current.XML'],0);
+%     WriteEventListXML(EventList,[PathEventXML '\EventList_Current_Bkup.XML'],0);
+%     
 %     if (~isempty(DataInfo.LastFocusFileTime))
 %         EventList = StoreEventList(EventList,PMU,DetectorXML,AdditionalOutput);
 %     end

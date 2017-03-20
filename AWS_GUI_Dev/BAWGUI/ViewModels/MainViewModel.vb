@@ -15,10 +15,22 @@ Public Class MainViewModel
             _showSettingsWindow = value
         End Set
     End Property
+
+    Private _settingsWin As SettingsWindow
+
     Private Sub ShowSettings()
-        Dim settingsVM As New SettingsViewModel
-        Dim settingsWin As New SettingsWindow
-        settingsWin.DataContext = settingsVM
-        settingsWin.Show()
+        Dim isWindowOpen = False
+        For Each w In Application.Current.Windows
+            If w Is _settingsWin Then
+                isWindowOpen = True
+                w.Activate
+            End If
+        Next
+        If Not isWindowOpen Then
+            Dim settingsVM As New SettingsViewModel
+            _settingsWin = New SettingsWindow
+            _settingsWin.DataContext = settingsVM
+            _settingsWin.Show()
+        End If
     End Sub
 End Class

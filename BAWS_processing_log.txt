@@ -1,0 +1,16 @@
+********************************************************
+Mode = Archive
+DateTimeStart =  2016-08-21 22:00:00
+DateTimeEnd  =   2016-08-24 00:59:00
+********************************************************
+
+The next focus file should be: E:\Alberta tie in-out\Munro\2016\160821\WISPMunro_20160821_220000.pdat
+The next focus file folder should be E:\Alberta tie in-out\Munro\2016\160821\
+No future files available. In archive mode, no need to wait
+NoFutureCount = 1
+
+Stopped Becuase No More Future Files Available
+
+Finished processing files
+********************************************************
+

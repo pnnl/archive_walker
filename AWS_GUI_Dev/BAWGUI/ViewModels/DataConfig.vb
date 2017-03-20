@@ -32,18 +32,44 @@ Public Class DataConfig
                                                                         {"Entire PMU Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
                                                                         {"Angle Wrapping Failure Filter", {"SetToNaN", "FlagBit", "AngleThresh"}.ToList}}
 
-        _customizationList = {"Scalar Repetition Customization",
-                                "Addition Customization",
-                                "Subtraction Customization",
-                                "Multiplication Customization",
-                                "Division Customization",
-                                "Exponent, Sign Reversal, Absolute Value, Real Component, Imaginary Component, Angle, and Complex Conjugate Customizations",
-                                "Phasor Creation Customization",
-                                "Power Calculation Customization",
-                                "Specify Signal Type and Unit Customization",
-                                "Metric Prefix Customization",
-                                "Angle Conversion Customization"}.ToList
-        _collectionOfSteps = New ObservableCollection(Of SignalProcessStep)
+        _customizationNameDictionary = New Dictionary(Of String, String) From {{"Scalar Repetition Customization", "ScalarRep"},
+                                                                            {"Addition Customization", "Addition"},
+                                                                            {"Subtraction Customization", "Subtraction"},
+                                                                            {"Multiplication Customization", "Multiplication"},
+                                                                            {"Division Customization", "Division"},
+                                                                            {"Raise signals to an exponent", "Exponent"},
+                                                                            {"Reverse sign of signals", "SignReversal"},
+                                                                            {"Take absolute value of signals", "AbsVal"},
+                                                                            {"Return real component of signals", "RealComponent"},
+                                                                            {"Return imaginary component of signals", "ImagComponent"},
+                                                                            {"Return angle of complex valued signals", "Angle"},
+                                                                            {"Take complex conjugate of signals", "ComplexConj"},
+                                                                            {"Phasor Creation Customization", "CreatePhasor"},
+                                                                            {"Power Calculation Customization", "PowerCalc"},
+                                                                            {"Specify Signal Type and Unit Customization", "SpecTypeUnit"},
+                                                                            {"Metric Prefix Customization", "MetricPrefix"},
+                                                                            {"Angle Conversion Customization", "AngleConversion"}}
+        _customizationReverseNameDictionary = _customizationNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
+        _customizationList = _customizationNameDictionary.Keys.ToList
+        _customizationNameParemetersDictionary = New Dictionary(Of String, List(Of String)) From {{"Scalar Repetition Customization", {"CustPMUname", "scalar", "SignalName", "SignalType", "SignalUnit", "TimeSourcePMU"}.ToList},
+                                                                            {"Addition Customization", {"CustPMUname", "SignalName", "term"}.ToList},
+                                                                            {"Subtraction Customization", {"CustPMUname", "SignalName", "minuend", "subtrahend"}.ToList},
+                                                                            {"Multiplication Customization", {"CustPMUname", "SignalName", "factor"}.ToList},
+                                                                            {"Division Customization", {"CustPMUname", "SignalName", "dividend", "divisor"}.ToList},
+                                                                            {"Raise signals to an exponent", {"CustPMUname", "signal", "exponent"}.ToList},
+                                                                            {"Reverse sign of signals", {"CustPMUname", "signal"}.ToList},
+                                                                            {"Take absolute value of signals", {"CustPMUname", "signal"}.ToList},
+                                                                            {"Return real component of signals", {"CustPMUname", "signal"}.ToList},
+                                                                            {"Return imaginary component of signals", {"CustPMUname", "signal"}.ToList},
+                                                                            {"Return angle of complex valued signals", {"CustPMUname", "signal"}.ToList},
+                                                                            {"Take complex conjugate of signals", {"CustPMUname", "signal"}.ToList},
+                                                                            {"Phasor Creation Customization", {"CustPMUname", "phasor ", "mag", "ang"}.ToList},
+                                                                            {"Power Calculation Customization", {"CustPMUname", "PowType", "power"}.ToList},
+                                                                            {"Specify Signal Type and Unit Customization", {"CustPMUname", "SigType", "SigUnit", "PMU", "Channel"}.ToList},
+                                                                            {"Metric Prefix Customization", {"CustPMUname", "ToConvert"}.ToList},
+                                                                            {"Angle Conversion Customization", {"CustPMUname", "ToConvert"}.ToList}}
+
+        _collectionOfSteps = New ObservableCollection(Of Object)
     End Sub
 
     Private _readerProperty As ReaderProperties
@@ -57,12 +83,12 @@ Public Class DataConfig
         End Set
     End Property
 
-    Private _collectionOfSteps As ObservableCollection(Of SignalProcessStep)
-    Public Property CollectionOfSteps As ObservableCollection(Of SignalProcessStep)
+    Private _collectionOfSteps As ObservableCollection(Of Object)
+    Public Property CollectionOfSteps As ObservableCollection(Of Object)
         Get
             Return _collectionOfSteps
         End Get
-        Set(ByVal value As ObservableCollection(Of SignalProcessStep))
+        Set(ByVal value As ObservableCollection(Of Object))
             _collectionOfSteps = value
             OnPropertyChanged("CollectionOfSteps")
         End Set
@@ -102,15 +128,38 @@ Public Class DataConfig
         End Get
     End Property
 
-    'Public ReadOnly Property stepList As Dictionary(Of String, List(Of String))
-    '    Get
-    '        Dim a As New Dictionary(Of String, List(Of String))
-    '        a("Filter") = DQFilterList
-    '        a("Customization") = CustomizationList
-    '        Return a
-    '    End Get
-    'End Property
+    Private _customizationNameDictionary As Dictionary(Of String, String)
+    Public Property CustomizationNameDictionary As Dictionary(Of String, String)
+        Get
+            Return _customizationNameDictionary
+        End Get
+        Set(ByVal value As Dictionary(Of String, String))
+            _customizationNameDictionary = value
+            OnPropertyChanged()
+        End Set
+    End Property
 
+    Private _customizationReverseNameDictionary As Dictionary(Of String, String)
+    Public Property CustomizationReverseNameDictionary As Dictionary(Of String, String)
+        Get
+            Return _customizationReverseNameDictionary
+        End Get
+        Set(ByVal value As Dictionary(Of String, String))
+            _customizationReverseNameDictionary = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _customizationNameParemetersDictionary As Dictionary(Of String, List(Of String))
+    Public Property CustomizationNameParemetersDictionary As Dictionary(Of String, List(Of String))
+        Get
+            Return _customizationNameParemetersDictionary
+        End Get
+        Set(ByVal value As Dictionary(Of String, List(Of String)))
+            _customizationNameParemetersDictionary = value
+            OnPropertyChanged()
+        End Set
+    End Property
 End Class
 
 Public Enum DataFileType
@@ -139,47 +188,58 @@ Public Class ReaderProperties
         _mode = New Dictionary(Of ModeType, Dictionary(Of String, String))
         '_modeParams = New ObservableCollection(Of ParameterValuePair)
 
-        ArchiveModeVisibility = Visibility.Collapsed
-        RealTimeModeVisibility = Visibility.Collapsed
-        HybridModeVisibility = Visibility.Collapsed
+        'ArchiveModeVisibility = Visibility.Collapsed
+        'RealTimeModeVisibility = Visibility.Collapsed
+        'HybridModeVisibility = Visibility.Collapsed
 
         '_dateTimeStart = ""
         _selectedTimeZone = TimeZoneInfo.Local
-        '_selectUTCTime = True
-        '_selectAlternateTimeZone = False
+
+        _inputFileInfos = New ObservableCollection(Of InputFileInfo)
     End Sub
-    Private _fileDirectory As String
-    Public Property FileDirectory As String
-        Get
-            Return _fileDirectory
-        End Get
-        Set(ByVal value As String)
-            _fileDirectory = value
-            OnPropertyChanged("FileDirectory")
-        End Set
-    End Property
 
-    Private _fileType As DataFileType
-    Public Property FileType As DataFileType
+    Private _inputFileInfos As ObservableCollection(Of InputFileInfo)
+    Public Property InputFileInfos As ObservableCollection(Of InputFileInfo)
         Get
-            Return _fileType
+            Return _inputFileInfos
         End Get
-        Set(ByVal value As DataFileType)
-            _fileType = value
-            OnPropertyChanged("FileType")
+        Set(ByVal value As ObservableCollection(Of InputFileInfo))
+            _inputFileInfos = value
+            OnPropertyChanged()
         End Set
     End Property
+    'Private _fileDirectory As String
+    'Public Property FileDirectory As String
+    '    Get
+    '        Return _fileDirectory
+    '    End Get
+    '    Set(ByVal value As String)
+    '        _fileDirectory = value
+    '        OnPropertyChanged("FileDirectory")
+    '    End Set
+    'End Property
 
-    Private _mnemonic As String
-    Public Property Mnemonic As String
-        Get
-            Return _mnemonic
-        End Get
-        Set(ByVal value As String)
-            _mnemonic = value
-            OnPropertyChanged("Mnemonic")
-        End Set
-    End Property
+    'Private _fileType As DataFileType
+    'Public Property FileType As DataFileType
+    '    Get
+    '        Return _fileType
+    '    End Get
+    '    Set(ByVal value As DataFileType)
+    '        _fileType = value
+    '        OnPropertyChanged("FileType")
+    '    End Set
+    'End Property
+
+    'Private _mnemonic As String
+    'Public Property Mnemonic As String
+    '    Get
+    '        Return _mnemonic
+    '    End Get
+    '    Set(ByVal value As String)
+    '        _mnemonic = value
+    '        OnPropertyChanged("Mnemonic")
+    '    End Set
+    'End Property
 
     Private _mode As Dictionary(Of ModeType, Dictionary(Of String, String))
     Public Property Mode As Dictionary(Of ModeType, Dictionary(Of String, String))
@@ -204,62 +264,62 @@ Public Class ReaderProperties
             'If not, call _constructParamTable()
             'This way we can show old mode parameters when switch among different mode name.
             _modeName = value
-            _changeModeParamsVisibility()
+            '_changeModeParamsVisibility()
             OnPropertyChanged("ModeName")
         End Set
     End Property
 
-    Private _realTimeModeVisibility As Visibility
-    Public Property RealTimeModeVisibility As Visibility
-        Get
-            Return _realTimeModeVisibility
-        End Get
-        Set(ByVal value As Visibility)
-            _realTimeModeVisibility = value
-            OnPropertyChanged("RealTimeModeVisibility")
-        End Set
-    End Property
+    'Private _realTimeModeVisibility As Visibility
+    'Public Property RealTimeModeVisibility As Visibility
+    '    Get
+    '        Return _realTimeModeVisibility
+    '    End Get
+    '    Set(ByVal value As Visibility)
+    '        _realTimeModeVisibility = value
+    '        OnPropertyChanged("RealTimeModeVisibility")
+    '    End Set
+    'End Property
 
-    Private _hybridModeVisibility As Visibility
-    Public Property HybridModeVisibility As Visibility
-        Get
-            Return _hybridModeVisibility
-        End Get
-        Set(ByVal value As Visibility)
-            _hybridModeVisibility = value
-            OnPropertyChanged("HybridModeVisibility")
-        End Set
-    End Property
+    'Private _hybridModeVisibility As Visibility
+    'Public Property HybridModeVisibility As Visibility
+    '    Get
+    '        Return _hybridModeVisibility
+    '    End Get
+    '    Set(ByVal value As Visibility)
+    '        _hybridModeVisibility = value
+    '        OnPropertyChanged("HybridModeVisibility")
+    '    End Set
+    'End Property
 
-    Private _archiveModeVisibility As Visibility
-    Public Property ArchiveModeVisibility As Visibility
-        Get
-            Return _archiveModeVisibility
-        End Get
-        Set(ByVal value As Visibility)
-            _archiveModeVisibility = value
-            OnPropertyChanged("ArchiveModeVisibility")
-        End Set
-    End Property
+    'Private _archiveModeVisibility As Visibility
+    'Public Property ArchiveModeVisibility As Visibility
+    '    Get
+    '        Return _archiveModeVisibility
+    '    End Get
+    '    Set(ByVal value As Visibility)
+    '        _archiveModeVisibility = value
+    '        OnPropertyChanged("ArchiveModeVisibility")
+    '    End Set
+    'End Property
 
-    Private Sub _changeModeParamsVisibility()
-        'Dim newParams = New ObservableCollection(Of ParameterValuePair)
-        Select Case _modeName
-            Case ModeType.Archive
-                ArchiveModeVisibility = Visibility.Visible
-                RealTimeModeVisibility = Visibility.Collapsed
-                HybridModeVisibility = Visibility.Collapsed
-            Case ModeType.Hybrid
-                ArchiveModeVisibility = Visibility.Collapsed
-                RealTimeModeVisibility = Visibility.Collapsed
-                HybridModeVisibility = Visibility.Visible
-            Case ModeType.RealTime
-                ArchiveModeVisibility = Visibility.Collapsed
-                RealTimeModeVisibility = Visibility.Visible
-                HybridModeVisibility = Visibility.Collapsed
-        End Select
-        'ModeParams = newParams
-    End Sub
+    'Private Sub _changeModeParamsVisibility()
+    '    'Dim newParams = New ObservableCollection(Of ParameterValuePair)
+    '    Select Case _modeName
+    '        Case ModeType.Archive
+    '            ArchiveModeVisibility = Visibility.Visible
+    '            RealTimeModeVisibility = Visibility.Collapsed
+    '            HybridModeVisibility = Visibility.Collapsed
+    '        Case ModeType.Hybrid
+    '            ArchiveModeVisibility = Visibility.Collapsed
+    '            RealTimeModeVisibility = Visibility.Collapsed
+    '            HybridModeVisibility = Visibility.Visible
+    '        Case ModeType.RealTime
+    '            ArchiveModeVisibility = Visibility.Collapsed
+    '            RealTimeModeVisibility = Visibility.Visible
+    '            HybridModeVisibility = Visibility.Collapsed
+    '    End Select
+    '    'ModeParams = newParams
+    'End Sub
 
     Private _dateTimeStart As String
     Public Property DateTimeStart As String
@@ -476,6 +536,117 @@ Public Class ReaderProperties
     End Property
 
 End Class
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''Class InputFileInfo''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Public Class InputFileInfo
+    Inherits ViewModelBase
+    Public Sub New()
+        _inputFileTree = New ObservableCollection(Of Folder)
+    End Sub
+    Private _fileDirectory As String
+    Public Property FileDirectory As String
+        Get
+            Return _fileDirectory
+        End Get
+        Set(ByVal value As String)
+            _fileDirectory = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _samplingRate As String
+    Public Property SamplingRate As String
+        Get
+            Return _samplingRate
+        End Get
+        Set(ByVal value As String)
+            _samplingRate = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _fileType As DataFileType
+    Public Property FileType As DataFileType
+        Get
+            Return _fileType
+        End Get
+        Set(ByVal value As DataFileType)
+            _fileType = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _mnemonic As String
+    Public Property Mnemonic As String
+        Get
+            Return _mnemonic
+        End Get
+        Set(ByVal value As String)
+            _mnemonic = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _inputFileTree As ObservableCollection(Of Folder)
+    Public Property InputFileTree As ObservableCollection(Of Folder)
+        Get
+            Return _inputFileTree
+        End Get
+        Set(ByVal value As ObservableCollection(Of Folder))
+            _inputFileTree = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _signalList As List(Of String)
+    Public Property SignalList As List(Of String)
+        Get
+            Return _signalList
+        End Get
+        Set(value As List(Of String))
+            _signalList = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _taggedSignals As ObservableCollection(Of SignalSignatures)
+    Public Property TaggedSignals As ObservableCollection(Of SignalSignatures)
+        Get
+            Return _taggedSignals
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalSignatures))
+            _taggedSignals = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _groupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _groupedSignalsByType
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _groupedSignalsByType = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
+    'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
+    '    Get
+    '        Return _pmuSignalDictionary
+    '    End Get
+    '    Set(ByVal value As Dictionary(Of String, List(Of SignalSignatures)))
+    '        _pmuSignalDictionary = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
+    Private _groupedSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _groupedSignalsByPMU
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _groupedSignalsByPMU = value
+            OnPropertyChanged()
+        End Set
+    End Property
+End Class
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''''''Class ModeParameter'''''''''''''''''''''''''''''''''''''''''''
@@ -531,7 +702,14 @@ End Class
 Public Class Customization
     Inherits SignalProcessStep
     Public Sub New()
-        _customizationParams = New ObservableCollection(Of ParameterValuePair)
+        '_customizationParams = New ObservableCollection(Of ParameterValuePair)
+        _parameters = New ObservableCollection(Of ParameterValuePair)
+        InputChannels = New ObservableCollection(Of SignalSignatures)
+        OutputChannels = New ObservableCollection(Of SignalSignatures)
+        ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+        _custSignalName = New ObservableCollection(Of String)
+        _outputInputMappingDictionary = New Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
     End Sub
 
     Private _customizationName As String
@@ -574,7 +752,94 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-
+    Private _minuendOrDivident As SignalSignatures
+    Public Property MinuendOrDivident As SignalSignatures
+        Get
+            Return _minuendOrDivident
+        End Get
+        Set(ByVal value As SignalSignatures)
+            _minuendOrDivident = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _subtrahendOrDivisor As SignalSignatures
+    Public Property SubtrahendOrDivisor As SignalSignatures
+        Get
+            Return _subtrahendOrDivisor
+        End Get
+        Set(ByVal value As SignalSignatures)
+            _subtrahendOrDivisor = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _currentCursor As String
+    Public Property CurrentCursor As String
+        Get
+            Return _currentCursor
+        End Get
+        Set(ByVal value As String)
+            _currentCursor = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _custPMUname As String
+    Public Property CustPMUname As String
+        Get
+            Return _custPMUname
+        End Get
+        Set(ByVal value As String)
+            _custPMUname = value
+            For Each out In OutputChannels
+                out.PMUName = value
+            Next
+            Dim theOnlyPMUHierachy = ThisStepOutputsAsSignalHierachyByPMU.SignalList.FirstOrDefault
+            If theOnlyPMUHierachy IsNot Nothing Then
+                theOnlyPMUHierachy.SignalSignature.PMUName = value
+                theOnlyPMUHierachy.SignalSignature.SignalName = value
+            End If
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _custSignalName As ObservableCollection(Of String)
+    Public Property CustSignalName As ObservableCollection(Of String)
+        Get
+            Return _custSignalName
+        End Get
+        Set(ByVal value As ObservableCollection(Of String))
+            _custSignalName = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _outputChannels As ObservableCollection(Of SignalSignatures)
+    Public Property OutputChannels As ObservableCollection(Of SignalSignatures)
+        Get
+            Return _outputChannels
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalSignatures))
+            _outputChannels = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _thisStepOutputsAsSignalHierachyByPMU As SignalTypeHierachy
+    Public Property ThisStepOutputsAsSignalHierachyByPMU As SignalTypeHierachy
+        Get
+            Return _thisStepOutputsAsSignalHierachyByPMU
+        End Get
+        Set(ByVal value As SignalTypeHierachy)
+            _thisStepOutputsAsSignalHierachyByPMU = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _outputInputMappingDictionary As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
+    Public Property OutputInputMappingDictionary As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
+        Get
+            Return _outputInputMappingDictionary
+        End Get
+        Set(ByVal value As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+            _outputInputMappingDictionary = value
+            OnPropertyChanged()
+        End Set
+    End Property
 End Class
 
 'Public Class DataConfigStage

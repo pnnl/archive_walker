@@ -29,43 +29,708 @@
             <local:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
             <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <local:SignalSignatureListStringConverter x:Key="SignalSignatureListStringConverter"/>
-            <!--<Style TargetType="toolkit:DateTimePicker">
-               
-                <Style.Setters>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="toolkit:DateTimePicker">
-                                <ToggleButton>
-                                    <ToggleButton.Style>
-                                        <Style TargetType="ToggleButton">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="ToggleButton">
-                                                        <Grid SnapsToDevicePixels="True">
-                                                            <Image Source="../Images/calendar.png"/>
-                                                        </Grid>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </ToggleButton.Style>
-                                </ToggleButton>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style.Setters>
-            </Style>-->
-            <!--<local:DateTimeZoneConverter x:Key="MyDateTimeZoneConverter"/>-->
-            <!--<Style TargetType="DataGridCell">
-                <Style.Setters>
-                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
-                </Style.Setters>
-            </Style>-->
-            <!--<Style x:Key="tabStripPlaceOnLeft" TargetType="{x:Type avalonDock:LayoutDocumentControl}">
-                <Style.Setters>
-                    <Setter Property="TabStripPlacement" Value="left"/>
-                </Style.Setters>
-            </Style>-->
+            <DataTemplate x:Key="ArchiveParameter">
+                <GroupBox Header="Archive Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Vertical" Margin="2">
+                                <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="20,2">
+                                <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2,40,2,2">
+                            <Label Content="End Time" Width="150" Margin="2" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Vertical" Margin="2">
+                                <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeEnd}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="20,2">
+                                <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedEndTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </DataTemplate>
+            <DataTemplate x:Key="RealTimeParameter">
+                <GroupBox Header="Real-Time Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="No Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.NoFutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Max No Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxNoFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.FutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Max Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </DataTemplate>
+            <DataTemplate x:Key="HybridParameter">
+                <GroupBox Header="Hybrid Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Vertical" Margin="2">
+                                <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="20,2">
+                                <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="No Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.NoFutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Max No Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxNoFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.FutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Max Future Wait" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Label Content="Real Time Range" Width="220"/>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.RealTimeRange}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </DataTemplate>
+            <DataTemplate x:Key="ParameterComboBox">
+                <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.AllPMUs}" SelectedValue="{Binding Value}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Left"/>
+            </DataTemplate>
+            <DataTemplate x:Key="ParameterTextBox">
+                <TextBox Text="{Binding Value}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+            </DataTemplate>
+            <DataTemplate x:Key="ScalarRepCustomization">
+                <StackPanel Orientation="Vertical" Margin="2">
+                    <Label Content="Parameters:" Margin="2"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="CustPMUname" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                        <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="SignalName" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                        <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter Property="Opacity" Value="0"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                                    <ContentControl Content="{Binding}" HorizontalAlignment="Left" Grid.Column="2">
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource ParameterTextBox}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ParameterName}" Value="TimeSourcePMU">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource ParameterComboBox}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="AdditionCustomization">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Terms ({0}):}"/>
+                        <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <TextBlock Margin="20,10,2,2" Text="Sum: "/>
+                        <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="SignalName: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="SubtractionCustomization">
+                <Grid>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,25,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Content="Minuend:" VerticalAlignment="Center"/>
+                            <TextBox Width="200" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotKeyboardFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDivident}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Text="-" FontSize="48" Margin="20,0" VerticalAlignment="Center"/>
+                            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,25,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Content="Subtrahend:" Margin="0" VerticalAlignment="Center"/>
+                            <TextBox Width="200" Height="22" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotKeyboardFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </StackPanel>
+                        <TextBlock Margin="250,10" Text="=" FontSize="24"/>
+                        <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="SignalName: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                        </StackPanel>
+                        <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter Property="Opacity" Value="0"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                            <Label Margin="0" Width="Auto" VerticalAlignment="Center" Content="{Binding ParameterName}" ContentStringFormat="{}{0}:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                                            <TextBox Width="150" Height="22" Text="{Binding Value}" Margin="0,0,20,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>-->
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="MultiplicationCustomization">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Factors ({0}):}"/>
+                        <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <TextBlock Margin="20,10,2,2" Text="Product: "/>
+                        <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="SignalName: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                        </StackPanel>
+                        <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Opacity" Value="0"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <Label Margin="0" Width="Auto" VerticalAlignment="Center" Content="{Binding ParameterName}" ContentStringFormat="{}{0}:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                                        <TextBox Width="150" Text="{Binding Value}" Margin="0,0,20,0" Height="22"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="DivisionCustomization">
+                <Grid>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,8,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Content="Dividend:" VerticalAlignment="Center"/>
+                            <TextBox Width="200" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotKeyboardFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDivident}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Text="/" FontSize="24" Margin="20,0" VerticalAlignment="Center"/>
+                            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,8,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Content="Divisor:" Margin="0" VerticalAlignment="Center"/>
+                            <TextBox Width="200" Height="22" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotKeyboardFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </StackPanel>
+                        <TextBlock Margin="250,10" Text="=" FontSize="24"/>
+                        <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="SignalName: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                            <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                        </StackPanel>
+                        <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Opacity" Value="0"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <Label Margin="0" Width="Auto" VerticalAlignment="Center" Content="{Binding ParameterName}" ContentStringFormat="{}{0}:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                                        <TextBox Width="150" Height="22" Text="{Binding Value}" Margin="0,0,20,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="ExponentCustomization">
+                <StackPanel Orientation="Vertical" Margin="2">
+                    <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                    <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter Property="Opacity" Value="0"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <Label Margin="0" Width="Auto" VerticalAlignment="Center" Content="{Binding ParameterName}" ContentStringFormat="{}{0}:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                                    <TextBox Width="150" Height="22" Text="{Binding Value}" Margin="0,0,20,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>-->
+                    <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
+                        <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="Exponent: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                        <TextBox Text="{Binding Parameters[0].Value}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                        <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                        <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="30,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Input Signals ({0}):}"/>
+                        <TextBlock Margin="165,2,2,2" Text="Output CustNames: "/>
+                    </StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
+                        <ItemsControl ItemsSource="{Binding OutputInputMappingDictionary}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="30,0" IsReadOnly="True"/>
+                                        <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Parameters[0].Value, StringFormat=^ {0}      \= }"/>
+                                        <TextBox Width="150" Text="{Binding Path=Key.SignalName}" Margin="30,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!--<StackPanel Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding InputChannels}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Width="150" Text="{Binding Path=SignalName}" Margin="30,0" IsReadOnly="True"/>
+                                            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Parameters[0].Value, StringFormat=^ {0}      \= }"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding OutputChannels}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBox Width="150" Text="{Binding Path=SignalName}" Margin="30,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>-->
+                    </ScrollViewer>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="UnaryCustomization">
+                <StackPanel Orientation="Vertical" Margin="2">
+                    <StackPanel Orientation="Horizontal" Margin="280,0,0,0">
+                        <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Margin="0,0,0,0" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                        <TextBox Width="150" Height="22" Text="{Binding CustPMUname}" Margin="0,0,20,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="30,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Input Signals ({0}):}"/>
+                        <TextBlock Margin="165,2,2,2" Text="Output CustNames: "/>
+                    </StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
+                        <ItemsControl ItemsSource="{Binding OutputInputMappingDictionary}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="30,0" IsReadOnly="True"/>
+                                        <TextBox Width="150" Text="{Binding Path=Key.SignalName}" Margin="70,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!--<StackPanel Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding InputChannels}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBox Width="150" Text="{Binding Path=SignalName}" Margin="30,0" IsReadOnly="True"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding OutputChannels}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBox Width="150" Text="{Binding Path=SignalName}" Margin="70,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>-->
+                    </ScrollViewer>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="CreatePhasorCustomization">
+                <StackPanel Orientation="Vertical" Margin="2" Name="StepPanel">
+                    <StackPanel Orientation="Horizontal" Margin="410,0,0,0">
+                        <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Margin="0,0,0,0" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+                        <TextBox Width="150" Height="22" Text="{Binding CustPMUname}" Margin="0,0,20,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="30,2,2,2" Text="Mag: "/>
+                        <TextBlock Margin="165,2,2,2" Text="Ang: "/>
+                        <TextBlock Margin="165,2,2,2" Text="Output CustNames: "/>
+                    </StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
+                        <ItemsControl ItemsSource="{Binding OutputInputMappingDictionary}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="30,0,0,0" IsReadOnly="True">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="GotKeyboardFocus">
+                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Path=Value[0]}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
+                                        <TextBox Width="150" Text="{Binding Path=Value[1].SignalName}" Margin="45,0,0,0" IsReadOnly="True">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="GotKeyboardFocus">
+                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Path=Value[0]}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
+                                        <TextBox Width="150" Text="{Binding Path=Key.SignalName}" Margin="45,0"/>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="LostFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Window.Resources>
     
@@ -90,324 +755,110 @@
         <avalonDock:DockingManager Grid.Row="1" Margin="2" Name="dockManager">
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel>
-                    <!--<avalonDock:LayoutDocumentPaneGroup Orientation="Vertical">-->
                     <avalonDock:LayoutDocumentPane DockMinWidth="100">
                         <avalonDock:LayoutAnchorable Title="Reader Properties" CanClose="False" CanHide="False" CanAutoHide="True">
                             <avalonDock:DockingManager AllowMixedOrientation="True">
                                 <avalonDock:LayoutRoot>
                                     <avalonDock:LayoutPanel Orientation="Horizontal">
                                         <avalonDock:LayoutAnchorablePane DockWidth="800">
-                                            <avalonDock:LayoutAnchorable Title="Reader Properties" CanHide="False" CanClose="False" AutoHideWidth="240">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                    </Grid.RowDefinitions>
-                                                    <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                                        <Label Content="File Directory:" Margin="2" Width="100"/>
-                                                        <TextBox Text="{Binding DataConfigure.ReaderProperty.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                        <Button Content="Browse" Width="100" Command="{Binding BrowseInputFileDir}" Margin="2"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                                        <Label Content="File Type:" Margin="2" Width="100"/>
-                                                        <ComboBox SelectedValue="{Binding DataConfigure.ReaderProperty.FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
-                                                            <i:Interaction.Triggers>
-                                                                <i:EventTrigger EventName="SelectionChanged">
-                                                                    <i:InvokeCommandAction Command="{Binding FileTypeChanged}"/>
-                                                                </i:EventTrigger>
-                                                            </i:Interaction.Triggers>
-                                                        </ComboBox>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                                        <Label Content="Mnemonic:" Margin="2" Width="100"/>
-                                                        <TextBox Text="{Binding DataConfigure.ReaderProperty.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                                        <Label Content="Mode:" Margin="2" Width="100"/>
-                                                        <ComboBox Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
-                                                    </StackPanel>
-                                                    <GroupBox Grid.Row="4" Header="Real-Time Mode Parameters" BorderBrush="#FF85DA89" BorderThickness="1" Visibility="{Binding DataConfigure.ReaderProperty.RealTimeModeVisibility}" Margin="2">
-                                                        <StackPanel Orientation="Vertical">
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="No Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.NoFutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Max No Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxNoFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.FutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Max Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </GroupBox>
-                                                    <GroupBox Grid.Row="4" Header="Hybrid Mode Parameters" BorderBrush="#FF85DA89" BorderThickness="1" Visibility="{Binding DataConfigure.ReaderProperty.HybridModeVisibility}" Margin="2,10">
-                                                        <StackPanel Orientation="Vertical">
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
-                                                                <StackPanel Orientation="Vertical" Margin="2">
-                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
-                                                                        <!--<CheckBox IsChecked="{Binding DataConfigure.ReaderProperty.SelectUTCTime}" VerticalAlignment="Center" Margin="2"/>-->
-                                                                        <!--IsEnabled="{Binding DataConfigure.ReaderProperty.SelectAlternateTimeZone, Converter={StaticResource InverseBooleanConverter}}"-->
-                                                                    <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
-                                                                        <!--<Button Content="select" Margin="2"/>-->
-                                                                    <!--</StackPanel>-->
-                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
-                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2,4,2,2" MinWidth="170" HorizontalContentAlignment="Right" IsEnabled="{Binding DataConfigure.ReaderProperty.SelectAlternateTimeZone, Converter={StaticResource InverseBooleanConverter}}"/>-->
-                                                                </StackPanel>
-                                                                <StackPanel Orientation="Vertical" Margin="20,2">
-                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
-                                                                        <!--<CheckBox IsChecked="{Binding DataConfigure.ReaderProperty.SelectAlternateTimeZone}" VerticalAlignment="Center" Margin="2"/>-->
-                                                                        <!--IsEnabled="{Binding DataConfigure.ReaderProperty.SelectUTCTime, Converter={StaticResource InverseBooleanConverter}}"-->
-                                                                    <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
-                                                                        <!--<Button Content="select" Margin="2"/>-->
-                                                                    <!--</StackPanel>-->
-                                                                    <!--<StackPanel Orientation="Vertical" Margin="2">-->
-                                                                    <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedIndex="10" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
-                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
-                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="150" HorizontalContentAlignment="Right" IsEnabled="{Binding DataConfigure.ReaderProperty.SelectUTCTime, Converter={StaticResource InverseBooleanConverter}}">-->
-                                                                            <!--<TextBox.Text>
-                                                                                <MultiBinding Converter="{StaticResource MyDateTimeZoneConverter}">
-                                                                                    <Binding Path="DataConfigure.ReaderProperty.DateTimeStart"/>
-                                                                                    <Binding Path="SelectedTimeZone"/>
-                                                                                </MultiBinding>
-                                                                            </TextBox.Text>-->
-                                                                        <!--</TextBox>-->
-                                                                    <!--</StackPanel>-->
-                                                                </StackPanel>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="No Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.NoFutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Max No Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxNoFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.FutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Max Future Wait" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Real Time Range" Width="220"/>
-                                                                <TextBox Text="{Binding DataConfigure.ReaderProperty.RealTimeRange}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </GroupBox>
-                                                    <GroupBox Grid.Row="4" Header="Archive Mode Parameters" BorderBrush="#FF85DA89" BorderThickness="1" Visibility="{Binding DataConfigure.ReaderProperty.ArchiveModeVisibility}">
-                                                        <StackPanel Orientation="Vertical">
-                                                            <StackPanel Orientation="Horizontal" Margin="2">
-                                                                <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
-                                                                <StackPanel Orientation="Vertical" Margin="2">
-                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
-                                                                    <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
-                                                                        <!--<Button Margin="2">
-                                                                            <Image Source="../Images/calendar.png" Stretch="Uniform" Height="20" Width="20">
-                                                                            </Image>
-                                                                        </Button>-->
-                                                                    <!--</StackPanel>-->
-                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
-                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.DateTimeStart}" HorizontalAlignment="Right" Margin="2,4,2,2" MinWidth="170" HorizontalContentAlignment="Right"/>-->
-                                                                </StackPanel>
-                                                                <StackPanel Orientation="Vertical" Margin="20,2">
-                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
-                                                                    <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
-                                                                        <!--<Button Content="select" Margin="2"/>-->
-                                                                    <!--</StackPanel>-->
-                                                                    <!--<StackPanel Orientation="Vertical" Margin="2">-->
-                                                                    <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedIndex="10" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
-                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
-                                                                        <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.ConvertedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="150" HorizontalContentAlignment="Right"/>-->
-                                                                    <!--</StackPanel>-->
-                                                                </StackPanel>
-                                                            </StackPanel>
-                                                            <StackPanel Orientation="Horizontal" Margin="2,40,2,2">
-                                                                <Label Content="End Time" Width="150" Margin="2" VerticalAlignment="Center"/>
-                                                                <StackPanel Orientation="Vertical" Margin="2">
-                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
-                                                                    <Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>
-                                                                        <!--<Button Content="select" Margin="2"/>-->
-                                                                    <!--</StackPanel>-->
-                                                                    <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeEnd}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
-                                                                    <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.DateTimeEnd}" HorizontalAlignment="Right" Margin="2,4,2,2" MinWidth="170" HorizontalContentAlignment="Right"/>-->
-                                                                </StackPanel>
-                                                                <StackPanel Orientation="Vertical" Margin="20,2">
-                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
-                                                                        <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
-                                                                        <!--<Button Content="select" Margin="2"/>
-                                                                    </StackPanel>-->
-                                                                    <!--<StackPanel Orientation="Vertical" Margin="2">-->
-                                                                        <ComboBox ItemsSource="{Binding TimeZoneList}" Margin="2" SelectedIndex="10" SelectedItem="{Binding DataConfigure.ReaderProperty.SelectedTimeZone}"/>
-                                                                        <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ConvertedEndTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
-                                                                        <!--<TextBox Text="{Binding DataConfigure.ReaderProperty.ConvertedEndTime}" HorizontalAlignment="Right" Margin="2" MinWidth="150" HorizontalContentAlignment="Right"/>-->
-                                                                    <!--</StackPanel>-->
-                                                                </StackPanel>
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                    </GroupBox>
-                                                    <!--<DataGrid Grid.Row="4" ItemsSource="{Binding DataConfigure.ReaderProperty.ModeParams}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" BorderBrush="#FF85DA89" VerticalAlignment="Top" Margin="100,2,2,2" HorizontalAlignment="Left">
-                                                        <DataGrid.Columns>
-                                                            <DataGridTextColumn Header="Parameters" Binding="{Binding ParameterName}" IsReadOnly="True"/>
-                                                            <DataGridTextColumn Header="Values" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                                        </DataGrid.Columns>
-                                                    </DataGrid>-->
-                                                </Grid>
-                                            </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutAnchorablePane>
-                                            <!--<avalonDock:LayoutAnchorablePane DockWidth="200">
-                                                <avalonDock:LayoutAnchorable Title="Signal Selection and Manipulation" CanHide="False" CanClose="False" AutoHideWidth="300">
-                                                    <TreeView>
-                                                        <TreeViewItem Header="step 1"/>
-                                                        <TreeViewItem Header="step 2"/>
-                                                        <TreeViewItem Header="step 3"/>
-                                                        <TreeViewItem Header="step 4"/>
-                                                        <TreeViewItem Header="step 5"/>
-                                                        <TreeViewItem Header="step 6"/>
-                                                        <TreeViewItem Header="step 7"/>
-                                                        <TreeViewItem Header="step 8"/>
-                                                        <TreeViewItem Header="step 9"/>
-                                                        <TreeViewItem Header="step 10"/>
-                                                    </TreeView>
-                                                </avalonDock:LayoutAnchorable>
-                                            </avalonDock:LayoutAnchorablePane>-->
-                                            <!--<avalonDock:LayoutAnchorablePaneGroup>
-                                                <avalonDock:LayoutAnchorablePane>
-                                                    <avalonDock:LayoutAnchorable Title="filters">
-                                                        <TextBox Text="List of filters in this stage, if click the customization tab, then List of customization" FontSize="36" TextWrapping="Wrap"/>
-                                                    </avalonDock:LayoutAnchorable>
-                                                    <avalonDock:LayoutAnchorable Title="Customizations">
-
-                                                    </avalonDock:LayoutAnchorable>
-                                                </avalonDock:LayoutAnchorablePane>
-                                            </avalonDock:LayoutAnchorablePaneGroup>-->
-                                        <avalonDock:LayoutDocumentPane DockWidth="200">
-                                            <avalonDock:LayoutAnchorable  Title="Input File Directory">
-                                                <TreeView ItemsSource="{Binding InputFileDirTree}">
-                                                    <TreeView.ItemTemplate>
-                                                        <HierarchicalDataTemplate ItemsSource="{Binding SubFolders}">
-                                                            <Border BorderBrush="AliceBlue" BorderThickness="1">
-                                                                <TextBlock Text="{Binding Name}"/>
-                                                            </Border>
-                                                        </HierarchicalDataTemplate>
-                                                    </TreeView.ItemTemplate>
-                                                </TreeView>
-                                            </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutDocumentPane>
-                                    </avalonDock:LayoutPanel>
-                                </avalonDock:LayoutRoot>
-                            </avalonDock:DockingManager>
-                            <!--<avalonDock:DockingManager Margin="2">
-                                <avalonDock:LayoutRoot>
-                                    <avalonDock:LayoutPanel>
-                                        <avalonDock:LayoutDocumentPaneGroup Orientation="Horizontal">
-                                            <avalonDock:LayoutDocumentPane DockMinWidth="100">
-                                                <avalonDock:LayoutAnchorable Title="Reader Properties" CanClose="False" CanHide="False" CanAutoHide="True">
+                                            <avalonDock:LayoutAnchorable CanHide="False" CanClose="False" AutoHideWidth="240">
+                                                <ScrollViewer>
                                                     <Grid>
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
                                                         </Grid.RowDefinitions>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                                            <Label Content="File Directory:" Margin="2" Width="100"/>
-                                                            <TextBox Text="{Binding DataConfigure.ReaderProperty.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                                            <Label Content="File Type:" Margin="2" Width="100"/>
-                                                            <ComboBox Text="{Binding DataConfigure.ReaderProperty.FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}"/>
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                                            <Label Content="Mnemonic:" Margin="2" Width="100"/>
-                                                            <TextBox Text="{Binding DataConfigure.ReaderProperty.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                                            <Label Content="Mode:" Margin="2" Width="100"/>
+                                                        <ItemsControl Grid.Row="0" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="AliceBlue" Margin="2">
+                                                                        <Grid>
+                                                                            <Grid.RowDefinitions>
+                                                                                <RowDefinition Height="Auto"/>
+                                                                                <RowDefinition Height="Auto"/>
+                                                                                <RowDefinition Height="Auto"/>
+                                                                            </Grid.RowDefinitions>
+                                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
+                                                                                <Label Content="File Directory:" Margin="2" Width="100"/>
+                                                                                <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                                                <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
+                                                                                    <Image Source="../Images/open.gif" Stretch="Uniform"/>
+                                                                                </Button>
+                                                                            </StackPanel>
+                                                                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
+                                                                                <Label Content="File Type:" Margin="2" Width="100"/>
+                                                                                <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                                                    <i:Interaction.Triggers>
+                                                                                        <i:EventTrigger EventName="SelectionChanged">
+                                                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
+                                                                                        </i:EventTrigger>
+                                                                                    </i:Interaction.Triggers>
+                                                                                </ComboBox>
+                                                                            </StackPanel>
+                                                                            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
+                                                                                <Label Content="Mnemonic:" Margin="2" Width="100"/>
+                                                                                <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                                            </StackPanel>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="6,40,0,2">
+                                                            <Label Content="Mode:" Margin="2" Width="100" FontWeight="Bold"/>
                                                             <ComboBox Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
                                                         </StackPanel>
-                                                        <DataGrid Grid.Row="4" ItemsSource="{Binding DataConfigure.ReaderProperty.ModeParams}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" BorderBrush="#FF85DA89" VerticalAlignment="Top" Margin="100,2,2,2" HorizontalAlignment="Left">
-                                                            <DataGrid.Columns>
-                                                                <DataGridTextColumn Header="Parameters" Binding="{Binding Parameter}" IsReadOnly="True"/>
-                                                                <DataGridTextColumn Header="Values" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                                            </DataGrid.Columns>
-                                                        </DataGrid>
+                                                        <ContentControl Grid.Row="2" Content="{Binding}">
+                                                            <ContentControl.Style>
+                                                                <Style TargetType="ContentControl">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="0">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource ArchiveParameter}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="1">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource RealTimeParameter}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="2">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource HybridParameter}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ContentControl.Style>
+                                                        </ContentControl>
                                                     </Grid>
-                                                </avalonDock:LayoutAnchorable>
-                                                <avalonDock:LayoutAnchorable Title="Other Properties" CanClose="False" CanHide="False" CanAutoHide="True">
-
-                                                </avalonDock:LayoutAnchorable>
-                                            </avalonDock:LayoutDocumentPane>
-                                        </avalonDock:LayoutDocumentPaneGroup>
+                                                </ScrollViewer>
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutAnchorablePane>
+                                        <avalonDock:LayoutDocumentPane DockWidth="200">
+                                            <avalonDock:LayoutAnchorable  Title="Input File Directory" CanAutoHide="False" CanClose="False" CanFloat="False">
+                                                <ScrollViewer>
+                                                    <ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border Margin="0,0,0,10">
+                                                                    <StackPanel>
+                                                                        <TextBlock Text="{Binding FileDirectory, StringFormat=Directory ({0}) Content:}" Margin="2"/>
+                                                                        <TreeView ItemsSource="{Binding InputFileTree}" MaxHeight="300" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                            <TreeView.ItemTemplate>
+                                                                                <HierarchicalDataTemplate ItemsSource="{Binding SubFolders}">
+                                                                                    <Border BorderBrush="AliceBlue" BorderThickness="1">
+                                                                                        <TextBlock Text="{Binding Name}"/>
+                                                                                    </Border>
+                                                                                </HierarchicalDataTemplate>
+                                                                            </TreeView.ItemTemplate>
+                                                                        </TreeView>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutDocumentPane>
                                     </avalonDock:LayoutPanel>
                                 </avalonDock:LayoutRoot>
-                            </avalonDock:DockingManager>-->
-                            <!--<StackPanel Orientation="Vertical">
-                                <GroupBox Header="Reader Properties" Margin="2" BorderBrush="#FF85DA89">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                            <Label Content="File Directory:" Margin="2" Width="100"/>
-                                            <TextBox Text="{Binding DataConfigure.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                            <Label Content="File Type:" Margin="2" Width="100"/>
-                                            <TextBox Text="{Binding DataConfigure.FileType}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                            <Label Content="Mnemonic:" Margin="2" Width="100"/>
-                                            <TextBox Text="{Binding DataConfigure.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                            <Label Content="Mode:" Margin="2" Width="100"/>
-                                            <ComboBox Text="{Binding DataConfigure.Mode}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </GroupBox>
-                                <GroupBox Header="Other Properties" Margin="2" BorderBrush="#FF85DA89">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                            <Label Content="property 1:" Margin="2" Width="100"/>
-                                            <TextBox Text="{Binding DataConfigure.FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                            <Label Content="property 2:" Margin="2" Width="100"/>
-                                            <TextBox Text="{Binding DataConfigure.FileType}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                            <Label Content="property 3:" Margin="2" Width="100"/>
-                                            <TextBox Text="{Binding DataConfigure.Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                            <Label Content="property 4:" Margin="2" Width="100"/>
-                                            <ComboBox Text="{Binding DataConfigure.Mode}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </GroupBox>
-                            </StackPanel>-->
+                            </avalonDock:DockingManager>
                         </avalonDock:LayoutAnchorable>
                         <avalonDock:LayoutAnchorable Title="Signal Selection and Manipulation" CanClose="False" CanHide="False" CanAutoHide="True">
                             <avalonDock:DockingManager>
@@ -433,40 +884,6 @@
                                                                 <ColumnDefinition Width="50"/>
                                                             </Grid.ColumnDefinitions>
                                                             <Label Content="Signal Selection and Manipulation Steps" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                            <!--<Button Name="AddStepButton" Click="Button_Click" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" HorizontalAlignment="Center" Grid.Column="1">
-                                                                <Image Source="../Images/CircledPlus.png"/>
-                                                                <Button.ContextMenu>
-                                                                    <ContextMenu>
-                                                                        <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}">
-                                                                            <MenuItem.ItemContainerStyle>
-                                                                                <Style>
-                                                                                    <Setter Property="MenuItem.Command" Value="{Binding Path=PlacementTarget.DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                                                                    <Setter Property="MenuItem.CommandParameter" Value="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                                                    <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
-                                                                                </Style>
-                                                                            </MenuItem.ItemContainerStyle>
-                                                                        </MenuItem>
-                                                                        <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}"/>
-                                                                    </ContextMenu>
-                                                                </Button.ContextMenu>
-                                                                <Button.Style>
-                                                                    <Style TargetType="{x:Type Button}">
-                                                                        <Style.Triggers>
-                                                                            <EventTrigger RoutedEvent="Click">
-                                                                                <EventTrigger.Actions>
-                                                                                    <BeginStoryboard>
-                                                                                        <Storyboard>
-                                                                                            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="ContextMenu.IsOpen">
-                                                                                                <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True"/>
-                                                                                            </BooleanAnimationUsingKeyFrames>
-                                                                                        </Storyboard>
-                                                                                    </BeginStoryboard>
-                                                                                </EventTrigger.Actions>
-                                                                            </EventTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </Button.Style>
-                                                            </Button>-->
                                                             <Menu Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Grid.Column="1" Margin="0">
                                                                 <MenuItem HorizontalAlignment="Right" Width="50" Margin="0">
                                                                     <MenuItem.Header>
@@ -479,18 +896,24 @@
                                                                         <MenuItem.ItemContainerStyle>
                                                                             <Style>
                                                                                 <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
-                                                                                <!--<Setter Property="MenuItem.CommandParameter" Value="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type MenuItem}}}"/>-->
                                                                                 <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
                                                                             </Style>
                                                                         </MenuItem.ItemContainerStyle>
                                                                     </MenuItem>
-                                                                    <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}"/>
+                                                                    <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}">
+                                                                        <MenuItem.ItemContainerStyle>
+                                                                            <Style>
+                                                                                <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.CustomizationSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                                                                <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                                                            </Style>
+                                                                        </MenuItem.ItemContainerStyle>
+                                                                    </MenuItem>
                                                                 </MenuItem>
                                                             </Menu>
                                                         </Grid>
                                                         <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
+                                                            <ItemsControl.Resources>                                                                
+                                                                <DataTemplate DataType="{x:Type local:DQFilter}">
                                                                     <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                                                         <i:Interaction.Triggers>
                                                                             <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -505,25 +928,14 @@
                                                                                 <ColumnDefinition Width="*"/>
                                                                                 <ColumnDefinition Width="30"/>
                                                                             </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0">
-                                                                                <Expander.Header>
-                                                                                    <TextBlock>
-                                                                                        <TextBlock.Text>
-                                                                                            <MultiBinding Converter="{StaticResource ExpanderHeaderConverter}">
-                                                                                                <Binding Path="StepCounter"/>
-                                                                                                <Binding Path="Name"/>
-                                                                                            </MultiBinding>
-                                                                                        </TextBlock.Text>
-                                                                                    </TextBlock>
-                                                                                </Expander.Header>
+                                                                            <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
                                                                                 <Grid>
                                                                                     <Grid.ColumnDefinitions>
                                                                                         <ColumnDefinition Width="6*"/>
                                                                                         <ColumnDefinition Width="4*"/>
                                                                                     </Grid.ColumnDefinitions>
                                                                                     <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
-                                                                                        <!--<Label Content="Channels" Margin="2"/>-->
-                                                                                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat='Channels (\{0\}):'}"/>
+                                                                                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
                                                                                         <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                                             <ListView.ItemTemplate>
                                                                                                 <DataTemplate>
@@ -539,12 +951,23 @@
                                                                                                 <DataTemplate>
                                                                                                     <Grid>
                                                                                                         <Grid.ColumnDefinitions>
-                                                                                                            <ColumnDefinition Width="6*"/>
-                                                                                                            <ColumnDefinition Width="4*"/>
+                                                                                                            <ColumnDefinition Width="Auto"/>
+                                                                                                            <ColumnDefinition Width="Auto"/>
+                                                                                                            <ColumnDefinition Width="*"/>
                                                                                                         </Grid.ColumnDefinitions>
-                                                                                                    <!--<StackPanel Orientation="Horizontal" Margin="2">-->
-                                                                                                        <Label Grid.Column="0" Content="{Binding ParameterName}" Margin="2" Width="150" VerticalAlignment="Center"/>
-                                                                                                        <ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="1">
+                                                                                                        <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                                                            <Image.Style>
+                                                                                                                <Style TargetType="Image">
+                                                                                                                    <Style.Triggers>
+                                                                                                                        <Trigger Property="IsEnabled" Value="False">
+                                                                                                                            <Setter Property="Opacity" Value="0"/>
+                                                                                                                        </Trigger>
+                                                                                                                    </Style.Triggers>
+                                                                                                                </Style>
+                                                                                                            </Image.Style>
+                                                                                                        </Image>
+                                                                                                        <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" HorizontalAlignment="Left"/>
+                                                                                                        <ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="2">
                                                                                                             <ContentPresenter.Resources>
                                                                                                                 <DataTemplate DataType="{x:Type sys:Boolean}">
                                                                                                                     <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
@@ -555,7 +978,6 @@
                                                                                                                 </DataTemplate>
                                                                                                             </ContentPresenter.Resources>
                                                                                                         </ContentPresenter>
-                                                                                                    <!--</StackPanel>-->
                                                                                                     </Grid>
                                                                                                 </DataTemplate>
                                                                                             </ItemsControl.ItemTemplate>
@@ -569,7 +991,77 @@
                                                                         </Grid>
                                                                     </Border>
                                                                 </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
+                                                                <DataTemplate DataType="{x:Type local:Customization}">
+                                                                    <Border Name="StepBorder" Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+                                                                        <i:Interaction.Triggers>
+                                                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                                            </i:EventTrigger>
+                                                                            <i:EventTrigger EventName="GotFocus">
+                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                                            </i:EventTrigger>
+                                                                        </i:Interaction.Triggers>
+                                                                        <Grid Margin="2">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="30"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                                                                <ContentControl Content="{Binding}" Name="Steps">
+                                                                                    <ContentControl.Style>
+                                                                                        <Style TargetType="ContentControl">
+                                                                                            <Style.Triggers>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Scalar Repetition Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ScalarRepCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Addition Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource AdditionCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Subtraction Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource SubtractionCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Multiplication Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MultiplicationCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Division Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource DivisionCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Raise signals to an exponent">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ExponentCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Reverse sign of signals">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Take absolute value of signals">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Return real component of signals">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Return imaginary component of signals">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Return angle of complex valued signals">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Take complex conjugate of signals">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Phasor Creation Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource CreatePhasorCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </ContentControl.Style>
+                                                                                </ContentControl>
+                                                                            </Expander>
+                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                <Image Source="../Images/CircledMinus.png" HorizontalAlignment="Stretch"/>
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.Resources>
                                                         </ItemsControl>
                                                         <Border Grid.Row="2" Margin="2">
                                                             <i:Interaction.Triggers>
@@ -590,11 +1082,16 @@
                                                         <TreeView.ItemTemplate>
                                                             <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
                                                                 <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
+                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" IsEnabled="{Binding SignalSignature.IsEnabled}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>                                                                    
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
                                                         </TreeView.ItemTemplate>
+                                                        <TreeView.ItemContainerStyle>
+                                                            <Style TargetType="{x:Type TreeViewItem}">
+                                                                <Setter Property="IsEnabled" Value="{Binding SignalSignature.IsEnabled}"/>
+                                                            </Style>
+                                                        </TreeView.ItemContainerStyle>
                                                     </TreeView>
                                                 </avalonDock:LayoutAnchorable>
                                             </avalonDock:LayoutAnchorablePane>
@@ -623,56 +1120,31 @@
                                                                 </HierarchicalDataTemplate.ItemTemplate>
                                                             </HierarchicalDataTemplate>-->
                                                         </TreeView.ItemTemplate>
+                                                        <TreeView.ItemContainerStyle>
+                                                            <Style TargetType="{x:Type TreeViewItem}">
+                                                                <Setter Property="IsEnabled" Value="{Binding SignalSignature.IsEnabled}"/>
+                                                            </Style>
+                                                        </TreeView.ItemContainerStyle>
                                                     </TreeView>
                                                 </avalonDock:LayoutAnchorable>
                                             </avalonDock:LayoutAnchorablePane>
                                         </avalonDock:LayoutPanel>
                                         <avalonDock:LayoutAnchorablePane>
-                                            <avalonDock:LayoutAnchorable>
+                                            <avalonDock:LayoutAnchorable Title="Signal Selection Panel">
                                                 <Grid>
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="auto"/>
                                                         <RowDefinition Height="auto"/>
+                                                        <!--<RowDefinition Height="auto"/>-->
                                                         <RowDefinition Height="*"/>
                                                         <!--<RowDefinition Height="auto"/>-->
                                                     </Grid.RowDefinitions>
-                                                    <Label Grid.Row="0" Content="{Binding}"/>
+                                                    <Label Grid.Row="0" Content="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}}" ContentStringFormat="Pick Channels for: {0}"/>
+                                                    <!--<TextBlock Grid.Row="0" Text="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}, StringFormat=Pick Channels for: {0}}"/>-->
                                                     <ComboBox Name="signalGroupMethodCombobox" Grid.Row="1" ItemsSource="{Binding SelectSignalMethods}" SelectedValue="{Binding SelectedSelectionMethod}" Margin="2"/>
-                                                    <!--<TreeView Grid.Row="2" ItemsSource="{Binding DataConfigure.CollectionOfSteps}">
-                                                        <TreeView.ItemTemplate>
-                                                            <HierarchicalDataTemplate ItemsSource="{Binding InputChannels}">
-                                                                <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.PMUSignalSelectionChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
-                                                                    <TextBlock Text="{Binding Name}" Margin="0"/>
-                                                                </StackPanel>
-                                                                <HierarchicalDataTemplate.ItemTemplate>
-                                                                    <DataTemplate>
-                                                                        <StackPanel Orientation="Horizontal" Margin="0">
-                                                                            <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.PMUSignalSelectionChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
-                                                                            <TextBlock Text="{Binding SignalName}" Margin="0"/>
-                                                                        </StackPanel>
-                                                                    </DataTemplate>
-                                                                </HierarchicalDataTemplate.ItemTemplate>
-                                                            </HierarchicalDataTemplate>
-                                                            <HierarchicalDataTemplate ItemsSource="{Binding InputChannelsSortedByType}">
-                                                                <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding AreSignalSelected}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SignalSelectedFromThisStep, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
-                                                                    <TextBlock Text="{Binding Name}" Margin="0"/>
-                                                                </StackPanel>
-                                                                <HierarchicalDataTemplate.ItemTemplate>
-                                                                    <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
-                                                                        <StackPanel Orientation="Horizontal" Margin="0">
-                                                                            <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
-                                                                            <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
-                                                                        </StackPanel>
-                                                                    </HierarchicalDataTemplate>
-                                                                </HierarchicalDataTemplate.ItemTemplate>
-                                                            </HierarchicalDataTemplate>
-                                                        </TreeView.ItemTemplate>
-                                                    </TreeView>-->
-                                                    <TreeView Grid.Row="2" Margin="2">
+                                                    <TreeView Grid.Row="2" Margin="2" Visibility="{Binding SignalSelectionTreeViewVisibility}">
                                                         <TreeView.Style>
-                                                            <Style TargetType="TreeView">
+                                                            <Style TargetType="{x:Type TreeView}">
                                                                 <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Raw Input Channels by Signal Type">
@@ -685,7 +1157,7 @@
                                                                         <Setter Property="ItemsSource" Value="{Binding GroupedSignalByStepsInput}"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="OutPut Channels by Step">
-                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
+                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalByStepsOutput}"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -693,11 +1165,27 @@
                                                         <TreeView.ItemTemplate>
                                                             <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
                                                                 <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
+                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" CommandParameter="{Binding}">
+                                                                        <CheckBox.Style>
+                                                                            <Style TargetType="{x:Type CheckBox}">
+                                                                                <Setter Property="Command" Value="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"/>
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding Path=DataContext.SelectedSelectionMethod, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" Value="OutPut Channels by Step">
+                                                                                        <Setter Property="Command" Value="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </CheckBox.Style>
+                                                                    </CheckBox>
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
                                                         </TreeView.ItemTemplate>
+                                                        <TreeView.ItemContainerStyle>
+                                                            <Style TargetType="{x:Type TreeViewItem}">
+                                                                <Setter Property="IsEnabled" Value="{Binding SignalSignature.IsEnabled}"/>
+                                                            </Style>
+                                                        </TreeView.ItemContainerStyle>
                                                     </TreeView>
                                                     <!--<Button Grid.Row="3" Content="add selected signals" Command="{Binding AddSelectedSignalToStep}"/>-->
                                                 </Grid>
@@ -710,11 +1198,13 @@
                         <avalonDock:LayoutAnchorable Title="Process Config" CanClose="False" CanHide="False" CanAutoHide="True">
 
                         </avalonDock:LayoutAnchorable>
+                        <avalonDock:LayoutAnchorable Title="Post-Processing Customization" CanClose="False" CanHide="False" CanAutoHide="True">
+
+                        </avalonDock:LayoutAnchorable>
                         <avalonDock:LayoutAnchorable Title="Detector Config" CanClose="False" CanHide="False" CanAutoHide="True">
 
                         </avalonDock:LayoutAnchorable>
                     </avalonDock:LayoutDocumentPane>
-                    <!--</avalonDock:LayoutDocumentPaneGroup>-->
                 </avalonDock:LayoutPanel>
             </avalonDock:LayoutRoot>
         </avalonDock:DockingManager>

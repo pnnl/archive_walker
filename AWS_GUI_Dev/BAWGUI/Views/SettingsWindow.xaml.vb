@@ -1,4 +1,11 @@
 ﻿Public Class SettingsWindow
+    Private Sub MinuendOrDividentTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
+        sender.datacontext.CurrentCursor = "MinuendOrDivident"
+    End Sub
+
+    Private Sub SubtrahendOrDivisorTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
+        sender.datacontext.CurrentCursor = "SubtrahendOrDivisor"
+    End Sub
     'Private Sub Button_Click(sender As Object, e As RoutedEventArgs)
     '    If Not AddStepButton.ContextMenu.IsOpen Then
     '        e.Handled = True

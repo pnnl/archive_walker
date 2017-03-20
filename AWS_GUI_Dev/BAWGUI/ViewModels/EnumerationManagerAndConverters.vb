@@ -96,14 +96,28 @@ Public Class SelectionStatusBackgroundConverter
 End Class
 
 Public Class ExpanderHeaderConverter
-    Implements IMultiValueConverter
-    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
-        Return "Step " & values(0) & " - " & values(1)
+    'Implements IMultiValueConverter
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        If value IsNot Nothing Then
+            Return "Step " & value.StepCounter & " - " & value.Name
+        Else
+            Return "No Step Selected Yet!"
+        End If
     End Function
 
-    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+    'Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+    '    Return "Step " & values(0) & " - " & values(1)
+    'End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
         Return DependencyProperty.UnsetValue
     End Function
+
+    'Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+    '    Return DependencyProperty.UnsetValue
+    'End Function
 End Class
 
 Public Class InverseBooleanConverter

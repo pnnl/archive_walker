@@ -46,7 +46,7 @@
                         <scalar>60</scalar>
                         <SignalType>F</SignalType>
                         <SignalUnit>Hz</SignalUnit>
-                        <TimeSourcePMU>JDAY 500  B1 SA </TimeSourcePMU>
+                        <TimeSourcePMU>JDAY 500  A1 SA </TimeSourcePMU>
                     </Parameters>
                 </Customization>
                 <Customization>
@@ -88,12 +88,12 @@
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <SignalName>Add 1</SignalName>
                         <term>
-                            <PMU>JDAY 500  B1 SA </PMU>
-                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <PMU>JDAY 500  A1 SA </PMU>
+                            <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                         </term>
                         <term>
-                            <PMU>MALN 500  B1 SA </PMU>
-                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <PMU>MALN 500  A1 SA </PMU>
+                            <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
                         </term>
                     </Parameters>
                 </Customization>
@@ -120,12 +120,12 @@
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <SignalName>sub BPA</SignalName>
                         <minuend>
-                            <PMU>JDAY 500  B1 SA </PMU>
-                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <PMU>JDAY 500  A1 SA </PMU>
+                            <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                         </minuend>
                         <subtrahend>
-                            <PMU>MALN 500  B1 SA </PMU>
-                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <PMU>MALN 500  A1 SA </PMU>
+                            <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
                         </subtrahend>
                     </Parameters>
                 </Customization>
@@ -152,12 +152,12 @@
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <SignalName>mult 1</SignalName>
                         <factor>
-                            <PMU>JDAY 500  B1 SA </PMU>
-                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <PMU>JDAY 500  A1 SA </PMU>
+                            <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                         </factor>
                         <factor>
-                            <PMU>MALN 500  B1 SA </PMU>
-                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <PMU>MALN 500  A1 SA </PMU>
+                            <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
                         </factor>
                     </Parameters>
                 </Customization>
@@ -184,12 +184,12 @@
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <SignalName>Div BPA</SignalName>
                         <dividend>
-                            <PMU>JDAY 500  B1 SA </PMU>
-                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <PMU>JDAY 500  A1 SA </PMU>
+                            <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                         </dividend>
                         <divisor>
-                            <PMU>MALN 500  B1 SA </PMU>
-                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <PMU>MALN 500  A1 SA </PMU>
+                            <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
                         </divisor>
                     </Parameters>
                 </Customization>
@@ -216,13 +216,13 @@
                         <exponent>2</exponent>
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <signal>
-                            <PMU>JDAY 500  B1 SA </PMU>
-                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <PMU>JDAY 500  A1 SA </PMU>
+                            <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                             <CustName>JDAY exp</CustName>
                         </signal>
                         <signal>
-                            <PMU>MALN 500  B1 SA </PMU>
-                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <PMU>MALN 500  A1 SA </PMU>
+                            <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
                             <CustName>MALN exp</CustName>
                         </signal>
                     </Parameters>
@@ -251,13 +251,13 @@
                     <Parameters>
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <signal>
-                            <PMU>JDAY 500  B1 SA </PMU>
-                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <PMU>JDAY 500  A1 SA </PMU>
+                            <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                             <CustName>JDAY AbsVal</CustName>
                         </signal>
                         <signal>
-                            <PMU>MALN 500  B1 SA </PMU>
-                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <PMU>MALN 500  A1 SA </PMU>
+                            <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
                             <CustName>MALN AbsVal</CustName>
                         </signal>
                     </Parameters>
@@ -286,23 +286,23 @@
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <phasor>
                             <mag>
-                                <PMU>JDAY 500  B1 SA </PMU>
-                                <Channel>JDAY 500  B1 SA .B500EAST_____1VP.MAG</Channel>
+                                <PMU>JDAY 500  A1 SA </PMU>
+                                <Channel>JDAY 500  A1 SA .B500EAST_____1VP.MAG</Channel>
                             </mag>
                             <ang>
-                                <PMU>JDAY 500  B1 SA </PMU>
-                                <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                                <PMU>JDAY 500  A1 SA </PMU>
+                                <Channel>JDAY 500  A1 SA .B500EAST_____1VP.ANG</Channel>
                             </ang>
                             <CustName>JDAY CreatePhasor</CustName>
                         </phasor>
                         <phasor>
                             <mag>
-                                <PMU>MALN 500  B1 SA </PMU>
-                                <Channel>MALN 500  B1 SA .L500GRIZZLY__2IP.MAG</Channel>
+                                <PMU>MALN 500  A1 SA </PMU>
+                                <Channel>MALN 500  A1 SA .L500GRIZZLY__2IP.MAG</Channel>
                             </mag>
                             <ang>
-                                <PMU>MALN 500  B1 SA </PMU>
-                                <Channel>MALN 500  B1 SA .L500GRIZZLY__2IP.ANG</Channel>
+                                <PMU>MALN 500  A1 SA </PMU>
+                                <Channel>MALN 500  A1 SA .L500GRIZZLY__2IP.ANG</Channel>
                             </ang>
                             <CustName>MALN CreatePhasor</CustName>
                         </phasor>
@@ -345,12 +345,12 @@
                         <CustPMUname>CustPMU BPA</CustPMUname>
                         <power>
                             <Vmag>
-                                <PMU>MALN 500  B1 SA </PMU>
-                                <Channel>MALN 500  B1 SA .B500NORTH____1VP.MAG</Channel>
+                                <PMU>MALN 500  A1 SA </PMU>
+                                <Channel>MALN 500  A1 SA .B500NORTH____1VP.MAG</Channel>
                             </Vmag>
                             <Vang>
-                                <PMU>MALN 500  B1 SA </PMU>
-                                <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                                <PMU>MALN 500  A1 SA </PMU>
+                                <Channel>MALN 500  A1 SA .B500NORTH____1VP.ANG</Channel>
                             </Vang>
                             <Imag>
                                 <PMU>KEEL 500 B1 SA  </PMU>

@@ -210,6 +210,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Asterisk-104.png" />
     <Resource Include="Images\settings24.png" />
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +248,9 @@
     <None Include="ConfigFiles\Config_MultFileTest_Customizations_2custPMU.XML">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Asterisk.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
