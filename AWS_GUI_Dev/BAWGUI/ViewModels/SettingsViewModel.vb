@@ -26,6 +26,7 @@ Public Class SettingsViewModel
         _stepSelected = New DelegateCommand(AddressOf _stepSelectedToEdit, AddressOf CanExecute)
         _stepDeSelected = New DelegateCommand(AddressOf _deSelectAllSteps, AddressOf CanExecute)
         _setCurrentFocusedTextbox = New DelegateCommand(AddressOf _curentFocusedTextBoxChanged, AddressOf CanExecute)
+        _setCurrentFocusedTextboxUnarySteps = New DelegateCommand(AddressOf _currentFocusedTextBoxForUnaryStepsChanged, AddressOf CanExecute)
         _selectedOutputSignalChanged = New DelegateCommand(AddressOf _outputSignalSelectionChanged, AddressOf CanExecute)
         _textboxesLostFocus = New DelegateCommand(AddressOf _recoverCheckStatusOfCurrentStep, AddressOf CanExecute)
         '_inputFileDirTree = New ObservableCollection(Of Folder)
@@ -2157,5 +2158,19 @@ Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+
+    Private _setCurrentFocusedTextboxUnarySteps As ICommand
+    Public Property SetCurrentFocusedTextboxUnarySteps As ICommand
+        Get
+            Return _setCurrentFocusedTextboxUnarySteps
+        End Get
+        Set(ByVal value As ICommand)
+            _setCurrentFocusedTextboxUnarySteps = value
+        End Set
+    End Property
+
+    Private Sub _currentFocusedTextBoxForUnaryStepsChanged(obj As Object)
+
+    End Sub
 
 End Class

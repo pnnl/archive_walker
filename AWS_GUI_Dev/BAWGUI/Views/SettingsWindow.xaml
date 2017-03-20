@@ -596,7 +596,13 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBox Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="30,0" IsReadOnly="True"/>
+                                        <TextBox Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="30,0" IsReadOnly="True">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="GotFocus">
+                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
                                         <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Parameters[0].Value, StringFormat=^ {0}      \= }"/>
                                         <TextBox Width="150" Text="{Binding Path=Key.SignalName}" Margin="30,0"/>
                                     </StackPanel>
