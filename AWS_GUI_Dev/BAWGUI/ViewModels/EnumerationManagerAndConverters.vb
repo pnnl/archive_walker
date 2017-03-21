@@ -141,7 +141,8 @@ Public Class SignalSignatureListStringConverter
         For Each item In value
             a.Add(item.SignalName)
         Next
-        Return String.Join(Of String)(vbCrLf, a)
+        Return String.Join(vbCrLf, a)
+        'Return String.Join(Of String)(vbCrLf, a)
     End Function
 
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
