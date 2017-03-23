@@ -95,7 +95,7 @@ Public Class SelectionStatusBackgroundConverter
     End Function
 End Class
 
-Public Class ErrorStatusBackgroundConverter
+Public Class ErrorStatusBorderColorConverter
     Implements IValueConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert

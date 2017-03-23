@@ -89,3 +89,5 @@ C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\
 C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\SubtractionCustomization.baml
 C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\DivisionCustomization.g.vb
 C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\DivisionCustomization.baml
+C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\ExponentCustomization.g.vb
+C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\ExponentCustomization.baml
