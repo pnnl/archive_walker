@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Config>
+	<DataConfig>
+		<Configuration>
+			<ReaderProperties>
+				<!--
+				<FileDirectory>D:\BAWS\BAWS_GIT\DataReaderCode\OriginalData</FileDirectory>
+				-->
+				<!--
+				<FileDirectory> D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\OriginalData</FileDirectory>
+				-->
+				<FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\DataReaderCode\OriginalData\2015</FileDirectory>
+				<FileType>PDAT</FileType>
+				<Mnemonic>ModeMeterSignals</Mnemonic>
+				
+<!--  				<Mode>
+					<Name>RealTime</Name>
+					<Params>
+						<NoFutureWait>60</NoFutureWait>
+						<MaxNoFutureCount>10</MaxNoFutureCount>
+						<FutureWait>60</FutureWait>
+						<MaxFutureCount>10</MaxFutureCount>
+					</Params>
+				</Mode>
+				<Mode>
+					<Name>Hybrid</Name>
+					<Params>
+						<DateTimeStart>2015-10-17 12:30:00 GMT</DateTimeStart>
+						<NoFutureWait>60</NoFutureWait>
+						<MaxNoFutureCount>10</MaxNoFutureCount>
+						<FutureWait>60</FutureWait>
+						<MaxFutureCount>10</MaxFutureCount>
+						<RealTimeRange>60</RealTimeRange>
+					</Params>
+				</Mode> -->
+				
+ 				<Mode>
+					<Name>Archive</Name>
+					<Params>
+						<DateTimeStart>2015-06-17 08:00:00 GMT</DateTimeStart>
+						<DateTimeEnd>2015-06-17 09:12:00 GMT</DateTimeEnd>
+					</Params>
+				</Mode>
+			</ReaderProperties>
+			<!-- 
+			Each stage is composed of data quality filters and customizations. 
+			Filters are always applied first, then the customizations. The 
+			stages are carried out in sequential order. 
+
+			For all filters, if PMU isn't included, the filter is applied to all 
+			PMUs. Under PMU, if Channel isn't included, the filter is applied for
+			all appropriate channels in the specified PMUs. 
+			-->
+			<!--
+			*******
+			Stage 1
+			*******
+			-->
+			<Stages>
+				<!--
+				**********************
+				Stage 1 - DQ Filtering
+				**********************
+				-->
+				<Filter>
+					<Name>DropOutZeroFilt</Name>
+					<Parameters>
+						<SetToNaN>TRUE</SetToNaN>
+						<FlagBit>2</FlagBit>
+					</Parameters>
+				</Filter>
+				<Filter>
+					<Name>VoltPhasorFilt</Name>
+					<Parameters>
+						<VoltMin>0.7</VoltMin>
+						<VoltMax>1.3</VoltMax>
+						<SetToNaN>TRUE</SetToNaN>
+						<FlagBit>4</FlagBit>
+					</Parameters>
+				</Filter>
+				<Filter>
+					<Name>StaleFilt</Name>
+					<Parameters>
+						<FlagAllByFreq>FALSE</FlagAllByFreq>
+						<StaleThresh>60</StaleThresh>
+						<SetToNaN>TRUE</SetToNaN>
+						<FlagBit>8</FlagBit>
+						<FlagBitFreq>9</FlagBitFreq>
+					</Parameters>
+				</Filter>
+				<Filter>
+					<Name>WrappingFailureFilt</Name>
+					<Parameters>
+						<AngleThresh>90</AngleThresh>
+						<SetToNaN>TRUE</SetToNaN>
+						<FlagBit>10</FlagBit>
+					</Parameters>
+				</Filter>
+			</Stages>
+			<SignalSelection>
+				<SignalType>
+					<Type>VAP</Type>
+				</SignalType>
+			</SignalSelection>
+		</Configuration>
+	</DataConfig>
+	<!--
+	****
+	****
+	-->
+	<ProcessConfig>
+		<Configuration>
+			<Processing>
+				<!--
+				For interpolation, filtering, and sampling-rate conversion, if the 
+				PMU element is omitted the process is applied to all signals in all
+				PMUs. If the Channels element within a PMU element is omitted the 
+				process is applied to all signals in that PMU. Otherwise, the 
+				process is applied to the specific PMUs and signals listed in the
+				elements.
+				If channels are not specified for wrap and unwrap operations, they
+				are applied to all angle signals in the PMUs.
+				-->
+				<Unwrap>
+					<MaxNaN>1</MaxNaN>
+				</Unwrap>
+				<Interpolate>
+					<Parameters>
+						<Limit>100</Limit>
+						<Type>Linear</Type>
+						<FlagInterp>TRUE</FlagInterp>
+					</Parameters>          
+				</Interpolate>
+				<Stages>
+					<Filter>
+						<Type>Rational</Type>
+						<Parameters>
+							<Numerator>1,-1</Numerator>
+							<Denominator>1</Denominator>
+							<ZeroPhase>FALSE</ZeroPhase>
+						</Parameters>
+					</Filter>
+					<Filter>
+						<Type>HighPass</Type>
+						<Parameters>
+							<Order>1</Order>
+							<Cutoff>0.1</Cutoff>
+							<ZeroPhase>FALSE</ZeroPhase>
+						</Parameters>
+					</Filter>
+					<Filter>
+						<Type>LowPass</Type>
+						<Parameters>
+							<PassRipple>0.1</PassRipple>
+							<StopRipple>50</StopRipple>
+							<PassCutoff>1.5</PassCutoff>
+							<StopCutoff>2.5</StopCutoff>
+							<ZeroPhase>FALSE</ZeroPhase>
+						</Parameters>
+					</Filter>
+				</Stages>
+			</Processing>   
+			<NameTypeUnit>
+				<NewUnit>Hz</NewUnit>
+				<NewType>F</NewType>
+				<!--
+				<PMU>
+					<Name>Custom Signals</Name>
+					<CurrentChannel>MALN</CurrentChannel>
+					<NewChannel>MALN</NewChannel>
+					<NewUnit>Hz</NewUnit>
+					<NewType>F</NewType>
+				</PMU>
+				<PMU>
+					<Name>Custom Signals</Name>
+					<CurrentChannel>JDAY</CurrentChannel>
+					<NewChannel>JDAY</NewChannel>
+					<NewUnit>Hz</NewUnit>
+					<NewType>F</NewType>
+				</PMU>
+				-->
+			</NameTypeUnit>
+			<!--
+			Specify the signals for output
+			-->
+			<SignalSelection>
+				<PMU>
+					<Name>ModeMeterSignals</Name>
+					<Channels>
+						<Channel>
+							<Name>MALIN500.VPA</Name>
+						</Channel>
+						<Channel>
+							<Name>CJK500.VPA</Name>
+						</Channel>
+						<Channel>
+							<Name>JDA500.VPA</Name>
+						</Channel>
+						<Channel>
+							<Name>BIGED500.VPA</Name>
+						</Channel>
+						<Channel>
+							<Name>MONROE500.VPA</Name>
+						</Channel>
+						<Channel>
+							<Name>CUSTER500.VPA</Name>
+						</Channel>
+						<Channel>
+							<Name>GARRISON500.VPA</Name>
+						</Channel>
+						<Channel>
+							<Name>CHJ500.VPA</Name>
+						</Channel>
+					</Channels>
+				</PMU>
+			</SignalSelection>
+		</Configuration>
+	</ProcessConfig>
+	<!--
+	****
+	****
+	-->
+	<DetectorConfig>
+		<Configuration>
+			<!-- Channels are specified identically for all detectors. If no PMU 
+			element is included, all channels from all PMUs are included. If Channel 
+			elements are not included within a PMU element, all channels for 
+			the specified PMU are included. Otherwise, only the specified 
+			channels are included in the analysis. Examples of the latter two cases
+			are given below rather than within each of the detector elements.
+			<PMU>
+				<Name>JDAY 500  A1 SA </Name>
+			</PMU>
+			<PMU>
+				<Name>ALSN 500 A1 SA  </Name>
+				<Channel>
+					<Name>ALSN 500 A1 SA  .B500NORTH____1VP.MAG</Name>
+				</Channel>
+				<Channel>
+					<Name>ALSN 500 A1 SA  .B500NORTH____1VP.ANG</Name>
+				</Channel>
+			</PMU>
+			-->
+			<EventPath>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\EventXML</EventPath>
+			<!-- Ringdown detector -->
+			<Ringdown>
+				<RMSlength>15</RMSlength>
+				<ForgetFactor>0.98</ForgetFactor>
+				<RingThresholdScale>3</RingThresholdScale>
+			</Ringdown>
+			<!-- Alarming info (not needed for ringdowns) -->
+			<Alarming>
+				<Ringdown>
+					<MaxDuration>90</MaxDuration>
+				</Ringdown>
+			</Alarming>
+		</Configuration>
+	</DetectorConfig>
+</Config>

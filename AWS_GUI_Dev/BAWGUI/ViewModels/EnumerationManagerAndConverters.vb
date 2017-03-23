@@ -95,6 +95,22 @@ Public Class SelectionStatusBackgroundConverter
     End Function
 End Class
 
+Public Class ErrorStatusBackgroundConverter
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        If value Then
+            Return "White"
+        Else
+            Return "Red"
+        End If
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+End Class
+
 Public Class ExpanderHeaderConverter
     'Implements IMultiValueConverter
     Implements IValueConverter

@@ -709,7 +709,7 @@ Public Class Customization
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         _custSignalName = New ObservableCollection(Of String)
-        _outputInputMappingDictionary = New Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
+        _outputInputMappingDictionary = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
     End Sub
 
     Private _customizationName As String
@@ -830,12 +830,12 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-    Private _outputInputMappingDictionary As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
-    Public Property OutputInputMappingDictionary As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
+    Private _outputInputMappingDictionary As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+    Public Property OutputInputMappingDictionary As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         Get
             Return _outputInputMappingDictionary
         End Get
-        Set(ByVal value As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+        Set(ByVal value As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))))
             _outputInputMappingDictionary = value
             OnPropertyChanged()
         End Set

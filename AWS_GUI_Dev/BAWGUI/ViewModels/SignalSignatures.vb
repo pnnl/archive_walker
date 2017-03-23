@@ -40,21 +40,25 @@ Public Class SignalSignatures
     'Implements IDisposable
     Public Sub New()
         _isEnabled = True
+        _isValid = True
     End Sub
     Public Sub New(name As String)
         _signalName = name
         _isEnabled = True
+        _isValid = True
     End Sub
     Public Sub New(name As String, pmu As String)
         _signalName = name
         _PMUName = pmu
         _isEnabled = True
+        _isValid = True
     End Sub
     Public Sub New(name As String, pmu As String, type As String)
         _signalName = name
         _PMUName = pmu
         _typeAbbreviation = type
         _isEnabled = True
+        _isValid = True
     End Sub
     'Public Sub Dispose() Implements IDisposable.Dispose
     '    'Dispose(True)
@@ -74,7 +78,16 @@ Public Class SignalSignatures
     '    End If
     '    Me.disposed = True
     'End Sub
-
+    Private _isValid As Boolean
+    Public Property IsValid As Boolean
+        Get
+            Return _isValid
+        End Get
+        Set(ByVal value As Boolean)
+            _isValid = value
+            OnPropertyChanged()
+        End Set
+    End Property
     Private _PMUName As String
     Public Property PMUName As String
         Get
@@ -125,4 +138,20 @@ Public Class SignalSignatures
             OnPropertyChanged()
         End Set
     End Property
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If obj Is Nothing OrElse Not Me.GetType Is obj.GetType Then
+            Return False
+        End If
+        Dim p As SignalSignatures = CType(obj, SignalSignatures)
+        Return Me.PMUName = p.PMUName AndAlso Me.SignalName = p.SignalName AndAlso Me.TypeAbbreviation = p.TypeAbbreviation
+    End Function
+    'Public Overrides Function GetHashCode() As Integer
+    '    Return MyBase.GetHashCode()
+    'End Function
+    Public Shared Operator =(ByVal x As SignalSignatures, ByVal y As SignalSignatures) As Boolean
+        Return x.PMUName = y.PMUName AndAlso x.SignalName = y.SignalName AndAlso x.TypeAbbreviation = y.TypeAbbreviation
+    End Operator
+    Public Shared Operator <>(ByVal x As SignalSignatures, ByVal y As SignalSignatures) As Boolean
+        Return x.PMUName <> y.PMUName OrElse x.SignalName <> y.SignalName OrElse x.TypeAbbreviation <> y.TypeAbbreviation
+    End Operator
 End Class

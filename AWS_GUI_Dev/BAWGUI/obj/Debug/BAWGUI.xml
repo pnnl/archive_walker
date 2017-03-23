@@ -1,0 +1,240 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+BAWGUI
+</name>
+</assembly>
+<members>
+<member name="E:BAWGUI.ViewModelBase.PropertyChanged">
+ <summary>
+ Raise property changed event
+ </summary>
+ <param name="sender">The event sender</param>
+ <param name="e">The event</param>
+</member>
+<member name="T:BAWGUI.AdditionCustomization">
+<summary>
+AdditionCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.AdditionCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.DivisionCustomization">
+<summary>
+DivisionCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.DivisionCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.SettingsWindow">
+<summary>
+SettingsWindow
+</summary>
+</member>
+<member name="M:BAWGUI.SettingsWindow.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.SubtractionCustomization">
+<summary>
+SubtractionCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.SubtractionCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.Application">
+<summary>
+Application
+</summary>
+</member>
+<member name="M:BAWGUI.Application.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="M:BAWGUI.Application.Main">
+<summary>
+Application Entry Point.
+</summary>
+</member>
+<member name="T:BAWGUI.ReaderProperties">
+ <summary>
+ 
+ </summary>
+</member>
+<member name="T:BAWGUI.DelegateCommand">
+ <summary>
+ This class provides a simple ICommand implementation
+ </summary>
+</member>
+<member name="E:BAWGUI.DelegateCommand.CanExecuteChanged">
+ <summary>
+ Occurs when changes occur that affect whether the command should execute.
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:BAWGUI.DelegateCommand.#ctor(System.Action{System.Object},System.Func{System.Object,System.Boolean})">
+ <summary>
+ Initializes a new instance of the DelegateCommand class
+ </summary>
+ <param name="executeAction">The execute action</param>
+ <param name="canExecute">The can execute predicate</param>
+</member>
+<member name="M:BAWGUI.DelegateCommand.CanExecute(System.Object)">
+ <summary>
+ Defines the method that determines whether the command can execute in its current state
+ </summary>
+ <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+ <returns>True if this command can be executed, otherwise false.</returns>
+</member>
+<member name="M:BAWGUI.DelegateCommand.Execute(System.Object)">
+ <summary>
+ Defines the method to be called when the command is invoked.
+ </summary>
+ <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._setFocusedTextbox(BAWGUI.SignalTypeHierachy)">
+ <summary>
+ This method is for the subtraction or division cutomization steps
+ </summary>
+ <param name="obj"></param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._curentFocusedTextBoxChanged(BAWGUI.SignalSignatures)">
+ <summary>
+ This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
+ where we want signal to be put in individual textboxes.
+ </summary>
+ <param name="obj"></param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._determineFileDirCheckableStatus">
+ <summary>
+ Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
+ </summary>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._checkAllChildren(BAWGUI.SignalTypeHierachy@,System.Boolean)">
+ <summary>
+ This sub checks/unchecks of all children of a node in the signal grouped by type parent tree
+ </summary>
+ <param name="node"></param>
+ <param name="isChecked"></param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._determineParentCheckStatus(BAWGUI.SignalTypeHierachy)">
+ <summary>
+ This sub loop through all children of a hierachy node to determine the node's status of checked/unchecked/indeterminate
+ </summary>
+ <param name="group"></param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._determineParentGroupedByTypeNodeStatus(System.Collections.ObjectModel.ObservableCollection{BAWGUI.SignalTypeHierachy})">
+ <summary>
+ Go down a tree to determine nodes checking status
+ </summary>
+ <param name="groups"></param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._deSelectAllSteps(System.Object)">
+ <summary>
+ When user click outside the step list and none of the steps should be selected, then we need to uncheck all checkboxes
+ </summary>
+ <param name="obj"></param>
+</member>
+<member name="T:BAWGUI.MainWindow">
+<summary>
+MainWindow
+</summary>
+</member>
+<member name="M:BAWGUI.MainWindow.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.My.MyWpfExtension">
+ <summary>
+ Module used to define the properties that are available in the My Namespace for WPF
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Application">
+ <summary>
+ Returns the application object for the running application
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Computer">
+ <summary>
+ Returns information about the host computer.
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.User">
+ <summary>
+ Returns information for the current user.  If you wish to run the application with the current 
+ Windows user credentials, call My.User.InitializeWithWindowsUser().
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Log">
+ <summary>
+ Returns the application log. The listeners can be configured by the application's configuration file.
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Windows">
+ <summary>
+ Returns the collection of Windows defined in the project.
+ </summary>
+</member>
+<member name="T:BAWGUI.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:BAWGUI.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:BAWGUI.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="T:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+<summary>
+GeneratedInternalTypeHelper
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+<summary>
+CreateInstance
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+<summary>
+GetPropertyValue
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+<summary>
+SetPropertyValue
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+<summary>
+CreateDelegate
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+<summary>
+AddEventHandler
+</summary>
+</member>
+</members>
+</doc>
