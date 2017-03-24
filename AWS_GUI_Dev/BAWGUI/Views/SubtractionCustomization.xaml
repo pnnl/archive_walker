@@ -27,9 +27,7 @@
                     </Image.Style>
                 </Image>
                 <Label Content="Minuend:" VerticalAlignment="Center"/>
-                <!--<TextBox Name="MinuendOrDivident" Width="200" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDivident.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">-->
                 <TextBox Name="MinuendOrDivident"  Width="200" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDivident.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                <!--<TextBox Name="MinuendOrDivident" Width="200" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True">-->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">
                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDivident}"/>
@@ -62,7 +60,6 @@
                     </Image.Style>
                 </Image>
                 <Label Content="Subtrahend:" Margin="0" VerticalAlignment="Center"/>
-                <!--<TextBox Name="SubtrahendOrDivisor" Width="200" Height="22" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" Background="{Binding SubtrahendOrDivisor.IsError, Converter={StaticResource ErrorStatusBorderColorConverter}}">-->
                 <TextBox Name="SubtrahendOrDivisor" Width="200" Height="22" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">

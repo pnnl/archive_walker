@@ -91,3 +91,7 @@ C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\
 C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\DivisionCustomization.baml
 C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\ExponentCustomization.g.vb
 C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\ExponentCustomization.baml
+C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\UnaryCustomization.g.vb
+C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\UnaryCustomization.baml
+C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\CreatePhasorCustomization.g.vb
+C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\obj\Debug\Views\CreatePhasorCustomization.baml

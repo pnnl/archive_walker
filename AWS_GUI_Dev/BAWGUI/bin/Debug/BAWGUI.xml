@@ -23,6 +23,16 @@ AdditionCustomization
 InitializeComponent
 </summary>
 </member>
+<member name="T:BAWGUI.CreatePhasorCustomization">
+<summary>
+CreatePhasorCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.CreatePhasorCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
 <member name="T:BAWGUI.DivisionCustomization">
 <summary>
 DivisionCustomization
@@ -59,6 +69,16 @@ SubtractionCustomization
 </summary>
 </member>
 <member name="M:BAWGUI.SubtractionCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.UnaryCustomization">
+<summary>
+UnaryCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.UnaryCustomization.InitializeComponent">
 <summary>
 InitializeComponent
 </summary>
@@ -121,13 +141,6 @@ Application Entry Point.
  </summary>
  <param name="obj"></param>
 </member>
-<member name="M:BAWGUI.SettingsViewModel._curentFocusedTextBoxChanged(BAWGUI.SignalSignatures)">
- <summary>
- This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
- where we want signal to be put in individual textboxes.
- </summary>
- <param name="obj"></param>
-</member>
 <member name="M:BAWGUI.SettingsViewModel._determineFileDirCheckableStatus">
  <summary>
  Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
@@ -157,6 +170,18 @@ Application Entry Point.
  When user click outside the step list and none of the steps should be selected, then we need to uncheck all checkboxes
  </summary>
  <param name="obj"></param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._currentFocusedTextBoxChanged(BAWGUI.SignalSignatures)">
+ <summary>
+ This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
+ where we want signal to be put in individual textboxes.
+ </summary>
+ <param name="obj"></param>
+</member>
+<member name="F:BAWGUI.SettingsViewModel._currentInputOutputPair">
+ <summary>
+ This points to the current selected textbox of a Unary operation step which is a pair of input output.
+ </summary>
 </member>
 <member name="T:BAWGUI.MainWindow">
 <summary>
@@ -214,6 +239,36 @@ InitializeComponent
 <summary>
   Overrides the current thread's CurrentUICulture property for all
   resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="T:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+<summary>
+GeneratedInternalTypeHelper
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+<summary>
+CreateInstance
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+<summary>
+GetPropertyValue
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+<summary>
+SetPropertyValue
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+<summary>
+CreateDelegate
+</summary>
+</member>
+<member name="M:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+<summary>
+AddEventHandler
 </summary>
 </member>
 </members>

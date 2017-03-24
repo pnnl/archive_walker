@@ -27,7 +27,7 @@ Public Class SettingsViewModel
         _selectedSignalChanged = New DelegateCommand(AddressOf _signalSelected, AddressOf CanExecute)
         _stepSelected = New DelegateCommand(AddressOf _stepSelectedToEdit, AddressOf CanExecute)
         _stepDeSelected = New DelegateCommand(AddressOf _deSelectAllSteps, AddressOf CanExecute)
-        _setCurrentFocusedTextbox = New DelegateCommand(AddressOf _curentFocusedTextBoxChanged, AddressOf CanExecute)
+        _setCurrentFocusedTextbox = New DelegateCommand(AddressOf _currentFocusedTextBoxChanged, AddressOf CanExecute)
         _setCurrentFocusedTextboxUnarySteps = New DelegateCommand(AddressOf _currentFocusedTextBoxForUnaryStepsChanged, AddressOf CanExecute)
         '_selectedOutputSignalChanged = New DelegateCommand(AddressOf _outputSignalSelectionChanged, AddressOf CanExecute)
         _textboxesLostFocus = New DelegateCommand(AddressOf _recoverCheckStatusOfCurrentStep, AddressOf CanExecute)
@@ -1180,24 +1180,6 @@ Public Class SettingsViewModel
     '        OnPropertyChanged()
     '    End Set
     'End Property
-    Private _setCurrentFocusedTextbox As ICommand
-    Public Property SetCurrentFocusedTextbox As ICommand
-        Get
-            Return _setCurrentFocusedTextbox
-        End Get
-        Set(ByVal value As ICommand)
-            _setCurrentFocusedTextbox = value
-        End Set
-    End Property
-    Private _textboxesLostFocus As ICommand
-    Public Property TextboxesLostFocus As ICommand
-        Get
-            Return _textboxesLostFocus
-        End Get
-        Set(ByVal value As ICommand)
-            _textboxesLostFocus = value
-        End Set
-    End Property
     Private Sub _CheckOutputType()
         If TypeOf (_currentSelectedStep) Is Customization AndAlso Not String.IsNullOrEmpty(_currentSelectedStep.CustPMUname) Then
             Dim type = "O"
@@ -1295,147 +1277,52 @@ Public Class SettingsViewModel
             'End If
         End If
     End Sub
+    Private Sub _keepOriginalSelection(obj As SignalTypeHierachy)
+        If obj.SignalList.Count = 0 AndAlso Not String.IsNullOrEmpty(obj.SignalSignature.PMUName) AndAlso Not String.IsNullOrEmpty(obj.SignalSignature.TypeAbbreviation) Then
+            If obj.SignalSignature.IsChecked Then
+                obj.SignalSignature.IsChecked = False
+            Else
+                obj.SignalSignature.IsChecked = True
+            End If
+        Else
+            _determineAllParentNodeStatus()
+        End If
+    End Sub
+    Private _textboxesLostFocus As ICommand
+    Public Property TextboxesLostFocus As ICommand
+        Get
+            Return _textboxesLostFocus
+        End Get
+        Set(ByVal value As ICommand)
+            _textboxesLostFocus = value
+        End Set
+    End Property
     Private Sub _recoverCheckStatusOfCurrentStep(obj As Object)
         For Each signal In obj.InputChannels
             signal.IsChecked = True
         Next
         _determineAllParentNodeStatus()
+        _currentSelectedStep.CurrentCursor = ""
+        _currentInputOutputPair = Nothing
     End Sub
-    ''' <summary>
-    ''' This method is for the subtraction or division cutomization steps
-    ''' </summary>
-    ''' <param name="obj"></param>
-    Private Sub _setFocusedTextbox(obj As SignalTypeHierachy)
-        If obj.SignalList.Count > 0 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then    'if selected a group of signal
-            _determineParentCheckStatus(obj)
-            Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
-        Else
-            If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
-                If obj.SignalSignature.IsChecked Then       ' reverse the click status to go back to the original checkbox status
-                    obj.SignalSignature.IsChecked = False
-                Else
-                    obj.SignalSignature.IsChecked = True
-                End If
-                For Each signal In _currentSelectedStep.InputChannels
-                    signal.IsChecked = True
-                Next
-                _determineAllParentNodeStatus()
-                Throw New Exception("Error! Please select a valid text box for this input signal!")
-            ElseIf _currentSelectedStep.CurrentCursor = "MinuendOrDivident" Then
-                If _currentSelectedStep.SubtrahendOrDivisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.SubtrahendOrDivisor Then
-                    Throw New Exception("Minuend Or divident cannot be the same as the subtrahend or divisor!")
-                End If
-                If obj.SignalSignature.IsChecked Then       ' check box checked
-                    If _currentSelectedStep.MinuendOrDivident IsNot Nothing And _currentSelectedStep.MinuendOrDivident IsNot _currentSelectedStep.SubtrahendOrDivisor Then  ' if the current text box has content and not equal to the divisor
-                        _currentSelectedStep.MinuendOrDivident.IsChecked = False
-                        _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.MinuendOrDivident)
-                    End If
-                    _currentSelectedStep.MinuendOrDivident = obj.SignalSignature
-                    '_currentSelectedStep.MinuendOrDivident.IsValid = obj.SignalSignature.IsValid
-                    If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                    End If
-                Else                                        ' check box unchecked
-                    If _currentSelectedStep.MinuendOrDivident Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
-                        If _currentSelectedStep.SubtrahendOrDivisor Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
-                            obj.SignalSignature.IsChecked = True
-                        Else
-                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                        End If
-                        '_currentSelectedStep.MinuendOrDivident.IsChecked = False
-                        _currentSelectedStep.MinuendOrDivident = Nothing
-                        'Else                                                                    ' if the content is not the same as the clicked item, then the clicked item must be the same as the divisor or subtrahend, so we cannot uncheck it
-                        '    If _currentSelectedStep.MinuendOrDivident IsNot Nothing Then        ' if the content of the text box is not empty, we need to set it old item's check mark to be false
-                        '        _currentSelectedStep.MinuendOrDivident.IsChecked = False
-                        '    End If
-                        '    obj.SignalSignature.IsChecked = True
-                        '    _currentSelectedStep.MinuendOrDivident = obj.SignalSignature
-                        '    If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                        '        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                        '    End If
-                    End If
-                End If
-                _currentSelectedStep.CurrentCursor = ""
-                _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-                _determineAllParentNodeStatus()
-            ElseIf _currentSelectedStep.CurrentCursor = "SubtrahendOrDivisor" Then
-                If _currentSelectedStep.MinuendOrDivident IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.MinuendOrDivident Then
-                    Throw New Exception("Subtrahend Or divisor cannot be the same as the minuend or divident!")
-                End If
-                If obj.SignalSignature.IsChecked Then
-                    If _currentSelectedStep.SubtrahendOrDivisor IsNot Nothing And _currentSelectedStep.SubtrahendOrDivisor IsNot _currentSelectedStep.MinuendOrDivident Then
-                        _currentSelectedStep.SubtrahendOrDivisor.IsChecked = False
-                        _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.SubtrahendOrDivisor)
-                    End If
-                    _currentSelectedStep.SubtrahendOrDivisor = obj.SignalSignature
-                    '_currentSelectedStep.SubtrahendOrDivisor.IsValid = obj.SignalSignature.IsValid
-                    If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                    End If
-                Else
-                    If _currentSelectedStep.SubtrahendOrDivisor Is obj.SignalSignature Then
-                        If _currentSelectedStep.MinuendOrDivident Is obj.SignalSignature Then
-                            obj.SignalSignature.IsChecked = True
-                        Else
-                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                        End If
-                        '_currentSelectedStep.SubtrahendOrDivisor.IsChecked = False
-                        _currentSelectedStep.SubtrahendOrDivisor = Nothing
-                        '_currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                        'Else
-                        '    If _currentSelectedStep.SubtrahendOrDivisor IsNot Nothing Then
-                        '        _currentSelectedStep.SubtrahendOrDivisor.IsChecked = False
-                        '    End If
-                        '    obj.SignalSignature.IsChecked = True
-                        '    _currentSelectedStep.SubtrahendOrDivisor = obj.SignalSignature
-                        '    If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                        '        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                        '    End If
-                    End If
-                End If
-                _currentSelectedStep.CurrentCursor = ""
-                _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-                _determineAllParentNodeStatus()
-            End If
-        End If
-    End Sub
-    ''' <summary>
-    ''' This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
-    ''' where we want signal to be put in individual textboxes.
-    ''' </summary>
-    ''' <param name="obj"></param>
-    Private Sub _curentFocusedTextBoxChanged(obj As SignalSignatures)
-        For Each signal In _currentSelectedStep.InputChannels
-            signal.IsChecked = False
-        Next
-        If obj IsNot Nothing Then
-            obj.IsChecked = True
-        End If
-        '_currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-        'If TypeOf (_currentSelectedStep) Is Customization Then
-        '    _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
-        'End If
-        _determineAllParentNodeStatus()
-        '_determineFileDirCheckableStatus()
-    End Sub
+
     Private Sub _signalSelected(obj As SignalTypeHierachy)
         If _currentSelectedStep IsNot Nothing Then
             If obj.SignalList.Count < 1 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
-                obj.SignalSignature.IsChecked = False
+                _keepOriginalSelection(obj)
                 MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
             Else
                 If TypeOf _currentSelectedStep Is DQFilter Then
                     Try
                         _changeSignalSelection(obj)
                     Catch ex As Exception
-                        obj.SignalSignature.IsChecked = False
+                        _keepOriginalSelection(obj)
                         MessageBox.Show("Error selecting signal(s) for data quality filter!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
                 Else
                     Try
                         Select Case _currentSelectedStep.Name
                             Case "Scalar Repetition Customization"
-                                obj.SignalSignature.IsChecked = False
                                 Throw New Exception("Please do NOT select signals for Scalar Repetition Customization!")
                             Case "Addition Customization"
                                 _changeSignalSelection(obj)
@@ -1471,7 +1358,8 @@ Public Class SettingsViewModel
                                 _changeSignalSelectionUnarySteps(obj)
                                 _CheckOutputType()
                             Case "Phasor Creation Customization"
-
+                                _changeSignalSelectionPhasorCreation(obj)
+                                _CheckOutputType()
                             Case "Power Calculation Customization"
                             Case "Specify Signal Type and Unit Customization"
                             Case "Metric Prefix Customization"
@@ -1480,20 +1368,85 @@ Public Class SettingsViewModel
                                 Throw New Exception("Customization step not supported!")
                         End Select
                     Catch ex As Exception
+                        _keepOriginalSelection(obj)
                         MessageBox.Show("Error selecting signal(s) for customization step!" & ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
                 End If
             End If
         Else
-            obj.SignalSignature.IsChecked = False
+            _keepOriginalSelection(obj)
             MessageBox.Show("Please select a step first!", "Error!", MessageBoxButtons.OK)
         End If
     End Sub
-
+    ''' <summary>
+    ''' This method is for the subtraction or division cutomization steps
+    ''' </summary>
+    ''' <param name="obj"></param>
+    Private Sub _setFocusedTextbox(obj As SignalTypeHierachy)
+        If obj.SignalList.Count > 0 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then    'if selected a group of signal
+            Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
+        Else
+            If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
+                Throw New Exception("Error! Please select a valid text box for this input signal!")
+            ElseIf _currentSelectedStep.CurrentCursor = "MinuendOrDivident" Then
+                If _currentSelectedStep.SubtrahendOrDivisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.SubtrahendOrDivisor Then
+                    Throw New Exception("Minuend Or divident cannot be the same as the subtrahend or divisor!")
+                End If
+                If obj.SignalSignature.IsChecked Then       ' check box checked
+                    If _currentSelectedStep.MinuendOrDivident IsNot Nothing And _currentSelectedStep.MinuendOrDivident IsNot _currentSelectedStep.SubtrahendOrDivisor Then  ' if the current text box has content and not equal to the divisor
+                        _currentSelectedStep.MinuendOrDivident.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.MinuendOrDivident)
+                    End If
+                    _currentSelectedStep.MinuendOrDivident = obj.SignalSignature
+                    If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                Else                                        ' check box unchecked
+                    If _currentSelectedStep.MinuendOrDivident Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
+                        If _currentSelectedStep.SubtrahendOrDivisor Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
+                            obj.SignalSignature.IsChecked = True
+                        Else
+                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                        End If
+                        _currentSelectedStep.MinuendOrDivident = Nothing
+                    End If
+                End If
+                _currentSelectedStep.CurrentCursor = ""
+                _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+                _determineAllParentNodeStatus()
+            ElseIf _currentSelectedStep.CurrentCursor = "SubtrahendOrDivisor" Then
+                If _currentSelectedStep.MinuendOrDivident IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.MinuendOrDivident Then
+                    Throw New Exception("Subtrahend Or divisor cannot be the same as the minuend or divident!")
+                End If
+                If obj.SignalSignature.IsChecked Then
+                    If _currentSelectedStep.SubtrahendOrDivisor IsNot Nothing And _currentSelectedStep.SubtrahendOrDivisor IsNot _currentSelectedStep.MinuendOrDivident Then
+                        _currentSelectedStep.SubtrahendOrDivisor.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.SubtrahendOrDivisor)
+                    End If
+                    _currentSelectedStep.SubtrahendOrDivisor = obj.SignalSignature
+                    If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                Else
+                    If _currentSelectedStep.SubtrahendOrDivisor Is obj.SignalSignature Then
+                        If _currentSelectedStep.MinuendOrDivident Is obj.SignalSignature Then
+                            obj.SignalSignature.IsChecked = True
+                        Else
+                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                        End If
+                        _currentSelectedStep.SubtrahendOrDivisor = Nothing
+                    End If
+                End If
+                _currentSelectedStep.CurrentCursor = ""
+                _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+                _determineAllParentNodeStatus()
+            End If
+        End If
+    End Sub
     Private Sub _changeSignalSelectionUnarySteps(obj As SignalTypeHierachy)
         If Not _currentInputOutputPair.HasValue Then
             If obj.SignalSignature.IsChecked Then
-                _checkAllChildren(obj, obj.SignalSignature.IsChecked)
+                '_checkAllChildren(obj, obj.SignalSignature.IsChecked)
                 _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
                 _addOuputSignals(obj)
             Else
@@ -1501,8 +1454,10 @@ Public Class SettingsViewModel
             End If
         Else
             If obj.SignalList.Count > 0 Or String.IsNullOrEmpty(obj.SignalSignature.PMUName) Or String.IsNullOrEmpty(obj.SignalSignature.TypeAbbreviation) Then
-                obj.SignalSignature.IsChecked = False
+                _keepOriginalSelection(obj)
                 Throw New Exception("Please select a valid signal!")
+            ElseIf obj.SignalSignature.IsChecked AndAlso _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+                Throw New Exception("Selected signal already in this step!")
             Else
                 Dim targetPairs = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingDictionary Where x.Key = _currentInputOutputPair.Value.Key Select x).ToList
 
@@ -1515,12 +1470,15 @@ Public Class SettingsViewModel
                     targetPairs.FirstOrDefault.Value.Clear()
                     If obj.SignalSignature.IsChecked Then
                         targetPairs.FirstOrDefault.Value.Add(obj.SignalSignature)
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    Else
+                        _currentSelectedStep.OutputChannels.Remove(targetPairs.FirstOrDefault.Key)
+                        _currentSelectedStep.OutputInputMappingDictionary.Remove(targetPairs.FirstOrDefault)
                     End If
                     _currentInputOutputPair = Nothing
-                    Else
-                        Throw New Exception("Error adding selected item to the step!")
+                Else
+                    Throw New Exception("Error adding/deleting selected item to the step!")
                 End If
-
             End If
         End If
 
@@ -1538,6 +1496,9 @@ Public Class SettingsViewModel
         _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
         _determineAllParentNodeStatus()
         _determineFileDirCheckableStatus()
+    End Sub
+    Private Sub _changeSignalSelectionPhasorCreation(obj As SignalTypeHierachy)
+
     End Sub
     ''' <summary>
     ''' Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
@@ -1909,16 +1870,31 @@ Public Class SettingsViewModel
                 _removeMatchingInputOutputSignals(child)
             Next
         Else
-            obj.SignalSignature.IsChecked = True
-            For Each pair In _currentSelectedStep.OutputInputMappingDictionary
-                If pair.Value(0).SignalName = obj.SignalSignature.SignalName Then
-                    _currentSelectedStep.OutputChannels.Remove(pair.Key)
-                    _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                    _currentSelectedStep.OutputInputMappingDictionary.Remove(pair.Key)
-                    obj.SignalSignature.IsChecked = False
-                    Exit For
-                End If
+            'obj.SignalSignature.IsChecked = True
+            Dim targetToRemove = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingDictionary Where x.Value(0).SignalName = obj.SignalSignature.SignalName Select x).ToList
+            For Each target In targetToRemove
+                _currentSelectedStep.OutputChannels.Remove(target.Key)
+                _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                _currentSelectedStep.OutputInputMappingDictionary.Remove(target)
+                obj.SignalSignature.IsChecked = False
             Next
+            'If targetToRemove.Count = 1 Then
+            '    _currentSelectedStep.OutputChannels.Remove(targetToRemove(0).Key)
+            '    _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+            '    _currentSelectedStep.OutputInputMappingDictionary.Remove(targetToRemove(0))
+            '    obj.SignalSignature.IsChecked = False
+            'Else
+            '    Throw New Exception("Error removing selected item!")
+            'End If
+            'For Each pair In _currentSelectedStep.OutputInputMappingDictionary
+            '    If pair.Value(0).SignalName = obj.SignalSignature.SignalName Then
+            '        _currentSelectedStep.OutputChannels.Remove(pair.Key)
+            '        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+            '        _currentSelectedStep.OutputInputMappingDictionary.Remove(pair)
+            '        obj.SignalSignature.IsChecked = False
+            '        Exit For
+            '    End If
+            'Next
             'For Each signal In _currentSelectedStep.OutputChannels
             '    If signal.SignalName = obj.SignalSignature.SignalName Then
             '        _currentSelectedStep.OutputChannels.Remove(signal)
@@ -1930,15 +1906,15 @@ Public Class SettingsViewModel
         End If
     End Sub
 
-    Private _selectedOutputSignalChanged As ICommand
-    Public Property SelectedOutputSignalChanged As ICommand
-        Get
-            Return _selectedOutputSignalChanged
-        End Get
-        Set(ByVal value As ICommand)
-            _selectedOutputSignalChanged = value
-        End Set
-    End Property
+    'Private _selectedOutputSignalChanged As ICommand
+    'Public Property SelectedOutputSignalChanged As ICommand
+    '    Get
+    '        Return _selectedOutputSignalChanged
+    '    End Get
+    '    Set(ByVal value As ICommand)
+    '        _selectedOutputSignalChanged = value
+    '    End Set
+    'End Property
 
     'Private Sub _outputSignalSelectionChanged(obj As SignalTypeHierachy)
     '    If _currentSelectedStep IsNot Nothing Then
@@ -2006,10 +1982,14 @@ Public Class SettingsViewModel
                     Throw New Exception("Item is not a valid signal, or contains no valid signal, nothing to be added or removed!")
                 Else
                     If isChecked Then
+                        If _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+                            Throw New Exception("Selected item " & obj.SignalSignature.SignalName & " already exist in this step!")
+                        End If
                         _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     Else
                         _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                     End If
+                    obj.SignalSignature.IsChecked = isChecked
                 End If
             End If
         End If
@@ -2082,7 +2062,39 @@ Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+    Private _setCurrentFocusedTextbox As ICommand
+    Public Property SetCurrentFocusedTextbox As ICommand
+        Get
+            Return _setCurrentFocusedTextbox
+        End Get
+        Set(ByVal value As ICommand)
+            _setCurrentFocusedTextbox = value
+        End Set
+    End Property
+    ''' <summary>
+    ''' This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
+    ''' where we want signal to be put in individual textboxes.
+    ''' </summary>
+    ''' <param name="obj"></param>
+    Private Sub _currentFocusedTextBoxChanged(obj As SignalSignatures)
+        For Each signal In _currentSelectedStep.InputChannels
+            signal.IsChecked = False
+        Next
+        If obj IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj.TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj.PMUName) Then
+            obj.IsChecked = True
+        End If
+        '_currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+        'If TypeOf (_currentSelectedStep) Is Customization Then
+        '    _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+        'End If
+        _determineAllParentNodeStatus()
+        '_determineFileDirCheckableStatus()
+    End Sub
 
+    ''' <summary>
+    ''' This points to the current selected textbox of a Unary operation step which is a pair of input output.
+    ''' </summary>
+    Private _currentInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
     Private _setCurrentFocusedTextboxUnarySteps As ICommand
     Public Property SetCurrentFocusedTextboxUnarySteps As ICommand
         Get
@@ -2092,9 +2104,9 @@ Public Class SettingsViewModel
             _setCurrentFocusedTextboxUnarySteps = value
         End Set
     End Property
-    Private _currentInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
     Private Sub _currentFocusedTextBoxForUnaryStepsChanged(obj As Object)
         _currentInputOutputPair = obj
+        _currentFocusedTextBoxChanged(obj.Value(0))
     End Sub
 
     Private _logs As ObservableCollection(Of String)

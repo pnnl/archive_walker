@@ -100,7 +100,7 @@ Public Class ErrorStatusBorderColorConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
         If value Then
-            Return "White"
+            Return Brushes.LightGray
         Else
             Return "Red"
         End If
