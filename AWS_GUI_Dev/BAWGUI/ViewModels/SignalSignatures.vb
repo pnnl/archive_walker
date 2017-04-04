@@ -41,17 +41,20 @@ Public Class SignalSignatures
     Public Sub New()
         _isEnabled = True
         _isValid = True
+        _isCustomSignal = False
     End Sub
     Public Sub New(name As String)
         _signalName = name
         _isEnabled = True
         _isValid = True
+        _isCustomSignal = False
     End Sub
     Public Sub New(name As String, pmu As String)
         _signalName = name
         _PMUName = pmu
         _isEnabled = True
         _isValid = True
+        _isCustomSignal = False
     End Sub
     Public Sub New(name As String, pmu As String, type As String)
         _signalName = name
@@ -59,6 +62,7 @@ Public Class SignalSignatures
         _typeAbbreviation = type
         _isEnabled = True
         _isValid = True
+        _isCustomSignal = False
     End Sub
     'Public Sub Dispose() Implements IDisposable.Dispose
     '    'Dispose(True)
@@ -118,6 +122,16 @@ Public Class SignalSignatures
             OnPropertyChanged()
         End Set
     End Property
+    Private _unit As String
+    Public Property Unit As String
+        Get
+            Return _unit
+        End Get
+        Set(ByVal value As String)
+            _unit = value
+            OnPropertyChanged()
+        End Set
+    End Property
     Private _isChecked? As Boolean = False
     Public Property IsChecked As Boolean?
         Get
@@ -135,6 +149,16 @@ Public Class SignalSignatures
         End Get
         Set(ByVal value As Boolean)
             _isEnabled = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _isCustomSignal As Boolean
+    Public Property IsCustomSignal As Boolean
+        Get
+            Return _isCustomSignal
+        End Get
+        Set(ByVal value As Boolean)
+            _isCustomSignal = value
             OnPropertyChanged()
         End Set
     End Property

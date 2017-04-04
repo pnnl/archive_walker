@@ -10,11 +10,11 @@ none
 false
 
 C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\AWS_GUI_Dev\BAWGUI\Application.xaml
-81679970424
+13-218618857
 
-24-1297449942
+29-1383392827
 24-336188255
-Views\AdditionCustomization.xaml;Views\CreatePhasorCustomization.xaml;Views\DivisionCustomization.xaml;Views\ExponentCustomization.xaml;Views\MainWindow.xaml;Views\SettingsWindow.xaml;Views\SubtractionCustomization.xaml;Views\UnaryCustomization.xaml;
+Views\AdditionCustomization.xaml;Views\AngleConversionCustomization.xaml;Views\CreatePhasorCustomization.xaml;Views\DivisionCustomization.xaml;Views\ExponentCustomization.xaml;Views\MainWindow.xaml;Views\MetricPrefixCustomization.xaml;Views\MultiplicationCustomization.xaml;Views\PowerCalculationsCustomization.xaml;Views\SettingsWindow.xaml;Views\SpecifySignalTypeUnitCustomization.xaml;Views\SubtractionCustomization.xaml;Views\UnaryCustomization.xaml;
 
-False
+True
 

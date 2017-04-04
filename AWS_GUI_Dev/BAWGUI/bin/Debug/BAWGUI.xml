@@ -6,6 +6,54 @@ BAWGUI
 </name>
 </assembly>
 <members>
+<member name="T:BAWGUI.My.MyWpfExtension">
+ <summary>
+ Module used to define the properties that are available in the My Namespace for WPF
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Application">
+ <summary>
+ Returns the application object for the running application
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Computer">
+ <summary>
+ Returns information about the host computer.
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.User">
+ <summary>
+ Returns information for the current user.  If you wish to run the application with the current 
+ Windows user credentials, call My.User.InitializeWithWindowsUser().
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Log">
+ <summary>
+ Returns the application log. The listeners can be configured by the application's configuration file.
+ </summary>
+</member>
+<member name="P:BAWGUI.My.MyWpfExtension.Windows">
+ <summary>
+ Returns the collection of Windows defined in the project.
+ </summary>
+</member>
+<member name="T:BAWGUI.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:BAWGUI.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:BAWGUI.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
 <member name="E:BAWGUI.ViewModelBase.PropertyChanged">
  <summary>
  Raise property changed event
@@ -19,6 +67,16 @@ AdditionCustomization
 </summary>
 </member>
 <member name="M:BAWGUI.AdditionCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.AngleConversionCustomization">
+<summary>
+AngleConversionCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.AngleConversionCustomization.InitializeComponent">
 <summary>
 InitializeComponent
 </summary>
@@ -53,12 +111,52 @@ ExponentCustomization
 InitializeComponent
 </summary>
 </member>
+<member name="T:BAWGUI.MetricPrefixCustomization">
+<summary>
+MetricPrefixCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.MetricPrefixCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.MultiplicationCustomization">
+<summary>
+MultiplicationCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.MultiplicationCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.PowerCalculationsCustomization">
+<summary>
+PowerCalculationsCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.PowerCalculationsCustomization.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
 <member name="T:BAWGUI.SettingsWindow">
 <summary>
 SettingsWindow
 </summary>
 </member>
 <member name="M:BAWGUI.SettingsWindow.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:BAWGUI.SpecifySignalTypeUnitCustomization">
+<summary>
+SpecifySignalTypeUnitCustomization
+</summary>
+</member>
+<member name="M:BAWGUI.SpecifySignalTypeUnitCustomization.InitializeComponent">
 <summary>
 InitializeComponent
 </summary>
@@ -141,6 +239,12 @@ Application Entry Point.
  </summary>
  <param name="obj"></param>
 </member>
+<member name="M:BAWGUI.SettingsViewModel._findMatchingAng(BAWGUI.SignalSignatures)">
+ <summary>
+ find matching Ang signal given a Mag signal
+ </summary>
+ <param name="mag"></param>
+</member>
 <member name="M:BAWGUI.SettingsViewModel._determineFileDirCheckableStatus">
  <summary>
  Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
@@ -159,6 +263,12 @@ Application Entry Point.
  </summary>
  <param name="group"></param>
 </member>
+<member name="M:BAWGUI.SettingsViewModel._disableEnableAllButMagnitudeSignals(System.Boolean)">
+ <summary>
+ disable all but magnitude of current or magnitude of voltage signals
+ </summary>
+ <param name="isEnable"></param>
+</member>
 <member name="M:BAWGUI.SettingsViewModel._determineParentGroupedByTypeNodeStatus(System.Collections.ObjectModel.ObservableCollection{BAWGUI.SignalTypeHierachy})">
  <summary>
  Go down a tree to determine nodes checking status
@@ -170,6 +280,13 @@ Application Entry Point.
  When user click outside the step list and none of the steps should be selected, then we need to uncheck all checkboxes
  </summary>
  <param name="obj"></param>
+</member>
+<member name="M:BAWGUI.SettingsViewModel._addOrDeleteInputSignal(BAWGUI.SignalTypeHierachy,System.Boolean)">
+ <summary>
+ add or remove selected signals to the inputChannels of customization steps except power calculation and phasor creation
+ </summary>
+ <param name="obj"></param>
+ <param name="isChecked"></param>
 </member>
 <member name="M:BAWGUI.SettingsViewModel._currentFocusedTextBoxChanged(BAWGUI.SignalSignatures)">
  <summary>
@@ -191,54 +308,6 @@ MainWindow
 <member name="M:BAWGUI.MainWindow.InitializeComponent">
 <summary>
 InitializeComponent
-</summary>
-</member>
-<member name="T:BAWGUI.My.MyWpfExtension">
- <summary>
- Module used to define the properties that are available in the My Namespace for WPF
- </summary>
- <remarks></remarks>
-</member>
-<member name="P:BAWGUI.My.MyWpfExtension.Application">
- <summary>
- Returns the application object for the running application
- </summary>
-</member>
-<member name="P:BAWGUI.My.MyWpfExtension.Computer">
- <summary>
- Returns information about the host computer.
- </summary>
-</member>
-<member name="P:BAWGUI.My.MyWpfExtension.User">
- <summary>
- Returns information for the current user.  If you wish to run the application with the current 
- Windows user credentials, call My.User.InitializeWithWindowsUser().
- </summary>
-</member>
-<member name="P:BAWGUI.My.MyWpfExtension.Log">
- <summary>
- Returns the application log. The listeners can be configured by the application's configuration file.
- </summary>
-</member>
-<member name="P:BAWGUI.My.MyWpfExtension.Windows">
- <summary>
- Returns the collection of Windows defined in the project.
- </summary>
-</member>
-<member name="T:BAWGUI.My.Resources.Resources">
-<summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
-</summary>
-</member>
-<member name="P:BAWGUI.My.Resources.Resources.ResourceManager">
-<summary>
-  Returns the cached ResourceManager instance used by this class.
-</summary>
-</member>
-<member name="P:BAWGUI.My.Resources.Resources.Culture">
-<summary>
-  Overrides the current thread's CurrentUICulture property for all
-  resource lookups using this strongly typed resource class.
 </summary>
 </member>
 <member name="T:BAWGUI.XamlGeneratedNamespace.GeneratedInternalTypeHelper">

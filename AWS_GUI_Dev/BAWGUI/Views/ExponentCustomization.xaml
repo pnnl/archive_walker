@@ -26,7 +26,7 @@
                 </Image.Style>
             </Image>
             <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="Exponent: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <TextBox Text="{Binding Parameters[0].Value}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+            <TextBox Text="{Binding Exponent}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
             <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
@@ -43,31 +43,38 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Margin="30,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Input Signals ({0}):}"/>
-            <TextBlock Margin="165,2,2,2" Text="Output CustNames: "/>
+            <TextBlock Margin="265,2,2,2" Text="CustNames: "/>
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
-            <ItemsControl ItemsSource="{Binding OutputInputMappingDictionary}">
+            <ItemsControl ItemsSource="{Binding OutputInputMappingPair}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <TextBox Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="30,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <TextBox Name="PMU" Width="100" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
-                            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Parameters[0].Value, StringFormat=^ {0}      \= }"/>
+                            <TextBox Name="Channel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="2,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Exponent, StringFormat=^ {0}      \= }"/>
                             <TextBox Width="150" Text="{Binding Path=Key.SignalName}" Margin="30,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <i:Interaction.Triggers>
+        <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonUp">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
             </i:EventTrigger>
-        </i:Interaction.Triggers>
+        </i:Interaction.Triggers>-->
     </StackPanel>
 </UserControl>

@@ -27,27 +27,21 @@
                     </Image.Style>
                 </Image>
                 <Label Content="Minuend:" VerticalAlignment="Center"/>
-                <TextBox Name="MinuendOrDivident"  Width="200" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDivident.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <TextBox Name="MDPMU" Width="100" Height="22" Text="{Binding MinuendOrDivident.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDivident.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">
                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDivident}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <!--<TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="BorderBrush" Value="Red"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding MinuendOrDivident.IsError}" Value="True">
-                                    <Setter Property="BorderBrush" Value="Red"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding MinuendOrDivident.IsValid, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Value="True">
-                                    <Setter Property="BorderBrush" Value="White"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>-->
                 </TextBox>
-                <TextBlock Text="-" FontSize="48" Margin="20,0" VerticalAlignment="Center"/>
+                <TextBox Name="MinuendOrDivident"  Width="150" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDivident.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotKeyboardFocus">
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDivident}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <TextBlock Text="-" FontSize="48" Margin="10,0" VerticalAlignment="Center"/>
                 <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,25,0,0" HorizontalAlignment="Right">
                     <Image.Style>
                         <Style TargetType="Image">
@@ -60,31 +54,20 @@
                     </Image.Style>
                 </Image>
                 <Label Content="Subtrahend:" Margin="0" VerticalAlignment="Center"/>
-                <TextBox Name="SubtrahendOrDivisor" Width="200" Height="22" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <TextBox Name="SDPMU" Width="100" Height="22" Text="{Binding SubtrahendOrDivisor.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">
                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <!--<TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="BorderBrush" Value="Red"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SubtrahendOrDivisor.IsError}" Value="True">
-                                    <Setter Property="Background" Value="Red"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SubtrahendOrDivisor.IsValid, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Value="True">
-                                    <Setter Property="BorderBrush" Value="White"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>-->
                 </TextBox>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="LostFocus">
-                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                <TextBox Name="SubtrahendOrDivisor" Width="150" Height="22" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotKeyboardFocus">
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
             </StackPanel>
             <TextBlock Margin="250,10" Text="=" FontSize="24"/>
             <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
@@ -115,6 +98,11 @@
                 <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="SignalName: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
                 <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
             </StackPanel>
+            <!--<i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>-->
         </StackPanel>
     </Grid>
 </UserControl>

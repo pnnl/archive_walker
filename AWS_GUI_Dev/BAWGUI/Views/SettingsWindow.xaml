@@ -230,77 +230,7 @@
                 <local:SubtractionCustomization/>
             </DataTemplate>
             <DataTemplate x:Key="MultiplicationCustomization">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="8*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
-                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Factors ({0}):}"/>
-                        <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                        <TextBlock Margin="20,10,2,2" Text="Product: "/>
-                        <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
-                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
-                                <Image.Style>
-                                    <Style TargetType="Image">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsEnabled" Value="False">
-                                                <Setter Property="Opacity" Value="0"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-                            <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
-                            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
-                                <Image.Style>
-                                    <Style TargetType="Image">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsEnabled" Value="False">
-                                                <Setter Property="Opacity" Value="0"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="SignalName: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-                            <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
-                        </StackPanel>
-                        <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                                        <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
-                                            <Image.Style>
-                                                <Style TargetType="Image">
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsEnabled" Value="False">
-                                                            <Setter Property="Opacity" Value="0"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Image.Style>
-                                        </Image>
-                                        <Label Margin="0" Width="Auto" VerticalAlignment="Center" Content="{Binding ParameterName}" ContentStringFormat="{}{0}:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-                                        <TextBox Width="150" Text="{Binding Value}" Margin="0,0,20,0" Height="22"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>-->
-                    </StackPanel>
-                </Grid>
+                <local:MultiplicationCustomization/>
             </DataTemplate>
             <DataTemplate x:Key="DivisionCustomization">
                 <local:DivisionCustomization/>
@@ -313,6 +243,18 @@
             </DataTemplate>
             <DataTemplate x:Key="CreatePhasorCustomization">
                 <local:CreatePhasorCustomization/>
+            </DataTemplate>
+            <DataTemplate x:Key="PowerCalculationsCustomization">
+                <local:PowerCalculationsCustomization/>
+            </DataTemplate>
+            <DataTemplate x:Key="SpecifySignalTypeUnitCustomization">
+                <local:SpecifySignalTypeUnitCustomization/>
+            </DataTemplate>
+            <DataTemplate x:Key="MetricPrefixCustomization">
+                <local:MetricPrefixCustomization/>
+            </DataTemplate>
+            <DataTemplate x:Key="AngleConversionCustomization">
+                <local:AngleConversionCustomization/>
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
@@ -352,48 +294,61 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
                                                         </Grid.RowDefinitions>
                                                         <ItemsControl Grid.Row="0" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <Border BorderBrush="LightGray" BorderThickness="1" Background="AliceBlue" Margin="2">
                                                                         <Grid>
-                                                                            <Grid.RowDefinitions>
-                                                                                <RowDefinition Height="Auto"/>
-                                                                                <RowDefinition Height="Auto"/>
-                                                                                <RowDefinition Height="Auto"/>
-                                                                            </Grid.RowDefinitions>
-                                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
-                                                                                <Label Content="File Directory:" Margin="2" Width="100"/>
-                                                                                <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                                                <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
-                                                                                    <Image Source="../Images/open.gif" Stretch="Uniform"/>
-                                                                                </Button>
-                                                                            </StackPanel>
-                                                                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
-                                                                                <Label Content="File Type:" Margin="2" Width="100"/>
-                                                                                <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
-                                                                                    <i:Interaction.Triggers>
-                                                                                        <i:EventTrigger EventName="SelectionChanged">
-                                                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
-                                                                                        </i:EventTrigger>
-                                                                                    </i:Interaction.Triggers>
-                                                                                </ComboBox>
-                                                                            </StackPanel>
-                                                                            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
-                                                                                <Label Content="Mnemonic:" Margin="2" Width="100"/>
-                                                                                <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                                            </StackPanel>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="30"/>                                                                                
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Expander Grid.Column="0" Header="{Binding Mnemonic}">
+                                                                                <Grid>
+                                                                                    <Grid.RowDefinitions>
+                                                                                        <RowDefinition Height="Auto"/>
+                                                                                        <RowDefinition Height="Auto"/>
+                                                                                        <RowDefinition Height="Auto"/>
+                                                                                    </Grid.RowDefinitions>
+                                                                                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
+                                                                                        <Label Content="File Directory:" Margin="2" Width="100"/>
+                                                                                        <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
+                                                                                            <Image Source="../Images/open.gif" Stretch="Uniform"/>
+                                                                                        </Button>
+                                                                                    </StackPanel>
+                                                                                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
+                                                                                        <Label Content="File Type:" Margin="2" Width="100"/>
+                                                                                        <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                                                            <i:Interaction.Triggers>
+                                                                                                <i:EventTrigger EventName="SelectionChanged">
+                                                                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
+                                                                                                </i:EventTrigger>
+                                                                                            </i:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </StackPanel>
+                                                                                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
+                                                                                        <Label Content="Mnemonic:" Margin="2" Width="100"/>
+                                                                                        <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                                                    </StackPanel>
+                                                                                </Grid>
+                                                                            </Expander>
+                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
+                                                                                <Image Source="../Images/CircledMinus.png" HorizontalAlignment="Stretch"/>
+                                                                            </Button>
                                                                         </Grid>
                                                                     </Border>
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="6,40,0,2">
+                                                        <Button Content="Add A File Source" Margin="2" Grid.Row="1" Command="{Binding AddFileSource}"/>
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="6,40,0,2">
                                                             <Label Content="Mode:" Margin="2" Width="100" FontWeight="Bold"/>
                                                             <ComboBox Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
                                                         </StackPanel>
-                                                        <ContentControl Grid.Row="2" Content="{Binding}">
+                                                        <ContentControl Grid.Row="3" Content="{Binding}">
                                                             <ContentControl.Style>
                                                                 <Style TargetType="ContentControl">
                                                                     <Style.Triggers>
@@ -584,6 +539,9 @@
                                                                             <i:EventTrigger EventName="GotFocus">
                                                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
                                                                             </i:EventTrigger>
+                                                                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
+                                                                            </i:EventTrigger>
                                                                         </i:Interaction.Triggers>
                                                                         <Grid Margin="2">
                                                                             <Grid.ColumnDefinitions>
@@ -633,6 +591,18 @@
                                                                                                 </DataTrigger>
                                                                                                 <DataTrigger Binding="{Binding Name}" Value="Phasor Creation Customization">
                                                                                                     <Setter Property="ContentTemplate" Value="{StaticResource CreatePhasorCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Power Calculation Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource PowerCalculationsCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Specify Signal Type and Unit Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource SpecifySignalTypeUnitCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Metric Prefix Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MetricPrefixCustomization}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Name}" Value="Angle Conversion Customization">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource AngleConversionCustomization}"/>
                                                                                                 </DataTrigger>
                                                                                             </Style.Triggers>
                                                                                         </Style>

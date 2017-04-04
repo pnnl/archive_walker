@@ -1,4 +1,4 @@
-﻿Public Class ExponentCustomization
+﻿Public Class AngleConversionCustomization
     Private Sub ExpTextBoxGotFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMU" Then
