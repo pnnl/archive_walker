@@ -629,7 +629,7 @@
                                                 </ScrollViewer>
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
-                                        <avalonDock:LayoutPanel Orientation="Vertical">
+                                        <!--<avalonDock:LayoutPanel Orientation="Vertical">
                                             <avalonDock:LayoutAnchorablePane DockMinWidth="200">
                                                 <avalonDock:LayoutAnchorable Title="Select Signal by Signal Type">
                                                     <TreeView ItemsSource="{Binding GroupedSignalsByType}">
@@ -659,7 +659,7 @@
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
-                                                            <!--<HierarchicalDataTemplate ItemsSource="{Binding Value}">
+                                                            <HierarchicalDataTemplate ItemsSource="{Binding Value}">
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0"/>
                                                                     <TextBlock Text="{Binding Key}" Margin="0"/>
@@ -672,7 +672,7 @@
                                                                         </StackPanel>
                                                                     </DataTemplate>
                                                                 </HierarchicalDataTemplate.ItemTemplate>
-                                                            </HierarchicalDataTemplate>-->
+                                                            </HierarchicalDataTemplate>
                                                         </TreeView.ItemTemplate>
                                                         <TreeView.ItemContainerStyle>
                                                             <Style TargetType="{x:Type TreeViewItem}">
@@ -682,7 +682,7 @@
                                                     </TreeView>
                                                 </avalonDock:LayoutAnchorable>
                                             </avalonDock:LayoutAnchorablePane>
-                                        </avalonDock:LayoutPanel>
+                                        </avalonDock:LayoutPanel>-->
                                         <avalonDock:LayoutAnchorablePane>
                                             <avalonDock:LayoutAnchorable Title="Signal Selection Panel">
                                                 <Grid>
