@@ -79,6 +79,39 @@ Public Class EnumToStringConverter2
     End Function
 End Class
 
+Public Class EnumToStringConverter3
+    Implements IValueConverter
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.Convert
+        Select Case value
+            Case PowerType.Active
+                Return "Active"
+            Case PowerType.Apparent
+                Return "Apparent"
+            Case PowerType.Complex
+                Return "Complex"
+            Case PowerType.Reactive
+                Return "Reactive"
+            Case Else
+                Throw New Exception("Power type not valid!")
+        End Select
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Select Case value
+            Case "Reactive"
+                Return PowerType.Reactive
+            Case "Apparent"
+                Return PowerType.Apparent
+            Case "Complex"
+                Return PowerType.Complex
+            Case "Active"
+                Return PowerType.Active
+            Case Else
+                Throw New Exception("Enum type not valid!")
+        End Select
+    End Function
+End Class
+
 Public Class SelectionStatusBackgroundConverter
     Implements IValueConverter
 
@@ -87,6 +120,22 @@ Public Class SelectionStatusBackgroundConverter
             Return "LightSkyBlue"
         Else
             Return "AliceBlue"
+        End If
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+End Class
+
+Public Class ErrorStatusBorderColorConverter
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        If value Then
+            Return Brushes.LightGray
+        Else
+            Return "Red"
         End If
     End Function
 

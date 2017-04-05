@@ -65,7 +65,7 @@ Public Class DataConfig
                                                                             {"Take complex conjugate of signals", {"CustPMUname", "signal"}.ToList},
                                                                             {"Phasor Creation Customization", {"CustPMUname", "phasor ", "mag", "ang"}.ToList},
                                                                             {"Power Calculation Customization", {"CustPMUname", "PowType", "power"}.ToList},
-                                                                            {"Specify Signal Type and Unit Customization", {"CustPMUname", "SigType", "SigUnit", "PMU", "Channel"}.ToList},
+                                                                            {"Specify Signal Type and Unit Customization", {"CustPMUname", "CustName", "SigType", "SigUnit", "PMU", "Channel"}.ToList},
                                                                             {"Metric Prefix Customization", {"CustPMUname", "ToConvert"}.ToList},
                                                                             {"Angle Conversion Customization", {"CustPMUname", "ToConvert"}.ToList}}
 
@@ -174,6 +174,13 @@ Public Enum ModeType
     <Description("Real Time")>
     RealTime
     Hybrid
+End Enum
+
+Public Enum PowerType
+    Complex
+    Apparent
+    Active
+    Reactive
 End Enum
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -543,6 +550,9 @@ Public Class InputFileInfo
     Inherits ViewModelBase
     Public Sub New()
         _inputFileTree = New ObservableCollection(Of Folder)
+        _groupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
+        _groupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+        _taggedSignals = New ObservableCollection(Of SignalSignatures)
     End Sub
     Private _fileDirectory As String
     Public Property FileDirectory As String
@@ -709,7 +719,16 @@ Public Class Customization
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         _custSignalName = New ObservableCollection(Of String)
-        _outputInputMappingDictionary = New Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
+        _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+        _exponent = "1"
+        '_outputInputMultipleMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+    End Sub
+
+    Public Sub New(cStep As Customization)
+        Me.New
+        Name = cStep.Name
+        CustPMUname = cStep.CustPMUname
+        PowType = cStep.PowType
     End Sub
 
     Private _customizationName As String
@@ -830,16 +849,49 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-    Private _outputInputMappingDictionary As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
-    Public Property OutputInputMappingDictionary As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures))
+    Private _outputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+    Public Property OutputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         Get
-            Return _outputInputMappingDictionary
+            Return _outputInputMappingPair
         End Get
-        Set(ByVal value As Dictionary(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
-            _outputInputMappingDictionary = value
+        Set(ByVal value As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))))
+            _outputInputMappingPair = value
             OnPropertyChanged()
         End Set
     End Property
+    Private _powType As PowerType
+    Public Property PowType As PowerType
+        Get
+            Return _powType
+        End Get
+        Set(ByVal value As PowerType)
+            _powType = value
+            'If _outputInputMappingPair.Count > 0 Then
+            '    _outputInputMappingPair(0).Key.
+            'End If
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _exponent As String
+    Public Property Exponent As String
+        Get
+            Return _exponent
+        End Get
+        Set(ByVal value As String)
+            _exponent = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    'Private _outputInputMultipleMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+    'Public Property OutputInputMultipleMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+    '    Get
+    '        Return _outputInputMultipleMappingPair
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))))
+    '        _outputInputMultipleMappingPair = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
 End Class
 
 'Public Class DataConfigStage
