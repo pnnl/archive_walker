@@ -117,9 +117,9 @@ Public Class SelectionStatusBackgroundConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
         If value Then
-            Return "LightSkyBlue"
+            Return "White"
         Else
-            Return "AliceBlue"
+            Return "WhiteSmoke"
         End If
     End Function
 

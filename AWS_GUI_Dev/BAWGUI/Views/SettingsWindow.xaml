@@ -295,11 +295,19 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"></RowDefinition>
                                                         </Grid.RowDefinitions>
-                                                        <ItemsControl Grid.Row="0" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
+                                                        <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                                                            <Button DockPanel.Dock="Right" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
+                                                                <Image Source="../Images/CircledPlus.png" Stretch="Uniform"/>
+                                                            </Button>
+                                                            <Label Content="File Sources" Grid.Row="0" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                        </DockPanel>
+                                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
-                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="AliceBlue" Margin="2">
+                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
                                                                         <Grid>
                                                                             <Grid.ColumnDefinitions>
                                                                                 <ColumnDefinition Width="*"/>
@@ -343,12 +351,9 @@
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
-                                                        <Button Content="Add A File Source" Margin="2" Grid.Row="1" Command="{Binding AddFileSource}"/>
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="6,40,0,2">
-                                                            <Label Content="Mode:" Margin="2" Width="100" FontWeight="Bold"/>
-                                                            <ComboBox Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
-                                                        </StackPanel>
-                                                        <ContentControl Grid.Row="3" Content="{Binding}">
+                                                        <Label Content="Mode" Grid.Row="3" Grid.Column="2" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                        <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="4" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
+                                                        <ContentControl Grid.Row="5" Content="{Binding}">
                                                             <ContentControl.Style>
                                                                 <Style TargetType="ContentControl">
                                                                     <Style.Triggers>
