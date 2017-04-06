@@ -133,7 +133,8 @@ Public Class ErrorStatusBorderColorConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
         If value Then
-            Return Brushes.LightGray
+            'Return Brushes.LightGray
+            Return Brushes.Black
         Else
             Return "Red"
         End If
@@ -191,6 +192,22 @@ Public Class SignalSignatureListStringConverter
             a.Add(item.SignalName)
         Next
         Return String.Join(Of String)(vbCrLf, a)
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+End Class
+
+Public Class CurrentStepNameConverter
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        If value IsNot Nothing Then
+            Return value.Name
+        Else
+            Return DependencyProperty.UnsetValue
+        End If
     End Function
 
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack

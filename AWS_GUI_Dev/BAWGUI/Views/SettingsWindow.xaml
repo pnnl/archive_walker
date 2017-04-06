@@ -29,6 +29,7 @@
             <local:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
             <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <local:SignalSignatureListStringConverter x:Key="SignalSignatureListStringConverter"/>
+            <local:CurrentStepNameConverter x:Key="CurrentStepNameConverter"/>
             <DataTemplate x:Key="ArchiveParameter">
                 <GroupBox Header="Archive Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
                     <StackPanel Orientation="Vertical">
@@ -403,7 +404,7 @@
                             <avalonDock:DockingManager>
                                 <avalonDock:LayoutRoot>
                                     <avalonDock:LayoutPanel Orientation="Horizontal">
-                                        <avalonDock:LayoutAnchorablePane DockMinWidth="800">
+                                        <avalonDock:LayoutAnchorablePane DockMinWidth="1000">
                                             <avalonDock:LayoutAnchorable>
                                                 <ScrollViewer>
                                                     <Grid>
@@ -629,7 +630,7 @@
                                                 </ScrollViewer>
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
-                                        <!--<avalonDock:LayoutPanel Orientation="Vertical">
+                                        <avalonDock:LayoutPanel Orientation="Vertical">
                                             <avalonDock:LayoutAnchorablePane DockMinWidth="200">
                                                 <avalonDock:LayoutAnchorable Title="Select Signal by Signal Type">
                                                     <TreeView ItemsSource="{Binding GroupedSignalsByType}">
@@ -659,7 +660,7 @@
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
-                                                            <HierarchicalDataTemplate ItemsSource="{Binding Value}">
+                                                            <!--<HierarchicalDataTemplate ItemsSource="{Binding Value}">
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0"/>
                                                                     <TextBlock Text="{Binding Key}" Margin="0"/>
@@ -672,7 +673,7 @@
                                                                         </StackPanel>
                                                                     </DataTemplate>
                                                                 </HierarchicalDataTemplate.ItemTemplate>
-                                                            </HierarchicalDataTemplate>
+                                                            </HierarchicalDataTemplate>-->
                                                         </TreeView.ItemTemplate>
                                                         <TreeView.ItemContainerStyle>
                                                             <Style TargetType="{x:Type TreeViewItem}">
@@ -682,7 +683,7 @@
                                                     </TreeView>
                                                 </avalonDock:LayoutAnchorable>
                                             </avalonDock:LayoutAnchorablePane>
-                                        </avalonDock:LayoutPanel>-->
+                                        </avalonDock:LayoutPanel>
                                         <avalonDock:LayoutAnchorablePane>
                                             <avalonDock:LayoutAnchorable Title="Signal Selection Panel">
                                                 <Grid>
@@ -724,10 +725,10 @@
                                                                             <Style TargetType="ContentControl">
                                                                                 <Setter Property="ContentTemplate" Value="{StaticResource TreeViewCheckBox}"/>
                                                                                 <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding CurrentSelectedStep.Name}" Value="Subtraction Customization">
+                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.CurrentSelectedStep, Converter={StaticResource CurrentStepNameConverter}}" Value="Subtraction Customization">
                                                                                         <Setter Property="ContentTemplate" Value="{StaticResource TreeViewRadioButton}"/>
                                                                                     </DataTrigger>
-                                                                                    <DataTrigger Binding="{Binding CurrentSelectedStep.Name}" Value="Division Customization">
+                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.CurrentSelectedStep, Converter={StaticResource CurrentStepNameConverter}}" Value="Division Customization">
                                                                                         <Setter Property="ContentTemplate" Value="{StaticResource TreeViewRadioButton}"/>
                                                                                     </DataTrigger>
                                                                                 </Style.Triggers>
