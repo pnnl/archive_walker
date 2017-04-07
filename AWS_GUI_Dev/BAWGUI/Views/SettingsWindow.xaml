@@ -30,6 +30,7 @@
             <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <local:SignalSignatureListStringConverter x:Key="SignalSignatureListStringConverter"/>
             <local:CurrentStepNameConverter x:Key="CurrentStepNameConverter"/>
+            <!--<local:EmptyHeaderConverter x:Key="EmptyHeaderConverter"></local:EmptyHeaderConverter>-->
             <DataTemplate x:Key="ArchiveParameter">
                 <GroupBox Header="Archive Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
                     <StackPanel Orientation="Vertical">
@@ -300,8 +301,8 @@
                                                             <RowDefinition Height="Auto"></RowDefinition>
                                                         </Grid.RowDefinitions>
                                                         <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
-                                                            <Button DockPanel.Dock="Right" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
-                                                                <Image Source="../Images/CircledPlus.png" Stretch="Uniform"/>
+                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
+                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
                                                             </Button>
                                                             <Label Content="File Sources" Grid.Row="0" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold"/>
                                                         </DockPanel>
@@ -314,7 +315,8 @@
                                                                                 <ColumnDefinition Width="*"/>
                                                                                 <ColumnDefinition Width="30"/>                                                                                
                                                                             </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0" Header="{Binding Mnemonic}">
+                                                                            <!--<Expander Grid.Column="0" Header="{Binding Mnemonic, Converter={StaticResource EmptyHeaderConverter}, ConverterParameter='(New file source)'}">-->
+                                                                            <Expander Grid.Column="0">
                                                                                 <Grid>
                                                                                     <Grid.RowDefinitions>
                                                                                         <RowDefinition Height="Auto"/>
@@ -344,8 +346,8 @@
                                                                                     </StackPanel>
                                                                                 </Grid>
                                                                             </Expander>
-                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
-                                                                                <Image Source="../Images/CircledMinus.png" HorizontalAlignment="Stretch"/>
+                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
+                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                                                             </Button>
                                                                         </Grid>
                                                                     </Border>
@@ -428,12 +430,12 @@
                                                                 <ColumnDefinition Width="*"/>
                                                                 <ColumnDefinition Width="50"/>
                                                             </Grid.ColumnDefinitions>
-                                                            <Label Content="Signal Selection and Manipulation Steps" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                            <Menu Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Grid.Column="1" Margin="0">
-                                                                <MenuItem HorizontalAlignment="Right" Width="50" Margin="0">
+                                                            <Label Content="Signal Selection and Manipulation Steps" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                            <Menu Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Grid.Column="1" Margin="0,14,2,0" >
+                                                                <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
                                                                     <MenuItem.Header>
                                                                         <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                                                            <Image Width="19" Height="19" Source="../Images/CircledPlus.png" HorizontalAlignment="Right" Margin="0"/>
+                                                                            <Image Width="16" Height="16" Source="../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
                                                                             <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                                                         </StackPanel>
                                                                     </MenuItem.Header>
@@ -530,8 +532,8 @@
                                                                                     </StackPanel>
                                                                                 </Grid>
                                                                             </Expander>
-                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Source="../Images/CircledMinus.png" HorizontalAlignment="Stretch"/>
+                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                                                             </Button>
                                                                         </Grid>
                                                                     </Border>
@@ -615,8 +617,8 @@
                                                                                     </ContentControl.Style>
                                                                                 </ContentControl>
                                                                             </Expander>
-                                                                            <Button Grid.Column="1" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Source="../Images/CircledMinus.png" HorizontalAlignment="Stretch"/>
+                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                                                             </Button>
                                                                         </Grid>
                                                                     </Border>
