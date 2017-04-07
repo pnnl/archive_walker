@@ -30,7 +30,7 @@
             <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <local:SignalSignatureListStringConverter x:Key="SignalSignatureListStringConverter"/>
             <local:CurrentStepNameConverter x:Key="CurrentStepNameConverter"/>
-            <!--<local:EmptyHeaderConverter x:Key="EmptyHeaderConverter"></local:EmptyHeaderConverter>-->
+            <local:EmptyHeaderConverter x:Key="EmptyHeaderConverter"></local:EmptyHeaderConverter>
             <DataTemplate x:Key="ArchiveParameter">
                 <GroupBox Header="Archive Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
                     <StackPanel Orientation="Vertical">
@@ -315,8 +315,8 @@
                                                                                 <ColumnDefinition Width="*"/>
                                                                                 <ColumnDefinition Width="30"/>                                                                                
                                                                             </Grid.ColumnDefinitions>
-                                                                            <!--<Expander Grid.Column="0" Header="{Binding Mnemonic, Converter={StaticResource EmptyHeaderConverter}, ConverterParameter='(New file source)'}">-->
-                                                                            <Expander Grid.Column="0">
+                                                                            <Expander Grid.Column="0" Header="{Binding Mnemonic, Converter={StaticResource EmptyHeaderConverter}, ConverterParameter='(New file source)'}">
+                                                                            <!--<Expander Grid.Column="0">-->
                                                                                 <Grid>
                                                                                     <Grid.RowDefinitions>
                                                                                         <RowDefinition Height="Auto"/>
