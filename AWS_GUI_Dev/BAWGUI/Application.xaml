@@ -4,6 +4,9 @@
     xmlns:local="clr-namespace:BAWGUI"
     StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-        
+        <Style TargetType="TextBlock" x:Key="NoItemsTextStyle">
+            <Setter Property="Foreground" Value="#232323" />
+            <Setter Property="FontStyle" Value="Italic" />
+        </Style>
     </Application.Resources>
 </Application>
