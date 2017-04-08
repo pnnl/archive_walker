@@ -1578,7 +1578,7 @@ Public Class SettingsViewModel
     ''' </summary>
     ''' <param name="obj"></param>
     Private Sub _setFocusedTextbox(obj As SignalTypeHierachy)
-        If obj.SignalList.Count > 0 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then    'if selected a group of signal
+        If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
             Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
         Else
             If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
@@ -1603,7 +1603,9 @@ Public Class SettingsViewModel
                         Else
                             _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                         End If
-                        _currentSelectedStep.MinuendOrDivident = Nothing
+                        Dim dummy = New SignalSignatures("PleaseAddASignal", "PleaseAddASignal")
+                        dummy.IsValid = False
+                        _currentSelectedStep.MinuendOrDivident = dummy
                     End If
                 End If
                 _currentSelectedStep.CurrentCursor = ""
@@ -1629,7 +1631,9 @@ Public Class SettingsViewModel
                         Else
                             _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                         End If
-                        _currentSelectedStep.SubtrahendOrDivisor = Nothing
+                        Dim dummy = New SignalSignatures("PleaseAddASignal", "PleaseAddASignal")
+                        dummy.IsValid = False
+                        _currentSelectedStep.SubtrahendOrDivisor = dummy
                     End If
                 End If
                 _currentSelectedStep.CurrentCursor = ""
@@ -1821,63 +1825,68 @@ Public Class SettingsViewModel
     End Function
 
     Private Sub _changePhasorSignalForPowerCalculationCustomization(obj As SignalTypeHierachy)
-        If obj.SignalSignature.TypeAbbreviation.Length <> 3 OrElse obj.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "P" Then
-            '_keepOriginalSelection(obj)
-            _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not a phasor signal.")
-            Throw New Exception("Signal selection is not Valid! Please select a signal of type phasor.")
-        ElseIf _currentFocusedPhasorSignalForPowerCalculation Is Nothing Then
-            '_keepOriginalSelection(obj)
-            Throw New Exception("No textbox selected!")
-            'ElseIf _currentFocusedPhasorSignalForPowerCalculation.IsValid AndAlso (_currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation.Substring(0) <> obj.SignalSignature.TypeAbbreviation.Substring(0)) Then
-            '    _keepOriginalSelection(obj)
-            '    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
-            '    Throw New Exception("Signal selection is not Valid! Please select a signal of type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
-        ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) = _currentFocusedPhasorSignalForPowerCalculation Then
-            If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "V" Then
-                Dim oldPhasor = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
-                If _currentSelectedStep.InputChannels.Contains(oldPhasor) Then
-                    oldPhasor.IsChecked = False
-                    _currentSelectedStep.InputChannels.Remove(oldPhasor)
-                End If
-                _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldPhasor)
-                If obj.SignalSignature.IsChecked Then
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, obj.SignalSignature)
-                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                Else
-                    Dim dummy = New SignalSignatures("PleaseAddVoltagePhasor")
-                    'dummy.IsValid = False
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, dummy)
-                End If
-            Else
-                '_keepOriginalSelection(obj)
-                _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type Voltage phasor ")
-                Throw New Exception("Signal selection is not Valid! Please select a signal of voltage phasor")
-            End If
-        ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(1) = _currentFocusedPhasorSignalForPowerCalculation Then
-            If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "I" Then
-                Dim oldPhasor = _currentSelectedStep.OutputInputMappingPair(0).Value(1)
-                If _currentSelectedStep.InputChannels.Contains(oldPhasor) Then
-                    oldPhasor.IsChecked = False
-                    _currentSelectedStep.InputChannels.Remove(oldPhasor)
-                End If
-                _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldPhasor)
-                If obj.SignalSignature.IsChecked Then
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, obj.SignalSignature)
-                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                Else
-                    Dim dummy = New SignalSignatures("PleaseAddCurrentPhasor")
-                    'dummy.IsValid = False
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, dummy)
-                End If
-            Else
-                '_keepOriginalSelection(obj)
-                _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current phasor.")
-                Throw New Exception("Signal selection is not Valid! Please select a signal of current phasor.")
-            End If
+        If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
+            Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
         Else
-            '_keepOriginalSelection(obj)
-            '_addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current phasor.")
-            Throw New Exception("Error changing signal for this power calculation step!")
+
+            If obj.SignalSignature.TypeAbbreviation.Length <> 3 OrElse obj.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "P" Then
+                '_keepOriginalSelection(obj)
+                _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not a phasor signal.")
+                Throw New Exception("Signal selection is not Valid! Please select a signal of type phasor.")
+            ElseIf _currentFocusedPhasorSignalForPowerCalculation Is Nothing Then
+                '_keepOriginalSelection(obj)
+                Throw New Exception("No textbox selected!")
+                'ElseIf _currentFocusedPhasorSignalForPowerCalculation.IsValid AndAlso (_currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation.Substring(0) <> obj.SignalSignature.TypeAbbreviation.Substring(0)) Then
+                '    _keepOriginalSelection(obj)
+                '    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
+                '    Throw New Exception("Signal selection is not Valid! Please select a signal of type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
+            ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) = _currentFocusedPhasorSignalForPowerCalculation Then
+                If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "V" Then
+                    Dim oldPhasor = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
+                    If _currentSelectedStep.InputChannels.Contains(oldPhasor) Then
+                        oldPhasor.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(oldPhasor)
+                    End If
+                    _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldPhasor)
+                    If obj.SignalSignature.IsChecked Then
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, obj.SignalSignature)
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    Else
+                        Dim dummy = New SignalSignatures("PleaseAddVoltagePhasor", "PleaseAddVoltagePhasor")
+                        dummy.IsValid = False
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, dummy)
+                    End If
+                Else
+                    '_keepOriginalSelection(obj)
+                    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type Voltage phasor ")
+                    Throw New Exception("Signal selection is not Valid! Please select a signal of voltage phasor")
+                End If
+            ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(1) = _currentFocusedPhasorSignalForPowerCalculation Then
+                If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "I" Then
+                    Dim oldPhasor = _currentSelectedStep.OutputInputMappingPair(0).Value(1)
+                    If _currentSelectedStep.InputChannels.Contains(oldPhasor) Then
+                        oldPhasor.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(oldPhasor)
+                    End If
+                    _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldPhasor)
+                    If obj.SignalSignature.IsChecked Then
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, obj.SignalSignature)
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    Else
+                        Dim dummy = New SignalSignatures("PleaseAddCurrentPhasor", "PleaseAddVoltagePhasor")
+                        dummy.IsValid = False
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, dummy)
+                    End If
+                Else
+                    '_keepOriginalSelection(obj)
+                    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current phasor.")
+                    Throw New Exception("Signal selection is not Valid! Please select a signal of current phasor.")
+                End If
+            Else
+                '_keepOriginalSelection(obj)
+                '_addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current phasor.")
+                Throw New Exception("Error changing signal for this power calculation step!")
+            End If
         End If
         _currentFocusedPhasorSignalForPowerCalculation = Nothing
         _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
