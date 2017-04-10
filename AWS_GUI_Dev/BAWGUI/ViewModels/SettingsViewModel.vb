@@ -1325,10 +1325,18 @@ Public Class SettingsViewModel
                     Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
-                Case "Addition Customization", "Multiplication Customization", "Subtraction Customization", "Division Customization"
+                Case "Addition Customization", "Multiplication Customization"
                     Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
+                Case "Subtraction Customization", "Division Customization"
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    newSignal.IsCustomSignal = True
+                    newCustomization.OutputChannels.Add(newSignal)
+                    Dim dummy = New SignalSignatures("PleaseAddASignal", "PleaseAddASignal")
+                    dummy.IsValid = False
+                    newCustomization.MinuendOrDivident = dummy
+                    newCustomization.SubtrahendOrDivisor = dummy
                 Case "Raise signals to an exponent"
                     newCustomization.Exponent = "1"
                 Case "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Return angle of complex valued signals", "Take complex conjugate of signals", "Phasor Creation Customization", "Metric Prefix Customization", "Angle Conversion Customization"
@@ -2156,99 +2164,93 @@ Public Class SettingsViewModel
         ' if processStep is already selected, then the selection is not changed, nothing needs to be done.
         ' however, if processStep is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
         If Not processStep.IsStepSelected Then
-            'Dim isFirstSelection = True
-            Dim lastNumberOfSteps = processStep.StepCounter
-            Dim stepsInputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
-            Dim stepsOutputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
-            For Each stp In DataConfigure.CollectionOfSteps
-                If stp.IsStepSelected Then
-                    'isFirstSelection = False
-                    stp.IsStepSelected = False
-                    For Each signal In stp.InputChannels
-                        signal.IsChecked = False
-                        ' these might not be necessary
-                        '_checkParentStatus(signal)
-                        '_checkPMUParentStaus(signal)
-                    Next
-                    If TypeOf (stp) Is Customization Then
-                        For Each signal In stp.OutputChannels
+            Try
+                Dim lastNumberOfSteps = processStep.StepCounter
+                Dim stepsInputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
+                Dim stepsOutputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
+                For Each stp In DataConfigure.CollectionOfSteps
+                    If stp.IsStepSelected Then
+                        stp.IsStepSelected = False
+                        For Each signal In stp.InputChannels
                             signal.IsChecked = False
                         Next
+                        If TypeOf (stp) Is Customization Then
+                            For Each signal In stp.OutputChannels
+                                signal.IsChecked = False
+                            Next
+                        End If
                     End If
-                End If
-                If stp.StepCounter < lastNumberOfSteps Then
-                    stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
-                    If TypeOf (stp) Is Customization Then
-                        stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
+                    If stp.StepCounter < lastNumberOfSteps Then
+                        stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
+                        If TypeOf (stp) Is Customization Then
+                            stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
+                        End If
                     End If
+                Next
+                _determineFileDirCheckableStatus()
+                processStep.IsStepSelected = True
+                'TODO: disable all signal selection tree if step name is "Scalar Repetition Customization"
+                For Each signal In processStep.InputChannels
+                    signal.IsChecked = True
+                    '_checkParentStatus(signal)
+                    '_checkPMUParentStaus(signal)
+                Next
+                'If TypeOf (processStep) Is Customization AndAlso processStep.OutputChannels IsNot Nothing Then
+                '    For Each signal In processStep.OutputChannels
+                '        signal.IsChecked = True
+                '    Next
+                'End If
+
+                If processStep.Name = "Scalar Repetition Customization" Then
+                    SignalSelectionTreeViewVisibility = "Collapsed"
+                Else
+                    SignalSelectionTreeViewVisibility = "Visible"
                 End If
-            Next
-            _determineFileDirCheckableStatus()
-            processStep.IsStepSelected = True
-            'TODO: disable all signal selection tree if step name is "Scalar Repetition Customization"
-            For Each signal In processStep.InputChannels
-                signal.IsChecked = True
-                '_checkParentStatus(signal)
-                '_checkPMUParentStaus(signal)
-            Next
-            'If TypeOf (processStep) Is Customization AndAlso processStep.OutputChannels IsNot Nothing Then
-            '    For Each signal In processStep.OutputChannels
-            '        signal.IsChecked = True
-            '    Next
-            'End If
 
-            If processStep.Name = "Scalar Repetition Customization" Then
-                SignalSelectionTreeViewVisibility = "Collapsed"
-            Else
-                SignalSelectionTreeViewVisibility = "Visible"
-            End If
-
-            'If CurrentSelectedStep.Name = "Power Calculation Customization" AndAlso CurrentSelectedStep.OutputInputMappingPair(0).Value.Count = 2 Then
-            '    _disableEnableAllButPhasorSignals(True)
-            'End If
-            If CurrentSelectedStep IsNot Nothing Then
-                If CurrentSelectedStep.Name = "Phasor Creation Customization" Then
-                    _disableEnableAllButMagnitudeSignals(True)
-                ElseIf CurrentSelectedStep.Name = "Power Calculation Customization" Then
-                    If CurrentSelectedStep.OutputInputMappingPair.Count > 0 Then
-                        Dim situation = CurrentSelectedStep.OutputInputMappingPair(0).Value.Count
-                        If situation = 4 Then
-                            _disableEnableAllButMagnitudeSignals(True)
-                        ElseIf situation = 2 Then
-                            _disableEnableAllButPhasorSignals(True)
+                'If CurrentSelectedStep.Name = "Power Calculation Customization" AndAlso CurrentSelectedStep.OutputInputMappingPair(0).Value.Count = 2 Then
+                '    _disableEnableAllButPhasorSignals(True)
+                'End If
+                If CurrentSelectedStep IsNot Nothing Then
+                    If CurrentSelectedStep.Name = "Phasor Creation Customization" Then
+                        _disableEnableAllButMagnitudeSignals(True)
+                    ElseIf CurrentSelectedStep.Name = "Power Calculation Customization" Then
+                        If CurrentSelectedStep.OutputInputMappingPair.Count > 0 Then
+                            Dim situation = CurrentSelectedStep.OutputInputMappingPair(0).Value.Count
+                            If situation = 4 Then
+                                _disableEnableAllButMagnitudeSignals(True)
+                            ElseIf situation = 2 Then
+                                _disableEnableAllButPhasorSignals(True)
+                            End If
                         End If
                     End If
                 End If
-            End If
 
-            GroupedSignalByStepsInput = stepsInputAsSignalHierachy
-            GroupedSignalByStepsOutput = stepsOutputAsSignalHierachy
+                GroupedSignalByStepsInput = stepsInputAsSignalHierachy
+                GroupedSignalByStepsOutput = stepsOutputAsSignalHierachy
 
-            _determineAllParentNodeStatus()
+                _determineAllParentNodeStatus()
 
-            _determineFileDirCheckableStatus()
+                _determineFileDirCheckableStatus()
 
-
-
-            If processStep.Name = "Phasor Creation Customization" Then
-                '_disableEnableGroupForPhasorCreationCustomization(GroupedSignalsByType, False)
-                '_disableEnableGroupForPhasorCreationCustomization(GroupedSignalByStepsInput, False)
-                '_disableEnableGroupForPhasorCreationCustomization(GroupedSignalByStepsOutput, False)
-                _disableEnableAllButMagnitudeSignals(False)
-            ElseIf processStep.Name = "Power Calculation Customization" Then
-                If processStep.OutputInputMappingPair.Count > 0 Then
-                    Dim situation = processStep.OutputInputMappingPair(0).Value.Count
-                    If situation = 4 Then
-                        _disableEnableAllButMagnitudeSignals(False)
-                    ElseIf situation = 2 Then
-                        _disableEnableAllButPhasorSignals(False)
+                If processStep.Name = "Phasor Creation Customization" Then
+                    '_disableEnableGroupForPhasorCreationCustomization(GroupedSignalsByType, False)
+                    '_disableEnableGroupForPhasorCreationCustomization(GroupedSignalByStepsInput, False)
+                    '_disableEnableGroupForPhasorCreationCustomization(GroupedSignalByStepsOutput, False)
+                    _disableEnableAllButMagnitudeSignals(False)
+                ElseIf processStep.Name = "Power Calculation Customization" Then
+                    If processStep.OutputInputMappingPair.Count > 0 Then
+                        Dim situation = processStep.OutputInputMappingPair(0).Value.Count
+                        If situation = 4 Then
+                            _disableEnableAllButMagnitudeSignals(False)
+                        ElseIf situation = 2 Then
+                            _disableEnableAllButPhasorSignals(False)
+                        End If
                     End If
                 End If
-                'Else
-                '    _disableEnableAllButMagnitudeSignals(True)
-            End If
-
-            CurrentSelectedStep = processStep
+                CurrentSelectedStep = processStep
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+            End Try
         End If
     End Sub
 
@@ -2263,8 +2265,12 @@ Public Class SettingsViewModel
                     subgroup.SignalSignature.IsEnabled = isEnable
                 Else
                     For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
+                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
                             subsubgroup.SignalSignature.IsEnabled = isEnable
+                            'Else
+                            '    If subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
+                            '        subsubgroup.SignalSignature.IsEnabled = isEnable
+                            '    End If
                         End If
                     Next
                 End If
