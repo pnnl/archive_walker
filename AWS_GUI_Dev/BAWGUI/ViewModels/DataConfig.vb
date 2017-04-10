@@ -731,16 +731,16 @@ Public Class Customization
         PowType = cStep.PowType
     End Sub
 
-    Private _customizationName As String
-    Public Property CustomizationName As String
-        Get
-            Return _customizationName
-        End Get
-        Set(ByVal value As String)
-            _customizationName = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _customizationName As String
+    'Public Property CustomizationName As String
+    '    Get
+    '        Return _customizationName
+    '    End Get
+    '    Set(ByVal value As String)
+    '        _customizationName = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
     Private _name As String
     Public Overrides Property Name As String
         Get
@@ -761,16 +761,16 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-    Private _customizationParams As ObservableCollection(Of ParameterValuePair)
-    Public Property CustomizationParams As ObservableCollection(Of ParameterValuePair)
-        Get
-            Return _customizationParams
-        End Get
-        Set(ByVal value As ObservableCollection(Of ParameterValuePair))
-            _customizationParams = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _customizationParams As ObservableCollection(Of ParameterValuePair)
+    'Public Property CustomizationParams As ObservableCollection(Of ParameterValuePair)
+    '    Get
+    '        Return _customizationParams
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of ParameterValuePair))
+    '        _customizationParams = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
     Private _minuendOrDivident As SignalSignatures
     Public Property MinuendOrDivident As SignalSignatures
         Get

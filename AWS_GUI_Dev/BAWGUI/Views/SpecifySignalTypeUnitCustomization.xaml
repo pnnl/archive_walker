@@ -58,7 +58,7 @@
                 </Image.Style>
             </Image>
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="SigType" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <TextBox Text="{Binding OutputChannels[0].TypeAbbreviation}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>
+            <TextBox Text="{Binding OutputChannels[0].TypeAbbreviation}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -73,7 +73,7 @@
                 </Image.Style>
             </Image>
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="SigUnit" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <TextBox Text="{Binding OutputChannels[0].Unit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>
+            <TextBox Text="{Binding OutputChannels[0].Unit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
             <ItemsControl.ItemTemplate>
@@ -114,7 +114,8 @@
                 </Image.Style>
             </Image>
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="PMU" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <TextBox Text="{Binding InputChannels[0].PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>
+            <!--<TextBox Text="{Binding InputChannels[0].PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>-->
+            <TextBlock Text="{Binding InputChannels[0].PMUName}" VerticalAlignment="Center"  Width="150" Margin="8" Background="LightGray" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -129,7 +130,8 @@
                 </Image.Style>
             </Image>
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Channel" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <TextBox Text="{Binding InputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>
+            <!--<TextBox Text="{Binding InputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>-->
+            <Label Content="{Binding InputChannels[0].SignalName}" VerticalAlignment="Center" Width="150" Margin="8" Background="LightGray" BorderBrush="Black" BorderThickness="1"/>
         </StackPanel>
     </StackPanel>
 </UserControl>
