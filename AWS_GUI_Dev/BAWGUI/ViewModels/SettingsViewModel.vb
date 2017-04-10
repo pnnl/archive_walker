@@ -2248,50 +2248,54 @@ Public Class SettingsViewModel
     ''' </summary>
     ''' <param name="isEnable"></param>
     Private Sub _disableEnableAllButMagnitudeSignals(isEnable As Boolean)
-        For Each group In GroupedSignalsByType
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
-                Else
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
-                        End If
-                    Next
-                End If
-            Next
-        Next
-        For Each group In GroupedSignalsByPMU
-            For Each subgroup In group.SignalList
-                For Each subsubgroup In subgroup.SignalList
-                    If subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+        Try
+            For Each group In GroupedSignalsByType
+                For Each subgroup In group.SignalList
+                    If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
+                        subgroup.SignalSignature.IsEnabled = isEnable
+                    Else
+                        For Each subsubgroup In subgroup.SignalList
+                            If subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnable
+                            End If
+                        Next
                     End If
                 Next
             Next
-        Next
-        For Each group In GroupedSignalByStepsInput
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
-                Else
+            For Each group In GroupedSignalsByPMU
+                For Each subgroup In group.SignalList
                     For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
+                        If subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
                             subsubgroup.SignalSignature.IsEnabled = isEnable
                         End If
                     Next
-                End If
+                Next
             Next
-        Next
-        For Each group In GroupedSignalByStepsOutput
-            For Each subgroup In group.SignalList
-                For Each subsubgroup In subgroup.SignalList
-                    If subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+            For Each group In GroupedSignalByStepsInput
+                For Each subgroup In group.SignalList
+                    If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
+                        subgroup.SignalSignature.IsEnabled = isEnable
+                    Else
+                        For Each subsubgroup In subgroup.SignalList
+                            If subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnable
+                            End If
+                        Next
                     End If
                 Next
             Next
-        Next
+            For Each group In GroupedSignalByStepsOutput
+                For Each subgroup In group.SignalList
+                    For Each subsubgroup In subgroup.SignalList
+                        If subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
+                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                        End If
+                    Next
+                Next
+            Next
+        Catch exception As Exception
+            _addLog("Error disable/enable all but magnitude signals: " + exception.Message)
+        End Try
     End Sub
     ''' <summary>
     ''' disable all signal type except voltage magnitude or current magnitude
