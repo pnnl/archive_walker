@@ -59,17 +59,6 @@ Public Class SettingsViewModel
     End Sub
 
 
-    Private _groupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
-    Public Property GroupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
-        Get
-            Return _groupedSignalsByType
-        End Get
-        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-            _groupedSignalsByType = value
-            OnPropertyChanged()
-        End Set
-    End Property
-
     Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
     Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
         Get
@@ -77,6 +66,16 @@ Public Class SettingsViewModel
         End Get
         Set(ByVal value As Dictionary(Of String, List(Of SignalSignatures)))
             _pmuSignalDictionary = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _groupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _groupedSignalsByType
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _groupedSignalsByType = value
             OnPropertyChanged()
         End Set
     End Property
@@ -556,6 +555,83 @@ Public Class SettingsViewModel
         Return pmuSignalTree
     End Function
 
+    Private _lastInputFolderLocation As String
+    Private _browseInputFileDir As ICommand
+    Public Property BrowseInputFileDir As ICommand
+        Get
+            Return _browseInputFileDir
+        End Get
+        Set(ByVal value As ICommand)
+            _browseInputFileDir = value
+        End Set
+    End Property
+
+    Private Sub _browseInputFileFolder(obj As InputFileInfo)
+        'Dim previousDir = New InputFileInfo(obj)
+        Dim openDirectoryDialog As New FolderBrowserDialog()
+        openDirectoryDialog.Description = "Select the directory that data files (.pdat or .csv) are located "
+        If _lastInputFolderLocation Is Nothing Then
+            openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+        Else
+            openDirectoryDialog.SelectedPath = _lastInputFolderLocation
+        End If
+        openDirectoryDialog.ShowNewFolderButton = False
+        If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+            ' When a new directory is selected, we need to clean out everything that display contents of that directory
+            obj.Mnemonic = ""
+            obj.SamplingRate = ""
+            obj.GroupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
+            obj.GroupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+            ' clean out signals from that directory from all references since we display those signals in 4 different ways
+            For Each group In GroupedSignalsByType
+                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                    GroupedSignalsByType.Remove(group)
+                    Exit For
+                End If
+            Next
+            For Each group In GroupedSignalsByPMU
+                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                    GroupedSignalsByPMU.Remove(group)
+                    Exit For
+                End If
+            Next
+            obj.TaggedSignals = New ObservableCollection(Of SignalSignatures)
+            'For Each signal In obj.TaggedSignals
+            '    signal.Dispose()
+            'Next
+            obj.SignalList = New List(Of String)
+            'obj.GroupedSignalsByPMU
+            _lastInputFolderLocation = openDirectoryDialog.SelectedPath
+            obj.FileDirectory = _lastInputFolderLocation
+            _buildInputFileFolderTree(obj)
+            If _configData IsNot Nothing Then
+                _readStages()
+            End If
+        End If
+    End Sub
+    Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfo)
+        Dim _sampleFile = ""
+        Try
+            fileInfo.InputFileTree = New ObservableCollection(Of Folder)
+            fileInfo.InputFileTree.Add(New Folder(fileInfo.FileDirectory, fileInfo.FileType.ToString, _sampleFile))
+        Catch ex As Exception
+            _addLog("Error reading input data directory! " & ex.Message)
+        End Try
+        If String.IsNullOrEmpty(_sampleFile) Then
+            'MessageBox.Show("No file of type: " & fileInfo.FileType.ToString & vbCrLf & " is found in: " & fileInfo.FileDirectory, "Error!", MessageBoxButtons.OK)
+            _addLog("No file of type: " & fileInfo.FileType.ToString & " is found in: " & fileInfo.FileDirectory)
+        Else
+            Try
+                _readFirstDataFile(_sampleFile, fileInfo)
+                If fileInfo.FileType.ToString = "pdat" Then
+                    _tagSignals(fileInfo, fileInfo.SignalList)
+                End If
+            Catch ex As Exception
+                'MessageBox.Show("Error sampling input data file!" & Environment.NewLine & ex.Message, "Error!", MessageBoxButtons.OK)
+                _addLog("Error sampling input data file! " & ex.Message)
+            End Try
+        End If
+    End Sub
     Private Sub _readFirstDataFile(sampleFile As String, fileInfo As InputFileInfo)
         If System.IO.Path.GetExtension(sampleFile).Substring(1) = "csv" Then
             'Dim CSVSampleFile As New JSIS_CSV_Reader.JSISCSV_Reader
@@ -643,7 +719,15 @@ Public Class SettingsViewModel
         End If
     End Sub
 
-    Private _lastInputFolderLocation As String
+    Private _fileTypeChanged As ICommand
+    Public Property FileTypeChanged As ICommand
+        Get
+            Return _fileTypeChanged
+        End Get
+        Set(ByVal value As ICommand)
+            _fileTypeChanged = value
+        End Set
+    End Property
 
     Private _configFileName As String
     Public Property ConfigFileName As String
@@ -691,16 +775,16 @@ Public Class SettingsViewModel
         End Set
     End Property
 
-    Private _inputFileDirTree As ObservableCollection(Of Folder)
-    Public Property InputFileDirTree As ObservableCollection(Of Folder)
-        Get
-            Return _inputFileDirTree
-        End Get
-        Set(ByVal value As ObservableCollection(Of Folder))
-            _inputFileDirTree = value
-            OnPropertyChanged("InputFileDirTree")
-        End Set
-    End Property
+    'Private _inputFileDirTree As ObservableCollection(Of Folder)
+    'Public Property InputFileDirTree As ObservableCollection(Of Folder)
+    '    Get
+    '        Return _inputFileDirTree
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of Folder))
+    '        _inputFileDirTree = value
+    '        OnPropertyChanged("InputFileDirTree")
+    '    End Set
+    'End Property
 
     Private _openConfigFile As ICommand
     Public Property OpenConfigFile As ICommand
@@ -734,7 +818,6 @@ Public Class SettingsViewModel
             End Try
         End If
     End Sub
-
     Private Sub _readConfigFile()
         'Dim _sampleFile = ""
         _addLog("Reading " & ConfigFileName)
@@ -862,12 +945,14 @@ Public Class SettingsViewModel
                 End Select
                 aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
                 GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
             Next
         Next
         DataConfigure.CollectionOfSteps = CollectionOfSteps
     End Sub
-#Region "readCustomizationStepsFromXMLConfigureFile"
+
+
+#Region "Read Customization Steps From XML Configure File"
 
     Private Sub _readPhasorCreationCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
         aStep.CustPMUname = params.<CustPMUname>.Value
@@ -919,7 +1004,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readAngleCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -968,7 +1053,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readUnaryCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1014,7 +1099,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readSubtractionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1060,7 +1145,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readRaiseExpCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1110,7 +1195,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readDivisionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1158,7 +1243,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readScalarRepetitionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1196,7 +1281,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readMultiplicationCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1241,7 +1326,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readAdditionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1280,7 +1365,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private _powerTypeDictionary As Dictionary(Of String, String)
@@ -1299,7 +1384,7 @@ Public Class SettingsViewModel
                 aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
                 'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
                 GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                 Dim oldStep = aStep
                 aStep = New Customization(oldStep)
                 stepCounter += 1
@@ -1335,7 +1420,7 @@ Public Class SettingsViewModel
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
             aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
             'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-            'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+            GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
         Next
     End Sub
 
@@ -1373,7 +1458,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readSpecTypeUnitCustomization(aStep As Object, params As IEnumerable(Of XElement), CollectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1410,7 +1495,7 @@ Public Class SettingsViewModel
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
         aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
     Private _lastCustPMUname As String
     ''' <summary>
@@ -1445,126 +1530,8 @@ Public Class SettingsViewModel
         Return Nothing
     End Function
 #End Region
-    Private _browseInputFileDir As ICommand
-    Public Property BrowseInputFileDir As ICommand
-        Get
-            Return _browseInputFileDir
-        End Get
-        Set(ByVal value As ICommand)
-            _browseInputFileDir = value
-        End Set
-    End Property
 
-    Private Sub _browseInputFileFolder(obj As InputFileInfo)
-        'Dim previousDir = New InputFileInfo(obj)
-        Dim openDirectoryDialog As New FolderBrowserDialog()
-        openDirectoryDialog.Description = "Select the directory that data files (.pdat or .csv) are located "
-        If _lastInputFolderLocation Is Nothing Then
-            openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
-        Else
-            openDirectoryDialog.SelectedPath = _lastInputFolderLocation
-        End If
-        openDirectoryDialog.ShowNewFolderButton = False
-        If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
-            ' When a new directory is selected, we need to clean out everything that display contents of that directory
-            obj.Mnemonic = ""
-            obj.SamplingRate = ""
-            obj.GroupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
-            obj.GroupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
-            ' clean out signals from that directory from all references since we display those signals in 4 different ways
-            For Each group In GroupedSignalsByType
-                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                    GroupedSignalsByType.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In GroupedSignalsByPMU
-                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                    GroupedSignalsByPMU.Remove(group)
-                    Exit For
-                End If
-            Next
-            'For Each stp In DataConfigure.CollectionOfSteps
-            '    If stp.InputChannels.Count > 0 Then
-            '        If obj.TaggedSignals.Contains(stp.InputChannels(0)) Then
-            '            stp.InputChannels = New ObservableCollection(Of SignalSignatures)
-            '            stp.ThisStepInputsAsSignalHerachyByType.SignalList = New ObservableCollection(Of SignalTypeHierachy)
-            '            stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.IsChecked = False
-            '            'If TypeOf stp Is Customization Then
-            '            '    For Each pair In stp.OutputInputMappingPair
-            '            '        Dim numberOfInput = pair.Value.Count
-            '            '        pair.Value.Clear()
-            '            '        For index = 0 To numberOfInput - 1
-            '            '            Dim empty = New SignalSignatures("NeedInput")
-            '            '            empty.IsValid = False
-            '            '            pair.Value.Add(empty)
-            '            '        Next
-            '            '    Next
-            '            '    stp.MinuendOrDivident = New SignalSignatures("NeedMinuendOrDivident")
-            '            '    stp.MinuendOrDivident.IsValid = False
-            '            '    stp.SubtrahendOrDivisor = New SignalSignatures("NeedSubtrahendOrDivisor")
-            '            '    stp.SubtrahendOrDivisor.IsValid = False
-            '            'End If
-            '            'AllPMUs = New ObservableCollection(Of String)
-            '            'For Each group In GroupedSignalsByPMU
-            '            '    For Each subgroup In group.SignalList
-            '            '        If Not AllPMUs.Contains(subgroup.SignalSignature.PMUName) Then
-            '            '            AllPMUs.Add(subgroup.SignalSignature.PMUName)
-            '            '        End If
-            '            '    Next
-            '            'Next
-            '        End If
-            '    End If
-            'Next
-            obj.TaggedSignals = New ObservableCollection(Of SignalSignatures)
-            'For Each signal In obj.TaggedSignals
-            '    signal.Dispose()
-            'Next
-            obj.SignalList = New List(Of String)
-            'obj.GroupedSignalsByPMU
-            _lastInputFolderLocation = openDirectoryDialog.SelectedPath
-            obj.FileDirectory = _lastInputFolderLocation
-            _buildInputFileFolderTree(obj)
-            If _configData IsNot Nothing Then
-                _readStages()
-            End If
-        End If
-    End Sub
-
-    Private _fileTypeChanged As ICommand
-    Public Property FileTypeChanged As ICommand
-        Get
-            Return _fileTypeChanged
-        End Get
-        Set(ByVal value As ICommand)
-            _fileTypeChanged = value
-        End Set
-    End Property
-
-    Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfo)
-        Dim _sampleFile = ""
-        Try
-            fileInfo.InputFileTree = New ObservableCollection(Of Folder)
-            fileInfo.InputFileTree.Add(New Folder(fileInfo.FileDirectory, fileInfo.FileType.ToString, _sampleFile))
-        Catch ex As Exception
-            _addLog("Error reading input data directory! " & ex.Message)
-        End Try
-        If String.IsNullOrEmpty(_sampleFile) Then
-            'MessageBox.Show("No file of type: " & fileInfo.FileType.ToString & vbCrLf & " is found in: " & fileInfo.FileDirectory, "Error!", MessageBoxButtons.OK)
-            _addLog("No file of type: " & fileInfo.FileType.ToString & " is found in: " & fileInfo.FileDirectory)
-        Else
-            Try
-                _readFirstDataFile(_sampleFile, fileInfo)
-                If fileInfo.FileType.ToString = "pdat" Then
-                    _tagSignals(fileInfo, fileInfo.SignalList)
-                End If
-            Catch ex As Exception
-                'MessageBox.Show("Error sampling input data file!" & Environment.NewLine & ex.Message, "Error!", MessageBoxButtons.OK)
-                _addLog("Error sampling input data file! " & ex.Message)
-            End Try
-        End If
-    End Sub
-
+#Region "Add a step"
     Private _dqfilterSelected As ICommand
     Public Property DQFilterSelected As ICommand
         Get
@@ -1574,7 +1541,6 @@ Public Class SettingsViewModel
             _dqfilterSelected = value
         End Set
     End Property
-
     Private Sub _dqfilterSelection(obj As Object)
         Dim newFilter As New DQFilter
         newFilter.Name = obj.ToString
@@ -1600,7 +1566,6 @@ Public Class SettingsViewModel
             _customizationSelected = value
         End Set
     End Property
-
     Private Sub _customizationStepSelection(obj As Object)
         Dim newCustomization As New Customization
         newCustomization.Name = obj.ToString
@@ -1660,7 +1625,48 @@ Public Class SettingsViewModel
         newCustomization.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newCustomization.OutputChannels)
         DataConfigure.CollectionOfSteps.Add(newCustomization)
     End Sub
+    Private _choosePhasorForPowerCalculation As ICommand
+    Public Property ChoosePhasorForPowerCalculation As ICommand
+        Get
+            Return _choosePhasorForPowerCalculation
+        End Get
+        Set(ByVal value As ICommand)
+            _choosePhasorForPowerCalculation = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private Sub _powerCalculationPhasorOption(obj As Object)
+        Dim vPhasor = New SignalSignatures("NeedVoltagePhasor", _currentSelectedStep.CustPMUname)
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vPhasor)
+        Dim iPhasor = New SignalSignatures("NeedCurrentPhasor", _currentSelectedStep.CustPMUname)
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iPhasor)
+        _disableEnableAllButPhasorSignals(False)
+    End Sub
+    Private _chooseMagAngForPowerCalculation As ICommand
+    Public Property ChooseMagAngForPowerCalculation As ICommand
+        Get
+            Return _chooseMagAngForPowerCalculation
+        End Get
+        Set(ByVal value As ICommand)
+            _chooseMagAngForPowerCalculation = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private Sub _powerCalculationMagAngOption(obj As Object)
+        Dim vMag = New SignalSignatures("NeedVoltageMag", _currentSelectedStep.CustPMUname)
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vMag)
+        Dim vAng = New SignalSignatures("NeedVoltageAng", _currentSelectedStep.CustPMUname)
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vAng)
+        Dim iMag = New SignalSignatures("NeedCurrentMag", _currentSelectedStep.CustPMUname)
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iMag)
+        Dim iAng = New SignalSignatures("NeedCurrentAng", _currentSelectedStep.CustPMUname)
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iAng)
+        _disableEnableAllButMagnitudeSignals(False)
+    End Sub
 
+#End Region
+
+#Region "Change signal selection"
     Private _selectedSignalChanged As ICommand
     Public Property SelectedSignalChanged As ICommand
         Get
@@ -1670,6 +1676,71 @@ Public Class SettingsViewModel
             _selectedSignalChanged = value
         End Set
     End Property
+    Private Sub _signalSelected(obj As SignalTypeHierachy)
+        If _currentSelectedStep IsNot Nothing Then
+            If obj.SignalList.Count < 1 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
+                _keepOriginalSelection(obj)
+                MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
+            Else
+                If TypeOf _currentSelectedStep Is DQFilter Then
+                    Try
+                        _changeSignalSelection(obj)
+                    Catch ex As Exception
+                        _keepOriginalSelection(obj)
+                        MessageBox.Show("Error selecting signal(s) for data quality filter!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
+                    End Try
+                Else
+                    Try
+                        Select Case _currentSelectedStep.Name
+                            Case "Scalar Repetition Customization"
+                                Throw New Exception("Please do NOT select signals for Scalar Repetition Customization!")
+                            Case "Addition Customization", "Multiplication Customization"
+                                _changeSignalSelection(obj)
+                                _CheckAdditionCustomizationOutputType()
+                            Case "Subtraction Customization", "Division Customization"
+                                _setFocusedTextbox(obj)
+                                _CheckOutputType()
+                            Case "Raise signals to an exponent", "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Return angle of complex valued signals", "Take complex conjugate of signals"
+                                _changeSignalSelectionUnarySteps(obj)
+                                _CheckOutputType()
+                            Case "Phasor Creation Customization"
+                                _changeSignalSelectionPhasorCreation(obj)
+                                '_CheckOutputType()
+                            Case "Power Calculation Customization"
+                                If _currentSelectedStep.OutputInputMappingPair(0).Value.Count = 2 Then
+                                    _changePhasorSignalForPowerCalculationCustomization(obj)
+                                Else
+                                    _changeMagAngSignalForPowerCalculationCustomization(obj)
+                                End If
+                                '_CheckOutputType()
+                            Case "Specify Signal Type and Unit Customization"
+                                _specifySignalTypeUnitSignalSelectionChanged(obj)
+                                '_CheckOutputType()
+                            Case "Metric Prefix Customization"
+                                _changeSignalSelectionUnarySteps(obj)
+                                _CheckOutputType()
+                            Case "Angle Conversion Customization"
+                                _changeSignalSelectionUnarySteps(obj)
+                                _CheckOutputType()
+                            Case Else
+                                Throw New Exception("Customization step not supported!")
+                        End Select
+                    Catch ex As Exception
+                        _keepOriginalSelection(obj)
+                        MessageBox.Show("Error selecting signal(s) for customization step!" & ex.Message, "Error!", MessageBoxButtons.OK)
+                    End Try
+                End If
+            End If
+        Else
+            _keepOriginalSelection(obj)
+            MessageBox.Show("Please select a step first!", "Error!", MessageBoxButtons.OK)
+        End If
+    End Sub
+
+    Private Sub _CheckAdditionCustomizationOutputType()
+
+    End Sub
+
     Private Sub _CheckOutputType()
         If TypeOf (_currentSelectedStep) Is Customization AndAlso Not String.IsNullOrEmpty(_currentSelectedStep.CustPMUname) Then
             Dim type = "O"
@@ -1813,66 +1884,6 @@ Public Class SettingsViewModel
         _currentFocusedPhasorSignalForPowerCalculation = Nothing
     End Sub
 
-    Private Sub _signalSelected(obj As SignalTypeHierachy)
-        If _currentSelectedStep IsNot Nothing Then
-            If obj.SignalList.Count < 1 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
-                _keepOriginalSelection(obj)
-                MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
-            Else
-                If TypeOf _currentSelectedStep Is DQFilter Then
-                    Try
-                        _changeSignalSelection(obj)
-                    Catch ex As Exception
-                        _keepOriginalSelection(obj)
-                        MessageBox.Show("Error selecting signal(s) for data quality filter!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
-                    End Try
-                Else
-                    Try
-                        Select Case _currentSelectedStep.Name
-                            Case "Scalar Repetition Customization"
-                                Throw New Exception("Please do NOT select signals for Scalar Repetition Customization!")
-                            Case "Addition Customization", "Multiplication Customization"
-                                _changeSignalSelection(obj)
-                                _CheckOutputType()
-                            Case "Subtraction Customization", "Division Customization"
-                                _setFocusedTextbox(obj)
-                                _CheckOutputType()
-                            Case "Raise signals to an exponent", "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Return angle of complex valued signals", "Take complex conjugate of signals"
-                                _changeSignalSelectionUnarySteps(obj)
-                                _CheckOutputType()
-                            Case "Phasor Creation Customization"
-                                _changeSignalSelectionPhasorCreation(obj)
-                                '_CheckOutputType()
-                            Case "Power Calculation Customization"
-                                If _currentSelectedStep.OutputInputMappingPair(0).Value.Count = 2 Then
-                                    _changePhasorSignalForPowerCalculationCustomization(obj)
-                                Else
-                                    _changeMagAngSignalForPowerCalculationCustomization(obj)
-                                End If
-                                '_CheckOutputType()
-                            Case "Specify Signal Type and Unit Customization"
-                                _specifySignalTypeUnitSignalSelectionChanged(obj)
-                                '_CheckOutputType()
-                            Case "Metric Prefix Customization"
-                                _changeSignalSelectionUnarySteps(obj)
-                                _CheckOutputType()
-                            Case "Angle Conversion Customization"
-                                _changeSignalSelectionUnarySteps(obj)
-                                _CheckOutputType()
-                            Case Else
-                                Throw New Exception("Customization step not supported!")
-                        End Select
-                    Catch ex As Exception
-                        _keepOriginalSelection(obj)
-                        MessageBox.Show("Error selecting signal(s) for customization step!" & ex.Message, "Error!", MessageBoxButtons.OK)
-                    End Try
-                End If
-            End If
-        Else
-            _keepOriginalSelection(obj)
-            MessageBox.Show("Please select a step first!", "Error!", MessageBoxButtons.OK)
-        End If
-    End Sub
 
     ''' <summary>
     ''' This method is for the subtraction or division cutomization steps
@@ -2313,42 +2324,6 @@ Public Class SettingsViewModel
             _determineFileDirCheckableStatus()
         End If
     End Sub
-
-    ''' <summary>
-    ''' Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
-    ''' </summary>
-    Private Sub _determineFileDirCheckableStatus()
-        Dim disableOthers = False
-        For Each group In GroupedSignalsByType
-            If group.SignalSignature.IsChecked Or group.SignalSignature.IsChecked Is Nothing Then
-                disableOthers = True
-            End If
-        Next
-        If disableOthers Then
-            For Each group In GroupedSignalsByType
-                If Not group.SignalSignature.IsChecked Then
-                    group.SignalSignature.IsEnabled = False
-                Else
-                    group.SignalSignature.IsEnabled = True
-                End If
-            Next
-            For Each group In GroupedSignalsByPMU
-                If Not group.SignalSignature.IsChecked Then
-                    group.SignalSignature.IsEnabled = False
-                Else
-                    group.SignalSignature.IsEnabled = True
-                End If
-            Next
-        Else
-            For Each group In GroupedSignalsByType
-                group.SignalSignature.IsEnabled = True
-            Next
-            For Each group In GroupedSignalsByPMU
-                group.SignalSignature.IsEnabled = True
-            Next
-        End If
-    End Sub
-
     ''' <summary>
     ''' This sub checks/unchecks of all children of a node in the signal grouped by type parent tree
     ''' </summary>
@@ -2398,6 +2373,9 @@ Public Class SettingsViewModel
             End If
         End If
     End Sub
+
+#End Region
+
 
     Private _currentSelectedStep As Object
     Public Property CurrentSelectedStep As Object
@@ -2647,6 +2625,53 @@ Public Class SettingsViewModel
         Next
     End Sub
 
+    ''' <summary>
+    ''' Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
+    ''' </summary>
+    Private Sub _determineFileDirCheckableStatus()
+        Dim disableOthers = False
+        For Each group In GroupedSignalsByType
+            If group.SignalSignature.IsChecked Or group.SignalSignature.IsChecked Is Nothing Then
+                disableOthers = True
+            End If
+        Next
+        If disableOthers Then
+            For Each group In GroupedSignalsByType
+                If Not group.SignalSignature.IsChecked Then
+                    group.SignalSignature.IsEnabled = False
+                Else
+                    group.SignalSignature.IsEnabled = True
+                End If
+            Next
+            For Each group In GroupedSignalsByPMU
+                If Not group.SignalSignature.IsChecked Then
+                    group.SignalSignature.IsEnabled = False
+                Else
+                    group.SignalSignature.IsEnabled = True
+                End If
+            Next
+        Else
+            For Each group In GroupedSignalsByType
+                group.SignalSignature.IsEnabled = True
+            Next
+            For Each group In GroupedSignalsByPMU
+                group.SignalSignature.IsEnabled = True
+            Next
+        End If
+    End Sub
+    Private _signalSelectionTreeViewVisibility As String
+    Public Property SignalSelectionTreeViewVisibility As String
+        Get
+            Return _signalSelectionTreeViewVisibility
+        End Get
+        Set(ByVal value As String)
+            _signalSelectionTreeViewVisibility = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+
+
     Private _stepDeSelected As ICommand
     Public Property StepDeSelected As ICommand
         Get
@@ -2859,126 +2884,7 @@ Public Class SettingsViewModel
         End If
     End Sub
 
-    Private _selectSignalMethods As List(Of String)
-    Public Property SelectSignalMethods As List(Of String)
-        Get
-            Return _selectSignalMethods
-        End Get
-        Set(ByVal value As List(Of String))
-            _selectSignalMethods = value
-            OnPropertyChanged()
-        End Set
-    End Property
 
-    Private _selectedSelectionMethod As String
-    Public Property SelectedSelectionMethod As String
-        Get
-            Return _selectedSelectionMethod
-        End Get
-        Set(ByVal value As String)
-            _selectedSelectionMethod = value
-            OnPropertyChanged()
-        End Set
-    End Property
-
-    Private _allPMUs As ObservableCollection(Of String)
-    Public Property AllPMUs As ObservableCollection(Of String)
-        Get
-            Return _allPMUs
-        End Get
-        Set(ByVal value As ObservableCollection(Of String))
-            _allPMUs = value
-            OnPropertyChanged()
-        End Set
-    End Property
-
-    Private _timezoneList As ReadOnlyCollection(Of TimeZoneInfo)
-    Public ReadOnly Property TimeZoneList As ReadOnlyCollection(Of TimeZoneInfo)
-        Get
-            Return _timezoneList
-        End Get
-    End Property
-
-    Private _signalSelectionTreeViewVisibility As String
-    Public Property SignalSelectionTreeViewVisibility As String
-        Get
-            Return _signalSelectionTreeViewVisibility
-        End Get
-        Set(ByVal value As String)
-            _signalSelectionTreeViewVisibility = value
-            OnPropertyChanged()
-        End Set
-    End Property
-    Private _setCurrentFocusedTextbox As ICommand
-    Public Property SetCurrentFocusedTextbox As ICommand
-        Get
-            Return _setCurrentFocusedTextbox
-        End Get
-        Set(ByVal value As ICommand)
-            _setCurrentFocusedTextbox = value
-        End Set
-    End Property
-    ''' <summary>
-    ''' This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
-    ''' where we want signal to be put in individual textboxes.
-    ''' </summary>
-    ''' <param name="obj"></param>
-    Private Sub _currentFocusedTextBoxChanged(obj As SignalSignatures)
-        For Each signal In _currentSelectedStep.InputChannels
-            signal.IsChecked = False
-        Next
-        If obj IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj.TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj.PMUName) Then
-            obj.IsChecked = True
-        End If
-        _determineAllParentNodeStatus()
-    End Sub
-
-    ''' <summary>
-    ''' This points to the current selected textbox of a Unary operation step which is a pair of input output.
-    ''' </summary>
-    Private _currentInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
-    'Private _currentMultipleInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
-    Private _setCurrentFocusedTextboxUnarySteps As ICommand
-    Public Property SetCurrentFocusedTextboxUnarySteps As ICommand
-        Get
-            Return _setCurrentFocusedTextboxUnarySteps
-        End Get
-        Set(ByVal value As ICommand)
-            _setCurrentFocusedTextboxUnarySteps = value
-        End Set
-    End Property
-    Private Sub _currentFocusedTextBoxForUnaryStepsChanged(obj As Object)
-        _currentInputOutputPair = obj
-        _currentFocusedTextBoxChanged(obj.Value(0))
-    End Sub
-    Private _powerPhasorTextBoxGotFocus As ICommand
-    Public Property PowerPhasorTextBoxGotFocus As ICommand
-        Get
-            Return _powerPhasorTextBoxGotFocus
-        End Get
-        Set(ByVal value As ICommand)
-            _powerPhasorTextBoxGotFocus = value
-        End Set
-    End Property
-    Private Sub _powerPhasorCurrentFocusedTextbox(obj As Object)
-        _currentFocusedTextBoxChanged(obj)
-        _currentFocusedPhasorSignalForPowerCalculation = obj
-    End Sub
-    Private _currentFocusedPhasorSignalForPowerCalculation As SignalSignatures
-    Private _logs As ObservableCollection(Of String)
-    Public Property Logs As ObservableCollection(Of String)
-        Get
-            Return _logs
-        End Get
-        Set(ByVal value As ObservableCollection(Of String))
-            _logs = value
-            OnPropertyChanged()
-        End Set
-    End Property
-    Private Sub _addLog(log As String)
-        Dim timeDate = DateTime.Now
-        Logs.Add(timeDate.ToString & ": " & log)
-    End Sub
     Private _deleteThisStep As ICommand
     Public Property DeleteThisStep As ICommand
         Get
@@ -3053,44 +2959,121 @@ Public Class SettingsViewModel
             MessageBox.Show("Step " & toBeDeleted.StepCounter.ToString & ", " & toBeDeleted.Name & " is not found!", "Error!", MessageBoxButtons.OK)
         End If
     End Sub
-    Private _choosePhasorForPowerCalculation As ICommand
-    Public Property ChoosePhasorForPowerCalculation As ICommand
+
+
+
+    Private _selectSignalMethods As List(Of String)
+    Public Property SelectSignalMethods As List(Of String)
         Get
-            Return _choosePhasorForPowerCalculation
+            Return _selectSignalMethods
         End Get
-        Set(ByVal value As ICommand)
-            _choosePhasorForPowerCalculation = value
+        Set(ByVal value As List(Of String))
+            _selectSignalMethods = value
             OnPropertyChanged()
         End Set
     End Property
-    Private Sub _powerCalculationPhasorOption(obj As Object)
-        Dim vPhasor = New SignalSignatures("NeedVoltagePhasor", _currentSelectedStep.CustPMUname)
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vPhasor)
-        Dim iPhasor = New SignalSignatures("NeedCurrentPhasor", _currentSelectedStep.CustPMUname)
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iPhasor)
-        _disableEnableAllButPhasorSignals(False)
-    End Sub
-    Private _chooseMagAngForPowerCalculation As ICommand
-    Public Property ChooseMagAngForPowerCalculation As ICommand
+
+    Private _selectedSelectionMethod As String
+    Public Property SelectedSelectionMethod As String
         Get
-            Return _chooseMagAngForPowerCalculation
+            Return _selectedSelectionMethod
         End Get
-        Set(ByVal value As ICommand)
-            _chooseMagAngForPowerCalculation = value
+        Set(ByVal value As String)
+            _selectedSelectionMethod = value
             OnPropertyChanged()
         End Set
     End Property
-    Private Sub _powerCalculationMagAngOption(obj As Object)
-        Dim vMag = New SignalSignatures("NeedVoltageMag", _currentSelectedStep.CustPMUname)
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vMag)
-        Dim vAng = New SignalSignatures("NeedVoltageAng", _currentSelectedStep.CustPMUname)
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vAng)
-        Dim iMag = New SignalSignatures("NeedCurrentMag", _currentSelectedStep.CustPMUname)
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iMag)
-        Dim iAng = New SignalSignatures("NeedCurrentAng", _currentSelectedStep.CustPMUname)
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iAng)
-        _disableEnableAllButMagnitudeSignals(False)
+
+    Private _allPMUs As ObservableCollection(Of String)
+    Public Property AllPMUs As ObservableCollection(Of String)
+        Get
+            Return _allPMUs
+        End Get
+        Set(ByVal value As ObservableCollection(Of String))
+            _allPMUs = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _timezoneList As ReadOnlyCollection(Of TimeZoneInfo)
+    Public ReadOnly Property TimeZoneList As ReadOnlyCollection(Of TimeZoneInfo)
+        Get
+            Return _timezoneList
+        End Get
+    End Property
+
+    Private _setCurrentFocusedTextbox As ICommand
+    Public Property SetCurrentFocusedTextbox As ICommand
+        Get
+            Return _setCurrentFocusedTextbox
+        End Get
+        Set(ByVal value As ICommand)
+            _setCurrentFocusedTextbox = value
+        End Set
+    End Property
+    ''' <summary>
+    ''' This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
+    ''' where we want signal to be put in individual textboxes.
+    ''' </summary>
+    ''' <param name="obj"></param>
+    Private Sub _currentFocusedTextBoxChanged(obj As SignalSignatures)
+        For Each signal In _currentSelectedStep.InputChannels
+            signal.IsChecked = False
+        Next
+        If obj IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj.TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj.PMUName) Then
+            obj.IsChecked = True
+        End If
+        _determineAllParentNodeStatus()
     End Sub
+
+    ''' <summary>
+    ''' This points to the current selected textbox of a Unary operation step which is a pair of input output.
+    ''' </summary>
+    Private _currentInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
+    'Private _currentMultipleInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
+    Private _setCurrentFocusedTextboxUnarySteps As ICommand
+    Public Property SetCurrentFocusedTextboxUnarySteps As ICommand
+        Get
+            Return _setCurrentFocusedTextboxUnarySteps
+        End Get
+        Set(ByVal value As ICommand)
+            _setCurrentFocusedTextboxUnarySteps = value
+        End Set
+    End Property
+    Private Sub _currentFocusedTextBoxForUnaryStepsChanged(obj As Object)
+        _currentInputOutputPair = obj
+        _currentFocusedTextBoxChanged(obj.Value(0))
+    End Sub
+    Private _powerPhasorTextBoxGotFocus As ICommand
+    Public Property PowerPhasorTextBoxGotFocus As ICommand
+        Get
+            Return _powerPhasorTextBoxGotFocus
+        End Get
+        Set(ByVal value As ICommand)
+            _powerPhasorTextBoxGotFocus = value
+        End Set
+    End Property
+    Private Sub _powerPhasorCurrentFocusedTextbox(obj As Object)
+        _currentFocusedTextBoxChanged(obj)
+        _currentFocusedPhasorSignalForPowerCalculation = obj
+    End Sub
+    Private _currentFocusedPhasorSignalForPowerCalculation As SignalSignatures
+    Private _logs As ObservableCollection(Of String)
+    Public Property Logs As ObservableCollection(Of String)
+        Get
+            Return _logs
+        End Get
+        Set(ByVal value As ObservableCollection(Of String))
+            _logs = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private Sub _addLog(log As String)
+        Dim timeDate = DateTime.Now
+        Logs.Add(timeDate.ToString & ": " & log)
+    End Sub
+
+
     Private _addFileSource As ICommand
     Public Property AddFileSource As ICommand
         Get
