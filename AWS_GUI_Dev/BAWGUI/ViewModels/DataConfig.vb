@@ -177,10 +177,14 @@ Public Enum ModeType
 End Enum
 
 Public Enum PowerType
-    Complex
-    Apparent
-    Active
-    Reactive
+    <Description("Complex")>
+    CP
+    <Description("Apparent")>
+    S
+    <Description("Active")>
+    P
+    <Description("Reactive")>
+    Q
 End Enum
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -866,9 +870,9 @@ Public Class Customization
         End Get
         Set(ByVal value As PowerType)
             _powType = value
-            'If _outputInputMappingPair.Count > 0 Then
-            '    _outputInputMappingPair(0).Key.
-            'End If
+            For Each out In OutputChannels
+                out.TypeAbbreviation = value.ToString
+            Next
             OnPropertyChanged()
         End Set
     End Property
@@ -879,6 +883,26 @@ Public Class Customization
         End Get
         Set(ByVal value As String)
             _exponent = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _scalar As String
+    Public Property Scalar As String
+        Get
+            Return _scalar
+        End Get
+        Set(ByVal value As String)
+            _scalar = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _timeSourcePMU As String
+    Public Property TimeSourcePMU As String
+        Get
+            Return _timeSourcePMU
+        End Get
+        Set(ByVal value As String)
+            _timeSourcePMU = value
             OnPropertyChanged()
         End Set
     End Property
