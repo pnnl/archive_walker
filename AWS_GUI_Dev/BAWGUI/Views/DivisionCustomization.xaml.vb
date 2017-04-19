@@ -1,12 +1,12 @@
 ﻿Public Class DivisionCustomization
     Private Sub MinuendOrDividentTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
-        sender.datacontext.CurrentCursor = "MinuendOrDivident"
+        sender.datacontext.CurrentCursor = "MinuendOrDividend"
         'sender.Background = Brushes.Yellow
         For Each item In sender.Parent.Children
             If item.Name = "MDPMU" Then
                 item.Background = Brushes.Yellow
             End If
-            If item.Name = "MinuendOrDivident" Then
+            If item.Name = "MinuendOrDividend" Then
                 item.Background = Brushes.Yellow
             End If
         Next
@@ -29,7 +29,7 @@
             If item.Name = "MDPMU" Then
                 item.Background = Brushes.White
             End If
-            If item.Name = "MinuendOrDivident" Then
+            If item.Name = "MinuendOrDividend" Then
                 item.Background = Brushes.White
             End If
         Next
