@@ -177,10 +177,14 @@ Public Enum ModeType
 End Enum
 
 Public Enum PowerType
-    Complex
-    Apparent
-    Active
-    Reactive
+    <Description("Complex")>
+    CP
+    <Description("Apparent")>
+    S
+    <Description("Active")>
+    P
+    <Description("Reactive")>
+    Q
 End Enum
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -192,7 +196,7 @@ End Enum
 Public Class ReaderProperties
     Inherits ViewModelBase
     Public Sub New()
-        _mode = New Dictionary(Of ModeType, Dictionary(Of String, String))
+        '_mode = New Dictionary(Of ModeType, Dictionary(Of String, String))
         '_modeParams = New ObservableCollection(Of ParameterValuePair)
 
         'ArchiveModeVisibility = Visibility.Collapsed
@@ -248,16 +252,16 @@ Public Class ReaderProperties
     '    End Set
     'End Property
 
-    Private _mode As Dictionary(Of ModeType, Dictionary(Of String, String))
-    Public Property Mode As Dictionary(Of ModeType, Dictionary(Of String, String))
-        Get
-            Return _mode
-        End Get
-        Set(ByVal value As Dictionary(Of ModeType, Dictionary(Of String, String)))
-            _mode = value
-            OnPropertyChanged("Mode")
-        End Set
-    End Property
+    'Private _mode As Dictionary(Of ModeType, Dictionary(Of String, String))
+    'Public Property Mode As Dictionary(Of ModeType, Dictionary(Of String, String))
+    '    Get
+    '        Return _mode
+    '    End Get
+    '    Set(ByVal value As Dictionary(Of ModeType, Dictionary(Of String, String)))
+    '        _mode = value
+    '        OnPropertyChanged("Mode")
+    '    End Set
+    'End Property
 
     Private _modeName As ModeType
     Public Property ModeName As ModeType
@@ -718,7 +722,7 @@ Public Class Customization
         OutputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
-        _custSignalName = New ObservableCollection(Of String)
+        '_custSignalName = New ObservableCollection(Of String)
         _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         _exponent = "1"
         '_outputInputMultipleMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
@@ -771,13 +775,13 @@ Public Class Customization
     '        OnPropertyChanged()
     '    End Set
     'End Property
-    Private _minuendOrDivident As SignalSignatures
-    Public Property MinuendOrDivident As SignalSignatures
+    Private _minuendOrDividend As SignalSignatures
+    Public Property MinuendOrDividend As SignalSignatures
         Get
-            Return _minuendOrDivident
+            Return _minuendOrDividend
         End Get
         Set(ByVal value As SignalSignatures)
-            _minuendOrDivident = value
+            _minuendOrDividend = value
             OnPropertyChanged()
         End Set
     End Property
@@ -819,16 +823,16 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-    Private _custSignalName As ObservableCollection(Of String)
-    Public Property CustSignalName As ObservableCollection(Of String)
-        Get
-            Return _custSignalName
-        End Get
-        Set(ByVal value As ObservableCollection(Of String))
-            _custSignalName = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _custSignalName As ObservableCollection(Of String)
+    'Public Property CustSignalName As ObservableCollection(Of String)
+    '    Get
+    '        Return _custSignalName
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of String))
+    '        _custSignalName = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
     Private _outputChannels As ObservableCollection(Of SignalSignatures)
     Public Property OutputChannels As ObservableCollection(Of SignalSignatures)
         Get
@@ -866,9 +870,9 @@ Public Class Customization
         End Get
         Set(ByVal value As PowerType)
             _powType = value
-            'If _outputInputMappingPair.Count > 0 Then
-            '    _outputInputMappingPair(0).Key.
-            'End If
+            For Each out In OutputChannels
+                out.TypeAbbreviation = value.ToString
+            Next
             OnPropertyChanged()
         End Set
     End Property
@@ -879,6 +883,26 @@ Public Class Customization
         End Get
         Set(ByVal value As String)
             _exponent = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _scalar As String
+    Public Property Scalar As String
+        Get
+            Return _scalar
+        End Get
+        Set(ByVal value As String)
+            _scalar = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _timeSourcePMU As String
+    Public Property TimeSourcePMU As String
+        Get
+            Return _timeSourcePMU
+        End Get
+        Set(ByVal value As String)
+            _timeSourcePMU = value
             OnPropertyChanged()
         End Set
     End Property

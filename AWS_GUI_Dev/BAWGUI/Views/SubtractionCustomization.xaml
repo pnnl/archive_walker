@@ -29,21 +29,21 @@
                     </Image.Style>
                 </Image>
                 <Label Content="Minuend:" VerticalAlignment="Center"/>
-                <TextBox Name="MDPMU" Width="100" Height="22" Text="{Binding MinuendOrDivident.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDivident.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Visibility="{Binding MinuendOrDivident, Converter={StaticResource InVisibleIfNothingConverter}}">
+                <TextBox Name="MDPMU" Width="100" Height="22" Text="{Binding MinuendOrDividend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Visibility="{Binding MinuendOrDividend, Converter={StaticResource InVisibleIfNothingConverter}}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDivident}"/>
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
-                <TextBox Name="MinuendOrDivident"  Width="150" Height="22" Text="{Binding MinuendOrDivident.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDivident.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Visibility="{Binding MinuendOrDivident, Converter={StaticResource InVisibleIfNothingConverter}}">
+                <TextBox Name="MinuendOrDividend"  Width="150" Height="22" Text="{Binding MinuendOrDividend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Visibility="{Binding MinuendOrDividend, Converter={StaticResource InVisibleIfNothingConverter}}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDivident}"/>
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
-                <TextBlock Style="{StaticResource NoItemsTextStyle}" Margin="2,2,2,2" VerticalAlignment="Center" Text="Select signal" Visibility="{Binding MinuendOrDivident, Converter={StaticResource InVisibleIfNothingConverter}, ConverterParameter=VisibleIfNothing}" />
+                <TextBlock Style="{StaticResource NoItemsTextStyle}" Margin="2,2,2,2" VerticalAlignment="Center" Text="Select signal" Visibility="{Binding MinuendOrDividend, Converter={StaticResource InVisibleIfNothingConverter}, ConverterParameter=VisibleIfNothing}" />
                 <TextBlock Text="-" FontSize="48" Margin="10,0" VerticalAlignment="Center"/>
                 <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,25,0,0" HorizontalAlignment="Right">
                     <Image.Style>

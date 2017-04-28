@@ -83,13 +83,13 @@ Public Class EnumToStringConverter3
     Implements IValueConverter
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.Convert
         Select Case value
-            Case PowerType.Active
+            Case PowerType.P
                 Return "Active"
-            Case PowerType.Apparent
+            Case PowerType.S
                 Return "Apparent"
-            Case PowerType.Complex
+            Case PowerType.CP
                 Return "Complex"
-            Case PowerType.Reactive
+            Case PowerType.Q
                 Return "Reactive"
             Case Else
                 Throw New Exception("Power type not valid!")
@@ -99,13 +99,13 @@ Public Class EnumToStringConverter3
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.ConvertBack
         Select Case value
             Case "Reactive"
-                Return PowerType.Reactive
+                Return PowerType.Q
             Case "Apparent"
-                Return PowerType.Apparent
+                Return PowerType.S
             Case "Complex"
-                Return PowerType.Complex
+                Return PowerType.CP
             Case "Active"
-                Return PowerType.Active
+                Return PowerType.P
             Case Else
                 Throw New Exception("Enum type not valid!")
         End Select
