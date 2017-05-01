@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BAWGUI"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              d:DesignHeight="300" d:DesignWidth="800">
@@ -12,97 +13,53 @@
             <local:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
-            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,8,0,0" HorizontalAlignment="Right">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Opacity" Value="0"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <Label Content="Dividend:" VerticalAlignment="Center"/>
-                <TextBox Name="MDPMU" Width="100" Height="22" Text="{Binding MinuendOrDividend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotKeyboardFocus">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
-                <TextBox Name="MinuendOrDividend" Width="150" Height="22" Text="{Binding MinuendOrDividend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotKeyboardFocus">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
-                <TextBlock Text="/" FontSize="24" Margin="10,0" VerticalAlignment="Center"/>
-                <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,8,0,0" HorizontalAlignment="Right">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Opacity" Value="0"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <Label Content="Divisor:" Margin="0" VerticalAlignment="Center"/>
-                <TextBox Name="SDPMU" Width="100" Height="22" Text="{Binding SubtrahendOrDivisor.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotKeyboardFocus">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
-                <TextBox Name="SubtrahendOrDivisor" Width="150" Height="22" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotKeyboardFocus">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
-            </StackPanel>
-            <TextBlock Margin="250,10" Text="=" FontSize="24"/>
-            <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
-                <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Opacity" Value="0"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-                <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
-                <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Opacity" Value="0"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="SignalName: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-                <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
-            </StackPanel>
-            <!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>-->
+    <Grid Margin="-10,10,0,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="36"></ColumnDefinition>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <xtlkt:WatermarkTextBox Name="MDPMU" ToolTip="Signal 1" Watermark="Enter PMU name" Text="{Binding MinuendOrDividend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
+            <xtlkt:WatermarkTextBox Name="MinuendOrDividend" ToolTip="Signal 1" Watermark="Enter signal name" Text="{Binding MinuendOrDividend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
+            <TextBlock HorizontalAlignment="Right" Margin="5,0,5,0" FontSize="24" Grid.Row="1" Grid.Column="0" Text="/" VerticalAlignment="Bottom"></TextBlock>
+            <xtlkt:WatermarkTextBox Name="SDPMU" ToolTip="Signal 2" Watermark="Enter PMU name" Text="{Binding SubtrahendOrDivisor.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
+            <xtlkt:WatermarkTextBox Name="SubtrahendOrDivisor" ToolTip="Signal 2" Watermark="Enter signal name" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
         </StackPanel>
+        <Separator Grid.Row="1" Grid.Column="1" Width="630" HorizontalAlignment="Left"></Separator>
+        <StackPanel Orientation="Horizontal" Margin="0,2,2,2" Grid.Row="2" Grid.Column="1">
+            <xtlkt:WatermarkTextBox ToolTip="PMU name" Watermark="Enter PMU name" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"></xtlkt:WatermarkTextBox>
+            <xtlkt:WatermarkTextBox ToolTip="Signal name" Watermark="Enter signal name" Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0"/>
+        </StackPanel>
+        <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" FontSize="24" Grid.Row="2" Grid.Column="0" Text="=" VerticalAlignment="Center"></TextBlock>
     </Grid>
 </UserControl>

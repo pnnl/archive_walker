@@ -1,26 +1,24 @@
 ﻿Public Class SubtractionCustomization
     Private Sub MinuendOrDividentTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
         sender.datacontext.CurrentCursor = "MinuendOrDividend"
-        'sender.Background = Brushes.Yellow
         For Each item In sender.Parent.Children
             If item.Name = "MDPMU" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
             If item.Name = "MinuendOrDividend" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
         Next
     End Sub
 
     Private Sub SubtrahendOrDivisorTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
         sender.datacontext.CurrentCursor = "SubtrahendOrDivisor"
-        'sender.Background = Brushes.Yellow
         For Each item In sender.Parent.Children
             If item.Name = "SDPMU" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
             If item.Name = "SubtrahendOrDivisor" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
         Next
     End Sub

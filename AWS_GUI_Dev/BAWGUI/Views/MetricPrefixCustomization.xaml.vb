@@ -37,18 +37,18 @@
 
     Private Sub StackPanel_GotFocus(sender As Object, e As RoutedEventArgs)
         For Each child In sender.Children
-            child.Background = Brushes.Yellow
+            child.Background = Application.HighlightColor
         Next
-        sender.Background = Brushes.Yellow
+        sender.Background = Application.HighlightColor
     End Sub
 
     Private Sub PMU_GotFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMU" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
             If item.Name = "Channel" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
         Next
     End Sub
@@ -56,10 +56,10 @@
     Private Sub Channel_GotFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMU" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
             If item.Name = "Channel" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
         Next
     End Sub
@@ -67,7 +67,7 @@
     Private Sub PMU_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         For Each item In sender.Parent.Children
             'If item.Name = "PMU" Then
-            item.Background = Brushes.Yellow
+            item.Background = Application.HighlightColor
             'End If
             'If item.Name = "Channel" Then
             '    item.Background = Brushes.Yellow
@@ -78,7 +78,7 @@
     Private Sub Channel_MouseDown(sender As Object, e As MouseButtonEventArgs)
         For Each item In sender.Parent.Children
             'If item.Name = "PMU" Then
-            item.Background = Brushes.Yellow
+            item.Background = Application.HighlightColor
             'End If
             'If item.Name = "Channel" Then
             '    item.Background = Brushes.Yellow
@@ -88,13 +88,13 @@
 
     Private Sub PMU_GotFocus_1(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Brushes.Yellow
+            item.Background = Application.HighlightColor
         Next
     End Sub
 
     Private Sub Channel_GotFocus_1(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Brushes.Yellow
+            item.Background = Application.HighlightColor
         Next
     End Sub
 
