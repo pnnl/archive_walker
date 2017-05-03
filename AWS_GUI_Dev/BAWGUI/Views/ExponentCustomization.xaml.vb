@@ -2,10 +2,10 @@
     Private Sub ExpTextBoxGotFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMU" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
             If item.Name = "Channel" Then
-                item.Background = Brushes.Yellow
+                item.Background = Application.HighlightColor
             End If
         Next
     End Sub

@@ -136,7 +136,7 @@ Public Class ErrorStatusBorderColorConverter
             'Return Brushes.LightGray
             Return Brushes.Black
         Else
-            Return "Red"
+            Return "Maroon"
         End If
     End Function
 
