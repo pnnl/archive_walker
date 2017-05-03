@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
+Imports BAWGUI
 
 Public Class ViewModelBase
     Implements INotifyPropertyChanged
@@ -72,15 +73,6 @@ Public Class ParameterValuePair
             OnPropertyChanged()
         End Set
     End Property
-    'Private _value As String
-    'Public Property Value As String
-    '    Get
-    '        Return _value
-    '    End Get
-    '    Set(ByVal value As String)
-    '        _value = value
-    '    End Set
-    'End Property
 End Class
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -120,9 +112,12 @@ Public Class Filter
     Inherits SignalProcessStep
     Public Sub New()
         '_filterParameters = New ObservableCollection(Of ParameterValuePair)
-        _parameters = New ObservableCollection(Of ParameterValuePair)
+        _fileterParameters = New ObservableCollection(Of ParameterValuePair)
         InputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        
+        OutputChannels = New ObservableCollection(Of SignalSignatures)
+        ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
     End Sub
     Private _name As String
     Public Overrides Property Name As String
@@ -135,45 +130,45 @@ Public Class Filter
         End Set
     End Property
 
-    Private _filterName As String
-    Public Property FilterName As String
-        Get
-            Return _filterName
-        End Get
-        Set(ByVal value As String)
-            _filterName = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _filterName As String
+    'Public Property FilterName As String
+    '    Get
+    '        Return _filterName
+    '    End Get
+    '    Set(ByVal value As String)
+    '        _filterName = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
 
-    Private _parameters As ObservableCollection(Of ParameterValuePair)
-    Public Overrides Property Parameters As ObservableCollection(Of ParameterValuePair)
-        Get
-            Return _parameters
-        End Get
-        Set(ByVal value As ObservableCollection(Of ParameterValuePair))
-            _parameters = value
-            OnPropertyChanged()
-        End Set
-    End Property
-
-    Private _filterParameters As ObservableCollection(Of ParameterValuePair)
+    Private _fileterParameters As ObservableCollection(Of ParameterValuePair)
     Public Property FilterParameters As ObservableCollection(Of ParameterValuePair)
         Get
-            Return _filterParameters
+            Return _fileterParameters
         End Get
         Set(ByVal value As ObservableCollection(Of ParameterValuePair))
-            _filterParameters = value
+            _fileterParameters = value
             OnPropertyChanged()
         End Set
     End Property
+
+    'Private _filterParameters As ObservableCollection(Of ParameterValuePair)
+    'Public Property FilterParameters As ObservableCollection(Of ParameterValuePair)
+    '    Get
+    '        Return _filterParameters
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of ParameterValuePair))
+    '        _filterParameters = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
 End Class
 
 Public MustInherit Class SignalProcessStep
     Inherits ViewModelBase
 
     Public MustOverride Property Name As String
-    Public MustOverride Property Parameters As ObservableCollection(Of ParameterValuePair)
+    'Public MustOverride Property Parameters As ObservableCollection(Of ParameterValuePair)
     Private _stepCounter As Integer
     Public Property StepCounter As Integer
         Get
@@ -197,17 +192,6 @@ Public MustInherit Class SignalProcessStep
         End Set
     End Property
 
-    'Private _areSignalSelected As Boolean
-    'Public Property AreSignalSelected As Boolean
-    '    Get
-    '        Return _areSignalSelected
-    '    End Get
-    '    Set(ByVal value As Boolean)
-    '        _areSignalSelected = value
-    '        OnPropertyChanged()
-    '    End Set
-    'End Property
-
     Private _inputChannels As ObservableCollection(Of SignalSignatures)
     Public Property InputChannels As ObservableCollection(Of SignalSignatures)
         Get
@@ -219,17 +203,6 @@ Public MustInherit Class SignalProcessStep
         End Set
     End Property
 
-    'Private _inputChannelsSortedByType As ObservableCollection(Of SignalTypeHierachy)
-    'Public Property InputChannelsSortedByType As ObservableCollection(Of SignalTypeHierachy)
-    '    Get
-    '        Return _inputChannelsSortedByType
-    '    End Get
-    '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-    '        _inputChannelsSortedByType = value
-    '        OnPropertyChanged()
-    '    End Set
-    'End Property
-    'ThisStepAsSignalHerachy
     Private _thisStepInputsAsSignalHierachyByType As SignalTypeHierachy
     Public Property ThisStepInputsAsSignalHerachyByType As SignalTypeHierachy
         Get
@@ -240,15 +213,26 @@ Public MustInherit Class SignalProcessStep
             OnPropertyChanged()
         End Set
     End Property
+    
+    Private _outputChannels As ObservableCollection(Of SignalSignatures)
+    Public Property OutputChannels As ObservableCollection(Of SignalSignatures)
+        Get
+            Return _outputChannels
+        End Get
+        Set(value As ObservableCollection(Of SignalSignatures))
+            _outputChannels = value
+            OnPropertyChanged()
+        End Set
+    End Property
 
-    'Private _inputSignalFromPreviousStepOutput As ObservableCollection(Of String)
-    'Public Property InputSignalFromPreviousStepOutput As ObservableCollection(Of String)
-    '    Get
-    '        Return _inputSignalFromPreviousStepOutput
-    '    End Get
-    '    Set(ByVal value As ObservableCollection(Of String))
-    '        _inputSignalFromPreviousStepOutput = value
-    '        OnPropertyChanged()
-    '    End Set
-    'End Property
+    Private _thisStepOutputsAsSignalHierachyByPMU As SignalTypeHierachy
+    Public Property ThisStepOutputsAsSignalHierachyByPMU As SignalTypeHierachy
+        Get
+            Return _thisStepOutputsAsSignalHierachyByPMU
+        End Get
+        Set(ByVal value As SignalTypeHierachy)
+            _thisStepOutputsAsSignalHierachyByPMU = value
+            OnPropertyChanged()
+        End Set
+    End Property
 End Class

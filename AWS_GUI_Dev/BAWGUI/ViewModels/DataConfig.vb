@@ -90,7 +90,7 @@ Public Class DataConfig
         End Get
         Set(ByVal value As ObservableCollection(Of Object))
             _collectionOfSteps = value
-            OnPropertyChanged("CollectionOfSteps")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -705,7 +705,7 @@ Public Class DQFilter
         End Get
         Set(ByVal value As ObservableCollection(Of PMU))
             _PMUs = value
-            OnPropertyChanged("PMUs")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -716,13 +716,10 @@ End Class
 Public Class Customization
     Inherits SignalProcessStep
     Public Sub New()
-        '_customizationParams = New ObservableCollection(Of ParameterValuePair)
-        _parameters = New ObservableCollection(Of ParameterValuePair)
         InputChannels = New ObservableCollection(Of SignalSignatures)
         OutputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
-        '_custSignalName = New ObservableCollection(Of String)
         _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         _exponent = "1"
         '_outputInputMultipleMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
@@ -755,16 +752,16 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-    Private _parameters As ObservableCollection(Of ParameterValuePair)
-    Public Overrides Property Parameters As ObservableCollection(Of ParameterValuePair)
-        Get
-            Return _parameters
-        End Get
-        Set(ByVal value As ObservableCollection(Of ParameterValuePair))
-            _parameters = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _parameters As ObservableCollection(Of ParameterValuePair)
+    'Public Property Parameters As ObservableCollection(Of ParameterValuePair)
+    '    Get
+    '        Return _parameters
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of ParameterValuePair))
+    '        _parameters = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
     'Private _customizationParams As ObservableCollection(Of ParameterValuePair)
     'Public Property CustomizationParams As ObservableCollection(Of ParameterValuePair)
     '    Get
@@ -833,26 +830,16 @@ Public Class Customization
     '        OnPropertyChanged()
     '    End Set
     'End Property
-    Private _outputChannels As ObservableCollection(Of SignalSignatures)
-    Public Property OutputChannels As ObservableCollection(Of SignalSignatures)
-        Get
-            Return _outputChannels
-        End Get
-        Set(ByVal value As ObservableCollection(Of SignalSignatures))
-            _outputChannels = value
-            OnPropertyChanged()
-        End Set
-    End Property
-    Private _thisStepOutputsAsSignalHierachyByPMU As SignalTypeHierachy
-    Public Property ThisStepOutputsAsSignalHierachyByPMU As SignalTypeHierachy
-        Get
-            Return _thisStepOutputsAsSignalHierachyByPMU
-        End Get
-        Set(ByVal value As SignalTypeHierachy)
-            _thisStepOutputsAsSignalHierachyByPMU = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _outputChannels As ObservableCollection(Of SignalSignatures)
+    'Public Property OutputChannels As ObservableCollection(Of SignalSignatures)
+    '    Get
+    '        Return _outputChannels
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of SignalSignatures))
+    '        _outputChannels = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
     Private _outputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
     Public Property OutputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         Get
@@ -906,53 +893,4 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-    'Private _outputInputMultipleMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
-    'Public Property OutputInputMultipleMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
-    '    Get
-    '        Return _outputInputMultipleMappingPair
-    '    End Get
-    '    Set(ByVal value As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))))
-    '        _outputInputMultipleMappingPair = value
-    '        OnPropertyChanged()
-    '    End Set
-    'End Property
 End Class
-
-'Public Class DataConfigStage
-'    Implements INotifyPropertyChanged
-'    ''' <summary>
-'    ''' Raise property changed event
-'    ''' </summary>
-'    ''' <param name="sender">The event sender</param>
-'    ''' <param name="e">The event</param>
-'    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-'    Private Sub OnPropertyChanged(ByVal info As String)
-'        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-'    End Sub
-'    Public Sub New()
-
-'    End Sub
-
-'    Private _filters As ObservableCollection(Of DQFilter)
-'    Public Property Filters As ObservableCollection(Of DQFilter)
-'        Get
-'            Return _filters
-'        End Get
-'        Set(ByVal value As ObservableCollection(Of DQFilter))
-'            _filters = value
-'            OnPropertyChanged("Filters")
-'        End Set
-'    End Property
-
-'    Private _customizations As ObservableCollection(Of Customization)
-'    Public Property Customizations As ObservableCollection(Of Customization)
-'        Get
-'            Return _customizations
-'        End Get
-'        Set(ByVal value As ObservableCollection(Of Customization))
-'            _customizations = value
-'            OnPropertyChanged("Customizations")
-'        End Set
-'    End Property
-
-'End Class

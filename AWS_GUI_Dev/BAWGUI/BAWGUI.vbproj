@@ -125,6 +125,7 @@
     <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.vb" />
     <Compile Include="ViewModels\Folder.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.ProcessConfig.vb" />
     <Compile Include="ViewModels\SignalSignatures.vb" />
     <Compile Include="Views\AdditionCustomization.xaml.vb">
       <DependentUpon>AdditionCustomization.xaml</DependentUpon>
@@ -155,6 +156,9 @@
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalSelectionPanel.xaml.vb">
+      <DependentUpon>SignalSelectionPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SpecifySignalTypeUnitCustomization.xaml.vb">
       <DependentUpon>SpecifySignalTypeUnitCustomization.xaml</DependentUpon>
@@ -220,6 +224,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignalSelectionPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

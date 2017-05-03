@@ -178,7 +178,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="2">
@@ -197,10 +198,573 @@
                 <Image Source="../Images/delete.bmp" Stretch="None"/>
             </Button>
         </StackPanel>
-        <avalonDock:DockingManager Grid.Row="1" Margin="2" Name="dockManager">
+        <TabControl Grid.Row="1" Margin="2" TabStripPlacement="Top">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.WalkerStageChanged}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Path=SelectedIndex}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <TabItem Header="Reader Properties">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
+                        <ScrollViewer Margin="2">
+                            <Grid Margin="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                                    <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
+                                        <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                                    </Button>
+                                    <Label Content="File Sources" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                </DockPanel>
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0" Header="{Binding Mnemonic, Converter={StaticResource EmptyHeaderConverter}, ConverterParameter='(New file source)'}">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                            </Grid.RowDefinitions>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
+                                                                <Label Content="File Directory:" Margin="2" Width="100"/>
+                                                                <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                                <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
+                                                                    <Image Source="../Images/open.gif" Stretch="Uniform"/>
+                                                                </Button>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
+                                                                <Label Content="File Type:" Margin="2" Width="100"/>
+                                                                <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                                    <i:Interaction.Triggers>
+                                                                        <i:EventTrigger EventName="SelectionChanged">
+                                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
+                                                                        </i:EventTrigger>
+                                                                    </i:Interaction.Triggers>
+                                                                </ComboBox>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
+                                                                <Label Content="Mnemonic:" Margin="2" Width="100"/>
+                                                                <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Label Content="Mode" Grid.Row="2" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="3" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
+                                <ContentControl Grid.Row="4" Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="0">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource ArchiveParameter}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="1">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource RealTimeParameter}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="2">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource HybridParameter}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                    <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="1">
+                        <ScrollViewer Margin="2">
+                            <ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="2,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Input File Directory/ies" Margin="2"/>
+                                                <TextBlock Text="{Binding FileDirectory, StringFormat=Directory ({0}) Content:}" Margin="2"/>
+                                                <TreeView ItemsSource="{Binding InputFileTree}" MaxHeight="300" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="2">
+                                                    <TreeView.ItemTemplate>
+                                                        <HierarchicalDataTemplate ItemsSource="{Binding SubFolders}">
+                                                            <Border BorderBrush="AliceBlue" BorderThickness="1">
+                                                                <TextBlock Text="{Binding Name}"/>
+                                                            </Border>
+                                                        </HierarchicalDataTemplate>
+                                                    </TreeView.ItemTemplate>
+                                                </TreeView>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Signal Selection and Manipulation">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
+                        <ScrollViewer>
+                            <Grid Margin="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Margin="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Signal Selection and Manipulation Steps" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                    <Menu Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Grid.Column="1" Margin="0,14,2,0" >
+                                        <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
+                                            <MenuItem.Header>
+                                                <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                                    <Image Width="16" Height="16" Source="../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                                    <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </MenuItem.Header>
+                                            <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}">
+                                                <MenuItem.ItemContainerStyle>
+                                                    <Style>
+                                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                                        <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                                    </Style>
+                                                </MenuItem.ItemContainerStyle>
+                                            </MenuItem>
+                                            <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}">
+                                                <MenuItem.ItemContainerStyle>
+                                                    <Style>
+                                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.CustomizationSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                                        <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                                    </Style>
+                                                </MenuItem.ItemContainerStyle>
+                                            </MenuItem>
+                                        </MenuItem>
+                                    </Menu>
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2">
+                                    <ItemsControl.Resources>
+                                        <DataTemplate DataType="{x:Type local:DQFilter}">
+                                            <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="6*"/>
+                                                                <ColumnDefinition Width="4*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                                                                <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                    <ListView.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                        </DataTemplate>
+                                                                    </ListView.ItemTemplate>
+                                                                </ListView>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                                                                <Label Content="Parameters:" Margin="2"/>
+                                                                <ItemsControl ItemsSource="{Binding FilterParameters}" Margin="2">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                                    <Image.Style>
+                                                                                        <Style TargetType="Image">
+                                                                                            <Style.Triggers>
+                                                                                                <Trigger Property="IsEnabled" Value="False">
+                                                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                                                </Trigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </Image.Style>
+                                                                                </Image>
+                                                                                <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" HorizontalAlignment="Left"/>
+                                                                                <ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="2">
+                                                                                    <ContentPresenter.Resources>
+                                                                                        <DataTemplate DataType="{x:Type sys:Boolean}">
+                                                                                            <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
+                                                                                        </DataTemplate>
+                                                                                        <DataTemplate DataType="{x:Type sys:String}">
+                                                                                            <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                                        </DataTemplate>
+                                                                                    </ContentPresenter.Resources>
+                                                                                </ContentPresenter>
+                                                                            </Grid>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:Customization}">
+                                            <Border Name="StepBorder" Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                                        <ContentControl Content="{Binding}" Name="Steps">
+                                                            <ContentControl.Style>
+                                                                <Style TargetType="ContentControl">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Scalar Repetition Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource ScalarRepCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Addition Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource AdditionCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Subtraction Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource SubtractionCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Multiplication Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource MultiplicationCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Division Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource DivisionCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Raise signals to an exponent">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource ExponentCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Reverse sign of signals">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Take absolute value of signals">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Return real component of signals">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Return imaginary component of signals">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Return angle of complex valued signals">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Take complex conjugate of signals">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Phasor Creation Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource CreatePhasorCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Power Calculation Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource PowerCalculationsCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Specify Signal Type and Unit Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource SpecifySignalTypeUnitCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Metric Prefix Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource MetricPrefixCustomization}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="Angle Conversion Customization">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource AngleConversionCustomization}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ContentControl.Style>
+                                                        </ContentControl>
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.Resources>
+                                </ItemsControl>
+                                <Border Grid.Row="2" Margin="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <TextBlock></TextBlock>
+                                </Border>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                    <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+                        <Grid Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Signal Selection Panel" Margin="2"/>
+                            <local:SignalSelectionPanel Grid.Row="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Process Config">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
+                        <ScrollViewer>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                                    <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddUnwrap}">
+                                        <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                                    </Button>
+                                    <Label Content="Unwrap" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                </DockPanel>
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding ProcessConfigure.UnWrapList}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="6*"/>
+                                                                <ColumnDefinition Width="4*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                                                                <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                    <ListView.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                        </DataTemplate>
+                                                                    </ListView.ItemTemplate>
+                                                                </ListView>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                                                                <Label Content="Parameters:" Margin="2"/>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsEnabled" Value="False">
+                                                                                        <Setter Property="Opacity" Value="0"/>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="MaxNaN" HorizontalAlignment="Left"/>
+                                                                    <TextBox Grid.Column="2" Text="{Binding MaxNaN}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                </Grid>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <DockPanel Grid.Row="2" LastChildFill="True" Margin="0,0,7,0">
+                                    <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddInterpolate}">
+                                        <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                                    </Button>
+                                    <Label Content="Interpolate" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                </DockPanel>
+                                <ItemsControl Grid.Row="3">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0">
+
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <DockPanel Grid.Row="4" LastChildFill="True" Margin="0,0,7,0">
+                                    <Menu DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Margin="0,14,2,0" >
+                                        <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
+                                            <MenuItem.Header>
+                                                <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                                    <Image Width="16" Height="16" Source="../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                                    <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </MenuItem.Header>
+                                            <MenuItem Header="Tunable Filter" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Filter"/>
+                                            <MenuItem Header="Multi-rate processing" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Multirate"/>
+                                        </MenuItem>
+                                    </Menu>
+                                    <Label Content="Stages" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                </DockPanel>
+                                <ItemsControl Grid.Row="5">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0">
+
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <DockPanel Grid.Row="6" LastChildFill="True" Margin="0,0,7,0">
+                                    <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddWrap}">
+                                        <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                                    </Button>
+                                    <Label Content="Wrap" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                </DockPanel>
+                                <ItemsControl Grid.Row="7">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0">
+
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                    <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+                        <Grid Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Signal Selection Panel" Margin="2" Grid.Row="0"/>
+                            <local:SignalSelectionPanel Grid.Row="1" Margin="2"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Post-Processing Customization"></TabItem>
+            <TabItem Header="Detector Config"></TabItem>
+        </TabControl>
+        <!--<avalonDock:DockingManager Grid.Row="2" Margin="2" Name="DockingManager">
+            --><!--<i:Interaction.Triggers>
+                <i:EventTrigger EventName="ActiveContentChanged">
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.WalkerStageChanged}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type avalonDock:DockingManager}}, Path=SelectedIndex}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>--><!--
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel>
                     <avalonDock:LayoutDocumentPane DockMinWidth="100">
+                        --><!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PropertyChanged">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.WalkerStageChanged}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=ActiveContent}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>--><!--
                         <avalonDock:LayoutAnchorable Title="Reader Properties" CanClose="False" CanHide="False" CanAutoHide="True">
                             <avalonDock:DockingManager AllowMixedOrientation="True">
                                 <avalonDock:LayoutRoot>
@@ -215,13 +779,12 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"></RowDefinition>
                                                         </Grid.RowDefinitions>
                                                         <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
                                                             <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
                                                                 <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
                                                             </Button>
-                                                            <Label Content="File Sources" Grid.Row="0" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                            <Label Content="File Sources" Margin="2" FontSize="18" FontWeight="Bold"/>
                                                         </DockPanel>
                                                         <ItemsControl Grid.Row="1" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
                                                             <ItemsControl.ItemTemplate>
@@ -233,7 +796,7 @@
                                                                                 <ColumnDefinition Width="30"/>                                                                                
                                                                             </Grid.ColumnDefinitions>
                                                                             <Expander Grid.Column="0" Header="{Binding Mnemonic, Converter={StaticResource EmptyHeaderConverter}, ConverterParameter='(New file source)'}">
-                                                                            <!--<Expander Grid.Column="0">-->
+                                                                            --><!--<Expander Grid.Column="0">--><!--
                                                                                 <Grid>
                                                                                     <Grid.RowDefinitions>
                                                                                         <RowDefinition Height="Auto"/>
@@ -271,9 +834,9 @@
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
-                                                        <Label Content="Mode" Grid.Row="3" Grid.Column="2" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                        <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="4" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
-                                                        <ContentControl Grid.Row="5" Content="{Binding}">
+                                                        <Label Content="Mode" Grid.Row="2" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                        <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="3" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
+                                                        <ContentControl Grid.Row="4" Content="{Binding}">
                                                             <ContentControl.Style>
                                                                 <Style TargetType="ContentControl">
                                                                     <Style.Triggers>
@@ -294,8 +857,8 @@
                                                 </ScrollViewer>
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
-                                        <avalonDock:LayoutDocumentPane DockWidth="200">
-                                            <avalonDock:LayoutAnchorable  Title="Input File Directory" CanAutoHide="False" CanClose="False" CanFloat="False">
+                                        <avalonDock:LayoutAnchorablePane DockWidth="200">
+                                            <avalonDock:LayoutAnchorable  Title="Input File Directory/ies" CanAutoHide="False" CanClose="False" CanFloat="False">
                                                 <ScrollViewer>
                                                     <ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
                                                         <ItemsControl.ItemTemplate>
@@ -319,7 +882,7 @@
                                                     </ItemsControl>
                                                 </ScrollViewer>
                                             </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutDocumentPane>
+                                        </avalonDock:LayoutAnchorablePane>
                                     </avalonDock:LayoutPanel>
                                 </avalonDock:LayoutRoot>
                             </avalonDock:DockingManager>
@@ -410,7 +973,7 @@
                                                                                     </StackPanel>
                                                                                     <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                                                         <Label Content="Parameters:" Margin="2"/>
-                                                                                        <ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
+                                                                                        <ItemsControl ItemsSource="{Binding FilterParameters}" Margin="2">
                                                                                             <ItemsControl.ItemTemplate>
                                                                                                 <DataTemplate>
                                                                                                     <Grid>
@@ -438,7 +1001,7 @@
                                                                                                                 </DataTemplate>
                                                                                                                 <DataTemplate DataType="{x:Type sys:String}">
                                                                                                                     <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
-                                                                                                                    <!--<TextBlock Text="{Binding Path=.}" VerticalAlignment="Center" Width="100" Margin="8"/>-->
+                                                                                                                    --><!--<TextBlock Text="{Binding Path=.}" VerticalAlignment="Center" Width="100" Margin="8"/>--><!--
                                                                                                                 </DataTemplate>
                                                                                                             </ContentPresenter.Resources>
                                                                                                         </ContentPresenter>
@@ -554,7 +1117,7 @@
                                                 </ScrollViewer>
                                             </avalonDock:LayoutAnchorable>
                                         </avalonDock:LayoutAnchorablePane>
-                                        <!--<avalonDock:LayoutPanel Orientation="Vertical">
+                                        --><!--<avalonDock:LayoutPanel Orientation="Vertical">
                                             <avalonDock:LayoutAnchorablePane DockMinWidth="200">
                                                 <avalonDock:LayoutAnchorable Title="Select Signal by Signal Type">
                                                     <TreeView ItemsSource="{Binding GroupedSignalsByType}">
@@ -584,7 +1147,7 @@
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
-                                                            --><!--<HierarchicalDataTemplate ItemsSource="{Binding Value}">
+                                                            <HierarchicalDataTemplate ItemsSource="{Binding Value}">
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0"/>
                                                                     <TextBlock Text="{Binding Key}" Margin="0"/>
@@ -597,7 +1160,7 @@
                                                                         </StackPanel>
                                                                     </DataTemplate>
                                                                 </HierarchicalDataTemplate.ItemTemplate>
-                                                            </HierarchicalDataTemplate>--><!--
+                                                            </HierarchicalDataTemplate>
                                                         </TreeView.ItemTemplate>
                                                         <TreeView.ItemContainerStyle>
                                                             <Style TargetType="{x:Type TreeViewItem}">
@@ -607,19 +1170,22 @@
                                                     </TreeView>
                                                 </avalonDock:LayoutAnchorable>
                                             </avalonDock:LayoutAnchorablePane>
-                                        </avalonDock:LayoutPanel>-->
+                                        </avalonDock:LayoutPanel>--><!--
                                         <avalonDock:LayoutAnchorablePane>
                                             <avalonDock:LayoutAnchorable Title="Signal Selection Panel">
+                                                <local:SignalSelectionPanel/>
+                                            </avalonDock:LayoutAnchorable>
+                                            --><!--<avalonDock:LayoutAnchorable Title="Signal Selection Panel">
                                                 <Grid>
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="auto"/>
                                                         <RowDefinition Height="auto"/>
-                                                        <!--<RowDefinition Height="auto"/>-->
+                                                        --><!--<RowDefinition Height="auto"/>--><!--
                                                         <RowDefinition Height="*"/>
-                                                        <!--<RowDefinition Height="auto"/>-->
+                                                        --><!--<RowDefinition Height="auto"/>--><!--
                                                     </Grid.RowDefinitions>
                                                     <Label Grid.Row="0" Content="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}}" ContentStringFormat="Pick Channels for: {0}"/>
-                                                    <!--<TextBlock Grid.Row="0" Text="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}, StringFormat=Pick Channels for: {0}}"/>-->
+                                                    --><!--<TextBlock Grid.Row="0" Text="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}, StringFormat=Pick Channels for: {0}}"/>--><!--
                                                     <ComboBox Name="signalGroupMethodCombobox" Grid.Row="1" ItemsSource="{Binding SelectSignalMethods}" SelectedValue="{Binding SelectedSelectionMethod}" Margin="2"/>
                                                     <TreeView Grid.Row="2" Margin="2" Visibility="{Binding SignalSelectionTreeViewVisibility}">
                                                         <TreeView.Style>
@@ -648,18 +1214,18 @@
                                                                         <ContentControl.Style>
                                                                             <Style TargetType="ContentControl">
                                                                                 <Setter Property="ContentTemplate" Value="{StaticResource TreeViewCheckBox}"/>
-                                                                                <!--<Style.Triggers>
+                                                                                --><!--<Style.Triggers>
                                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.CurrentSelectedStep, Converter={StaticResource CurrentStepNameConverter}}" Value="Subtraction Customization">
                                                                                         <Setter Property="ContentTemplate" Value="{StaticResource TreeViewRadioButton}"/>
                                                                                     </DataTrigger>
                                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.CurrentSelectedStep, Converter={StaticResource CurrentStepNameConverter}}" Value="Division Customization">
                                                                                         <Setter Property="ContentTemplate" Value="{StaticResource TreeViewRadioButton}"/>
                                                                                     </DataTrigger>
-                                                                                </Style.Triggers>-->
+                                                                                </Style.Triggers>--><!--
                                                                             </Style>
                                                                         </ContentControl.Style>
                                                                     </ContentControl>
-                                                                    <!--<CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" CommandParameter="{Binding}" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}">
+                                                                    --><!--<CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" CommandParameter="{Binding}" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}">
                                                                         --><!--<CheckBox.Style>
                                                                             <Style TargetType="{x:Type CheckBox}">
                                                                                 <Setter Property="Command" Value="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"/>
@@ -670,7 +1236,7 @@
                                                                                 </Style.Triggers>
                                                                             </Style>
                                                                         </CheckBox.Style>--><!--
-                                                                    </CheckBox>-->
+                                                                    </CheckBox>--><!--
                                                                     <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
                                                                 </StackPanel>
                                                             </HierarchicalDataTemplate>
@@ -681,19 +1247,164 @@
                                                             </Style>
                                                         </TreeView.ItemContainerStyle>
                                                     </TreeView>
-                                                    <!--<Button Grid.Row="3" Content="add selected signals" Command="{Binding AddSelectedSignalToStep}"/>-->
+                                                    --><!--<Button Grid.Row="3" Content="add selected signals" Command="{Binding AddSelectedSignalToStep}"/>--><!--
                                                 </Grid>
-                                            </avalonDock:LayoutAnchorable>
+                                            </avalonDock:LayoutAnchorable>--><!--
                                         </avalonDock:LayoutAnchorablePane>
                                     </avalonDock:LayoutPanel>
                                 </avalonDock:LayoutRoot>
                             </avalonDock:DockingManager>
                         </avalonDock:LayoutAnchorable>
                         <avalonDock:LayoutAnchorable Title="Process Config" CanClose="False" CanHide="False" CanAutoHide="True">
+                            <avalonDock:DockingManager AllowMixedOrientation="True">
+                                <avalonDock:LayoutRoot>
+                                    <avalonDock:LayoutPanel Orientation="Horizontal">
+                                        <avalonDock:LayoutAnchorablePane DockMinWidth="1000">
+                                            <avalonDock:LayoutAnchorable CanClose="False" CanHide="False">
+                                                <ScrollViewer>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddUnwrap}">
+                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                                                            </Button>
+                                                            <Label Content="Unwrap" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                        </DockPanel>
+                                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding ProcessConfigure.UnWrapList}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                                        <Grid Margin="2">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="30"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Expander Grid.Column="0">
+    
+                                                                            </Expander>
+                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                        <DockPanel Grid.Row="2" LastChildFill="True" Margin="0,0,7,0">
+                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddInterpolate}">
+                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                                                            </Button>
+                                                            <Label Content="Interpolate" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                        </DockPanel>
+                                                        <ItemsControl Grid.Row="3">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                                        <Grid Margin="2">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="30"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Expander Grid.Column="0">
 
+                                                                            </Expander>
+                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                        <DockPanel Grid.Row="4" LastChildFill="True" Margin="0,0,7,0">
+                                                            <Menu DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Margin="0,14,2,0" >
+                                                                <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
+                                                                    <MenuItem.Header>
+                                                                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                                                            <Image Width="16" Height="16" Source="../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                                                            <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
+                                                                        </StackPanel>
+                                                                    </MenuItem.Header>
+                                                                    <MenuItem Header="Tunable Filter" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Filter"/>
+                                                                    <MenuItem Header="Multi-rate processing" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Multirate"/>
+                                                                </MenuItem>
+                                                            </Menu>
+                                                            <Label Content="Stages" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                        </DockPanel>
+                                                        <ItemsControl Grid.Row="5">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                                        <Grid Margin="2">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="30"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Expander Grid.Column="0">
+
+                                                                            </Expander>
+                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                        <DockPanel Grid.Row="6" LastChildFill="True" Margin="0,0,7,0">
+                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddWrap}">
+                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                                                            </Button>
+                                                            <Label Content="Wrap" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                                        </DockPanel>
+                                                        <ItemsControl Grid.Row="7">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                                                        <Grid Margin="2">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="30"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Expander Grid.Column="0">
+
+                                                                            </Expander>
+                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Grid>
+                                                </ScrollViewer>
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutAnchorablePane>
+                                        <avalonDock:LayoutAnchorablePane>
+                                            <avalonDock:LayoutAnchorable Title="Signal Selection Panel">
+                                                <local:SignalSelectionPanel/>
+                                            </avalonDock:LayoutAnchorable>
+                                        </avalonDock:LayoutAnchorablePane>
+                                    </avalonDock:LayoutPanel>
+                                </avalonDock:LayoutRoot>
+                            </avalonDock:DockingManager>
                         </avalonDock:LayoutAnchorable>
                         <avalonDock:LayoutAnchorable Title="Post-Processing Customization" CanClose="False" CanHide="False" CanAutoHide="True">
-
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="IsSelectedChanged">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PostProcessingSelected}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </avalonDock:LayoutAnchorable>
                         <avalonDock:LayoutAnchorable Title="Detector Config" CanClose="False" CanHide="False" CanAutoHide="True">
 
@@ -701,10 +1412,11 @@
                     </avalonDock:LayoutDocumentPane>
                 </avalonDock:LayoutPanel>
             </avalonDock:LayoutRoot>
-        </avalonDock:DockingManager>
-        <StackPanel Orientation="Vertical" Margin="2" Grid.Row="2">
+        </avalonDock:DockingManager>-->
+        <StackPanel Orientation="Vertical" Margin="2" Grid.Row="3">
             <Label Content="Log Messages:"/>
             <ListBox ItemsSource="{Binding Logs}" Margin="2" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" MaxHeight="100"/>
         </StackPanel>
     </Grid>
 </Window>
+
