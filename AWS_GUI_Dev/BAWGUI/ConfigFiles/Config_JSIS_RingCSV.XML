@@ -158,6 +158,27 @@
 							<ZeroPhase>FALSE</ZeroPhase>
 						</Parameters>
 					</Filter>
+					<Filter>
+						<Type>Median</Type>
+						<Parameters>
+							<Order>5</Order>
+							<Endpoints>truncate</Endpoints>
+							<HandleNaN>includenan</HandleNaN>
+						</Parameters>
+					</Filter>
+					<Multirate>
+						<Parameters>
+							<MultiRatePMU>Custom Signals 1</MultiRatePMU>
+							<NewRate>120</NewRate>
+						</Parameters>
+					</Multirate>
+					<Multirate>
+						<Parameters>
+							<MultiRatePMU>Custom Signals 2</MultiRatePMU>
+							<p>3</p>
+							<q>2</q>
+						</Parameters>
+					</Multirate>
 				</Stages>
 			</Processing>   
 			<NameTypeUnit>

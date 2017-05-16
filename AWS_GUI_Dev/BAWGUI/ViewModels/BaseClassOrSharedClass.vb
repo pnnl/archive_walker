@@ -164,6 +164,13 @@ Public Class Filter
     'End Property
 End Class
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''Class SignalProcessStep''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''' <summary>
+''' This is the base class that all signal process steps inherits, including
+''' filters (DQFilter and TunableFilter), data config customization, unwrap, wrap, interpolate, etc.
+''' </summary>
 Public MustInherit Class SignalProcessStep
     Inherits ViewModelBase
 

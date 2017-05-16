@@ -129,6 +129,8 @@ Public Class Interpolate
         End Get
         Set(value As InterpolateType)
             _type = value
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
             OnPropertyChanged()
         End Set
     End Property
@@ -186,3 +188,155 @@ Public Class Wrap
     Public Overrides Property Name As String
 
 End Class
+
+Public Class TunableFilter
+    Inherits Filter
+
+    Public Sub New ()
+        MyBase.New
+        _filterParameterDictionary = New Dictionary(Of TunableFilterType, List(Of String)) From{{TunableFilterType.Rational, {"Numerator", "Denominator", "ZeroPhase"}.ToList()},
+                                                                                                {TunableFilterType.HighPass, {"Order", "Cutoff", "ZeroPhase"}.ToList()},
+                                                                                                {TunableFilterType.LowPass, {"PassRipple", "StopRipple", "PassCutoff", "StopCutoff", "ZeroPhase"}.ToList()},
+                                                                                                {TunableFilterType.Median, {"Order", "Endpoints", "HandleNaN"}.ToList()}}
+        InputChannels = New ObservableCollection(Of SignalSignatures)
+        OutputChannels = New ObservableCollection(Of SignalSignatures)
+        ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+        Name = "Filter"
+        Type = TunableFilterType.Rational
+    End Sub
+
+    Private _type As TunableFilterType
+    Public Property Type As TunableFilterType
+        Get
+            Return _type
+        End Get
+        Set(value As TunableFilterType)
+            _type = value
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
+            Dim newParameterList = New ObservableCollection(Of ParameterValuePair)
+            for Each p in _filterParameterDictionary(_type)
+                dim newPair = New ParameterValuePair
+                newPair.ParameterName = p
+                If p = "ZeroPhase"
+                    newPair.Value = False
+                ElseIf p = "Endpoints"
+                    newPair.Value = EndpointsType.zeropad
+                ElseIf p = "HandleNaN"
+                    newPair.Value = HandleNaNType.includenan
+                Else 
+                    newPair.Value = ""
+                End If
+                newParameterList.Add(newPair)
+            Next
+            Me.FilterParameters = newParameterList
+            OnPropertyChanged()
+        End Set
+    End Property
+    
+    Private _filterParameterDictionary As Dictionary(Of TunableFilterType, List(Of String))
+    Public ReadOnly Property FilterParameterDictionary As Dictionary(Of TunableFilterType, List(Of String))
+        Get
+            Return _filterParameterDictionary
+        End Get
+    End Property
+    End Class
+
+Public Class Multirate
+    Inherits Filter
+    Public Sub New ()
+        InputChannels = New ObservableCollection(Of SignalSignatures)
+        OutputChannels = New ObservableCollection(Of SignalSignatures)
+        ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+        _name = "Multirate"
+    End Sub
+
+    Private _name As String
+    Public Overrides Property Name As String
+        Get
+            Return _name
+        End Get
+        Set(value As String)
+            _name = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _multiRatePMU As String
+    Public Property MultiRatePMU As String
+        Get
+            Return _multiRatePMU
+        End Get
+        Set(value As String)
+            _multiRatePMU = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _newRate As String
+    Public Property NewRate As String
+        Get
+            Return _newRate
+        End Get
+        Set(value As String)
+            _newRate = value
+            for each signal in OutputChannels
+                signal.SamplingRate = value
+            Next
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _pElement As String
+    Public Property PElement As String
+        Get
+            Return _pElement
+        End Get
+        Set(value As String)
+            _pElement = value
+            dim q = 0
+            Integer.TryParse(_qElement, q)
+            if q <> 0
+                dim p = 0
+                Integer.TryParse(_pElement, p)
+                for index = 0 to OutputChannels.Count - 1
+                    OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
+                Next
+            End If
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _qElement As String
+    Public Property QElement As String
+        Get
+            Return _qElement
+        End Get
+        Set(value As String)
+            _qElement = value
+            dim q = 0
+            Integer.TryParse(_qElement, q)
+            if q <> 0
+                dim p = 0
+                Integer.TryParse(_pElement, p)
+                for index = 0 to OutputChannels.Count - 1
+                    OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
+                Next
+            End If
+            OnPropertyChanged()
+        End Set
+    End Property
+
+End Class
+
+Public Enum EndpointsType
+    zeropad
+    truncate
+End Enum
+
+Public Enum HandleNaNType
+    includenan
+    omitnan
+End Enum

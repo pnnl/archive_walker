@@ -26,10 +26,35 @@
                     <x:Type TypeName="local:ModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type local:EnumerationManager}" x:Key="InterpolateTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:InterpolateType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type local:EnumerationManager}" x:Key="EndpointsTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:EndpointsType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type local:EnumerationManager}" x:Key="HandleNaNTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:HandleNaNType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type local:EnumerationManager}" x:Key="TunableFilterTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:TunableFilterType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
             <local:EnumToStringConverter1 x:Key="EnumToStringConverter1"/>
             <local:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
+            <local:EnumToStringConverter4 x:Key="EnumToStringConverter4"/>
+            <local:EnumToStringConverter5 x:Key="EnumToStringConverter5"/>
+            <local:EnumToStringConverter6 x:Key="EnumToStringConverter6"/>
+            <local:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <local:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
+            <local:ValueTypeConverter x:Key="ValueTypeConverter"/>
             <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <local:SignalSignatureListStringConverter x:Key="SignalSignatureListStringConverter"/>
             <local:CurrentStepNameConverter x:Key="CurrentStepNameConverter"/>
@@ -134,7 +159,16 @@
                 <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.AllPMUs}" SelectedValue="{Binding Value}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Left"/>
             </DataTemplate>
             <DataTemplate x:Key="ParameterTextBox">
-                <TextBox Text="{Binding Value}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+                <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+            </DataTemplate>
+            <DataTemplate x:Key="ParameterCheckBox">
+                <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
+            </DataTemplate>
+            <DataTemplate x:Key="EndpointsCombobox">
+                <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource EndpointsTypeValues}}" Text="{Binding Path=., Converter={StaticResource EnumToStringConverter5}}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="HandleNaNCombobox">
+                <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource HandleNaNTypeValues}}" Text="{Binding Path=., Converter={StaticResource EnumToStringConverter6}}"/>
             </DataTemplate>
             <DataTemplate x:Key="ScalarRepCustomization">
                 <local:ScalarRepCustomization/>
@@ -172,6 +206,132 @@
             <DataTemplate x:Key="AngleConversionCustomization">
                 <local:AngleConversionCustomization/>
             </DataTemplate>
+            <DataTemplate x:Key="MultiRateOptionButtons">
+                <StackPanel Orientation="Vertical" Margin="30,0,0,0">
+                    <Button Content="Specify New Rate" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.MultirateParameterChoice}" CommandParameter="newrate"/>
+                    <Button Content="Specify P, Q Ratio" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.MultirateParameterChoice}" CommandParameter="pqratio"/>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="MultiRateNewRateParameters">
+                <!--<ItemsControl ItemsSource="{Binding FilterParameters}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewRate" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Column="2" Text="{Binding NewRate}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                </Grid>
+                        <!--</DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>-->
+            </DataTemplate>
+            <DataTemplate x:Key="MultiRatePQParameters">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Row="0" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="p" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                    <Image Grid.Row="1" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="q" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                </Grid>
+            </DataTemplate>
+            <!--<DataTemplate x:Key="PQRatio">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="MultiRatePMU" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding MultiRatePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                    <Image Grid.Row="1" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="p" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                    <Image Grid.Row="2" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="q" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                </Grid>
+            </DataTemplate>-->
         </ResourceDictionary>
     </Window.Resources>
     
@@ -179,7 +339,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <!--<RowDefinition Height="*"/>-->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="2">
@@ -198,12 +358,12 @@
                 <Image Source="../Images/delete.bmp" Stretch="None"/>
             </Button>
         </StackPanel>
-        <TabControl Grid.Row="1" Margin="2" TabStripPlacement="Top">
-            <i:Interaction.Triggers>
+        <TabControl Grid.Row="1" Margin="2" TabStripPlacement="Top" SelectedIndex="{Binding CurrentTabIndex}">
+            <!--<i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.WalkerStageChanged}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Path=SelectedIndex}"/>
                 </i:EventTrigger>
-            </i:Interaction.Triggers>
+            </i:Interaction.Triggers>-->
             <TabItem Header="Reader Properties">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -339,7 +499,7 @@
                                 <Grid Grid.Row="0" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepDeSelected}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid.ColumnDefinitions>
@@ -380,10 +540,10 @@
                                             <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="MouseLeftButtonDown">
-                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                                     </i:EventTrigger>
                                                     <i:EventTrigger EventName="GotFocus">
-                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <Grid Margin="2">
@@ -457,10 +617,10 @@
                                             <Border Name="StepBorder" Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="MouseLeftButtonDown">
-                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                                     </i:EventTrigger>
                                                     <i:EventTrigger EventName="GotFocus">
-                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                                     </i:EventTrigger>
                                                     <i:EventTrigger EventName="MouseLeftButtonUp">
                                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
@@ -543,7 +703,7 @@
                                 <Border Grid.Row="2" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepDeSelected}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <TextBlock></TextBlock>
@@ -573,25 +733,49 @@
                         <ScrollViewer>
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                                <Border Grid.Row="0" Margin="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <TextBlock></TextBlock>
+                                </Border>
+                                <DockPanel Grid.Row="1" LastChildFill="True" Margin="0,0,7,0">
                                     <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddUnwrap}">
                                         <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
                                     </Button>
-                                    <Label Content="Unwrap" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                    <Label Content="Unwrap" Margin="2" FontSize="18" FontWeight="Bold">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
                                 </DockPanel>
-                                <ItemsControl Grid.Row="1" ItemsSource="{Binding ProcessConfigure.UnWrapList}">
+                                <ItemsControl Grid.Row="2" ItemsSource="{Binding ProcessConfigure.UnWrapList}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Margin="2" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
                                                 <Grid Margin="2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
@@ -638,7 +822,7 @@
                                                             </StackPanel>
                                                         </Grid>
                                                     </Expander>
-                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteUnwrapStep}" CommandParameter="{Binding}">
                                                         <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                                     </Button>
                                                 </Grid>
@@ -646,25 +830,120 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <DockPanel Grid.Row="2" LastChildFill="True" Margin="0,0,7,0">
+                                <DockPanel Grid.Row="3" LastChildFill="True" Margin="0,0,7,0">
                                     <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddInterpolate}">
                                         <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
                                     </Button>
-                                    <Label Content="Interpolate" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                    <Label Content="Interpolate" Margin="2" FontSize="18" FontWeight="Bold">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
                                 </DockPanel>
-                                <ItemsControl Grid.Row="3">
+                                <ItemsControl Grid.Row="4" ItemsSource="{Binding ProcessConfigure.InterpolateList}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
                                                 <Grid Margin="2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="30"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Expander Grid.Column="0">
-
+                                                        <Expander.Header>
+                                                            <TextBlock Margin="0">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding StringFormat="Step{0} - {1} {2}">
+                                                                        <Binding Path="StepCounter"/>
+                                                                        <Binding Path="Type"/>
+                                                                        <Binding Path="Name"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                        </Expander.Header>
+                                                    <!--<Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">-->
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="6*"/>
+                                                                <ColumnDefinition Width="4*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                                                                <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                    <ListView.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                        </DataTemplate>
+                                                                    </ListView.ItemTemplate>
+                                                                </ListView>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                                                                <Label Content="Parameters:" Margin="2"/>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <Image Grid.Row="0" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsEnabled" Value="False">
+                                                                                        <Setter Property="Opacity" Value="0"/>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Limit" HorizontalAlignment="Left"/>
+                                                                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Limit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                    <Image Grid.Row="1" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsEnabled" Value="False">
+                                                                                        <Setter Property="Opacity" Value="0"/>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Type" HorizontalAlignment="Left"/>
+                                                                    <ComboBox Grid.Row="1" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource InterpolateTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter4}}"/>
+                                                                    <Image Grid.Row="2" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsEnabled" Value="False">
+                                                                                        <Setter Property="Opacity" Value="0"/>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="FlagInterp" HorizontalAlignment="Left"/>
+                                                                    <CheckBox Grid.Row="2" Grid.Column="2" IsChecked="{Binding FlagInterp}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Center"/>
+                                                                </Grid>
+                                                            </StackPanel>
+                                                        </Grid>
                                                     </Expander>
-                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteInterpolateStep}" CommandParameter="{Binding}">
                                                         <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                                     </Button>
                                                 </Grid>
@@ -672,7 +951,7 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <DockPanel Grid.Row="4" LastChildFill="True" Margin="0,0,7,0">
+                                <DockPanel Grid.Row="5" LastChildFill="True" Margin="0,0,7,0">
                                     <Menu DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Margin="0,14,2,0" >
                                         <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
                                             <MenuItem.Header>
@@ -681,51 +960,268 @@
                                                     <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                                 </StackPanel>
                                             </MenuItem.Header>
-                                            <MenuItem Header="Tunable Filter" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Filter"/>
-                                            <MenuItem Header="Multi-rate processing" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Multirate"/>
+                                            <MenuItem Header="Tunable Filter" Command="{Binding Path=DataContext.AddTunableFilterOrMultirate, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Filter"/>
+                                            <MenuItem Header="Multi-rate processing" Command="{Binding Path=DataContext.AddTunableFilterOrMultirate, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Multirate"/>
                                         </MenuItem>
                                     </Menu>
-                                    <Label Content="Stages" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                    <Label Content="Stages" Margin="2" FontSize="18" FontWeight="Bold">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
                                 </DockPanel>
-                                <ItemsControl Grid.Row="5">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                <ItemsControl Grid.Row="6" ItemsSource="{Binding ProcessConfigure.CollectionOfSteps}">
+                                    <ItemsControl.Resources>
+                                        <DataTemplate DataType="{x:Type local:TunableFilter}">
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
                                                 <Grid Margin="2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="30"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Expander Grid.Column="0">
-
+                                                        <Expander.Header>
+                                                            <TextBlock>
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding StringFormat="Step{0} - {1} {2}">
+                                                                        <Binding Path="StepCounter"/>
+                                                                        <Binding Path="Type"/>
+                                                                        <Binding Path="Name"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                        </Expander.Header>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="6*"/>
+                                                                <ColumnDefinition Width="4*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                                                                <StackPanel Orientation="Horizontal" Margin="2">
+                                                                    <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsEnabled" Value="False">
+                                                                                        <Setter Property="Opacity" Value="0"/>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="Filter Type: " HorizontalAlignment="Left"/>
+                                                                    <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}"/>
+                                                                </StackPanel>
+                                                                <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                    <ListView.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                        </DataTemplate>
+                                                                    </ListView.ItemTemplate>
+                                                                </ListView>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                                                                <Label Content="Parameters:" Margin="2"/>
+                                                                <ItemsControl ItemsSource="{Binding FilterParameters}" Margin="2">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                                    <Image.Style>
+                                                                                        <Style TargetType="Image">
+                                                                                            <Style.Triggers>
+                                                                                                <Trigger Property="IsEnabled" Value="False">
+                                                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                                                </Trigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </Image.Style>
+                                                                                </Image>
+                                                                                <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" HorizontalAlignment="Left"/>
+                                                                                <ContentControl Content="{Binding Value}" Grid.Column="2">
+                                                                                    <ContentControl.Style>
+                                                                                        <Style TargetType="ContentControl">
+                                                                                            <Style.Triggers>
+                                                                                                <DataTrigger Binding="{Binding Value, Converter={StaticResource ValueTypeConverter}}" Value="Boolean">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ParameterCheckBox}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Value, Converter={StaticResource ValueTypeConverter}}" Value="String">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ParameterTextBox}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Value, Converter={StaticResource ValueTypeConverter}}" Value="EndpointsType">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource EndpointsCombobox}"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding Value, Converter={StaticResource ValueTypeConverter}}" Value="HandleNaNType">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource HandleNaNCombobox}"/>
+                                                                                                </DataTrigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </ContentControl.Style>
+                                                                                </ContentControl>
+                                                                                <!--<ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="2">
+                                                                                    <ContentPresenter.Resources>
+                                                                                        <DataTemplate DataType="{x:Type sys:Boolean}">
+                                                                                            <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
+                                                                                        </DataTemplate>
+                                                                                        <DataTemplate DataType="{x:Type sys:String}">
+                                                                                            <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                                        </DataTemplate>
+                                                                                        <DataTemplate DataType="{x:Type local:EndpointsType}">
+                                                                                            <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource EndpointsTypeValues}}" Text="{Binding Path=., Converter={StaticResource EnumToStringConverter5}}"/>
+                                                                                        </DataTemplate>
+                                                                                        <DataTemplate DataType="{x:Type local:HandleNaNType}">
+                                                                                            <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource HandleNaNTypeValues}}" Text="{Binding Path=., Converter={StaticResource EnumToStringConverter6}}"/>
+                                                                                        </DataTemplate>
+                                                                                    </ContentPresenter.Resources>
+                                                                                </ContentPresenter>-->
+                                                                            </Grid>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </StackPanel>
+                                                        </Grid>
                                                     </Expander>
-                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
                                                         <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                                     </Button>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:Multirate}">
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="6*"/>
+                                                                <ColumnDefinition Width="4*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                                                                <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                    <ListView.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                        </DataTemplate>
+                                                                    </ListView.ItemTemplate>
+                                                                </ListView>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                                                                <Label Content="Parameters:" Margin="2"/>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                        <Image.Style>
+                                                                            <Style TargetType="Image">
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsEnabled" Value="False">
+                                                                                        <Setter Property="Opacity" Value="0"/>
+                                                                                    </Trigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Image.Style>
+                                                                    </Image>
+                                                                    <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="MultiRatePMU" HorizontalAlignment="Left"/>
+                                                                    <TextBox Text="{Binding MultiRatePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                </StackPanel>
+                                                                <ContentControl Content="{Binding}">
+                                                                    <ContentControl.Style>
+                                                                        <Style TargetType="ContentControl">
+                                                                            <!--<Setter Property="ContentTemplate" Value="{StaticResource MultiRatePQParameters}"/>-->
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding FilterParameters.Count}" Value="0">
+                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MultiRateOptionButtons}"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding FilterParameters.Count}" Value="2">
+                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MultiRateNewRateParameters}"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding FilterParameters.Count}" Value="3">
+                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MultiRatePQParameters}"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </ContentControl.Style>
+                                                                </ContentControl>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Expander>
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
+                                                        <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.Resources>
                                 </ItemsControl>
-                                <DockPanel Grid.Row="6" LastChildFill="True" Margin="0,0,7,0">
+                                <DockPanel Grid.Row="7" LastChildFill="True" Margin="0,0,7,0">
                                     <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddWrap}">
                                         <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
                                     </Button>
-                                    <Label Content="Wrap" Margin="2" FontSize="18" FontWeight="Bold"/>
+                                    <Label Content="Wrap" Margin="2" FontSize="18" FontWeight="Bold">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Label>
                                 </DockPanel>
-                                <ItemsControl Grid.Row="7">
+                                <ItemsControl Grid.Row="8" ItemsSource="{Binding ProcessConfigure.WrapList}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
+                                            <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
                                                 <Grid Margin="2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="30"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Expander Grid.Column="0">
-
+                                                    <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                                        <StackPanel Orientation="Vertical" Margin="2">
+                                                            <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                                                            <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                <ListView.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                    </DataTemplate>
+                                                                </ListView.ItemTemplate>
+                                                            </ListView>
+                                                        </StackPanel>
                                                     </Expander>
-                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
+                                                    <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteWrap}" CommandParameter="{Binding}">
                                                         <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                                     </Button>
                                                 </Grid>
@@ -733,6 +1229,14 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
+                                <Border Grid.Row="9" Margin="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <TextBlock></TextBlock>
+                                </Border>
                             </Grid>
                         </ScrollViewer>
                     </Border>
@@ -751,672 +1255,12 @@
             <TabItem Header="Post-Processing Customization"></TabItem>
             <TabItem Header="Detector Config"></TabItem>
         </TabControl>
-        <!--<avalonDock:DockingManager Grid.Row="2" Margin="2" Name="DockingManager">
-            --><!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="ActiveContentChanged">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.WalkerStageChanged}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type avalonDock:DockingManager}}, Path=SelectedIndex}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>--><!--
-            <avalonDock:LayoutRoot>
-                <avalonDock:LayoutPanel>
-                    <avalonDock:LayoutDocumentPane DockMinWidth="100">
-                        --><!--<i:Interaction.Triggers>
-                            <i:EventTrigger EventName="PropertyChanged">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.WalkerStageChanged}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=ActiveContent}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>--><!--
-                        <avalonDock:LayoutAnchorable Title="Reader Properties" CanClose="False" CanHide="False" CanAutoHide="True">
-                            <avalonDock:DockingManager AllowMixedOrientation="True">
-                                <avalonDock:LayoutRoot>
-                                    <avalonDock:LayoutPanel Orientation="Horizontal">
-                                        <avalonDock:LayoutAnchorablePane DockWidth="800">
-                                            <avalonDock:LayoutAnchorable CanHide="False" CanClose="False" AutoHideWidth="240">
-                                                <ScrollViewer>
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                        </Grid.RowDefinitions>
-                                                        <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
-                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
-                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
-                                                            </Button>
-                                                            <Label Content="File Sources" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                        </DockPanel>
-                                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
-                                                                        <Grid>
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition Width="30"/>                                                                                
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0" Header="{Binding Mnemonic, Converter={StaticResource EmptyHeaderConverter}, ConverterParameter='(New file source)'}">
-                                                                            --><!--<Expander Grid.Column="0">--><!--
-                                                                                <Grid>
-                                                                                    <Grid.RowDefinitions>
-                                                                                        <RowDefinition Height="Auto"/>
-                                                                                        <RowDefinition Height="Auto"/>
-                                                                                        <RowDefinition Height="Auto"/>
-                                                                                    </Grid.RowDefinitions>
-                                                                                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
-                                                                                        <Label Content="File Directory:" Margin="2" Width="100"/>
-                                                                                        <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
-                                                                                            <Image Source="../Images/open.gif" Stretch="Uniform"/>
-                                                                                        </Button>
-                                                                                    </StackPanel>
-                                                                                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
-                                                                                        <Label Content="File Type:" Margin="2" Width="100"/>
-                                                                                        <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
-                                                                                            <i:Interaction.Triggers>
-                                                                                                <i:EventTrigger EventName="SelectionChanged">
-                                                                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
-                                                                                                </i:EventTrigger>
-                                                                                            </i:Interaction.Triggers>
-                                                                                        </ComboBox>
-                                                                                    </StackPanel>
-                                                                                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
-                                                                                        <Label Content="Mnemonic:" Margin="2" Width="100"/>
-                                                                                        <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                                                    </StackPanel>
-                                                                                </Grid>
-                                                                            </Expander>
-                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
-                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                        <Label Content="Mode" Grid.Row="2" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                        <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="3" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
-                                                        <ContentControl Grid.Row="4" Content="{Binding}">
-                                                            <ContentControl.Style>
-                                                                <Style TargetType="ContentControl">
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="0">
-                                                                            <Setter Property="ContentTemplate" Value="{StaticResource ArchiveParameter}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="1">
-                                                                            <Setter Property="ContentTemplate" Value="{StaticResource RealTimeParameter}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding DataConfigure.ReaderProperty.ModeName}" Value="2">
-                                                                            <Setter Property="ContentTemplate" Value="{StaticResource HybridParameter}"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </ContentControl.Style>
-                                                        </ContentControl>
-                                                    </Grid>
-                                                </ScrollViewer>
-                                            </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutAnchorablePane>
-                                        <avalonDock:LayoutAnchorablePane DockWidth="200">
-                                            <avalonDock:LayoutAnchorable  Title="Input File Directory/ies" CanAutoHide="False" CanClose="False" CanFloat="False">
-                                                <ScrollViewer>
-                                                    <ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Border Margin="0,0,0,10">
-                                                                    <StackPanel>
-                                                                        <TextBlock Text="{Binding FileDirectory, StringFormat=Directory ({0}) Content:}" Margin="2"/>
-                                                                        <TreeView ItemsSource="{Binding InputFileTree}" MaxHeight="300" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                                                            <TreeView.ItemTemplate>
-                                                                                <HierarchicalDataTemplate ItemsSource="{Binding SubFolders}">
-                                                                                    <Border BorderBrush="AliceBlue" BorderThickness="1">
-                                                                                        <TextBlock Text="{Binding Name}"/>
-                                                                                    </Border>
-                                                                                </HierarchicalDataTemplate>
-                                                                            </TreeView.ItemTemplate>
-                                                                        </TreeView>
-                                                                    </StackPanel>
-                                                                </Border>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                </ScrollViewer>
-                                            </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutAnchorablePane>
-                                    </avalonDock:LayoutPanel>
-                                </avalonDock:LayoutRoot>
-                            </avalonDock:DockingManager>
-                        </avalonDock:LayoutAnchorable>
-                        <avalonDock:LayoutAnchorable Title="Signal Selection and Manipulation" CanClose="False" CanHide="False" CanAutoHide="True">
-                            <avalonDock:DockingManager>
-                                <avalonDock:LayoutRoot>
-                                    <avalonDock:LayoutPanel Orientation="Horizontal">
-                                        <avalonDock:LayoutAnchorablePane DockMinWidth="1000">
-                                            <avalonDock:LayoutAnchorable>
-                                                <ScrollViewer>
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="auto"/>
-                                                            <RowDefinition Height="auto"/>
-                                                            <RowDefinition Height="*"/>
-                                                        </Grid.RowDefinitions>
-                                                        <Grid Grid.Row="0" Margin="2">
-                                                            <i:Interaction.Triggers>
-                                                                <i:EventTrigger EventName="MouseLeftButtonDown">
-                                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
-                                                                </i:EventTrigger>
-                                                            </i:Interaction.Triggers>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="50"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <Label Content="Signal Selection and Manipulation Steps" Grid.Column="0" Margin="2" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                                                            <Menu Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Grid.Column="1" Margin="0,14,2,0" >
-                                                                <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
-                                                                    <MenuItem.Header>
-                                                                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                                                            <Image Width="16" Height="16" Source="../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
-                                                                            <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
-                                                                        </StackPanel>
-                                                                    </MenuItem.Header>
-                                                                    <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}">
-                                                                        <MenuItem.ItemContainerStyle>
-                                                                            <Style>
-                                                                                <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
-                                                                                <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
-                                                                            </Style>
-                                                                        </MenuItem.ItemContainerStyle>
-                                                                    </MenuItem>
-                                                                    <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}">
-                                                                        <MenuItem.ItemContainerStyle>
-                                                                            <Style>
-                                                                                <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.CustomizationSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
-                                                                                <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
-                                                                            </Style>
-                                                                        </MenuItem.ItemContainerStyle>
-                                                                    </MenuItem>
-                                                                </MenuItem>
-                                                            </Menu>
-                                                        </Grid>
-                                                        <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2">
-                                                            <ItemsControl.Resources>                                                                
-                                                                <DataTemplate DataType="{x:Type local:DQFilter}">
-                                                                    <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
-                                                                        <i:Interaction.Triggers>
-                                                                            <i:EventTrigger EventName="MouseLeftButtonDown">
-                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
-                                                                            </i:EventTrigger>
-                                                                            <i:EventTrigger EventName="GotFocus">
-                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
-                                                                            </i:EventTrigger>
-                                                                        </i:Interaction.Triggers>
-                                                                        <Grid Margin="2">
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition Width="30"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
-                                                                                <Grid>
-                                                                                    <Grid.ColumnDefinitions>
-                                                                                        <ColumnDefinition Width="6*"/>
-                                                                                        <ColumnDefinition Width="4*"/>
-                                                                                    </Grid.ColumnDefinitions>
-                                                                                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
-                                                                                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                                                                                        <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                                                                            <ListView.ItemTemplate>
-                                                                                                <DataTemplate>
-                                                                                                    <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
-                                                                                                </DataTemplate>
-                                                                                            </ListView.ItemTemplate>
-                                                                                        </ListView>
-                                                                                    </StackPanel>
-                                                                                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
-                                                                                        <Label Content="Parameters:" Margin="2"/>
-                                                                                        <ItemsControl ItemsSource="{Binding FilterParameters}" Margin="2">
-                                                                                            <ItemsControl.ItemTemplate>
-                                                                                                <DataTemplate>
-                                                                                                    <Grid>
-                                                                                                        <Grid.ColumnDefinitions>
-                                                                                                            <ColumnDefinition Width="Auto"/>
-                                                                                                            <ColumnDefinition Width="Auto"/>
-                                                                                                            <ColumnDefinition Width="*"/>
-                                                                                                        </Grid.ColumnDefinitions>
-                                                                                                        <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
-                                                                                                            <Image.Style>
-                                                                                                                <Style TargetType="Image">
-                                                                                                                    <Style.Triggers>
-                                                                                                                        <Trigger Property="IsEnabled" Value="False">
-                                                                                                                            <Setter Property="Opacity" Value="0"/>
-                                                                                                                        </Trigger>
-                                                                                                                    </Style.Triggers>
-                                                                                                                </Style>
-                                                                                                            </Image.Style>
-                                                                                                        </Image>
-                                                                                                        <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" HorizontalAlignment="Left"/>
-                                                                                                        <ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="2">
-                                                                                                            <ContentPresenter.Resources>
-                                                                                                                <DataTemplate DataType="{x:Type sys:Boolean}">
-                                                                                                                    <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
-                                                                                                                </DataTemplate>
-                                                                                                                <DataTemplate DataType="{x:Type sys:String}">
-                                                                                                                    <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
-                                                                                                                    --><!--<TextBlock Text="{Binding Path=.}" VerticalAlignment="Center" Width="100" Margin="8"/>--><!--
-                                                                                                                </DataTemplate>
-                                                                                                            </ContentPresenter.Resources>
-                                                                                                        </ContentPresenter>
-                                                                                                    </Grid>
-                                                                                                </DataTemplate>
-                                                                                            </ItemsControl.ItemTemplate>
-                                                                                        </ItemsControl>
-                                                                                    </StackPanel>
-                                                                                </Grid>
-                                                                            </Expander>
-                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                                <DataTemplate DataType="{x:Type local:Customization}">
-                                                                    <Border Name="StepBorder" Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
-                                                                        <i:Interaction.Triggers>
-                                                                            <i:EventTrigger EventName="MouseLeftButtonDown">
-                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
-                                                                            </i:EventTrigger>
-                                                                            <i:EventTrigger EventName="GotFocus">
-                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepSelected}" CommandParameter="{Binding}"/>
-                                                                            </i:EventTrigger>
-                                                                            <i:EventTrigger EventName="MouseLeftButtonUp">
-                                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
-                                                                            </i:EventTrigger>
-                                                                        </i:Interaction.Triggers>
-                                                                        <Grid Margin="2">
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition Width="30"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
-                                                                                <ContentControl Content="{Binding}" Name="Steps">
-                                                                                    <ContentControl.Style>
-                                                                                        <Style TargetType="ContentControl">
-                                                                                            <Style.Triggers>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Scalar Repetition Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ScalarRepCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Addition Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource AdditionCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Subtraction Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource SubtractionCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Multiplication Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MultiplicationCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Division Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource DivisionCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Raise signals to an exponent">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ExponentCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Reverse sign of signals">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Take absolute value of signals">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Return real component of signals">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Return imaginary component of signals">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Return angle of complex valued signals">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Take complex conjugate of signals">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Phasor Creation Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource CreatePhasorCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Power Calculation Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource PowerCalculationsCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Specify Signal Type and Unit Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource SpecifySignalTypeUnitCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Metric Prefix Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource MetricPrefixCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                                <DataTrigger Binding="{Binding Name}" Value="Angle Conversion Customization">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource AngleConversionCustomization}"/>
-                                                                                                </DataTrigger>
-                                                                                            </Style.Triggers>
-                                                                                        </Style>
-                                                                                    </ContentControl.Style>
-                                                                                </ContentControl>
-                                                                            </Expander>
-                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                            </ItemsControl.Resources>
-                                                        </ItemsControl>
-                                                        <Border Grid.Row="2" Margin="2">
-                                                            <i:Interaction.Triggers>
-                                                                <i:EventTrigger EventName="MouseLeftButtonDown">
-                                                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StepDeSelected}"/>
-                                                                </i:EventTrigger>
-                                                            </i:Interaction.Triggers>
-                                                            <TextBlock>                </TextBlock>
-                                                        </Border>
-                                                    </Grid>
-                                                </ScrollViewer>
-                                            </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutAnchorablePane>
-                                        --><!--<avalonDock:LayoutPanel Orientation="Vertical">
-                                            <avalonDock:LayoutAnchorablePane DockMinWidth="200">
-                                                <avalonDock:LayoutAnchorable Title="Select Signal by Signal Type">
-                                                    <TreeView ItemsSource="{Binding GroupedSignalsByType}">
-                                                        <TreeView.ItemTemplate>
-                                                            <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
-                                                                <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" IsEnabled="{Binding SignalSignature.IsEnabled}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
-                                                                    <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>                                                                    
-                                                                </StackPanel>
-                                                            </HierarchicalDataTemplate>
-                                                        </TreeView.ItemTemplate>
-                                                        <TreeView.ItemContainerStyle>
-                                                            <Style TargetType="{x:Type TreeViewItem}">
-                                                                <Setter Property="IsEnabled" Value="{Binding SignalSignature.IsEnabled}"/>
-                                                            </Style>
-                                                        </TreeView.ItemContainerStyle>
-                                                    </TreeView>
-                                                </avalonDock:LayoutAnchorable>
-                                            </avalonDock:LayoutAnchorablePane>
-                                            <avalonDock:LayoutAnchorablePane DockMinWidth="200">
-                                                <avalonDock:LayoutAnchorable Title="Select Signal by PMU">
-                                                    <TreeView ItemsSource="{Binding GroupedSignalsByPMU}">
-                                                        <TreeView.ItemTemplate>
-                                                            <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
-                                                                <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" CommandParameter="{Binding}"/>
-                                                                    <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
-                                                                </StackPanel>
-                                                            </HierarchicalDataTemplate>
-                                                            <HierarchicalDataTemplate ItemsSource="{Binding Value}">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0"/>
-                                                                    <TextBlock Text="{Binding Key}" Margin="0"/>
-                                                                </StackPanel>
-                                                                <HierarchicalDataTemplate.ItemTemplate>
-                                                                    <DataTemplate>
-                                                                        <StackPanel Orientation="Horizontal">
-                                                                            <CheckBox IsChecked="{Binding IsChecked}" Margin="2,0,5,0"/>
-                                                                            <TextBlock Text="{Binding SignalName}" Margin="0"/>
-                                                                        </StackPanel>
-                                                                    </DataTemplate>
-                                                                </HierarchicalDataTemplate.ItemTemplate>
-                                                            </HierarchicalDataTemplate>
-                                                        </TreeView.ItemTemplate>
-                                                        <TreeView.ItemContainerStyle>
-                                                            <Style TargetType="{x:Type TreeViewItem}">
-                                                                <Setter Property="IsEnabled" Value="{Binding SignalSignature.IsEnabled}"/>
-                                                            </Style>
-                                                        </TreeView.ItemContainerStyle>
-                                                    </TreeView>
-                                                </avalonDock:LayoutAnchorable>
-                                            </avalonDock:LayoutAnchorablePane>
-                                        </avalonDock:LayoutPanel>--><!--
-                                        <avalonDock:LayoutAnchorablePane>
-                                            <avalonDock:LayoutAnchorable Title="Signal Selection Panel">
-                                                <local:SignalSelectionPanel/>
-                                            </avalonDock:LayoutAnchorable>
-                                            --><!--<avalonDock:LayoutAnchorable Title="Signal Selection Panel">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="auto"/>
-                                                        <RowDefinition Height="auto"/>
-                                                        --><!--<RowDefinition Height="auto"/>--><!--
-                                                        <RowDefinition Height="*"/>
-                                                        --><!--<RowDefinition Height="auto"/>--><!--
-                                                    </Grid.RowDefinitions>
-                                                    <Label Grid.Row="0" Content="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}}" ContentStringFormat="Pick Channels for: {0}"/>
-                                                    --><!--<TextBlock Grid.Row="0" Text="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}, StringFormat=Pick Channels for: {0}}"/>--><!--
-                                                    <ComboBox Name="signalGroupMethodCombobox" Grid.Row="1" ItemsSource="{Binding SelectSignalMethods}" SelectedValue="{Binding SelectedSelectionMethod}" Margin="2"/>
-                                                    <TreeView Grid.Row="2" Margin="2" Visibility="{Binding SignalSelectionTreeViewVisibility}">
-                                                        <TreeView.Style>
-                                                            <Style TargetType="{x:Type TreeView}">
-                                                                <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Raw Input Channels by Signal Type">
-                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Raw Input Channels by PMU">
-                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByPMU}"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step">
-                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalByStepsInput}"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="OutPut Channels by Step">
-                                                                        <Setter Property="ItemsSource" Value="{Binding GroupedSignalByStepsOutput}"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TreeView.Style>
-                                                        <TreeView.ItemTemplate>
-                                                            <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
-                                                                <StackPanel Orientation="Horizontal" Margin="0">
-                                                                    <ContentControl Content="{Binding}">
-                                                                        <ContentControl.Style>
-                                                                            <Style TargetType="ContentControl">
-                                                                                <Setter Property="ContentTemplate" Value="{StaticResource TreeViewCheckBox}"/>
-                                                                                --><!--<Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.CurrentSelectedStep, Converter={StaticResource CurrentStepNameConverter}}" Value="Subtraction Customization">
-                                                                                        <Setter Property="ContentTemplate" Value="{StaticResource TreeViewRadioButton}"/>
-                                                                                    </DataTrigger>
-                                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.CurrentSelectedStep, Converter={StaticResource CurrentStepNameConverter}}" Value="Division Customization">
-                                                                                        <Setter Property="ContentTemplate" Value="{StaticResource TreeViewRadioButton}"/>
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>--><!--
-                                                                            </Style>
-                                                                        </ContentControl.Style>
-                                                                    </ContentControl>
-                                                                    --><!--<CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" CommandParameter="{Binding}" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}">
-                                                                        --><!--<CheckBox.Style>
-                                                                            <Style TargetType="{x:Type CheckBox}">
-                                                                                <Setter Property="Command" Value="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"/>
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding Path=DataContext.SelectedSelectionMethod, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}" Value="OutPut Channels by Step">
-                                                                                        <Setter Property="Command" Value="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"/>
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </CheckBox.Style>--><!--
-                                                                    </CheckBox>--><!--
-                                                                    <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
-                                                                </StackPanel>
-                                                            </HierarchicalDataTemplate>
-                                                        </TreeView.ItemTemplate>
-                                                        <TreeView.ItemContainerStyle>
-                                                            <Style TargetType="{x:Type TreeViewItem}">
-                                                                <Setter Property="IsEnabled" Value="{Binding SignalSignature.IsEnabled}"/>
-                                                            </Style>
-                                                        </TreeView.ItemContainerStyle>
-                                                    </TreeView>
-                                                    --><!--<Button Grid.Row="3" Content="add selected signals" Command="{Binding AddSelectedSignalToStep}"/>--><!--
-                                                </Grid>
-                                            </avalonDock:LayoutAnchorable>--><!--
-                                        </avalonDock:LayoutAnchorablePane>
-                                    </avalonDock:LayoutPanel>
-                                </avalonDock:LayoutRoot>
-                            </avalonDock:DockingManager>
-                        </avalonDock:LayoutAnchorable>
-                        <avalonDock:LayoutAnchorable Title="Process Config" CanClose="False" CanHide="False" CanAutoHide="True">
-                            <avalonDock:DockingManager AllowMixedOrientation="True">
-                                <avalonDock:LayoutRoot>
-                                    <avalonDock:LayoutPanel Orientation="Horizontal">
-                                        <avalonDock:LayoutAnchorablePane DockMinWidth="1000">
-                                            <avalonDock:LayoutAnchorable CanClose="False" CanHide="False">
-                                                <ScrollViewer>
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                        </Grid.RowDefinitions>
-                                                        <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
-                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddUnwrap}">
-                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
-                                                            </Button>
-                                                            <Label Content="Unwrap" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                        </DockPanel>
-                                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding ProcessConfigure.UnWrapList}">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
-                                                                        <Grid Margin="2">
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition Width="30"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0">
-    
-                                                                            </Expander>
-                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                        <DockPanel Grid.Row="2" LastChildFill="True" Margin="0,0,7,0">
-                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddInterpolate}">
-                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
-                                                            </Button>
-                                                            <Label Content="Interpolate" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                        </DockPanel>
-                                                        <ItemsControl Grid.Row="3">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
-                                                                        <Grid Margin="2">
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition Width="30"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0">
-
-                                                                            </Expander>
-                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                        <DockPanel Grid.Row="4" LastChildFill="True" Margin="0,0,7,0">
-                                                            <Menu DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Margin="0,14,2,0" >
-                                                                <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
-                                                                    <MenuItem.Header>
-                                                                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                                                            <Image Width="16" Height="16" Source="../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
-                                                                            <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
-                                                                        </StackPanel>
-                                                                    </MenuItem.Header>
-                                                                    <MenuItem Header="Tunable Filter" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Filter"/>
-                                                                    <MenuItem Header="Multi-rate processing" Command="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Multirate"/>
-                                                                </MenuItem>
-                                                            </Menu>
-                                                            <Label Content="Stages" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                        </DockPanel>
-                                                        <ItemsControl Grid.Row="5">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
-                                                                        <Grid Margin="2">
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition Width="30"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0">
-
-                                                                            </Expander>
-                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                        <DockPanel Grid.Row="6" LastChildFill="True" Margin="0,0,7,0">
-                                                            <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddWrap}">
-                                                                <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
-                                                            </Button>
-                                                            <Label Content="Wrap" Margin="2" FontSize="18" FontWeight="Bold"/>
-                                                        </DockPanel>
-                                                        <ItemsControl Grid.Row="7">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">
-                                                                        <Grid Margin="2">
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition Width="30"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Expander Grid.Column="0">
-
-                                                                            </Expander>
-                                                                            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisStep}" CommandParameter="{Binding}">
-                                                                                <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                    </Grid>
-                                                </ScrollViewer>
-                                            </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutAnchorablePane>
-                                        <avalonDock:LayoutAnchorablePane>
-                                            <avalonDock:LayoutAnchorable Title="Signal Selection Panel">
-                                                <local:SignalSelectionPanel/>
-                                            </avalonDock:LayoutAnchorable>
-                                        </avalonDock:LayoutAnchorablePane>
-                                    </avalonDock:LayoutPanel>
-                                </avalonDock:LayoutRoot>
-                            </avalonDock:DockingManager>
-                        </avalonDock:LayoutAnchorable>
-                        <avalonDock:LayoutAnchorable Title="Post-Processing Customization" CanClose="False" CanHide="False" CanAutoHide="True">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="IsSelectedChanged">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PostProcessingSelected}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </avalonDock:LayoutAnchorable>
-                        <avalonDock:LayoutAnchorable Title="Detector Config" CanClose="False" CanHide="False" CanAutoHide="True">
-
-                        </avalonDock:LayoutAnchorable>
-                    </avalonDock:LayoutDocumentPane>
-                </avalonDock:LayoutPanel>
-            </avalonDock:LayoutRoot>
-        </avalonDock:DockingManager>-->
-        <StackPanel Orientation="Vertical" Margin="2" Grid.Row="3">
+        <StackPanel Orientation="Vertical" Margin="2" Grid.Row="2">
             <Label Content="Log Messages:"/>
             <ListBox ItemsSource="{Binding Logs}" Margin="2" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" MaxHeight="100"/>
         </StackPanel>
     </Grid>
 </Window>
+
+
 

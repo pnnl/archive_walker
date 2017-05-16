@@ -133,7 +133,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\VisibleIfNonZeroConverter.vb" />
     <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.vb" />
     <Compile Include="ViewModels\Folder.vb" />
