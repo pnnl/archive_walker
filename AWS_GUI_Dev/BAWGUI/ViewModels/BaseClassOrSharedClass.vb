@@ -75,35 +75,35 @@ Public Class ParameterValuePair
     End Property
 End Class
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-''''''''''''''''''''''''''''''''Class PMU''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Public Class PMU
-    Inherits ViewModelBase
-    Public Sub New()
-        _channels = New ObservableCollection(Of String)
-    End Sub
-    Private _PMUName As String
-    Public Property PMUName As String
-        Get
-            Return _PMUName
-        End Get
-        Set(ByVal value As String)
-            _PMUName = value
-            OnPropertyChanged()
-        End Set
-    End Property
-    Private _channels As ObservableCollection(Of String)
-    Public Property Channels As ObservableCollection(Of String)
-        Get
-            Return _channels
-        End Get
-        Set(ByVal value As ObservableCollection(Of String))
-            _channels = value
-            OnPropertyChanged()
-        End Set
-    End Property
-End Class
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''Class PMU''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Public Class PMU
+'    Inherits ViewModelBase
+'    Public Sub New()
+'        _channels = New ObservableCollection(Of String)
+'    End Sub
+'    Private _PMUName As String
+'    Public Property PMUName As String
+'        Get
+'            Return _PMUName
+'        End Get
+'        Set(ByVal value As String)
+'            _PMUName = value
+'            OnPropertyChanged()
+'        End Set
+'    End Property
+'    Private _channels As ObservableCollection(Of String)
+'    Public Property Channels As ObservableCollection(Of String)
+'        Get
+'            Return _channels
+'        End Get
+'        Set(ByVal value As ObservableCollection(Of String))
+'            _channels = value
+'            OnPropertyChanged()
+'        End Set
+'    End Property
+'End Class
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ''''''''''''''''''''''''''''''''Class Filter''''''''''''''''''''''''''''''''''''''''''''''''''''''

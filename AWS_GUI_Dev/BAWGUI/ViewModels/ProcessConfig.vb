@@ -9,6 +9,7 @@ Public Class ProcessConfig
         _interpolateList = New ObservableCollection(Of Interpolate)()
         _collectionOfSteps = New ObservableCollection(Of Object)()
         _wrapList = New ObservableCollection(Of Wrap)()
+        _nameTypeUnitElement = New NameTypeUnit()
     End Sub
 
     Private _unWrapList As ObservableCollection(Of Unwrap)
@@ -51,6 +52,17 @@ Public Class ProcessConfig
         End Get
         Set(ByVal value As ObservableCollection(Of Object))
             _collectionOfSteps = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _nameTypeUnitElement As NameTypeUnit
+    Public Property NameTypeUnitElement As NameTypeUnit
+        Get
+            Return _nameTypeUnitElement
+        End Get
+        Set(value As NameTypeUnit)
+            _nameTypeUnitElement = value
             OnPropertyChanged()
         End Set
     End Property
@@ -340,3 +352,128 @@ Public Enum HandleNaNType
     includenan
     omitnan
 End Enum
+
+Public Class NameTypeUnit
+    Inherits ViewModelBase
+    Public Sub New ()
+        _nameTypeUnitPMUList = New ObservableCollection(Of NameTypeUnitPMU)()
+    End Sub
+    Private _newUnit As String
+    Public Property NewUnit As String
+        Get
+            Return _newUnit
+        End Get
+        Set(value As String)
+            _newUnit = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _newType As String
+    Public Property NewType As String
+        Get
+            Return _newType
+        End Get
+        Set(value As String)
+            _newType = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    
+    Private _nameTypeUnitPMUList As ObservableCollection(Of NameTypeUnitPMU)
+    Public Property NameTypeUnitPMUList As ObservableCollection(Of NameTypeUnitPMU)
+        Get
+            Return _nameTypeUnitPMUList
+        End Get
+        Set(value As ObservableCollection(Of NameTypeUnitPMU))
+            _nameTypeUnitPMUList = value
+            OnPropertyChanged()
+        End Set
+    End Property
+End Class
+
+Public Class NameTypeUnitPMU
+    Inherits SignalProcessStep
+    Public Sub New ()
+        InputChannels = New ObservableCollection(Of SignalSignatures)
+        OutputChannels = New ObservableCollection(Of SignalSignatures)
+        ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+        _name = "Signal Type and Unit Specification"
+    End Sub
+
+    Private _name As String
+    Public Overrides Property Name As String
+        Get
+            Return _name
+        End Get
+        Set(value As String)
+            _name = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    'Private _pmuName As String
+    'Public Property PmuName As String
+    '    Get
+    '        Return _pmuName
+    '    End Get
+    '    Set(value As String)
+    '        _pmuName = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
+
+    'Private _currentChannel As String
+    'Public Property CurrentChannel As String
+    '    Get
+    '        Return _currentChannel
+    '    End Get
+    '    Set(value As String)
+    '        _currentChannel = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
+
+    Private _newChannel As String
+    Public Property NewChannel As String
+        Get
+            Return _newChannel
+        End Get
+        Set(value As String)
+            _newChannel = value
+            if value <> "" And OutputChannels.Count > 0
+                OutputChannels(0).SignalName = value
+            End If
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _newUnit As String
+    Public Property NewUnit As String
+        Get
+            Return _newUnit
+        End Get
+        Set(value As String)
+            _newUnit = value
+            For Each signal In OutputChannels
+                signal.Unit = value
+            Next
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _newType As String
+    Public Property NewType As String
+        Get
+            Return _newType
+        End Get
+        Set(value As String)
+            _newType = value
+            For Each signal In OutputChannels
+                signal.TypeAbbreviation = value
+            Next
+            OnPropertyChanged()
+        End Set
+    End Property
+End Class

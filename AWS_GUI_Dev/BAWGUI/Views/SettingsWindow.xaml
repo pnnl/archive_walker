@@ -52,6 +52,7 @@
             <local:EnumToStringConverter5 x:Key="EnumToStringConverter5"/>
             <local:EnumToStringConverter6 x:Key="EnumToStringConverter6"/>
             <local:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
+            <local:NewChannelVisibilityConverter x:Key="NewChannelVisibilityConverter"/>
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <local:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
             <local:ValueTypeConverter x:Key="ValueTypeConverter"/>
@@ -234,7 +235,7 @@
                         </Image.Style>
                     </Image>
                     <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewRate" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Column="2" Text="{Binding NewRate}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                    <TextBox Grid.Column="2" Text="{Binding NewRate}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8"/>
                 </Grid>
                         <!--</DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -263,7 +264,7 @@
                         </Image.Style>
                     </Image>
                     <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="p" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8"/>
                     <Image Grid.Row="1" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
@@ -276,7 +277,7 @@
                         </Image.Style>
                     </Image>
                     <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="q" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8"/>
                 </Grid>
             </DataTemplate>
             <!--<DataTemplate x:Key="PQRatio">
@@ -332,9 +333,171 @@
                     <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
                 </Grid>
             </DataTemplate>-->
+            <DataTemplate x:Key="NameTypeUnitApproach1">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="NameTypeUnit" Margin="2" FontSize="18" FontWeight="Bold">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Label>
+                    <Grid Margin="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Row="0" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewUnit" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding ProcessConfigure.NameTypeUnitElement.NewUnit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8"/>
+                        <Image Grid.Row="1" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewType" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Row="1" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding ProcessConfigure.NameTypeUnitElement.NewType}"/>
+                    </Grid>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="NameTypeUnitApproach2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                        <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddNameTypeUnit}">
+                            <Image Width="16" Height="16" Source="../Images/AddCommand.png" />
+                        </Button>
+                        <Label Content="NameTypeUnit" Margin="2" FontSize="18" FontWeight="Bold">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Label>
+                    </DockPanel>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Grid Margin="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="30"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                            <Grid Margin="2">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>
+                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock>
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                                        <Binding Path="PMUName"/>
+                                                                        <Binding Path="SignalName"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                                <Image Grid.Row="2" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsEnabled" Value="False">
+                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewChannel" HorizontalAlignment="Left" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}"/>
+                                                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding NewChannel}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}"/>
+                                                <Image Grid.Row="3" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsEnabled" Value="False">
+                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <Label Grid.Row="4" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewUnit" HorizontalAlignment="Left"/>
+                                                <TextBox Grid.Row="4" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding NewUnit}"/>
+                                                <Image Grid.Row="4" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsEnabled" Value="False">
+                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewType" HorizontalAlignment="Left"/>
+                                                <TextBox Grid.Row="3" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding NewType}"/>
+                                            </Grid>
+                                        </Expander>
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteNameTypeUnit}" CommandParameter="{Binding}">
+                                            <Image Width="16" Height="16" Source="../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -562,7 +725,14 @@
                                                                 <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                     <ListView.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                            <TextBlock Margin="2,0">
+                                                                                <TextBlock.Text>
+                                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                                                        <Binding Path="PMUName"/>
+                                                                                        <Binding Path="SignalName"/>
+                                                                                    </MultiBinding>
+                                                                                </TextBlock.Text>
+                                                                            </TextBlock>
                                                                         </DataTemplate>
                                                                     </ListView.ItemTemplate>
                                                                 </ListView>
@@ -743,6 +913,8 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Border Grid.Row="0" Margin="2">
                                     <i:Interaction.Triggers>
@@ -792,7 +964,14 @@
                                                                 <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                     <ListView.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                            <TextBlock Margin="2,0">
+                                                                                <TextBlock.Text>
+                                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                                                        <Binding Path="PMUName"/>
+                                                                                        <Binding Path="SignalName"/>
+                                                                                    </MultiBinding>
+                                                                                </TextBlock.Text>
+                                                                            </TextBlock>
                                                                         </DataTemplate>
                                                                     </ListView.ItemTemplate>
                                                                 </ListView>
@@ -882,7 +1061,14 @@
                                                                 <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                     <ListView.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                            <TextBlock Margin="2,0">
+                                                                                <TextBlock.Text>
+                                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                                                        <Binding Path="PMUName"/>
+                                                                                        <Binding Path="SignalName"/>
+                                                                                    </MultiBinding>
+                                                                                </TextBlock.Text>
+                                                                            </TextBlock>
                                                                         </DataTemplate>
                                                                     </ListView.ItemTemplate>
                                                                 </ListView>
@@ -1026,7 +1212,14 @@
                                                                 <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                     <ListView.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                            <TextBlock Margin="2,0">
+                                                                                <TextBlock.Text>
+                                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                                                        <Binding Path="PMUName"/>
+                                                                                        <Binding Path="SignalName"/>
+                                                                                    </MultiBinding>
+                                                                                </TextBlock.Text>
+                                                                            </TextBlock>
                                                                         </DataTemplate>
                                                                     </ListView.ItemTemplate>
                                                                 </ListView>
@@ -1129,7 +1322,14 @@
                                                                 <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                     <ListView.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                            <TextBlock Margin="2,0">
+                                                                                <TextBlock.Text>
+                                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                                                        <Binding Path="PMUName"/>
+                                                                                        <Binding Path="SignalName"/>
+                                                                                    </MultiBinding>
+                                                                                </TextBlock.Text>
+                                                                            </TextBlock>
                                                                         </DataTemplate>
                                                                     </ListView.ItemTemplate>
                                                                 </ListView>
@@ -1149,7 +1349,7 @@
                                                                         </Image.Style>
                                                                     </Image>
                                                                     <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="MultiRatePMU" HorizontalAlignment="Left"/>
-                                                                    <TextBox Text="{Binding MultiRatePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                    <TextBox Text="{Binding MultiRatePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8"/>
                                                                 </StackPanel>
                                                                 <ContentControl Content="{Binding}">
                                                                     <ContentControl.Style>
@@ -1215,7 +1415,14 @@
                                                             <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                 <ListView.ItemTemplate>
                                                                     <DataTemplate>
-                                                                        <TextBlock Text="{Binding Path=SignalName}" Margin="2,0"/>
+                                                                        <TextBlock Margin="2,0">
+                                                                            <TextBlock.Text>
+                                                                                <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                                                    <Binding Path="PMUName"/>
+                                                                                    <Binding Path="SignalName"/>
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                        </TextBlock>
                                                                     </DataTemplate>
                                                                 </ListView.ItemTemplate>
                                                             </ListView>
@@ -1230,6 +1437,26 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                                 <Border Grid.Row="9" Margin="2">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <TextBlock></TextBlock>
+                                </Border>
+                                <ContentControl Grid.Row="10" Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource NameTypeUnitApproach2}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count}" Value="0">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource NameTypeUnitApproach1}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                                <Border Grid.Row="11" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>

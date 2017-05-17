@@ -53,6 +53,8 @@ Partial Public Class SettingsViewModel
         _multirateParameterChoice = New DelegateCommand(AddressOf _chooseParameterForMultirate, AddressOf CanExecute)
         _processConfigStepSelected = New DelegateCommand(AddressOf _processStepSelectedToEdit, AddressOf canExecute)
         _processConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllProcessConfigSteps, AddressOf CanExecute)
+        _deleteNameTypeUnit = New DelegateCommand(AddressOf _deleteANameTypeUnit, AddressOf CanExecute)
+        _addNameTypeUnit = New DelegateCommand(AddressOf _addANameTypeUnit, AddressOf CanExecute)
         '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
         '_inputFileDirTree = New ObservableCollection(Of Folder)
@@ -76,6 +78,7 @@ Partial Public Class SettingsViewModel
         _powerTypeDictionary = New Dictionary(Of String, String) From {{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}}
 
     End Sub
+
 
     'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
     'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
@@ -1257,6 +1260,35 @@ Partial Public Class SettingsViewModel
         Next
         processConfig.<Configuration>.LastOrDefault.Add(processing)
         Dim nameTypeUnit as XElement = <NameTypeUnit></NameTypeUnit>
+        if ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0
+            For Each pmus In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+                For Each signal In pmus.InputChannels
+                    Dim pmu = <PMU></PMU>
+                    dim a =              <Name><%= signal.PMUName %></Name>
+                    pmu.Add(a)
+                    dim b =                <CurrentChannel><%= signal.SignalName %></CurrentChannel>
+                    pmu.Add(b)
+                    If pmus.InputChannels.Count > 1
+                        dim c =                <NewChannel><%= signal.SignalName %></NewChannel>
+                        pmu.Add(c)
+                    else
+                        dim c =                <NewChannel><%= pmus.NewChannel %></NewChannel>
+                        pmu.Add(c)
+                    End If
+                    dim d =                <NewUnit><%= pmus.NewUnit %></NewUnit>
+                    pmu.Add(d)
+                    dim e =                <NewType><%= pmus.NewType %></NewType>
+                    pmu.Add(e)
+                              
+                    nameTypeUnit.Add(pmu)
+                Next
+            Next
+        Else
+            dim unit = <NewUnit><%= ProcessConfigure.NameTypeUnitElement.NewUnit %></NewUnit>
+            dim type = <NewType><%= ProcessConfigure.NameTypeUnitElement.NewType %></NewType>
+            nameTypeUnit.Add(unit)
+            nameTypeUnit.Add(type)
+        End If
         processConfig.<Configuration>.LastOrDefault.Add(nameTypeUnit)
         Dim signalSelection2 As XElement = <SignalSelection></SignalSelection>
         processConfig.<Configuration>.LastOrDefault.Add(signalSelection2)
@@ -2095,6 +2127,17 @@ Partial Public Class SettingsViewModel
                 End If
             Next
         Next
+        For Each group In GroupedSignalByProcessConfigStepsOutput
+            For Each subgroup In group.SignalList
+                If subgroup.SignalSignature.PMUName = pmu Then
+                    For Each subsubgroup In subgroup.SignalList
+                        If subsubgroup.SignalSignature.SignalName = channel Then
+                            Return subsubgroup.SignalSignature
+                        End If
+                    Next
+                End If
+            Next
+        Next
         Return Nothing
     End Function
 #End Region
@@ -2116,7 +2159,7 @@ Partial Public Class SettingsViewModel
                 _keepOriginalSelection(obj)
                 MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
             Else
-                If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap OrElse TypeOf _currentSelectedStep Is Multirate
+                If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap OrElse TypeOf _currentSelectedStep Is Multirate OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU
                     Try
                         _changeSignalSelection(obj)
                     Catch ex As Exception
@@ -2429,7 +2472,7 @@ Partial Public Class SettingsViewModel
     Private Sub _changeSignalSelection(obj As SignalTypeHierachy)
         _checkAllChildren(obj, obj.SignalSignature.IsChecked)
         _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
-        if TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap
+        if TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap OrElse TypeOf _currentSelectedStep is NameTypeUnitPMU
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
         Elseif TypeOf _currentSelectedStep Is Multirate
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
@@ -2845,6 +2888,8 @@ Partial Public Class SettingsViewModel
                             dim newOutput = New SignalSignatures(obj.SignalSignature.SignalName)
                             newOutput.PMUName = _currentSelectedStep.FilterParameters(0).Value
                             newOutput.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
+                            newOutput.IsCustomSignal = True
+                            newOutput.Unit = obj.SignalSignature.Unit
                             If _currentSelectedStep.FilterParameters.Count = 2
                                 newOutput.SamplingRate = _currentSelectedStep.NewRate
                             elseIf _currentSelectedStep.FilterParameters.Count = 3
@@ -2856,6 +2901,22 @@ Partial Public Class SettingsViewModel
                                     newOutput.SamplingRate = obj.SignalSignature.SamplingRate * p / q
                                 End If
                             End If
+                            _currentSelectedStep.OutputChannels.Add(newOutput)
+                        End If
+                        if TypeOf _currentSelectedStep Is NameTypeUnitPMU
+                            dim newOutput = New SignalSignatures()
+                            If CurrentSelectedStep.InputChannels.Count > 1
+                                newOutput.SignalName = obj.SignalSignature.SignalName
+                                CurrentSelectedStep.NewChannel = ""
+                            Else 
+                                CurrentSelectedStep.NewChannel = obj.SignalSignature.SignalName
+                                newOutput.SignalName = CurrentSelectedStep.NewChannel
+                            End If
+                            newOutput.PMUName = obj.SignalSignature.PMUName
+                            newOutput.TypeAbbreviation = CurrentSelectedStep.NewType
+                            newOutput.Unit = CurrentSelectedStep.NewUnit
+                            newOutput.IsCustomSignal = True
+                            newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                             _currentSelectedStep.OutputChannels.Add(newOutput)
                         End If
                     Else
@@ -2875,6 +2936,18 @@ Partial Public Class SettingsViewModel
                                     Exit For
                                 End If
                             Next
+                        End If
+                        if TypeOf _currentSelectedStep Is NameTypeUnitPMU
+                            If CurrentSelectedStep.OutputChannels.Count = 1
+                                CurrentSelectedStep.OutputChannels.Clear
+                            Else
+                                For each output in _currentSelectedStep.OutputChannels
+                                    if output.SignalName = obj.SignalSignature.SignalName AndAlso output.PMUName = obj.SignalSignature.PMUName
+                                        _currentSelectedStep.OutputChannels.Remove(output)
+                                        Exit For
+                                    End If
+                                Next
+                            End If
                         End If
                     End If
                     obj.SignalSignature.IsChecked = isChecked

@@ -698,16 +698,16 @@ Public Class DQFilter
         MyBase.New
     End Sub
 
-    Private _PMUs As ObservableCollection(Of PMU)
-    Public Property PMUs As ObservableCollection(Of PMU)
-        Get
-            Return _PMUs
-        End Get
-        Set(ByVal value As ObservableCollection(Of PMU))
-            _PMUs = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _PMUs As ObservableCollection(Of PMU)
+    'Public Property PMUs As ObservableCollection(Of PMU)
+    '    Get
+    '        Return _PMUs
+    '    End Get
+    '    Set(ByVal value As ObservableCollection(Of PMU))
+    '        _PMUs = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
 
 
 
