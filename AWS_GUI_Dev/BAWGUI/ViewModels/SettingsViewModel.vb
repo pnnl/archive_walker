@@ -1183,8 +1183,17 @@ Partial Public Class SettingsViewModel
                         Dim para As XElement = New XElement(parameter.ParameterName.ToString, parameter.Value)
                         aStep.<Parameters>.LastOrDefault.Add(para)
                     Next
-                    dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
-                    _writePMUElements(aStep, PMUSignalDictionary)
+                    if singleStep.Name = "PMU Status Flags Data Quality Filter"
+                        For Each signal In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
+                            Dim PMU As XElement = <PMU>
+                                                    <Name><%= signal.SignalSignature.PMUName %></Name>
+                                                  </PMU>
+                            aStep.Add(PMU)
+                        Next
+                    Else
+                        dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                        _writePMUElements(aStep, PMUSignalDictionary)
+                    End If
             End Select
             stage.Add(aStep)
         Next
