@@ -431,7 +431,8 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>
-                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                                                <local:FilterListBox/>
+                                                <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
                                                     <ListView.ItemTemplate>
                                                         <DataTemplate>
                                                             <TextBlock>
@@ -444,7 +445,7 @@
                                                             </TextBlock>
                                                         </DataTemplate>
                                                     </ListView.ItemTemplate>
-                                                </ListView>
+                                                </ListView>-->
                                                 <Image Grid.Row="2" Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
@@ -495,6 +496,19 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="FilterListBox">
+                <local:FilterListBox/>
+            </DataTemplate>
+            <DataTemplate x:Key="PMUOnlyFilterListBox">
+                <!--<TextBlock Margin="2,0" Text="{Binding Path=DataContext.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}">-->
+                <ListView Margin="20,2,2,2" ItemsSource="{Binding ThisStepOutputsAsSignalHierachyByPMU.SignalList}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                            <TextBlock Margin="2,0" Text="{Binding SignalSignature.PMUName}"/>
+                        </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
@@ -697,7 +711,7 @@
                                         </MenuItem>
                                     </Menu>
                                 </Grid>
-                                <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2">
+                                <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2" Name="StepsControl">
                                     <ItemsControl.Resources>
                                         <DataTemplate DataType="{x:Type local:DQFilter}">
                                             <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
@@ -722,20 +736,18 @@
                                                             </Grid.ColumnDefinitions>
                                                             <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                                                    <ListView.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <TextBlock Margin="2,0">
-                                                                                <TextBlock.Text>
-                                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
-                                                                                        <Binding Path="PMUName"/>
-                                                                                        <Binding Path="SignalName"/>
-                                                                                    </MultiBinding>
-                                                                                </TextBlock.Text>
-                                                                            </TextBlock>
-                                                                        </DataTemplate>
-                                                                    </ListView.ItemTemplate>
-                                                                </ListView>
+                                                                <ContentControl Content="{Binding}">
+                                                                    <ContentControl.Style>
+                                                                        <Style TargetType="ContentControl">
+                                                                            <Setter Property="ContentTemplate" Value="{StaticResource FilterListBox}"/>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Name}" Value="PMU Status Flags Data Quality Filter">
+                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource PMUOnlyFilterListBox}"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </ContentControl.Style>
+                                                                </ContentControl>
                                                             </StackPanel>
                                                             <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                                 <Label Content="Parameters:" Margin="2"/>
@@ -961,20 +973,7 @@
                                                             </Grid.ColumnDefinitions>
                                                             <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                                                    <ListView.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <TextBlock Margin="2,0">
-                                                                                <TextBlock.Text>
-                                                                                    <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
-                                                                                        <Binding Path="PMUName"/>
-                                                                                        <Binding Path="SignalName"/>
-                                                                                    </MultiBinding>
-                                                                                </TextBlock.Text>
-                                                                            </TextBlock>
-                                                                        </DataTemplate>
-                                                                    </ListView.ItemTemplate>
-                                                                </ListView>
+                                                                <local:FilterListBox/>
                                                             </StackPanel>
                                                             <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                                 <Label Content="Parameters:" Margin="2"/>
@@ -1058,7 +1057,8 @@
                                                             </Grid.ColumnDefinitions>
                                                             <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                <local:FilterListBox/>
+                                                                <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                     <ListView.ItemTemplate>
                                                                         <DataTemplate>
                                                                             <TextBlock Margin="2,0">
@@ -1071,7 +1071,7 @@
                                                                             </TextBlock>
                                                                         </DataTemplate>
                                                                     </ListView.ItemTemplate>
-                                                                </ListView>
+                                                                </ListView>-->
                                                             </StackPanel>
                                                             <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                                 <Label Content="Parameters:" Margin="2"/>
@@ -1209,7 +1209,8 @@
                                                                     <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}"/>
                                                                 </StackPanel>
                                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                                                                <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                                <local:FilterListBox/>
+                                                                <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                     <ListView.ItemTemplate>
                                                                         <DataTemplate>
                                                                             <TextBlock Margin="2,0">
@@ -1222,7 +1223,7 @@
                                                                             </TextBlock>
                                                                         </DataTemplate>
                                                                     </ListView.ItemTemplate>
-                                                                </ListView>
+                                                                </ListView>-->
                                                             </StackPanel>
                                                             <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                                 <Label Content="Parameters:" Margin="2"/>
@@ -1412,7 +1413,8 @@
                                                     <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
                                                         <StackPanel Orientation="Vertical" Margin="2">
                                                             <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                                                            <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                                            <local:FilterListBox/>
+                                                            <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                                                 <ListView.ItemTemplate>
                                                                     <DataTemplate>
                                                                         <TextBlock Margin="2,0">
@@ -1425,7 +1427,7 @@
                                                                         </TextBlock>
                                                                     </DataTemplate>
                                                                 </ListView.ItemTemplate>
-                                                            </ListView>
+                                                            </ListView>-->
                                                         </StackPanel>
                                                     </Expander>
                                                     <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteWrap}" CommandParameter="{Binding}">
@@ -1488,6 +1490,10 @@
         </StackPanel>
     </Grid>
 </Window>
+
+
+
+
 
 
 

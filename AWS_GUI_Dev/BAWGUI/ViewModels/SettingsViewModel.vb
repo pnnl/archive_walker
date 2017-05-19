@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
+Imports System.Globalization
 Imports System.Windows.Forms
 Imports BAWGUI
 Imports PDAT_Reader
@@ -913,14 +914,20 @@ Partial Public Class SettingsViewModel
                                </Mode>
         Select Case DataConfigure.ReaderProperty.ModeName
             Case ModeType.Archive
+                dim dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
+                dim dtEnd = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
                 Dim parameters As XElement = <Params>
-                                                 <DateTimeStart><%= DataConfigure.ReaderProperty.DateTimeStart %></DateTimeStart>
-                                                 <DateTimeEnd><%= DataConfigure.ReaderProperty.DateTimeEnd %></DateTimeEnd>
+                                                 <DateTimeStart><%= dtStringStart %></DateTimeStart>
+                                                 <DateTimeEnd><%= dtStringEnd %></DateTimeEnd>
                                              </Params>
                 mode.Add(parameters)
             Case ModeType.Hybrid
+                dim dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
                 Dim parameters As XElement = <Params>
-                                                 <DateTimeStart><%= DataConfigure.ReaderProperty.DateTimeStart %></DateTimeStart>
+                                                 <DateTimeStart><%= dtStringStart %></DateTimeStart>
                                                  <NoFutureWait><%= DataConfigure.ReaderProperty.NoFutureWait %></NoFutureWait>
                                                  <MaxNoFutureCount><%= DataConfigure.ReaderProperty.MaxNoFutureCount %></MaxNoFutureCount>
                                                  <FutureWait><%= DataConfigure.ReaderProperty.FutureWait %></FutureWait>
