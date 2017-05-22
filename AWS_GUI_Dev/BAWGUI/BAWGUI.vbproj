@@ -133,6 +133,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\ValueIfEmptyConverter.vb" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.vb" />
     <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.vb" />
@@ -152,6 +153,9 @@
     </Compile>
     <Compile Include="Views\ExponentCustomization.xaml.vb">
       <DependentUpon>ExponentCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExponentCustomizationItem.xaml.vb">
+      <DependentUpon>ExponentCustomizationItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MetricPrefixCustomization.xaml.vb">
       <DependentUpon>MetricPrefixCustomization.xaml</DependentUpon>
@@ -194,6 +198,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ExponentCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExponentCustomizationItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

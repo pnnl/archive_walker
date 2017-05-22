@@ -38,7 +38,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <TextBlock VerticalAlignment="Bottom" Style="{StaticResource NoItemsTextStyle}" Margin="0,2,2,6" Text="Select signals for summation" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
+            <TextBlock VerticalAlignment="Bottom" Style="{StaticResource NoItemsTextStyle}" Margin="0,2,2,6" Text="Select signals for multiplication" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
         </Grid>
         <Separator Grid.Row="1" Grid.Column="1" Width="305" HorizontalAlignment="Left"></Separator>
         <StackPanel Orientation="Horizontal" Margin="0,2,2,2" Grid.Row="2" Grid.Column="1">
