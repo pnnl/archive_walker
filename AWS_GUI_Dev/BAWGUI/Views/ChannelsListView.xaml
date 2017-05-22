@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="ChannelsListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:BAWGUI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <ListView Style="{StaticResource ChannelsListViewStyle}" Margin="0,2,2,2" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding InputChannels}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Margin="2,0">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                <Binding Path="PMUName"/>
+                                <Binding Path="SignalName"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock VerticalAlignment="Bottom" Style="{StaticResource NoItemsTextStyle}" Margin="0,2,2,6" Text="Select signals for summation" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
+    </Grid>
+</UserControl>

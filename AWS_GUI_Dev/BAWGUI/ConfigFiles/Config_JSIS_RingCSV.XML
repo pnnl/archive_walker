@@ -158,27 +158,87 @@
 							<ZeroPhase>FALSE</ZeroPhase>
 						</Parameters>
 					</Filter>
+					<Filter>
+						<Type>Median</Type>
+						<Parameters>
+							<Order>5</Order>
+							<Endpoints>truncate</Endpoints>
+							<HandleNaN>includenan</HandleNaN>
+						</Parameters>
+					</Filter>
+					<Multirate>
+						<Parameters>
+							<MultiRatePMU>Custom Signals 1</MultiRatePMU>
+							<NewRate>120</NewRate>
+						</Parameters>
+					</Multirate>
+					<Multirate>
+						<Parameters>
+							<MultiRatePMU>Custom Signals 2</MultiRatePMU>
+							<p>3</p>
+							<q>2</q>
+						</Parameters>
+					</Multirate>
+					<Multirate>
+						<Parameters>
+						  <MultiRatePMU>Custom Signals 1</MultiRatePMU>
+						  <NewRate>120</NewRate>
+						</Parameters>
+						<PMU>
+						  <Name>ALSN 500 A1 SA  </Name>
+						  <Channel>
+							<Name>ALSN 500 A1 SA  .frq</Name>
+						  </Channel>
+						</PMU>
+					</Multirate>
+					<Multirate>
+						<Parameters>
+						  <MultiRatePMU>Custom Signals 2</MultiRatePMU>
+						  <p>3</p>
+						  <q>2</q>
+						</Parameters>
+						<PMU>
+						  <Name>BGED 500  A1 SA </Name>
+						  <Channel>
+							<Name>BGED 500  A1 SA .frq</Name>
+						  </Channel>
+					</PMU>
+					</Multirate>
 				</Stages>
 			</Processing>   
 			<NameTypeUnit>
-				<NewUnit>Hz</NewUnit>
-				<NewType>F</NewType>
-				<!--
+<!-- 				<NewUnit>Hz</NewUnit>
+				<NewType>F</NewType> -->
+				
 				<PMU>
-					<Name>Custom Signals</Name>
-					<CurrentChannel>MALN</CurrentChannel>
-					<NewChannel>MALN</NewChannel>
+					<Name>Custom Signals 1</Name>
+					<CurrentChannel>ALSN 500 A1 SA  .frq</CurrentChannel>
+					<NewChannel>ALSN 500 A1 SA  .frq</NewChannel>
 					<NewUnit>Hz</NewUnit>
 					<NewType>F</NewType>
 				</PMU>
 				<PMU>
-					<Name>Custom Signals</Name>
-					<CurrentChannel>JDAY</CurrentChannel>
-					<NewChannel>JDAY</NewChannel>
+					<Name>Custom Signals 2</Name>
+					<CurrentChannel>BGED 500  A1 SA .frq</CurrentChannel>
+					<NewChannel>BGED 500  A1 SA .frq</NewChannel>
 					<NewUnit>Hz</NewUnit>
 					<NewType>F</NewType>
 				</PMU>
-				-->
+				<PMU>
+					<Name>Custom Signals 2</Name>
+					<CurrentChannel>BGED 500  A1 SA .frq</CurrentChannel>
+					<NewChannel>BGED 500  A1 SA .frq</NewChannel>
+					<NewUnit>kV</NewUnit>
+					<NewType>F</NewType>
+				</PMU>
+				<PMU>
+					<Name>Custom Signals 1</Name>
+					<CurrentChannel>ALSN 500 A1 SA  .frq</CurrentChannel>
+					<NewChannel>ALSN 500 A1 SA  .frq</NewChannel>
+					<NewUnit>Hz</NewUnit>
+					<NewType>F</NewType>
+				</PMU>
+				
 			</NameTypeUnit>
 			<!--
 			Specify the signals for output

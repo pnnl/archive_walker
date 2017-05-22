@@ -42,12 +42,16 @@ Public Class SignalSignatures
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
+        _passedThroughDQFilter = False
+        _passedThroughProcessor = False
     End Sub
     Public Sub New(name As String)
         _signalName = name
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
+        _passedThroughDQFilter = False
+        _passedThroughProcessor = False
     End Sub
     Public Sub New(name As String, pmu As String)
         _signalName = name
@@ -55,6 +59,8 @@ Public Class SignalSignatures
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
+        _passedThroughDQFilter = False
+        _passedThroughProcessor = False
     End Sub
     Public Sub New(name As String, pmu As String, type As String)
         _signalName = name
@@ -63,6 +69,8 @@ Public Class SignalSignatures
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
+        _passedThroughDQFilter = False
+        _passedThroughProcessor = False
     End Sub
     'Public Sub Dispose() Implements IDisposable.Dispose
     '    'Dispose(True)
@@ -162,6 +170,40 @@ Public Class SignalSignatures
             OnPropertyChanged()
         End Set
     End Property
+    
+    Private _samplingRate As Integer
+    Public Property SamplingRate As Integer
+        Get
+            Return _samplingRate
+        End Get
+        Set(value As Integer)
+            _samplingRate = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    
+    Private _passedThroughDQFilter As Boolean
+    Public Property PassedThroughDQFilter As Boolean
+        Get
+            Return _passedThroughDQFilter
+        End Get
+        Set(value As Boolean)
+            _passedThroughDQFilter = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    
+    Private _passedThroughProcessor As Boolean
+    Public Property PassedThroughProcessor As Boolean
+        Get
+            Return _passedThroughProcessor
+        End Get
+        Set(value As Boolean)
+            _passedThroughProcessor = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
     Public Overrides Function Equals(obj As Object) As Boolean
         If obj Is Nothing OrElse Not Me.GetType Is obj.GetType Then
             Return False

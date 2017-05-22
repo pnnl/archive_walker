@@ -13,7 +13,7 @@
             <converters:ValueIfEmptyConverter x:Key="ValueIfEmptyConverter"></converters:ValueIfEmptyConverter>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border Background="WhiteSmoke" BorderBrush="Green" PreviewMouseDown="">
+    <Border Background="WhiteSmoke" BorderBrush="Green">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"></ColumnDefinition>

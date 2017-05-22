@@ -1,13 +1,15 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
+Imports System.Globalization
 Imports System.Windows.Forms
 Imports BAWGUI
 Imports PDAT_Reader
 Imports System.Linq
+Imports Microsoft.Expression.Interactivity.Core
 
 'Imports BAWGUI.DataConfig
 
-Public Class SettingsViewModel
+Partial Public Class SettingsViewModel
     Inherits ViewModelBase
 
     Public Sub New()
@@ -26,8 +28,8 @@ Public Class SettingsViewModel
         _dqfilterSelected = New DelegateCommand(AddressOf _dqfilterSelection, AddressOf CanExecute)
         _customizationSelected = New DelegateCommand(AddressOf _customizationStepSelection, AddressOf CanExecute)
         _selectedSignalChanged = New DelegateCommand(AddressOf _signalSelected, AddressOf CanExecute)
-        _stepSelected = New DelegateCommand(AddressOf _stepSelectedToEdit, AddressOf CanExecute)
-        _stepDeSelected = New DelegateCommand(AddressOf _deSelectAllSteps, AddressOf CanExecute)
+        _dataConfigStepSelected = New DelegateCommand(AddressOf _stepSelectedToEdit, AddressOf CanExecute)
+        _dataConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllDataConfigSteps, AddressOf CanExecute)
         _setCurrentFocusedTextbox = New DelegateCommand(AddressOf _currentFocusedTextBoxChanged, AddressOf CanExecute)
         _setCurrentFocusedTextboxUnarySteps = New DelegateCommand(AddressOf _currentFocusedTextBoxForUnaryStepsChanged, AddressOf CanExecute)
         '_selectedOutputSignalChanged = New DelegateCommand(AddressOf _outputSignalSelectionChanged, AddressOf CanExecute)
@@ -40,73 +42,112 @@ Public Class SettingsViewModel
         _deleteThisFileSource = New DelegateCommand(AddressOf _deleteAFileSource, AddressOf CanExecute)
         _saveConfigFile = New DelegateCommand(AddressOf _saveConfigureFile, AddressOf CanExecute)
         _saveConfigFileAs = New DelegateCommand(AddressOf _saveConfigureFileAs, AddressOf CanExecute)
+        _walkerStageChanged = New DelegateCommand(AddressOf _changeSignalSelectionDropDownChoice, AddressOf CanExecute)
+        _addUnwrap = New DelegateCommand(AddressOf _addAUnwrap, AddressOf CanExecute)
+        _deleteUnwrapStep = New DelegateCommand(AddressOf _deleteAUnwrap, addressOf CanExecute)
+        _addInterpolate = New DelegateCommand(AddressOf _addAnInterpolate, AddressOf CanExecute)
+        _deleteInterpolateStep = New DelegateCommand(AddressOf _deleteAnInterpolate, AddressOf CanExecute)
+        _addWrap = New DelegateCommand(AddressOf _addAWrap, AddressOf CanExecute)
+        _deleteWrap = New DelegateCommand(AddressOf _deleteAWrap, AddressOf CanExecute)
+        _addTunableFilterOrMultirate = New DelegateCommand(AddressOf _addATunableFilterOrMultirate, AddressOf CanExecute)
+        _deleteTunableFilterOrMultirate = New DelegateCommand(AddressOf _deleteATunableFilterOrMultirate, addressOf CanExecute)
+        _multirateParameterChoice = New DelegateCommand(AddressOf _chooseParameterForMultirate, AddressOf CanExecute)
+        _processConfigStepSelected = New DelegateCommand(AddressOf _processStepSelectedToEdit, AddressOf canExecute)
+        _processConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllProcessConfigSteps, AddressOf CanExecute)
+        _deleteNameTypeUnit = New DelegateCommand(AddressOf _deleteANameTypeUnit, AddressOf CanExecute)
+        _addNameTypeUnit = New DelegateCommand(AddressOf _addANameTypeUnit, AddressOf CanExecute)
+        '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
+
         '_inputFileDirTree = New ObservableCollection(Of Folder)
-        _groupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
-        _groupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
-        _groupedSignalByStepsInput = New ObservableCollection(Of SignalTypeHierachy)
-        _groupedSignalByStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
+        _groupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+        _groupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
+        _groupedSignalByDataConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
+        _groupedSignalByDataConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
+        _groupedSignalByProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
+        _groupedSignalByProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
+
         _allPMUs = New ObservableCollection(Of String)
 
         _timezoneList = TimeZoneInfo.GetSystemTimeZones
         _signalSelectionTreeViewVisibility = "Visible"
-        _selectSignalMethods = {"All Raw Input Channels by Signal Type",
-                                "All Raw Input Channels by PMU",
+        _selectSignalMethods = {"All Initial Input Channels by Signal Type",
+                                "All Initial Input Channels by PMU",
                                 "Input Channels by Step",
-                                "OutPut Channels by Step"}.ToList
-        _selectedSelectionMethod = "All Raw Input Channels by Signal Type"
+                                "Output Channels by Step"}.ToList
+        _selectedSelectionMethod = "All Initial Input Channels by Signal Type"
         '_powerTypeDictionary = New Dictionary(Of String, String) From {{"CP", "Complex"}, {"S", "Apparent"}, {"P", "Active"}, {"Q", "Reactive"}}
         _powerTypeDictionary = New Dictionary(Of String, String) From {{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}}
 
     End Sub
 
 
-    Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
-    Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
+    'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
+    'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
+    '    Get
+    '        Return _pmuSignalDictionary
+    '    End Get
+    '    Set(ByVal value As Dictionary(Of String, List(Of SignalSignatures)))
+    '        _pmuSignalDictionary = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
+    Private _groupedRawSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedRawSignalsByType As ObservableCollection(Of SignalTypeHierachy)
         Get
-            Return _pmuSignalDictionary
+            Return _groupedRawSignalsByType
         End Get
-        Set(ByVal value As Dictionary(Of String, List(Of SignalSignatures)))
-            _pmuSignalDictionary = value
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _groupedRawSignalsByType = value
             OnPropertyChanged()
         End Set
     End Property
-    Private _groupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
-    Public Property GroupedSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+    Private _groupedRawSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedRawSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
         Get
-            Return _groupedSignalsByType
+            Return _groupedRawSignalsByPMU
         End Get
         Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-            _groupedSignalsByType = value
+            _groupedRawSignalsByPMU = value
             OnPropertyChanged()
         End Set
     End Property
-    Private _groupedSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
-    Public Property GroupedSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
+    Private _groupedSignalByDataConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedSignalByDataConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
         Get
-            Return _groupedSignalsByPMU
+            Return _groupedSignalByDataConfigStepsInput
         End Get
         Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-            _groupedSignalsByPMU = value
+            _groupedSignalByDataConfigStepsInput = value
             OnPropertyChanged()
         End Set
     End Property
-    Private _groupedSignalByStepsInput As ObservableCollection(Of SignalTypeHierachy)
-    Public Property GroupedSignalByStepsInput As ObservableCollection(Of SignalTypeHierachy)
+    Private _groupedSignalByDataConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
+    Public Property GroupedSignalByDataConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
         Get
-            Return _groupedSignalByStepsInput
+            Return _groupedSignalByDataConfigStepsOutput
         End Get
         Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-            _groupedSignalByStepsInput = value
+            _groupedSignalByDataConfigStepsOutput = value
             OnPropertyChanged()
         End Set
     End Property
-    Private _groupedSignalByStepsOutput As ObservableCollection(Of SignalTypeHierachy)
-    Public Property GroupedSignalByStepsOutput As ObservableCollection(Of SignalTypeHierachy)
+    Private _allDataConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
+    Public Property AllDataConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
         Get
-            Return _groupedSignalByStepsOutput
+            Return _allDataConfigOutputGroupedByType
         End Get
-        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-            _groupedSignalByStepsOutput = value
+        Set(value As ObservableCollection(Of SignalTypeHierachy))
+            _allDataConfigOutputGroupedByType = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _allDataConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+    Public Property AllDataConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _allDataConfigOutputGroupedByPMU
+        End Get
+        Set(value As ObservableCollection(Of SignalTypeHierachy))
+            _allDataConfigOutputGroupedByPMU = value
             OnPropertyChanged()
         End Set
     End Property
@@ -117,6 +158,7 @@ Public Class SettingsViewModel
             'signal.SignalName = name
             Dim nameParts = name.Split(".")
             signal.PMUName = nameParts(0)
+            signal.SamplingRate = fileInfo.SamplingRate
             If nameParts.Length = 3 Then
                 Select Case nameParts(2)
                     Case "F"
@@ -180,11 +222,11 @@ Public Class SettingsViewModel
         Next
         Dim a = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second"))
         a.SignalList = fileInfo.GroupedSignalsByPMU
-        GroupedSignalsByPMU.Add(a)
+        GroupedRawSignalsByPMU.Add(a)
         fileInfo.GroupedSignalsByType = SortSignalByType(newSignalList)
         Dim b = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second"))
         b.SignalList = fileInfo.GroupedSignalsByType
-        GroupedSignalsByType.Add(b)
+        GroupedRawSignalsByType.Add(b)
     End Sub
 
     Private Function SortSignalByType(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
@@ -543,7 +585,7 @@ Public Class SettingsViewModel
     End Function
 
     Private Function SortSignalByPMU(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
-        PMUSignalDictionary = signalList.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+        dim PMUSignalDictionary = signalList.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
         Dim pmuSignalTree = New ObservableCollection(Of SignalTypeHierachy)
         For Each group In PMUSignalDictionary
             Dim newPMUSignature = New SignalSignatures(group.Key, group.Key)
@@ -584,15 +626,15 @@ Public Class SettingsViewModel
             obj.GroupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
             obj.GroupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             ' clean out signals from that directory from all references since we display those signals in 4 different ways
-            For Each group In GroupedSignalsByType
+            For Each group In GroupedRawSignalsByType
                 If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                    GroupedSignalsByType.Remove(group)
+                    GroupedRawSignalsByType.Remove(group)
                     Exit For
                 End If
             Next
-            For Each group In GroupedSignalsByPMU
+            For Each group In GroupedRawSignalsByPMU
                 If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                    GroupedSignalsByPMU.Remove(group)
+                    GroupedRawSignalsByPMU.Remove(group)
                     Exit For
                 End If
             Next
@@ -606,7 +648,7 @@ Public Class SettingsViewModel
             obj.FileDirectory = _lastInputFolderLocation
             _buildInputFileFolderTree(obj)
             If _configData IsNot Nothing Then
-                _readStages()
+                _readDataConfigStages()
             End If
         End If
     End Sub
@@ -650,6 +692,20 @@ Public Class SettingsViewModel
             Dim signalNames = fr.ReadFields.Skip(1).ToList
             Dim signalTypes = fr.ReadFields.Skip(1).ToList
             Dim signalUnits = fr.ReadFields.Skip(1).ToList
+            fr.ReadLine()
+            fr.ReadLine()
+            Dim time1 = fr.ReadFields(0)
+            Dim time2 = fr.ReadFields(0)
+            Try
+                Dim t1 = Convert.ToDouble(time1)
+                Dim t2 = Convert.ToDouble(time2)
+                fileInfo.SamplingRate = Math.Round((1 / (t2 - t1)) / 10) * 10.ToString
+            Catch ex As Exception
+                Dim t1 = DateTime.Parse(time1)
+                Dim t2 = DateTime.Parse(time2)
+                Dim dif = t2.Subtract(t1).TotalSeconds
+                fileInfo.SamplingRate = Math.Round((1 / dif) / 10) * 10.ToString
+            End Try
             Dim type = ""
             Dim signalName = ""
             Dim signalList = New List(Of String)
@@ -659,6 +715,7 @@ Public Class SettingsViewModel
                 newSignal.PMUName = pmuName
                 newSignal.Unit = signalUnits(index)
                 newSignal.SignalName = signalNames(index)
+                newSignal.SamplingRate = fileInfo.SamplingRate
                 signalList.Add(signalNames(index))
                 Select Case signalTypes(index)
                     Case "VPM"
@@ -693,28 +750,14 @@ Public Class SettingsViewModel
             Next
             fileInfo.SignalList = signalList
             fileInfo.TaggedSignals = signalSignatureList
-            fr.ReadLine()
-            fr.ReadLine()
-            Dim time1 = fr.ReadFields(0)
-            Dim time2 = fr.ReadFields(0)
-            Try
-                Dim t1 = Convert.ToDouble(time1)
-                Dim t2 = Convert.ToDouble(time2)
-                fileInfo.SamplingRate = Math.Round((1 / (t2 - t1)) / 10) * 10.ToString
-            Catch ex As Exception
-                Dim t1 = DateTime.Parse(time1)
-                Dim t2 = DateTime.Parse(time2)
-                Dim dif = t2.Subtract(t1).TotalSeconds
-                fileInfo.SamplingRate = Math.Round((1 / dif) / 10) * 10.ToString
-            End Try
             fileInfo.GroupedSignalsByPMU = SortSignalByPMU(signalSignatureList)
             Dim a = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second"))
             a.SignalList = fileInfo.GroupedSignalsByPMU
-            GroupedSignalsByPMU.Add(a)
+            GroupedRawSignalsByPMU.Add(a)
             fileInfo.GroupedSignalsByType = SortSignalByType(signalSignatureList)
             Dim b = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second"))
             b.SignalList = fileInfo.GroupedSignalsByType
-            GroupedSignalsByType.Add(b)
+            GroupedRawSignalsByType.Add(b)
         Else
             Dim PDATSampleFile As New PDATReader
             fileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(sampleFile)
@@ -752,7 +795,7 @@ Public Class SettingsViewModel
         End Get
         Set(ByVal value As DataConfig)
             _dataConfigure = value
-            OnPropertyChanged("DataConfigure")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -763,7 +806,7 @@ Public Class SettingsViewModel
         End Get
         Set(ByVal value As ProcessConfig)
             _processConfigure = value
-            OnPropertyChanged("ProcessConfigure")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -774,7 +817,7 @@ Public Class SettingsViewModel
         End Get
         Set(ByVal value As DetectorConfig)
             _detectorConfigure = value
-            OnPropertyChanged("Detectorconfigure")
+            OnPropertyChanged()
         End Set
     End Property
 
@@ -847,8 +890,6 @@ Public Class SettingsViewModel
         Dim dataConfig As XElement = <DataConfig>
                                          <Configuration>
                                              <ReaderProperties></ReaderProperties>
-                                             <Stages></Stages>
-                                             <SignalSelection></SignalSelection>
                                          </Configuration>
                                      </DataConfig>
         Dim fileInfoCount = 0
@@ -873,14 +914,20 @@ Public Class SettingsViewModel
                                </Mode>
         Select Case DataConfigure.ReaderProperty.ModeName
             Case ModeType.Archive
+                dim dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
+                dim dtEnd = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
                 Dim parameters As XElement = <Params>
-                                                 <DateTimeStart><%= DataConfigure.ReaderProperty.DateTimeStart %></DateTimeStart>
-                                                 <DateTimeEnd><%= DataConfigure.ReaderProperty.DateTimeEnd %></DateTimeEnd>
+                                                 <DateTimeStart><%= dtStringStart %></DateTimeStart>
+                                                 <DateTimeEnd><%= dtStringEnd %></DateTimeEnd>
                                              </Params>
                 mode.Add(parameters)
             Case ModeType.Hybrid
+                dim dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
                 Dim parameters As XElement = <Params>
-                                                 <DateTimeStart><%= DataConfigure.ReaderProperty.DateTimeStart %></DateTimeStart>
+                                                 <DateTimeStart><%= dtStringStart %></DateTimeStart>
                                                  <NoFutureWait><%= DataConfigure.ReaderProperty.NoFutureWait %></NoFutureWait>
                                                  <MaxNoFutureCount><%= DataConfigure.ReaderProperty.MaxNoFutureCount %></MaxNoFutureCount>
                                                  <FutureWait><%= DataConfigure.ReaderProperty.FutureWait %></FutureWait>
@@ -899,7 +946,16 @@ Public Class SettingsViewModel
         End Select
         dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(mode)
         Dim aStep As XElement
+        Dim stage As XElement = <Stages></Stages>
+        Dim newStageFlag = True
         For Each singleStep In DataConfigure.CollectionOfSteps
+            If TypeOf singleStep Is Customization AndAlso newStageFlag Then
+                newStageFlag = False
+            ElseIf Not newStageFlag AndAlso TypeOf singleStep Is DQFilter Then
+                dataConfig.<Configuration>.LastOrDefault.Add(stage)
+                stage = <Stages></Stages>
+                newStageFlag = True
+            End If
             Select Case singleStep.Name
                 Case "Scalar Repetition Customization"
                     aStep = <Customization>
@@ -1058,7 +1114,7 @@ Public Class SettingsViewModel
                                                         <CustName><%= pair.Key.SignalName %></CustName>
                                                     </power>
                             aStep.<Parameters>.LastOrDefault.Add(power)
-                        Else
+                        ElseIf pair.Value.Count = 2 Then
                             Dim power As XElement = <power>
                                                         <Vphasor>
                                                             <PMU><%= pair.Value(0).PMUName %></PMU>
@@ -1121,17 +1177,137 @@ Public Class SettingsViewModel
                                 <Name><%= DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                                 <Parameters></Parameters>
                             </Filter>
-                    For Each parameter In singleStep.Parameters
+                    For Each parameter In singleStep.FilterParameters
                         'Dim a = {parameter}ParameterName
                         'Dim para As XElement = <<%= parameter.ParameterName.ToString %>><%= parameter.Value %></>
                         Dim para As XElement = New XElement(parameter.ParameterName.ToString, parameter.Value)
                         aStep.<Parameters>.LastOrDefault.Add(para)
                     Next
+                    if singleStep.Name = "PMU Status Flags Data Quality Filter"
+                        For Each signal In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
+                            Dim PMU As XElement = <PMU>
+                                                    <Name><%= signal.SignalSignature.PMUName %></Name>
+                                                  </PMU>
+                            aStep.Add(PMU)
+                        Next
+                    Else
+                        dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                        _writePMUElements(aStep, PMUSignalDictionary)
+                    End If
             End Select
-            dataConfig.<Configuration>.<Stages>.LastOrDefault.Add(aStep)
+            stage.Add(aStep)
         Next
+        dataConfig.<Configuration>.LastOrDefault.Add(stage)
+        Dim signalSelection As XElement = <SignalSelection></SignalSelection>
+        dataConfig.<Configuration>.LastOrDefault.Add(signalSelection)
         _configData.Add(dataConfig)
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '''''''''''Write process config''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
         Dim processConfig As XElement = <ProcessConfig><Configuration></Configuration></ProcessConfig>
+        dim processing As XElement = <Processing></Processing>
+        for Each unWrap in ProcessConfigure.UnWrapList
+            aStep = <Unwrap>
+                        <MaxNaN><%= unWrap.MaxNaN %></MaxNaN>
+                    </Unwrap>
+            dim PMUSignalDictionary = unWrap.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+            _writePMUElements(aStep, PMUSignalDictionary)
+            processing.Add(aStep)
+        Next
+        For Each itrplt In ProcessConfigure.InterpolateList
+            aStep = <Interpolate>
+                        <Parameters>
+                            <Limit><%= itrplt.Limit %></Limit>
+                            <Type><%= itrplt.Type %></Type>
+                            <FlagInterp><%= itrplt.FlagInterp %></FlagInterp>
+                        </Parameters>
+                    </Interpolate>
+            dim PMUSignalDictionary = itrplt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+            _writePMUElements(aStep, PMUSignalDictionary)
+            processing.Add(aStep)
+        Next
+        stage = <Stages></Stages>
+        For Each stp In ProcessConfigure.CollectionOfSteps
+            If TypeOf stp Is Multirate AndAlso newStageFlag Then
+                newStageFlag = False
+            ElseIf Not newStageFlag AndAlso TypeOf stp Is TunableFilter Then
+                processing.Add(stage)
+                stage = <Stages></Stages>
+                newStageFlag = True
+            End If
+            if TypeOf stp Is TunableFilter
+                aStep = <Filter>
+                            <Type><%= stp.Type.ToString() %></Type>
+                            <Parameters></Parameters>
+                        </Filter>
+                For Each parameter In stp.FilterParameters
+                    Dim para As XElement = New XElement(parameter.ParameterName.ToString, parameter.Value)
+                    aStep.<Parameters>.LastOrDefault.Add(para)
+                Next
+                dim PMUSignalDictionary = DirectCast(stp, TunableFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            ElseIf TypeOf stp is Multirate
+                aStep = <Multirate>
+                            <Parameters>                                
+                                <MultiRatePMU><%= stp.MultiRatePMU %></MultiRatePMU>
+                            </Parameters>
+                        </Multirate>
+                if stp.FilterParameters.Count = 2
+                    dim newR = <NewRate><%= stp.NewRate %></NewRate>
+                    aStep.<Parameters>.LastOrDefault.Add(newR)
+                ElseIf stp.FilterParameters.Count = 3
+                    dim p = <p><%= stp.PElement %></p>
+                    dim q = <q><%= stp.QElement %></q>
+                    aStep.<Parameters>.LastOrDefault.Add(p)
+                    aStep.<Parameters>.LastOrDefault.Add(q)
+                End If
+                dim PMUSignalDictionary = DirectCast(stp, Multirate).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            End If
+            stage.Add(aStep)
+        Next
+        processing.Add(stage)
+        For Each wrp In ProcessConfigure.WrapList
+            aStep = <Wrap></Wrap>
+            dim PMUSignalDictionary = wrp.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+            _writePMUElements(aStep, PMUSignalDictionary)
+            processing.Add(aStep)
+        Next
+        processConfig.<Configuration>.LastOrDefault.Add(processing)
+        Dim nameTypeUnit as XElement = <NameTypeUnit></NameTypeUnit>
+        if ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0
+            For Each pmus In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+                For Each signal In pmus.InputChannels
+                    Dim pmu = <PMU></PMU>
+                    dim a =              <Name><%= signal.PMUName %></Name>
+                    pmu.Add(a)
+                    dim b =                <CurrentChannel><%= signal.SignalName %></CurrentChannel>
+                    pmu.Add(b)
+                    If pmus.InputChannels.Count > 1
+                        dim c =                <NewChannel><%= signal.SignalName %></NewChannel>
+                        pmu.Add(c)
+                    else
+                        dim c =                <NewChannel><%= pmus.NewChannel %></NewChannel>
+                        pmu.Add(c)
+                    End If
+                    dim d =                <NewUnit><%= pmus.NewUnit %></NewUnit>
+                    pmu.Add(d)
+                    dim e =                <NewType><%= pmus.NewType %></NewType>
+                    pmu.Add(e)
+                              
+                    nameTypeUnit.Add(pmu)
+                Next
+            Next
+        Else
+            dim unit = <NewUnit><%= ProcessConfigure.NameTypeUnitElement.NewUnit %></NewUnit>
+            dim type = <NewType><%= ProcessConfigure.NameTypeUnitElement.NewType %></NewType>
+            nameTypeUnit.Add(unit)
+            nameTypeUnit.Add(type)
+        End If
+        processConfig.<Configuration>.LastOrDefault.Add(nameTypeUnit)
+        Dim signalSelection2 As XElement = <SignalSelection></SignalSelection>
+        processConfig.<Configuration>.LastOrDefault.Add(signalSelection2)
         _configData.Add(processConfig)
         Dim postProcessConfig As XElement = <PostProcessCustomizationConfig><Configuration></Configuration></PostProcessCustomizationConfig>
         _configData.Add(postProcessConfig)
@@ -1139,6 +1315,23 @@ Public Class SettingsViewModel
         _configData.Add(detectorConfig)
         _configData.Save(filename)
     End Sub
+
+    Private Sub _writePMUElements(aStep As XElement, pMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures)))
+        For Each pmuGroup In PMUSignalDictionary
+            Dim PMU As XElement = <PMU>
+                                    <Name><%= pmuGroup.Key %></Name>
+                                  </PMU>
+            For Each signal In pmuGroup.Value
+                dim sglName As XElement = <Channel>
+                                            <Name><%= signal.SignalName %></Name>
+                                          </Channel>
+                PMU.Add(sglName)
+            Next
+            aStep.Add(PMU)
+        Next
+    End Sub
+
+
 #End Region
 
     Private _openConfigFile As ICommand
@@ -1163,24 +1356,28 @@ Public Class SettingsViewModel
         If DialogResult Then
             ConfigFileName = openFileDialog.FileName
             _addLog("Open file: " & ConfigFileName & " successfully!")
-            GroupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
-            GroupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
+            GroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+            GroupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
             Try
                 _configData = XDocument.Load(_configFileName)
                 _readConfigFile()
             Catch ex As Exception
+                _addLog("Error reading config file!" & vbCrLf & ex.Message)
                 MessageBox.Show("Error reading config file!" & vbCrLf & ex.Message & vbCrLf & "Please see logs below!", "Error!", MessageBoxButtons.OK)
             End Try
         End If
     End Sub
     Private Sub _readConfigFile()
-        'Dim _sampleFile = ""
         _addLog("Reading " & ConfigFileName)
+
+        '''''''''''''''''''''' Read DataConfig''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         Dim fileInfo = New InputFileInfo
         Dim fileInfoList = New ObservableCollection(Of InputFileInfo)
         fileInfo.FileDirectory = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<FileDirectory>.Value
-        Dim fileType = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<FileType>.Value.ToLower
-        fileInfo.FileType = [Enum].Parse(GetType(DataFileType), fileType)
+        Dim fileType = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<FileType>.Value
+        If fileType IsNot Nothing Then
+            fileInfo.FileType = [Enum].Parse(GetType(DataFileType), fileType.ToLower())
+        End If
         fileInfo.Mnemonic = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mnemonic>.Value
         fileInfoList.Add(fileInfo)
         _buildInputFileFolderTree(fileInfo)
@@ -1218,67 +1415,121 @@ Public Class SettingsViewModel
             Case Else
                 Throw New Exception("Error: invalid mode type found in config file.")
         End Select
-        _readStages()
+        _readDataConfigStages()
+        _groupAllDataConfigOutputSignal()
+        '''''''''''''''''''''''''''''''''Read ProcessConfig''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        _readProcessConfig()
 
         _addLog("Done reading " & ConfigFileName & " .")
     End Sub
-    Private Sub _readStages()
+
+    Private Function _readPMUElements(stp As XElement) As ObservableCollection(Of SignalSignatures)
+        Dim inputSignalList = New ObservableCollection(Of SignalSignatures)
+        Dim inputs = From el In stp.Elements Where el.Name = "PMU" Select el
+        If inputs.ToList.Count > 0 Then
+
+            For Each aInput In inputs
+                Dim pmuName = aInput.<Name>.Value()
+                Dim channels = From el In aInput.Elements Where el.Name = "Channel" Select el
+                If channels.ToList.Count > 0 Then
+
+                    For Each channel In channels
+                        Dim signalName = channel.<Name>.Value
+                        Dim signal = _searchForSignalInTaggedSignals(pmuName, signalName)
+                        If signal IsNot Nothing Then
+                            inputSignalList.Add(signal)
+                        Else
+                            _addLog("Error reading config file! Signal in a step of processing with channel name: " & signalName & " in PMU " & pmuName & " not found!")
+                        End If
+                    Next
+                Else
+                    For Each group In GroupedRawSignalsByPMU
+                        For Each subgroup In group.SignalList
+                            If subgroup.SignalSignature.PMUName = pmuName Then
+
+                                For Each signal In subgroup.SignalList
+                                    inputSignalList.Add(signal.SignalSignature)
+                                Next
+                            End If
+                        Next
+                    Next
+                End If
+            Next
+        Else
+            'For Each group In GroupedSignalsByType
+            '    For Each subgroup In group.SignalList
+            '        If subgroup.SignalSignature.TypeAbbreviation = "V" OrElse subgroup.SignalSignature.TypeAbbreviation = "I"
+            '            For Each subsubgroup In subgroup.SignalList
+            '                 if subsubgroup.SignalSignature.TypeAbbreviation.Substring(1,1) = "A"
+            '                     For Each phase In subsubgroup.SignalList
+            '                         For Each signal In phase.SignalList
+            '                             aUnwrap.InputChannels.Add(signal.SignalSignature)
+            '                         Next
+            '                     Next
+            '                 End If       
+            '            Next
+            '        End If
+            '    Next
+            'Next
+            _addLog("Warning! No PMU specified in the step, no channel or no PMU is included in this step.")
+        End If
+        Return inputSignalList
+    End Function
+
+#Region "Read Data Config Customization Steps From XML Configure File"
+    Private Sub _readDataConfigStages()
         Dim CollectionOfSteps As New ObservableCollection(Of Object)
-        GroupedSignalByStepsInput = New ObservableCollection(Of SignalTypeHierachy)
-        GroupedSignalByStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
+        GroupedSignalByDataConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
+        GroupedSignalByDataConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
         Dim stepCounter As Integer = 0
         Dim stages = From el In _configData.<Config>.<DataConfig>.<Configuration>.Elements Where el.Name = "Stages" Select el
-        For Each el In stages
-            Dim steps = From element In _configData.<Config>.<DataConfig>.<Configuration>.<Stages>.Elements Select element
-            For Each element In steps
+        For Each stage In stages
+            Dim steps = From element In stage.Elements Select element
+            For Each stp In steps
                 Dim aStep As Object
-                'Dim necessaryParams As New List(Of String)
-                Dim outputInputNameDictionary = New Dictionary(Of String, List(Of SignalSignatures))
 
-                If element.Name = "Filter" Then
+                If stp.Name = "Filter" Then
                     aStep = New DQFilter
-                    aStep.Name = DataConfigure.DQFilterReverseNameDictionary(element.<Name>.Value)
+                    aStep.Name = DataConfigure.DQFilterReverseNameDictionary(stp.<Name>.Value)
                     'necessaryParams.AddRange(DataConfigure.DQFilterNameParametersDictionary(aStep.Name))
-                ElseIf element.Name = "Customization" Then
+                ElseIf stp.Name = "Customization" Then
                     aStep = New Customization
-                    aStep.Name = DataConfigure.CustomizationReverseNameDictionary(element.<Name>.Value)
+                    aStep.Name = DataConfigure.CustomizationReverseNameDictionary(stp.<Name>.Value)
                     'necessaryParams.AddRange(DataConfigure.CustomizationNameParemetersDictionary(aStep.Name))
                 End If
                 stepCounter += 1
                 aStep.StepCounter = stepCounter
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & "-" & aStep.Name
-                If TypeOf (aStep) Is Customization Then
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & "-" & aStep.Name
-                End If
+                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
 
                 'Dim signalForUnitTypeSpecificationCustomization As SignalSignatures = Nothing
                 Select Case aStep.Name
                     Case "Scalar Repetition Customization"
-                        _readScalarRepetitionCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Addition Customization"
-                        _readAdditionCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readAdditionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Subtraction Customization"
-                        _readSubtractionCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readSubtractionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Division Customization"
-                        _readDivisionCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readDivisionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Multiplication Customization"
-                        _readMultiplicationCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readMultiplicationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Raise signals to an exponent"
-                        _readRaiseExpCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readRaiseExpCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Take complex conjugate of signals"
-                        _readUnaryCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readUnaryCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Return angle of complex valued signals"
-                        _readAngleCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readAngleCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Phasor Creation Customization"
-                        _readPhasorCreationCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readPhasorCreationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Specify Signal Type and Unit Customization"
-                        _readSpecTypeUnitCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readSpecTypeUnitCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Power Calculation Customization"
-                        _readPowerCalculationCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readPowerCalculationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case "Metric Prefix Customization", "Angle Conversion Customization"
-                        _readMetricPrefixOrAngleConversionCustomization(aStep, element.<Parameters>, CollectionOfSteps, stepCounter)
+                        _readMetricPrefixOrAngleConversionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                     Case Else
-                        Dim params = From ps In element.<Parameters>.Elements Select ps
+                        Dim params = From ps In stp.<Parameters>.Elements Select ps
                         For Each pair In params
                             Dim aPair As New ParameterValuePair
                             Dim paraName = pair.Name.ToString
@@ -1293,21 +1544,31 @@ Public Class SettingsViewModel
                             Else
                                 aPair.Value = pair.Value
                             End If
-                            aStep.Parameters.Add(aPair)
+                            aStep.FilterParameters.Add(aPair)
                         Next
+                        aStep.InputChannels = _readPMUElements(stp)
+                        For Each signal In aStep.InputChannels
+                            signal.PassedThroughDQFilter = True
+                            aStep.OutputChannels.Add(signal)
+                        Next
+                        ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                        ' to add this step that is for sure a DQ filter to the list of step for signal manipulation and customization.
+                        ' Don't not move it outside the select case loop!!!!!
+                        ' Or it will cause customization steps being added twice.
                         CollectionOfSteps.Add(aStep)
-                        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
+                        ' Leave this line here! Don't move it!
+                        ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
                 End Select
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                If TypeOf aStep Is Customization Then
+                    aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
+                    GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
+                End If
+                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+                GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
             Next
         Next
         DataConfigure.CollectionOfSteps = CollectionOfSteps
     End Sub
-
-
-#Region "Read Customization Steps From XML Configure File"
 
     Private Sub _readPhasorCreationCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
         aStep.CustPMUname = params.<CustPMUname>.Value
@@ -1357,9 +1618,9 @@ Public Class SettingsViewModel
         Next
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readAngleCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1406,9 +1667,9 @@ Public Class SettingsViewModel
         Next
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readUnaryCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1452,9 +1713,9 @@ Public Class SettingsViewModel
         Next
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readSubtractionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1498,9 +1759,9 @@ Public Class SettingsViewModel
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readRaiseExpCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1548,9 +1809,9 @@ Public Class SettingsViewModel
         Next
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readDivisionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
@@ -1596,9 +1857,9 @@ Public Class SettingsViewModel
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readScalarRepetitionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1634,9 +1895,9 @@ Public Class SettingsViewModel
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readMultiplicationCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1679,9 +1940,9 @@ Public Class SettingsViewModel
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readAdditionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1718,9 +1979,9 @@ Public Class SettingsViewModel
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private _powerTypeDictionary As Dictionary(Of String, String)
@@ -1737,9 +1998,9 @@ Public Class SettingsViewModel
             'For Each power In powers
             If index > 0 Then
                 aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-                GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
+                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+                GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                 Dim oldStep = aStep
                 aStep = New Customization(oldStep)
                 stepCounter += 1
@@ -1773,9 +2034,9 @@ Public Class SettingsViewModel
             aStep.OutputInputMappingPair.Add(newPair)
             CollectionOfSteps.Add(aStep)
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-            aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
             'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-            GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+            'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+            'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
         Next
     End Sub
 
@@ -1811,9 +2072,9 @@ Public Class SettingsViewModel
         Next
         CollectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
 
     Private Sub _readSpecTypeUnitCustomization(aStep As Object, params As IEnumerable(Of XElement), CollectionOfSteps As ObservableCollection(Of Object), ByRef stepCounter As Integer)
@@ -1848,9 +2109,9 @@ Public Class SettingsViewModel
         'Next
         CollectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
         'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
     End Sub
     Private _lastCustPMUname As String
     ''' <summary>
@@ -1860,7 +2121,7 @@ Public Class SettingsViewModel
     ''' <param name="channel"></param>
     ''' <returns></returns>
     Private Function _searchForSignalInTaggedSignals(pmu As String, channel As String) As SignalSignatures
-        For Each group In GroupedSignalsByPMU
+        For Each group In GroupedRawSignalsByPMU
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.PMUName = pmu Then
                     For Each subsubgroup In subgroup.SignalList
@@ -1871,7 +2132,18 @@ Public Class SettingsViewModel
                 End If
             Next
         Next
-        For Each group In GroupedSignalByStepsOutput
+        For Each group In GroupedSignalByDataConfigStepsOutput
+            For Each subgroup In group.SignalList
+                If subgroup.SignalSignature.PMUName = pmu Then
+                    For Each subsubgroup In subgroup.SignalList
+                        If subsubgroup.SignalSignature.SignalName = channel Then
+                            Return subsubgroup.SignalSignature
+                        End If
+                    Next
+                End If
+            Next
+        Next
+        For Each group In GroupedSignalByProcessConfigStepsOutput
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.PMUName = pmu Then
                     For Each subsubgroup In subgroup.SignalList
@@ -1886,138 +2158,6 @@ Public Class SettingsViewModel
     End Function
 #End Region
 
-#Region "Add a step"
-    Private _dqfilterSelected As ICommand
-    Public Property DQFilterSelected As ICommand
-        Get
-            Return _dqfilterSelected
-        End Get
-        Set(ByVal value As ICommand)
-            _dqfilterSelected = value
-        End Set
-    End Property
-    Private Sub _dqfilterSelection(obj As Object)
-        Dim newFilter As New DQFilter
-        newFilter.Name = obj.ToString
-        newFilter.StepCounter = DataConfigure.CollectionOfSteps.Count + 1
-        For Each parameter In DataConfigure.DQFilterNameParametersDictionary(newFilter.Name)
-            If parameter = "SetToNaN" Or parameter = "FlagAllByFreq" Then
-                newFilter.Parameters.Add(New ParameterValuePair(parameter, False))
-            ElseIf newFilter.Name = "Nominal-Value Frequency Data Quality Filter" And parameter = "FlagBit" Then
-                newFilter.Parameters.Add(New ParameterValuePair(parameter, False, False))
-            Else
-                newFilter.Parameters.Add(New ParameterValuePair(parameter, ""))
-            End If
-        Next
-        'newFilter.Parameters
-        DataConfigure.CollectionOfSteps.Add(newFilter)
-    End Sub
-    Private _customizationSelected As ICommand
-    Public Property CustomizationSelected As ICommand
-        Get
-            Return _customizationSelected
-        End Get
-        Set(ByVal value As ICommand)
-            _customizationSelected = value
-        End Set
-    End Property
-    Private Sub _customizationStepSelection(obj As Object)
-        Dim newCustomization As New Customization
-        newCustomization.Name = obj.ToString
-        newCustomization.StepCounter = DataConfigure.CollectionOfSteps.Count + 1
-        newCustomization.CustPMUname = _lastCustPMUname
-        Try
-            Select Case newCustomization.Name
-                Case "Scalar Repetition Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
-                    newSignal.IsCustomSignal = True
-                    newCustomization.OutputChannels.Add(newSignal)
-                Case "Addition Customization", "Multiplication Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
-                    newSignal.IsCustomSignal = True
-                    newCustomization.OutputChannels.Add(newSignal)
-                Case "Subtraction Customization", "Division Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
-                    newSignal.IsCustomSignal = True
-                    newCustomization.OutputChannels.Add(newSignal)
-                    Dim dummy = New SignalSignatures("PleaseAddASignal", "PleaseAddASignal")
-                    dummy.IsValid = False
-                    newCustomization.MinuendOrDividend = dummy
-                    newCustomization.SubtrahendOrDivisor = dummy
-                Case "Raise signals to an exponent"
-                    newCustomization.Exponent = "1"
-                Case "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Return angle of complex valued signals", "Take complex conjugate of signals", "Phasor Creation Customization", "Metric Prefix Customization", "Angle Conversion Customization"
-                    'PASS
-                Case "Power Calculation Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, newCustomization.PowType)
-                    newSignal.IsCustomSignal = True
-                    newCustomization.OutputChannels.Add(newSignal)
-                    Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newSignal, New ObservableCollection(Of SignalSignatures))
-                    newCustomization.OutputInputMappingPair.Add(newPair)
-                Case "Specify Signal Type and Unit Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
-                    newSignal.IsCustomSignal = True
-                    newCustomization.OutputChannels.Add(newSignal)
-                    Dim dummy = New SignalSignatures("NeedInputSignal", newCustomization.CustPMUname)
-                    dummy.IsValid = False
-                    newCustomization.InputChannels.Add(dummy)
-                Case Else
-                    Throw New Exception("Customization step not supported!")
-            End Select
-        Catch ex As Exception
-            MessageBox.Show("Error selecting signal(s) for customization step!" & ex.Message, "Error!", MessageBoxButtons.OK)
-        End Try
-        newCustomization.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newCustomization.StepCounter.ToString & "-" & newCustomization.Name
-        newCustomization.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newCustomization.StepCounter.ToString & "-" & newCustomization.Name
-        newCustomization.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newCustomization.OutputChannels)
-        DataConfigure.CollectionOfSteps.Add(newCustomization)
-    End Sub
-    Private _choosePhasorForPowerCalculation As ICommand
-    Public Property ChoosePhasorForPowerCalculation As ICommand
-        Get
-            Return _choosePhasorForPowerCalculation
-        End Get
-        Set(ByVal value As ICommand)
-            _choosePhasorForPowerCalculation = value
-            OnPropertyChanged()
-        End Set
-    End Property
-    Private Sub _powerCalculationPhasorOption(obj As Object)
-        Dim vPhasor = New SignalSignatures("NeedVoltagePhasor", _currentSelectedStep.CustPMUname)
-        vPhasor.IsValid = False
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vPhasor)
-        Dim iPhasor = New SignalSignatures("NeedCurrentPhasor", _currentSelectedStep.CustPMUname)
-        iPhasor.IsValid = False
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iPhasor)
-        _disableEnableAllButPhasorSignals(False)
-    End Sub
-    Private _chooseMagAngForPowerCalculation As ICommand
-    Public Property ChooseMagAngForPowerCalculation As ICommand
-        Get
-            Return _chooseMagAngForPowerCalculation
-        End Get
-        Set(ByVal value As ICommand)
-            _chooseMagAngForPowerCalculation = value
-            OnPropertyChanged()
-        End Set
-    End Property
-    Private Sub _powerCalculationMagAngOption(obj As Object)
-        Dim vMag = New SignalSignatures("NeedVoltageMag", _currentSelectedStep.CustPMUname)
-        vMag.IsValid = False
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vMag)
-        Dim vAng = New SignalSignatures("NeedVoltageAng", _currentSelectedStep.CustPMUname)
-        vAng.IsValid = False
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vAng)
-        Dim iMag = New SignalSignatures("NeedCurrentMag", _currentSelectedStep.CustPMUname)
-        iMag.IsValid = False
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iMag)
-        Dim iAng = New SignalSignatures("NeedCurrentAng", _currentSelectedStep.CustPMUname)
-        iAng.IsValid = False
-        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iAng)
-        _disableEnableAllButMagnitudeSignals(False)
-    End Sub
-
-#End Region
 
 #Region "Change signal selection"
     Private _selectedSignalChanged As ICommand
@@ -2035,13 +2175,22 @@ Public Class SettingsViewModel
                 _keepOriginalSelection(obj)
                 MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
             Else
-                If TypeOf _currentSelectedStep Is DQFilter Then
+                If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap OrElse TypeOf _currentSelectedStep Is Multirate OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU
                     Try
                         _changeSignalSelection(obj)
                     Catch ex As Exception
                         _keepOriginalSelection(obj)
-                        MessageBox.Show("Error selecting signal(s) for data quality filter!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
+                        MessageBox.Show("Error selecting signal(s) for data quality filter or data processing steps!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
+                        _addLog("Error selecting signal(s) for data quality filter or data processing steps!" & ex.Message)
                     End Try
+                    'ElseIf TypeOf _currentSelectedStep Is Multirate
+                    '    try
+
+                    '    Catch ex As Exception
+                    '        _keepOriginalSelection(obj)
+                    '        MessageBox.Show("Error selecting signal(s) for Multirate!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '        _addLog("Error selecting signal(s) for Multirate!" & ex.Message)
+                    '    End Try
                 Else
                     Try
                         Select Case _currentSelectedStep.Name
@@ -2067,7 +2216,7 @@ Public Class SettingsViewModel
                                 ' For these 7 unary customization steps, the signal type and units of the input signal are applied to the output signal
                                 ' So, the type are applied while signals are added in the _changeSignalSelectionUnarySteps() subroutine
                                 ' Thus we don't need another subroutine to check output signal type
-                                ' However, if we encounters bug due to type for these steps, we might want to add a subroutine: _checkUnaryCustomizationOutputType()
+                                ' However, if we encounter bugs due to type for these steps, we might want to add a subroutine: _checkUnaryCustomizationOutputType()
                             Case "Return angle of complex valued signals"
                                 _changeSignalSelectionUnarySteps(obj)
                                 _checkAngleForComplexSignalCustomizationOutputType()
@@ -2194,7 +2343,7 @@ Public Class SettingsViewModel
                 obj.SignalSignature.IsChecked = True
             End If
         Else
-            _determineAllParentNodeStatus()
+            _dataConfigDetermineAllParentNodeStatus()
         End If
     End Sub
     Private _textboxesLostFocus As ICommand
@@ -2210,7 +2359,7 @@ Public Class SettingsViewModel
         For Each signal In obj.InputChannels
             signal.IsChecked = True
         Next
-        _determineAllParentNodeStatus()
+        _dataConfigDetermineAllParentNodeStatus()
         If _currentSelectedStep IsNot Nothing Then
             _currentSelectedStep.CurrentCursor = ""
         End If
@@ -2255,7 +2404,7 @@ Public Class SettingsViewModel
                 End If
                 _currentSelectedStep.CurrentCursor = ""
                 _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-                _determineAllParentNodeStatus()
+                _dataConfigDetermineAllParentNodeStatus()
             ElseIf _currentSelectedStep.CurrentCursor = "SubtrahendOrDivisor" Then
                 If _currentSelectedStep.MinuendOrDividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.MinuendOrDividend Then
                     Throw New Exception("Subtrahend Or divisor cannot be the same as the minuend or divident!")
@@ -2283,7 +2432,7 @@ Public Class SettingsViewModel
                 End If
                 _currentSelectedStep.CurrentCursor = ""
                 _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-                _determineAllParentNodeStatus()
+                _dataConfigDetermineAllParentNodeStatus()
             End If
         End If
         _determineFileDirCheckableStatus()
@@ -2332,15 +2481,23 @@ Public Class SettingsViewModel
         If TypeOf (_currentSelectedStep) Is Customization Then
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
         End If
-        _determineAllParentNodeStatus()
+        _dataConfigDetermineAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
 
     Private Sub _changeSignalSelection(obj As SignalTypeHierachy)
         _checkAllChildren(obj, obj.SignalSignature.IsChecked)
         _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
-        _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-        _determineAllParentNodeStatus()
+        if TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap OrElse TypeOf _currentSelectedStep is NameTypeUnitPMU
+            _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+        Elseif TypeOf _currentSelectedStep Is Multirate
+            _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+        else
+            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+        End If
+        _dataConfigDetermineAllParentNodeStatus()
+        _processConfigDetermineAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
     Private Sub _changeSignalSelectionPhasorCreation(obj As SignalTypeHierachy)
@@ -2400,7 +2557,7 @@ Public Class SettingsViewModel
         If TypeOf (_currentSelectedStep) Is Customization Then
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
         End If
-        _determineAllParentNodeStatus()
+        _dataConfigDetermineAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
     ''' <summary>
@@ -2418,7 +2575,7 @@ Public Class SettingsViewModel
         End If
         Dim pmu = mag.PMUName
         If mag.IsCustomSignal Then
-            For Each group In GroupedSignalByStepsOutput
+            For Each group In GroupedSignalByDataConfigStepsOutput
                 For Each subgroup In group.SignalList
                     If subgroup.SignalSignature.PMUName = pmu Then
                         For Each signal In subgroup.SignalList
@@ -2437,7 +2594,7 @@ Public Class SettingsViewModel
                 Next
             Next
         Else
-            For Each group In GroupedSignalsByType
+            For Each group In GroupedRawSignalsByType
                 If group.SignalSignature.IsEnabled Then
                     For Each subgroup In group.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation = type.Substring(0, 1) Then
@@ -2534,99 +2691,104 @@ Public Class SettingsViewModel
         _currentFocusedPhasorSignalForPowerCalculation = Nothing
         _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
         _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
-        _determineAllParentNodeStatus()
+        _dataConfigDetermineAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
     Private Sub _changeMagAngSignalForPowerCalculationCustomization(obj As SignalTypeHierachy)
-        If obj.SignalSignature.TypeAbbreviation.Length <> 3 OrElse obj.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
-            _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not a magnitude signal.")
-            Throw New Exception("Signal selection is not Valid! Please select a signal of magnitude type.")
-        ElseIf _currentFocusedPhasorSignalForPowerCalculation Is Nothing Then
-            Throw New Exception("No textbox selected!")
-        ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) = _currentFocusedPhasorSignalForPowerCalculation OrElse _currentSelectedStep.OutputInputMappingPair(0).Value(1) = _currentFocusedPhasorSignalForPowerCalculation Then
-            If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "V" Then
-                Dim oldVM = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
-                Dim oldVA = _currentSelectedStep.OutputInputMappingPair(0).Value(1)
-                If _currentSelectedStep.InputChannels.Contains(oldVM) Then
-                    oldVM.IsChecked = False
-                    _currentSelectedStep.InputChannels.Remove(oldVM)
-                End If
-                If _currentSelectedStep.InputChannels.Contains(oldVA) Then
-                    oldVA.IsChecked = False
-                    _currentSelectedStep.InputChannels.Remove(oldVA)
-                End If
-                _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVM)
-                _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVA)
-                If obj.SignalSignature.IsChecked Then
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, obj.SignalSignature)
-                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                    Dim newVA = _findMatchingAng(obj.SignalSignature)
-                    If newVA Is Nothing Then
-                        newVA = New SignalSignatures("NoMatchingAnglefound")
-                        newVA.IsValid = False
-                    Else
-                        newVA.IsChecked = True
+        if obj.SignalList.Count > 0
+            _addLog("Selected a group of signals! Signal group: " & obj.SignalSignature.SignalName & ", number of signals: " & obj.SignalList.Count & " .")
+            Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
+        else
+            If obj.SignalSignature.TypeAbbreviation.Length <> 3 OrElse obj.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
+                _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not a magnitude signal.")
+                Throw New Exception("Signal selection is not Valid! Please select a signal of magnitude type.")
+            ElseIf _currentFocusedPhasorSignalForPowerCalculation Is Nothing Then
+                Throw New Exception("No textbox selected!")
+            ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) = _currentFocusedPhasorSignalForPowerCalculation OrElse _currentSelectedStep.OutputInputMappingPair(0).Value(1) = _currentFocusedPhasorSignalForPowerCalculation Then
+                If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "V" Then
+                    Dim oldVM = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
+                    Dim oldVA = _currentSelectedStep.OutputInputMappingPair(0).Value(1)
+                    If _currentSelectedStep.InputChannels.Contains(oldVM) Then
+                        oldVM.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(oldVM)
                     End If
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, newVA)
-                    _currentSelectedStep.InputChannels.Add(newVA)
+                    If _currentSelectedStep.InputChannels.Contains(oldVA) Then
+                        oldVA.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(oldVA)
+                    End If
+                    _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVM)
+                    _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVA)
+                    If obj.SignalSignature.IsChecked Then
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, obj.SignalSignature)
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        Dim newVA = _findMatchingAng(obj.SignalSignature)
+                        If newVA Is Nothing Then
+                            newVA = New SignalSignatures("NoMatchingAnglefound")
+                            newVA.IsValid = False
+                        Else
+                            newVA.IsChecked = True
+                        End If
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, newVA)
+                        _currentSelectedStep.InputChannels.Add(newVA)
+                    Else
+                        Dim dummyVM = New SignalSignatures("PleaseAddVoltageMag")
+                        dummyVM.IsValid = False
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, dummyVM)
+                        Dim dummyVA = New SignalSignatures("PleaseAddVoltageAng")
+                        dummyVA.IsValid = False
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, dummyVA)
+                    End If
                 Else
-                    Dim dummyVM = New SignalSignatures("PleaseAddVoltageMag")
-                    dummyVM.IsValid = False
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, dummyVM)
-                    Dim dummyVA = New SignalSignatures("PleaseAddVoltageAng")
-                    dummyVA.IsValid = False
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, dummyVA)
+                    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type Voltage Magnitude.")
+                    Throw New Exception("Signal selection is not Valid! Please select a signal of voltage Magnitude.")
+                End If
+            ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(2) = _currentFocusedPhasorSignalForPowerCalculation OrElse _currentSelectedStep.OutputInputMappingPair(0).Value(3) = _currentFocusedPhasorSignalForPowerCalculation Then
+                If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "I" Then
+                    Dim oldIM = _currentSelectedStep.OutputInputMappingPair(0).Value(2)
+                    Dim oldIA = _currentSelectedStep.OutputInputMappingPair(0).Value(3)
+                    If _currentSelectedStep.InputChannels.Contains(oldIM) Then
+                        oldIM.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(oldIM)
+                    End If
+                    If _currentSelectedStep.InputChannels.Contains(oldIA) Then
+                        oldIA.IsChecked = False
+                        _currentSelectedStep.InputChannels.Remove(oldIA)
+                    End If
+                    _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIM)
+                    _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIA)
+                    If obj.SignalSignature.IsChecked Then
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(2, obj.SignalSignature)
+                        _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        Dim newIA = _findMatchingAng(obj.SignalSignature)
+                        If newIA Is Nothing Then
+                            newIA = New SignalSignatures("NoMatchingAnglefound")
+                            newIA.IsValid = False
+                        Else
+                            newIA.IsChecked = True
+                        End If
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(3, newIA)
+                        _currentSelectedStep.InputChannels.Add(newIA)
+                    Else
+                        Dim dummyIM = New SignalSignatures("PleaseAddCurrentMag")
+                        dummyIM.IsValid = False
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(2, dummyIM)
+                        Dim dummyIA = New SignalSignatures("PleaseAddCurrentAng")
+                        dummyIA.IsValid = False
+                        _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(3, dummyIA)
+                    End If
+                Else
+                    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current magnitude.")
+                    Throw New Exception("Signal selection is not Valid! Please select a signal of current magnitude.")
                 End If
             Else
-                _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type Voltage Magnitude.")
-                Throw New Exception("Signal selection is not Valid! Please select a signal of voltage Magnitude.")
+                Throw New Exception("Error changing signal for this power calculation step!")
             End If
-        ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(2) = _currentFocusedPhasorSignalForPowerCalculation OrElse _currentSelectedStep.OutputInputMappingPair(0).Value(3) = _currentFocusedPhasorSignalForPowerCalculation Then
-            If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "I" Then
-                Dim oldIM = _currentSelectedStep.OutputInputMappingPair(0).Value(2)
-                Dim oldIA = _currentSelectedStep.OutputInputMappingPair(0).Value(3)
-                If _currentSelectedStep.InputChannels.Contains(oldIM) Then
-                    oldIM.IsChecked = False
-                    _currentSelectedStep.InputChannels.Remove(oldIM)
-                End If
-                If _currentSelectedStep.InputChannels.Contains(oldIA) Then
-                    oldIA.IsChecked = False
-                    _currentSelectedStep.InputChannels.Remove(oldIA)
-                End If
-                _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIM)
-                _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIA)
-                If obj.SignalSignature.IsChecked Then
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(2, obj.SignalSignature)
-                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                    Dim newIA = _findMatchingAng(obj.SignalSignature)
-                    If newIA Is Nothing Then
-                        newIA = New SignalSignatures("NoMatchingAnglefound")
-                        newIA.IsValid = False
-                    Else
-                        newIA.IsChecked = True
-                    End If
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(3, newIA)
-                    _currentSelectedStep.InputChannels.Add(newIA)
-                Else
-                    Dim dummyIM = New SignalSignatures("PleaseAddCurrentMag")
-                    dummyIM.IsValid = False
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(2, dummyIM)
-                    Dim dummyIA = New SignalSignatures("PleaseAddCurrentAng")
-                    dummyIA.IsValid = False
-                    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(3, dummyIA)
-                End If
-            Else
-                _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current magnitude.")
-                Throw New Exception("Signal selection is not Valid! Please select a signal of current magnitude.")
-            End If
-        Else
-            Throw New Exception("Error changing signal for this power calculation step!")
+            _currentFocusedPhasorSignalForPowerCalculation = Nothing
+            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+            _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+            _dataConfigDetermineAllParentNodeStatus()
+            _determineFileDirCheckableStatus()
         End If
-        _currentFocusedPhasorSignalForPowerCalculation = Nothing
-        _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-        _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
-        _determineAllParentNodeStatus()
-        _determineFileDirCheckableStatus()
     End Sub
     Private Sub _specifySignalTypeUnitSignalSelectionChanged(obj As SignalTypeHierachy)
         If obj.SignalList.Count > 0 OrElse String.IsNullOrEmpty(obj.SignalSignature.PMUName) OrElse String.IsNullOrEmpty(obj.SignalSignature.TypeAbbreviation) Then
@@ -2644,7 +2806,7 @@ Public Class SettingsViewModel
                 End If
             End If
             _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-            _determineAllParentNodeStatus()
+            _dataConfigDetermineAllParentNodeStatus()
             _determineFileDirCheckableStatus()
         End If
     End Sub
@@ -2716,7 +2878,9 @@ Public Class SettingsViewModel
         If _currentSelectedStep IsNot Nothing Then
             If obj.SignalList.Count > 0 Then
                 For Each signal In obj.SignalList
-                    _addOrDeleteInputSignal(signal, isChecked)
+                    If signal.SignalSignature.IsEnabled
+                        _addOrDeleteInputSignal(signal, isChecked)
+                    End If
                 Next
             Else
                 ' This happens when user check a input grouped by steps, but that step has no input signals thus has no child
@@ -2728,8 +2892,79 @@ Public Class SettingsViewModel
                             Throw New Exception("Selected item " & obj.SignalSignature.SignalName & " already exist in this step!")
                         End If
                         _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If TypeOf _currentSelectedStep is DQFilter
+                            obj.SignalSignature.PassedThroughDQFilter = True
+                            _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
+                        End If
+                        If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap
+                            obj.SignalSignature.PassedThroughProcessor = True
+                            _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
+                        End If
+                        If TypeOf _currentSelectedStep Is Multirate
+                            dim newOutput = New SignalSignatures(obj.SignalSignature.SignalName)
+                            newOutput.PMUName = _currentSelectedStep.FilterParameters(0).Value
+                            newOutput.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
+                            newOutput.IsCustomSignal = True
+                            newOutput.Unit = obj.SignalSignature.Unit
+                            If _currentSelectedStep.FilterParameters.Count = 2
+                                newOutput.SamplingRate = _currentSelectedStep.NewRate
+                            elseIf _currentSelectedStep.FilterParameters.Count = 3
+                                dim p = 0
+                                Integer.TryParse(_currentSelectedStep.PElement, p)
+                                dim q = 0
+                                Integer.TryParse(_currentSelectedStep.QElement, q)
+                                if q <> 0
+                                    newOutput.SamplingRate = obj.SignalSignature.SamplingRate * p / q
+                                End If
+                            End If
+                            _currentSelectedStep.OutputChannels.Add(newOutput)
+                        End If
+                        if TypeOf _currentSelectedStep Is NameTypeUnitPMU
+                            dim newOutput = New SignalSignatures()
+                            If CurrentSelectedStep.InputChannels.Count > 1
+                                newOutput.SignalName = obj.SignalSignature.SignalName
+                                CurrentSelectedStep.NewChannel = ""
+                            Else 
+                                CurrentSelectedStep.NewChannel = obj.SignalSignature.SignalName
+                                newOutput.SignalName = CurrentSelectedStep.NewChannel
+                            End If
+                            newOutput.PMUName = obj.SignalSignature.PMUName
+                            newOutput.TypeAbbreviation = CurrentSelectedStep.NewType
+                            newOutput.Unit = CurrentSelectedStep.NewUnit
+                            newOutput.IsCustomSignal = True
+                            newOutput.SamplingRate = obj.SignalSignature.SamplingRate
+                            _currentSelectedStep.OutputChannels.Add(newOutput)
+                        End If
                     Else
                         _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                        If TypeOf _currentSelectedStep is DQFilter
+                            obj.SignalSignature.PassedThroughDQFilter = False
+                            _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
+                        End If
+                        If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep is Unwrap
+                            obj.SignalSignature.PassedThroughProcessor = False
+                            _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
+                        End If
+                        If TypeOf _currentSelectedStep Is Multirate
+                            For each output in _currentSelectedStep.OutputChannels
+                                if output.SignalName = obj.SignalSignature.SignalName AndAlso output.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
+                                    _currentSelectedStep.OutputChannels.Remove(output)
+                                    Exit For
+                                End If
+                            Next
+                        End If
+                        if TypeOf _currentSelectedStep Is NameTypeUnitPMU
+                            If CurrentSelectedStep.OutputChannels.Count = 1
+                                CurrentSelectedStep.OutputChannels.Clear
+                            Else
+                                For each output in _currentSelectedStep.OutputChannels
+                                    if output.SignalName = obj.SignalSignature.SignalName AndAlso output.PMUName = obj.SignalSignature.PMUName
+                                        _currentSelectedStep.OutputChannels.Remove(output)
+                                        Exit For
+                                    End If
+                                Next
+                            End If
+                        End If
                     End If
                     obj.SignalSignature.IsChecked = isChecked
                 End If
@@ -2739,7 +2974,9 @@ Public Class SettingsViewModel
     Private Sub _addMatchingInputOutputSignalsPhasor(obj As SignalTypeHierachy)
         If obj.SignalList.Count > 0 Then
             For Each signal In obj.SignalList
-                _addMatchingInputOutputSignalsPhasor(signal)
+                if signal.SignalSignature.IsEnabled
+                    _addMatchingInputOutputSignalsPhasor(signal)
+                End If
             Next
         Else
             If (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
@@ -2786,21 +3023,81 @@ Public Class SettingsViewModel
         If node.SignalList.Count > 0 Then
             ' if not a leaf node, call itself recursively to check/uncheck all children
             For Each child In node.SignalList
-                child.SignalSignature.IsChecked = isChecked
-                _checkAllChildren(child, isChecked)
+                If child.SignalSignature.IsEnabled
+                    child.SignalSignature.IsChecked = isChecked
+                    _checkAllChildren(child, isChecked)
+                End If
             Next
         End If
     End Sub
 
+
+    Private _setCurrentFocusedTextbox As ICommand
+    Public Property SetCurrentFocusedTextbox As ICommand
+        Get
+            Return _setCurrentFocusedTextbox
+        End Get
+        Set(ByVal value As ICommand)
+            _setCurrentFocusedTextbox = value
+        End Set
+    End Property
+    ''' <summary>
+    ''' This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
+    ''' where we want signal to be put in individual textboxes.
+    ''' </summary>
+    ''' <param name="obj"></param>
+    Private Sub _currentFocusedTextBoxChanged(obj As SignalSignatures)
+        For Each signal In _currentSelectedStep.InputChannels
+            signal.IsChecked = False
+        Next
+        If obj IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj.TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj.PMUName) Then
+            obj.IsChecked = True
+        End If
+        _dataConfigDetermineAllParentNodeStatus()
+    End Sub
+
+    ''' <summary>
+    ''' This points to the current selected textbox of a Unary operation step which is a pair of input output.
+    ''' </summary>
+    Private _currentInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
+    'Private _currentMultipleInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
+    Private _setCurrentFocusedTextboxUnarySteps As ICommand
+    Public Property SetCurrentFocusedTextboxUnarySteps As ICommand
+        Get
+            Return _setCurrentFocusedTextboxUnarySteps
+        End Get
+        Set(ByVal value As ICommand)
+            _setCurrentFocusedTextboxUnarySteps = value
+        End Set
+    End Property
+    Private Sub _currentFocusedTextBoxForUnaryStepsChanged(obj As Object)
+        _currentInputOutputPair = obj
+        _currentFocusedTextBoxChanged(obj.Value(0))
+    End Sub
+    Private _powerPhasorTextBoxGotFocus As ICommand
+    Public Property PowerPhasorTextBoxGotFocus As ICommand
+        Get
+            Return _powerPhasorTextBoxGotFocus
+        End Get
+        Set(ByVal value As ICommand)
+            _powerPhasorTextBoxGotFocus = value
+        End Set
+    End Property
+    Private Sub _powerPhasorCurrentFocusedTextbox(obj As Object)
+        _currentFocusedTextBoxChanged(obj)
+        _currentFocusedPhasorSignalForPowerCalculation = obj
+    End Sub
+    Private _currentFocusedPhasorSignalForPowerCalculation As SignalSignatures
+
 #End Region
 
-    Private Sub _determineAllParentNodeStatus()
-        _determineParentGroupedByTypeNodeStatus(GroupedSignalsByType)
-        _determineParentGroupedByTypeNodeStatus(GroupedSignalsByPMU)
+    Private Sub _dataConfigDetermineAllParentNodeStatus()
+        _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType)
+        _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
         'For Each group In GroupedSignalsByPMU
         '    _determineParentCheckStatus(group)
         'Next
-        For Each stepInput In GroupedSignalByStepsInput
+        For Each stepInput In GroupedSignalByDataConfigStepsInput
             If stepInput.SignalList.Count > 0 Then
                 _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
                 _determineParentCheckStatus(stepInput)
@@ -2808,7 +3105,7 @@ Public Class SettingsViewModel
                 stepInput.SignalSignature.IsChecked = False
             End If
         Next
-        For Each stepOutput In GroupedSignalByStepsOutput
+        For Each stepOutput In GroupedSignalByDataConfigStepsOutput
             If stepOutput.SignalList.Count > 0 Then
                 _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
                 _determineParentCheckStatus(stepOutput)
@@ -2885,20 +3182,20 @@ Public Class SettingsViewModel
     ''' </summary>
     Private Sub _determineFileDirCheckableStatus()
         Dim disableOthers = False
-        For Each group In GroupedSignalsByType
+        For Each group In GroupedRawSignalsByType
             If group.SignalSignature.IsChecked Or group.SignalSignature.IsChecked Is Nothing Then
                 disableOthers = True
             End If
         Next
         If disableOthers Then
-            For Each group In GroupedSignalsByType
+            For Each group In GroupedRawSignalsByType
                 If Not group.SignalSignature.IsChecked Then
                     group.SignalSignature.IsEnabled = False
                 Else
                     group.SignalSignature.IsEnabled = True
                 End If
             Next
-            For Each group In GroupedSignalsByPMU
+            For Each group In GroupedRawSignalsByPMU
                 If Not group.SignalSignature.IsChecked Then
                     group.SignalSignature.IsEnabled = False
                 Else
@@ -2906,16 +3203,158 @@ Public Class SettingsViewModel
                 End If
             Next
         Else
-            For Each group In GroupedSignalsByType
+            For Each group In GroupedRawSignalsByType
                 group.SignalSignature.IsEnabled = True
             Next
-            For Each group In GroupedSignalsByPMU
+            For Each group In GroupedRawSignalsByPMU
                 group.SignalSignature.IsEnabled = True
             Next
         End If
     End Sub
 
-#Region "Step Manipulations"
+#Region "Step manipulation: Add a step"
+    Private _dqfilterSelected As ICommand
+    Public Property DQFilterSelected As ICommand
+        Get
+            Return _dqfilterSelected
+        End Get
+        Set(ByVal value As ICommand)
+            _dqfilterSelected = value
+        End Set
+    End Property
+    Private Sub _dqfilterSelection(obj As Object)
+        Dim newFilter As New DQFilter
+        newFilter.Name = obj.ToString
+        newFilter.StepCounter = DataConfigure.CollectionOfSteps.Count + 1
+        newFilter.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newFilter.StepCounter.ToString & "-" & newFilter.Name
+        newFilter.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newFilter.StepCounter.ToString & "-" & newFilter.Name
+        'GroupedSignalByStepsInput.Add(newFilter.ThisStepInputsAsSignalHerachyByType)
+        'GroupedSignalByDataConfigStepsOutput.Add(newFilter.ThisStepOutputsAsSignalHierachyByPMU)
+
+        For Each parameter In DataConfigure.DQFilterNameParametersDictionary(newFilter.Name)
+            If parameter = "SetToNaN" Or parameter = "FlagAllByFreq" Then
+                newFilter.FilterParameters.Add(New ParameterValuePair(parameter, False))
+            ElseIf newFilter.Name = "Nominal-Value Frequency Data Quality Filter" And parameter = "FlagBit" Then
+                newFilter.FilterParameters.Add(New ParameterValuePair(parameter, False, False))
+            Else
+                newFilter.FilterParameters.Add(New ParameterValuePair(parameter, ""))
+            End If
+        Next
+        'newFilter.Parameters
+        DataConfigure.CollectionOfSteps.Add(newFilter)
+        _stepSelectedToEdit(newFilter)
+    End Sub
+    Private _customizationSelected As ICommand
+    Public Property CustomizationSelected As ICommand
+        Get
+            Return _customizationSelected
+        End Get
+        Set(ByVal value As ICommand)
+            _customizationSelected = value
+        End Set
+    End Property
+    Private Sub _customizationStepSelection(obj As Object)
+        Dim newCustomization As New Customization
+        newCustomization.Name = obj.ToString
+        newCustomization.StepCounter = DataConfigure.CollectionOfSteps.Count + 1
+        newCustomization.CustPMUname = _lastCustPMUname
+        Try
+            Select Case newCustomization.Name
+                Case "Scalar Repetition Customization"
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    newSignal.IsCustomSignal = True
+                    newCustomization.OutputChannels.Add(newSignal)
+                Case "Addition Customization", "Multiplication Customization"
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    newSignal.IsCustomSignal = True
+                    newCustomization.OutputChannels.Add(newSignal)
+                Case "Subtraction Customization", "Division Customization"
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    newSignal.IsCustomSignal = True
+                    newCustomization.OutputChannels.Add(newSignal)
+                    Dim dummy = New SignalSignatures("PleaseAddASignal", "PleaseAddASignal")
+                    dummy.IsValid = False
+                    newCustomization.MinuendOrDividend = dummy
+                    newCustomization.SubtrahendOrDivisor = dummy
+                Case "Raise signals to an exponent"
+                    newCustomization.Exponent = "1"
+                Case "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Return angle of complex valued signals", "Take complex conjugate of signals", "Phasor Creation Customization", "Metric Prefix Customization", "Angle Conversion Customization"
+                    'PASS
+                Case "Power Calculation Customization"
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, newCustomization.PowType)
+                    newSignal.IsCustomSignal = True
+                    newCustomization.OutputChannels.Add(newSignal)
+                    Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newSignal, New ObservableCollection(Of SignalSignatures))
+                    newCustomization.OutputInputMappingPair.Add(newPair)
+                Case "Specify Signal Type and Unit Customization"
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    newSignal.IsCustomSignal = True
+                    newCustomization.OutputChannels.Add(newSignal)
+                    Dim dummy = New SignalSignatures("NeedInputSignal", newCustomization.CustPMUname, "OTHER")
+                    dummy.IsValid = False
+                    newCustomization.InputChannels.Add(dummy)
+                Case Else
+                    Throw New Exception("Customization step not supported!")
+            End Select
+        Catch ex As Exception
+            MessageBox.Show("Error selecting signal(s) for customization step!" & ex.Message, "Error!", MessageBoxButtons.OK)
+        End Try
+        newCustomization.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newCustomization.StepCounter.ToString & "-" & newCustomization.Name
+        newCustomization.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newCustomization.StepCounter.ToString & "-" & newCustomization.Name
+        newCustomization.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newCustomization.OutputChannels)
+        'GroupedSignalByDataConfigStepsInput.Add(newCustomization.ThisStepInputsAsSignalHerachyByType)
+        'GroupedSignalByDataConfigStepsOutput.Add(newCustomization.ThisStepOutputsAsSignalHierachyByPMU)
+        DataConfigure.CollectionOfSteps.Add(newCustomization)
+        _stepSelectedToEdit(newCustomization)
+    End Sub
+    Private _choosePhasorForPowerCalculation As ICommand
+    Public Property ChoosePhasorForPowerCalculation As ICommand
+        Get
+            Return _choosePhasorForPowerCalculation
+        End Get
+        Set(ByVal value As ICommand)
+            _choosePhasorForPowerCalculation = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private Sub _powerCalculationPhasorOption(obj As Object)
+        Dim vPhasor = New SignalSignatures("NeedVoltagePhasor", _currentSelectedStep.CustPMUname)
+        vPhasor.IsValid = False
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vPhasor)
+        Dim iPhasor = New SignalSignatures("NeedCurrentPhasor", _currentSelectedStep.CustPMUname)
+        iPhasor.IsValid = False
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iPhasor)
+        _disableEnableAllButPhasorSignals(False)
+    End Sub
+    Private _chooseMagAngForPowerCalculation As ICommand
+    Public Property ChooseMagAngForPowerCalculation As ICommand
+        Get
+            Return _chooseMagAngForPowerCalculation
+        End Get
+        Set(ByVal value As ICommand)
+            _chooseMagAngForPowerCalculation = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private Sub _powerCalculationMagAngOption(obj As Object)
+        Dim vMag = New SignalSignatures("NeedVoltageMag", _currentSelectedStep.CustPMUname)
+        vMag.IsValid = False
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vMag)
+        Dim vAng = New SignalSignatures("NeedVoltageAng", _currentSelectedStep.CustPMUname)
+        vAng.IsValid = False
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vAng)
+        Dim iMag = New SignalSignatures("NeedCurrentMag", _currentSelectedStep.CustPMUname)
+        iMag.IsValid = False
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iMag)
+        Dim iAng = New SignalSignatures("NeedCurrentAng", _currentSelectedStep.CustPMUname)
+        iAng.IsValid = False
+        _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iAng)
+        _disableEnableAllButMagnitudeSignals(False)
+    End Sub
+
+#End Region
+
+#Region "Step Manipulations: Delete, Select or DeSelect"
     Private _currentSelectedStep As Object
     Public Property CurrentSelectedStep As Object
         Get
@@ -2927,13 +3366,13 @@ Public Class SettingsViewModel
         End Set
     End Property
 
-    Private _stepSelected As ICommand
-    Public Property StepSelected As ICommand
+    Private _dataConfigStepSelected As ICommand
+    Public Property DataConfigStepSelected As ICommand
         Get
-            Return _stepSelected
+            Return _dataConfigStepSelected
         End Get
         Set(ByVal value As ICommand)
-            _stepSelected = value
+            _dataConfigStepSelected = value
         End Set
     End Property
     Private Sub _stepSelectedToEdit(processStep As Object)
@@ -2944,25 +3383,31 @@ Public Class SettingsViewModel
                 Dim lastNumberOfSteps = processStep.StepCounter
                 Dim stepsInputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
                 Dim stepsOutputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
+                dim selectedFound = False
                 For Each stp In DataConfigure.CollectionOfSteps
                     If stp.IsStepSelected Then
                         stp.IsStepSelected = False
                         For Each signal In stp.InputChannels
                             signal.IsChecked = False
                         Next
-                        If TypeOf (stp) Is Customization Then
-                            For Each signal In stp.OutputChannels
-                                signal.IsChecked = False
-                            Next
-                        End If
+                        'If TypeOf (stp) Is Customization Then
+                        '    For Each signal In stp.OutputChannels
+                        '        signal.IsChecked = False
+                        '    Next
+                        'End If
+                        'Exit For
+                        selectedFound = True
                     End If
                     If stp.StepCounter < lastNumberOfSteps Then
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(stp.InputChannels)
-                        stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                         If TypeOf (stp) Is Customization Then
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
-                            stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
+                            stp.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(stp.InputChannels)
+                            stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                         End If
+                        stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
+                        stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
+                    End If
+                    If stp.StepCounter >= lastNumberOfSteps AndAlso selectedFound
+                        Exit For
                     End If
                 Next
                 _determineFileDirCheckableStatus()
@@ -3000,9 +3445,9 @@ Public Class SettingsViewModel
                     End If
                 End If
 
-                GroupedSignalByStepsInput = stepsInputAsSignalHierachy
-                GroupedSignalByStepsOutput = stepsOutputAsSignalHierachy
-                _determineAllParentNodeStatus()
+                GroupedSignalByDataConfigStepsInput = stepsInputAsSignalHierachy
+                GroupedSignalByDataConfigStepsOutput = stepsOutputAsSignalHierachy
+                _dataConfigDetermineAllParentNodeStatus()
                 _determineFileDirCheckableStatus()
 
                 If processStep.Name = "Phasor Creation Customization" Then
@@ -3034,16 +3479,16 @@ Public Class SettingsViewModel
     ''' <summary>
     ''' disable all but magnitude of current or magnitude of voltage signals
     ''' </summary>
-    ''' <param name="isEnable"></param>
-    Private Sub _disableEnableAllButMagnitudeSignals(isEnable As Boolean)
-        For Each group In GroupedSignalsByType
+    ''' <param name="isEnabled"></param>
+    Private Sub _disableEnableAllButMagnitudeSignals(isEnabled As Boolean)
+        For Each group In GroupedRawSignalsByType
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
+                    subgroup.SignalSignature.IsEnabled = isEnabled
                 Else
                     For Each subsubgroup In subgroup.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
                             'Else
                             '    If subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
                             '        subsubgroup.SignalSignature.IsEnabled = isEnable
@@ -3053,160 +3498,200 @@ Public Class SettingsViewModel
                 End If
             Next
         Next
-        For Each group In GroupedSignalsByPMU
+        For Each group In GroupedRawSignalsByPMU
             For Each subgroup In group.SignalList
                 For Each subsubgroup In subgroup.SignalList
                     If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
                     End If
                 Next
             Next
         Next
-        For Each group In GroupedSignalByStepsInput
+        For Each group In GroupedSignalByDataConfigStepsInput
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
+                    subgroup.SignalSignature.IsEnabled = isEnabled
                 Else
                     For Each subsubgroup In subgroup.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M" Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
                         End If
                     Next
                 End If
             Next
         Next
-        For Each group In GroupedSignalByStepsOutput
+        For Each group In GroupedSignalByDataConfigStepsOutput
             For Each subgroup In group.SignalList
                 For Each subsubgroup In subgroup.SignalList
                     If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
                     End If
                 Next
             Next
         Next
     End Sub
-    Private Sub _disableEnableAllButPhasorSignals(isEnable As Boolean)
-        For Each group In GroupedSignalsByType
-            group.SignalSignature.IsEnabled = isEnable
+    Private Sub _disableEnableAllButPhasorSignals(isEnabled As Boolean)
+        For Each group In GroupedRawSignalsByType
+            group.SignalSignature.IsEnabled = isEnabled
         Next
-        For Each group In GroupedSignalsByPMU
-            group.SignalSignature.IsEnabled = isEnable
+        For Each group In GroupedRawSignalsByPMU
+            group.SignalSignature.IsEnabled = isEnabled
         Next
-        For Each group In GroupedSignalByStepsInput
+        For Each group In GroupedSignalByDataConfigStepsInput
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
+                    subgroup.SignalSignature.IsEnabled = isEnabled
                 Else
                     For Each subsubgroup In subgroup.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "P" Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
                         End If
                     Next
                 End If
             Next
         Next
-        For Each group In GroupedSignalByStepsOutput
+        For Each group In GroupedSignalByDataConfigStepsOutput
             For Each subgroup In group.SignalList
                 For Each subsubgroup In subgroup.SignalList
                     If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "P" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
                     End If
                 Next
             Next
         Next
     End Sub
-    Private Sub _disableEnableAllButAngleSignals(isEnable As Boolean)
-        For Each group In GroupedSignalsByType
+    Private Sub _disableEnableAllButAngleSignals(isEnabled As Boolean)
+        For Each group In GroupedRawSignalsByType
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
+                    subgroup.SignalSignature.IsEnabled = isEnabled
                 Else
                     For Each subsubgroup In subgroup.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
                         End If
                     Next
                 End If
             Next
         Next
-        For Each group In GroupedSignalsByPMU
+        For Each group In GroupedRawSignalsByPMU
             For Each subgroup In group.SignalList
                 For Each subsubgroup In subgroup.SignalList
                     If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
                     End If
                 Next
             Next
         Next
-        For Each group In GroupedSignalByStepsInput
+        For Each group In GroupedSignalByDataConfigStepsInput
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
+                    subgroup.SignalSignature.IsEnabled = isEnabled
                 Else
                     For Each subsubgroup In subgroup.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
                         End If
                     Next
                 End If
             Next
         Next
-        For Each group In GroupedSignalByStepsOutput
+        For Each group In GroupedSignalByDataConfigStepsOutput
             For Each subgroup In group.SignalList
                 For Each subsubgroup In subgroup.SignalList
                     If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
                     End If
                 Next
             Next
         Next
     End Sub
-    Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignals(isEnable As Boolean)
-        For Each group In GroupedSignalsByType
+    Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignals(isEnabled As Boolean)
+        For Each group In GroupedRawSignalsByType
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
+                    subgroup.SignalSignature.IsEnabled = isEnabled
                 Else
                     For Each subsubgroup In subgroup.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
                         End If
                     Next
                 End If
             Next
         Next
-        For Each group In GroupedSignalsByPMU
+        For Each group In GroupedRawSignalsByPMU
             For Each subgroup In group.SignalList
                 For Each subsubgroup In subgroup.SignalList
                     If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
                     End If
                 Next
             Next
         Next
-        For Each group In GroupedSignalByStepsInput
+        For Each group In GroupedSignalByDataConfigStepsInput
             For Each subgroup In group.SignalList
                 If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-                    subgroup.SignalSignature.IsEnabled = isEnable
+                    subgroup.SignalSignature.IsEnabled = isEnabled
                 Else
                     For Each subsubgroup In subgroup.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnable
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
                         End If
                     Next
                 End If
             Next
         Next
-        For Each group In GroupedSignalByStepsOutput
+        For Each group In GroupedSignalByDataConfigStepsOutput
             For Each subgroup In group.SignalList
                 For Each subsubgroup In subgroup.SignalList
                     If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnable
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
                     End If
                 Next
             Next
         Next
     End Sub
+    'Private Sub _disableEnableAllButCurrentVoltageSignals(isEnabled As Boolean)
+    '    For Each group In GroupedRawSignalsByType
+    '        For Each subgroup In group.SignalList
+    '            If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V"
+    '                subgroup.SignalSignature.IsEnabled = isEnabled
+    '            End If
+    '        Next
+    '    Next
+    '    For Each group In GroupedRawSignalsByPMU
+    '        For Each subgroup In group.SignalList
+    '            For Each subsubgroup In subgroup.SignalList
+    '                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Substring(0,1) <> "V" AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(0,1) <> "I") Then
+    '                    subsubgroup.SignalSignature.IsEnabled = isEnabled
+    '                End If
+    '            Next
+    '        Next
+    '    Next
+    '    For Each group In GroupedSignalByProcessConfigStepsInput
+    '        For Each subgroup In group.SignalList
+    '            If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
+    '                subgroup.SignalSignature.IsEnabled = isEnabled
+    '            Else
+    '                For Each subsubgroup In subgroup.SignalList
+    '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
+    '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+    '                    End If
+    '                Next
+    '            End If
+    '        Next
+    '    Next
+    '    For Each group In GroupedSignalByProcessConfigStepsOutput
+    '        For Each subgroup In group.SignalList
+    '            For Each subsubgroup In subgroup.SignalList
+    '                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
+    '                    subsubgroup.SignalSignature.IsEnabled = isEnabled
+    '                End If
+    '            Next
+    '        Next
+    '    Next
+    'End Sub
 
     Private _signalSelectionTreeViewVisibility As String
     Public Property SignalSelectionTreeViewVisibility As String
@@ -3219,39 +3704,39 @@ Public Class SettingsViewModel
         End Set
     End Property
 
-    Private _stepDeSelected As ICommand
-    Public Property StepDeSelected As ICommand
+    Private _dataConfigStepDeSelected As ICommand
+    Public Property DataConfigStepDeSelected As ICommand
         Get
-            Return _stepDeSelected
+            Return _dataConfigStepDeSelected
         End Get
         Set(ByVal value As ICommand)
-            _stepDeSelected = value
+            _dataConfigStepDeSelected = value
         End Set
     End Property
     ''' <summary>
     ''' When user click outside the step list and none of the steps should be selected, then we need to uncheck all checkboxes
     ''' </summary>
     ''' <param name="obj"></param>
-    Private Sub _deSelectAllSteps(obj As Object)
+    Private Sub _deSelectAllDataConfigSteps(obj As Object)
         If _currentSelectedStep IsNot Nothing Then
             For Each signal In _currentSelectedStep.InputChannels
                 signal.IsChecked = False
             Next
-            If TypeOf (_currentSelectedStep) Is Customization AndAlso _currentSelectedStep.OutputChannels IsNot Nothing Then
-                For Each signal In _currentSelectedStep.OutputChannels
-                    signal.IsChecked = False
-                Next
-            End If
+            'If _currentSelectedStep.OutputChannels IsNot Nothing Then
+            '    For Each signal In _currentSelectedStep.OutputChannels
+            '        signal.IsChecked = False
+            '    Next
+            'End If
             Dim stepsInputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
             Dim stepsOutputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
             For Each stp In DataConfigure.CollectionOfSteps
-                stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                 If TypeOf (stp) Is Customization Then
-                    stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
+                    stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                 End If
+                stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
             Next
-            GroupedSignalByStepsInput = stepsInputAsSignalHierachy
-            GroupedSignalByStepsOutput = stepsOutputAsSignalHierachy
+            GroupedSignalByDataConfigStepsInput = stepsInputAsSignalHierachy
+            GroupedSignalByDataConfigStepsOutput = stepsOutputAsSignalHierachy
             If CurrentSelectedStep.Name = "Phasor Creation Customization" Then
                 _disableEnableAllButMagnitudeSignals(True)
             ElseIf CurrentSelectedStep.Name = "Power Calculation Customization" Then
@@ -3268,10 +3753,10 @@ Public Class SettingsViewModel
             ElseIf CurrentSelectedStep.Name = "Angle Conversion Customization" Then
                 _disableEnableAllButAngleSignals(True)
             End If
-            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByStepsInput, False)
-            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByStepsOutput, False)
-            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalsByPMU, False)
-            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalsByType, False)
+            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByDataConfigStepsInput, False)
+            _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByDataConfigStepsOutput, False)
+            _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByPMU, False)
+            _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByType, False)
             _currentSelectedStep.IsStepSelected = False
             CurrentSelectedStep = Nothing
             _determineFileDirCheckableStatus()
@@ -3320,21 +3805,23 @@ Public Class SettingsViewModel
                 ' go through each step to change names that affected by the deleted step
                 For Each stp In steps
                     If stp.StepCounter < toBeDeleted.StepCounter Then
-                        stepInputHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
+                        If TypeOf stp Is Customization Then
+                            stepInputHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
+                        End If
                         stepOutputHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                     End If
                     If stp.StepCounter > toBeDeleted.StepCounter Then
                         stp.StepCounter -= 1
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
-                        stepInputHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                         If TypeOf (stp) Is Customization Then
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
-                            stepOutputHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
+                            stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
+                            stepInputHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                         End If
+                        stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
+                        stepOutputHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                     End If
                 Next
-                GroupedSignalByStepsInput = stepInputHierachy
-                GroupedSignalByStepsOutput = stepOutputHierachy
+                GroupedSignalByDataConfigStepsInput = stepInputHierachy
+                GroupedSignalByDataConfigStepsOutput = stepOutputHierachy
                 If CurrentSelectedStep.StepCounter = toBeDeleted.StepCounter Then
                     For Each signal In toBeDeleted.InputChannels
                         signal.IsChecked = False
@@ -3356,7 +3843,7 @@ Public Class SettingsViewModel
                         _disableEnableAllButAngleSignals(True)
                     End If
                     CurrentSelectedStep = Nothing
-                    _determineAllParentNodeStatus()
+                    _dataConfigDetermineAllParentNodeStatus()
                     _determineFileDirCheckableStatus()
                 End If
                 steps.Remove(toBeDeleted)
@@ -3365,7 +3852,7 @@ Public Class SettingsViewModel
                 toBeDeleted = Nothing
                 SignalSelectionTreeViewVisibility = "Visible"
             Catch ex As Exception
-                MessageBox.Show("Error deleting step " & toBeDeleted.StepCounter.ToString & ", " & toBeDeleted.Name, "Error!", MessageBoxButtons.OK)
+                MessageBox.Show("Error deleting step " & toBeDeleted.StepCounter.ToString & ", " & toBeDeleted.Name & ex.Message, "Error!", MessageBoxButtons.OK)
             End Try
         Else
             MessageBox.Show("Step " & toBeDeleted.StepCounter.ToString & ", " & toBeDeleted.Name & " is not found!", "Error!", MessageBoxButtons.OK)
@@ -3414,62 +3901,6 @@ Public Class SettingsViewModel
         End Get
     End Property
 
-    Private _setCurrentFocusedTextbox As ICommand
-    Public Property SetCurrentFocusedTextbox As ICommand
-        Get
-            Return _setCurrentFocusedTextbox
-        End Get
-        Set(ByVal value As ICommand)
-            _setCurrentFocusedTextbox = value
-        End Set
-    End Property
-    ''' <summary>
-    ''' This method is called when a textbox is clicked in subtraction, division, exponent, unary.... customization
-    ''' where we want signal to be put in individual textboxes.
-    ''' </summary>
-    ''' <param name="obj"></param>
-    Private Sub _currentFocusedTextBoxChanged(obj As SignalSignatures)
-        For Each signal In _currentSelectedStep.InputChannels
-            signal.IsChecked = False
-        Next
-        If obj IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj.TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj.PMUName) Then
-            obj.IsChecked = True
-        End If
-        _determineAllParentNodeStatus()
-    End Sub
-
-    ''' <summary>
-    ''' This points to the current selected textbox of a Unary operation step which is a pair of input output.
-    ''' </summary>
-    Private _currentInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
-    'Private _currentMultipleInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
-    Private _setCurrentFocusedTextboxUnarySteps As ICommand
-    Public Property SetCurrentFocusedTextboxUnarySteps As ICommand
-        Get
-            Return _setCurrentFocusedTextboxUnarySteps
-        End Get
-        Set(ByVal value As ICommand)
-            _setCurrentFocusedTextboxUnarySteps = value
-        End Set
-    End Property
-    Private Sub _currentFocusedTextBoxForUnaryStepsChanged(obj As Object)
-        _currentInputOutputPair = obj
-        _currentFocusedTextBoxChanged(obj.Value(0))
-    End Sub
-    Private _powerPhasorTextBoxGotFocus As ICommand
-    Public Property PowerPhasorTextBoxGotFocus As ICommand
-        Get
-            Return _powerPhasorTextBoxGotFocus
-        End Get
-        Set(ByVal value As ICommand)
-            _powerPhasorTextBoxGotFocus = value
-        End Set
-    End Property
-    Private Sub _powerPhasorCurrentFocusedTextbox(obj As Object)
-        _currentFocusedTextBoxChanged(obj)
-        _currentFocusedPhasorSignalForPowerCalculation = obj
-    End Sub
-    Private _currentFocusedPhasorSignalForPowerCalculation As SignalSignatures
     Private _logs As ObservableCollection(Of String)
     Public Property Logs As ObservableCollection(Of String)
         Get
@@ -3507,19 +3938,20 @@ Public Class SettingsViewModel
             _deleteThisFileSource = value
         End Set
     End Property
+
     Private Sub _deleteAFileSource(obj As InputFileInfo)
         For Each source In DataConfigure.ReaderProperty.InputFileInfos
             If obj Is source Then
 
-                For Each group In GroupedSignalsByType
+                For Each group In GroupedRawSignalsByType
                     If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                        GroupedSignalsByType.Remove(group)
+                        GroupedRawSignalsByType.Remove(group)
                         Exit For
                     End If
                 Next
-                For Each group In GroupedSignalsByPMU
+                For Each group In GroupedRawSignalsByPMU
                     If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                        GroupedSignalsByPMU.Remove(group)
+                        GroupedRawSignalsByPMU.Remove(group)
                         Exit For
                     End If
                 Next
@@ -3562,7 +3994,99 @@ Public Class SettingsViewModel
             End If
         Next
         If _configData IsNot Nothing Then
-            _readStages()
+            _readDataConfigStages()
         End If
     End Sub
+
+    Private _walkerStageChanged As ICommand
+    Public Property WalkerStageChanged As ICommand
+        Get
+            Return _walkerStageChanged
+        End Get
+        Set(value As ICommand)
+            _walkerStageChanged = value
+        End Set
+    End Property
+
+
+    Private Sub _changeSignalSelectionDropDownChoice(index As Integer)
+        Select Case index
+            Case 0
+                CurrentTabIndex = 0
+            Case 1
+                SelectSignalMethods = {"All Initial Input Channels by Signal Type",
+                                       "All Initial Input Channels by PMU",
+                                       "Input Channels by Step",
+                                       "Output Channels by Step"}.ToList
+                'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
+                CurrentTabIndex = 1
+            Case 2
+                SelectSignalMethods = {"All Initial Input Channels by Signal Type",
+                                       "All Initial Input Channels by PMU",
+                                       "Output from SignalSelectionAndManipulation by Signal Type",
+                                       "Output from SignalSelectionAndManipulation by PMU",
+                                       "Input to MultiRate steps",
+                                       "Output Channels by Step"}.ToList
+                'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
+                CurrentTabIndex = 2
+            Case 3
+                SelectSignalMethods = {"NOT Implemented Yet!",
+                                        "All Initial Input Channels by Signal Type",
+                                        "All Initial Input Channels by PMU",
+                                        "Output from SignalSelectionAndManipulation by Signal Type",
+                                        "Output from SignalSelectionAndManipulation by PMU",
+                                        "Input to MultiRate steps",
+                                        "Output Channels by Step"}.ToList
+                'SelectedSelectionMethod = "NOT Implemented Yet!"
+                CurrentTabIndex = 3
+        End Select
+    End Sub
+    Private _oldTabIndex as Integer
+    private _currentTabIndex as Integer
+    Public Property CurrentTabIndex As Integer
+        Get
+            Return _currentTabIndex
+        End Get
+        Set(value As Integer)
+            _currentTabIndex = value
+            if _oldTabIndex = 1 And _currentTabIndex <> 1
+                _groupAllDataConfigOutputSignal()
+                _deSelectAllDataConfigSteps(Nothing)
+            End If
+            if _oldTabIndex = 2 And _currentTabIndex <> 2
+                '_groupAllDataConfigOutputSignal()
+                _deSelectAllProcessConfigSteps(Nothing)
+            End If
+            _oldTabIndex = _currentTabIndex
+            OnPropertyChanged()
+        End Set
+    End Property
+
+
+    Private Sub _groupAllDataConfigOutputSignal()
+        dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        For Each stp In DataConfigure.CollectionOfSteps
+            For Each signal As SignalSignatures In stp.OutputChannels
+                If Not allOutputSignals.Contains(signal)
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        AllDataConfigOutputGroupedByType = SortSignalByType(allOutputSignals)
+        AllDataConfigOutputGroupedByPMU = SortSignalByPMU(allOutputSignals)
+    End Sub
+
+
+    'Private _postProcessingSelected As ICommand
+    'Public Property PostProcessingSelected As ICommand
+    '    Get
+    '        Return _postProcessingSelected
+    '    End Get
+    '    Set(value As ICommand)
+    '        _postProcessingSelected = value
+    '    End Set
+    'End Property
+    'Private Sub _selectPostProcessing(obj As Object)
+
+    'End Sub
 End Class
