@@ -131,6 +131,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\ValueIfEmptyConverter.vb" />
     <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.vb" />
     <Compile Include="ViewModels\Folder.vb" />
@@ -144,6 +145,9 @@
     <Compile Include="Views\AngleConversionCustomization.xaml.vb">
       <DependentUpon>AngleConversionCustomization.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ChannelsListView.xaml.vb">
+      <DependentUpon>ChannelsListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreatePhasorCustomization.xaml.vb">
       <DependentUpon>CreatePhasorCustomization.xaml</DependentUpon>
     </Compile>
@@ -152,6 +156,9 @@
     </Compile>
     <Compile Include="Views\ExponentCustomization.xaml.vb">
       <DependentUpon>ExponentCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExponentCustomizationItem.xaml.vb">
+      <DependentUpon>ExponentCustomizationItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FilterListBox.xaml.vb">
       <DependentUpon>FilterListBox.xaml</DependentUpon>
@@ -191,6 +198,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ChannelsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CreatePhasorCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -202,6 +213,10 @@
     <Page Include="Views\ExponentCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExponentCustomizationItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FilterListBox.xaml">
       <SubType>Designer</SubType>
