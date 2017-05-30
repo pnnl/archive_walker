@@ -66,6 +66,17 @@ Public Class ProcessConfig
             OnPropertyChanged()
         End Set
     End Property
+
+    Private _initializationPath As String
+    Public Property InitializationPath As String
+        Get
+            Return _initializationPath
+        End Get
+        Set(ByVal value As String)
+            _initializationPath = value
+            OnPropertyChanged
+        End Set
+    End Property
 End Class
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -263,6 +274,9 @@ Public Class Multirate
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         _name = "Multirate"
+        _pElement = 1
+        _qElement = 1
+        _newRate = 1
     End Sub
 
     Private _name As String
@@ -283,6 +297,14 @@ Public Class Multirate
         End Get
         Set(value As String)
             _multiRatePMU = value
+            For Each out In OutputChannels
+                out.PMUName = value
+            Next
+            Dim theOnlyPMUHierachy = ThisStepOutputsAsSignalHierachyByPMU.SignalList.FirstOrDefault
+            If theOnlyPMUHierachy IsNot Nothing Then
+                theOnlyPMUHierachy.SignalSignature.PMUName = value
+                theOnlyPMUHierachy.SignalSignature.SignalName = value
+            End If
             OnPropertyChanged()
         End Set
     End Property

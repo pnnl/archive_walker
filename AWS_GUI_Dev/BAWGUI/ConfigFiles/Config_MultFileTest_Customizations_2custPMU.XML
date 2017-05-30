@@ -581,6 +581,332 @@
     -->
     <PostProcessCustomizationConfig>
         <Configuration>
+			<Stages>
+                <Customization>
+                    <Name>ScalarRep</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU PART</CustPMUname>
+                        <SignalName>ScalarRep 1</SignalName>
+                        <scalar>60</scalar>
+                        <SignalType>F</SignalType>
+                        <SignalUnit>Hz</SignalUnit>
+                        <TimeSourcePMU>W106GENESEE___02</TimeSourcePMU>
+                    </Parameters>
+                </Customization>
+                <Customization>
+                    <Name>ScalarRep</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU PART</CustPMUname>
+                        <SignalName>ScalarRep 2</SignalName>
+                        <scalar>230</scalar>
+                        <SignalType>VMP</SignalType>
+                        <SignalUnit>kV</SignalUnit>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>Addition</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <SignalName>Add 1</SignalName>
+                        <term>
+                            <PMU>JDAY 500  B1 SA </PMU>
+                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                        </term>
+                        <term>
+                            <PMU>MALN 500  B1 SA </PMU>
+                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                        </term>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>Subtraction</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <SignalName>sub BPA</SignalName>
+                        <minuend>
+                            <PMU>JDAY 500  B1 SA </PMU>
+                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                        </minuend>
+                        <subtrahend>
+                            <PMU>MALN 500  B1 SA </PMU>
+                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                        </subtrahend>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>Multiplication</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <SignalName>mult 1</SignalName>
+                        <factor>
+                            <PMU>JDAY 500  B1 SA </PMU>
+                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                        </factor>
+                        <factor>
+                            <PMU>MALN 500  B1 SA </PMU>
+                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                        </factor>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>Division</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <SignalName>Div BPA</SignalName>
+                        <dividend>
+                            <PMU>JDAY 500  B1 SA </PMU>
+                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                        </dividend>
+                        <divisor>
+                            <PMU>MALN 500  B1 SA </PMU>
+                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                        </divisor>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>Exponent</Name>
+                    <Parameters>
+                        <exponent>2</exponent>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <signal>
+                            <PMU>JDAY 500  B1 SA </PMU>
+                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <CustName>JDAY exp</CustName>
+                        </signal>
+                        <signal>
+                            <PMU>MALN 500  B1 SA </PMU>
+                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <CustName>MALN exp</CustName>
+                        </signal>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>AbsVal</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <signal>
+                            <PMU>JDAY 500  B1 SA </PMU>
+                            <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            <CustName>JDAY AbsVal</CustName>
+                        </signal>
+                        <signal>
+                            <PMU>MALN 500  B1 SA </PMU>
+                            <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            <CustName>MALN AbsVal</CustName>
+                        </signal>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>CreatePhasor</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <phasor>
+                            <mag>
+                                <PMU>JDAY 500  B1 SA </PMU>
+                                <Channel>JDAY 500  B1 SA .B500EAST_____1VP.MAG</Channel>
+                            </mag>
+                            <ang>
+                                <PMU>JDAY 500  B1 SA </PMU>
+                                <Channel>JDAY 500  B1 SA .B500EAST_____1VP.ANG</Channel>
+                            </ang>
+                            <CustName>JDAY CreatePhasor</CustName>
+                        </phasor>
+                        <phasor>
+                            <mag>
+                                <PMU>MALN 500  B1 SA </PMU>
+                                <Channel>MALN 500  B1 SA .L500GRIZZLY__2IP.MAG</Channel>
+                            </mag>
+                            <ang>
+                                <PMU>MALN 500  B1 SA </PMU>
+                                <Channel>MALN 500  B1 SA .L500GRIZZLY__2IP.ANG</Channel>
+                            </ang>
+                            <CustName>MALN CreatePhasor</CustName>
+                        </phasor>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>PowerCalc</Name>
+                    <Parameters>
+                        <PowType>Active</PowType>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <power>
+                            <Vmag>
+                                <PMU>MALN 500  B1 SA </PMU>
+                                <Channel>MALN 500  B1 SA .B500NORTH____1VP.MAG</Channel>
+                            </Vmag>
+                            <Vang>
+                                <PMU>MALN 500  B1 SA </PMU>
+                                <Channel>MALN 500  B1 SA .B500NORTH____1VP.ANG</Channel>
+                            </Vang>
+                            <Imag>
+                                <PMU>KEEL 500 B1 SA  </PMU>
+                                <Channel>KEEL 500 B1 SA  .L500ALLSTON__1IP.MAG</Channel>
+                            </Imag>
+                            <Iang>
+                                <PMU>KEEL 500 B1 SA  </PMU>
+                                <Channel>KEEL 500 B1 SA  .L500ALLSTON__1IP.ANG</Channel>
+                            </Iang>
+                            <CustName>PowSig BPA 1</CustName>
+                        </power>
+                        <power>
+                            <Vphasor>
+                                <PMU>CustPMU BPA</PMU>
+                                <Channel>JDAY CreatePhasor</Channel>
+                            </Vphasor>
+                            <Iphasor>
+                                <PMU>CustPMU BPA</PMU>
+                                <Channel>MALN CreatePhasor</Channel>
+                            </Iphasor>
+                            <CustName>PowSig BPA 2</CustName>
+                        </power>
+                    </Parameters>
+                </Customization>
+                <Customization>
+                    <Name>PowerCalc</Name>
+                    <Parameters>
+                        <PowType>Apparent</PowType>
+                        <CustPMUname>CustPMU PART</CustPMUname>
+                        <power>
+                            <Vmag>
+                                <PMU>W106GENESEE___02</PMU>
+                                <Channel>W106GENESEE___02.L500ELLERSLI_1VP.MAG</Channel>
+                            </Vmag>
+                            <Vang>
+                                <PMU>W106GENESEE___02</PMU>
+                                <Channel>W106GENESEE___02.L500ELLERSLI_1VP.ANG</Channel>
+                            </Vang>
+                            <Imag>
+                                <PMU>W066NAVAJO____01</PMU>
+                                <Channel>W066NAVAJO____01.G500NAVAJO_1_1IP.MAG</Channel>
+                            </Imag>
+                            <Iang>
+                                <PMU>W066NAVAJO____01</PMU>
+                                <Channel>W066NAVAJO____01.G500NAVAJO_1_1IP.ANG</Channel>
+                            </Iang>
+                            <CustName>PowSig PART 1</CustName>
+                        </power>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>SpecTypeUnit</Name>
+                    <Parameters>
+                        <SigType>VMP</SigType>
+                        <SigUnit>V</SigUnit>
+                        <PMU>ALSN 500 B1 SA  </PMU>
+                        <Channel>ALSN 500 B1 SA  .rocof</Channel>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <CustName>SpecTypeUnit BPA 1</CustName>
+                    </Parameters>
+                </Customization>
+                <Customization>
+                    <Name>SpecTypeUnit</Name>
+                    <Parameters>
+                        <SigType>VMP</SigType>
+                        <SigUnit>V</SigUnit>
+                        <PMU>ALVY 500 B1 SA  </PMU>
+                        <Channel>ALVY 500 B1 SA  .rocof</Channel>
+                    </Parameters>
+                </Customization>
+                <Customization>
+                    <Name>SpecTypeUnit</Name>
+                    <Parameters>
+                        <SigType>VMP</SigType>
+                        <SigUnit>V</SigUnit>
+                        <PMU>W010CRGCU_____02</PMU>
+                        <Channel>W010CRGCU_____02.rocof</Channel>
+                        <CustPMUname>CustPMU PART</CustPMUname>
+                        <CustName>SpecTypeUnit PART 1</CustName>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>MetricPrefix</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <ToConvert>
+                            <PMU>ASHE 500 B1 SA  </PMU>
+                            <Channel>ASHE 500 B1 SA  .B500NORTH____1VP.MAG</Channel>
+                            <NewUnit>kV</NewUnit>
+                            <CustName>ASHE kV</CustName>
+                        </ToConvert>
+                        <ToConvert>
+                            <PMU>BELL 230 B1 SA  </PMU>
+                            <Channel>BELL 230 B1 SA  .B230SECT1____1VP.MAG</Channel>
+                            <NewUnit>kV</NewUnit>
+                        </ToConvert>
+                    </Parameters>
+                </Customization>
+                <Customization>
+                    <Name>MetricPrefix</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU PART</CustPMUname>
+                        <ToConvert>
+                            <PMU>W075SAN_JUAN__01</PMU>
+                            <Channel>W075SAN_JUAN__01.B345BUS1_____1VP.MAG</Channel>
+                            <NewUnit>kV</NewUnit>
+                            <CustName>San Juan kV</CustName>
+                        </ToConvert>
+                        <ToConvert>
+                            <PMU>W073PALVERDE__01</PMU>
+                            <Channel>W073PALVERDE__01.B500EAST_____1VP.MAG</Channel>
+                            <NewUnit>kV</NewUnit>
+                        </ToConvert>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+                <Customization>
+                    <Name>AngleConversion</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU BPA</CustPMUname>
+                        <ToConvert>
+                            <PMU>ASHE 500 B1 SA  </PMU>
+                            <Channel>ASHE 500 B1 SA  .B500NORTH____1VP.ANG</Channel>
+                            <CustName>ASHE RAD</CustName>
+                        </ToConvert>
+                        <ToConvert>
+                            <PMU>BELL 230 B1 SA  </PMU>
+                            <Channel>BELL 230 B1 SA  .B230SECT1____1VP.ANG</Channel>
+                        </ToConvert>
+                    </Parameters>
+                </Customization>
+                <Customization>
+                    <Name>AngleConversion</Name>
+                    <Parameters>
+                        <CustPMUname>CustPMU PART</CustPMUname>
+                        <ToConvert>
+                            <PMU>W075SAN_JUAN__01</PMU>
+                            <Channel>W075SAN_JUAN__01.B345BUS1_____1VP.ANG</Channel>
+                            <CustName>San Juan RAD</CustName>
+                        </ToConvert>
+                        <ToConvert>
+                            <PMU>W073PALVERDE__01</PMU>
+                            <Channel>W073PALVERDE__01.B500EAST_____1VP.ANG</Channel>
+                        </ToConvert>
+                    </Parameters>
+                </Customization>
+                <!--
+                -->
+            </Stages>
         </Configuration>
     </PostProcessCustomizationConfig>
     <!--

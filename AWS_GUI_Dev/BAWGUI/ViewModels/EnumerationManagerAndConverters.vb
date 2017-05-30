@@ -411,12 +411,13 @@ Public Class SignalSelectionDropDownConverter
                                        "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
             Case 3
-                value1 = {"NOT Implemented Yet!",
-                                       "All Initial Input Channels by Signal Type",
+                value1 = {"All Initial Input Channels by Signal Type",
                                        "All Initial Input Channels by PMU",
                                        "Output from SignalSelectionAndManipulation by Signal Type",
                                        "Output from SignalSelectionAndManipulation by PMU",
-                                       "Input to MultiRate steps",
+                                       "Output from ProcessConfig by Signal Type",
+                                       "Output from ProcessConfig by PMU",
+                                       "Input Channels by Step",
                                        "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "NOT Implemented Yet!"
         End Select
@@ -486,14 +487,26 @@ Public Class NewChannelVisibilityConverter
     Implements IValueConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-        If value = 1 or value = 0
+        If value = 1 Or value = 0 Then
             Return True
-        Else 
+        Else
             Return False
         End If
     End Function
 
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+End Class
+
+Public Class AddCustomizationParameters
+    Implements IMultiValueConverter
+
+    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+        Return values.ToList
+    End Function
+
+    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
         Return DependencyProperty.UnsetValue
     End Function
 End Class
