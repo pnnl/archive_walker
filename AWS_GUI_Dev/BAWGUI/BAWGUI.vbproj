@@ -175,9 +175,6 @@
     <Compile Include="Views\ScalarRepCustomization.xaml.vb">
       <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsControl.xaml.vb">
-      <DependentUpon>SettingsControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -256,10 +253,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ScalarRepCustomization.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
