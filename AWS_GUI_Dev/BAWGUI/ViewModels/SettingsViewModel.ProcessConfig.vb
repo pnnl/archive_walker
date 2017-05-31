@@ -22,11 +22,45 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-
+    Private _allProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
+    Public Property AllProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _allProcessConfigOutputGroupedByType
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _allProcessConfigOutputGroupedByType = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _allProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+    Public Property AllProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _allProcessConfigOutputGroupedByPMU
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _allProcessConfigOutputGroupedByPMU = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _nameTypeUnitStatusFlag As Integer
+    ''' <summary>
+    ''' This Flag denotes the rare situation(might never happend since obsolete) when there is NameTypeUnit Element exists and use the first approach in the Processor XML Configuration File specifications
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property NameTypeUnitStatusFlag As Integer
+        Get
+            Return _nameTypeUnitStatusFlag
+        End Get
+        Set(ByVal value As Integer)
+            _nameTypeUnitStatusFlag = value
+            OnPropertyChanged()
+        End Set
+    End Property
 #Region "Read Process Config"
     Private Sub _readProcessConfig()
         GroupedSignalByProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
         GroupedSignalByProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
+        ProcessConfigure.InitializationPath = _configData.<Config>.<ProcessConfig>.<Configuration>.<InitializationPath>.Value
         _readUnwrap()
         _readInterpolate()
         _readProcessConfigStages()
@@ -318,54 +352,60 @@ Partial Public Class SettingsViewModel
         ProcessConfigure.WrapList = newWrapList
     End Sub
     Private Sub _readNameTypeUnit()
-        dim pmus = From el In _configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.Elements() where el.Name = "PMU" Select el
-        if pmus.Count() = 0
-            ProcessConfigure.NameTypeUnitElement.NewUnit = _configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewUnit>.Value()
-            ProcessConfigure.NameTypeUnitElement.NewType = _configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewType>.Value()
-        else
-            dim newPMU As NameTypeUnitPMU
-            'newPMU.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
-            'newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newPMU.StepCounter.ToString & "-" & newPMU.Name
-            For Each pmu In pmus
-                dim pmuName = pmu.<Name>.Value
-                dim CurrentChannel = pmu.<CurrentChannel>.Value
-                dim NewChannel = pmu.<NewChannel>.Value
-                dim NewUnit = pmu.<NewUnit>.Value
-                dim NewType = pmu.<NewType>.Value
+        ProcessConfigure.NameTypeUnitElement = New NameTypeUnit
+        Dim NameTypeUnitExist = From el In _configData.<Config>.<ProcessConfig>.<Configuration>.Elements() Where el.Name = "NameTypeUnit" Select el
+        If NameTypeUnitExist.Count <> 0 Then
+            Dim pmus = From el In _configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.Elements() Where el.Name = "PMU" Select el
+            If pmus.Count() = 0 Then
+                ProcessConfigure.NameTypeUnitElement.NewUnit = _configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewUnit>.Value()
+                ProcessConfigure.NameTypeUnitElement.NewType = _configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewType>.Value()
+                NameTypeUnitStatusFlag = 1
+            Else
+                Dim newPMU As NameTypeUnitPMU
+                'newPMU.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
+                'newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newPMU.StepCounter.ToString & "-" & newPMU.Name
+                For Each pmu In pmus
+                    Dim pmuName = pmu.<Name>.Value
+                    Dim CurrentChannel = pmu.<CurrentChannel>.Value
+                    Dim NewChannel = pmu.<NewChannel>.Value
+                    Dim NewUnit = pmu.<NewUnit>.Value
+                    Dim NewType = pmu.<NewType>.Value
 
-                if newPMU is Nothing orelse newPMU.NewType <> NewType OrElse newPMU.NewUnit <> NewUnit OrElse CurrentChannel <> NewChannel
-                    If newPMU isNot Nothing
-                        newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newPMU.OutputChannels)
-                        GroupedSignalByProcessConfigStepsOutput.Add(newPMU.ThisStepOutputsAsSignalHierachyByPMU)
-                        ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
+                    If newPMU Is Nothing OrElse newPMU.NewType <> NewType OrElse newPMU.NewUnit <> NewUnit OrElse CurrentChannel <> NewChannel Then
+
+                        If newPMU IsNot Nothing Then
+                            newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newPMU.OutputChannels)
+                            GroupedSignalByProcessConfigStepsOutput.Add(newPMU.ThisStepOutputsAsSignalHierachyByPMU)
+                            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
+                        End If
+                        newPMU = New NameTypeUnitPMU()
+                        newPMU.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
+                        newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newPMU.StepCounter.ToString & "-" & newPMU.Name
+
+                        newPMU.NewType = NewType
+                        newPMU.NewUnit = NewUnit
+                        newPMU.NewChannel = NewChannel
+
                     End If
-                    newPMU = New NameTypeUnitPMU()
-                    newPMU.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
-                    newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newPMU.StepCounter.ToString & "-" & newPMU.Name
+                    If newPMU.InputChannels.Count > 0 Then
+                        newPMU.NewChannel = ""
+                    End If
+                    Dim input = _searchForSignalInTaggedSignals(pmuName, CurrentChannel)
+                    If input IsNot Nothing Then
+                        newPMU.InputChannels.Add(input)
+                        Dim output = New SignalSignatures(NewChannel, pmuName, NewType)
+                        output.Unit = NewUnit
+                        output.IsCustomSignal = True
+                        newPMU.OutputChannels.Add(output)
+                    Else
+                        _addLog("Error reading config file! Signal in a step of processing with channel name: " & CurrentChannel & " in PMU " & pmuName & " not found!")
+                    End If
 
-                    newPMU.NewType = NewType
-                    newPMU.NewUnit = NewUnit
-                    newPMU.NewChannel = NewChannel
-
-                End If
-                if newPMU.InputChannels.Count > 0
-                    newPMU.NewChannel = ""
-                End If
-                dim input = _searchForSignalInTaggedSignals(pmuName, CurrentChannel)
-                if input IsNot Nothing
-                    newPMU.InputChannels.Add(input)
-                    dim output = New SignalSignatures(NewChannel, pmuName, NewType)
-                    output.Unit = NewUnit
-                    output.IsCustomSignal = True
-                    newPMU.OutputChannels.Add(output)
-                Else
-                    _addLog("Error reading config file! Signal in a step of processing with channel name: " & CurrentChannel & " in PMU " & pmuName & " not found!")
-                End If
-
-            Next
-            newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newPMU.OutputChannels)
-            GroupedSignalByProcessConfigStepsOutput.Add(newPMU.ThisStepOutputsAsSignalHierachyByPMU)
-            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
+                Next
+                newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newPMU.OutputChannels)
+                GroupedSignalByProcessConfigStepsOutput.Add(newPMU.ThisStepOutputsAsSignalHierachyByPMU)
+                ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
+            End If
         End If
     End Sub
 #End Region
@@ -436,52 +476,57 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteAUnwrap(obj As Unwrap)
-        GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
-        ProcessConfigure.UnWrapList.Remove((obj))
-        dim unwraps = New ObservableCollection(Of Unwrap)(ProcessConfigure.UnWrapList)
-        For Each unwrap In unwraps
-            If unwrap.StepCounter > obj.StepCounter
-                unwrap.StepCounter -= 1
-                unwrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & unwrap.StepCounter.ToString & " - " & unwrap.Name
-                unwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & unwrap.StepCounter.ToString & " - " & unwrap.Name
-            End If
-        Next
-        ProcessConfigure.UnWrapList=unwraps
-        Dim intplts = new ObservableCollection(Of Interpolate)(ProcessConfigure.InterpolateList)
-        For Each interpolate In intplts
-            interpolate.StepCounter -=1
-            interpolate.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & interpolate.StepCounter.ToString & " - " & interpolate.Type.ToString() & " " & interpolate.Name
-            interpolate.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & interpolate.StepCounter.ToString & " - " & interpolate.Type.ToString() & " " & interpolate.Name
-        Next
-        ProcessConfigure.InterpolateList = intplts
-        dim steps = New ObservableCollection(Of Object)(ProcessConfigure.CollectionOfSteps)
-        For Each aStep In steps
-            aStep.StepCounter -=1
-            If TypeOf aStep Is TunableFilter
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
-            else
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-            End If
-        Next
-        ProcessConfigure.CollectionOfSteps = steps
-        dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
-        For Each wrap In wraps
-            wrap.StepCounter -=1
-            wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & " - " & wrap.Name
-            wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & " - " & wrap.Name
-        Next
-        ProcessConfigure.WrapList = wraps
-        if ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0
-            dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
-            For Each newTypeUnit In newTypeUnits
-                newTypeUnit.StepCounter -=1
-                newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
-                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+        Try
+            ProcessConfigure.UnWrapList.Remove((obj))
+            Dim unwraps = New ObservableCollection(Of Unwrap)(ProcessConfigure.UnWrapList)
+            For Each unwrap In unwraps
+                If unwrap.StepCounter > obj.StepCounter Then
+                    unwrap.StepCounter -= 1
+                    unwrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & unwrap.StepCounter.ToString & " - " & unwrap.Name
+                    unwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & unwrap.StepCounter.ToString & " - " & unwrap.Name
+                End If
             Next
-            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
-        End If
+            ProcessConfigure.UnWrapList = unwraps
+            Dim intplts = New ObservableCollection(Of Interpolate)(ProcessConfigure.InterpolateList)
+            For Each interpolate In intplts
+                interpolate.StepCounter -= 1
+                interpolate.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & interpolate.StepCounter.ToString & " - " & interpolate.Type.ToString() & " " & interpolate.Name
+                interpolate.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & interpolate.StepCounter.ToString & " - " & interpolate.Type.ToString() & " " & interpolate.Name
+            Next
+            ProcessConfigure.InterpolateList = intplts
+            Dim steps = New ObservableCollection(Of Object)(ProcessConfigure.CollectionOfSteps)
+            For Each aStep In steps
+                aStep.StepCounter -= 1
+                If TypeOf aStep Is TunableFilter Then
+                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
+                Else
+                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                End If
+            Next
+            ProcessConfigure.CollectionOfSteps = steps
+            Dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
+            For Each wrap In wraps
+                wrap.StepCounter -= 1
+                wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & " - " & wrap.Name
+                wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & " - " & wrap.Name
+            Next
+            ProcessConfigure.WrapList = wraps
+            If ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0 Then
+                Dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
+                For Each newTypeUnit In newTypeUnits
+                    newTypeUnit.StepCounter -= 1
+                    newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                    newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                Next
+                ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
+            End If
+            _deSelectAllProcessConfigSteps()
+            _addLog("Unwrap step " & obj.StepCounter & " is deleted!")
+        Catch ex As Exception
+            MessageBox.Show("Error deleting a unwrap step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
+        End Try
     End Sub
 
     Private _addInterpolate as ICommand
@@ -541,45 +586,51 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteAnInterpolate(obj As Interpolate)
-        GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
-        ProcessConfigure.InterpolateList.Remove((obj))
-        Dim intplts = new ObservableCollection(Of Interpolate)(ProcessConfigure.InterpolateList)
-        For Each intplt In intplts
-            If intplt.StepCounter > obj.StepCounter
-                intplt.StepCounter -= 1
-                intplt.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & intplt.StepCounter.ToString & " - " & intplt.Type.ToString() & " " & intplt.Name
-                intplt.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & intplt.StepCounter.ToString & " - " & intplt.Type.ToString() & " " & intplt.Name
-            End If
-        Next
-        ProcessConfigure.InterpolateList = intplts
-        dim steps = new ObservableCollection(Of Object)(ProcessConfigure.CollectionOfSteps)
-        For Each aStep In steps
-            aStep.StepCounter -=1
-            If TypeOf aStep Is TunableFilter
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
-            else
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-            End If
-        Next
-        ProcessConfigure.CollectionOfSteps = steps
-        dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
-        For Each wrap In wraps
-            wrap.StepCounter -=1
-            wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
-            wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
-        Next
-        ProcessConfigure.WrapList = wraps
-        if ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0
-            dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
-            For Each newTypeUnit In newTypeUnits
-                newTypeUnit.StepCounter -=1
-                newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
-                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+        'GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
+        Try
+            ProcessConfigure.InterpolateList.Remove((obj))
+            Dim intplts = New ObservableCollection(Of Interpolate)(ProcessConfigure.InterpolateList)
+            For Each intplt In intplts
+                If intplt.StepCounter > obj.StepCounter Then
+                    intplt.StepCounter -= 1
+                    intplt.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & intplt.StepCounter.ToString & " - " & intplt.Type.ToString() & " " & intplt.Name
+                    intplt.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & intplt.StepCounter.ToString & " - " & intplt.Type.ToString() & " " & intplt.Name
+                End If
             Next
-            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
-        End If
+            ProcessConfigure.InterpolateList = intplts
+            Dim steps = New ObservableCollection(Of Object)(ProcessConfigure.CollectionOfSteps)
+            For Each aStep In steps
+                aStep.StepCounter -= 1
+                If TypeOf aStep Is TunableFilter Then
+                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
+                Else
+                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                End If
+            Next
+            ProcessConfigure.CollectionOfSteps = steps
+            Dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
+            For Each wrap In wraps
+                wrap.StepCounter -= 1
+                wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
+                wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
+            Next
+            ProcessConfigure.WrapList = wraps
+            If ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0 Then
+                Dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
+                For Each newTypeUnit In newTypeUnits
+                    newTypeUnit.StepCounter -= 1
+                    newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                    newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                Next
+                ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
+            End If
+            _deSelectAllProcessConfigSteps()
+            _addLog("Interpolate step " & obj.StepCounter & " is deleted!")
+        Catch ex As Exception
+            MessageBox.Show("Error deleting an interpolate step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
+        End Try
     End Sub
 
     Private _addTunableFilterOrMultirate As ICommand
@@ -641,43 +692,49 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteATunableFilterOrMultirate(obj As Object)
-        GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
-        if TypeOf obj Is Multirate
-            GroupedSignalByProcessConfigStepsInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
-        End If
-        ProcessConfigure.CollectionOfSteps.Remove((obj))
-        dim steps = new ObservableCollection(Of Object)(ProcessConfigure.CollectionOfSteps)
-        For Each aStep In steps
-            If aStep.StepCounter > obj.StepCounter
-                aStep.StepCounter -=1
-                If TypeOf aStep Is TunableFilter
-                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
-                else
-                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+        'GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
+        'If TypeOf obj Is Multirate Then
+        '    GroupedSignalByProcessConfigStepsInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
+        'End If
+        Try
+            ProcessConfigure.CollectionOfSteps.Remove((obj))
+            Dim steps = New ObservableCollection(Of Object)(ProcessConfigure.CollectionOfSteps)
+            For Each aStep In steps
+                If aStep.StepCounter > obj.StepCounter Then
+                    aStep.StepCounter -= 1
+                    If TypeOf aStep Is TunableFilter Then
+                        aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
+                        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
+                    Else
+                        aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                        aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                    End If
                 End If
-            End If
-        Next
-        ProcessConfigure.CollectionOfSteps = steps
-        dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
-        For Each wrap In wraps
-            wrap.StepCounter -=1
-            wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
-            wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
-        Next
-        ProcessConfigure.WrapList = wraps
-        if ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0
-            dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
-            For Each newTypeUnit In newTypeUnits
-                newTypeUnit.StepCounter -=1
-                newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
-                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
             Next
-            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
-        End If
+            ProcessConfigure.CollectionOfSteps = steps
+            Dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
+            For Each wrap In wraps
+                wrap.StepCounter -= 1
+                wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
+                wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
+            Next
+            ProcessConfigure.WrapList = wraps
+            If ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0 Then
+                Dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
+                For Each newTypeUnit In newTypeUnits
+                    newTypeUnit.StepCounter -= 1
+                    newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                    newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                Next
+                ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
+            End If
+            _deSelectAllProcessConfigSteps()
+            _addLog("Step " & obj.StepCounter.ToString & ", " & obj.Name & " is deleted!")
+        Catch ex As Exception
+            MessageBox.Show("Error deleting a step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
+        End Try
     End Sub
-    
+
     Private _addWrap As ICommand
     Public Property AddWrap As ICommand
         Get
@@ -716,26 +773,32 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteAWrap(obj As Wrap)
-        GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
-        ProcessConfigure.WrapList.Remove((obj))
-        dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
-        For Each wrap In wraps
-            If wrap.StepCounter > obj.StepCounter
-                wrap.StepCounter -=1
-                wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
-                wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
-            End If
-        Next
-        ProcessConfigure.WrapList = wraps
-        if ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0
-            dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
-            For Each newTypeUnit In newTypeUnits
-                newTypeUnit.StepCounter -=1
-                newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
-                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+        'GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
+        Try
+            ProcessConfigure.WrapList.Remove((obj))
+            Dim wraps = New ObservableCollection(Of Wrap)(ProcessConfigure.WrapList)
+            For Each wrap In wraps
+                If wrap.StepCounter > obj.StepCounter Then
+                    wrap.StepCounter -= 1
+                    wrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
+                    wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & wrap.StepCounter.ToString & "-" & wrap.Name
+                End If
             Next
-            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
-        End If
+            ProcessConfigure.WrapList = wraps
+            If ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0 Then
+                Dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
+                For Each newTypeUnit In newTypeUnits
+                    newTypeUnit.StepCounter -= 1
+                    newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                    newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & " - " & newTypeUnit.Name
+                Next
+                ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
+            End If
+            _deSelectAllProcessConfigSteps()
+            _addLog("Wrap step " & obj.StepCounter & " is deleted!")
+        Catch ex As Exception
+            MessageBox.Show("Error deleting a wrap step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
+        End Try
     End Sub
 
     Private _addNameTypeUnit As ICommand
@@ -756,7 +819,6 @@ Partial Public Class SettingsViewModel
         _processStepSelectedToEdit(newTypeUnit)
     End Sub
 
-
     Private _deleteNameTypeUnit As ICommand
     Public Property DeleteNameTypeUnit As ICommand
         Get
@@ -767,17 +829,23 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteANameTypeUnit(obj As Object)
-        GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
-        ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Remove((obj))
-        dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
-        For Each newTypeUnit In newTypeUnits
-            If newTypeUnit.StepCounter > obj.StepCounter
-                newTypeUnit.StepCounter -=1
-                newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & "-" & newTypeUnit.Name
-                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & "-" & newTypeUnit.Name
-            End If
-        Next
-        ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
+        'GroupedSignalByProcessConfigStepsOutput.Remove(obj.ThisStepOutputsAsSignalHierachyByPMU)
+        Try
+            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Remove((obj))
+            Dim newTypeUnits = New ObservableCollection(Of NameTypeUnitPMU)(ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList)
+            For Each newTypeUnit In newTypeUnits
+                If newTypeUnit.StepCounter > obj.StepCounter Then
+                    newTypeUnit.StepCounter -= 1
+                    newTypeUnit.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & "-" & newTypeUnit.Name
+                    newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newTypeUnit.StepCounter.ToString & "-" & newTypeUnit.Name
+                End If
+            Next
+            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
+            _deSelectAllProcessConfigSteps()
+            _addLog("NameTypeUnit step " & obj.StepCounter & " is deleted!")
+        Catch ex As Exception
+            MessageBox.Show("Error deleting a NameTypeUnit step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
+        End Try
     End Sub
 
     Private _multirateParameterChoice As ICommand
@@ -794,10 +862,10 @@ Partial Public Class SettingsViewModel
         parameters.Add(new ParameterValuePair("MultiRatePMU", ""))
         Select Case obj
             Case "newrate"
-                parameters.Add(New ParameterValuePair("NewRate", ""))
+                parameters.Add(New ParameterValuePair("NewRate", "1"))
             Case "pqratio"
-                parameters.Add(New ParameterValuePair("p", ""))
-                parameters.Add(New ParameterValuePair("q", ""))
+                parameters.Add(New ParameterValuePair("p", "1"))
+                parameters.Add(New ParameterValuePair("q", "1"))
         End Select
         CurrentSelectedStep.FilterParameters = parameters
     End Sub
@@ -918,8 +986,8 @@ Partial Public Class SettingsViewModel
                 Next
                 processStep.IsStepSelected = True
                 If CurrentSelectedStep IsNot Nothing Then
-                    if TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap
-                        _disableEnableAllButAngleSignals(True)
+                    if TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap Then
+                        _disableEnableAllButAngleSignalsInProcessConfig(True)
                     End If
                 End If
 
@@ -928,8 +996,8 @@ Partial Public Class SettingsViewModel
                 _processConfigDetermineAllParentNodeStatus()
                 _determineFileDirCheckableStatus()
                 
-                if TypeOf processStep Is Unwrap OrElse TypeOf processStep Is Wrap
-                    _disableEnableAllButAngleSignals(False)
+                if TypeOf processStep Is Unwrap OrElse TypeOf processStep Is Wrap Then
+                    _disableEnableAllButAngleSignalsInProcessConfig(False)
                 End If
                 
                 CurrentSelectedStep = processStep
@@ -937,6 +1005,71 @@ Partial Public Class SettingsViewModel
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
             End Try
         End If
+    End Sub
+
+    Private Sub _disableEnableAllButAngleSignalsInProcessConfig(isEnabled As Boolean)
+        For Each group In GroupedRawSignalsByType
+            For Each subgroup In group.SignalList
+                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
+                    subgroup.SignalSignature.IsEnabled = isEnabled
+                Else
+                    For Each subsubgroup In subgroup.SignalList
+                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+                        End If
+                    Next
+                End If
+            Next
+        Next
+        For Each group In GroupedRawSignalsByPMU
+            For Each subgroup In group.SignalList
+                For Each subsubgroup In subgroup.SignalList
+                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+                    End If
+                Next
+            Next
+        Next
+        For Each group In GroupedSignalByProcessConfigStepsInput
+            For Each subgroup In group.SignalList
+                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
+                    subgroup.SignalSignature.IsEnabled = isEnabled
+                Else
+                    For Each subsubgroup In subgroup.SignalList
+                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+                        End If
+                    Next
+                End If
+            Next
+        Next
+        For Each group In GroupedSignalByProcessConfigStepsOutput
+            For Each subgroup In group.SignalList
+                For Each subsubgroup In subgroup.SignalList
+                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+                    End If
+                Next
+            Next
+        Next
+        For Each group In AllDataConfigOutputGroupedByType
+            If group.SignalSignature.TypeAbbreviation <> "I" AndAlso group.SignalSignature.TypeAbbreviation <> "V" Then
+                group.SignalSignature.IsEnabled = isEnabled
+            Else
+                For Each subsubgroup In group.SignalList
+                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
+                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+                    End If
+                Next
+            End If
+        Next
+        For Each group In AllDataConfigOutputGroupedByPMU
+            For Each subgroup In group.SignalList
+                If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
+                    subgroup.SignalSignature.IsEnabled = isEnabled
+                End If
+            Next
+        Next
     End Sub
 
     Private _processConfigStepDeSelected As ICommand
@@ -948,8 +1081,7 @@ Partial Public Class SettingsViewModel
             _processConfigStepDeSelected = value
         End Set
     End Property
-
-    Private Sub _deSelectAllProcessConfigSteps(obj As Object)
+    Private Sub _deSelectAllProcessConfigSteps()
         If CurrentSelectedStep IsNot Nothing Then
             For Each signal In CurrentSelectedStep.InputChannels
                 signal.IsChecked = False
@@ -969,14 +1101,15 @@ Partial Public Class SettingsViewModel
             Next
             For Each stp In ProcessConfigure.CollectionOfSteps
                 stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
-                If TypeOf stp Is Multirate
+                If TypeOf stp Is Multirate Then
                     stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                 End If
             Next
             For Each wrap In ProcessConfigure.WrapList
                 stepsOutputAsSignalHierachy.Add(wrap.ThisStepOutputsAsSignalHierachyByPMU)
             Next
-            if ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0
+            If ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Count > 0 Then
+
                 For Each newTypeUnit In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
                     stepsOutputAsSignalHierachy.Add(newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU)
                 Next
@@ -984,8 +1117,8 @@ Partial Public Class SettingsViewModel
             GroupedSignalByProcessConfigStepsInput = stepsInputAsSignalHierachy
             GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
 
-            if TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap
-                _disableEnableAllButAngleSignals(True)
+            If TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap Then
+                _disableEnableAllButAngleSignalsInProcessConfig(True)
             End If
             'If CurrentSelectedDataConfigStep.Name = "Phasor Creation Customization" Then
             '    _disableEnableAllButMagnitudeSignals(True)
@@ -1039,6 +1172,40 @@ Partial Public Class SettingsViewModel
                 stepOutput.SignalSignature.IsChecked = False
             End If
         Next
+    End Sub
+
+    Private Sub _groupAllProcessConfigOutputSignal()
+        Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        For Each uwrp In ProcessConfigure.UnWrapList
+            For Each signal In uwrp.OutputChannels
+                If Not allOutputSignals.Contains(signal) Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each itpl In ProcessConfigure.InterpolateList
+            For Each signal In itpl.OutputChannels
+                If Not allOutputSignals.Contains(signal) Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each stp In ProcessConfigure.CollectionOfSteps
+            For Each signal In stp.OutputChannels
+                If Not allOutputSignals.Contains(signal) Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each wrp In ProcessConfigure.WrapList
+            For Each signal In wrp.OutputChannels
+                If Not allOutputSignals.Contains(signal) Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        AllProcessConfigOutputGroupedByType = SortSignalByType(allOutputSignals)
+        AllProcessConfigOutputGroupedByPMU = SortSignalByPMU(allOutputSignals)
     End Sub
 
 End Class

@@ -135,6 +135,8 @@
     <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.vb" />
     <Compile Include="ViewModels\Folder.vb" />
+    <Compile Include="ViewModels\PostProcessCustomizationConfig.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.PostProcessConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.ProcessConfig.vb" />
     <Compile Include="ViewModels\SignalSignatures.vb" />
     <Compile Include="Views\AdditionCustomization.xaml.vb">
