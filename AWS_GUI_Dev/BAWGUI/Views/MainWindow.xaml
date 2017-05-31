@@ -3,16 +3,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BAWGUI"        
+        xmlns:local="clr-namespace:BAWGUI" 
+        xmlns:results="clr-namespace:BAWGUI.Results;assembly=BAWGUI.Results"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized">
-
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="Width" Value="16"></Setter>
+            <Setter Property="Height" Value="16"></Setter>
+        </Style>
+    </Window.Resources>
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
-    <Grid>
-        <Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}" Height="100" Width="200">
-            <Image Source="..\Images\settings24.png"/>
-        </Button>
-    </Grid>
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <Button>
+                <Image Source="..\Images\NewFile_16x.png"></Image>
+            </Button>
+            <Separator></Separator>
+            <Button>
+                <Image Source="..\Images\open.gif"></Image>
+            </Button>
+            <Button>
+                <Image Source="..\Images\Save24.png"></Image>
+            </Button>
+            <Separator></Separator>
+            <Button>
+                <Image Source="..\Images\Run_16x.png"></Image>
+            </Button>
+            <Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}">
+                <Image Source="..\Images\Settings_16x.png"/>
+            </Button>
+        </ToolBar>
+        <TabControl>
+            <TabItem Header="Settings" Background="LightGray"></TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>
