@@ -434,5 +434,20 @@
   <ItemGroup>
     <Resource Include="Images\saveAs.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Settings_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Run_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.Results\BAWGUI.Results.csproj">
+      <Project>{65fbb914-5df7-4008-ab31-6e1a609327e5}</Project>
+      <Name>BAWGUI.Results</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\NewFile_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
