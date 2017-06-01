@@ -139,86 +139,112 @@
     <Compile Include="ViewModels\SettingsViewModel.PostProcessConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.ProcessConfig.vb" />
     <Compile Include="ViewModels\SignalSignatures.vb" />
-    <Compile Include="Views\AdditionCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\AdditionCustomization.xaml.vb">
       <DependentUpon>AdditionCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AngleConversionCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\AngleConversionCustomization.xaml.vb">
       <DependentUpon>AngleConversionCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChannelsListView.xaml.vb">
+    <Compile Include="Views\SettingsView\ChannelsListView.xaml.vb">
       <DependentUpon>ChannelsListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CreatePhasorCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\CreatePhasorCustomization.xaml.vb">
       <DependentUpon>CreatePhasorCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DivisionCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\DataConfigStagesTabInSettings.xaml.vb">
+      <DependentUpon>DataConfigStagesTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\DetectorConfigTabInSettings.xaml.vb">
+      <DependentUpon>DetectorConfigTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\DivisionCustomization.xaml.vb">
       <DependentUpon>DivisionCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ExponentCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\ExponentCustomization.xaml.vb">
       <DependentUpon>ExponentCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ExponentCustomizationItem.xaml.vb">
+    <Compile Include="Views\SettingsView\ExponentCustomizationItem.xaml.vb">
       <DependentUpon>ExponentCustomizationItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FilterListBox.xaml.vb">
+    <Compile Include="Views\SettingsView\FilterListBox.xaml.vb">
       <DependentUpon>FilterListBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MetricPrefixCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\MetricPrefixCustomization.xaml.vb">
       <DependentUpon>MetricPrefixCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MultiplicationCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\MultiplicationCustomization.xaml.vb">
       <DependentUpon>MultiplicationCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PowerCalculationsCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\PostProcessingConfigTabInSettings.xaml.vb">
+      <DependentUpon>PostProcessingConfigTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\PowerCalculationsCustomization.xaml.vb">
       <DependentUpon>PowerCalculationsCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ScalarRepCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\ProcessConfigTabInSettings.xaml.vb">
+      <DependentUpon>ProcessConfigTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\ReadPropertiesTabInSettings.xaml.vb">
+      <DependentUpon>ReadPropertiesTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\ScalarRepCustomization.xaml.vb">
       <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsWindow.xaml.vb">
+    <Compile Include="Views\SettingsView\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignalSelectionPanel.xaml.vb">
+    <Compile Include="Views\SettingsView\SignalSelectionPanel.xaml.vb">
       <DependentUpon>SignalSelectionPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SpecifySignalTypeUnitCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\SpecifySignalTypeUnitCustomization.xaml.vb">
       <DependentUpon>SpecifySignalTypeUnitCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SubtractionCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\SubtractionCustomization.xaml.vb">
       <DependentUpon>SubtractionCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UnaryCustomization.xaml.vb">
+    <Compile Include="Views\SettingsView\TabControlForSettingsWindow.xaml.vb">
+      <DependentUpon>TabControlForSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\UnaryCustomization.xaml.vb">
       <DependentUpon>UnaryCustomization.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\AdditionCustomization.xaml">
+    <Page Include="Views\SettingsView\AdditionCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AngleConversionCustomization.xaml">
+    <Page Include="Views\SettingsView\AngleConversionCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ChannelsListView.xaml">
+    <Page Include="Views\SettingsView\ChannelsListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CreatePhasorCustomization.xaml">
+    <Page Include="Views\SettingsView\CreatePhasorCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DivisionCustomization.xaml">
+    <Page Include="Views\SettingsView\DataConfigStagesTabInSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ExponentCustomization.xaml">
+    <Page Include="Views\SettingsView\DetectorConfigTabInSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ExponentCustomizationItem.xaml">
+    <Page Include="Views\SettingsView\DivisionCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\ExponentCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\ExponentCustomizationItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\FilterListBox.xaml">
+    <Page Include="Views\SettingsView\FilterListBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -240,39 +266,55 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\MetricPrefixCustomization.xaml">
+    <Page Include="Views\SettingsView\MetricPrefixCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MultiplicationCustomization.xaml">
+    <Page Include="Views\SettingsView\MultiplicationCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PowerCalculationsCustomization.xaml">
+    <Page Include="Views\SettingsView\PostProcessingConfigTabInSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ScalarRepCustomization.xaml">
+    <Page Include="Views\SettingsView\PowerCalculationsCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsWindow.xaml">
+    <Page Include="Views\SettingsView\ProcessConfigTabInSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SignalSelectionPanel.xaml">
+    <Page Include="Views\SettingsView\ReadPropertiesTabInSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SpecifySignalTypeUnitCustomization.xaml">
+    <Page Include="Views\SettingsView\ScalarRepCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SubtractionCustomization.xaml">
+    <Page Include="Views\SettingsView\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UnaryCustomization.xaml">
+    <Page Include="Views\SettingsView\SignalSelectionPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\SpecifySignalTypeUnitCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\SubtractionCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\TabControlForSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\UnaryCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
