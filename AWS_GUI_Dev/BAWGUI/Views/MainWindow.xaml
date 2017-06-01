@@ -22,7 +22,7 @@
                 <Image Source="..\Images\NewFile_16x.png"></Image>
             </Button>
             <Separator></Separator>
-            <Button>
+            <Button Command="{Binding OpenFile}">
                 <Image Source="..\Images\open.gif"></Image>
             </Button>
             <Button>

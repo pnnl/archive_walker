@@ -12,6 +12,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.Xml", "BAWGUI.Xml\BA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.Results", "BAWGUI.Results\BAWGUI.Results.csproj", "{65FBB914-5DF7-4008-AB31-6E1A609327E5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE14B546-5EB6-44B4-9629-1285319B107D}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.Test", "BAWGUI.Test\BAWGUI.Test.csproj", "{6171CA6B-5C9B-4502-BE08-C2E1B050838F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +37,10 @@ Global
 		{65FBB914-5DF7-4008-AB31-6E1A609327E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65FBB914-5DF7-4008-AB31-6E1A609327E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65FBB914-5DF7-4008-AB31-6E1A609327E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
