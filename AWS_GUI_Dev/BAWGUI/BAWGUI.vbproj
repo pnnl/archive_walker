@@ -136,6 +136,7 @@
     <Compile Include="ViewModels\BaseClassOrSharedClass.vb" />
     <Compile Include="ViewModels\Folder.vb" />
     <Compile Include="ViewModels\PostProcessCustomizationConfig.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.DetectorConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.PostProcessConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.ProcessConfig.vb" />
     <Compile Include="ViewModels\SignalSignatures.vb" />
@@ -175,6 +176,18 @@
     <Compile Include="Views\SettingsView\MultiplicationCustomization.xaml.vb">
       <DependentUpon>MultiplicationCustomization.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingsView\OutOfRangeFrequencyView.xaml.vb">
+      <DependentUpon>OutOfRangeFrequencyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\OutOfRangeGeneralView.xaml.vb">
+      <DependentUpon>OutOfRangeGeneralView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\PeriodogramAlarmingView.xaml.vb">
+      <DependentUpon>PeriodogramAlarmingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\PeriodogramDetectorView.xaml.vb">
+      <DependentUpon>PeriodogramDetectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView\PostProcessingConfigTabInSettings.xaml.vb">
       <DependentUpon>PostProcessingConfigTabInSettings.xaml</DependentUpon>
     </Compile>
@@ -186,6 +199,12 @@
     </Compile>
     <Compile Include="Views\SettingsView\ReadPropertiesTabInSettings.xaml.vb">
       <DependentUpon>ReadPropertiesTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\RingdownAlarmingView.xaml.vb">
+      <DependentUpon>RingdownAlarmingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\RingdownView.xaml.vb">
+      <DependentUpon>RingdownView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView\ScalarRepCustomization.xaml.vb">
       <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
@@ -199,6 +218,12 @@
     <Compile Include="Views\SettingsView\SpecifySignalTypeUnitCustomization.xaml.vb">
       <DependentUpon>SpecifySignalTypeUnitCustomization.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingsView\SpectralCoherenceAlarmingView.xaml.vb">
+      <DependentUpon>SpectralCoherenceAlarmingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\SpectralCoherenceDetectorView.xaml.vb">
+      <DependentUpon>SpectralCoherenceDetectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView\SubtractionCustomization.xaml.vb">
       <DependentUpon>SubtractionCustomization.xaml</DependentUpon>
     </Compile>
@@ -207,6 +232,9 @@
     </Compile>
     <Compile Include="Views\SettingsView\UnaryCustomization.xaml.vb">
       <DependentUpon>UnaryCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\WindRampView.xaml.vb">
+      <DependentUpon>WindRampView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\SettingsView\AdditionCustomization.xaml">
       <SubType>Designer</SubType>
@@ -274,6 +302,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsView\OutOfRangeFrequencyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\OutOfRangeGeneralView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\PeriodogramAlarmingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\PeriodogramDetectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsView\PostProcessingConfigTabInSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -287,6 +331,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView\ReadPropertiesTabInSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\RingdownAlarmingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\RingdownView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -306,6 +358,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsView\SpectralCoherenceAlarmingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\SpectralCoherenceDetectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsView\SubtractionCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -315,6 +375,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView\UnaryCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\WindRampView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -448,6 +512,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\NewFile_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ConfigFiles\UpdatedMultiFile.XML">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

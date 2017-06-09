@@ -220,7 +220,7 @@ Public MustInherit Class SignalProcessStep
             OnPropertyChanged()
         End Set
     End Property
-    
+
     Private _outputChannels As ObservableCollection(Of SignalSignatures)
     Public Property OutputChannels As ObservableCollection(Of SignalSignatures)
         Get
@@ -239,6 +239,61 @@ Public MustInherit Class SignalProcessStep
         End Get
         Set(ByVal value As SignalTypeHierachy)
             _thisStepOutputsAsSignalHierachyByPMU = value
+            OnPropertyChanged()
+        End Set
+    End Property
+End Class
+
+Public MustInherit Class DetectorBase
+    Inherits ViewModelBase
+
+    Public MustOverride ReadOnly Property Name As String
+
+    Private _isStepSelected As Boolean
+    Public Property IsStepSelected As Boolean
+        Get
+            Return _isStepSelected
+        End Get
+        Set(ByVal value As Boolean)
+            _isStepSelected = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _inputChannels As ObservableCollection(Of SignalSignatures)
+    Public Property InputChannels As ObservableCollection(Of SignalSignatures)
+        Get
+            Return _inputChannels
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalSignatures))
+            _inputChannels = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _thisStepInputsAsSignalHierachyByType As SignalTypeHierachy
+    Public Property ThisStepInputsAsSignalHerachyByType As SignalTypeHierachy
+        Get
+            Return _thisStepInputsAsSignalHierachyByType
+        End Get
+        Set(ByVal value As SignalTypeHierachy)
+            _thisStepInputsAsSignalHierachyByType = value
+            OnPropertyChanged()
+        End Set
+    End Property
+End Class
+
+Public MustInherit Class AlarmingDetectorBase
+    Inherits ViewModelBase
+
+    Public MustOverride ReadOnly Property Name As String
+
+    Private _isStepSelected As Boolean
+    Public Property IsStepSelected As Boolean
+        Get
+            Return _isStepSelected
+        End Get
+        Set(ByVal value As Boolean)
+            _isStepSelected = value
             OnPropertyChanged()
         End Set
     End Property

@@ -220,6 +220,96 @@ Public Class EnumToStringConverter7
     End Function
 End Class
 
+Public Class EnumToStringConverter8
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        Select Case value
+            Case DetectorModeType.SingleChannel
+                Return "SingleChannel"
+            Case DetectorModeType.MultiChannel
+                Return "MultiChannel"
+            Case Else
+                Throw New Exception("Detector mode type not valid!")
+        End Select
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Select Case value
+            Case "SingleChannel"
+                Return DetectorModeType.SingleChannel
+            Case "MultiChannel"
+                Return DetectorModeType.MultiChannel
+            Case Else
+                Throw New Exception("Enum type not valid!")
+        End Select
+    End Function
+End Class
+
+Public Class EnumToStringConverter9
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        Select Case value
+            Case DetectorWindowType.bartlett
+                Return "bartlett"
+            Case DetectorWindowType.blackman
+                Return "blackman"
+            Case DetectorWindowType.hamming
+                Return "hamming"
+            Case DetectorWindowType.hann
+                Return "hann"
+            Case DetectorWindowType.rectwin
+                Return "rectwin"
+            Case Else
+                Throw New Exception("Detector window type not valid!")
+        End Select
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Select Case value
+            Case "bartlett"
+                Return DetectorWindowType.bartlett
+            Case "blackman"
+                Return DetectorWindowType.blackman
+            Case "hamming"
+                Return DetectorWindowType.hamming
+            Case "hann"
+                Return DetectorWindowType.hann
+            Case "rectwin"
+                Return DetectorWindowType.rectwin
+            Case Else
+                Throw New Exception("Enum type not valid!")
+        End Select
+    End Function
+End Class
+
+Public Class EnumToStringConverter10
+    Implements IValueConverter
+
+    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+        Select Case value
+            Case OutOfRangeFrequencyDetectorType.AvergeWindow
+                Return "AvergeWindow"
+            Case OutOfRangeFrequencyDetectorType.Nominal
+                Return "Nominal"
+            Case Else
+                Throw New Exception("Out of range frequency detector type not valid!")
+        End Select
+    End Function
+
+    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+        Select Case value
+            Case "Nominal"
+                Return OutOfRangeFrequencyDetectorType.Nominal
+            Case "AvergeWindow"
+                Return OutOfRangeFrequencyDetectorType.AvergeWindow
+            Case Else
+                Throw New Exception("Enum type not valid!")
+        End Select
+    End Function
+End Class
+
 Public Class SelectionStatusBackgroundConverter
     Implements IValueConverter
 
@@ -286,7 +376,6 @@ Public Class ProcessedSignalFlagConverter
 End Class
 
 Public Class ExpanderHeaderConverter
-    'Implements IMultiValueConverter
     Implements IValueConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
@@ -296,16 +385,71 @@ Public Class ExpanderHeaderConverter
             Return "No Step Selected Yet!"
         End If
     End Function
-
-    'Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
-    '    Return "Step " & values(0) & " - " & values(1)
-    'End Function
-
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
         Return DependencyProperty.UnsetValue
     End Function
+End Class
 
-    'Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+Public Class DetectorExpanderHeaderConverter
+    Implements IMultiValueConverter
+
+    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+        If values(0) IsNot Nothing Then
+            'Dim detectorList =
+            Return (values(1).IndexOf(values(0)) + 1).ToString & " - Detector " & values(0).Name
+        Else
+            Return "No detector Selected Yet!"
+        End If
+    End Function
+
+    'Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+    '    If value IsNot Nothing Then
+    '        'Dim detectorList =
+    '        Return value.Name & " Detector"
+    '    Else
+    '        Return "No detector Selected Yet!"
+    '    End If
+    'End Function
+
+    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+
+    'Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+    '    Return DependencyProperty.UnsetValue
+    'End Function
+End Class
+
+Public Class DetectorExpanderHeaderConverter2
+    Implements IMultiValueConverter
+
+    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+        If values(0) IsNot Nothing Then
+            If TypeOf values(0) Is DetectorBase Then
+                Return (values(1).IndexOf(values(0)) + 1).ToString & " - Detector " & values(0).Name
+            End If
+            If TypeOf values(0) Is AlarmingDetectorBase Then
+                Return (values(2).IndexOf(values(0)) + 1).ToString & " - Alarming Detector " & values(0).Name
+            End If
+        Else
+            Return "No detector Selected Yet!"
+        End If
+    End Function
+
+    'Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+    '    If value IsNot Nothing Then
+    '        'Dim detectorList =
+    '        Return value.Name & " Detector"
+    '    Else
+    '        Return "No detector Selected Yet!"
+    '    End If
+    'End Function
+
+    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+
+    'Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
     '    Return DependencyProperty.UnsetValue
     'End Function
 End Class
@@ -420,6 +564,16 @@ Public Class SignalSelectionDropDownConverter
                                        "Input Channels by Step",
                                        "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "NOT Implemented Yet!"
+            Case 4
+                value1 = {"All Initial Input Channels by Signal Type",
+                                       "All Initial Input Channels by PMU",
+                                       "Output from SignalSelectionAndManipulation by Signal Type",
+                                       "Output from SignalSelectionAndManipulation by PMU",
+                                       "Output from ProcessConfig by Signal Type",
+                                       "Output from ProcessConfig by PMU",
+                                       "Output from Post ProcessConfig by Signal Type",
+                                       "Output from Post ProcessConfig by PMU",
+                                       "Input Channels by Step"}.ToList
         End Select
         Return value1
     End Function
@@ -510,3 +664,19 @@ Public Class AddCustomizationParameters
         Return DependencyProperty.UnsetValue
     End Function
 End Class
+
+'Public Class TreeViewItemLabelConverter
+'    Implements IMultiValueConverter
+
+'    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+'        If values(2) = 4 Then
+'            Return Nothing
+'        Else
+'            Return values(0)
+'        End If
+'    End Function
+
+'    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+'        Return DependencyProperty.UnsetValue
+'    End Function
+'End Class

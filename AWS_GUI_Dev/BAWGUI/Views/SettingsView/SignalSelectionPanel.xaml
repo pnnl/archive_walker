@@ -8,11 +8,27 @@
              d:DesignHeight="600" d:DesignWidth="200">
     <UserControl.Resources>
         <local:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
+        <local:DetectorExpanderHeaderConverter2 x:Key="DetectorExpanderHeaderConverter2"/>
         <local:DQFilteredSignalFlagConverter x:Key="DQFilteredSignalFlagConverter"/>
         <local:SignalSelectionDropDownConverter x:Key="SignalSelectionDropDownConverter"/>
         <local:ProcessedSignalFlagConverter x:Key="ProcessedSignalFlagConverter"/>
+        <!--<local:TreeViewItemLabelConverter x:Key="TreeViewItemLabelConverter"/>-->
         <DataTemplate x:Key="TreeViewCheckBox">
             <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" CommandParameter="{Binding}" Command="{Binding Path=DataContext.SelectedSignalChanged, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="NonDetectorStyle">
+            <Label Content="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}}" ContentStringFormat="Pick Channels for: {0}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="DetectorStyle"> 
+            <Label ContentStringFormat="Pick Channels for: {0}">
+                <Label.Content>
+                    <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter2}">                        
+                        <Binding Path="CurrentSelectedStep"/>
+                        <Binding Path="DetectorConfigure.DetectorList"/>
+                        <Binding Path="DetectorConfigure.AlarmingList"/>
+                    </MultiBinding>
+                </Label.Content>
+            </Label>
         </DataTemplate>
     </UserControl.Resources>
     <!--<avalonDock:LayoutAnchorable Title="Signal Selection Panel">-->
@@ -24,7 +40,18 @@
             <RowDefinition Height="*"/>
             <!--<RowDefinition Height="auto"/>-->
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Content="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}}" ContentStringFormat="Pick Channels for: {0}"/>
+        <ContentControl Grid.Row="0" Content="{Binding}">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Setter Property="ContentTemplate" Value="{StaticResource NonDetectorStyle}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentTabIndex}" Value="4">
+                            <Setter Property="ContentTemplate" Value="{StaticResource DetectorStyle}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
         <!--<TextBlock Grid.Row="0" Text="{Binding CurrentSelectedStep, Converter={StaticResource ExpanderHeaderConverter}, StringFormat=Pick Channels for: {0}}"/>-->
         <ComboBox Name="signalGroupMethodCombobox" Grid.Row="1" SelectedValue="{Binding SelectedSelectionMethod}" Margin="2">
             <ComboBox.ItemsSource>
@@ -96,6 +123,19 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding GroupedSignalByPostProcessConfigStepsOutput}"/>
                         </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post ProcessConfig by Signal Type">
+                            <Setter Property="ItemsSource" Value="{Binding AllPostProcessOutputGroupedByType}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post ProcessConfig by PMU">
+                            <Setter Property="ItemsSource" Value="{Binding AllPostProcessOutputGroupedByPMU}"/>
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="4"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByDetectorInput}"/>
+                        </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>
             </TreeView.Style>
@@ -110,6 +150,13 @@
                             </ContentControl.Style>
                         </ContentControl>
                         <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
+                        <!--<TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource TreeViewItemLabelConverter}">
+                                    <Binding Path="SignalSignature.SignalName"/>
+                                    <Binding Path="DetectorConfigure.DetectorList"/>
+                                    <Binding Path="CurrentTabIndex"/>
+                                </MultiBinding>
+                            </TextBlock.Text>-->
                         <TextBlock Text=" *" VerticalAlignment="Center" Foreground="Green" Visibility="{Binding SignalSignature.PassedThroughDQFilter, Converter={StaticResource DQFilteredSignalFlagConverter}}"/>
                         <TextBlock Text=" *" VerticalAlignment="Center" Foreground="Blue" Visibility="{Binding SignalSignature.PassedThroughProcessor, Converter={StaticResource ProcessedSignalFlagConverter}}"/>
                     </StackPanel>

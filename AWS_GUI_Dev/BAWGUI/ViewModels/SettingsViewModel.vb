@@ -43,7 +43,7 @@ Partial Public Class SettingsViewModel
         _deleteThisFileSource = New DelegateCommand(AddressOf _deleteAFileSource, AddressOf CanExecute)
         _saveConfigFile = New DelegateCommand(AddressOf _saveConfigureFile, AddressOf CanExecute)
         _saveConfigFileAs = New DelegateCommand(AddressOf _saveConfigureFileAs, AddressOf CanExecute)
-        _walkerStageChanged = New DelegateCommand(AddressOf _changeSignalSelectionDropDownChoice, AddressOf CanExecute)
+        '_walkerStageChanged = New DelegateCommand(AddressOf _changeSignalSelectionDropDownChoice, AddressOf CanExecute)
         _addUnwrap = New DelegateCommand(AddressOf _addAUnwrap, AddressOf CanExecute)
         _deleteUnwrapStep = New DelegateCommand(AddressOf _deleteAUnwrap, AddressOf CanExecute)
         _addInterpolate = New DelegateCommand(AddressOf _addAnInterpolate, AddressOf CanExecute)
@@ -60,6 +60,11 @@ Partial Public Class SettingsViewModel
         _postProcessConfigStepSelected = New DelegateCommand(AddressOf _postProcessConfigureStepSelected, AddressOf CanExecute)
         _postProcessConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllPostProcessConfigSteps, AddressOf CanExecute)
         _deletePostProcessStep = New DelegateCommand(AddressOf _deleteAPostProcessStep, AddressOf CanExecute)
+        _detectorSelectedToAdd = New DelegateCommand(AddressOf _addSelectedDetector, AddressOf CanExecute)
+        _detectorConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllDetectors, AddressOf CanExecute)
+        _detectorSelected = New DelegateCommand(AddressOf _selectedADetector, AddressOf CanExecute)
+        _deleteDetector = New DelegateCommand(AddressOf _deleteADetector, AddressOf CanExecute)
+        _alarmingDetectorSelectedToAdd = New DelegateCommand(AddressOf _addSelectedAlarmingDetector, AddressOf CanExecute)
         '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
         '_inputFileDirTree = New ObservableCollection(Of Folder)
@@ -71,6 +76,7 @@ Partial Public Class SettingsViewModel
         _groupedSignalByProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
         _groupedSignalByPostProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
         _groupedSignalByPostProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
+        _groupedSignalByDetectorInput = New ObservableCollection(Of SignalTypeHierachy)
         _allDataConfigOutputGroupedByPMU = New ObservableCollection(Of SignalTypeHierachy)
         _allDataConfigOutputGroupedByType = New ObservableCollection(Of SignalTypeHierachy)
         _allProcessConfigOutputGroupedByPMU = New ObservableCollection(Of SignalTypeHierachy)
@@ -91,6 +97,7 @@ Partial Public Class SettingsViewModel
         _powerTypeDictionary = New Dictionary(Of String, String) From {{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}}
         _nameTypeUnitStatusFlag = 0
     End Sub
+
 
     'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
     'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
@@ -861,7 +868,11 @@ Partial Public Class SettingsViewModel
             Dim userchoice As Integer = MessageBox.Show("Do you want to over write current configure xml file?", "Warning!", MessageBoxButtons.YesNo)
             If userchoice = DialogResult.Yes Then
                 If System.IO.File.Exists(ConfigFileName) Then
-                    _writeXmlConfigFile(ConfigFileName)
+                    Try
+                        _writeXmlConfigFile(ConfigFileName)
+                    Catch ex As Exception
+                        MessageBox.Show("Error writing xml config file! " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    End Try
                 Else
                     MessageBox.Show("Specified file path " & ConfigFileName & " does not exist!", "Error!", MessageBoxButtons.OK)
                     _saveConfigureFileAs()
@@ -892,18 +903,11 @@ Partial Public Class SettingsViewModel
         Dim userChoice As Integer = saveFileDialog.ShowDialog()
         If userChoice = DialogResult.OK Then
             Dim fileNameToSave = saveFileDialog.FileName
-            'If System.IO.File.Exists(fileNameToSave) Then
-            '    Dim userchoice2 As Integer = MessageBox.Show("Do you want to over write current configure xml file?", "Warning!", MessageBoxButtons.YesNo)
-            '    If userchoice2 = DialogResult.Yes Then
-            '        MessageBox.Show("Save file: " & fileNameToSave)
-            '        _writeXmlConfigFile(fileNameToSave)
-            '    Else
-            '        _saveConfigureFileAs()
-            '    End If
-            'Else
-            'MessageBox.Show("Save file: " & fileNameToSave)
-            _writeXmlConfigFile(fileNameToSave)
-            'End If
+            Try
+                _writeXmlConfigFile(fileNameToSave)
+            Catch ex As Exception
+                MessageBox.Show("Error writing xml config file! " & ex.Message, "Error!", MessageBoxButtons.OK)
+            End Try
         End If
     End Sub
 
@@ -914,22 +918,13 @@ Partial Public Class SettingsViewModel
                                              <ReaderProperties></ReaderProperties>
                                          </Configuration>
                                      </DataConfig>
-        Dim fileInfoCount = 0
         For Each fileInfo In DataConfigure.ReaderProperty.InputFileInfos
-            If fileInfoCount = 0 Then
-                Dim reader = (From c In dataConfig.<Configuration>.Elements Where c.Name = "ReaderProperties").FirstOrDefault
-                reader.Add(<FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>)
-                reader.Add(<FileType><%= fileInfo.FileType %></FileType>)
-                reader.Add(<Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>)
-            Else
-                Dim info As XElement = <AdditionalFilePath>
-                                           <FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
-                                           <FileType><%= fileInfo.FileType %></FileType>
-                                           <Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>
-                                       </AdditionalFilePath>
-                dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(info)
-            End If
-            fileInfoCount += 1
+            Dim info As XElement = <FilePath>
+                                       <FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
+                                       <FileType><%= fileInfo.FileType %></FileType>
+                                       <Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>
+                                   </FilePath>
+            dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(info)
         Next
         Dim mode As XElement = <Mode>
                                    <Name><%= DataConfigure.ReaderProperty.ModeName %></Name>
@@ -988,7 +983,6 @@ Partial Public Class SettingsViewModel
         '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         '''''''''''Write process config''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
         Dim processConfig As XElement = <ProcessConfig><Configuration></Configuration></ProcessConfig>
         If String.IsNullOrEmpty(ProcessConfigure.InitializationPath) Then
             processConfig.<Configuration>.FirstOrDefault.Add(<InitializationPath><%= ProcessConfigure.InitializationPath %>></InitializationPath>)
@@ -1116,7 +1110,133 @@ Partial Public Class SettingsViewModel
         'signalSelection = <SignalSelection></SignalSelection>
         'postProcessConfig.<Configuration>.LastOrDefault.Add(signalSelection)
         _configData.Add(postProcessConfig)
-        Dim detectorConfig As XElement = <DetectorConfig><Configuration></Configuration></DetectorConfig>
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '''''''''''Write detector config''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        Dim detectorConfig As XElement = <DetectorConfig>
+                                             <Configuration>
+                                                 <EventPath><%= DetectorConfigure.EventPath %></EventPath>
+                                                 <ResultUpdateInterval><%= DetectorConfigure.ResultUpdateInterval %></ResultUpdateInterval>
+                                             </Configuration>
+                                         </DetectorConfig>
+        For Each detector In DetectorConfigure.DetectorList
+            Dim element As XElement
+            Select Case detector.GetType
+                Case GetType(OutOfRangeFrequencyDetector)
+                    Dim dt = DirectCast(detector, OutOfRangeFrequencyDetector)
+                    element = <OutOfRangeFrequency>
+                                  <DurationMax><%= dt.DurationMax %></DurationMax>
+                                  <DurationMin><%= dt.DurationMin %></DurationMin>
+                                  <Duration><%= dt.Duration %></Duration>
+                                  <AnalysisWindow><%= dt.AnalysisWindow %></AnalysisWindow>
+                                  <RateOfChangeMax><%= dt.RateOfChangeMax %></RateOfChangeMax>
+                                  <RateOfChangeMin><%= dt.RateOfChangeMin %></RateOfChangeMin>
+                                  <RateOfChange><%= dt.RateOfChange %></RateOfChange>
+                              </OutOfRangeFrequency>
+                    If dt.Type = OutOfRangeFrequencyDetectorType.AvergeWindow Then
+                        element.AddFirst(<AverageWindow><%= dt.AverageWindow %></AverageWindow>)
+                    ElseIf dt.Type = OutOfRangeFrequencyDetectorType.Nominal Then
+                        element.AddFirst(<Nominal><%= dt.Nominal %></Nominal>)
+                    End If
+                Case GetType(OutOfRangeGeneralDetector)
+                    Dim dt = DirectCast(detector, OutOfRangeGeneralDetector)
+                    element = <OutOfRangeGeneral>
+                                  <Max><%= dt.Max %></Max>
+                                  <Min><%= dt.Min %></Min>
+                                  <AnalysisWindow><%= dt.AnalysisWindow %></AnalysisWindow>
+                                  <Duration><%= dt.Duration %></Duration>
+                              </OutOfRangeGeneral>
+                Case GetType(SpectralCoherenceDetector)
+                    Dim dt = DirectCast(detector, SpectralCoherenceDetector)
+                    element = <SpectralCoherence>
+                                  <Mode><%= dt.Mode.ToString %></Mode>
+                                  <AnalysisLength><%= dt.AnalysisLength %></AnalysisLength>
+                                  <Delay><%= dt.Delay %></Delay>
+                                  <NumberDelays><%= dt.NumberDelays %></NumberDelays>
+                                  <ThresholdScale><%= dt.ThresholdScale %></ThresholdScale>
+                                  <WindowType><%= dt.WindowType.ToString %></WindowType>
+                                  <FrequencyInterval><%= dt.FrequencyInterval %></FrequencyInterval>
+                                  <WindowLength><%= dt.WindowLength %></WindowLength>
+                                  <WindowOverlap><%= dt.WindowOverlap %></WindowOverlap>
+                                  <FrequencyMin><%= dt.FrequencyMin %></FrequencyMin>
+                                  <FrequencyMax><%= dt.FrequencyMax %></FrequencyMax>
+                                  <FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>
+                              </SpectralCoherence>
+                Case GetType(RingdownDetector)
+                    Dim dt = DirectCast(detector, RingdownDetector)
+                    element = <Ringdown>
+                                  <RMSlength><%= dt.RMSlength %></RMSlength>
+                                  <MaxDuration><%= dt.MaxDuration %></MaxDuration>
+                                  <ForgetFactor><%= dt.ForgetFactor %></ForgetFactor>
+                                  <RingThresholdScale><%= dt.RingThresholdScale %></RingThresholdScale>
+                              </Ringdown>
+
+                Case GetType(WindRampDetector)
+                    Dim dt = DirectCast(detector, WindRampDetector)
+                    element = <WindRamp>
+                                  <Fpass><%= dt.Fpass %></Fpass>
+                                  <Fstop><%= dt.Fstop %></Fstop>
+                                  <Apass><%= dt.Apass %></Apass>
+                                  <Astop><%= dt.Astop %></Astop>
+                                  <ValMin><%= dt.ValMin %></ValMin>
+                                  <TimeMin><%= dt.TimeMin %></TimeMin>
+                                  <ValMax><%= dt.ValMax %></ValMax>
+                                  <TimeMax><%= dt.TimeMax %></TimeMax>
+                              </WindRamp>
+                Case GetType(PeriodogramDetector)
+                    Dim dt = DirectCast(detector, PeriodogramDetector)
+                    element = <Periodogram>
+                                  <Mode><%= dt.Mode.ToString %></Mode>
+                                  <AnalysisLength><%= dt.AnalysisLength %></AnalysisLength>
+                                  <WindowType><%= dt.WindowType.ToString %></WindowType>
+                                  <FrequencyInterval><%= dt.FrequencyInterval %></FrequencyInterval>
+                                  <WindowLength><%= dt.WindowLength %></WindowLength>
+                                  <WindowOverlap><%= dt.WindowOverlap %></WindowOverlap>
+                                  <MedianFilterFrequencyWidth><%= dt.MedianFilterFrequencyWidth %></MedianFilterFrequencyWidth>
+                                  <Pfa><%= dt.Pfa %></Pfa>
+                                  <FrequencyMin><%= dt.FrequencyMin %></FrequencyMin>
+                                  <FrequencyMax><%= dt.FrequencyMax %></FrequencyMax>
+                                  <FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>
+                              </Periodogram>
+                Case Else
+                    Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
+            End Select
+            Dim PMUSignalDictionary = detector.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+            _writePMUElements(element, PMUSignalDictionary)
+            detectorConfig.<Configuration>.LastOrDefault.Add(element)
+        Next
+        detectorConfig.<Configuration>.LastOrDefault.Add(<Alarming></Alarming>)
+        For Each alarm In DetectorConfigure.AlarmingList
+            Dim element As XElement
+            Select Case alarm.GetType
+                Case GetType(AlarmingPeriodogram)
+                    Dim al = DirectCast(alarm, AlarmingPeriodogram)
+                    element = <Periodogram>
+                                  <SNRalarm><%= al.SNRalarm %></SNRalarm>
+                                  <SNRmin><%= al.SNRmin %></SNRmin>
+                                  <TimeMin><%= al.TimeMin %></TimeMin>
+                                  <SNRcorner><%= al.SNRcorner %></SNRcorner>
+                                  <TimeCorner><%= al.TimeCorner %></TimeCorner>
+                              </Periodogram>
+                Case GetType(AlarmingRingdown)
+                    Dim al = DirectCast(alarm, AlarmingRingdown)
+                    element = <Ringdown>
+                                  <MaxDuration><%= al.MaxDuration %></MaxDuration>
+                              </Ringdown>
+                Case GetType(AlarmingSpectralCoherence)
+                    Dim al = DirectCast(alarm, AlarmingSpectralCoherence)
+                    element = <SpectralCoherence>
+                                  <CoherenceAlarm><%= al.CoherenceAlarm %></CoherenceAlarm>
+                                  <CoherenceMin><%= al.CoherenceMin %></CoherenceMin>
+                                  <TimeMin><%= al.TimeMin %></TimeMin>
+                                  <CoherenceCorner><%= al.CoherenceCorner %></CoherenceCorner>
+                                  <TimeCorner><%= al.TimeCorner %></TimeCorner>
+                              </SpectralCoherence>
+                Case Else
+                    Throw New Exception("Error! Unrecognized alarming detector type: " & alarm.GetType.ToString & ".")
+            End Select
+            detectorConfig.<Configuration>.<Alarming>.LastOrDefault.Add(element)
+        Next
         _configData.Add(detectorConfig)
         _configData.Save(filename)
     End Sub
@@ -1369,12 +1489,12 @@ Partial Public Class SettingsViewModel
     Private Sub _writePMUElements(aStep As XElement, pMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures)))
         For Each pmuGroup In pMUSignalDictionary
             Dim PMU As XElement = <PMU>
-                                      <Name><%= pmuGroup.Key %></Name>
-                                  </PMU>
+                                                                                          <Name><%= pmuGroup.Key %></Name>
+                                                                                      </PMU>
             For Each signal In pmuGroup.Value
                 Dim sglName As XElement = <Channel>
-                                              <Name><%= signal.SignalName %></Name>
-                                          </Channel>
+                                                                                          <Name><%= signal.SignalName %></Name>
+                                                                                      </Channel>
                 PMU.Add(sglName)
             Next
             aStep.Add(PMU)
@@ -1422,23 +1542,15 @@ Partial Public Class SettingsViewModel
         _addLog("Reading " & ConfigFileName)
 
         '''''''''''''''''''''' Read DataConfig''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-        Dim fileInfo = New InputFileInfo
         Dim fileInfoList = New ObservableCollection(Of InputFileInfo)
-        fileInfo.FileDirectory = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<FileDirectory>.Value
-        Dim fileType = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<FileType>.Value
-        If fileType IsNot Nothing Then
-            fileInfo.FileType = [Enum].Parse(GetType(DataFileType), fileType.ToLower())
-        End If
-        fileInfo.Mnemonic = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mnemonic>.Value
-        fileInfoList.Add(fileInfo)
-        _buildInputFileFolderTree(fileInfo)
-
-        Dim inputInformation = From el In _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements Where el.Name = "AdditionalFilePath" Select el
+        Dim inputInformation = From el In _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements Where el.Name = "FilePath" Select el
         For Each el In inputInformation
             Dim info = New InputFileInfo
             info.FileDirectory = el.<FileDirectory>.Value
-            Dim type = el.<FileType>.Value.ToLower
-            info.FileType = [Enum].Parse(GetType(DataFileType), type)
+            Dim type = el.<FileType>.Value
+            If type IsNot Nothing Then
+                info.FileType = [Enum].Parse(GetType(DataFileType), type.ToLower)
+            End If
             info.Mnemonic = el.<Mnemonic>.Value
             fileInfoList.Add(info)
             _buildInputFileFolderTree(info)
@@ -1467,14 +1579,18 @@ Partial Public Class SettingsViewModel
                 Throw New Exception("Error: invalid mode type found in config file.")
         End Select
         _readDataConfigStages()
-        _groupAllDataConfigOutputSignal()
-        '''''''''''''''''''''''''''''''''Read ProcessConfig''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '''''''''''''''''''''''''''''''''Read ProcessConfig and PostProcessConfig''''''''''''''''''''''''''''''''''''''''''''''''''''
         _readProcessConfig()
         _readPostProcessConfig()
+        '''''''''''''''''''''''''''''''''Read DetectorConfig'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        _readDetectorConfig()
+
+        _groupAllDataConfigOutputSignal()
+        _groupAllProcessConfigOutputSignal()
+        _groupAllPostProcessConfigOutputSignal()
+
         _addLog("Done reading " & ConfigFileName & " .")
     End Sub
-
-
 
     Private Function _readPMUElements(stp As XElement) As ObservableCollection(Of SignalSignatures)
         Dim inputSignalList = New ObservableCollection(Of SignalSignatures)
@@ -1492,7 +1608,7 @@ Partial Public Class SettingsViewModel
                         If signal IsNot Nothing Then
                             inputSignalList.Add(signal)
                         Else
-                            _addLog("Error reading config file! Signal in a step of processing with channel name: " & signalName & " in PMU " & pmuName & " not found!")
+                            Throw New Exception("Error reading config file! Signal with channel name: " & signalName & " in PMU " & pmuName & " not found!")
                         End If
                     Next
                 Else
@@ -1524,7 +1640,7 @@ Partial Public Class SettingsViewModel
             '        End If
             '    Next
             'Next
-            _addLog("Warning! No PMU specified in the step, no channel or no PMU is included in this step.")
+            Throw New Exception("Warning! No PMU specified, no channel or no PMU is included.")
         End If
         Return inputSignalList
     End Function
@@ -1599,7 +1715,11 @@ Partial Public Class SettingsViewModel
                             End If
                             aStep.FilterParameters.Add(aPair)
                         Next
-                        aStep.InputChannels = _readPMUElements(stp)
+                        Try
+                            aStep.InputChannels = _readPMUElements(stp)
+                        Catch ex As Exception
+                            _addLog("In a data quality filter step: " & aStep.StepCounter.ToString & " of data config. " & ex.Message)
+                        End Try
                         For Each signal In aStep.InputChannels
                             signal.PassedThroughDQFilter = True
                             aStep.OutputChannels.Add(signal)
@@ -2230,18 +2350,17 @@ Partial Public Class SettingsViewModel
     End Property
     Private Sub _signalSelected(obj As SignalTypeHierachy)
         If _currentSelectedStep IsNot Nothing Then
-            If obj.SignalList.Count < 1 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
+            If obj.SignalList.Count <1 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
                 _keepOriginalSelection(obj)
                 MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
             Else
                 If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
-
                     Try
                         _changeSignalSelection(obj)
                     Catch ex As Exception
                         _keepOriginalSelection(obj)
-                        MessageBox.Show("Error selecting signal(s) for DQfilter or data processing steps!" & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
-                        _addLog("Error selecting signal(s) for DQfilter or data processing steps!" & ex.Message)
+                        MessageBox.Show("Error selecting signal(s) for step " & _currentSelectedStep.StepCounter.ToString & " - " & _currentSelectedStep.Name & " ." & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
+                        _addLog("Error selecting signal(s) for step " & _currentSelectedStep.StepCounter.ToString & " - " & _currentSelectedStep.Name & " ." & ex.Message)
                     End Try
                 ElseIf TypeOf _currentSelectedStep Is Multirate Then
                     If CurrentSelectedStep.FilterParameters.Count <> 0 Then
@@ -2257,6 +2376,14 @@ Partial Public Class SettingsViewModel
                         MessageBox.Show("Please choose a way to specify sampling rate for Multirate!", "Error!", MessageBoxButtons.OK)
                         _addLog("Error selecting signal(s) for Multirate! No sampling rate specified!")
                     End If
+                ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
+                    Try
+                        _changeSignalSelection(obj)
+                    Catch ex As Exception
+                        _keepOriginalSelection(obj)
+                        MessageBox.Show("Error selecting signal(s) for detector " & _currentSelectedStep.Name & " ." & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
+                        _addLog("Error selecting signal(s) for detector " & _currentSelectedStep.Name & " ." & ex.Message)
+                    End Try
                 Else
                     Try
                         Select Case _currentSelectedStep.Name
@@ -2414,7 +2541,11 @@ Partial Public Class SettingsViewModel
             Else
                 _checkAllChildren(obj, True)
             End If
-            _dataConfigDetermineAllParentNodeStatus()
+            '_dataConfigDetermineAllParentNodeStatus()
+            '_processConfigDetermineAllParentNodeStatus()
+            '_postProcessDetermineAllParentNodeStatus()
+            '_detectorConfigDetermineAllParentNodeStatus()
+            _determineAllParentNodeStatus()
         End If
     End Sub
     Private _textboxesLostFocus As ICommand
@@ -2430,7 +2561,8 @@ Partial Public Class SettingsViewModel
         For Each signal In obj.InputChannels
             signal.IsChecked = True
         Next
-        _dataConfigDetermineAllParentNodeStatus()
+        '_dataConfigDetermineAllParentNodeStatus()
+        _determineDataConfigPostProcessConfigAllParentNodeStatus()
         If _currentSelectedStep IsNot Nothing Then
             _currentSelectedStep.CurrentCursor = ""
         End If
@@ -2475,7 +2607,8 @@ Partial Public Class SettingsViewModel
                 End If
                 _currentSelectedStep.CurrentCursor = ""
                 _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-                _dataConfigDetermineAllParentNodeStatus()
+                '_dataConfigDetermineAllParentNodeStatus()
+                _determineDataConfigPostProcessConfigAllParentNodeStatus()
             ElseIf _currentSelectedStep.CurrentCursor = "SubtrahendOrDivisor" Then
                 If _currentSelectedStep.MinuendOrDividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.MinuendOrDividend Then
                     Throw New Exception("Subtrahend Or divisor cannot be the same as the minuend or divident!")
@@ -2503,7 +2636,8 @@ Partial Public Class SettingsViewModel
                 End If
                 _currentSelectedStep.CurrentCursor = ""
                 _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-                _dataConfigDetermineAllParentNodeStatus()
+                '_dataConfigDetermineAllParentNodeStatus()
+                _determineDataConfigPostProcessConfigAllParentNodeStatus()
             End If
         End If
         _determineFileDirCheckableStatus()
@@ -2552,7 +2686,8 @@ Partial Public Class SettingsViewModel
         If TypeOf (_currentSelectedStep) Is Customization Then
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
         End If
-        _dataConfigDetermineAllParentNodeStatus()
+        '_dataConfigDetermineAllParentNodeStatus()
+        _determineDataConfigPostProcessConfigAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
 
@@ -2567,8 +2702,11 @@ Partial Public Class SettingsViewModel
         Else
             _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
         End If
-        _dataConfigDetermineAllParentNodeStatus()
-        _processConfigDetermineAllParentNodeStatus()
+        '_dataConfigDetermineAllParentNodeStatus()
+        '_processConfigDetermineAllParentNodeStatus()
+        '_postProcessDetermineAllParentNodeStatus()
+        '_detectorConfigDetermineAllParentNodeStatus()
+        _determineAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
     Private Sub _changeSignalSelectionPhasorCreation(obj As SignalTypeHierachy)
@@ -2628,7 +2766,8 @@ Partial Public Class SettingsViewModel
         If TypeOf (_currentSelectedStep) Is Customization Then
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
         End If
-        _dataConfigDetermineAllParentNodeStatus()
+        '_dataConfigDetermineAllParentNodeStatus()
+        _determineDataConfigPostProcessConfigAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
     ''' <summary>
@@ -2762,7 +2901,8 @@ Partial Public Class SettingsViewModel
         _currentFocusedPhasorSignalForPowerCalculation = Nothing
         _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
         _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
-        _dataConfigDetermineAllParentNodeStatus()
+        '_dataConfigDetermineAllParentNodeStatus()
+        _determineDataConfigPostProcessConfigAllParentNodeStatus()
         _determineFileDirCheckableStatus()
     End Sub
     Private Sub _changeMagAngSignalForPowerCalculationCustomization(obj As SignalTypeHierachy)
@@ -2857,7 +2997,8 @@ Partial Public Class SettingsViewModel
             _currentFocusedPhasorSignalForPowerCalculation = Nothing
             _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
-            _dataConfigDetermineAllParentNodeStatus()
+            '_dataConfigDetermineAllParentNodeStatus()
+            _determineDataConfigPostProcessConfigAllParentNodeStatus()
             _determineFileDirCheckableStatus()
         End If
     End Sub
@@ -2877,7 +3018,8 @@ Partial Public Class SettingsViewModel
                 End If
             End If
             _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
-            _dataConfigDetermineAllParentNodeStatus()
+            '_dataConfigDetermineAllParentNodeStatus()
+            _determineDataConfigPostProcessConfigAllParentNodeStatus()
             _determineFileDirCheckableStatus()
         End If
     End Sub
@@ -3126,7 +3268,8 @@ Partial Public Class SettingsViewModel
         If obj IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj.TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj.PMUName) Then
             obj.IsChecked = True
         End If
-        _dataConfigDetermineAllParentNodeStatus()
+        '_dataConfigDetermineAllParentNodeStatus()
+        _determineDataConfigPostProcessConfigAllParentNodeStatus()
     End Sub
 
     ''' <summary>
@@ -3167,9 +3310,6 @@ Partial Public Class SettingsViewModel
     Private Sub _dataConfigDetermineAllParentNodeStatus()
         _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType)
         _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
-        'For Each group In GroupedSignalsByPMU
-        '    _determineParentCheckStatus(group)
-        'Next
         For Each stepInput In GroupedSignalByDataConfigStepsInput
             If stepInput.SignalList.Count > 0 Then
                 _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
@@ -3187,6 +3327,113 @@ Partial Public Class SettingsViewModel
             End If
         Next
     End Sub
+    Private Sub _determineDataConfigPostProcessConfigAllParentNodeStatus()
+        _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType)
+        _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
+        _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType)
+        _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU)
+        _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType)
+        _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU)
+        For Each stepInput In GroupedSignalByDataConfigStepsInput
+            If stepInput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+                _determineParentCheckStatus(stepInput)
+            Else
+                stepInput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepOutput In GroupedSignalByDataConfigStepsOutput
+            If stepOutput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+                _determineParentCheckStatus(stepOutput)
+            Else
+                stepOutput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepInput In GroupedSignalByPostProcessConfigStepsInput
+            If stepInput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+                _determineParentCheckStatus(stepInput)
+            Else
+                stepInput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepOutput In GroupedSignalByPostProcessConfigStepsOutput
+            If stepOutput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+                _determineParentCheckStatus(stepOutput)
+            Else
+                stepOutput.SignalSignature.IsChecked = False
+            End If
+        Next
+    End Sub
+    Private Sub _determineAllParentNodeStatus()
+        _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType)
+        _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
+        _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType)
+        _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU)
+        _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType)
+        _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU)
+        _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByType)
+        _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByPMU)
+        For Each stepInput In GroupedSignalByDataConfigStepsInput
+            If stepInput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+                _determineParentCheckStatus(stepInput)
+            Else
+                stepInput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepOutput In GroupedSignalByDataConfigStepsOutput
+            If stepOutput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+                _determineParentCheckStatus(stepOutput)
+            Else
+                stepOutput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepInput In GroupedSignalByProcessConfigStepsInput
+            If stepInput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+                _determineParentCheckStatus(stepInput)
+            Else
+                stepInput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepOutput In GroupedSignalByProcessConfigStepsOutput
+            If stepOutput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+                _determineParentCheckStatus(stepOutput)
+            Else
+                stepOutput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepInput In GroupedSignalByPostProcessConfigStepsInput
+            If stepInput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+                _determineParentCheckStatus(stepInput)
+            Else
+                stepInput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepOutput In GroupedSignalByPostProcessConfigStepsOutput
+            If stepOutput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+                _determineParentCheckStatus(stepOutput)
+            Else
+                stepOutput.SignalSignature.IsChecked = False
+            End If
+        Next
+        For Each stepInput In GroupedSignalByDetectorInput
+            If stepInput.SignalList.Count > 0 Then
+                _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+                _determineParentCheckStatus(stepInput)
+            Else
+                stepInput.SignalSignature.IsChecked = False
+            End If
+        Next
+    End Sub
+
     ''' <summary>
     ''' Go down a tree to determine nodes checking status
     ''' </summary>
@@ -4103,49 +4350,49 @@ Partial Public Class SettingsViewModel
         End If
     End Sub
 
-    Private _walkerStageChanged As ICommand
-    Public Property WalkerStageChanged As ICommand
-        Get
-            Return _walkerStageChanged
-        End Get
-        Set(value As ICommand)
-            _walkerStageChanged = value
-        End Set
-    End Property
+    'Private _walkerStageChanged As ICommand
+    'Public Property WalkerStageChanged As ICommand
+    '    Get
+    '        Return _walkerStageChanged
+    '    End Get
+    '    Set(value As ICommand)
+    '        _walkerStageChanged = value
+    '    End Set
+    'End Property
 
 
-    Private Sub _changeSignalSelectionDropDownChoice(index As Integer)
-        Select Case index
-            Case 0
-                CurrentTabIndex = 0
-            Case 1
-                SelectSignalMethods = {"All Initial Input Channels by Signal Type",
-                                       "All Initial Input Channels by PMU",
-                                       "Input Channels by Step",
-                                       "Output Channels by Step"}.ToList
-                'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
-                CurrentTabIndex = 1
-            Case 2
-                SelectSignalMethods = {"All Initial Input Channels by Signal Type",
-                                       "All Initial Input Channels by PMU",
-                                       "Output from SignalSelectionAndManipulation by Signal Type",
-                                       "Output from SignalSelectionAndManipulation by PMU",
-                                       "Input to MultiRate steps",
-                                       "Output Channels by Step"}.ToList
-                'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
-                CurrentTabIndex = 2
-            Case 3
-                SelectSignalMethods = {"NOT Implemented Yet!",
-                                        "All Initial Input Channels by Signal Type",
-                                        "All Initial Input Channels by PMU",
-                                        "Output from SignalSelectionAndManipulation by Signal Type",
-                                        "Output from SignalSelectionAndManipulation by PMU",
-                                        "Input to MultiRate steps",
-                                        "Output Channels by Step"}.ToList
-                'SelectedSelectionMethod = "NOT Implemented Yet!"
-                CurrentTabIndex = 3
-        End Select
-    End Sub
+    'Private Sub _changeSignalSelectionDropDownChoice(index As Integer)
+    '    Select Case index
+    '        Case 0
+    '            CurrentTabIndex = 0
+    '        Case 1
+    '            SelectSignalMethods = {"All Initial Input Channels by Signal Type",
+    '                                   "All Initial Input Channels by PMU",
+    '                                   "Input Channels by Step",
+    '                                   "Output Channels by Step"}.ToList
+    '            'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
+    '            CurrentTabIndex = 1
+    '        Case 2
+    '            SelectSignalMethods = {"All Initial Input Channels by Signal Type",
+    '                                   "All Initial Input Channels by PMU",
+    '                                   "Output from SignalSelectionAndManipulation by Signal Type",
+    '                                   "Output from SignalSelectionAndManipulation by PMU",
+    '                                   "Input to MultiRate steps",
+    '                                   "Output Channels by Step"}.ToList
+    '            'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
+    '            CurrentTabIndex = 2
+    '        Case 3
+    '            SelectSignalMethods = {"NOT Implemented Yet!",
+    '                                    "All Initial Input Channels by Signal Type",
+    '                                    "All Initial Input Channels by PMU",
+    '                                    "Output from SignalSelectionAndManipulation by Signal Type",
+    '                                    "Output from SignalSelectionAndManipulation by PMU",
+    '                                    "Input to MultiRate steps",
+    '                                    "Output Channels by Step"}.ToList
+    '            'SelectedSelectionMethod = "NOT Implemented Yet!"
+    '            CurrentTabIndex = 3
+    '    End Select
+    'End Sub
     Private _oldTabIndex as Integer
     private _currentTabIndex as Integer
     Public Property CurrentTabIndex As Integer
@@ -4166,6 +4413,10 @@ Partial Public Class SettingsViewModel
                 _groupAllPostProcessConfigOutputSignal()
                 _deSelectAllPostProcessConfigSteps()
             End If
+            If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
+                '_groupAllPostProcessConfigOutputSignal()
+                _deSelectAllDetectors()
+            End If
             _oldTabIndex = _currentTabIndex
             OnPropertyChanged()
         End Set
@@ -4183,7 +4434,6 @@ Partial Public Class SettingsViewModel
         AllDataConfigOutputGroupedByType = SortSignalByType(allOutputSignals)
         AllDataConfigOutputGroupedByPMU = SortSignalByPMU(allOutputSignals)
     End Sub
-
 
     'Private _postProcessingSelected As ICommand
     'Public Property PostProcessingSelected As ICommand

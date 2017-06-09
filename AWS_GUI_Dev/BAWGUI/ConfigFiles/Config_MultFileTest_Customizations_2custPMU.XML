@@ -3,16 +3,18 @@
     <DataConfig>
         <Configuration>
             <ReaderProperties>
-                <FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\Alberta tie in-out\Munro</FileDirectory>
-                <FileType>PDAT</FileType>
-                <Mnemonic>WISPMunro</Mnemonic>
+                <FilePath>
+					<FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\Alberta tie in-out\Munro</FileDirectory>
+					<FileType>PDAT</FileType>
+					<Mnemonic>WISPMunro</Mnemonic>
+                </FilePath>
                 <!--
                 -->
-                <AdditionalFilePath>
+                <FilePath>
                     <FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\Alberta tie in-out\Partner</FileDirectory>
                     <FileType>PDAT</FileType>
                     <Mnemonic>WISPPart</Mnemonic>
-                </AdditionalFilePath>
+                </FilePath>
                 <!--
                 -->
                 <Mode>
@@ -934,9 +936,396 @@
                 </Channel>
             </PMU>
             -->
-            <EventPath>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventXML</EventPath>
+            <EventPath>C:\Users\wang690\Documents\</EventPath>
+            <ResultUpdateInterval>37</ResultUpdateInterval>
+            <!-- Out of range frequency detector -->
+            <OutOfRangeFrequency>
+                <AverageWindow>70</AverageWindow>
+                <DurationMax>0.05</DurationMax>
+                <DurationMin>-0.05</DurationMin>
+                <Duration>2</Duration>
+                <AnalysisWindow>10</AnalysisWindow>
+                <RateOfChangeMax>0.02</RateOfChangeMax>
+                <RateOfChangeMin>-0.02</RateOfChangeMin>
+                <RateOfChange>0.1</RateOfChange>
+                <PMU>
+                    <Name>ALSN 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 B1 SA  .frq</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>BGED 500  B1 SA </Name>
+                    <Channel>
+                        <Name>BGED 500  B1 SA .frq</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>CHJO 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>CHJO 500 B1 SA  .frq</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GARR 500  B1 SA </Name>
+                    <Channel>
+                        <Name>GARR 500  B1 SA .frq</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GCFI 500 B2 SA  </Name>
+                    <Channel>
+                        <Name>GCFI 500 B2 SA  .frq</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>MALN 500  B2 SA </Name>
+                    <Channel>
+                        <Name>MALN 500  B2 SA .frq</Name>
+                    </Channel>
+                </PMU>
+            </OutOfRangeFrequency>
+            <OutOfRangeFrequency>
+                <AverageWindow>70</AverageWindow>
+                <DurationMax>0.05</DurationMax>
+                <DurationMin>-0.05</DurationMin>
+                <Duration>2</Duration>
+                <AnalysisWindow>10</AnalysisWindow>
+                <RateOfChangeMax>0.02</RateOfChangeMax>
+                <RateOfChangeMin>-0.02</RateOfChangeMin>
+                <RateOfChange>0.1</RateOfChange>
+                <PMU>
+                    <Name>W036COLSTRIP__01</Name>
+                    <Channel>
+                        <Name>W036COLSTRIP__01.frq</Name>
+                    </Channel>
+                </PMU>
+            </OutOfRangeFrequency>
+            <!-- Ringdown detector -->
+            <Ringdown>
+                <RMSlength>15</RMSlength>
+                <ForgetFactor>0.98</ForgetFactor>
+                <RingThresholdScale>3</RingThresholdScale>
+                <PMU>
+                    <Name>ALSN 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>BGED 500  B1 SA </Name>
+                    <Channel>
+                        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>CHJO 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GARR 500  B1 SA </Name>
+                    <Channel>
+                        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GCFI 500 B2 SA  </Name>
+                    <Channel>
+                        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>MALN 500  B2 SA </Name>
+                    <Channel>
+                        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>COLSTRIP_UP</Name>
+                    <Channel>
+                        <Name>W036COLSTRIP__01.B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+            </Ringdown>
+            <!-- Wind ramp detector - short trend -->
+            <WindRamp>
+                <PMU>
+                    <Name>RKCR 230 B1 SA  </Name>
+                    <Channel>
+                        <Name>RKCR 230 B1 SA  .A230BANK1____1MW</Name>
+                    </Channel>
+                </PMU>
+                <Fpass>0.03</Fpass>
+                <Fstop>0.05</Fstop>
+                <Apass>1</Apass>
+                <Astop>60</Astop>
+                <ValMin>50</ValMin>
+                <TimeMin>30</TimeMin>
+                <ValMax>300</ValMax>
+                <TimeMax>300</TimeMax>
+            </WindRamp>
+            <!-- Wind ramp detector - long trend -->
+            <WindRamp>
+                <PMU>
+                    <Name>WindOscillation2</Name>
+                    <Channel>
+                        <Name>RKCR 230 B1 SA  .A230BANK1____1MW</Name>
+                    </Channel>
+                </PMU>
+                <Fpass>0.00005</Fpass>
+                <Fstop>0.0002</Fstop>
+                <Apass>1</Apass>
+                <Astop>60</Astop>
+                <ValMin>400</ValMin>
+                <TimeMin>14400</TimeMin>
+                <ValMax>1000</ValMax>
+                <TimeMax>45000</TimeMax>
+            </WindRamp>
+            <!-- Forced Oscillation detector -->
+            <Periodogram>
+                <!-- Mode of operation. Options are SingleChannel and MultiChannel.
+                If omitted, default is single channel.-->
+                <Mode>MultiChannel</Mode>
+                <!-- Number of seconds of data to use in the analysis. Not optional.
+                -->
+                <AnalysisLength>640</AnalysisLength>
+                <!-- Type of window used for the test statistic periodogram, 
+                Daniell-Welch periodogram, and GMSC. Options are rectwin (rectangular), 
+                bartlett, hann, hamming, and blackman. If omitted, default is hann. -->
+                <WindowType>hamming</WindowType>
+                <!-- This is the frequency interval in Hz for the test statistic periodogram,
+                Daniell-Welch periodogram, and GMSC. It corresponds to the sampling
+                rate divided by the zero-padded length of each of these spectrums.
+                If omitted, it defaults to the sampling rate divided by the number
+                of samples corresponding to AnalysisLength, i.e., no zero padding 
+                is implemented. -->
+                
+                <FrequencyInterval>0.00125</FrequencyInterval>
+                
+                <!-- Length of the sections for the Daniell-Welch periodogram and 
+                GMSC in seconds. If omitted, default is 1/3 of AnalyisLength. -->
+                <WindowLength>256</WindowLength>
+                <!-- Amount of overlap between sections for the Daniell-Welch 
+                periodogram and GMSC in seconds. If omitted, default is half of 
+                WindowLength -->
+                <WindowOverlap>128</WindowOverlap>
+                <!-- Frequency width corresponding to the frequency-domain median 
+                filter used in the Daniell-Welch periodogram. This width is equal 
+                to the median filter's order times the FrequencyInterval entry. If 
+                omitted, the default corresponds to a filter order such that: it is 
+                the smallest odd integer greater 
+                than or equal to three times the main lobe width of the applied 
+                window. If an even number, a number less than 3, or a non-integer 
+                would result for the filter order, the smallest odd integer greater 
+                than or equal to 3
+                and the order resulting from specified value will be used. -->
+                
+                <MedianFilterFrequencyWidth>0.04625</MedianFilterFrequencyWidth>
+               
+                <!-- Probability of false alarm. With zero padding it becomes a 
+                maximum. If omitted, the default of 0.01 is used. -->
+                <Pfa>0.001</Pfa>
+                <!-- Minimum frequency to be considered. If omitted, the default is
+                zero, but in many cases this will cause excessive false alarms. -->
+                <FrequencyMin>0.1</FrequencyMin>
+                <!-- Maximum frequency to be considered. If omitted, the default is
+                the Nyquist frequency -->
+                <FrequencyMax>1.5</FrequencyMax>
+                <!-- Tolerance used to refine the frequency estimate.
+                If omitted, the default is the greater of 1) the main lobe 
+                width of the test statistic periodogram's window and 2) half of 
+                FrequencyMin. -->
+                <FrequencyTolerance>0.05</FrequencyTolerance>
+                <!-- Select channels for analysis -->
+                <PMU>
+                    <Name>ALSN 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>BGED 500  B1 SA </Name>
+                    <Channel>
+                        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>CHJO 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GARR 500  B1 SA </Name>
+                    <Channel>
+                        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GCFI 500 B2 SA  </Name>
+                    <Channel>
+                        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>MALN 500  B2 SA </Name>
+                    <Channel>
+                        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>COLSTRIP_UP</Name>
+                    <Channel>
+                        <Name>W036COLSTRIP__01.B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+            </Periodogram>
+            <!--
+            -->
+            <!-- Spectral coherence based forced oscillation detector -->
+            <SpectralCoherence>
+                <!-- Mode of operation. Options are SingleChannel and MultiChannel.
+                If omitted, default is single channel.-->
+                <Mode>MultiChannel</Mode>
+                <!-- Number of seconds of data to use in the analysis. Not optional. -->
+                <AnalysisLength>60</AnalysisLength>
+                <!-- The delay in seconds used to calculate the self-GMSC. If 
+                omitted, the default is floor(AnalysisLength/10)-->
+                <Delay>20</Delay>
+                <!-- Number of delays in the self-GMSC. Must be an integer greater than
+                or equal to 2. If omitted, default is 2. -->
+                <NumberDelays>2</NumberDelays>
+                <!-- Scaling factor to establish the detection threshold. If omitted,
+                default is 3.-->
+                <ThresholdScale>5</ThresholdScale>
+                <!-- Type of window used for the self-GMSC. Options are rectangular, 
+                bartlett, hann, hamming, and blackman. If omitted, default is hann. -->
+                <WindowType>hamming</WindowType>
+                <!-- This is the frequency interval in Hz for the self-GMSC. It 
+                corresponds to the sampling
+                rate divided by the zero-padded length of the self-GMSC.
+                If omitted, it defaults to the sampling rate divided by the number
+                of samples corresponding to WindowLength, i.e., no zero padding 
+                is implemented. -->
+                <FrequencyInterval>0.00125</FrequencyInterval>
+                <!-- Length of the sections for the self-GMSC in seconds. If 
+                omitted, default is 1/5 of AnalyisLength. -->
+                <WindowLength>12</WindowLength>
+                <!-- Amount of overlap between sections for the self-GMSC in seconds.
+                If omitted, default is half of WindowLength. -->
+                <WindowOverlap>6</WindowOverlap>
+                <!-- Minimum frequency to be considered. If omitted, the default is
+                zero, but in many cases this will cause excessive false alarms. -->
+                <FrequencyMin>0.1</FrequencyMin>
+                <!-- Maximum frequency to be considered. If omitted, the default is
+                the Nyquist frequency -->
+                <FrequencyMax>1.5</FrequencyMax>
+                <!-- Tolerance used to refine the frequency estimate.
+                If omitted, the default is the greater of 1) the main lobe 
+                width of the self-GMSC window and 2) half of FrequencyMin. -->
+                <FrequencyTolerance>0.05</FrequencyTolerance>
+                <!-- Select channels for analysis -->
+                <PMU>
+                    <Name>ALSN 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>BGED 500  B1 SA </Name>
+                    <Channel>
+                        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>CHJO 500 B1 SA  </Name>
+                    <Channel>
+                        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GARR 500  B1 SA </Name>
+                    <Channel>
+                        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>GCFI 500 B2 SA  </Name>
+                    <Channel>
+                        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>MALN 500  B2 SA </Name>
+                    <Channel>
+                        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+                <PMU>
+                    <Name>COLSTRIP_UP</Name>
+                    <Channel>
+                        <Name>W036COLSTRIP__01.B500NORTH____1VP.ANG</Name>
+                    </Channel>
+                </PMU>
+            </SpectralCoherence>
+			      <OutOfRangeGeneral>
+                <Max>0.02</Max>
+                <Min>-0.02</Min>
+                <AnalysisWindow>10</AnalysisWindow>
+                <Duration>2</Duration>
+            </OutOfRangeGeneral>
+            <!-- Alarming info (not needed for ringdowns) -->
             <Alarming>
+                <SpectralCoherence>
+                    <!-- An alarm will be set for any detection with a coherence 
+                    greater than CoherenceAlarm -->
+                    <CoherenceAlarm>0.9</CoherenceAlarm>
+                    <!-- Alarms will not be set for any detection with a coherence less
+                    than CoherenceMin, no matter how long they persist. -->
+                    <CoherenceMin>0.5</CoherenceMin>
+                    <!-- Detected forced oscillations must persist for TimeMin seconds
+                    before an alarm will be set (unless the coherence is greater than
+                    CoherenceAlarm -->
+                    <TimeMin>120</TimeMin>
+                    <!-- Specifies the coherence component of an ordered pair that is 
+                    located on the alarming curve. The ordered pair specifies the shape
+                    of the curve. -->
+                    <CoherenceCorner>0.6</CoherenceCorner>
+                    <!-- Specifies the time component of an ordered pair that is 
+                    located on the alarming curve. The ordered pair specifies the shape
+                    of the curve. -->
+                    <TimeCorner>145</TimeCorner>
+                </SpectralCoherence>
+                <!--
+                -->
+                <Periodogram>
+                    <!-- An alarm will be set for any detection with an SNR 
+                    greater than SNRalarm -->
+                    <SNRalarm>0.9</SNRalarm>
+                    <!-- Alarms will not be set for any detection with an SNR less
+                    than SNRmin no matter how long they persist. -->
+                    <SNRmin>0.5</SNRmin>
+                    <!-- Detected forced oscillations must persist for TimeMin seconds
+                    before an alarm will be set (unless the SNR is greater than
+                    SNRalarm -->
+                    <TimeMin>120</TimeMin>
+                    <!-- Specifies the SNR component of an ordered pair that is 
+                    located on the alarming curve. The ordered pair specifies the shape
+                    of the curve. -->
+                    <SNRcorner>0.6</SNRcorner>
+                    <!-- Specifies the time component of an ordered pair that is 
+                    located on the alarming curve. The ordered pair specifies the shape
+                    of the curve. -->
+                    <TimeCorner>145</TimeCorner>
+                </Periodogram>
+                <!--
+                -->
+                <Ringdown>
+                    <MaxDuration>90</MaxDuration>
+                </Ringdown>
             </Alarming>
         </Configuration>
     </DetectorConfig>
-</Config>
+ </Config>

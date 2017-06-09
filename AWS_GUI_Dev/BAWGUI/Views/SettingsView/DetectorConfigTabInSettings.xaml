@@ -4,7 +4,135 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BAWGUI"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid></Grid>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <local:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
+            <ScrollViewer>
+                <Grid Margin="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                        <Menu DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Margin="0,14,2,0" >
+                            <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0" ItemsSource="{Binding DetectorConfigure.DetectorNameList}">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                        <Image Width="16" Height="16" Source="../../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                        <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+                                </MenuItem.Header>
+                                <MenuItem.ItemContainerStyle>
+                                    <Style>
+                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DetectorSelectedToAdd, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                        <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                    </Style>
+                                </MenuItem.ItemContainerStyle>
+                            </MenuItem>
+                        </Menu>
+                        <Label Content="Detector Configurations" Margin="2" FontSize="18" FontWeight="Bold">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Label>
+                    </DockPanel>
+                    <ItemsControl ItemsSource="{Binding DetectorConfigure.DetectorList}" Grid.Row="1" Margin="2" AlternationCount="{Binding DetectorConfigure.DetectorList.Count}">
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type local:SpectralCoherenceDetector}">
+                                <local:SpectralCoherenceDetectorView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:PeriodogramDetector}">
+                                <local:PeriodogramDetectorView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:RingdownDetector}">
+                                <local:RingdownView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:WindRampDetector}">
+                                <local:WindRampView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:OutOfRangeFrequencyDetector}">
+                                <local:OutOfRangeFrequencyView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:OutOfRangeGeneralDetector}">
+                                <local:OutOfRangeGeneralView/>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                    <DockPanel Grid.Row="2" LastChildFill="True" Margin="0,20,7,0">
+                        <Menu DockPanel.Dock="Right" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Right" Margin="0,14,2,0" >
+                            <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0" ItemsSource="{Binding DetectorConfigure.AlarmingDetectorNameList}">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                        <Image Width="16" Height="16" Source="../../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                        <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+                                </MenuItem.Header>
+                                <MenuItem.ItemContainerStyle>
+                                    <Style>
+                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.AlarmingDetectorSelectedToAdd, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                        <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                                    </Style>
+                                </MenuItem.ItemContainerStyle>
+                            </MenuItem>
+                        </Menu>
+                        <Label Content="Alarming Detector Configurations" Margin="2" FontSize="18" FontWeight="Bold">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Label>
+                    </DockPanel>
+                    <ItemsControl ItemsSource="{Binding DetectorConfigure.AlarmingList}" Grid.Row="3" Margin="2" AlternationCount="{Binding DetectorConfigure.AlarmingList.Count}">
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type local:AlarmingSpectralCoherence}">
+                                <local:SpectralCoherenceAlarmingView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:AlarmingPeriodogram}">
+                                <local:PeriodogramAlarmingView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:AlarmingRingdown}">
+                                <local:RingdownAlarmingView/>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                    <Border Grid.Row="4" Margin="2">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <TextBlock></TextBlock>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+            <Grid Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Signal Selection Panel" Margin="2"/>
+                <local:SignalSelectionPanel Grid.Row="1" Margin="2"/>
+            </Grid>
+        </Border>
+    </Grid>
 </UserControl>

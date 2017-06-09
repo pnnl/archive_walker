@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="PeriodogramAlarmingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <local:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+            <Expander Grid.Column="0">
+                <Expander.Header>
+                    <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                        <Binding/>
+                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                    </MultiBinding>
+                </Expander.Header>
+                <StackPanel Orientation="Vertical" Margin="2">
+                    <Label Content="Parameters:" Margin="2"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Grid.Row="0" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="SNRalarm" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Row="0" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding SNRalarm}" HorizontalAlignment="Left"/>
+                        <Image Grid.Row="1" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="SNRmin" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding SNRmin}" HorizontalAlignment="Left"/>
+                        <Image Grid.Row="2" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="TimeMin" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Row="2" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding TimeMin}" HorizontalAlignment="Left"/>
+                        <Image Grid.Row="3" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="SNRcorner" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Row="3" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding SNRcorner}" HorizontalAlignment="Left"/>
+                        <Image Grid.Row="4" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Label Grid.Row="4" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="TimeCorner" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Row="4" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding TimeCorner}" HorizontalAlignment="Left"/>
+                    </Grid>
+                </StackPanel>
+            </Expander>
+            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
+                <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

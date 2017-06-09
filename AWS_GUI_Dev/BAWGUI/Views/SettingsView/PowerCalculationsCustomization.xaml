@@ -149,7 +149,7 @@
             </Image>
             <Label Margin="0,0,0,0" Width="Auto" VerticalAlignment="Center" Content="PowType: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
             <ComboBox Width="80" Height="22" Text="{Binding PowType, Converter={StaticResource EnumToStringConverter3}}" Margin="0,0,20,0" ItemsSource="{Binding Source={StaticResource PowerTypeValues}}"/>
-            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>

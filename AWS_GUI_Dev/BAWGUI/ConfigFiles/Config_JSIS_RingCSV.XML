@@ -9,9 +9,11 @@
 				<!--
 				<FileDirectory> D:\BAWS\BAWS_GIT_FY17\code\DataReaderCode\OriginalData</FileDirectory>
 				-->
-				<FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\DataReaderCode\OriginalData\2015</FileDirectory>
-				<FileType>PDAT</FileType>
-				<Mnemonic>ModeMeterSignals</Mnemonic>
+                <FilePath>
+					<FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\detector\DataReaderCode\OriginalData\2015</FileDirectory>
+					<FileType>PDAT</FileType>
+					<Mnemonic>ModeMeterSignals</Mnemonic>
+                </FilePath>
 				
 <!--  				<Mode>
 					<Name>RealTime</Name>
@@ -147,6 +149,12 @@
 							<Cutoff>0.1</Cutoff>
 							<ZeroPhase>FALSE</ZeroPhase>
 						</Parameters>
+						<PMU>
+							<Name>RKCR 230 B1 SA  </Name>
+							<Channel>
+								<Name>RKCR 230 B1 SA  .A230BANK1____1MW</Name>
+							</Channel>
+						</PMU>
 					</Filter>
 					<Filter>
 						<Type>LowPass</Type>
@@ -165,6 +173,42 @@
 							<Endpoints>truncate</Endpoints>
 							<HandleNaN>includenan</HandleNaN>
 						</Parameters>
+						<PMU>
+							<Name>ALSN 500 B1 SA  </Name>
+							<Channel>
+								<Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>BGED 500  B1 SA </Name>
+							<Channel>
+								<Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>CHJO 500 B1 SA  </Name>
+							<Channel>
+								<Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>GARR 500  B1 SA </Name>
+							<Channel>
+								<Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>GCFI 500 B2 SA  </Name>
+							<Channel>
+								<Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>MALN 500  B2 SA </Name>
+							<Channel>
+								<Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+							</Channel>
+						</PMU>
 					</Filter>
 					<Multirate>
 						<Parameters>
@@ -178,6 +222,48 @@
 							<p>3</p>
 							<q>2</q>
 						</Parameters>
+						<PMU>
+							<Name>ALSN 500 B1 SA  </Name>
+							<Channel>
+								<Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>BGED 500  B1 SA </Name>
+							<Channel>
+								<Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>CHJO 500 B1 SA  </Name>
+							<Channel>
+								<Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>GARR 500  B1 SA </Name>
+							<Channel>
+								<Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>GCFI 500 B2 SA  </Name>
+							<Channel>
+								<Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>MALN 500  B2 SA </Name>
+							<Channel>
+								<Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+							</Channel>
+						</PMU>
+						<PMU>
+							<Name>COLSTRIP_UP</Name>
+							<Channel>
+								<Name>W036COLSTRIP__01.B500NORTH____1VP.ANG</Name>
+							</Channel>
+						</PMU>
 					</Multirate>
 					<Multirate>
 						<Parameters>

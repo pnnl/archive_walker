@@ -9,8 +9,10 @@ Public Class MainViewModel
         _showSettingsWindow = New DelegateCommand(AddressOf ShowSettings, AddressOf CanExecute)
         _openFile = New DelegateCommand(AddressOf OpenFileFunc, AddressOf CanExecute)
     End Sub
+
+    Private _settingsWin As SettingsWindow
+
     Private _showSettingsWindow As ICommand
-    Private _openFile As ICommand
     Public Property ShowSettingsWindow As ICommand
         Get
             Return _showSettingsWindow
@@ -19,19 +21,6 @@ Public Class MainViewModel
             _showSettingsWindow = value
         End Set
     End Property
-
-    Public Property OpenFile As ICommand
-        Get
-            Return _openFile
-        End Get
-        Set(ByVal value As ICommand)
-            _openFile = value
-        End Set
-    End Property
-
-
-    Private _settingsWin As SettingsWindow
-
     Private Sub ShowSettings()
         Dim isWindowOpen = False
         For Each w In Application.Current.Windows
@@ -47,7 +36,15 @@ Public Class MainViewModel
             _settingsWin.Show()
         End If
     End Sub
-
+    Private _openFile As ICommand
+    Public Property OpenFile As ICommand
+        Get
+            Return _openFile
+        End Get
+        Set(ByVal value As ICommand)
+            _openFile = value
+        End Set
+    End Property
     Private Sub OpenFileFunc()
         Dim openFileDialog As New OpenFileDialog()
         openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"

@@ -633,8 +633,6 @@ Partial Public Class SettingsViewModel
         End Try
     End Sub
 
-
-
     Private Sub _groupAllPostProcessConfigOutputSignal()
         Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
         For Each stp In PostProcessConfigure.CollectionOfSteps

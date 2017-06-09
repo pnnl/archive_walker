@@ -77,7 +77,11 @@ Partial Public Class SettingsViewModel
             'aUnwrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aUnwrap.StepCounter.ToString & "-" & aUnwrap.Name
             aUnwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aUnwrap.StepCounter.ToString & "-" & aUnwrap.Name
             aUnwrap.MaxNaN = unWrap.<MaxNaN>.Value()
-            aUnwrap.InputChannels = _readPMUElements(unWrap)
+            Try
+                aUnwrap.InputChannels = _readPMUElements(unWrap)
+            Catch ex As Exception
+                _addLog("In unwrap processing step: " & aUnwrap.StepCounter.ToString & ". " & ex.Message)
+            End Try
             For Each signal In aUnwrap.InputChannels
                 signal.PassedThroughProcessor = True
                 aUnwrap.OutputChannels.Add(signal)
@@ -145,7 +149,11 @@ Partial Public Class SettingsViewModel
             anInterpolate.Type = [Enum].Parse(GetType(InterpolateType), interpolate.<Parameters>.<Type>.Value)
             anInterpolate.FlagInterp = Convert.ToBoolean(interpolate.<Parameters>.<FlagInterp>.Value)
             anInterpolate.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & anInterpolate.StepCounter.ToString & " - " & anInterpolate.Type.ToString() & " " & anInterpolate.Name
-            anInterpolate.InputChannels = _readPMUElements(interpolate)
+            Try
+                anInterpolate.InputChannels = _readPMUElements(interpolate)
+            Catch ex As Exception
+                _addLog("In an interpolate processing step: " & anInterpolate.StepCounter.ToString & ". " & ex.Message)
+            End Try
             For Each signal In anInterpolate.InputChannels
                 signal.PassedThroughProcessor = True
                 anInterpolate.OutputChannels.Add(signal)
@@ -201,46 +209,32 @@ Partial Public Class SettingsViewModel
             Dim steps = From element In stage.Elements Select element
             For Each stp In steps
                 Dim aStep As Object
-                If stp.Name = "Filter"
+                If stp.Name = "Filter" Then
                     aStep = New TunableFilter
                     stepCounter += 1
                     aStep.StepCounter = stepCounter
                     aStep.Type = [Enum].Parse(GetType(TunableFilterType), stp.<Type>.Value)
-                    'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Type.ToString() & " " & aStep.Name
-                    'Select Case aStep.Type
-                    '    Case TunableFilterType.HighPass
-                            
-                    '        '_readHighPassFilter(aStep, stp.<Parameters>)
-                    '    Case TunableFilterType.LowPass
-
-                    '    Case TunableFilterType.Median
-
-                    '    Case TunableFilterType.Rational
-
-                    '    Case Else
-                    '        Throw New Exception("Undefined tunable filter type found!")
-                    'End Select
                     Dim params = From ps In stp.<Parameters>.Elements Select ps
                     For Each pair In params
                         'Dim aPair As New ParameterValuePair
                         Dim paraName = pair.Name.ToString
-                        dim aPair = (From x in DirectCast(aStep, TunableFilter).FilterParameters Where x.ParameterName = paraName Select x).firstOrDefault
+                        Dim aPair = (From x In DirectCast(aStep, TunableFilter).FilterParameters Where x.ParameterName = paraName Select x).firstOrDefault
                         If pair.Value.ToLower = "false" Then
                             aPair.Value = False
                         ElseIf pair.Value.ToLower = "true" Then
                             aPair.Value = True
                         ElseIf paraName = "Endpoints" Then
                             aPair.Value = [Enum].Parse(GetType(EndpointsType), pair.Value)
-                        ElseIf paraName = "HandleNaN"
+                        ElseIf paraName = "HandleNaN" Then
                             aPair.Value = [Enum].Parse(GetType(HandleNaNType), pair.Value)
-                        'ElseIf aStep.Name = "Nominal-Value Frequency Data Quality Filter" And paraName = "FlagBit" Then
-                        '    aPair.IsRequired = False
-                        '    aPair.Value = pair.Value
+                            'ElseIf aStep.Name = "Nominal-Value Frequency Data Quality Filter" And paraName = "FlagBit" Then
+                            '    aPair.IsRequired = False
+                            '    aPair.Value = pair.Value
                         Else
                             aPair.Value = pair.Value
                         End If
                     Next
-                ElseIf stp.Name = "Multirate"
+                ElseIf stp.Name = "Multirate" Then
                     aStep = New Multirate
                     stepCounter += 1
                     aStep.StepCounter = stepCounter
@@ -251,20 +245,24 @@ Partial Public Class SettingsViewModel
                         aPair.ParameterName = paraName
                         aPair.Value = pair.Value
                         aStep.FilterParameters.Add(aPair)
-                        if paraName = "MultiRatePMU"
+                        If paraName = "MultiRatePMU" Then
                             aStep.MultiRatePMU = pair.Value()
-                        ElseIf paraName = "NewRate"
+                        ElseIf paraName = "NewRate" Then
                             aStep.NewRate = pair.Value()
-                        ElseIf paraName = "p"
+                        ElseIf paraName = "p" Then
                             aStep.PElement = pair.Value()
-                        ElseIf paraName = "q"
+                        ElseIf paraName = "q" Then
                             aStep.QElement = pair.Value()
                         End If
                     Next
                     aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
                     aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
                 End If
-                aStep.InputChannels = _readPMUElements(stp)
+                Try
+                    aStep.InputChannels = _readPMUElements(stp)
+                Catch ex As Exception
+                    _addLog("In a " & aStep.GetType.ToString & " processing step: " & aStep.StepCounter.ToString & ". " & ex.Message)
+                End Try
                 For Each signal In aStep.InputChannels
                     signal.PassedThroughProcessor = True
                     If TypeOf aStep Is Multirate
@@ -295,7 +293,11 @@ Partial Public Class SettingsViewModel
             Dim aWrap = New Wrap
             aWrap.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
             aWrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aWrap.StepCounter.ToString & "-" & aWrap.Name
-            aWrap.InputChannels = _readPMUElements(Wrap)
+            Try
+                aWrap.InputChannels = _readPMUElements(Wrap)
+            Catch ex As Exception
+                _addLog("In a wrap processing step: " & aWrap.StepCounter.ToString & ". " & ex.Message)
+            End Try
             For Each signal In aWrap.InputChannels
                 signal.PassedThroughProcessor = True
                 aWrap.OutputChannels.Add(signal)
@@ -1153,9 +1155,6 @@ Partial Public Class SettingsViewModel
         _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
         _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType)
         _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU)
-        'For Each group In GroupedSignalsByPMU
-        '    _determineParentCheckStatus(group)
-        'Next
         For Each stepInput In GroupedSignalByProcessConfigStepsInput
             If stepInput.SignalList.Count > 0 Then
                 _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
