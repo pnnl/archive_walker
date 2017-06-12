@@ -14,7 +14,6 @@ Partial Public Class SettingsViewModel
 
     Public Sub New()
         _configFileName = ""
-        _lastCustPMUname = ""
         '_sampleFile = ""
 
         _dataConfigure = New DataConfig
@@ -98,7 +97,6 @@ Partial Public Class SettingsViewModel
         _nameTypeUnitStatusFlag = 0
     End Sub
 
-
     'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
     'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
     '    Get
@@ -169,6 +167,7 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+
     Private Sub _tagSignals(fileInfo As InputFileInfo, signalList As List(Of String))
         Dim newSignalList As New ObservableCollection(Of SignalSignatures)
         For Each name In signalList
@@ -246,7 +245,6 @@ Partial Public Class SettingsViewModel
         b.SignalList = fileInfo.GroupedSignalsByType
         GroupedRawSignalsByType.Add(b)
     End Sub
-
     Private Function SortSignalByType(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
         Dim signalTypeTree As New ObservableCollection(Of SignalTypeHierachy)
         Dim signalTypeDictionary = signalList.GroupBy(Function(x) x.TypeAbbreviation.ToArray(0).ToString).ToDictionary(Function(x) x.Key, Function(x) New ObservableCollection(Of SignalSignatures)(x.ToList))
@@ -601,7 +599,6 @@ Partial Public Class SettingsViewModel
         Next
         Return signalTypeTree
     End Function
-
     Private Function SortSignalByPMU(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
         Dim PMUSignalDictionary = signalList.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
         Dim pmuSignalTree = New ObservableCollection(Of SignalTypeHierachy)
@@ -626,7 +623,6 @@ Partial Public Class SettingsViewModel
             _browseInputFileDir = value
         End Set
     End Property
-
     Private Sub _browseInputFileFolder(obj As InputFileInfo)
         'Dim previousDir = New InputFileInfo(obj)
         Dim openDirectoryDialog As New FolderBrowserDialog()
@@ -666,7 +662,10 @@ Partial Public Class SettingsViewModel
             obj.FileDirectory = _lastInputFolderLocation
             _buildInputFileFolderTree(obj)
             If _configData IsNot Nothing Then
-                _readDataConfigStages()
+                _readDataConfigStages(_configData)
+                _readProcessConfig(_configData)
+                _readPostProcessConfig(_configData)
+                _readDetectorConfig(_configData)
             End If
         End If
     End Sub
@@ -1166,7 +1165,6 @@ Partial Public Class SettingsViewModel
                     Dim dt = DirectCast(detector, RingdownDetector)
                     element = <Ringdown>
                                   <RMSlength><%= dt.RMSlength %></RMSlength>
-                                  <MaxDuration><%= dt.MaxDuration %></MaxDuration>
                                   <ForgetFactor><%= dt.ForgetFactor %></ForgetFactor>
                                   <RingThresholdScale><%= dt.RingThresholdScale %></RingThresholdScale>
                               </Ringdown>
@@ -1531,812 +1529,18 @@ Partial Public Class SettingsViewModel
             NameTypeUnitStatusFlag = 0
             Try
                 _configData = XDocument.Load(_configFileName)
-                _readConfigFile()
+                _addLog("Reading " & ConfigFileName)
+                _readConfigFile(_configData)
+                _addLog("Done reading " & ConfigFileName & " .")
+                _groupAllDataConfigOutputSignal()
+                _groupAllProcessConfigOutputSignal()
+                _groupAllPostProcessConfigOutputSignal()
             Catch ex As Exception
                 _addLog("Error reading config file!" & vbCrLf & ex.Message)
                 MessageBox.Show("Error reading config file!" & vbCrLf & ex.Message & vbCrLf & "Please see logs below!", "Error!", MessageBoxButtons.OK)
             End Try
         End If
     End Sub
-    Private Sub _readConfigFile()
-        _addLog("Reading " & ConfigFileName)
-
-        '''''''''''''''''''''' Read DataConfig''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-        Dim fileInfoList = New ObservableCollection(Of InputFileInfo)
-        Dim inputInformation = From el In _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements Where el.Name = "FilePath" Select el
-        For Each el In inputInformation
-            Dim info = New InputFileInfo
-            info.FileDirectory = el.<FileDirectory>.Value
-            Dim type = el.<FileType>.Value
-            If type IsNot Nothing Then
-                info.FileType = [Enum].Parse(GetType(DataFileType), type.ToLower)
-            End If
-            info.Mnemonic = el.<Mnemonic>.Value
-            fileInfoList.Add(info)
-            _buildInputFileFolderTree(info)
-        Next
-
-        DataConfigure.ReaderProperty.InputFileInfos = fileInfoList
-
-        DataConfigure.ReaderProperty.ModeName = [Enum].Parse(GetType(ModeType), _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Name>.Value)
-        Select Case DataConfigure.ReaderProperty.ModeName
-            Case ModeType.Archive
-                DataConfigure.ReaderProperty.DateTimeStart = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeStart>.Value
-                DataConfigure.ReaderProperty.DateTimeEnd = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeEnd>.Value
-            Case ModeType.Hybrid
-                DataConfigure.ReaderProperty.DateTimeStart = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeStart>.Value
-                DataConfigure.ReaderProperty.NoFutureWait = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<NoFutureWait>.Value
-                DataConfigure.ReaderProperty.MaxNoFutureCount = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxNoFutureCount>.Value
-                DataConfigure.ReaderProperty.FutureWait = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<FutureWait>.Value
-                DataConfigure.ReaderProperty.MaxFutureCount = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxFutureCount>.Value
-                DataConfigure.ReaderProperty.RealTimeRange = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<RealTimeRange>.Value
-            Case ModeType.RealTime
-                DataConfigure.ReaderProperty.NoFutureWait = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<NoFutureWait>.Value
-                DataConfigure.ReaderProperty.MaxNoFutureCount = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxNoFutureCount>.Value
-                DataConfigure.ReaderProperty.FutureWait = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<FutureWait>.Value
-                DataConfigure.ReaderProperty.MaxFutureCount = _configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxFutureCount>.Value
-            Case Else
-                Throw New Exception("Error: invalid mode type found in config file.")
-        End Select
-        _readDataConfigStages()
-        '''''''''''''''''''''''''''''''''Read ProcessConfig and PostProcessConfig''''''''''''''''''''''''''''''''''''''''''''''''''''
-        _readProcessConfig()
-        _readPostProcessConfig()
-        '''''''''''''''''''''''''''''''''Read DetectorConfig'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-        _readDetectorConfig()
-
-        _groupAllDataConfigOutputSignal()
-        _groupAllProcessConfigOutputSignal()
-        _groupAllPostProcessConfigOutputSignal()
-
-        _addLog("Done reading " & ConfigFileName & " .")
-    End Sub
-
-    Private Function _readPMUElements(stp As XElement) As ObservableCollection(Of SignalSignatures)
-        Dim inputSignalList = New ObservableCollection(Of SignalSignatures)
-        Dim inputs = From el In stp.Elements Where el.Name = "PMU" Select el
-        If inputs.ToList.Count > 0 Then
-
-            For Each aInput In inputs
-                Dim pmuName = aInput.<Name>.Value()
-                Dim channels = From el In aInput.Elements Where el.Name = "Channel" Select el
-                If channels.ToList.Count > 0 Then
-
-                    For Each channel In channels
-                        Dim signalName = channel.<Name>.Value
-                        Dim signal = _searchForSignalInTaggedSignals(pmuName, signalName)
-                        If signal IsNot Nothing Then
-                            inputSignalList.Add(signal)
-                        Else
-                            Throw New Exception("Error reading config file! Signal with channel name: " & signalName & " in PMU " & pmuName & " not found!")
-                        End If
-                    Next
-                Else
-                    For Each group In GroupedRawSignalsByPMU
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.PMUName = pmuName Then
-
-                                For Each signal In subgroup.SignalList
-                                    inputSignalList.Add(signal.SignalSignature)
-                                Next
-                            End If
-                        Next
-                    Next
-                End If
-            Next
-        Else
-            'For Each group In GroupedSignalsByType
-            '    For Each subgroup In group.SignalList
-            '        If subgroup.SignalSignature.TypeAbbreviation = "V" OrElse subgroup.SignalSignature.TypeAbbreviation = "I"
-            '            For Each subsubgroup In subgroup.SignalList
-            '                 if subsubgroup.SignalSignature.TypeAbbreviation.Substring(1,1) = "A"
-            '                     For Each phase In subsubgroup.SignalList
-            '                         For Each signal In phase.SignalList
-            '                             aUnwrap.InputChannels.Add(signal.SignalSignature)
-            '                         Next
-            '                     Next
-            '                 End If       
-            '            Next
-            '        End If
-            '    Next
-            'Next
-            Throw New Exception("Warning! No PMU specified, no channel or no PMU is included.")
-        End If
-        Return inputSignalList
-    End Function
-
-#Region "Read Data Config Customization Steps From XML Configure File"
-    Private Sub _readDataConfigStages()
-        Dim CollectionOfSteps As New ObservableCollection(Of Object)
-        GroupedSignalByDataConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
-        GroupedSignalByDataConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
-        Dim stepCounter As Integer = 0
-        Dim stages = From el In _configData.<Config>.<DataConfig>.<Configuration>.Elements Where el.Name = "Stages" Select el
-        For Each stage In stages
-            Dim steps = From element In stage.Elements Select element
-            For Each stp In steps
-                Dim aStep As Object
-
-                If stp.Name = "Filter" Then
-                    aStep = New DQFilter
-                    aStep.Name = DataConfigure.DQFilterReverseNameDictionary(stp.<Name>.Value)
-                    'necessaryParams.AddRange(DataConfigure.DQFilterNameParametersDictionary(aStep.Name))
-                ElseIf stp.Name = "Customization" Then
-                    aStep = New Customization
-                    aStep.Name = DataConfigure.CustomizationReverseNameDictionary(stp.<Name>.Value)
-                    'necessaryParams.AddRange(DataConfigure.CustomizationNameParemetersDictionary(aStep.Name))
-                End If
-                stepCounter += 1
-                aStep.StepCounter = stepCounter
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-
-                'Dim signalForUnitTypeSpecificationCustomization As SignalSignatures = Nothing
-                Select Case aStep.Name
-                    Case "Scalar Repetition Customization"
-                        _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Addition Customization"
-                        _readAdditionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Subtraction Customization"
-                        _readSubtractionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Division Customization"
-                        _readDivisionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Multiplication Customization"
-                        _readMultiplicationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Raise signals to an exponent"
-                        _readRaiseExpCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Take complex conjugate of signals"
-                        _readUnaryCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Return angle of complex valued signals"
-                        _readAngleCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Phasor Creation Customization"
-                        _readPhasorCreationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Specify Signal Type and Unit Customization"
-                        _readSpecTypeUnitCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Power Calculation Customization"
-                        _readPowerCalculationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter, 1)
-                    Case "Metric Prefix Customization", "Angle Conversion Customization"
-                        _readMetricPrefixOrAngleConversionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case Else
-                        Dim params = From ps In stp.<Parameters>.Elements Select ps
-                        For Each pair In params
-                            Dim aPair As New ParameterValuePair
-                            Dim paraName = pair.Name.ToString
-                            aPair.ParameterName = paraName
-                            If pair.Value.ToLower = "false" Then
-                                aPair.Value = False
-                            ElseIf pair.Value.ToLower = "true" Then
-                                aPair.Value = True
-                            ElseIf aStep.Name = "Nominal-Value Frequency Data Quality Filter" And paraName = "FlagBit" Then
-                                aPair.IsRequired = False
-                                aPair.Value = pair.Value
-                            Else
-                                aPair.Value = pair.Value
-                            End If
-                            aStep.FilterParameters.Add(aPair)
-                        Next
-                        Try
-                            aStep.InputChannels = _readPMUElements(stp)
-                        Catch ex As Exception
-                            _addLog("In a data quality filter step: " & aStep.StepCounter.ToString & " of data config. " & ex.Message)
-                        End Try
-                        For Each signal In aStep.InputChannels
-                            signal.PassedThroughDQFilter = True
-                            aStep.OutputChannels.Add(signal)
-                        Next
-                        ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-                        ' to add this step that is for sure a DQ filter to the list of step for signal manipulation and customization.
-                        ' Don't not move it outside the select case loop!!!!!
-                        ' Or it will cause customization steps being added twice.
-                        CollectionOfSteps.Add(aStep)
-                        ' Leave this line here! Don't move it!
-                        ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-                End Select
-                If TypeOf aStep Is Customization Then
-                    aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                    GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                End If
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-                GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-            Next
-        Next
-        DataConfigure.CollectionOfSteps = CollectionOfSteps
-    End Sub
-
-    Private Sub _readPhasorCreationCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim phasors = From phasor In params.Elements Where phasor.Name = "phasor" Select phasor
-        For Each phasor In phasors
-            Dim magSignal = _searchForSignalInTaggedSignals(phasor.<mag>.<PMU>.Value, phasor.<mag>.<Channel>.Value)
-            If magSignal IsNot Nothing Then
-                aStep.InputChannels.Add(magSignal)
-            Else
-                magSignal = New SignalSignatures("ErrorReadingMag")
-                magSignal.IsValid = False
-                _addLog("Error reading config file! Signal in step: " & stepCounter & ", channel name: " & phasor.<mag>.<Channel>.Value & " in PMU " & phasor.<mag>.<PMU>.Value & " not found!")
-            End If
-            Dim angSignal = _searchForSignalInTaggedSignals(phasor.<ang>.<PMU>.Value, phasor.<ang>.<Channel>.Value)
-            If angSignal IsNot Nothing Then
-                aStep.InputChannels.Add(angSignal)
-            Else
-                angSignal = New SignalSignatures("ErrorReadingAng")
-                angSignal.IsValid = False
-                _addLog("Error reading config file! Signal in step: " & stepCounter & ", channel name: " & phasor.<ang>.<Channel>.Value & " in PMU " & phasor.<ang>.<PMU>.Value & " not found!")
-            End If
-            Dim custSignalName = phasor.<CustName>.Value
-            If String.IsNullOrEmpty(custSignalName) Then
-                custSignalName = "CustomSignalNameRequired"
-            End If
-            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
-            output.IsCustomSignal = True
-            If magSignal.IsValid AndAlso angSignal.IsValid Then
-                Dim mtype = magSignal.TypeAbbreviation.ToArray
-                Dim atype = angSignal.TypeAbbreviation.ToArray
-                If mtype(0) = atype(0) AndAlso mtype(2) = atype(2) AndAlso mtype(1) = "M" AndAlso atype(1) = "A" Then
-                    output.TypeAbbreviation = mtype(0) & "P" & mtype(2)
-                Else
-                    _addLog("In step: " & stepCounter & ", type of input magnitude siganl: " & magSignal.SignalName & ", does not match angle signal: " & angSignal.SignalName & ".")
-                End If
-            End If
-            aStep.OutputChannels.Add(output)
-            Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
-            newPair.Value.Add(magSignal)
-            newPair.Value.Add(angSignal)
-            aStep.OutputInputMappingPair.Add(newPair)
-        Next
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readAngleCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim signals = From signal In params.Elements Where signal.Name = "signal" Select signal
-        For Each signal In signals
-            Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
-            If input IsNot Nothing Then
-                If aStep.InputChannels.Contains(input) Then
-                    _addLog("Duplicate input signal found in step: " & stepCounter & " ," & aStep.Name & ".")
-                Else
-                    aStep.InputChannels.Add(input)
-                End If
-            Else
-                input = New SignalSignatures("SignalNotFound")
-                input.IsValid = False
-                _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
-            End If
-            Dim custSignalName = signal.<CustName>.Value
-            If String.IsNullOrEmpty(custSignalName) Then
-                If input.IsValid Then
-                    custSignalName = input.SignalName
-                Else
-                    custSignalName = "CustomSignalNameRequired"
-                End If
-            End If
-            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
-            output.IsCustomSignal = True
-            If input.IsValid AndAlso input.TypeAbbreviation.Length = 3 Then
-                Dim letter2 = input.TypeAbbreviation.ToArray(1)
-                If letter2 = "P" Then
-                    output.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
-                End If
-            End If
-            aStep.OutputChannels.Add(output)
-            Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
-            newPair.Value.Add(input)
-            aStep.OutputInputMappingPair.Add(newPair)
-        Next
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readUnaryCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim signals = From signal In params.Elements Where signal.Name = "signal" Select signal
-        For Each signal In signals
-            Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
-            If input IsNot Nothing Then
-                If aStep.InputChannels.Contains(input) Then
-                    _addLog("Duplicate input signal found in step: " & stepCounter & " ," & aStep.Name & ".")
-                Else
-                    aStep.InputChannels.Add(input)
-                End If
-            Else
-                input = New SignalSignatures("SignalNotFound")
-                input.IsValid = False
-                _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
-            End If
-            Dim custSignalName = signal.<CustName>.Value
-            If String.IsNullOrEmpty(custSignalName) Then
-                If input.IsValid Then
-                    custSignalName = input.SignalName
-                Else
-                    custSignalName = "NoCustomSignalNameSpecified"
-                End If
-            End If
-            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
-            output.IsCustomSignal = True
-            If input.IsValid Then
-                output.TypeAbbreviation = input.TypeAbbreviation
-            End If
-            aStep.OutputChannels.Add(output)
-            Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
-            newPair.Value.Add(input)
-            aStep.OutputInputMappingPair.Add(newPair)
-        Next
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readSubtractionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim outputName = params.<SignalName>.Value
-        If outputName Is Nothing Then
-            outputName = ""
-        End If
-        Dim minuend = _searchForSignalInTaggedSignals(params.<minuend>.<PMU>.Value, params.<minuend>.<Channel>.Value)
-        If minuend Is Nothing Then
-            minuend = New SignalSignatures("MinuentNotFound")
-            minuend.IsValid = False
-            _addLog("Error reading config file! Minuend in step: " & stepCounter & " with PMU: " & params.<minuend>.<PMU>.Value & ", and Channel: " & params.<minuend>.<Channel>.Value & " not found!")
-        Else
-            aStep.InputChannels.Add(minuend)
-        End If
-        aStep.MinuendOrDividend = minuend
-        Dim subtrahend = _searchForSignalInTaggedSignals(params.<subtrahend>.<PMU>.Value, params.<subtrahend>.<Channel>.Value)
-        If subtrahend Is Nothing Then
-            subtrahend = New SignalSignatures("SubtrahendNotFound")
-            subtrahend.IsValid = False
-            _addLog("Error reading config file! Subtrahend in step: " & stepCounter & " with PMU: " & params.<subtrahend>.<PMU>.Value & ", and Channel: " & params.<subtrahend>.<Channel>.Value & " not found!")
-        Else
-            aStep.InputChannels.Add(subtrahend)
-        End If
-        aStep.SubtrahendOrDivisor = subtrahend
-        Dim output = New SignalSignatures(outputName, aStep.CustPMUname, "OTHER")
-        If minuend.IsValid AndAlso subtrahend.IsValid Then
-            If minuend.TypeAbbreviation = subtrahend.TypeAbbreviation Then
-                output.TypeAbbreviation = minuend.TypeAbbreviation
-            Else
-                _addLog("In step: " & stepCounter & " ," & aStep.Name & ", the types of Minuend and Subtrahend or divisor and dividend do not match!")
-            End If
-        End If
-        output.IsCustomSignal = True
-        aStep.OutputChannels.Add(output)
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readRaiseExpCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        aStep.Exponent = params.<exponent>.Value
-        If aStep.Exponent Is Nothing Then
-            aStep.Exponent = 1
-        End If
-        Dim signals = From signal In params.Elements Where signal.Name = "signal" Select signal
-        For Each signal In signals
-            Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
-            If input IsNot Nothing Then
-                If aStep.InputChannels.Contains(input) Then
-                    _addLog("Duplicate input signal found in step: " & stepCounter & " ," & aStep.Name & ".")
-                Else
-                    aStep.InputChannels.Add(input)
-                End If
-            Else
-                input = New SignalSignatures("SignalNotFound")
-                input.IsValid = False
-                _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
-            End If
-            Dim custSignalName = signal.<CustName>.Value
-            If String.IsNullOrEmpty(custSignalName) Then
-                If input.IsValid Then
-                    custSignalName = input.SignalName
-                Else
-                    custSignalName = "NoCustomSignalNameSpecified"
-                End If
-            End If
-            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
-            output.IsCustomSignal = True
-            If input.IsValid And input.TypeAbbreviation = "SC" Then
-                output.TypeAbbreviation = "SC"
-            End If
-            aStep.OutputChannels.Add(output)
-            Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
-            newPair.Value.Add(input)
-            aStep.OutputInputMappingPair.Add(newPair)
-        Next
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readDivisionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim outputName = params.<SignalName>.Value
-        If outputName Is Nothing Then
-            outputName = ""
-        End If
-        Dim Dividend = _searchForSignalInTaggedSignals(params.<dividend>.<PMU>.Value, params.<dividend>.<Channel>.Value)
-        If Dividend Is Nothing Then
-            Dividend = New SignalSignatures("DividendNotFound")
-            Dividend.IsValid = False
-            _addLog("Error reading config file! Dividend in step: " & stepCounter & ", with PMU: " & params.<dividend>.<PMU>.Value & ", and Channel: " & params.<dividend>.<Channel>.Value & " not found!")
-        Else
-            aStep.InputChannels.Add(Dividend)
-        End If
-        aStep.MinuendOrDividend = Dividend
-        Dim Divisor = _searchForSignalInTaggedSignals(params.<divisor>.<PMU>.Value, params.<divisor>.<Channel>.Value)
-        If Divisor Is Nothing Then
-            Divisor = New SignalSignatures("DivisorNotFound")
-            Divisor.IsValid = False
-            _addLog("Error reading config file! Divisor in step: " & stepCounter & ", with PMU: " & params.<divisor>.<PMU>.Value & ", and Channel: " & params.<divisor>.<Channel>.Value & " not found!")
-        Else
-            aStep.InputChannels.Add(Divisor)
-        End If
-        aStep.SubtrahendOrDivisor = Divisor
-        Dim output = New SignalSignatures(outputName, aStep.CustPMUname, "OTHER")
-        If Dividend.IsValid AndAlso Divisor.IsValid Then
-            If Dividend.TypeAbbreviation = Divisor.TypeAbbreviation Then
-                output.TypeAbbreviation = "SC"
-            ElseIf Divisor.TypeAbbreviation = "SC" Then
-                output.TypeAbbreviation = Dividend.TypeAbbreviation
-            Else
-                _addLog("In step: " & stepCounter & " ," & aStep.Name & ", the types of divisor and dividend do not agree!")
-            End If
-        End If
-        output.IsCustomSignal = True
-        aStep.OutputChannels.Add(output)
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-    'Private Overloads Sub _readScalarRepetitionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Customization), ByRef stepCounter As Integer)
-    'End Sub
-    Private Sub _readScalarRepetitionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, ByRef stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim outputName = params.<SignalName>.Value
-        If outputName Is Nothing Then
-            outputName = ""
-        End If
-        aStep.Scalar = params.<scalar>.Value
-        Try
-            Double.Parse(aStep.Scalar)
-        Catch ex As Exception
-            _addLog("Scalar repetition customization step: " & stepCounter & " has invalid scalar input that cannot be converted to a scalar.")
-        End Try
-        Dim type = params.<SignalType>.Value
-        If type Is Nothing Then
-            type = "SC"
-        End If
-        Dim unit = params.<SignalUnit>.Value
-        If unit Is Nothing Then
-            unit = "SC"
-        End If
-        aStep.TimeSourcePMU = params.<TimeSourcePMU>.Value
-
-        Dim output = New SignalSignatures(outputName, aStep.CustPMUname, type)
-        output.IsCustomSignal = True
-        output.Unit = unit
-        aStep.OutputChannels.Add(output)
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readMultiplicationCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, ByRef stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim type = ""
-        Dim countNonScalarType = 0
-        Dim factors = From factor In params.Elements Where factor.Name = "factor" Select factor
-        For Each factor In factors
-            Dim input = _searchForSignalInTaggedSignals(factor.<PMU>.Value, factor.<Channel>.Value)
-            If input IsNot Nothing Then
-                aStep.InputChannels.Add(input)
-                If input.TypeAbbreviation <> "SC" Then
-                    countNonScalarType += 1
-                    If String.IsNullOrEmpty(type) Then
-                        type = input.TypeAbbreviation
-                    End If
-                End If
-            Else
-                _addLog("Error reading config file! Input signal in step: " & stepCounter & "with channel name: " & factor.<Channel>.Value & ", and in PMU " & factor.<PMU>.Value & " not found!")
-            End If
-        Next
-        Dim outputName = params.<SignalName>.Value
-        If outputName Is Nothing Then
-            outputName = ""
-        End If
-        Dim output = New SignalSignatures(outputName, aStep.CustPMUname)
-        If countNonScalarType = 0 Then
-            output.TypeAbbreviation = "SC"
-        ElseIf countNonScalarType = 1 Then
-            output.TypeAbbreviation = type
-        Else
-            output.TypeAbbreviation = "OTHER"
-        End If
-        output.IsCustomSignal = True
-        aStep.OutputChannels.Add(output)
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readAdditionCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, ByRef stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim type = ""
-        Dim outputName = params.<SignalName>.Value
-        If outputName Is Nothing Then
-            outputName = ""
-        End If
-        Dim output = New SignalSignatures(outputName, aStep.CustPMUname, "OTHER")
-        output.IsCustomSignal = True
-        Dim terms = From term In params.Elements Where term.Name = "term" Select term
-        For Each term In terms
-            Dim input = _searchForSignalInTaggedSignals(term.<PMU>.Value, term.<Channel>.Value)
-            If input IsNot Nothing Then
-                aStep.InputChannels.Add(input)
-                If String.IsNullOrEmpty(type) Then
-                    type = input.TypeAbbreviation
-                ElseIf type <> input.TypeAbbreviation Then
-                    _addLog("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & stepCounter & ", with types: " & type & " and " & input.TypeAbbreviation & ".")
-                End If
-            Else
-                _addLog("Error reading config file! Input signal in step: " & stepCounter & "with channel name: " & term.<Channel>.Value & ", and in PMU " & term.<PMU>.Value & " not found!")
-            End If
-        Next
-        If Not String.IsNullOrEmpty(type) Then
-            output.TypeAbbreviation = type
-        End If
-        aStep.OutputChannels.Add(output)
-        collectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private _powerTypeDictionary As Dictionary(Of String, String)
-    Private Sub _readPowerCalculationCustomization(ByRef aStep As Object, params As IEnumerable(Of XElement), CollectionOfSteps As Object, ByRef stepCounter As Integer, ByVal sectionFlag As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        aStep.PowType = [Enum].Parse(GetType(PowerType), _powerTypeDictionary(params.<PowType>.Value))
-        Dim powers = From el In params.Elements Where el.Name = "power" Select el
-        For index = 0 To powers.Count - 1
-            'For Each power In powers
-            If index > 0 Then
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-                If sectionFlag = 1 Then
-                    GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                    GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-                ElseIf sectionFlag = 3 Then
-                    GroupedSignalByPostProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                    GroupedSignalByPostProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-                End If
-                Dim oldStep = aStep
-                aStep = New Customization(oldStep)
-                stepCounter += 1
-                aStep.StepCounter = stepCounter
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & "-" & aStep.Name
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & "-" & aStep.Name
-            End If
-            Dim signalName = powers(index).<CustName>.Value
-            If String.IsNullOrEmpty(signalName) Then
-                signalName = "CustomSignalNameRequired"
-            End If
-            Dim typeAbbre = aStep.PowType.ToString
-            Dim output = New SignalSignatures(signalName, aStep.CustPMUname, typeAbbre)
-            output.IsCustomSignal = True
-            aStep.OutputChannels.Add(output)
-            Dim signals = From el In powers(index).Elements Where el.Name <> "CustName"
-            For Each signal In signals
-                Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
-                If input Is Nothing Then
-                    input = New SignalSignatures("SignalNotFound")
-                    input.IsValid = False
-                    input.TypeAbbreviation = "C"
-                    _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
-                End If
-                aStep.InputChannels.Add(input)
-            Next
-            Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
-            For Each signal In aStep.InputChannels
-                newPair.Value.Add(signal)
-            Next
-            aStep.OutputInputMappingPair.Add(newPair)
-            CollectionOfSteps.Add(aStep)
-            'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-            'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-            'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-            'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-        Next
-    End Sub
-
-    Private Sub _readMetricPrefixOrAngleConversionCustomization(aStep As Object, params As IEnumerable(Of XElement), CollectionOfSteps As Object, ByRef stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim toConvert = From convert In params.Elements Where convert.Name = "ToConvert" Select convert
-        For Each convert In toConvert
-            Dim input = _searchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
-            If input IsNot Nothing Then
-                aStep.InputChannels.Add(input)
-            Else
-                input = New SignalSignatures("SignalNotFound")
-                input.IsValid = False
-                input.TypeAbbreviation = "C"
-                _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
-            End If
-            Dim outputName = convert.<CustName>.Value
-            If outputName Is Nothing Then
-                outputName = input.SignalName
-            End If
-            Dim output = New SignalSignatures(outputName, aStep.CustPMUname, input.TypeAbbreviation)
-            output.IsCustomSignal = True
-            output.Unit = convert.<NewUnit>.Value
-            aStep.OutputChannels.Add(output)
-            Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
-            newPair.Value.Add(input)
-            aStep.OutputInputMappingPair.Add(newPair)
-        Next
-        CollectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-
-    Private Sub _readSpecTypeUnitCustomization(aStep As Object, params As IEnumerable(Of XElement), CollectionOfSteps As Object, ByRef stepCounter As Integer)
-        aStep.CustPMUname = params.<CustPMUname>.Value
-        If String.IsNullOrEmpty(aStep.CustPMUname) Then
-            aStep.CustPMUname = _lastCustPMUname
-        Else
-            _lastCustPMUname = aStep.CustPMUname
-        End If
-        Dim inputSignal = _searchForSignalInTaggedSignals(params.<PMU>.Value, params.<Channel>.Value)
-        'Dim toConvert = From convert In params.Elements Where convert.Name = "ToConvert" Select convert
-        'For Each convert In toConvert
-        'Dim input = _searchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
-        If inputSignal Is Nothing Then
-            inputSignal = New SignalSignatures("SignalNotFound")
-            inputSignal.IsValid = False
-            inputSignal.TypeAbbreviation = "C"
-            _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
-        End If
-        aStep.InputChannels.Add(inputSignal)
-        Dim outputName = params.<CustName>.Value
-        If outputName Is Nothing Then
-            outputName = inputSignal.SignalName
-        End If
-        Dim output = New SignalSignatures(outputName, aStep.CustPMUname, params.<SigType>.Value)
-        output.IsCustomSignal = True
-        output.Unit = params.<SigUnit>.Value
-        aStep.OutputChannels.Add(output)
-        Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
-        newPair.Value.Add(inputSignal)
-        aStep.OutputInputMappingPair.Add(newPair)
-        'Next
-        CollectionOfSteps.Add(aStep)
-        'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-        'GroupedSignalByStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-        'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-        'GroupedSignalByStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-    End Sub
-    Private _lastCustPMUname As String
-    ''' <summary>
-    ''' Go through both signals read from file (csv or pdat) and custom created signals to find a target signal by matching both PMU name and channel name
-    ''' </summary>
-    ''' <param name="pmu"></param>
-    ''' <param name="channel"></param>
-    ''' <returns></returns>
-    Private Function _searchForSignalInTaggedSignals(pmu As String, channel As String) As SignalSignatures
-        For Each group In GroupedRawSignalsByPMU
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.PMUName = pmu Then
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.SignalName = channel Then
-                            Return subsubgroup.SignalSignature
-                        End If
-                    Next
-                End If
-            Next
-        Next
-        For Each group In GroupedSignalByDataConfigStepsOutput
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.PMUName = pmu Then
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.SignalName = channel Then
-                            Return subsubgroup.SignalSignature
-                        End If
-                    Next
-                End If
-            Next
-        Next
-        For Each group In GroupedSignalByProcessConfigStepsOutput
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.PMUName = pmu Then
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.SignalName = channel Then
-                            Return subsubgroup.SignalSignature
-                        End If
-                    Next
-                End If
-            Next
-        Next
-        Return Nothing
-    End Function
-#End Region
-
 
 #Region "Change signal selection"
     Private _selectedSignalChanged As ICommand
@@ -4268,7 +3472,6 @@ Partial Public Class SettingsViewModel
         Logs.Add(timeDate.ToString & ": " & log)
     End Sub
 
-
     Private _addFileSource As ICommand
     Public Property AddFileSource As ICommand
         Get
@@ -4307,46 +3510,15 @@ Partial Public Class SettingsViewModel
                         Exit For
                     End If
                 Next
-                'For Each stp In DataConfigure.CollectionOfSteps
-                '    If stp.InputChannels.Count > 0 Then
-                '        If obj.TaggedSignals.Contains(stp.InputChannels(0)) Then
-                '            stp.InputChannels = New ObservableCollection(Of SignalSignatures)
-                '            stp.ThisStepInputsAsSignalHerachyByType.SignalList = New ObservableCollection(Of SignalTypeHierachy)
-                '            stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.IsChecked = False
-                '            'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = New ObservableCollection(Of SignalTypeHierachy)
-                '            'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.IsChecked = False
-                '            If TypeOf stp Is Customization Then
-                '                For Each pair In stp.OutputInputMappingPair
-                '                    Dim numberOfInput = pair.Value.Count
-                '                    pair.Value.Clear()
-                '                    For index = 0 To numberOfInput - 1
-                '                        Dim empty = New SignalSignatures("NeedInput")
-                '                        empty.IsValid = False
-                '                        pair.Value.Add(empty)
-                '                    Next
-                '                Next
-                '                stp.MinuendOrDividend = New SignalSignatures("NeedMinuendOrDivident")
-                '                stp.MinuendOrDividend.IsValid = False
-                '                stp.SubtrahendOrDivisor = New SignalSignatures("NeedSubtrahendOrDivisor")
-                '                stp.SubtrahendOrDivisor.IsValid = False
-                '            End If
-                '            AllPMUs = New ObservableCollection(Of String)
-                '            For Each group In GroupedSignalsByPMU
-                '                For Each subgroup In group.SignalList
-                '                    If Not AllPMUs.Contains(subgroup.SignalSignature.PMUName) Then
-                '                        AllPMUs.Add(subgroup.SignalSignature.PMUName)
-                '                    End If
-                '                Next
-                '            Next
-                '        End If
-                '    End If
-                'Next
                 DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
                 Exit For
             End If
         Next
         If _configData IsNot Nothing Then
-            _readDataConfigStages()
+            _readDataConfigStages(_configData)
+            _readProcessConfig(_configData)
+            _readPostProcessConfig(_configData)
+            _readDetectorConfig(_configData)
         End If
     End Sub
 

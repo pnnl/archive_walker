@@ -46,62 +46,6 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
 
-    Private Sub _readPostProcessConfig()
-        GroupedSignalByPostProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
-        GroupedSignalByPostProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
-        Dim CollectionOfSteps As New ObservableCollection(Of Customization)
-        Dim stepCounter As Integer = 0
-        Dim stages = From el In _configData.<Config>.<PostProcessCustomizationConfig>.<Configuration>.Elements Where el.Name = "Stages" Select el
-        For Each stage In stages
-            Dim steps = From element In stage.Elements Select element
-            For Each stp In steps
-                Dim aStep = New Customization
-                aStep.Name = PostProcessConfigure.CustomizationReverseNameDictionary(stp.<Name>.Value)
-                stepCounter += 1
-                aStep.StepCounter = stepCounter
-                aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-
-                'Dim signalForUnitTypeSpecificationCustomization As SignalSignatures = Nothing
-                Select Case aStep.Name
-                    Case "Scalar Repetition Customization"
-                        _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Addition Customization"
-                        _readAdditionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Subtraction Customization"
-                        _readSubtractionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Division Customization"
-                        _readDivisionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Multiplication Customization"
-                        _readMultiplicationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Raise signals to an exponent"
-                        _readRaiseExpCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Reverse sign of signals", "Take absolute value of signals", "Return real component of signals", "Return imaginary component of signals", "Take complex conjugate of signals"
-                        _readUnaryCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Return angle of complex valued signals"
-                        _readAngleCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Phasor Creation Customization"
-                        _readPhasorCreationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Specify Signal Type and Unit Customization"
-                        _readSpecTypeUnitCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case "Power Calculation Customization"
-                        _readPowerCalculationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter, 3)
-                    Case "Metric Prefix Customization", "Angle Conversion Customization"
-                        _readMetricPrefixOrAngleConversionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                    Case Else
-                        _addLog("Cutomization not recognized in Post process configuration.")
-                        Throw New Exception("Cutomization not recognized in Post process configuration.")
-                End Select
-                If TypeOf aStep Is Customization Then
-                    aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                    GroupedSignalByPostProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                End If
-                aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-                GroupedSignalByPostProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
-            Next
-        Next
-        PostProcessConfigure.CollectionOfSteps = CollectionOfSteps
-    End Sub
     Private _postProcessConfigStepSelected As ICommand
     Public Property PostProcessConfigStepSelected As ICommand
         Get

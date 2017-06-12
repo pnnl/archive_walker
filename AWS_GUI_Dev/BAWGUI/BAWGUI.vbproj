@@ -132,14 +132,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ValueIfEmptyConverter.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.ConfigFileRead.vb" />
     <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
-    <Compile Include="ViewModels\BaseClassOrSharedClass.vb" />
-    <Compile Include="ViewModels\Folder.vb" />
-    <Compile Include="ViewModels\PostProcessCustomizationConfig.vb" />
+    <Compile Include="Model\BaseClassOrSharedClass.vb" />
+    <Compile Include="Model\Folder.vb" />
+    <Compile Include="Model\PostProcessCustomizationConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.DetectorConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.PostProcessConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.ProcessConfig.vb" />
-    <Compile Include="ViewModels\SignalSignatures.vb" />
+    <Compile Include="Model\SignalSignatures.vb" />
+    <Compile Include="ViewModels\ViewModelBase.vb" />
     <Compile Include="Views\SettingsView\AdditionCustomization.xaml.vb">
       <DependentUpon>AdditionCustomization.xaml</DependentUpon>
     </Compile>
@@ -208,6 +210,9 @@
     </Compile>
     <Compile Include="Views\SettingsView\ScalarRepCustomization.xaml.vb">
       <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView\SettingsView.xaml.vb">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -284,11 +289,11 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModels\DataConfig.vb" />
+    <Compile Include="Model\DataConfig.vb" />
     <Compile Include="ViewModels\DelegateCommand.vb" />
-    <Compile Include="ViewModels\DetectorConfig.vb" />
+    <Compile Include="Model\DetectorConfig.vb" />
     <Compile Include="ViewModels\MainViewModel.vb" />
-    <Compile Include="ViewModels\ProcessConfig.vb" />
+    <Compile Include="Model\ProcessConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.vb" />
     <Compile Include="Views\MainWindow.xaml.vb">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -343,6 +348,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView\ScalarRepCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,22 +1,4 @@
 ﻿Imports System.Collections.ObjectModel
-Imports System.ComponentModel
-Imports BAWGUI
-
-Public Class ViewModelBase
-    Implements INotifyPropertyChanged
-    ''' <summary>
-    ''' Raise property changed event
-    ''' </summary>
-    ''' <param name="sender">The event sender</param>
-    ''' <param name="e">The event</param>
-    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
-    Protected Overridable Sub OnPropertyChanged(<Runtime.CompilerServices.CallerMemberName> Optional propertyName As String = Nothing)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
-    End Sub
-    Protected Overridable Function CanExecute(ByVal param As Object) As Boolean
-        Return True
-    End Function
-End Class
 
 Public Class ParameterValuePair
     Inherits ViewModelBase
@@ -175,7 +157,6 @@ Public MustInherit Class SignalProcessStep
     Inherits ViewModelBase
 
     Public MustOverride Property Name As String
-    'Public MustOverride Property Parameters As ObservableCollection(Of ParameterValuePair)
     Private _stepCounter As Integer
     Public Property StepCounter As Integer
         Get

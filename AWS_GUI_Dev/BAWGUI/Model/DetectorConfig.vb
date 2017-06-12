@@ -368,16 +368,16 @@ Public Class RingdownDetector
             OnPropertyChanged()
         End Set
     End Property
-    Private _maxDuration As String
-    Public Property MaxDuration As String
-        Get
-            Return _maxDuration
-        End Get
-        Set(ByVal value As String)
-            _maxDuration = value
-            OnPropertyChanged()
-        End Set
-    End Property
+    'Private _maxDuration As String
+    'Public Property MaxDuration As String
+    '    Get
+    '        Return _maxDuration
+    '    End Get
+    '    Set(ByVal value As String)
+    '        _maxDuration = value
+    '        OnPropertyChanged()
+    '    End Set
+    'End Property
     Private _forgetFactor As String
     Public Property ForgetFactor As String
         Get

@@ -72,9 +72,9 @@
                             <Image Grid.Row="0" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="RMSlength" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="0" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding RMSlength}" HorizontalAlignment="Left"/>
-                            <Image Grid.Row="1" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <!--<Image Grid.Row="1" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="MaxDuration" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding MaxDuration}" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding MaxDuration}" HorizontalAlignment="Left"/>-->
                             <Image Grid.Row="2" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="ForgetFactor" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="2" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding ForgetFactor}" HorizontalAlignment="Left"/>
