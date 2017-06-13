@@ -1,15 +1,17 @@
-﻿Imports Microsoft.Win32
+﻿Imports System.ComponentModel
+Imports Microsoft.Win32
+Imports System.Windows.Forms.VisualStyles
 Imports BAWGUI.Results.ViewModels
 
 Public Class MainViewModel
     Inherits ViewModelBase
 
     Public Sub New()
+        _resultsViewModel = New ResultsViewModel()
         _showSettingsWindow = New DelegateCommand(AddressOf ShowSettings, AddressOf CanExecute)
         _openFile = New DelegateCommand(AddressOf OpenFileFunc, AddressOf CanExecute)
-        _settingsView = New SettingsViewModel
-        _resultsView = New ResultsViewModel
-        _currentView = _settingsView
+        _settingsViewModel = New SettingsViewModel
+        _currentView = _settingsViewModel
         _currentViewName = "Settings"
         _toggleResultsSettings = New DelegateCommand(AddressOf _switchView, AddressOf CanExecute)
     End Sub
@@ -25,6 +27,18 @@ Public Class MainViewModel
             _showSettingsWindow = value
         End Set
     End Property
+
+    Private Property _resultsViewModel As ResultsViewModel
+    Public Property ResultsViewModel As ResultsViewModel
+        Get
+            Return _resultsViewModel
+        End Get
+        Set(ByVal value As ResultsViewModel)
+            _resultsViewModel = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
     Private Sub ShowSettings()
         Dim isWindowOpen = False
         For Each w In Application.Current.Windows
@@ -35,7 +49,7 @@ Public Class MainViewModel
         Next
         If Not isWindowOpen Then
             _settingsWin = New SettingsWindow
-            _settingsWin.DataContext = SettingsView
+            _settingsWin.DataContext = SettingsViewModel
             _settingsWin.Show()
         End If
     End Sub
@@ -53,7 +67,7 @@ Public Class MainViewModel
         openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
 
         If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-
+            _resultsViewModel.LoadResults(openFileDialog.FileName)
         End If
     End Sub
     Private _currentView As Object
@@ -66,23 +80,13 @@ Public Class MainViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private _resultsView As ResultsViewModel
-    Public Property ResultsView As ResultsViewModel
+    Private _settingsViewModel As SettingsViewModel
+    Public Property SettingsViewModel As SettingsViewModel
         Get
-            Return _resultsView
-        End Get
-        Set(ByVal value As ResultsViewModel)
-            _resultsView = value
-            OnPropertyChanged()
-        End Set
-    End Property
-    Private _settingsView As SettingsViewModel
-    Public Property SettingsView As SettingsViewModel
-        Get
-            Return _settingsView
+            Return _settingsViewModel
         End Get
         Set(ByVal value As SettingsViewModel)
-            _settingsView = value
+            _settingsViewModel = value
             OnPropertyChanged()
         End Set
     End Property
@@ -108,10 +112,10 @@ Public Class MainViewModel
     Private Sub _switchView(obj As Object)
         If CurrentViewName = "Settings" Then
             CurrentViewName = "Results"
-            CurrentView = ResultsView
+            CurrentView = ResultsViewModel
         Else
             CurrentViewName = "Settings"
-            CurrentView = SettingsView
+            CurrentView = SettingsViewModel
         End If
     End Sub
 End Class

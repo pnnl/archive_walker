@@ -1,19 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BAWGUI.Results.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class ResultsViewModel:INotifyPropertyChanged
+    public class ResultsViewModel
     {
+        private ForcedOscillationResultsViewModel _forcedOscillationResultsViewModel = new ForcedOscillationResultsViewModel();
+        private OutOfRangeResultsViewModel _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
+        private RingdownResultsViewModel _ringdownResultsViewModel = new RingdownResultsViewModel();
+        private WindRampResultsViewModel _windRampResultsViewModel = new WindRampResultsViewModel();
+        private ResultsModel _resultsModel = new ResultsModel();
+
         public ResultsViewModel()
         {
 
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public void LoadResults(string filename)
+        {
+            this._resultsModel.LoadResults(filename);
+        }
     }
 }

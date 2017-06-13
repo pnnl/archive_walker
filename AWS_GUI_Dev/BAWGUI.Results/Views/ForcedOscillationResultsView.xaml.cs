@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace BAWGUI.Results.Views
 {
     /// <summary>
-    /// Interaction logic for ResultsTabControl.xaml
+    /// Interaction logic for ForcedOscillationResultsView.xaml
     /// </summary>
-    public partial class ResultsTabControl : UserControl
+    public partial class ForcedOscillationResultsView : UserControl
     {
-        public ResultsTabControl()
+        public ForcedOscillationResultsView()
         {
             InitializeComponent();
         }

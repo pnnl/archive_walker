@@ -424,16 +424,18 @@ Public Class DetectorExpanderHeaderConverter2
     Implements IMultiValueConverter
 
     Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+        Dim str = ""
         If values(0) IsNot Nothing Then
             If TypeOf values(0) Is DetectorBase Then
-                Return (values(1).IndexOf(values(0)) + 1).ToString & " - Detector " & values(0).Name
+                str = (values(1).IndexOf(values(0)) + 1).ToString & " - Detector " & values(0).Name
             End If
             If TypeOf values(0) Is AlarmingDetectorBase Then
-                Return (values(2).IndexOf(values(0)) + 1).ToString & " - Alarming Detector " & values(0).Name
+                str = (values(2).IndexOf(values(0)) + 1).ToString & " - Alarming Detector " & values(0).Name
             End If
         Else
-            Return "No detector Selected Yet!"
+            str = "No detector Selected Yet!"
         End If
+        Return str
     End Function
 
     'Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert

@@ -47,21 +47,47 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Views\ResultsTabControl.xaml.cs">
-      <DependentUpon>ResultsTabControl.xaml</DependentUpon>
+    <Compile Include="Models\ResultsModel.cs" />
+    <Compile Include="Views\RingdownResultsView.xaml.cs">
+      <DependentUpon>RingdownResultsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WindRampResultsView.xaml.cs">
+      <DependentUpon>WindRampResultsView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\ForcedOscillationResultsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OutOfRangeResultsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\ResultsMainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="ViewModels\ForcedOscillationResultsViewModel.cs" />
+    <Compile Include="ViewModels\OutOfRangeResultsViewModel.cs" />
     <Compile Include="ViewModels\ResultsViewModel.cs" />
+    <Compile Include="ViewModels\RingdownResultsViewModel.cs" />
+    <Compile Include="ViewModels\WindRampResultsViewModel.cs" />
+    <Compile Include="Views\ForcedOscillationResultsView.xaml.cs">
+      <DependentUpon>ForcedOscillationResultsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutOfRangeResultsView.xaml.cs">
+      <DependentUpon>OutOfRangeResultsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ResultsMainView.xaml.cs">
       <DependentUpon>ResultsMainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ResultsTabControl.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\RingdownResultsView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\WindRampResultsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +115,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
+      <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
+      <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
