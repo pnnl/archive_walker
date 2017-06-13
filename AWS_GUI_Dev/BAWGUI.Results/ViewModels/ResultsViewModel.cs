@@ -7,7 +7,7 @@ using BAWGUI.Results.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
-    class ResultsViewModel
+    public class ResultsViewModel
     {
         private ForcedOscillationResultsViewModel _forcedOscillationResultsViewModel = new ForcedOscillationResultsViewModel();
         private OutOfRangeResultsViewModel _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();

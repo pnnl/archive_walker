@@ -1,11 +1,13 @@
 ﻿Imports System.ComponentModel
 Imports Microsoft.Win32
 Imports System.Windows.Forms.VisualStyles
+Imports BAWGUI.Results.ViewModels
 
 Public Class MainViewModel
     Inherits ViewModelBase
 
     Public Sub New()
+        _resultsViewModel = New ResultsViewModel()
         _showSettingsWindow = New DelegateCommand(AddressOf ShowSettings, AddressOf CanExecute)
         _openFile = New DelegateCommand(AddressOf OpenFileFunc, AddressOf CanExecute)
     End Sub
@@ -21,6 +23,9 @@ Public Class MainViewModel
             _showSettingsWindow = value
         End Set
     End Property
+
+    Private Property _resultsViewModel As ResultsViewModel
+
     Private Sub ShowSettings()
         Dim isWindowOpen = False
         For Each w In Application.Current.Windows
@@ -50,7 +55,7 @@ Public Class MainViewModel
         openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
 
         If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-
+            _resultsViewModel.LoadResults(openFileDialog.FileName)
         End If
     End Sub
 End Class
