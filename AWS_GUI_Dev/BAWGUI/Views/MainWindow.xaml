@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BAWGUI" 
-        xmlns:results="clr-namespace:BAWGUI.Results;assembly=BAWGUI.Results"
+        xmlns:results="clr-namespace:BAWGUI.Results.ViewModels;assembly=BAWGUI.Results"
+        xmlns:rv="clr-namespace:BAWGUI.Results.Views;assembly=BAWGUI.Results"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized">
     <Window.Resources>
@@ -12,6 +13,12 @@
             <Setter Property="Width" Value="16"></Setter>
             <Setter Property="Height" Value="16"></Setter>
         </Style>
+        <DataTemplate DataType="{x:Type local:SettingsViewModel}">
+            <local:SettingsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type results:ResultsViewModel}">
+            <rv:ResultsMainView/>
+        </DataTemplate>
     </Window.Resources>
     <Window.DataContext>
         <local:MainViewModel/>
@@ -35,9 +42,11 @@
             <Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}">
                 <Image Source="..\Images\Settings_16x.png"/>
             </Button>
+            <Button ToolTip="Results" Command="{Binding ToggleResultsSettings}" Content="{Binding CurrentViewName}"/>
         </ToolBar>
-        <TabControl>
+        <ContentControl Content="{Binding CurrentView}"/>
+        <!--<TabControl>
             <TabItem Header="Settings" Background="LightGray"></TabItem>
-        </TabControl>
+        </TabControl>-->
     </DockPanel>
 </Window>

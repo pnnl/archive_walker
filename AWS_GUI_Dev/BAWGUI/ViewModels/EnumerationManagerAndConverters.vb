@@ -538,24 +538,25 @@ Public Class SignalSelectionDropDownConverter
     Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
         Dim value1 = values(0)
         Dim index = values(1)
-        Select Case index
-            Case 0
-            Case 1
-                value1 = {"All Initial Input Channels by Signal Type",
+        If TypeOf index Is Integer Then
+            Select Case index
+                Case 0
+                Case 1
+                    value1 = {"All Initial Input Channels by Signal Type",
                                        "All Initial Input Channels by PMU",
                                        "Input Channels by Step",
                                        "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
-            Case 2
-                value1 = {"All Initial Input Channels by Signal Type",
+                Case 2
+                    value1 = {"All Initial Input Channels by Signal Type",
                                        "All Initial Input Channels by PMU",
                                        "Output from SignalSelectionAndManipulation by Signal Type",
                                        "Output from SignalSelectionAndManipulation by PMU",
                                        "Input to MultiRate steps",
                                        "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
-            Case 3
-                value1 = {"All Initial Input Channels by Signal Type",
+                Case 3
+                    value1 = {"All Initial Input Channels by Signal Type",
                                        "All Initial Input Channels by PMU",
                                        "Output from SignalSelectionAndManipulation by Signal Type",
                                        "Output from SignalSelectionAndManipulation by PMU",
@@ -564,8 +565,8 @@ Public Class SignalSelectionDropDownConverter
                                        "Input Channels by Step",
                                        "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "NOT Implemented Yet!"
-            Case 4
-                value1 = {"All Initial Input Channels by Signal Type",
+                Case 4
+                    value1 = {"All Initial Input Channels by Signal Type",
                                        "All Initial Input Channels by PMU",
                                        "Output from SignalSelectionAndManipulation by Signal Type",
                                        "Output from SignalSelectionAndManipulation by PMU",
@@ -574,7 +575,8 @@ Public Class SignalSelectionDropDownConverter
                                        "Output from Post ProcessConfig by Signal Type",
                                        "Output from Post ProcessConfig by PMU",
                                        "Input Channels by Step"}.ToList
-        End Select
+            End Select
+        End If
         Return value1
     End Function
 

@@ -1511,7 +1511,6 @@ Partial Public Class SettingsViewModel
             _openConfigFile = value
         End Set
     End Property
-
     Private Sub openConfigXMLFile()
         Dim openFileDialog As New Microsoft.Win32.OpenFileDialog()
         openFileDialog.RestoreDirectory = True
