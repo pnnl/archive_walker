@@ -36,8 +36,6 @@
                 <Image Source="..\Images\Settings_16x.png"/>
             </Button>
         </ToolBar>
-        <TabControl>
-            <TabItem Header="Settings" Background="LightGray"></TabItem>
-        </TabControl>
+        <results:ResultsMainView></results:ResultsMainView>
     </DockPanel>
 </Window>

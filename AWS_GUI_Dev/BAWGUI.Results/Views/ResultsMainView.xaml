@@ -3,9 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:views="clr-namespace:BAWGUI.Results.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-           <TextBlock Text="These are some results!" /> 
-    </Grid>
+             d:DesignHeight="300" d:DesignWidth="600">
+    <TabControl>
+        <TabItem Header="Forced Oscillations">
+            <views:ForcedOscillationResultsView />
+        </TabItem>
+        <TabItem Header="Out of Range Errors">
+            <views:OutOfRangeResultsView></views:OutOfRangeResultsView>
+        </TabItem>
+        <TabItem Header="Ringdowns">
+            <views:RingdownResultsView></views:RingdownResultsView>
+        </TabItem>
+        <TabItem Header="Wind Ramps">
+            <views:WindRampResultsView></views:WindRampResultsView>
+        </TabItem>
+    </TabControl>
 </UserControl>
