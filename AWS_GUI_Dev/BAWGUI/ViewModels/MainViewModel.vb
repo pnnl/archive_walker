@@ -1,5 +1,5 @@
 ﻿Imports System.ComponentModel
-Imports Microsoft.Win32
+Imports System.Windows.Forms
 Imports System.Windows.Forms.VisualStyles
 Imports BAWGUI.Results.ViewModels
 
@@ -29,13 +29,13 @@ Public Class MainViewModel
     End Property
 
     Private Property _resultsViewModel As ResultsViewModel
+
     Public Property ResultsViewModel As ResultsViewModel
         Get
             Return _resultsViewModel
         End Get
-        Set(ByVal value As ResultsViewModel)
+        Set(value As ResultsViewModel)
             _resultsViewModel = value
-            OnPropertyChanged()
         End Set
     End Property
 
@@ -63,11 +63,15 @@ Public Class MainViewModel
         End Set
     End Property
     Private Sub OpenFileFunc()
-        Dim openFileDialog As New OpenFileDialog()
+        Dim openFileDialog As New System.Windows.Forms.OpenFileDialog()
         openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
 
-        If openFileDialog.ShowDialog Then
-            _resultsViewModel.LoadResults(openFileDialog.FileName)
+        If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            Try
+                _resultsViewModel.LoadResults(openFileDialog.FileName)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End If
     End Sub
     Private _currentView As Object

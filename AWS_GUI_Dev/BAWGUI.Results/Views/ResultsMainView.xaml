@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="600">
     <TabControl>
         <TabItem Header="Forced Oscillations">
-            <views:ForcedOscillationResultsView />
+            <views:ForcedOscillationResultsView DataContext="{Binding ForcedOscillationResultsViewModel}" />
         </TabItem>
         <TabItem Header="Out of Range Errors">
             <views:OutOfRangeResultsView></views:OutOfRangeResultsView>
