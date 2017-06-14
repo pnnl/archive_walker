@@ -21,15 +21,17 @@ namespace BAWGUI.Results.ViewModels
 
         public ObservableCollection<ForcedOscillationResultViewModel> Results
         {
-            get { return this._results; }
-            set { this._results = value; }
+            get { return _results; }
+            set { _results = value; }
         } 
 
         public ForcedOscillationType[] Models
         {
-            get { return this._models; }
+            get { return _models; }
             set
             {
+                _models = value;
+
                 _results.Clear();
                 foreach (var model in value)
                 {
