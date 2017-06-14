@@ -66,7 +66,7 @@ Public Class MainViewModel
         Dim openFileDialog As New OpenFileDialog()
         openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
 
-        If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+        If openFileDialog.ShowDialog Then
             _resultsViewModel.LoadResults(openFileDialog.FileName)
         End If
     End Sub

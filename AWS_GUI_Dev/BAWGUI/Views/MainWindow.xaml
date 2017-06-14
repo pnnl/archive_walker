@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BAWGUI" 
         xmlns:results="clr-namespace:BAWGUI.Results;assembly=BAWGUI.Results"
-        xmlns:rvm="clr-namespace:BAWGUI.Results.ViewModels"
+        xmlns:rvm="clr-namespace:BAWGUI.Results.ViewModels;assembly=BAWGUI.Results"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized">
     <Window.Resources>
