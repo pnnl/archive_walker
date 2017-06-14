@@ -35,9 +35,6 @@ namespace BAWGUI.Results.ViewModels
                 {
                     _results.Add(new ForcedOscillationResultViewModel(model));
                 }
-
-                // We shouldn't need this thanks to the ObservableCollection.
-                PropertyChanged.Fire(this, "Results");
             }
         }
 

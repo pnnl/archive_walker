@@ -20,6 +20,21 @@ namespace BAWGUI.Results.ViewModels
             get { return this._forcedOscillationResultsViewModel; }
         }
 
+        public OutOfRangeResultsViewModel OutOfRangeResultsViewModel
+        {
+            get { return this._outOfRangeResultsViewModel; }
+        }
+
+        public RingdownResultsViewModel RingdownResultsViewModel
+        {
+            get { return this._ringdownResultsViewModel; }
+        }
+
+        public WindRampResultsViewModel WindRampResultsViewModel
+        {
+            get { return this._windRampResultsViewModel; }
+        }
+
         public ResultsViewModel()
         {
 

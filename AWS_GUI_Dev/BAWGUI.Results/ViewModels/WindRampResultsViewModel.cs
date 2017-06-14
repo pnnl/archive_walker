@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BAWGUI.Results.ViewModels
 {
-    class WindRampResultsViewModel
+    public class WindRampResultsViewModel
     {
+
     }
 }
