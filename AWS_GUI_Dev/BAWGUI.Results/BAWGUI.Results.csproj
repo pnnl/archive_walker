@@ -47,7 +47,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Models\ResultsModel.cs" />
+    <Compile Include="ViewModels\ForcedOscillationResultViewModel.cs" />
     <Compile Include="Views\RingdownResultsView.xaml.cs">
       <DependentUpon>RingdownResultsView.xaml</DependentUpon>
     </Compile>

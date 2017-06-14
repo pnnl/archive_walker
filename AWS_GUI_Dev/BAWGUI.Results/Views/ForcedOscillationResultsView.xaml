@@ -6,6 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
+        <ListView ItemsSource="{Binding Results}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Label}"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>  
     </Grid>
 </UserControl>

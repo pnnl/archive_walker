@@ -1,5 +1,5 @@
 ﻿Imports System.ComponentModel
-Imports Microsoft.Win32
+Imports System.Windows.Forms
 Imports System.Windows.Forms.VisualStyles
 Imports BAWGUI.Results.ViewModels
 
@@ -26,6 +26,15 @@ Public Class MainViewModel
 
     Private Property _resultsViewModel As ResultsViewModel
 
+    Public Property ResultsViewModel As ResultsViewModel
+        Get
+            Return _resultsViewModel
+        End Get
+        Set(value As ResultsViewModel)
+            _resultsViewModel = value
+        End Set
+    End Property
+
     Private Sub ShowSettings()
         Dim isWindowOpen = False
         For Each w In Application.Current.Windows
@@ -51,11 +60,15 @@ Public Class MainViewModel
         End Set
     End Property
     Private Sub OpenFileFunc()
-        Dim openFileDialog As New OpenFileDialog()
+        Dim openFileDialog As New System.Windows.Forms.OpenFileDialog()
         openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
 
         If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-            _resultsViewModel.LoadResults(openFileDialog.FileName)
+            Try
+                _resultsViewModel.LoadResults(openFileDialog.FileName)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End If
     End Sub
 End Class

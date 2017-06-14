@@ -36,6 +36,6 @@
                 <Image Source="..\Images\Settings_16x.png"/>
             </Button>
         </ToolBar>
-        <results:ResultsMainView></results:ResultsMainView>
+        <results:ResultsMainView DataContext="{Binding ResultsViewModel}"></results:ResultsMainView>
     </DockPanel>
 </Window>

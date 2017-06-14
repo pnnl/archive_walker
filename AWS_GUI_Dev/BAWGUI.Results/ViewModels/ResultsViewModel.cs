@@ -15,6 +15,11 @@ namespace BAWGUI.Results.ViewModels
         private WindRampResultsViewModel _windRampResultsViewModel = new WindRampResultsViewModel();
         private ResultsModel _resultsModel = new ResultsModel();
 
+        public ForcedOscillationResultsViewModel ForcedOscillationResultsViewModel
+        {
+            get { return this._forcedOscillationResultsViewModel; }
+        }
+
         public ResultsViewModel()
         {
 
@@ -23,6 +28,7 @@ namespace BAWGUI.Results.ViewModels
         public void LoadResults(string filename)
         {
             this._resultsModel.LoadResults(filename);
+            this._forcedOscillationResultsViewModel.Models = this._resultsModel.Events.ForcedOscillation;
         }
     }
 }
