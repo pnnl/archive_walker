@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BAWGUI.Results.ViewModels
 {
-    class RingdownResultsViewModel
+    public class RingdownResultsViewModel
     {
     }
 }

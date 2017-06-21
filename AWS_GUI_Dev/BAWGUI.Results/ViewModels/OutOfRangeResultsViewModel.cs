@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BAWGUI.Results.ViewModels
 {
-    class OutOfRangeResultsViewModel
+    public class OutOfRangeResultsViewModel
     {
     }
 }
