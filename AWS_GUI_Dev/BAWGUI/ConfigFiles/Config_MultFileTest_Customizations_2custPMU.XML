@@ -936,7 +936,7 @@
                 </Channel>
             </PMU>
             -->
-            <EventPath>C:\Users\wang690\Documents\</EventPath>
+            <EventPath>C:\Users\wang690\Desktop\projects\ArchiveWalker\EventListReading\EventListReading\EventXML5\</EventPath>
             <ResultUpdateInterval>37</ResultUpdateInterval>
             <!-- Out of range frequency detector -->
             <OutOfRangeFrequency>

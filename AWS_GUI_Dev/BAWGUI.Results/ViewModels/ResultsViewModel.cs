@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BAWGUI.Results.Models;
+using BAWGUI.Xml;
+using System.Globalization;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -25,10 +27,12 @@ namespace BAWGUI.Results.ViewModels
 
         }
 
-        public void LoadResults(string filename)
+        public void LoadResults(List<string> filenames, string startDate, string endDate)
         {
-            this._resultsModel.LoadResults(filename);
-            this._forcedOscillationResultsViewModel.Models = this._resultsModel.Events.ForcedOscillation;
+            this._resultsModel.LoadResults(filenames, startDate, endDate);
+            _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
+            _forcedOscillationResultsViewModel.SelectedStartTime = DateTime.ParseExact(_resultsModel.SelectedStartTime, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            _forcedOscillationResultsViewModel.SelectedEndTime = DateTime.ParseExact(_resultsModel.SelectedEndTime, "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).ToString("MM/dd/yyyy HH:mm:ss");
         }
     }
 }

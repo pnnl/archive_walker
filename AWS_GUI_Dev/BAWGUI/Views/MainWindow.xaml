@@ -45,8 +45,7 @@
             <Button ToolTip="Results" Command="{Binding ToggleResultsSettings}" Content="{Binding CurrentViewName}"/>
         </ToolBar>
         <ContentControl Content="{Binding CurrentView}"/>
-        <!--<TabControl>
-            <TabItem Header="Settings" Background="LightGray"></TabItem>
-        </TabControl>-->
+
+        <!--<results:ResultsMainView DataContext="{Binding ResultsViewModel}"/>-->
     </DockPanel>
 </Window>

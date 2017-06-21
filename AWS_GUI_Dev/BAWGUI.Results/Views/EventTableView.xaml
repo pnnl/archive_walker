@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="BAWGUI.Results.Views.EventTableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Results.Views"
+             xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:dtgd="http://schemas.xceed.com/wpf/xaml/datagrid" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <converters:DateTimeStringConverter x:Key="DateTimeStringConverter"/>
+    </UserControl.Resources>
+    <!--<dtgd:DataGridCollectionViewSource Source="{Binding FilteredResults}">
+        <dtgd:DataGridCollectionViewSource.ItemProperties>
+            <dtgd:DataGridItemProperty Name="ID"/>
+            <dtgd:DataGridItemProperty Name="OverallStart"/>
+            <dtgd:DataGridItemProperty Name="OverallEnd"/>
+            <dtgd:DataGridItemProperty Name="Occurrence"/>
+        </dtgd:DataGridCollectionViewSource.ItemProperties>
+    </dtgd:DataGridCollectionViewSource>-->
+    <dtgd:DataGridControl ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False">
+        <!--<dtgd:DataGridControl.View>
+            <dtgd:TableflowView Theme="{DynamicResource defulatTheme}"/>
+        </dtgd:DataGridControl.View>-->        
+        <dtgd:DataGridControl.Columns>
+            <dtgd:Column Title="ID" FieldName="ID">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="ID" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <!--<dtgd:Column Title="Overall Start Date" FieldName="overallStartTime">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="overallStartTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="DateOnly" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Overall Start Time" FieldName="StartTime">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="overallStartTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="TimeOnly" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Overall End Date" FieldName="EndDate">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="overallEndTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="DateOnly" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Overall End Time" FieldName="EndTime">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="overallEndTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="TimeOnly" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>-->
+            <dtgd:Column Title="Overall Start Date" FieldName="StartDate">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="StartDate" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Overall Start Time" FieldName="StartTime">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="StartTime" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Overall End Date" FieldName="EndDate">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="EndDate" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Overall End Time" FieldName="EndTime">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="EndTime" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Occurrence ID" FieldName="OccurrenceID">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="OccurrenceID" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Frequency" FieldName="Frequency">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="Frequency" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Occurrence Start Date" FieldName="OcurStartDate">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="OcurStartDate" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>
+            <dtgd:Column Title="Occurrence Start Time" FieldName="OcurStartTime">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="OcurStartTime" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>            
+            <!--<dtgd:Column Title="Occurrence" FieldName="FilteredOccurrences">
+                <dtgd:Column.DisplayMemberBindingInfo>
+                    <dtgd:DataGridBindingInfo Path="FilteredOccurrences" ReadOnly="True"/>
+                </dtgd:Column.DisplayMemberBindingInfo>
+            </dtgd:Column>-->
+        </dtgd:DataGridControl.Columns>
+    </dtgd:DataGridControl>
+</UserControl>

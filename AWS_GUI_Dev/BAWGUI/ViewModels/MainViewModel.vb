@@ -1,4 +1,6 @@
 ﻿Imports System.ComponentModel
+Imports System.Globalization
+Imports System.IO
 Imports System.Windows.Forms
 Imports System.Windows.Forms.VisualStyles
 Imports BAWGUI.Results.ViewModels
@@ -11,7 +13,7 @@ Public Class MainViewModel
         _showSettingsWindow = New DelegateCommand(AddressOf ShowSettings, AddressOf CanExecute)
         _openFile = New DelegateCommand(AddressOf OpenFileFunc, AddressOf CanExecute)
         _settingsViewModel = New SettingsViewModel
-        _currentView = _settingsViewModel
+        _currentView = _resultsViewModel
         _currentViewName = "Settings"
         _toggleResultsSettings = New DelegateCommand(AddressOf _switchView, AddressOf CanExecute)
     End Sub
@@ -29,7 +31,6 @@ Public Class MainViewModel
     End Property
 
     Private Property _resultsViewModel As ResultsViewModel
-
     Public Property ResultsViewModel As ResultsViewModel
         Get
             Return _resultsViewModel
@@ -63,16 +64,64 @@ Public Class MainViewModel
         End Set
     End Property
     Private Sub OpenFileFunc()
-        Dim openFileDialog As New System.Windows.Forms.OpenFileDialog()
-        openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
-
-        If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+        Dim openDirectoryDialog As New FolderBrowserDialog()
+        openDirectoryDialog.Description = "Select the directory that result xml files are located "
+        Dim folderName = SettingsViewModel.DetectorConfigure.EventPath
+        If Directory.Exists(folderName) Then
+            openDirectoryDialog.SelectedPath = folderName
+        Else
+            openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+        End If
+        openDirectoryDialog.ShowNewFolderButton = False
+        If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+            Dim selectedInputFolderInfo As New DirectoryInfo(openDirectoryDialog.SelectedPath)
+            Dim filenames = selectedInputFolderInfo.GetFiles
+            filenames = filenames.OrderBy(Function(x) x.Name).ToArray
+            Dim files = New List(Of String)
+            Dim dates = New List(Of String)
+            For Each file In filenames
+                If file.Extension.ToLower = ".xml" Then
+                    Dim datestr = file.Name.Split(New Char() {".", "_"})(1)
+                    Try
+                        Date.ParseExact(datestr, "yyMMdd", CultureInfo.InvariantCulture)
+                        dates.Add(datestr)
+                        files.Add(file.FullName)
+                    Catch ex As Exception
+                        If file.Name.ToLower = "eventlist_current.xml" Then
+                            files.Add(file.FullName)
+                        End If
+                    End Try
+                End If
+            Next
+            dates.Sort()
+            Dim startDate As String
+            Dim endDate As String
+            If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart) Then
+                startDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart).ToString("yyMMdd")
+            Else
+                startDate = dates.FirstOrDefault
+            End If
+            If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd) Then
+                endDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd).ToString("yyMMdd")
+            Else
+                endDate = dates.LastOrDefault
+            End If
             Try
-                _resultsViewModel.LoadResults(openFileDialog.FileName)
+                _resultsViewModel.LoadResults(files, startDate, endDate)
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
+        'Dim openFileDialog As New System.Windows.Forms.OpenFileDialog()
+        'openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
+
+        'If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+        '    Try
+        '        _resultsViewModel.LoadResults(openFileDialog.FileName)
+        '    Catch ex As Exception
+        '        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    End Try
+        'End If
     End Sub
     Private _currentView As Object
     Public Property CurrentView As Object
@@ -116,10 +165,10 @@ Public Class MainViewModel
     Private Sub _switchView(obj As Object)
         If CurrentViewName = "Settings" Then
             CurrentViewName = "Results"
-            CurrentView = ResultsViewModel
+            CurrentView = SettingsViewModel
         Else
             CurrentViewName = "Settings"
-            CurrentView = SettingsViewModel
+            CurrentView = ResultsViewModel
         End If
     End Sub
 End Class
