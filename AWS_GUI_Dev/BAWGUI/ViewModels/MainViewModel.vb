@@ -29,17 +29,6 @@ Public Class MainViewModel
             _showSettingsWindow = value
         End Set
     End Property
-
-    Private Property _resultsViewModel As ResultsViewModel
-    Public Property ResultsViewModel As ResultsViewModel
-        Get
-            Return _resultsViewModel
-        End Get
-        Set(value As ResultsViewModel)
-            _resultsViewModel = value
-        End Set
-    End Property
-
     Private Sub ShowSettings()
         Dim isWindowOpen = False
         For Each w In Application.Current.Windows
@@ -54,6 +43,17 @@ Public Class MainViewModel
             _settingsWin.Show()
         End If
     End Sub
+    Private Property _resultsViewModel As ResultsViewModel
+    Public Property ResultsViewModel As ResultsViewModel
+        Get
+            Return _resultsViewModel
+        End Get
+        Set(value As ResultsViewModel)
+            _resultsViewModel = value
+        End Set
+    End Property
+
+
     Private _openFile As ICommand
     Public Property OpenFile As ICommand
         Get

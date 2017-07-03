@@ -96,7 +96,7 @@
                 </Image.Style>
             </Image>
             <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="TimeSourcePMU" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.AllPMUs}" SelectedValue="{Binding TimeSourcePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Left"/>
+            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.AllPMUs}" SelectedValue="{Binding TimeSourcePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Left"/>
         </StackPanel>
         <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
             <ItemsControl.ItemTemplate>

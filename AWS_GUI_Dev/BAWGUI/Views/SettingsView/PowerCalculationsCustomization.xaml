@@ -23,14 +23,14 @@
                         <TextBox Name="VphasorPMU" Width="150" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="VTextBoxGotFocus" LostFocus="VTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="VphasorChannel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="VTextBoxGotFocus" LostFocus="VTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
@@ -40,14 +40,14 @@
                         <TextBox Name="IphasorPMU" Width="150" Text="{Binding Path=Value[1].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="ITextBoxGotFocus" LostFocus="ITextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="IphasorChannel" Width="150" Text="{Binding Path=Value[1].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="ITextBoxGotFocus" LostFocus="ITextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
@@ -64,28 +64,28 @@
                         <TextBox Name="VmagPMU" Width="150" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="VTextBoxGotFocus" LostFocus="VTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="VmagChannel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="VTextBoxGotFocus" LostFocus="VTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="VangPMU" Width="150" Text="{Binding Path=Value[1].PMUName}" Margin="45,0,0,0" IsReadOnly="True" GotFocus="VTextBoxGotFocus" LostFocus="VTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="VangChannel" Width="150" Text="{Binding Path=Value[1].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="VTextBoxGotFocus" LostFocus="VTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
@@ -98,28 +98,28 @@
                         <TextBox Name="ImagPMU" Width="150" Text="{Binding Path=Value[2].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="ITextBoxGotFocus" LostFocus="ITextBoxLostFocus" BorderBrush="{Binding Path=Value[2].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[2]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[2]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="ImagChannel" Width="150" Text="{Binding Path=Value[2].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="ITextBoxGotFocus" LostFocus="ITextBoxLostFocus" BorderBrush="{Binding Path=Value[2].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[2]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[2]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="IangPMU" Width="150" Text="{Binding Path=Value[3].PMUName}" Margin="45,0,0,0" IsReadOnly="True" GotFocus="ITextBoxGotFocus" LostFocus="ITextBoxLostFocus" BorderBrush="{Binding Path=Value[3].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[3]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[3]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBox Name="IangChannel" Width="150" Text="{Binding Path=Value[3].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="ITextBoxGotFocus" LostFocus="ITextBoxLostFocus" BorderBrush="{Binding Path=Value[3].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[3]}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[3]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
@@ -128,15 +128,15 @@
             </DataTemplate>
             <DataTemplate x:Key="OptionButtons">
                 <StackPanel Orientation="Horizontal" Margin="30,0,0,0">
-                    <Button Content="Add phasor signals" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ChoosePhasorForPowerCalculation}"/>
-                    <Button Content="Add magnitude and angle signals" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ChooseMagAngForPowerCalculation}"/>
+                    <Button Content="Add phasor signals" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.ChoosePhasorForPowerCalculation}"/>
+                    <Button Content="Add magnitude and angle signals" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.ChooseMagAngForPowerCalculation}"/>
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="2" Name="StepPanel">
         <StackPanel Orientation="Horizontal" Margin="30,0,0,0">
-            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -162,7 +162,7 @@
             </Image>
             <Label Margin="0,0,0,0" Width="Auto" VerticalAlignment="Center" Content="CustPMUname: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
             <TextBox Width="150" Height="22" Text="{Binding CustPMUname}" Margin="0,0,20,0"/>
-            <Image Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>

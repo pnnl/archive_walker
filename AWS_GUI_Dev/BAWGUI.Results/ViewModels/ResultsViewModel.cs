@@ -47,7 +47,7 @@ namespace BAWGUI.Results.ViewModels
             this._resultsModel.LoadResults(filenames, startDate, endDate);
             _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
             _forcedOscillationResultsViewModel.SelectedStartTime = DateTime.ParseExact(_resultsModel.SelectedStartTime, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
-            _forcedOscillationResultsViewModel.SelectedEndTime = DateTime.ParseExact(_resultsModel.SelectedEndTime, "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).ToString("MM/dd/yyyy HH:mm:ss");
+            _forcedOscillationResultsViewModel.SelectedEndTime = DateTime.ParseExact(_resultsModel.SelectedEndTime, "yyMMdd", CultureInfo.InvariantCulture).AddDays(2).ToString("MM/dd/yyyy HH:mm:ss");
         }
     }
 }

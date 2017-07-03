@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using BAWGUI.Xml;
 using System.Windows;
+using BAWGUI.Results.Models;
+using System.Windows.Input;
+using BAWGUI.Results.Views;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -18,8 +21,13 @@ namespace BAWGUI.Results.ViewModels
         //public event PropertyChangedEventHandler PropertyChanged;
 
         //private ForcedOscillationType[] _models;
-        private List<ForcedOscillationType> _models = new List<ForcedOscillationType>();
-        private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>(); 
+        public ForcedOscillationResultsViewModel()
+        {
+            ShowOccurrenceWindow = new RelayCommand(_showOccurrenceWindow);
+            ShowChannelWindow = new RelayCommand(_showChannelWindow);
+        }
+
+        private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
         private ObservableCollection<ForcedOscillationResultViewModel> _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
         public ObservableCollection<ForcedOscillationResultViewModel> FilteredResults
         {
@@ -30,7 +38,8 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
             }
         }
-        public List<ForcedOscillationType> Models
+        private List<DatedForcedOscillationEvent> _models = new List<DatedForcedOscillationEvent>();
+        public List<DatedForcedOscillationEvent> Models
         {
             get { return this._models; }
             set
@@ -40,16 +49,16 @@ namespace BAWGUI.Results.ViewModels
                 _filteredResults.Clear();
                 foreach (var model in value)
                 {
-                    //_results.Add(new ForcedOscillationResultViewModel(model));
-                    //_filteredResults.Add(new ForcedOscillationResultViewModel(model));
+                    _results.Add(new ForcedOscillationResultViewModel(model));
+                    _filteredResults.Add(new ForcedOscillationResultViewModel(model));
 
 
-                    //flattened occurrence with events
-                    foreach (var ocur in model.Occurrence)
-                    {
-                        _results.Add(new ForcedOscillationResultViewModel(model, ocur));
-                        _filteredResults.Add(new ForcedOscillationResultViewModel(model, ocur));
-                    }
+                    ////flattened occurrence with events
+                    //foreach (var ocur in model.Occurrence)
+                    //{
+                    //    _results.Add(new ForcedOscillationResultViewModel(model, ocur));
+                    //    _filteredResults.Add(new ForcedOscillationResultViewModel(model, ocur));
+                    //}
                 }
 
                 // We shouldn't need this thanks to the ObservableCollection.
@@ -63,7 +72,7 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedStartTime = value;
-                if(!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedEndTime))
+                if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedEndTime))
                 {
                     _filterTableByTime();
                 }
@@ -91,38 +100,104 @@ namespace BAWGUI.Results.ViewModels
             ObservableCollection<ForcedOscillationResultViewModel> newResults = new ObservableCollection<ForcedOscillationResultViewModel>();
             DateTime startT = DateTime.Parse(SelectedStartTime);
             DateTime endT = DateTime.Parse(SelectedEndTime);
-            foreach ( var evnt in _results)
+            foreach (var evnt in _results)
             {
                 DateTime st = DateTime.Parse(evnt.OverallStartTime);
                 DateTime ed = DateTime.Parse(evnt.OverallEndTime);
-                if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0 )
+                if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0)
                 {
-                    //List<OccurrenceViewModel> newOcurs = new List<OccurrenceViewModel>();
-                    //foreach (var ocur in evnt.Occurrences)
-                    //{
-                    //    DateTime ocurst = DateTime.Parse(ocur.Start);
-                    //    DateTime ocured = DateTime.Parse(ocur.End);
-                    //    if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
-                    //    {
-                    //        newOcurs.Add(ocur);
-                    //    }
-                    //}
-                    //if (newOcurs.Count != 0)
-                    //{
-                    //    evnt.FilteredOccurrences = newOcurs;
-                    //    newResults.Add(evnt);
-                    //}
-
-                    //flattened occurence with events
-                    DateTime ocurst = DateTime.Parse(evnt.Occurrence.Start);
-                    DateTime ocured = DateTime.Parse(evnt.Occurrence.End);
-                    if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
+                    ObservableCollection<OccurrenceViewModel> newOcurs = new ObservableCollection<OccurrenceViewModel>();
+                    foreach (var ocur in evnt.Occurrences)
                     {
+                        DateTime ocurst = DateTime.Parse(ocur.Start);
+                        DateTime ocured = DateTime.Parse(ocur.End);
+                        if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
+                        {
+                            newOcurs.Add(ocur);
+                        }
+                    }
+                    if (newOcurs.Count != 0)
+                    {
+                        evnt.FilteredOccurrences = newOcurs;
                         newResults.Add(evnt);
                     }
+
+                    ////flattened occurence with events
+                    //DateTime ocurst = DateTime.Parse(evnt.Occurrence.Start);
+                    //DateTime ocured = DateTime.Parse(evnt.Occurrence.End);
+                    //if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
+                    //{
+                    //    newResults.Add(evnt);
+                    //}
                 }
             }
             FilteredResults = newResults;
+        }
+
+        private ForcedOscillationResultViewModel _selectedOscillationEvent;
+        public ForcedOscillationResultViewModel SelectedOscillationEvent
+        {
+            get { return _selectedOscillationEvent; }
+            set
+            {
+                _selectedOscillationEvent = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private OccurrenceViewModel _selectedOccurrence;
+        public OccurrenceViewModel SelectedOccurrence
+        {
+            get { return _selectedOccurrence; }
+            set
+            {
+                _selectedOccurrence = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private OccurrenceTableWindow _occurrenceTableWin;
+        public ICommand ShowOccurrenceWindow { get; set; }
+        private void _showOccurrenceWindow(object obj)
+        {
+            bool isWindowOpen = false;
+            foreach(var w in Application.Current.Windows)
+            {
+                if( w is OccurrenceTableWindow)
+                {
+                    isWindowOpen = true;
+                    ((OccurrenceTableWindow)w).DataContext = this;
+                    ((OccurrenceTableWindow)w).Activate();
+                }
+            }
+            if(!isWindowOpen)
+            {
+                _occurrenceTableWin = new OccurrenceTableWindow();
+                _occurrenceTableWin.DataContext = this;
+                _occurrenceTableWin.Show();
+            }
+        }
+
+        private ChannelTableWindow _channelTableWin;
+        public ICommand ShowChannelWindow { get; set; }
+        private void _showChannelWindow(object obj)
+        {
+            bool isWindowOpen = false;
+            foreach (var w in Application.Current.Windows)
+            {
+                if (w is ChannelTableWindow)
+                {
+                    isWindowOpen = true;
+                    ((ChannelTableWindow)w).DataContext = this;
+                    ((ChannelTableWindow)w).Activate();
+                }
+            }
+            if (!isWindowOpen)
+            {
+                _channelTableWin = new ChannelTableWindow();
+                _channelTableWin.DataContext = this;
+                _channelTableWin.Show();
+            }
         }
     }
 }

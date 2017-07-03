@@ -14,7 +14,7 @@
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="2">
         <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
-            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+            <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -72,7 +72,7 @@
                                 <TextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0" BorderBrush="Black"/>
                                 <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                             </StackPanel>

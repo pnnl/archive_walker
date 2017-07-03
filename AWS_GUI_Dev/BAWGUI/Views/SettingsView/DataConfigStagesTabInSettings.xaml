@@ -80,7 +80,7 @@
                     <Grid Grid.Row="0" Margin="2">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepDeSelected}"/>
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DataConfigStepDeSelected}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Grid.ColumnDefinitions>
@@ -99,7 +99,7 @@
                                 <MenuItem Header="Filter" ItemsSource="{Binding DataConfigure.DQFilterList}">
                                     <MenuItem.ItemContainerStyle>
                                         <Style>
-                                            <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                            <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DQFilterSelected, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}"/>
                                             <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
                                         </Style>
                                     </MenuItem.ItemContainerStyle>
@@ -107,7 +107,7 @@
                                 <MenuItem Header="Customization" ItemsSource="{Binding DataConfigure.CustomizationList}">
                                     <MenuItem.ItemContainerStyle>
                                         <Style>
-                                            <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.CustomizationSelected, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                            <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.CustomizationSelected, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}"/>
                                             <Setter Property="MenuItem.CommandParameter">
                                                 <Setter.Value>
                                                     <MultiBinding Converter="{StaticResource AddCustomizationParameters}">
@@ -128,10 +128,10 @@
                                 <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -200,7 +200,7 @@
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteDataConfigStep}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteDataConfigStep}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -210,13 +210,13 @@
                                 <Border Name="StepBorder" Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DataConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseLeftButtonUp">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -285,7 +285,7 @@
                                                 </ContentControl.Style>
                                             </ContentControl>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteDataConfigStep}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteDataConfigStep}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -296,7 +296,7 @@
                     <Border Grid.Row="2" Margin="2">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DataConfigStepDeSelected}"/>
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DataConfigStepDeSelected}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <TextBlock></TextBlock>

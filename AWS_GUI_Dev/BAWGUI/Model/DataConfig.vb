@@ -7,6 +7,7 @@ Public Class DataConfig
     Public Sub New()
         MyBase.New
         _readerProperty = New ReaderProperties
+        _collectionOfSteps = New ObservableCollection(Of Object)
         _dqFilterNameDictionary = New Dictionary(Of String, String) From {{"PMU Status Flags Data Quality Filter", "PMUflagFilt"},
                                                                         {"Replaced-by-Zero Dropout Data Quality Filter", "DropOutZeroFilt"},
                                                                         {"Replaced-by-Missing Dropout Data Quality Filter", "DropOutMissingFilt"},

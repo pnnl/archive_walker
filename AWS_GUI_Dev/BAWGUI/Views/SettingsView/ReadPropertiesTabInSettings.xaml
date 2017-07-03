@@ -155,7 +155,7 @@
                                                 <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
                                                     <Label Content="File Directory:" Margin="2" Width="100"/>
                                                     <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
-                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
+                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
                                                         <Image Source="../../Images/open.gif" Stretch="Uniform"/>
                                                     </Button>
                                                 </StackPanel>
@@ -164,7 +164,7 @@
                                                     <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
                                                         <i:Interaction.Triggers>
                                                             <i:EventTrigger EventName="SelectionChanged">
-                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
+                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
                                                             </i:EventTrigger>
                                                         </i:Interaction.Triggers>
                                                     </ComboBox>
@@ -175,7 +175,7 @@
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>

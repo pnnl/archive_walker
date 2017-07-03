@@ -39,7 +39,7 @@
                                 </MenuItem.Header>
                                 <MenuItem.ItemContainerStyle>
                                     <Style>
-                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DetectorSelectedToAdd, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.DetectorSelectedToAdd, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}"/>
                                         <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
                                     </Style>
                                 </MenuItem.ItemContainerStyle>
@@ -48,7 +48,8 @@
                         <Label Content="Detector Configurations" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
@@ -86,7 +87,7 @@
                                 </MenuItem.Header>
                                 <MenuItem.ItemContainerStyle>
                                     <Style>
-                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.AlarmingDetectorSelectedToAdd, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                                        <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.AlarmingDetectorSelectedToAdd, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}"/>
                                         <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
                                     </Style>
                                 </MenuItem.ItemContainerStyle>
@@ -95,7 +96,8 @@
                         <Label Content="Alarming Detector Configurations" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
@@ -116,7 +118,8 @@
                     <Border Grid.Row="4" Margin="2">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>
+                                <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->
+                                <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <TextBlock></TextBlock>

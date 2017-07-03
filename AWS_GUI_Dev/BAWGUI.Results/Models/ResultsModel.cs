@@ -44,40 +44,41 @@ namespace BAWGUI.Results.Models
 
         private void _combineForcedOscillationEvents(List<DatedForcedOscillationEvent> forcedOscillationCompleteList)
         {
-            var foDictByID = forcedOscillationCompleteList.GroupBy(x => x.ForcedOscillationEvent.ID).ToDictionary(p=>p.Key, p=>p.ToList());
+            _forcedOscillationCombinedList.Clear();
+            var foDictByID = forcedOscillationCompleteList.GroupBy(x => x.ID).ToDictionary(p=>p.Key, p=>p.ToList());
             foreach(var evnts in foDictByID)
             {
-                var aEvent = evnts.Value.FirstOrDefault().ForcedOscillationEvent;
+                var aEvent = evnts.Value.FirstOrDefault();
                 var completeOccurencesList = new List<DatedOccurrence>();
                 foreach (var evnt in evnts.Value)
                 {
-                    foreach(var ocur in evnt.ForcedOscillationEvent.Occurrence)
+                    foreach(var ocur in evnt.Occurrences)
                     {
-                        var newOcr = new DatedOccurrence(evnt.Date, ocur);
-                        completeOccurencesList.Add(newOcr);
+                        //var newOcr = new DatedOccurrence(evnt.Date, ocur);
+                        completeOccurencesList.Add(ocur);
                     }
                 }
-                var occurByID = completeOccurencesList.GroupBy(x => x.Occurence.OccurrenceID).ToDictionary(p => p.Key, p => p.ToList());
+                var occurByID = completeOccurencesList.GroupBy(x => x.ID).ToDictionary(p => p.Key, p => p.ToList());
                 var singleOcur = (from ocur in occurByID where ocur.Value.Count == 1 select ocur.Value.FirstOrDefault()).ToList();
                 var multiOcur = (from ocur in occurByID where ocur.Value.Count > 1 select ocur).ToList();
-                var ocurList = (from a in singleOcur select a.Occurence).ToList();
+                //var ocurList = (from a in singleOcur select a.Occurence).ToList();
                 if (multiOcur.Count != 0)
                 {
                     foreach (var ocur in multiOcur)
                     {
                         var latestDate = ocur.Value.Max(p => p.Date);
                         var item = ocur.Value.First(x => x.Date == latestDate);
-                        ocurList.Add(item.Occurence);
+                        singleOcur.Add(item);
                     }
-                    ocurList = ocurList.OrderBy(x=>x.Start).ToList();
+                    singleOcur = singleOcur.OrderBy(x=>x.Start).ToList();
                 }
-                aEvent.Occurrence = ocurList.ToArray();
+                aEvent.Occurrences = singleOcur;
                 _forcedOscillationCombinedList.Add(aEvent);
             }
         }
         
-        private List<ForcedOscillationType> _forcedOscillationCombinedList = new List<ForcedOscillationType>();
-        public List<ForcedOscillationType> ForcedOscillationCombinedList
+        private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
+        public List<DatedForcedOscillationEvent> ForcedOscillationCombinedList
         {
             get { return _forcedOscillationCombinedList; }
         }

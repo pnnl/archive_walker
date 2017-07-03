@@ -65,7 +65,7 @@
         <TreeView Grid.Row="2" Margin="2" Visibility="{Binding SignalSelectionTreeViewVisibility}">
             <TreeView.Style>
                 <Style TargetType="{x:Type TreeView}">
-                    <Setter Property="ItemsSource" Value="{Binding GroupedSignalsByType}"/>
+                    <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type">
                             <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>

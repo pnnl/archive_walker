@@ -777,8 +777,12 @@ Partial Public Class SettingsViewModel
             GroupedRawSignalsByType.Add(b)
         Else
             Dim PDATSampleFile As New PDATReader
-            fileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(sampleFile)
-            fileInfo.SamplingRate = PDATSampleFile.GetSamplingRate()
+            Try
+                fileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(sampleFile)
+                fileInfo.SamplingRate = PDATSampleFile.GetSamplingRate()
+            Catch ex As Exception
+                MessageBox.Show("PDAT Reading error! " & ex.Message)
+            End Try
         End If
     End Sub
 
@@ -1553,7 +1557,7 @@ Partial Public Class SettingsViewModel
     End Property
     Private Sub _signalSelected(obj As SignalTypeHierachy)
         If _currentSelectedStep IsNot Nothing Then
-            If obj.SignalList.Count <1 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
+            If obj.SignalList.Count < 1 And (obj.SignalSignature.PMUName Is Nothing Or obj.SignalSignature.TypeAbbreviation Is Nothing) Then
                 _keepOriginalSelection(obj)
                 MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
             Else
@@ -1634,6 +1638,9 @@ Partial Public Class SettingsViewModel
                         End Select
                     Catch ex As Exception
                         _keepOriginalSelection(obj)
+                        If _currentSelectedStep.Name = "Addition Customization" Then
+                            _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
+                        End If
                         MessageBox.Show("Error selecting signal(s) for customization step!" & ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
                 End If
@@ -1748,8 +1755,8 @@ Partial Public Class SettingsViewModel
             '_processConfigDetermineAllParentNodeStatus()
             '_postProcessDetermineAllParentNodeStatus()
             '_detectorConfigDetermineAllParentNodeStatus()
-            _determineAllParentNodeStatus()
         End If
+        _determineAllParentNodeStatus()
     End Sub
     Private _textboxesLostFocus As ICommand
     Public Property TextboxesLostFocus As ICommand
@@ -2781,19 +2788,22 @@ Partial Public Class SettingsViewModel
     Private Sub _customizationStepSelection(obj As Object)
         Dim newCustomization As New Customization
         newCustomization.Name = obj(0).ToString
+        If _lastCustPMUname Is Nothing Then
+            _lastCustPMUname = "CustomPMU"
+        End If
         newCustomization.CustPMUname = _lastCustPMUname
         Try
             Select Case newCustomization.Name
                 Case "Scalar Repetition Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
                 Case "Addition Customization", "Multiplication Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
                 Case "Subtraction Customization", "Division Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
                     Dim dummy = New SignalSignatures("PleaseAddASignal", "PleaseAddASignal")
@@ -2811,7 +2821,7 @@ Partial Public Class SettingsViewModel
                     Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newSignal, New ObservableCollection(Of SignalSignatures))
                     newCustomization.OutputInputMappingPair.Add(newPair)
                 Case "Specify Signal Type and Unit Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "C")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
                     Dim dummy = New SignalSignatures("NeedInputSignal", newCustomization.CustPMUname, "OTHER")
@@ -3274,7 +3284,6 @@ Partial Public Class SettingsViewModel
     ''' <summary>
     ''' When user click outside the step list and none of the steps should be selected, then we need to uncheck all checkboxes
     ''' </summary>
-    ''' <param name="obj"></param>
     Private Sub _deSelectAllDataConfigSteps()
         If _currentSelectedStep IsNot Nothing Then
             For Each signal In _currentSelectedStep.InputChannels

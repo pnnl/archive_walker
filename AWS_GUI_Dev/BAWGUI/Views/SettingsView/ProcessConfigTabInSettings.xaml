@@ -39,8 +39,8 @@
             </ObjectDataProvider>
             <DataTemplate x:Key="MultiRateOptionButtons">
                 <StackPanel Orientation="Vertical" Margin="30,0,0,0">
-                    <Button Content="Specify New Rate" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.MultirateParameterChoice}" CommandParameter="newrate"/>
-                    <Button Content="Specify P, Q Ratio" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.MultirateParameterChoice}" CommandParameter="pqratio"/>
+                    <Button Content="Specify New Rate" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.MultirateParameterChoice}" CommandParameter="newrate"/>
+                    <Button Content="Specify P, Q Ratio" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.MultirateParameterChoice}" CommandParameter="pqratio"/>
                 </StackPanel>
             </DataTemplate>
             <DataTemplate x:Key="MultiRateNewRateParameters">
@@ -121,7 +121,7 @@
                     <Label Content="NameTypeUnit" Margin="2" FontSize="18" FontWeight="Bold">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Label>
@@ -177,7 +177,7 @@
                         <Label Content="NameTypeUnit" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
@@ -188,10 +188,10 @@
                                 <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -270,7 +270,7 @@
                                                 <TextBox Grid.Row="3" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding NewType}"/>
                                             </Grid>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteNameTypeUnit}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteNameTypeUnit}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -303,14 +303,6 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <!--<Border Grid.Row="0" Margin="2">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <TextBlock></TextBlock>
-                    </Border>-->
                     <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddUnwrap}">
                             <Image Width="16" Height="16" Source="../../Images/AddCommand.png" />
@@ -318,7 +310,8 @@
                         <Label Content="Unwrap" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding ProcessConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
@@ -329,10 +322,10 @@
                                 <Border BorderBrush="LightGray" BorderThickness="1" Margin="2" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -375,7 +368,7 @@
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteUnwrapStep}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteUnwrapStep}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -390,7 +383,8 @@
                         <Label Content="Interpolate" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding ProcessConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
@@ -401,10 +395,10 @@
                                 <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -433,20 +427,6 @@
                                                 <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                                                     <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
                                                     <local:FilterListBox/>
-                                                    <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                                                <ListView.ItemTemplate>
-                                                                    <DataTemplate>
-                                                                        <TextBlock Margin="2,0">
-                                                                            <TextBlock.Text>
-                                                                                <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
-                                                                                    <Binding Path="PMUName"/>
-                                                                                    <Binding Path="SignalName"/>
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Text>
-                                                                        </TextBlock>
-                                                                    </DataTemplate>
-                                                                </ListView.ItemTemplate>
-                                                            </ListView>-->
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                     <Label Content="Parameters:" Margin="2"/>
@@ -504,7 +484,7 @@
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteInterpolateStep}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteInterpolateStep}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -521,14 +501,15 @@
                                         <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </MenuItem.Header>
-                                <MenuItem Header="Tunable Filter" Command="{Binding Path=DataContext.AddTunableFilterOrMultirate, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Filter"/>
-                                <MenuItem Header="Multi-rate processing" Command="{Binding Path=DataContext.AddTunableFilterOrMultirate, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" CommandParameter="Multirate"/>
+                                <MenuItem Header="Tunable Filter" Command="{Binding AddTunableFilterOrMultirate}" CommandParameter="Filter"/>
+                                <MenuItem Header="Multi-rate processing" Command="{Binding AddTunableFilterOrMultirate}" CommandParameter="Multirate"/>
                             </MenuItem>
                         </Menu>
                         <Label Content="Stages" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding ProcessConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
@@ -539,10 +520,10 @@
                                 <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -585,20 +566,6 @@
                                                     </StackPanel>
                                                     <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
                                                     <local:FilterListBox/>
-                                                    <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                                                <ListView.ItemTemplate>
-                                                                    <DataTemplate>
-                                                                        <TextBlock Margin="2,0">
-                                                                            <TextBlock.Text>
-                                                                                <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
-                                                                                    <Binding Path="PMUName"/>
-                                                                                    <Binding Path="SignalName"/>
-                                                                                </MultiBinding>
-                                                                            </TextBlock.Text>
-                                                                        </TextBlock>
-                                                                    </DataTemplate>
-                                                                </ListView.ItemTemplate>
-                                                            </ListView>-->
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                                                     <Label Content="Parameters:" Margin="2"/>
@@ -643,22 +610,6 @@
                                                                             </Style>
                                                                         </ContentControl.Style>
                                                                     </ContentControl>
-                                                                    <!--<ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="2">
-                                                                                <ContentPresenter.Resources>
-                                                                                    <DataTemplate DataType="{x:Type sys:Boolean}">
-                                                                                        <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
-                                                                                    </DataTemplate>
-                                                                                    <DataTemplate DataType="{x:Type sys:String}">
-                                                                                        <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
-                                                                                    </DataTemplate>
-                                                                                    <DataTemplate DataType="{x:Type local:EndpointsType}">
-                                                                                        <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource EndpointsTypeValues}}" Text="{Binding Path=., Converter={StaticResource EnumToStringConverter5}}"/>
-                                                                                    </DataTemplate>
-                                                                                    <DataTemplate DataType="{x:Type local:HandleNaNType}">
-                                                                                        <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource HandleNaNTypeValues}}" Text="{Binding Path=., Converter={StaticResource EnumToStringConverter6}}"/>
-                                                                                    </DataTemplate>
-                                                                                </ContentPresenter.Resources>
-                                                                            </ContentPresenter>-->
                                                                 </Grid>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
@@ -666,7 +617,7 @@
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -676,10 +627,10 @@
                                 <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -730,7 +681,6 @@
                                                     <ContentControl Content="{Binding}">
                                                         <ContentControl.Style>
                                                             <Style TargetType="ContentControl">
-                                                                <!--<Setter Property="ContentTemplate" Value="{StaticResource MultiRatePQParameters}"/>-->
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding FilterParameters.Count}" Value="0">
                                                                         <Setter Property="ContentTemplate" Value="{StaticResource MultiRateOptionButtons}"/>
@@ -748,7 +698,7 @@
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -763,7 +713,8 @@
                         <Label Content="Wrap" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding ProcessConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
@@ -774,10 +725,10 @@
                                 <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Grid Margin="2">
@@ -789,23 +740,9 @@
                                             <StackPanel Orientation="Vertical" Margin="2">
                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
                                                 <local:FilterListBox/>
-                                                <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                                            <ListView.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <TextBlock Margin="2,0">
-                                                                        <TextBlock.Text>
-                                                                            <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
-                                                                                <Binding Path="PMUName"/>
-                                                                                <Binding Path="SignalName"/>
-                                                                            </MultiBinding>
-                                                                        </TextBlock.Text>
-                                                                    </TextBlock>
-                                                                </DataTemplate>
-                                                            </ListView.ItemTemplate>
-                                                        </ListView>-->
                                             </StackPanel>
                                         </Expander>
-                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.DeleteWrap}" CommandParameter="{Binding}">
+                                        <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteWrap}" CommandParameter="{Binding}">
                                             <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
@@ -816,7 +753,8 @@
                     <Border Grid.Row="8" Margin="2">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                <i:InvokeCommandAction Command="{Binding ProcessConfigStepDeSelected}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <TextBlock></TextBlock>
@@ -836,7 +774,8 @@
                     <Border Grid.Row="10" Margin="2">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                <i:InvokeCommandAction Command="{Binding ProcessConfigStepDeSelected}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <TextBlock></TextBlock>
