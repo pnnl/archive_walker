@@ -22,6 +22,11 @@ namespace BAWGUI.Results.ViewModels
         //    this._model = model;
         //    _occurrence = ocur;
         //}
+        //public ForcedOscillationResultViewModel()
+        //{
+        //    _occurrences = new List<OccurrenceViewModel>();
+        //    _filteredOccurrences = new ObservableCollection<OccurrenceViewModel>();
+        //}
         public ForcedOscillationResultViewModel(DatedForcedOscillationEvent model)
         {
             this._model = model;
@@ -39,6 +44,7 @@ namespace BAWGUI.Results.ViewModels
             get { return this._model; }
         }
         private List<OccurrenceViewModel> _occurrences = new List<OccurrenceViewModel>();
+        //private List<OccurrenceViewModel> _occurrences;
         public List<OccurrenceViewModel> Occurrences
         {
             get { return _occurrences; }
@@ -48,6 +54,7 @@ namespace BAWGUI.Results.ViewModels
             }
         }
         private ObservableCollection<OccurrenceViewModel> _filteredOccurrences = new ObservableCollection<OccurrenceViewModel>();
+        //private ObservableCollection<OccurrenceViewModel> _filteredOccurrences;
         public ObservableCollection<OccurrenceViewModel> FilteredOccurrences
         {
             get { return _filteredOccurrences; }
@@ -174,7 +181,7 @@ namespace BAWGUI.Results.ViewModels
                 return _model.MaxCoherence;
             }
         }
-        public int NumberOfCoherences
+        public int NumberOfOccurrences
         {
             get { return _filteredOccurrences.Count(); }
         }

@@ -25,10 +25,17 @@ namespace BAWGUI.Results.ViewModels
         {
             ShowOccurrenceWindow = new RelayCommand(_showOccurrenceWindow);
             ShowChannelWindow = new RelayCommand(_showChannelWindow);
+            //ShowOccurrencePopup = new RelayCommand(_showOccurrencePopup);
+            //CloseOccurrencePopup = new RelayCommand(_closeOccurrencePopup);
+            _results = new ObservableCollection<ForcedOscillationResultViewModel>();
+            _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
+            _models = new List<DatedForcedOscillationEvent>();
         }
 
-        private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
-        private ObservableCollection<ForcedOscillationResultViewModel> _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
+        //private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
+        //private ObservableCollection<ForcedOscillationResultViewModel> _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
+        private ObservableCollection<ForcedOscillationResultViewModel> _results;
+        private ObservableCollection<ForcedOscillationResultViewModel> _filteredResults;
         public ObservableCollection<ForcedOscillationResultViewModel> FilteredResults
         {
             get { return _filteredResults; }
@@ -38,7 +45,8 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
             }
         }
-        private List<DatedForcedOscillationEvent> _models = new List<DatedForcedOscillationEvent>();
+        //private List<DatedForcedOscillationEvent> _models = new List<DatedForcedOscillationEvent>();
+        private List<DatedForcedOscillationEvent> _models;
         public List<DatedForcedOscillationEvent> Models
         {
             get { return this._models; }
@@ -174,6 +182,7 @@ namespace BAWGUI.Results.ViewModels
             {
                 _occurrenceTableWin = new OccurrenceTableWindow();
                 _occurrenceTableWin.DataContext = this;
+                _occurrenceTableWin.Owner = Application.Current.MainWindow;
                 _occurrenceTableWin.Show();
             }
         }
@@ -196,8 +205,29 @@ namespace BAWGUI.Results.ViewModels
             {
                 _channelTableWin = new ChannelTableWindow();
                 _channelTableWin.DataContext = this;
+                _channelTableWin.Owner = _occurrenceTableWin;
                 _channelTableWin.Show();
             }
         }
+        //private bool _isOccurrencePopupOpen;
+        //public bool IsOccurrencePopupOpen
+        //{
+        //    get { return _isOccurrencePopupOpen; }
+        //    set
+        //    {
+        //        _isOccurrencePopupOpen = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+        //public ICommand ShowOccurrencePopup { get; set; }
+        //private void _showOccurrencePopup(object obj)
+        //{
+        //    IsOccurrencePopupOpen = true;
+        //}
+        //public ICommand CloseOccurrencePopup { get; set; }
+        //private void _closeOccurrencePopup(object obj)
+        //{
+        //    IsOccurrencePopupOpen = false;
+        //}
     }
 }

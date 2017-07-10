@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BAWGUI.Results.Views"
+             xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
@@ -25,11 +25,15 @@
             <xcdg:DataGridItemProperty Name="Occurrence"/>
         </xcdg:DataGridCollectionViewSource.ItemProperties>
     </xcdg:DataGridCollectionViewSource>-->
+    <!--<StackPanel Orientation="Vertical">-->
     <xcdg:DataGridControl ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
             </i:EventTrigger>
+            <!--<i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrencePopup}"/>
+            </i:EventTrigger>-->
         </i:Interaction.Triggers>
         <xcdg:DataGridControl.View>
             <xcdg:TableflowView UseDefaultHeadersFooters="False">
@@ -44,31 +48,31 @@
         </xcdg:DataGridControl.View>
         <xcdg:DataGridControl.Columns>
             <!--<xcdg:Column Title="ID" FieldName="ID">
-                <xcdg:Column.DisplayMemberBindingInfo>
-                    <xcdg:DataGridBindingInfo Path="ID" ReadOnly="True"/>
-                </xcdg:Column.DisplayMemberBindingInfo>
-            </xcdg:Column>
-            <xcdg:Column Title="Overall Start Date" FieldName="overallStartTime">
-                <xcdg:Column.DisplayMemberBindingInfo>
-                    <xcdg:DataGridBindingInfo Path="overallStartTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="DateOnly" ReadOnly="True"/>
-                </xcdg:Column.DisplayMemberBindingInfo>
-            </xcdg:Column>
-            <xcdg:Column Title="Overall Start Time" FieldName="StartTime">
-                <xcdg:Column.DisplayMemberBindingInfo>
-                    <xcdg:DataGridBindingInfo Path="overallStartTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="TimeOnly" ReadOnly="True"/>
-                </xcdg:Column.DisplayMemberBindingInfo>
-            </xcdg:Column>
-            <xcdg:Column Title="Overall End Date" FieldName="EndDate">
-                <xcdg:Column.DisplayMemberBindingInfo>
-                    <xcdg:DataGridBindingInfo Path="overallEndTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="DateOnly" ReadOnly="True"/>
-                </xcdg:Column.DisplayMemberBindingInfo>
-            </xcdg:Column>
-            <xcdg:Column Title="Overall End Time" FieldName="EndTime">
-                <xcdg:Column.DisplayMemberBindingInfo>
-                    <xcdg:DataGridBindingInfo Path="overallEndTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="TimeOnly" ReadOnly="True"/>
-                </xcdg:Column.DisplayMemberBindingInfo>
-            </xcdg:Column>-->
-            <xcdg:Column Title="" FieldName=" " Width="30">
+            <xcdg:Column.DisplayMemberBindingInfo>
+                <xcdg:DataGridBindingInfo Path="ID" ReadOnly="True"/>
+            </xcdg:Column.DisplayMemberBindingInfo>
+        </xcdg:Column>
+        <xcdg:Column Title="Overall Start Date" FieldName="overallStartTime">
+            <xcdg:Column.DisplayMemberBindingInfo>
+                <xcdg:DataGridBindingInfo Path="overallStartTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="DateOnly" ReadOnly="True"/>
+            </xcdg:Column.DisplayMemberBindingInfo>
+        </xcdg:Column>
+        <xcdg:Column Title="Overall Start Time" FieldName="StartTime">
+            <xcdg:Column.DisplayMemberBindingInfo>
+                <xcdg:DataGridBindingInfo Path="overallStartTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="TimeOnly" ReadOnly="True"/>
+            </xcdg:Column.DisplayMemberBindingInfo>
+        </xcdg:Column>
+        <xcdg:Column Title="Overall End Date" FieldName="EndDate">
+            <xcdg:Column.DisplayMemberBindingInfo>
+                <xcdg:DataGridBindingInfo Path="overallEndTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="DateOnly" ReadOnly="True"/>
+            </xcdg:Column.DisplayMemberBindingInfo>
+        </xcdg:Column>
+        <xcdg:Column Title="Overall End Time" FieldName="EndTime">
+            <xcdg:Column.DisplayMemberBindingInfo>
+                <xcdg:DataGridBindingInfo Path="overallEndTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="TimeOnly" ReadOnly="True"/>
+            </xcdg:Column.DisplayMemberBindingInfo>
+        </xcdg:Column>-->
+            <xcdg:Column Title="" FieldName=" " Width="30" AllowSort="False">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource TableRowIndexConverter} }" />
@@ -83,7 +87,9 @@
             <xcdg:Column Title="Max Amplitude" FieldName="MaxAmplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
             <xcdg:Column Title="Max SNR" FieldName="MaxSNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
             <xcdg:Column Title="Max Coherence" FieldName="MaxCoherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
-            <xcdg:Column Title="Number Of Coherences" FieldName="NumberOfCoherences" ReadOnly="True"/>
+            <xcdg:Column Title="Number Of Occurrences" FieldName="NumberOfOccurrences" ReadOnly="True"/>
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>
+        <!--views:OccurrenceTablePopup-->
+    <!--</StackPanel>-->
 </UserControl>

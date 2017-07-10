@@ -80,8 +80,9 @@ Public Class MainViewModel
             Dim files = New List(Of String)
             Dim dates = New List(Of String)
             For Each file In filenames
-                If file.Extension.ToLower = ".xml" Then
-                    Dim datestr = file.Name.Split(New Char() {".", "_"})(1)
+                Dim nameFragment = file.Name.Split(New Char() {".", "_"})
+                If file.Extension.ToLower = ".xml" And nameFragment.Length = 3 Then
+                    Dim datestr = nameFragment(1)
                     Try
                         Date.ParseExact(datestr, "yyMMdd", CultureInfo.InvariantCulture)
                         dates.Add(datestr)
@@ -93,21 +94,27 @@ Public Class MainViewModel
                     End Try
                 End If
             Next
-            dates.Sort()
-            Dim startDate As String
-            Dim endDate As String
-            If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart) Then
-                startDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart).ToString("yyMMdd")
-            Else
-                startDate = dates.FirstOrDefault
+            If Not files.Count = dates.Count Then
+                dates.Sort()
+                Dim lastDate = dates.LastOrDefault
+                dates.Add((Convert.ToInt32(lastDate) + 1).ToString)
             End If
-            If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd) Then
-                endDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd).ToString("yyMMdd")
-            Else
-                endDate = dates.LastOrDefault
-            End If
+            'dates.Sort()
+            'Dim startDate As String
+            'Dim endDate As String
+            'If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart) Then
+            '    startDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart).ToString("yyMMdd")
+            'Else
+            '    startDate = dates.FirstOrDefault
+            'End If
+            'If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd) Then
+            '    endDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd).ToString("yyMMdd")
+            'Else
+            '    endDate = dates.LastOrDefault
+            'End If
             Try
-                _resultsViewModel.LoadResults(files, startDate, endDate)
+                '_resultsViewModel.LoadResults(files, startDate, endDate)
+                _resultsViewModel.LoadResults(files, dates)
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try

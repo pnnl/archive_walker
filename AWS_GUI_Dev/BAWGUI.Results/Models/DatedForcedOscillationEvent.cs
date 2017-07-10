@@ -9,6 +9,12 @@ namespace BAWGUI.Results.Models
 {
     public class DatedForcedOscillationEvent
     {
+        //public DatedForcedOscillationEvent()
+        //{
+        //    _occurrences = new List<DatedOccurrence>();
+        //    _filteredOccurrences = new List<DatedOccurrence>();
+        //    _forcedOscillationEvent = new ForcedOscillationType();
+        //}
         public DatedForcedOscillationEvent(string dt, ForcedOscillationType foevent)
         {
             _date = dt;

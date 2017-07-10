@@ -10,6 +10,10 @@ namespace BAWGUI.Results.ViewModels
 {
     public class OccurrenceViewModel:ViewModelBase
     {
+        //public OccurrenceViewModel()
+        //{
+        //    _channels = new List<ChannelViewModel>();
+        //}
         public OccurrenceViewModel(DatedOccurrence model)
         {
             _model = model;
@@ -134,6 +138,7 @@ namespace BAWGUI.Results.ViewModels
             }
         }
         private List<ChannelViewModel> _channels = new List<ChannelViewModel>();
+        //private List<ChannelViewModel> _channels;
         public List<ChannelViewModel> Channels
         {
             get { return _channels; }

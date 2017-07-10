@@ -7,4 +7,5 @@
         mc:Ignorable="d"
         Title="OccurrenceTableWindow" Height="300" Width="1000">
     <views:OccurrenceTableView/>
+    <!--<views:OccurrenceTablePopup/>-->
 </Window>

@@ -12,11 +12,13 @@
             <RowDefinition Height="5*"/>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="2*"/>
+            <!--<RowDefinition Height="auto"/>-->
         </Grid.RowDefinitions>
         <views:TimeFilterView Grid.Row="0"/>
         <views:EventTableView Grid.Row="1"/>
         <views:OccurrenceTableView Grid.Row="2"/>
         <views:ChannelTableView Grid.Row="3"/>
+        <!--<views:OccurrenceTablePopup Grid.Row="4"/>-->
         <!--<ListView ItemsSource="{Binding FilteredResults}" Grid.Row="2">
             <ListView.ItemTemplate>
                 <DataTemplate>

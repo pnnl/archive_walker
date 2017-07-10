@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BAWGUI.Results.Converters
@@ -24,7 +25,8 @@ namespace BAWGUI.Results.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            //return null;
+            return DependencyProperty.UnsetValue;
         }
     }
 }

@@ -19,25 +19,37 @@ namespace BAWGUI.Results.Models
         //    private set { this._events = value; }
         //}
 
-        internal void LoadResults(List<string> filenames, string startDate, string endDate)
+        public ResultsModel()
         {
-            _selectedStartTime = startDate;
-            _selectedEndTime = endDate;
+            _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
+        }
+
+        internal void LoadResults(List<string> filenames, List<string> dates)
+        {
+            //_selectedStartTime = startDate;
+            //_selectedEndTime = endDate;
+
             List<DatedForcedOscillationEvent> forcedOscillationCompleteList = new List<DatedForcedOscillationEvent>();
             foreach (var filename in filenames)
             {
                 var date = Path.GetFileNameWithoutExtension(filename).Split('_').Last();
-                if((string.Compare(date, startDate) >= 0 && string.Compare(date, endDate) <= 0) || date.ToLower() == "current")
+                if(date.ToLower() == "current")
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(EventSequenceType));
-                    FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    var content = serializer.Deserialize(stream) as EventSequenceType;
-                    foreach (var foe in content.ForcedOscillation)
-                    {
-                        var newfoe = new DatedForcedOscillationEvent(date, foe);
-                        forcedOscillationCompleteList.Add(newfoe);
-                    }
+                    //dates.Sort();
+                    //date = (Convert.ToInt32(Enumerable.LastOrDefault(dates)) + 1).ToString();
+                    date = Enumerable.LastOrDefault(dates);
                 }
+                //if((string.Compare(date, startDate) >= 0 && string.Compare(date, endDate) <= 0) || date.ToLower() == "current")
+                //{
+                XmlSerializer serializer = new XmlSerializer(typeof(EventSequenceType));
+                FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                var content = serializer.Deserialize(stream) as EventSequenceType;
+                foreach (var foe in content.ForcedOscillation)
+                {
+                    var newfoe = new DatedForcedOscillationEvent(date, foe);
+                    forcedOscillationCompleteList.Add(newfoe);
+                }
+                //}
             }
             _combineForcedOscillationEvents(forcedOscillationCompleteList);
         }
@@ -77,22 +89,23 @@ namespace BAWGUI.Results.Models
             }
         }
         
-        private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
+        //private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
+        private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList;
         public List<DatedForcedOscillationEvent> ForcedOscillationCombinedList
         {
             get { return _forcedOscillationCombinedList; }
         }
-        private string _selectedStartTime;
-        public string SelectedStartTime
-        {
-            get { return _selectedStartTime; }
-            set { _selectedStartTime = value; }
-        }
-        private string _selectedEndTime;
-        public string SelectedEndTime
-        {
-            get { return _selectedEndTime; }
-            set { _selectedEndTime = value; }
-        }
+        //private string _selectedStartTime;
+        //public string SelectedStartTime
+        //{
+        //    get { return _selectedStartTime; }
+        //    set { _selectedStartTime = value; }
+        //}
+        //private string _selectedEndTime;
+        //public string SelectedEndTime
+        //{
+        //    get { return _selectedEndTime; }
+        //    set { _selectedEndTime = value; }
+        //}
     }
 }

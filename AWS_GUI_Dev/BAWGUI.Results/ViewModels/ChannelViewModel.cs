@@ -22,48 +22,6 @@ namespace BAWGUI.Results.ViewModels
         {
             get { return _model.Name; }
         }
-        //public string Amplitude
-        //{
-        //    get
-        //    {
-        //        if(float.IsNaN(_model.Amplitude))
-        //        {
-        //            return "";
-        //        }
-        //        else
-        //        {
-        //            return _model.Amplitude.ToString();
-        //        }
-        //    }                
-        //}
-        //public string SNR
-        //{
-        //    get
-        //    {
-        //        if (float.IsNaN(_model.SNR))
-        //        {
-        //            return "";
-        //        }
-        //        else
-        //        {
-        //            return _model.SNR.ToString();
-        //        }
-        //    }
-        //}
-        //public string Coherence
-        //{
-        //    get
-        //    {
-        //        if(float.IsNaN(_model.Coherence))
-        //        {
-        //            return "";
-        //        }
-        //        else
-        //        {
-        //            return _model.Coherence.ToString();
-        //        }
-        //    }
-        //}
         public float Amplitude
         {
             get

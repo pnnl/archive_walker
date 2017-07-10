@@ -9,23 +9,15 @@ using System.Windows.Data;
 
 namespace BAWGUI.Results.Converters
 {
-    public class TableValueNANConverter : IValueConverter
+    public class DateDictionaryKeyConverter : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is float && float.IsNaN((float)value))
-            {
-                return "";
-            }
-            else
-            {
-                return value;
-            }
+            return value;
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //return null;
             return DependencyProperty.UnsetValue;
         }
     }

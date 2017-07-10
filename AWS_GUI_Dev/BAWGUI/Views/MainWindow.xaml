@@ -43,6 +43,9 @@
                 <Image Source="..\Images\Settings_16x.png"/>
             </Button>
             <Button ToolTip="Results" Command="{Binding ToggleResultsSettings}" Content="{Binding CurrentViewName}"/>
+            <Separator></Separator>
+            <!--<Label Content="Available Event Dates: " Width="300" HorizontalContentAlignment="Right"/>
+            <ComboBox ItemsSource="{Binding }"/>-->
         </ToolBar>
         <ContentControl Content="{Binding CurrentView}"/>
 
