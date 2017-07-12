@@ -223,5 +223,13 @@ namespace BAWGUI.Results.ViewModels
         //{
         //    get { return _occurrence.End.Split(null)[1]; }
         //}
+        public string GetFirstStartOfFilteredOccurrences()
+        {
+            return _filteredOccurrences.OrderBy(x => x.Start).FirstOrDefault().Start;
+        }
+        public string GetLastEndOfFilteredOccurrences()
+        {
+            return _filteredOccurrences.OrderBy(x => x.End).LastOrDefault().End;
+        }
     }
 }

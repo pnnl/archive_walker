@@ -10,6 +10,9 @@ using System.Windows;
 using BAWGUI.Results.Models;
 using System.Windows.Input;
 using BAWGUI.Results.Views;
+using OxyPlot;
+using OxyPlot.Series;
+using OxyPlot.Axes;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -30,6 +33,7 @@ namespace BAWGUI.Results.ViewModels
             _results = new ObservableCollection<ForcedOscillationResultViewModel>();
             _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
             _models = new List<DatedForcedOscillationEvent>();
+            _foPlotModel = new PlotModel();
         }
 
         //private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
@@ -140,6 +144,7 @@ namespace BAWGUI.Results.ViewModels
                 }
             }
             FilteredResults = newResults;
+            _drawFOPlot();
         }
 
         private ForcedOscillationResultViewModel _selectedOscillationEvent;
@@ -229,5 +234,138 @@ namespace BAWGUI.Results.ViewModels
         //{
         //    IsOccurrencePopupOpen = false;
         //}
+
+        private PlotModel _foPlotModel;
+        public PlotModel FOPlotModel
+        {
+            get { return _foPlotModel; }
+            set
+            {
+                _foPlotModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void _drawFOPlot()
+        {
+            PlotModel a = new PlotModel() { PlotAreaBackground = OxyColors.LightGray };
+            //{ PlotAreaBackground = OxyColors.WhiteSmoke}
+            //a.PlotType = PlotType.Cartesian;
+            var xAxisFormatString = "";
+            var startTime = FilteredResults.Min(x => x.GetFirstStartOfFilteredOccurrences());
+            var endTime = FilteredResults.Max(x => x.GetLastEndOfFilteredOccurrences());
+            var time = Convert.ToDateTime(endTime) - Convert.ToDateTime(startTime);
+            if(time < TimeSpan.FromHours(24))
+            {
+                xAxisFormatString = "HH:mm";
+            }
+            else if(time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+            {
+                xAxisFormatString = "MM/dd HH";
+            }
+            else
+            {
+                xAxisFormatString = "MM/dd";
+            }
+            DateTimeAxis timeXAxis = new DateTimeAxis()
+            {
+                Position = AxisPosition.Bottom,
+                MinorIntervalType = DateTimeIntervalType.Auto,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                Title = "Time",
+                IsZoomEnabled = true,
+                IsPanEnabled = true,
+                StringFormat = xAxisFormatString
+            };
+            //a.Axes.Add(timeXAxis);
+
+            LinearAxis frequencyYAxis = new LinearAxis()
+            {
+                Position = AxisPosition.Left,
+                Title = "Frequency (Hz)",
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true
+            };
+            if (FilteredResults.Count > 0)
+            {
+                frequencyYAxis.Maximum = FilteredResults.Select(x => x.TypicalFrequency).Max() + 0.1;
+                frequencyYAxis.Minimum = FilteredResults.Select(x => x.TypicalFrequency).Min() - 0.1;
+            }
+            a.Axes.Add(frequencyYAxis);
+            //var categoryAxis = new CategoryAxis { Position = AxisPosition.Left };
+            //a.DefaultColors = OxyPalettes.BlueWhiteRed(FilteredResults.Count).Colors;
+            //int index = 0;
+            var alarmSeries = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerFill = OxyColors.Red, MarkerSize = 4};
+            foreach (var fo in FilteredResults)
+            {
+                //OxyColor eventColor = a.DefaultColors[index];
+                OxyColor eventColor = _mapFrequencyToColor(fo.TypicalFrequency);
+                foreach (var ocur in fo.FilteredOccurrences)
+                {
+                    //var newSeries = new LineSeries { Title = fo.Label };
+                    var newSeries = new LineSeries() { LineStyle= LineStyle.Solid, Color = eventColor, StrokeThickness = 5};
+                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
+                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
+                    a.Series.Add(newSeries);
+                    if (ocur.Alarm == "YES")
+                    {
+                        var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency);
+                        var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency);
+                        //aPoint.Size = 5;
+                        //aPoint.Tag = "Alarm";
+                        alarmSeries.Points.Add(startPoint);
+                        alarmSeries.Points.Add(endPoint);
+                    }
+                }
+                //index++;
+                //categoryAxis.Labels.Add(fo.TypicalFrequency.ToString());
+            }
+            a.Series.Add(alarmSeries);
+            a.Axes.Add(timeXAxis);
+
+            FOPlotModel = a;
+        }
+
+        private OxyColor _mapFrequencyToColor(float frequency)
+        {
+            OxyColor color;
+            var colorCount = FilteredResults.Count;
+            var minFreq = FilteredResults.Select(x => x.TypicalFrequency).Min();
+            var maxFreq = FilteredResults.Select(x => x.TypicalFrequency).Max();
+            var percentage = (frequency - minFreq) / (maxFreq - minFreq);
+
+            //blue-green rgb gradient
+            return OxyColor.FromRgb(0, Convert.ToByte(255 * percentage), Convert.ToByte(255 * (1 - percentage)));
+
+            //blue-purple-red gradient
+            //return OxyColor.FromRgb(Convert.ToByte(255 * percentage), 0, Convert.ToByte(255 * (1 - percentage)));
+
+            //blue-white-red gradient
+            //if (percentage < 0.5)
+            //{
+            //    return OxyColor.FromRgb(Convert.ToByte(255 * percentage), Convert.ToByte(255 * percentage), 255);
+            //}
+            //else
+            //{
+            //    return OxyColor.FromRgb(255, Convert.ToByte(255 * (1 - percentage)), Convert.ToByte(255 * (1 - percentage)));
+            //}
+
+            //blue-white-green gradient
+            //if (percentage < 0.5)
+            //{
+            //    return OxyColor.FromRgb(Convert.ToByte(255 * percentage), Convert.ToByte(255 * percentage), 255);
+            //}
+            //else
+            //{
+            //    return OxyColor.FromRgb(Convert.ToByte(255 * (1 - percentage)), 255, Convert.ToByte(255 * (1 - percentage)));
+            //}
+        }
     }
 }

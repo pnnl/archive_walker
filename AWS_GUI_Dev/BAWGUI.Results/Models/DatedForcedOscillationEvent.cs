@@ -63,6 +63,7 @@ namespace BAWGUI.Results.Models
         public string OverallEndTime
         {
             get { return _forcedOscillationEvent.OverallEnd; }
+            set { _forcedOscillationEvent.OverallEnd = value; }
         }
         public string ID
         {

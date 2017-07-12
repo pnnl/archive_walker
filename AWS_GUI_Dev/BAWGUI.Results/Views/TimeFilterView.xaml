@@ -8,9 +8,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <StackPanel Orientation="Horizontal">
-        <Label Content="Start Time:" Width="80" Margin="2" VerticalAlignment="Center"/>
+        <Label Content="Search Start Time:" Width="110" Margin="2" VerticalAlignment="Center"/>
         <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding SelectedStartTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
-        <Label Content="End Time:" Width="80" Margin="100,2,2,2" VerticalAlignment="Center"/>
+        <Label Content="Search End Time:" Width="110" Margin="100,2,2,2" VerticalAlignment="Center"/>
         <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding SelectedEndTime}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom"/>
     </StackPanel>
 </UserControl>

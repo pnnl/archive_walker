@@ -5,19 +5,68 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+             d:DesignHeight="300" d:DesignWidth="600">
+    <DockPanel>
+        <views:TimeFilterView DockPanel.Dock="Top"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="5*"/>
+                </Grid.RowDefinitions>
+                <views:FOEventPlot Grid.Row="0"/>
+                <DockPanel Grid.Row="1">
+                    <Label Content="Events:" DockPanel.Dock="Top"/>
+                    <views:EventTableView/>
+                </DockPanel>
+            </Grid>
+            <Grid Grid.Column="1" Margin="2,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
+                    <Label Content="Occurrences:" DockPanel.Dock="Top"/>
+                    <views:OccurrenceTableView/>
+                </DockPanel>
+                <DockPanel Grid.Row="1">
+                    <Label Content="Channels:" DockPanel.Dock="Top"/>
+                    <views:ChannelTableView/>
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
+    <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="5*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="2*"/>
-            <!--<RowDefinition Height="auto"/>-->
         </Grid.RowDefinitions>
-        <views:TimeFilterView Grid.Row="0"/>
-        <views:EventTableView Grid.Row="1"/>
-        <views:OccurrenceTableView Grid.Row="2"/>
-        <views:ChannelTableView Grid.Row="3"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <views:TimeFilterView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <views:FOEventPlot Grid.Row="1" Grid.Column="0"/>
+        <DockPanel Grid.Column="0" Grid.Row="2">
+            <Label Content="Event Table" DockPanel.Dock="Top"/>
+            <views:EventTableView/>
+        </DockPanel>
+        <DockPanel Grid.Row="1" Grid.Column="1">
+            <Label Content="Occurrence Table" DockPanel.Dock="Top"/>
+            <views:OccurrenceTableView/>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="1">
+            <Label Content="Channel Table" DockPanel.Dock="Top"/>
+            <views:ChannelTableView/>
+        </DockPanel>
+        --><!--<views:EventTableView Grid.Row="2" Grid.Column="0"/>
+        <views:OccurrenceTableView Grid.Row="1" Grid.Column="1"/>
+        <views:ChannelTableView Grid.Row="2" Grid.Column="1"/>-->
         <!--<views:OccurrenceTablePopup Grid.Row="4"/>-->
         <!--<ListView ItemsSource="{Binding FilteredResults}" Grid.Row="2">
             <ListView.ItemTemplate>
@@ -25,6 +74,6 @@
                     <TextBlock Text="{Binding Label}"></TextBlock>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>-->
-    </Grid>
+        </ListView>--><!--
+    </Grid>-->
 </UserControl>

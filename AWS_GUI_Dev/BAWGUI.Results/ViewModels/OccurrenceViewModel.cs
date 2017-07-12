@@ -46,11 +46,11 @@ namespace BAWGUI.Results.ViewModels
             {
                 if (_model.Alarm)
                 {
-                    return "Yes";
+                    return "YES";
                 }
                 else
                 {
-                    return "No";
+                    return "NO";
                 }
             }
         }
