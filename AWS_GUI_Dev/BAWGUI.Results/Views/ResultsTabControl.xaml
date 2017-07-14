@@ -10,7 +10,7 @@
         <TabItem Header="Forced Oscillations">
             <views:ForcedOscillationResultsView DataContext="{Binding ForcedOscillationResultsViewModel}" />
         </TabItem>
-        <TabItem Header="Out of Range Errors">
+        <TabItem Header="Out of Range Events">
             <views:OutOfRangeResultsView DataContext="{Binding OutOfRangeResultsViewModel}"></views:OutOfRangeResultsView>
         </TabItem>
         <TabItem Header="Ringdowns">

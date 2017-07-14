@@ -25,20 +25,20 @@
     </Window.DataContext>
     <DockPanel>
         <ToolBar DockPanel.Dock="Top">
-            <Button>
+            <!--<Button>
                 <Image Source="..\Images\NewFile_16x.png"></Image>
             </Button>
-            <Separator></Separator>
+            <Separator></Separator>-->
             <Button Command="{Binding OpenFile}">
                 <Image Source="..\Images\open.gif"></Image>
             </Button>
-            <Button>
+            <!--<Button>
                 <Image Source="..\Images\Save24.png"></Image>
-            </Button>
+            </Button>-->
             <Separator></Separator>
-            <Button>
+            <!--<Button>
                 <Image Source="..\Images\Run_16x.png"></Image>
-            </Button>
+            </Button>-->
             <Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}">
                 <Image Source="..\Images\Settings_16x.png"/>
             </Button>

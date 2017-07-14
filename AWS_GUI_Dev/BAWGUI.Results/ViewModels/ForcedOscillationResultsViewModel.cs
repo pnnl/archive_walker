@@ -302,11 +302,15 @@ namespace BAWGUI.Results.ViewModels
             //var categoryAxis = new CategoryAxis { Position = AxisPosition.Left };
             //a.DefaultColors = OxyPalettes.BlueWhiteRed(FilteredResults.Count).Colors;
             //int index = 0;
-            var alarmSeries = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerFill = OxyColors.Red, MarkerSize = 4};
+            a.DefaultColors.Clear();
+            var alarmSeries = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerFill = OxyColors.Red, MarkerSize = 4, Title = "Alarms", ColorAxisKey = null};
+            var heatMapData = new List<float>();
             foreach (var fo in FilteredResults)
             {
                 //OxyColor eventColor = a.DefaultColors[index];
                 OxyColor eventColor = _mapFrequencyToColor(fo.TypicalFrequency);
+                a.DefaultColors.Add(eventColor);
+                heatMapData.Add(fo.TypicalFrequency);
                 foreach (var ocur in fo.FilteredOccurrences)
                 {
                     //var newSeries = new LineSeries { Title = fo.Label };
@@ -316,8 +320,8 @@ namespace BAWGUI.Results.ViewModels
                     a.Series.Add(newSeries);
                     if (ocur.Alarm == "YES")
                     {
-                        var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency);
-                        var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency);
+                        var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency, 4, 0);
+                        var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency, 4, 0);
                         //aPoint.Size = 5;
                         //aPoint.Tag = "Alarm";
                         alarmSeries.Points.Add(startPoint);
@@ -328,14 +332,31 @@ namespace BAWGUI.Results.ViewModels
                 //categoryAxis.Labels.Add(fo.TypicalFrequency.ToString());
             }
             a.Series.Add(alarmSeries);
-            a.Axes.Add(timeXAxis);
 
+            heatMapData.Sort();
+            a.Axes.Add(new LinearColorAxis { Palette = new OxyPalette(a.DefaultColors.OrderBy(x => x.G)), Position = AxisPosition.Right, Minimum = heatMapData.Min(), Maximum = heatMapData.Max(), Title = "Frequency (Hz)", MajorStep = 0.2 });
+         
+            //var frequencyHeatMap = new HeatMapSeries
+            //{
+            //    X0 = 0,
+            //    X1 = 0.1,
+            //    Y0 = heatMapData.Min(),
+            //    Y1 = heatMapData.Max(),
+            //    RenderMethod = HeatMapRenderMethod.Bitmap,
+            //    Interpolate = true,
+            //    //Data = heatMapData.ToArray()
+            //};
+            //a.Series.Add(frequencyHeatMap);
+
+            a.Axes.Add(timeXAxis);
+            a.LegendPlacement = LegendPlacement.Outside;
+            a.LegendPosition = LegendPosition.RightTop;
             FOPlotModel = a;
         }
 
         private OxyColor _mapFrequencyToColor(float frequency)
         {
-            OxyColor color;
+            //OxyColor color;
             var colorCount = FilteredResults.Count;
             var minFreq = FilteredResults.Select(x => x.TypicalFrequency).Min();
             var maxFreq = FilteredResults.Select(x => x.TypicalFrequency).Max();

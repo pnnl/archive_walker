@@ -60,7 +60,14 @@ namespace BAWGUI.Results.ViewModels
         //public void LoadResults(List<string> filenames, string startDate, string endDate)
         public void LoadResults(List<string> filenames, List<string> dates)
         {
-            _getAvailableDates(dates);
+            try
+            {
+                _getAvailableDates(dates);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error parsing available dates from result files. " + ex.Message);
+            }
             //if (filenames.Count() != dates.Count())
             //{
 
@@ -159,7 +166,7 @@ namespace BAWGUI.Results.ViewModels
             }
             YearList = _availableDateDict.Keys.ToList();
             DateStruct date1 = dateList.FirstOrDefault();
-            string d1 = date1.Year.Substring(2,2) + date1.Month + date1.Day;
+            string d1 = date1.Year.Substring(2, 2) + date1.Month + date1.Day;
             DateStruct date2 = dateList.LastOrDefault();
             string d2= date2.Year.Substring(2, 2) + date2.Month + date2.Day;
             FirstAvailableDate = DateTime.ParseExact(d1, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");

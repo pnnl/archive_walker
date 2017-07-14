@@ -205,7 +205,8 @@ Public Class ReaderProperties
         'RealTimeModeVisibility = Visibility.Collapsed
         'HybridModeVisibility = Visibility.Collapsed
 
-        '_dateTimeStart = ""
+        _dateTimeStart = ""
+        _dateTimeEnd = ""
         _selectedTimeZone = TimeZoneInfo.Local
 
         _inputFileInfos = New ObservableCollection(Of InputFileInfo)

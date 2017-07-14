@@ -932,11 +932,20 @@ Partial Public Class SettingsViewModel
         Dim mode As XElement = <Mode>
                                    <Name><%= DataConfigure.ReaderProperty.ModeName %></Name>
                                </Mode>
+        Dim dtStart, dtEnd As DateTime
         Select Case DataConfigure.ReaderProperty.ModeName
             Case ModeType.Archive
-                Dim dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                Try
+                    dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                Catch ex As Exception
+                    Throw New Exception("Error parsing start time.")
+                End Try
+                Try
+                    dtEnd = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                Catch ex As Exception
+                    Throw New Exception("Error parsing end time.")
+                End Try
                 Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
-                Dim dtEnd = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
                 Dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
                 Dim parameters As XElement = <Params>
                                                  <DateTimeStart><%= dtStringStart %></DateTimeStart>
@@ -944,7 +953,11 @@ Partial Public Class SettingsViewModel
                                              </Params>
                 mode.Add(parameters)
             Case ModeType.Hybrid
-                Dim dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                Try
+                    dtStart = DateTime.Parse(DataConfigure.ReaderProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                Catch ex As Exception
+                    Throw New Exception("Error parsing start time.")
+                End Try
                 Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
                 Dim parameters As XElement = <Params>
                                                  <DateTimeStart><%= dtStringStart %></DateTimeStart>
@@ -1470,7 +1483,16 @@ Partial Public Class SettingsViewModel
                 For Each parameter In singleStep.FilterParameters
                     'Dim a = {parameter}ParameterName
                     'Dim para As XElement = <<%= parameter.ParameterName.ToString %>><%= parameter.Value %></>
-                    Dim para As XElement = New XElement(parameter.ParameterName.ToString, parameter.Value)
+                    Dim para As XElement
+                    If TypeOf parameter.Value Is Boolean Then
+                        If parameter.Value Then
+                            para = New XElement(parameter.ParameterName.ToString, "TRUE")
+                        Else
+                            para = New XElement(parameter.ParameterName.ToString, "FALSE")
+                        End If
+                    Else
+                        para = New XElement(parameter.ParameterName.ToString, parameter.Value)
+                    End If
                     aStep.<Parameters>.LastOrDefault.Add(para)
                 Next
                 If singleStep.Name = "PMU Status Flags Data Quality Filter" Then
@@ -2767,7 +2789,7 @@ Partial Public Class SettingsViewModel
             If parameter = "SetToNaN" Or parameter = "FlagAllByFreq" Then
                 newFilter.FilterParameters.Add(New ParameterValuePair(parameter, False))
             ElseIf newFilter.Name = "Nominal-Value Frequency Data Quality Filter" And parameter = "FlagBit" Then
-                newFilter.FilterParameters.Add(New ParameterValuePair(parameter, False, False))
+                newFilter.FilterParameters.Add(New ParameterValuePair(parameter, "", False))
             Else
                 newFilter.FilterParameters.Add(New ParameterValuePair(parameter, ""))
             End If

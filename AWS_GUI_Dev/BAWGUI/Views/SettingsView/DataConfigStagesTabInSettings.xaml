@@ -183,13 +183,13 @@
                                                                         </Image.Style>
                                                                     </Image>
                                                                     <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" HorizontalAlignment="Left"/>
-                                                                    <ContentPresenter Content="{Binding Value}" HorizontalAlignment="Right" Grid.Column="2">
+                                                                    <ContentPresenter Content="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Grid.Column="2">
                                                                         <ContentPresenter.Resources>
                                                                             <DataTemplate DataType="{x:Type sys:Boolean}">
-                                                                                <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
+                                                                                <CheckBox IsChecked="{Binding Path=Content, RelativeSource={RelativeSource AncestorType=ContentPresenter}}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Right"/>
                                                                             </DataTemplate>
                                                                             <DataTemplate DataType="{x:Type sys:String}">
-                                                                                <TextBox Text="{Binding Path=.}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
+                                                                                <TextBox Text="{Binding Path=Content, RelativeSource={RelativeSource AncestorType=ContentPresenter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
                                                                             </DataTemplate>
                                                                         </ContentPresenter.Resources>
                                                                     </ContentPresenter>

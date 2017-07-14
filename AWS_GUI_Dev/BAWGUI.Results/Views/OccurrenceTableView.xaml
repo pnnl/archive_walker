@@ -16,7 +16,7 @@
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
         </DataTemplate>
     </UserControl.Resources>    
-    <xcdg:DataGridControl ItemsSource="{Binding SelectedOscillationEvent.FilteredOccurrences}" SelectedItem="{Binding SelectedOccurrence}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedOscillationEvent.FilteredOccurrences}" SelectedItem="{Binding SelectedOccurrence}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowChannelWindow}"/>

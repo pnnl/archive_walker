@@ -81,7 +81,7 @@ Public Class MainViewModel
             Dim dates = New List(Of String)
             For Each file In filenames
                 Dim nameFragment = file.Name.Split(New Char() {".", "_"})
-                If file.Extension.ToLower = ".xml" And nameFragment.Length = 3 Then
+                If file.Extension.ToLower = ".xml" And nameFragment.Length = 3 And nameFragment(0).ToLower = "eventlist" Then
                     Dim datestr = nameFragment(1)
                     Try
                         Date.ParseExact(datestr, "yyMMdd", CultureInfo.InvariantCulture)
@@ -90,34 +90,44 @@ Public Class MainViewModel
                     Catch ex As Exception
                         If file.Name.ToLower = "eventlist_current.xml" Then
                             files.Add(file.FullName)
+                            'Else
+                            '    MessageBox.Show("Invalid filename " & file.Name & " found!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         End If
                     End Try
                 End If
             Next
-            If Not files.Count = dates.Count Then
-                dates.Sort()
-                Dim lastDate = dates.LastOrDefault
-                dates.Add((Convert.ToInt32(lastDate) + 1).ToString)
+            If files.Count > 0 Then
+                If Not files.Count = dates.Count Then
+                    dates.Sort()
+                    Dim lastDate = dates.LastOrDefault
+                    dates.Add((Convert.ToInt32(lastDate) + 1).ToString)
+                End If
+                'dates.Sort()
+                'Dim startDate As String
+                'Dim endDate As String
+                'If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart) Then
+                '    startDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart).ToString("yyMMdd")
+                'Else
+                '    startDate = dates.FirstOrDefault
+                'End If
+                'If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd) Then
+                '    endDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd).ToString("yyMMdd")
+                'Else
+                '    endDate = dates.LastOrDefault
+                'End If
+                Try
+                    '_resultsViewModel.LoadResults(files, startDate, endDate)
+                    _resultsViewModel.LoadResults(files, dates)
+                Catch ex As Exception
+                    Dim errorStr = "Error loading results: " & ex.Message
+                    If ex.InnerException IsNot Nothing Then
+                        errorStr = errorStr & vbCrLf & ex.InnerException.Message
+                    End If
+                    MessageBox.Show(errorStr, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
+            Else
+                MessageBox.Show("No valid file found in folder: " & openDirectoryDialog.SelectedPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-            'dates.Sort()
-            'Dim startDate As String
-            'Dim endDate As String
-            'If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart) Then
-            '    startDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeStart).ToString("yyMMdd")
-            'Else
-            '    startDate = dates.FirstOrDefault
-            'End If
-            'If Not String.IsNullOrEmpty(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd) Then
-            '    endDate = Date.Parse(SettingsViewModel.DataConfigure.ReaderProperty.DateTimeEnd).ToString("yyMMdd")
-            'Else
-            '    endDate = dates.LastOrDefault
-            'End If
-            Try
-                '_resultsViewModel.LoadResults(files, startDate, endDate)
-                _resultsViewModel.LoadResults(files, dates)
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
         End If
         'Dim openFileDialog As New System.Windows.Forms.OpenFileDialog()
         'openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"

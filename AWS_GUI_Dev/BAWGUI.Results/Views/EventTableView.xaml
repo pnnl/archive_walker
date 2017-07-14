@@ -26,7 +26,7 @@
         </xcdg:DataGridCollectionViewSource.ItemProperties>
     </xcdg:DataGridCollectionViewSource>-->
     <!--<StackPanel Orientation="Vertical">-->
-    <xcdg:DataGridControl ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
