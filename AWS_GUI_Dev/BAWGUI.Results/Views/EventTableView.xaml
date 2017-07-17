@@ -16,6 +16,13 @@
         <DataTemplate x:Key="FloatCellTemplate">
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
         </DataTemplate>
+        <Style TargetType="{x:Type xcdg:DataRow}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES">
+                    <Setter Property="Background" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <!--<xcdg:DataGridCollectionViewSource Source="{Binding FilteredResults}">
         <xcdg:DataGridCollectionViewSource.ItemProperties>
@@ -72,22 +79,22 @@
                 <xcdg:DataGridBindingInfo Path="overallEndTime" Converter="{StaticResource DateTimeStringConverter}" ConverterParameter="TimeOnly" ReadOnly="True"/>
             </xcdg:Column.DisplayMemberBindingInfo>
         </xcdg:Column>-->
-            <xcdg:Column Title="" FieldName=" " Width="30" AllowSort="False">
+            <xcdg:Column Title="" FieldName=" " Width="25" AllowSort="False">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource TableRowIndexConverter} }" />
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
-            <xcdg:Column Title="Overall Start Time" FieldName="OverallStartTime" ReadOnly="True"/>
-            <xcdg:Column Title="Overall End Time" FieldName="OverallEndTime" ReadOnly="True"/>
-            <xcdg:Column Title="Alarm" FieldName="Alarm" ReadOnly="True"/>
-            <xcdg:Column Title="Typical Frequency" FieldName="TypicalFrequency" ReadOnly="True"/>
-            <xcdg:Column Title="Max Persistence" FieldName="MaxPersistence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
-            <xcdg:Column Title="Max Amplitude" FieldName="MaxAmplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
-            <xcdg:Column Title="Max SNR" FieldName="MaxSNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
-            <xcdg:Column Title="Max Coherence" FieldName="MaxCoherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
-            <xcdg:Column Title="Number Of Occurrences" FieldName="NumberOfOccurrences" ReadOnly="True"/>
+            <xcdg:Column Title="Overall Start Time" FieldName="OverallStartTime" ReadOnly="True" Width="120"/>
+            <xcdg:Column Title="Overall End Time" FieldName="OverallEndTime" ReadOnly="True" Width="120"/>
+            <xcdg:Column Title="Alarm" FieldName="Alarm" ReadOnly="True" Width="40"/>
+            <xcdg:Column Title="Typical Frequency" FieldName="TypicalFrequency" ReadOnly="True" Width="110"/>
+            <xcdg:Column Title="Max Persistence" FieldName="MaxPersistence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+            <xcdg:Column Title="Max Amplitude" FieldName="MaxAmplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+            <xcdg:Column Title="Max SNR" FieldName="MaxSNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
+            <xcdg:Column Title="Max Coherence" FieldName="MaxCoherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+            <xcdg:Column Title="Number Of Occurrences" FieldName="NumberOfOccurrences" ReadOnly="True" Width="*"/>
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>
         <!--views:OccurrenceTablePopup-->

@@ -72,7 +72,8 @@ namespace BAWGUI.Results.ViewModels
                     //    _filteredResults.Add(new ForcedOscillationResultViewModel(model, ocur));
                     //}
                 }
-
+                //_filteredResults.OrderBy(x => x.TypicalFrequency).OrderBy(y => y.Alarm);
+                //_filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>(_filteredResults.OrderByDescending(x => x.OverallStartTime).OrderByDescending(y => y.Alarm));
                 // We shouldn't need this thanks to the ObservableCollection.
                 OnPropertyChanged();
             }
@@ -143,7 +144,7 @@ namespace BAWGUI.Results.ViewModels
                     //}
                 }
             }
-            FilteredResults = newResults;
+            FilteredResults = new ObservableCollection<ForcedOscillationResultViewModel>(newResults.OrderBy(x=>x.OverallStartTime).OrderByDescending(y=>y.Alarm));
             _drawFOPlot();
         }
 
@@ -334,8 +335,10 @@ namespace BAWGUI.Results.ViewModels
             a.Series.Add(alarmSeries);
 
             heatMapData.Sort();
-            a.Axes.Add(new LinearColorAxis { Palette = new OxyPalette(a.DefaultColors.OrderBy(x => x.G)), Position = AxisPosition.Right, Minimum = heatMapData.Min(), Maximum = heatMapData.Max(), Title = "Frequency (Hz)", MajorStep = 0.2 });
-         
+            if (a.DefaultColors.Count > 0)
+                a.Axes.Add(new LinearColorAxis { Palette = new OxyPalette(a.DefaultColors.OrderBy(x => x.G)), Position = AxisPosition.Right, Minimum = heatMapData.Min(), Maximum = heatMapData.Max(), Title = "Frequency (Hz)", MajorStep = 0.2 });
+            //else
+            //    a.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Minimum = heatMapData.Min(), Maximum = heatMapData.Max(), Title = "Frequency (Hz)", MajorStep = 0.2 });
             //var frequencyHeatMap = new HeatMapSeries
             //{
             //    X0 = 0,

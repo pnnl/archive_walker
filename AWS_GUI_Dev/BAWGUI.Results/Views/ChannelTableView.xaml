@@ -35,10 +35,10 @@
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
-            <xcdg:Column Title="Name" FieldName="Name" ReadOnly="True"/>
-            <xcdg:Column Title="Amplitude" FieldName="Amplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
-            <xcdg:Column Title="SNR" FieldName="SNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
-            <xcdg:Column Title="Coherence" FieldName="Coherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True"/>
+            <xcdg:Column Title="Name" FieldName="Name" ReadOnly="True" Width="250"/>
+            <xcdg:Column Title="Amplitude" FieldName="Amplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+            <xcdg:Column Title="SNR" FieldName="SNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
+            <xcdg:Column Title="Coherence" FieldName="Coherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>
 </UserControl>
