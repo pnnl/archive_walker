@@ -155,6 +155,9 @@
                                                                     <DataTrigger Binding="{Binding Name}" Value="PMU Status Flags Data Quality Filter">
                                                                         <Setter Property="ContentTemplate" Value="{StaticResource PMUOnlyFilterListBox}"/>
                                                                     </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Name}" Value="Entire PMU Data Quality Filter">
+                                                                        <Setter Property="ContentTemplate" Value="{StaticResource PMUOnlyFilterListBox}"/>
+                                                                    </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </ContentControl.Style>

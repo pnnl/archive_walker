@@ -1663,7 +1663,10 @@ Partial Public Class SettingsViewModel
                         If _currentSelectedStep.Name = "Addition Customization" Then
                             _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
                         End If
-                        MessageBox.Show("Error selecting signal(s) for customization step!" & ex.Message, "Error!", MessageBoxButtons.OK)
+                        If _currentSelectedStep.Name = "Return angle of complex valued signals" Then
+                            _removeMatchingInputOutputSignalsUnary(obj)
+                        End If
+                        MessageBox.Show("Error selecting signal(s) for customization step! " & ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
                 End If
             End If
@@ -1678,7 +1681,7 @@ Partial Public Class SettingsViewModel
             If inputOutputPair.Value.Count > 0 Then
                 Dim input = inputOutputPair.Value(0)
                 If input.IsValid AndAlso input.TypeAbbreviation.Length = 3 Then
-                    Dim letter2 = input.TypeAbbreviation.ToArray(1)
+                    Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
                     If letter2 = "P" Then
                         inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
                     End If
