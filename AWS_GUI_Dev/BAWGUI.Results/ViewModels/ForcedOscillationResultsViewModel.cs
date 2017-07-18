@@ -34,6 +34,8 @@ namespace BAWGUI.Results.ViewModels
             _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
             _models = new List<DatedForcedOscillationEvent>();
             _foPlotModel = new PlotModel();
+            //_selectedOscillationEvent = null;
+            //_selectedOccurrence = null;
         }
 
         //private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
@@ -131,7 +133,7 @@ namespace BAWGUI.Results.ViewModels
                     }
                     if (newOcurs.Count != 0)
                     {
-                        evnt.FilteredOccurrences = newOcurs;
+                        evnt.FilteredOccurrences = new ObservableCollection<OccurrenceViewModel>(newOcurs.OrderBy(x => x.Start).OrderByDescending(y => y.Alarm));
                         newResults.Add(evnt);
                     }
 

@@ -16,12 +16,49 @@
         <DataTemplate x:Key="FloatCellTemplate">
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
         </DataTemplate>
-        <Style TargetType="{x:Type xcdg:DataRow}">
+        
+        <SolidColorBrush Opacity="0.2" x:Key="SelectionBackGround"/>
+
+        <!--<Style TargetType="{x:Type xcdg:DataRow}">
+            <Setter Property="SelectionBackground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+            <Setter Property="InactiveSelectionBackground"  Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES">
-                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="Foreground" Value="Red"/>
+                    <Setter Property="FontWeight" Value="ExtraBold"/>
                 </DataTrigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                    <Setter Property="SelectionForeground" Value="Black"/>
+                    <Setter Property="SelectionBackground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                    <Setter Property="SelectionForeground" Value="Black"/>
+                    <Setter Property="SelectionBackground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                </Trigger>
             </Style.Triggers>
+        </Style>-->
+
+        <Style TargetType="{x:Type xcdg:DataCell}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES">
+                    <Setter Property="Foreground" Value="Red"/>
+                    <Setter Property="FontWeight" Value="ExtraBold"/>
+                </DataTrigger>
+                <!--<Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                    <Setter Property="SelectionForeground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                    <Setter Property="SelectionBackground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                    <Setter Property="SelectionForeground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                    <Setter Property="SelectionBackground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+                </Trigger>-->
+            </Style.Triggers>
+            <!--<Setter Property="SelectionBackground" Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>
+            <Setter Property="InactiveSelectionBackground"  Value="{Binding Source={StaticResource ResourceKey=SelectionBackGround}}"/>-->
         </Style>
     </UserControl.Resources>
     <!--<xcdg:DataGridCollectionViewSource Source="{Binding FilteredResults}">
@@ -33,7 +70,7 @@
         </xcdg:DataGridCollectionViewSource.ItemProperties>
     </xcdg:DataGridCollectionViewSource>-->
     <!--<StackPanel Orientation="Vertical">-->
-    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedIndex="5" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
