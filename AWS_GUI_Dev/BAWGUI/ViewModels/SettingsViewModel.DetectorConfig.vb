@@ -40,6 +40,7 @@ Partial Public Class SettingsViewModel
             Case Else
                 Throw New Exception("Unknown detector selected to add.")
         End Select
+        newDetector.IsExpanded = True
         newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & " Detector " & newDetector.Name
         newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
         GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
@@ -65,6 +66,7 @@ Partial Public Class SettingsViewModel
                     End If
                 Next
                 Dim newDetector = New AlarmingRingdown
+                newDetector.IsExpanded = True
                 DetectorConfigure.AlarmingList.Add(newDetector)
                 _selectedADetector(newDetector)
             Case "Periodogram"
@@ -75,6 +77,7 @@ Partial Public Class SettingsViewModel
                     End If
                 Next
                 Dim newDetector = New AlarmingPeriodogram
+                newDetector.IsExpanded = True
                 DetectorConfigure.AlarmingList.Add(newDetector)
                 _selectedADetector(newDetector)
             Case "SpectralCoherence"
@@ -85,6 +88,7 @@ Partial Public Class SettingsViewModel
                     End If
                 Next
                 Dim newDetector = New AlarmingSpectralCoherence
+                newDetector.IsExpanded = True
                 DetectorConfigure.AlarmingList.Add(newDetector)
                 _selectedADetector(newDetector)
             Case Else
@@ -210,26 +214,31 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteADetector(obj As Object)
-        Try
-            If TypeOf obj Is DetectorBase Then
-                Dim newlist = New ObservableCollection(Of DetectorBase)(DetectorConfigure.DetectorList)
-                newlist.Remove(obj)
-                DetectorConfigure.DetectorList = newlist
-                _addLog("Detector " & obj.Name & " is deleted!")
-                GroupedSignalByDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
-                For index = 1 To GroupedSignalByDetectorInput.Count
-                    GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & " Detector " & DetectorConfigure.DetectorList(index - 1).Name
-                Next
-            Else
-                Dim newlist = New ObservableCollection(Of AlarmingDetectorBase)(DetectorConfigure.AlarmingList)
-                newlist.Remove(obj)
-                DetectorConfigure.AlarmingList = newlist
-                _addLog("Alarming detector " & obj.Name & " is deleted from alarming!")
-            End If
-            _deSelectAllDetectors()
-        Catch ex As Exception
-
-        End Try
+        Dim result = MessageBox.Show("Delete detector " & obj.Name & " in Detector Configuration?", "Warning!", MessageBoxButtons.OKCancel)
+        If result = DialogResult.OK Then
+            Try
+                If TypeOf obj Is DetectorBase Then
+                    Dim newlist = New ObservableCollection(Of DetectorBase)(DetectorConfigure.DetectorList)
+                    newlist.Remove(obj)
+                    DetectorConfigure.DetectorList = newlist
+                    _addLog("Detector " & obj.Name & " is deleted!")
+                    GroupedSignalByDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
+                    For index = 1 To GroupedSignalByDetectorInput.Count
+                        GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & " Detector " & DetectorConfigure.DetectorList(index - 1).Name
+                    Next
+                Else
+                    Dim newlist = New ObservableCollection(Of AlarmingDetectorBase)(DetectorConfigure.AlarmingList)
+                    newlist.Remove(obj)
+                    DetectorConfigure.AlarmingList = newlist
+                    _addLog("Alarming detector " & obj.Name & " is deleted from alarming!")
+                End If
+                _deSelectAllDetectors()
+            Catch ex As Exception
+                MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
+            End Try
+        Else
+            Exit Sub
+        End If
     End Sub
 #End Region
 

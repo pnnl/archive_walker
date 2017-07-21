@@ -94,6 +94,7 @@ Public Class Unwrap
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         Name = "Unwrap"
+        IsExpanded = False
     End Sub
     Public Overrides Property Name As String
     'Private _inputChannels As ObservableCollection(Of SignalSignatures)
@@ -131,6 +132,7 @@ Public Class Interpolate
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         Name = "Interpolate"
+        IsExpanded = False
     End Sub
     Public Overrides Property Name As String
 
@@ -206,6 +208,7 @@ Public Class Wrap
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         Name = "Wrap"
+        IsExpanded = False
     End Sub
 
     Public Overrides Property Name As String
@@ -227,6 +230,7 @@ Public Class TunableFilter
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         Name = "Filter"
         Type = TunableFilterType.Rational
+        IsExpanded = False
     End Sub
 
     Private _type As TunableFilterType
@@ -277,6 +281,7 @@ Public Class Multirate
         _pElement = 1
         _qElement = 1
         _newRate = 1
+        IsExpanded = False
     End Sub
 
     Private _name As String
@@ -422,6 +427,7 @@ Public Class NameTypeUnitPMU
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         _name = "Signal Type and Unit Specification"
+        IsExpanded = False
     End Sub
 
     Private _name As String

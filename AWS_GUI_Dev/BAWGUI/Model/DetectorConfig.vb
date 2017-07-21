@@ -83,6 +83,7 @@ Public Class PeriodogramDetector
         _pfa = "0.01"
         InputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get
@@ -209,6 +210,7 @@ Public Class SpectralCoherenceDetector
         _thresholdScale = 3
         InputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        IsExpanded = False
         '_windowLength = _analysisLength / 5
     End Sub
     Public Overrides ReadOnly Property Name As String
@@ -352,6 +354,7 @@ Public Class RingdownDetector
     Public Sub New()
         InputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get
@@ -405,6 +408,7 @@ Public Class OutOfRangeGeneralDetector
     Public Sub New()
         InputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get
@@ -458,6 +462,7 @@ Public Class OutOfRangeFrequencyDetector
     Public Sub New()
         InputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get
@@ -571,6 +576,7 @@ Public Class WindRampDetector
     Public Sub New()
         InputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get
@@ -680,7 +686,7 @@ End Enum
 Public Class AlarmingSpectralCoherence
     Inherits AlarmingDetectorBase
     Public Sub New()
-
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get
@@ -742,7 +748,7 @@ End Class
 Public Class AlarmingPeriodogram
     Inherits AlarmingDetectorBase
     Public Sub New()
-
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get
@@ -804,7 +810,7 @@ End Class
 Public Class AlarmingRingdown
     Inherits AlarmingDetectorBase
     Public Sub New()
-
+        IsExpanded = False
     End Sub
     Public Overrides ReadOnly Property Name As String
         Get

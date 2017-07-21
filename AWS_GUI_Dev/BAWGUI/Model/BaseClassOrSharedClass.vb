@@ -100,6 +100,7 @@ Public Class Filter
         
         OutputChannels = New ObservableCollection(Of SignalSignatures)
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+        IsExpanded = False
     End Sub
     Private _name As String
     Public Overrides Property Name As String
@@ -223,6 +224,17 @@ Public MustInherit Class SignalProcessStep
             OnPropertyChanged()
         End Set
     End Property
+
+    Private _isExpanded As Boolean
+    Public Property IsExpanded As Boolean
+        Get
+            Return _isExpanded
+        End Get
+        Set(ByVal value As Boolean)
+            _isExpanded = value
+            OnPropertyChanged()
+        End Set
+    End Property
 End Class
 
 Public MustInherit Class DetectorBase
@@ -261,6 +273,16 @@ Public MustInherit Class DetectorBase
             OnPropertyChanged()
         End Set
     End Property
+    Private _isExpanded As Boolean
+    Public Property IsExpanded As Boolean
+        Get
+            Return _isExpanded
+        End Get
+        Set(ByVal value As Boolean)
+            _isExpanded = value
+            OnPropertyChanged()
+        End Set
+    End Property
 End Class
 
 Public MustInherit Class AlarmingDetectorBase
@@ -275,6 +297,16 @@ Public MustInherit Class AlarmingDetectorBase
         End Get
         Set(ByVal value As Boolean)
             _isStepSelected = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _isExpanded As Boolean
+    Public Property IsExpanded As Boolean
+        Get
+            Return _isExpanded
+        End Get
+        Set(ByVal value As Boolean)
+            _isExpanded = value
             OnPropertyChanged()
         End Set
     End Property

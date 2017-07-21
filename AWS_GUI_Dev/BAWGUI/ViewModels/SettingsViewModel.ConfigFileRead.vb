@@ -778,6 +778,17 @@ Partial Public Class SettingsViewModel
                 End If
             Next
         Next
+        For Each group In GroupedSignalByPostProcessConfigStepsOutput
+            For Each subgroup In group.SignalList
+                If subgroup.SignalSignature.PMUName = pmu Then
+                    For Each subsubgroup In subgroup.SignalList
+                        If subsubgroup.SignalSignature.SignalName = channel Then
+                            Return subsubgroup.SignalSignature
+                        End If
+                    Next
+                End If
+            Next
+        Next
         Return Nothing
     End Function
 #End Region
@@ -1144,7 +1155,7 @@ Partial Public Class SettingsViewModel
         Try
             newDetector.InputChannels = _readPMUElements(detector)
         Catch ex As Exception
-            _addLog("In Spectral Coherence detector" & ex.Message)
+            _addLog("In Spectral Coherence detector: " & ex.Message)
         End Try
         newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
         GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
@@ -1168,7 +1179,7 @@ Partial Public Class SettingsViewModel
         Try
             newDetector.InputChannels = _readPMUElements(detector)
         Catch ex As Exception
-            _addLog("In Periodogram detector" & ex.Message)
+            _addLog("In Periodogram detector: " & ex.Message)
         End Try
         newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
         GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)

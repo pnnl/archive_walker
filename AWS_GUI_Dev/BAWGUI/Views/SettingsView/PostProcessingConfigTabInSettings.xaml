@@ -119,7 +119,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
-                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}" IsExpanded="{Binding IsExpanded}">
                                             <ContentControl Content="{Binding}" Name="Steps">
                                                 <ContentControl.Style>
                                                     <Style TargetType="ContentControl">

@@ -14,7 +14,7 @@
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="2">
         <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
-            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+            <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -27,7 +27,7 @@
             </Image>
             <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="Exponent: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
             <TextBox Text="{Binding Exponent}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
-            <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+            <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>

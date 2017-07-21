@@ -16,6 +16,11 @@
         </DataTemplate>
     </UserControl.Resources>
     <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedOccurrence.Channels}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <xcdg:DataGridControl.Resources>
+            <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
+                <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
+            </Style>
+        </xcdg:DataGridControl.Resources>
         <xcdg:DataGridControl.View>
             <xcdg:TableflowView UseDefaultHeadersFooters="False">
                 <xcdg:TableflowView.FixedHeaders>

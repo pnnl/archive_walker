@@ -199,7 +199,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
-                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}" IsExpanded="{Binding IsExpanded}">
                                             <Grid Margin="2">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*"/>
@@ -333,7 +333,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
-                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}" IsExpanded="{Binding IsExpanded}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="6*"/>
@@ -406,7 +406,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
-                                        <Expander Grid.Column="0">
+                                        <Expander Grid.Column="0" IsExpanded="{Binding IsExpanded}">
                                             <Expander.Header>
                                                 <TextBlock Margin="0">
                                                     <TextBlock.Text>
@@ -531,7 +531,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
-                                        <Expander Grid.Column="0">
+                                        <Expander Grid.Column="0" IsExpanded="{Binding IsExpanded}">
                                             <Expander.Header>
                                                 <TextBlock>
                                                     <TextBlock.Text>
@@ -638,7 +638,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
-                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}" IsExpanded="{Binding IsExpanded}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="6*"/>
@@ -756,7 +756,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
-                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}">
+                                        <Expander Grid.Column="0" Header="{Binding Converter={StaticResource ExpanderHeaderConverter}}" IsExpanded="{Binding IsExpanded}">
                                             <StackPanel Orientation="Vertical" Margin="2">
                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
                                                 <local:FilterListBox/>

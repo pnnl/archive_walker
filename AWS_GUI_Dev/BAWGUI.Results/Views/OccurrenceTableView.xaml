@@ -15,14 +15,14 @@
         <DataTemplate x:Key="FloatCellTemplate">
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
         </DataTemplate>
-        <Style TargetType="{x:Type xcdg:DataCell}">
+        <!--<Style TargetType="{x:Type xcdg:DataCell}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES">
                     <Setter Property="Foreground" Value="Red"/>
                     <Setter Property="FontWeight" Value="ExtraBold"/>
                 </DataTrigger>
             </Style.Triggers>
-        </Style>
+        </Style>-->
     </UserControl.Resources>    
     <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedOscillationEvent.FilteredOccurrences}" SelectedItem="{Binding SelectedOccurrence}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
         <i:Interaction.Triggers>
@@ -30,6 +30,27 @@
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowChannelWindow}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
+        <xcdg:DataGridControl.Resources>
+            <Style TargetType="{x:Type xcdg:DataCell}">
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=FieldName}" Value="Alarm"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="Red"/>
+                        <Setter Property="FontWeight" Value="ExtraBold"/>
+                    </MultiDataTrigger>
+                    <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES">
+                        <Setter Property="Foreground" Value="Red"/>
+                        <Setter Property="FontWeight" Value="ExtraBold"/>
+                    </DataTrigger>-->
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
+                <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
+            </Style>
+        </xcdg:DataGridControl.Resources>
         <xcdg:DataGridControl.View>
             <xcdg:TableflowView UseDefaultHeadersFooters="False">
                 <xcdg:TableflowView.FixedHeaders>

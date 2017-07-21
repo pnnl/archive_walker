@@ -26,7 +26,7 @@ Public Class DataConfig
                                                                         {"Replaced-by-Zero Dropout Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
                                                                         {"Replaced-by-Missing Dropout Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
                                                                         {"Nominal-Value Voltage Phasor Data Quality Filter", {"SetToNaN", "FlagBit", "VoltMin", "VoltMax", "NomVoltage"}.ToList},
-                                                                        {"Nominal-Value Frequency Data Quality Filter", {"SetToNaN", "FlagBit", "FreqMinChan", "FreqMaxChan", "FreqPctChan", "FreqMinSamp", "FreqMaxSamp", "FlagBitChan", "FlagBitSamp"}.ToList},
+                                                                        {"Nominal-Value Frequency Data Quality Filter", {"SetToNaN", "FreqMinChan", "FreqMaxChan", "FreqPctChan", "FreqMinSamp", "FreqMaxSamp", "FlagBitChan", "FlagBitSamp"}.ToList},
                                                                         {"Outlier Data Quality Filter", {"SetToNaN", "FlagBit", "StdDevMult"}.ToList},
                                                                         {"Stale Measurements Data Quality Filter", {"SetToNaN", "FlagBit", "StaleThresh", "FlagAllByFreq", "FlagBitFreq"}.ToList},
                                                                         {"Measurement Frame Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
@@ -560,6 +560,7 @@ Public Class InputFileInfo
         _groupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
         _groupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
         _taggedSignals = New ObservableCollection(Of SignalSignatures)
+        _isExpanded = False
     End Sub
     Private _fileDirectory As String
     Public Property FileDirectory As String
@@ -642,7 +643,16 @@ Public Class InputFileInfo
             OnPropertyChanged()
         End Set
     End Property
-
+    Private _isExpanded As Boolean
+    Public Property IsExpanded As Boolean
+        Get
+            Return _isExpanded
+        End Get
+        Set(ByVal value As Boolean)
+            _isExpanded = value
+            OnPropertyChanged()
+        End Set
+    End Property
     'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
     'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
     '    Get
@@ -725,6 +735,7 @@ Public Class Customization
         ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
         _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         _exponent = "1"
+        IsExpanded = False
         '_outputInputMultipleMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
     End Sub
 

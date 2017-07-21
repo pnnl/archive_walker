@@ -10,7 +10,7 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Border>
-                    <Expander Margin="5,0,0,0">
+                    <Expander Margin="5,0,0,0" IsExpanded="{Binding IsExpanded}">
                         <Expander.Header>
                             <TextBlock>
                                 <TextBlock.Text>

@@ -556,25 +556,30 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteAPostProcessStep(obj As Object)
-        Try
-            PostProcessConfigure.CollectionOfSteps.Remove(obj)
-            Dim steps = New ObservableCollection(Of Customization)(PostProcessConfigure.CollectionOfSteps)
-            For Each stp In steps
-                If stp.StepCounter > obj.StepCounter Then
-                    stp.StepCounter -= 1
-                    If TypeOf (stp) Is Customization Then
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
+        Dim result = MessageBox.Show("Delete step " & obj.StepCounter.ToString & " in Post Process Configuration: " & obj.Name & " ?", "Warning!", MessageBoxButtons.OKCancel)
+        If result = DialogResult.OK Then
+            Try
+                PostProcessConfigure.CollectionOfSteps.Remove(obj)
+                Dim steps = New ObservableCollection(Of Customization)(PostProcessConfigure.CollectionOfSteps)
+                For Each stp In steps
+                    If stp.StepCounter > obj.StepCounter Then
+                        stp.StepCounter -= 1
+                        If TypeOf (stp) Is Customization Then
+                            stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
+                        End If
+                        stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
                     End If
-                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
-                End If
-            Next
-            _deSelectAllPostProcessConfigSteps()
-            _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
-            PostProcessConfigure.CollectionOfSteps = steps
-            SignalSelectionTreeViewVisibility = "Visible"
-        Catch ex As Exception
-            MessageBox.Show("Error deleting step " & obj.StepCounter.ToString & " in Post Process Configuration, " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
-        End Try
+                Next
+                _deSelectAllPostProcessConfigSteps()
+                _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
+                PostProcessConfigure.CollectionOfSteps = steps
+                SignalSelectionTreeViewVisibility = "Visible"
+            Catch ex As Exception
+                MessageBox.Show("Error deleting step " & obj.StepCounter.ToString & " in Post Process Configuration, " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
+            End Try
+        Else
+            Exit Sub
+        End If
     End Sub
 
     Private Sub _groupAllPostProcessConfigOutputSignal()

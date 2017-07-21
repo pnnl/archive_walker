@@ -193,6 +193,9 @@
     <Compile Include="Views\SettingsView\PeriodogramDetectorView.xaml.vb">
       <DependentUpon>PeriodogramDetectorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingsView\PMUOnlyFilterListBox.xaml.vb">
+      <DependentUpon>PMUOnlyFilterListBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView\PostProcessingConfigTabInSettings.xaml.vb">
       <DependentUpon>PostProcessingConfigTabInSettings.xaml</DependentUpon>
     </Compile>
@@ -323,6 +326,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView\PeriodogramDetectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView\PMUOnlyFilterListBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

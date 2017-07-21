@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
-            <Expander Grid.Column="0">
+            <Expander Grid.Column="0" IsExpanded="{Binding IsExpanded}">
                 <Expander.Header>
                     <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
                         <Binding/>

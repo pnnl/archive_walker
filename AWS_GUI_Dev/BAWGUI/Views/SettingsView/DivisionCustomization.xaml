@@ -25,14 +25,14 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-            <xtlkt:WatermarkTextBox Name="MDPMU" ToolTip="Signal 1" Watermark="Enter PMU name" Text="{Binding MinuendOrDividend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <xtlkt:WatermarkTextBox Name="MDPMU" ToolTip="Signal 1" Watermark="Select PMU name" Text="{Binding MinuendOrDividend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotKeyboardFocus">
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </xtlkt:WatermarkTextBox>
-            <xtlkt:WatermarkTextBox Name="MinuendOrDividend" ToolTip="Signal 1" Watermark="Enter signal name" Text="{Binding MinuendOrDividend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <xtlkt:WatermarkTextBox Name="MinuendOrDividend" ToolTip="Signal 1" Watermark="Select signal name" Text="{Binding MinuendOrDividend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding MinuendOrDividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotKeyboardFocus">
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding MinuendOrDividend}"/>
@@ -40,14 +40,14 @@
                 </i:Interaction.Triggers>
             </xtlkt:WatermarkTextBox>
             <TextBlock HorizontalAlignment="Right" Margin="5,0,5,0" FontSize="24" Grid.Row="1" Grid.Column="0" Text="/" VerticalAlignment="Bottom"></TextBlock>
-            <xtlkt:WatermarkTextBox Name="SDPMU" ToolTip="Signal 2" Watermark="Enter PMU name" Text="{Binding SubtrahendOrDivisor.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <xtlkt:WatermarkTextBox Name="SDPMU" ToolTip="Signal 2" Watermark="Select PMU name" Text="{Binding SubtrahendOrDivisor.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotKeyboardFocus">
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </xtlkt:WatermarkTextBox>
-            <xtlkt:WatermarkTextBox Name="SubtrahendOrDivisor" ToolTip="Signal 2" Watermark="Enter signal name" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <xtlkt:WatermarkTextBox Name="SubtrahendOrDivisor" ToolTip="Signal 2" Watermark="Select signal name" Text="{Binding SubtrahendOrDivisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding SubtrahendOrDivisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotKeyboardFocus">
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding SubtrahendOrDivisor}"/>

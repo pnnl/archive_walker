@@ -6,18 +6,24 @@
              xmlns:local="clr-namespace:BAWGUI"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <TextBlock Margin="2,0">
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
-                            <Binding Path="PMUName"/>
-                            <Binding Path="SignalName"/>
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+    <UserControl.Resources>
+        <local:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <ListView Margin="20,2,2,2" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Margin="2,0">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                <Binding Path="PMUName"/>
+                                <Binding Path="SignalName"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock VerticalAlignment="Bottom" Style="{StaticResource NoItemsTextStyle}" Margin="0,2,2,6" Text="Please select signal(s)" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
+    </Grid>
 </UserControl>

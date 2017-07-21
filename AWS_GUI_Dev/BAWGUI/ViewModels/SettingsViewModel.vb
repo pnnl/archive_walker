@@ -1496,7 +1496,6 @@ Partial Public Class SettingsViewModel
                     aStep.<Parameters>.LastOrDefault.Add(para)
                 Next
                 If singleStep.Name = "PMU Status Flags Data Quality Filter" Then
-
                     For Each signal In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
                         Dim PMU As XElement = <PMU>
                                                   <Name><%= signal.SignalSignature.PMUName %></Name>
@@ -1513,12 +1512,12 @@ Partial Public Class SettingsViewModel
     Private Sub _writePMUElements(aStep As XElement, pMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures)))
         For Each pmuGroup In pMUSignalDictionary
             Dim PMU As XElement = <PMU>
-                                                                                          <Name><%= pmuGroup.Key %></Name>
-                                                                                      </PMU>
+                                      <Name><%= pmuGroup.Key %></Name>
+                                  </PMU>
             For Each signal In pmuGroup.Value
                 Dim sglName As XElement = <Channel>
-                                                                                          <Name><%= signal.SignalName %></Name>
-                                                                                      </Channel>
+                                              <Name><%= signal.SignalName %></Name>
+                                          </Channel>
                 PMU.Add(sglName)
             Next
             aStep.Add(PMU)
@@ -2781,6 +2780,7 @@ Partial Public Class SettingsViewModel
     End Property
     Private Sub _dqfilterSelection(obj As Object)
         Dim newFilter As New DQFilter
+        newFilter.IsExpanded = True
         newFilter.Name = obj.ToString
         newFilter.StepCounter = DataConfigure.CollectionOfSteps.Count + 1
         newFilter.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newFilter.StepCounter.ToString & "-" & newFilter.Name
@@ -2789,10 +2789,12 @@ Partial Public Class SettingsViewModel
         'GroupedSignalByDataConfigStepsOutput.Add(newFilter.ThisStepOutputsAsSignalHierachyByPMU)
 
         For Each parameter In DataConfigure.DQFilterNameParametersDictionary(newFilter.Name)
-            If parameter = "SetToNaN" Or parameter = "FlagAllByFreq" Then
+            If parameter = "FlagAllByFreq" Then
                 newFilter.FilterParameters.Add(New ParameterValuePair(parameter, False))
-            ElseIf newFilter.Name = "Nominal-Value Frequency Data Quality Filter" And parameter = "FlagBit" Then
-                newFilter.FilterParameters.Add(New ParameterValuePair(parameter, "", False))
+            ElseIf parameter = "SetToNaN" Then
+                newFilter.FilterParameters.Add(New ParameterValuePair(parameter, True))
+                'ElseIf newFilter.Name = "Nominal-Value Frequency Data Quality Filter" And parameter = "FlagBit" Then
+                '    newFilter.FilterParameters.Add(New ParameterValuePair(parameter, "", False))
             Else
                 newFilter.FilterParameters.Add(New ParameterValuePair(parameter, ""))
             End If
@@ -2812,26 +2814,27 @@ Partial Public Class SettingsViewModel
     End Property
     Private Sub _customizationStepSelection(obj As Object)
         Dim newCustomization As New Customization
+        newCustomization.IsExpanded = True
         newCustomization.Name = obj(0).ToString
         If _lastCustPMUname Is Nothing Then
-            _lastCustPMUname = "CustomPMU"
+            _lastCustPMUname = ""
         End If
         newCustomization.CustPMUname = _lastCustPMUname
         Try
             Select Case newCustomization.Name
                 Case "Scalar Repetition Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "OTHER")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
                 Case "Addition Customization", "Multiplication Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "OTHER")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
                 Case "Subtraction Customization", "Division Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "OTHER")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
-                    Dim dummy = New SignalSignatures("PleaseAddASignal", "PleaseAddASignal")
+                    Dim dummy = New SignalSignatures("", "", "OTHER")
                     dummy.IsValid = False
                     newCustomization.MinuendOrDividend = dummy
                     newCustomization.SubtrahendOrDivisor = dummy
@@ -2846,10 +2849,10 @@ Partial Public Class SettingsViewModel
                     Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newSignal, New ObservableCollection(Of SignalSignatures))
                     newCustomization.OutputInputMappingPair.Add(newPair)
                 Case "Specify Signal Type and Unit Customization"
-                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
+                    Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "OTHER")
                     newSignal.IsCustomSignal = True
                     newCustomization.OutputChannels.Add(newSignal)
-                    Dim dummy = New SignalSignatures("NeedInputSignal", newCustomization.CustPMUname, "OTHER")
+                    Dim dummy = New SignalSignatures("", "", "OTHER")
                     dummy.IsValid = False
                     newCustomization.InputChannels.Add(dummy)
                 Case Else
@@ -3383,69 +3386,30 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _deleteADataConfigStep(obj As Object)
-        'Dim toBeDeleted = obj
-        Try
-            DataConfigure.CollectionOfSteps.Remove(obj)
-            Dim steps = New ObservableCollection(Of Object)(DataConfigure.CollectionOfSteps)
-            ' First find the step to be deleted
-            'For Each stp In steps
-            '    If stp.StepCounter = obj.StepCounter Then
-            '        toBeDeleted = stp
-            '        Exit For
-            '    End If
-            'Next
-            ' if the step is found
-            'If toBeDeleted IsNot Nothing Then
-            'Dim stepInputHierachy = New ObservableCollection(Of SignalTypeHierachy)
-            'Dim stepOutputHierachy = New ObservableCollection(Of SignalTypeHierachy)
-
-            ' go through each step to change names that affected by the deleted step
-            For Each stp In steps
-                If stp.StepCounter > obj.StepCounter Then
-                    stp.StepCounter -= 1
-                    If TypeOf (stp) Is Customization Then
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
+        Dim result = MessageBox.Show("Delete step " & obj.StepCounter.ToString & " in Data Configuration: " & obj.Name & " ?", "Warning!", MessageBoxButtons.OKCancel)
+        If result = DialogResult.OK Then
+            Try
+                DataConfigure.CollectionOfSteps.Remove(obj)
+                Dim steps = New ObservableCollection(Of Object)(DataConfigure.CollectionOfSteps)
+                For Each stp In steps
+                    If stp.StepCounter > obj.StepCounter Then
+                        stp.StepCounter -= 1
+                        If TypeOf (stp) Is Customization Then
+                            stp.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
+                        End If
+                        stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
                     End If
-                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
-                End If
-            Next
-            'GroupedSignalByDataConfigStepsInput = stepInputHierachy
-            'GroupedSignalByDataConfigStepsOutput = stepOutputHierachy
-            _deSelectAllDataConfigSteps()
-            'If CurrentSelectedStep.StepCounter = obj.StepCounter Then
-            '    For Each signal In obj.InputChannels
-            '        signal.IsChecked = False
-            '    Next
-            '    If CurrentSelectedStep.Name = "Phasor Creation Customization" Then
-            '        _disableEnableAllButMagnitudeSignals(True)
-            '    ElseIf CurrentSelectedStep.Name = "Power Calculation Customization" Then
-            '        If CurrentSelectedStep.OutputInputMappingPair.Count > 0 Then
-            '            Dim situation = CurrentSelectedStep.OutputInputMappingPair(0).Value.Count
-            '            If situation = 4 Then
-            '                _disableEnableAllButMagnitudeSignals(True)
-            '            Else
-            '                _disableEnableAllButPhasorSignals(True)
-            '            End If
-            '        End If
-            '    ElseIf CurrentSelectedStep.Name = "Metric Prefix Customization" Then
-            '        _disableEnableAllButMagnitudeFrequencyROCOFSignals(True)
-            '    ElseIf CurrentSelectedStep.Name = "Angle Conversion Customization" Then
-            '        _disableEnableAllButAngleSignalsInDataConfig(True)
-            '    End If
-            '    CurrentSelectedStep = Nothing
-            '    _dataConfigDetermineAllParentNodeStatus()
-            '    _determineFileDirCheckableStatus()
-            'End If
-            _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
-            DataConfigure.CollectionOfSteps = steps
-            'toBeDeleted = Nothing
-            SignalSelectionTreeViewVisibility = "Visible"
-        Catch ex As Exception
-            MessageBox.Show("Error deleting step " & obj.StepCounter.ToString & " in Data Configuration, " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
-        End Try
-        'Else
-        '    MessageBox.Show("Step " & toBeDeleted.StepCounter.ToString & ", " & toBeDeleted.Name & " is not found!", "Error!", MessageBoxButtons.OK)
-        'End If
+                Next
+                _deSelectAllDataConfigSteps()
+                _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
+                DataConfigure.CollectionOfSteps = steps
+                SignalSelectionTreeViewVisibility = "Visible"
+            Catch ex As Exception
+                MessageBox.Show("Error deleting step " & obj.StepCounter.ToString & " in Data Configuration, " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
+            End Try
+        Else
+            Exit Sub
+        End If
     End Sub
 
 #End Region
@@ -3515,7 +3479,9 @@ Partial Public Class SettingsViewModel
         End Set
     End Property
     Private Sub _addAFileSource(obj As Object)
-        DataConfigure.ReaderProperty.InputFileInfos.Add(New InputFileInfo)
+        Dim newFileSource = New InputFileInfo()
+        newFileSource.IsExpanded = True
+        DataConfigure.ReaderProperty.InputFileInfos.Add(newFileSource)
     End Sub
     Private _deleteThisFileSource As ICommand
     Public Property DeleteThisFileSource As ICommand
@@ -3528,30 +3494,35 @@ Partial Public Class SettingsViewModel
     End Property
 
     Private Sub _deleteAFileSource(obj As InputFileInfo)
-        For Each source In DataConfigure.ReaderProperty.InputFileInfos
-            If obj Is source Then
+        Dim result = MessageBox.Show("Delete this file source: " & obj.Mnemonic & " ?", "Warning!", MessageBoxButtons.OKCancel)
+        If result = DialogResult.OK Then
+            For Each source In DataConfigure.ReaderProperty.InputFileInfos
+                If obj Is source Then
 
-                For Each group In GroupedRawSignalsByType
-                    If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                        GroupedRawSignalsByType.Remove(group)
-                        Exit For
-                    End If
-                Next
-                For Each group In GroupedRawSignalsByPMU
-                    If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                        GroupedRawSignalsByPMU.Remove(group)
-                        Exit For
-                    End If
-                Next
-                DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
-                Exit For
+                    For Each group In GroupedRawSignalsByType
+                        If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            GroupedRawSignalsByType.Remove(group)
+                            Exit For
+                        End If
+                    Next
+                    For Each group In GroupedRawSignalsByPMU
+                        If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            GroupedRawSignalsByPMU.Remove(group)
+                            Exit For
+                        End If
+                    Next
+                    DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
+                    Exit For
+                End If
+            Next
+            If _configData IsNot Nothing Then
+                _readDataConfigStages(_configData)
+                _readProcessConfig(_configData)
+                _readPostProcessConfig(_configData)
+                _readDetectorConfig(_configData)
             End If
-        Next
-        If _configData IsNot Nothing Then
-            _readDataConfigStages(_configData)
-            _readProcessConfig(_configData)
-            _readPostProcessConfig(_configData)
-            _readDetectorConfig(_configData)
+        Else
+            Exit Sub
         End If
     End Sub
 
@@ -3606,22 +3577,27 @@ Partial Public Class SettingsViewModel
         End Get
         Set(value As Integer)
             _currentTabIndex = value
-            If _oldTabIndex = 1 And _currentTabIndex <> 1 Then
-                _groupAllDataConfigOutputSignal()
-                _deSelectAllDataConfigSteps()
-            End If
-            If _oldTabIndex = 2 And _currentTabIndex <> 2 Then
-                _groupAllProcessConfigOutputSignal()
-                _deSelectAllProcessConfigSteps()
-            End If
-            If _oldTabIndex = 3 And _currentTabIndex <> 3 Then
-                _groupAllPostProcessConfigOutputSignal()
-                _deSelectAllPostProcessConfigSteps()
-            End If
-            If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
-                '_groupAllPostProcessConfigOutputSignal()
-                _deSelectAllDetectors()
-            End If
+            Try
+                If _oldTabIndex = 1 And _currentTabIndex <> 1 Then
+                    _groupAllDataConfigOutputSignal()
+                    _deSelectAllDataConfigSteps()
+                End If
+                If _oldTabIndex = 2 And _currentTabIndex <> 2 Then
+                    _groupAllProcessConfigOutputSignal()
+                    _deSelectAllProcessConfigSteps()
+                End If
+                If _oldTabIndex = 3 And _currentTabIndex <> 3 Then
+                    _groupAllPostProcessConfigOutputSignal()
+                    _deSelectAllPostProcessConfigSteps()
+                End If
+                If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
+                    '_groupAllPostProcessConfigOutputSignal()
+                    _deSelectAllDetectors()
+                End If
+            Catch ex As Exception
+                _addLog(ex.Message)
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+            End Try
             _oldTabIndex = _currentTabIndex
             OnPropertyChanged()
         End Set
