@@ -129,10 +129,13 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
-                            <Image Width="16" Height="16" Source="../../Images/AddCommand.png" />
+                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" />
                         </Button>
                         <Label Content="File Sources" Margin="2" FontSize="18" FontWeight="Bold"/>
                     </DockPanel>
@@ -156,7 +159,7 @@
                                                     <Label Content="File Directory:" Margin="2" Width="100"/>
                                                     <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
-                                                        <Image Source="../../Images/open.gif" Stretch="Uniform"/>
+                                                        <Image Source="/BAWGUI;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
@@ -176,7 +179,7 @@
                                             </Grid>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteThisFileSource}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -202,6 +205,21 @@
                             </Style>
                         </ContentControl.Style>
                     </ContentControl>
+                    <Label Content="Additional Paths:" FontWeight="Bold" FontSize="18" Grid.Row="5"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="6">
+                        <Label Content="Initialization Path:" Width="150"/>
+                        <TextBox Text="{Binding ProcessConfigure.InitializationPath}" MinWidth="100" Margin="2"/>
+                        <Button ToolTip="Open Config File" Width="25" Height="25" Margin="2" Command="{Binding SpecifyInitializationPath}">
+                            <Image Source="/BAWGUI;component/MyResources/open.gif" Stretch="Uniform"/>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="7">
+                        <Label Content="Event Path:" Width="150"/>
+                        <TextBox Text="{Binding DetectorConfigure.EventPath}" MinWidth="100" Margin="2"/>
+                        <Button ToolTip="Open Config File" Width="25" Height="25" Margin="2" Command="{Binding SpecifyEventPath}">
+                            <Image Source="/BAWGUI;component/MyResources/open.gif" Stretch="Uniform"/>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </ScrollViewer>
         </Border>

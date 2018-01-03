@@ -302,6 +302,7 @@ Public Class Multirate
         End Get
         Set(value As String)
             _multiRatePMU = value
+            'FilterParameters(0).Value = value
             For Each out In OutputChannels
                 out.PMUName = value
             Next
@@ -321,9 +322,12 @@ Public Class Multirate
         End Get
         Set(value As String)
             _newRate = value
-            for each signal in OutputChannels
-                signal.SamplingRate = value
-            Next
+            If Not String.IsNullOrEmpty(value) Then
+                For Each signal In OutputChannels
+                    signal.SamplingRate = value
+                Next
+            End If
+            'ThisStepOutputsAsSignalHierachyByPMU.SignalList =
             OnPropertyChanged()
         End Set
     End Property

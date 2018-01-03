@@ -9,7 +9,7 @@
     <StackPanel Orientation="Vertical" Margin="2">
         <Label Content="Parameters:" Margin="2"/>
         <StackPanel Orientation="Horizontal">
-            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -24,7 +24,7 @@
             <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -39,7 +39,7 @@
             <TextBox Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -54,7 +54,7 @@
             <TextBox Text="{Binding Scalar}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -69,7 +69,7 @@
             <TextBox Text="{Binding OutputChannels[0].TypeAbbreviation}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -84,7 +84,7 @@
             <TextBox Text="{Binding OutputChannels[0].Unit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+            <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -96,7 +96,7 @@
                 </Image.Style>
             </Image>
             <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="TimeSourcePMU" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.AllPMUs}" SelectedValue="{Binding TimeSourcePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Left"/>
+            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.AllPMUs}" DisplayMemberPath="PMU" SelectedItem="{Binding TimeSourcePMU, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="PMU" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Left"/>
         </StackPanel>
         <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
             <ItemsControl.ItemTemplate>
@@ -107,7 +107,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>

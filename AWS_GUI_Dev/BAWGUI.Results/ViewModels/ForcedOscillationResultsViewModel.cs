@@ -13,6 +13,7 @@ using BAWGUI.Results.Views;
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.Axes;
+using BAWGUI.RunMATLAB.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -146,8 +147,15 @@ namespace BAWGUI.Results.ViewModels
                     //}
                 }
             }
-            FilteredResults = new ObservableCollection<ForcedOscillationResultViewModel>(newResults.OrderBy(x=>x.OverallStartTime).OrderByDescending(y=>y.Alarm));
-            _drawFOPlot();
+            FilteredResults = new ObservableCollection<ForcedOscillationResultViewModel>(newResults.OrderBy(x => x.OverallStartTime).OrderByDescending(y => y.Alarm));
+            if (FilteredResults.Count() != 0)
+            {
+                _drawFOPlot();
+            }
+            //else
+            //{
+            //    MessageBox.Show("Selected time range has no results!", "Warning", MessageBoxButton.OK);
+            //}
         }
 
         private ForcedOscillationResultViewModel _selectedOscillationEvent;
@@ -264,7 +272,7 @@ namespace BAWGUI.Results.ViewModels
             }
             else if(time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
             {
-                xAxisFormatString = "MM/dd HH";
+                xAxisFormatString = "MM/dd\nHH:mm";
             }
             else
             {
@@ -278,13 +286,13 @@ namespace BAWGUI.Results.ViewModels
                 MinorGridlineStyle = LineStyle.Dot,
                 MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
                 TicklineColor = OxyColor.FromRgb(82, 82, 82),
-                Title = "Time",
+                //Title = "Time",
                 IsZoomEnabled = true,
                 IsPanEnabled = true,
-                StringFormat = xAxisFormatString
+                StringFormat = xAxisFormatString,
             };
             //a.Axes.Add(timeXAxis);
-
+            timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
             LinearAxis frequencyYAxis = new LinearAxis()
             {
                 Position = AxisPosition.Left,
@@ -296,10 +304,14 @@ namespace BAWGUI.Results.ViewModels
                 IsZoomEnabled = true,
                 IsPanEnabled = true
             };
+            frequencyYAxis.AxisChanged += FrequencyYAxis_AxisChanged;
+
+            float axisMax = FilteredResults.Select(x => x.TypicalFrequency).Max() + (float)0.1;
+            float axisMin = FilteredResults.Select(x => x.TypicalFrequency).Min() - (float)0.1;
             if (FilteredResults.Count > 0)
             {
-                frequencyYAxis.Maximum = FilteredResults.Select(x => x.TypicalFrequency).Max() + 0.1;
-                frequencyYAxis.Minimum = FilteredResults.Select(x => x.TypicalFrequency).Min() - 0.1;
+                frequencyYAxis.Maximum = axisMax;
+                frequencyYAxis.Minimum = axisMin;
             }
             a.Axes.Add(frequencyYAxis);
             //var categoryAxis = new CategoryAxis { Position = AxisPosition.Left };
@@ -307,13 +319,13 @@ namespace BAWGUI.Results.ViewModels
             //int index = 0;
             a.DefaultColors.Clear();
             var alarmSeries = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerFill = OxyColors.Red, MarkerSize = 4, Title = "Alarms", ColorAxisKey = null};
-            var heatMapData = new List<float>();
+            //var heatMapData = new List<float>();
             foreach (var fo in FilteredResults)
             {
                 //OxyColor eventColor = a.DefaultColors[index];
                 OxyColor eventColor = _mapFrequencyToColor(fo.TypicalFrequency);
                 a.DefaultColors.Add(eventColor);
-                heatMapData.Add(fo.TypicalFrequency);
+                //heatMapData.Add(fo.TypicalFrequency);
                 foreach (var ocur in fo.FilteredOccurrences)
                 {
                     //var newSeries = new LineSeries { Title = fo.Label };
@@ -321,6 +333,7 @@ namespace BAWGUI.Results.ViewModels
                     newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
                     newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
                     a.Series.Add(newSeries);
+                    newSeries.MouseDown += foEvent_MouseDown;
                     if (ocur.Alarm == "YES")
                     {
                         var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency, 4, 0);
@@ -336,9 +349,13 @@ namespace BAWGUI.Results.ViewModels
             }
             a.Series.Add(alarmSeries);
 
-            heatMapData.Sort();
+            //heatMapData.Sort();
             if (a.DefaultColors.Count > 0)
-                a.Axes.Add(new LinearColorAxis { Palette = new OxyPalette(a.DefaultColors.OrderBy(x => x.G)), Position = AxisPosition.Right, Minimum = heatMapData.Min(), Maximum = heatMapData.Max(), Title = "Frequency (Hz)", MajorStep = 0.2 });
+            {
+                a.DefaultColors.Add(_mapFrequencyToColor(axisMax));
+                a.DefaultColors.Add(_mapFrequencyToColor(axisMin));
+                a.Axes.Add(new LinearColorAxis { Palette = new OxyPalette(a.DefaultColors.OrderBy(x => x.G)), Position = AxisPosition.Right, Minimum = axisMin, Maximum = axisMax, Title = "Frequency (Hz)", MajorStep = 0.2});
+            }
             //else
             //    a.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Minimum = heatMapData.Min(), Maximum = heatMapData.Max(), Title = "Frequency (Hz)", MajorStep = 0.2 });
             //var frequencyHeatMap = new HeatMapSeries
@@ -355,16 +372,47 @@ namespace BAWGUI.Results.ViewModels
 
             a.Axes.Add(timeXAxis);
             a.LegendPlacement = LegendPlacement.Outside;
-            a.LegendPosition = LegendPosition.RightTop;
+            a.LegendPosition = LegendPosition.TopRight;
+            //a.LegendOrientation = LegendOrientation.Horizontal;
+            a.LegendPadding = 0.0;
+            a.LegendSymbolMargin = 0.0;
+            a.LegendMargin = 0;
+            //a.LegendSymbolPlacement = LegendSymbolPlacement.Right;
+            var currentArea = a.LegendArea;
+            var currentPlotWithAxis = a.PlotAndAxisArea;
+
+                //= new OxyRect(currentArea.Left, currentArea.Top - 10, currentArea.Width, currentArea.Height);
+
+            var currentMargins = a.PlotMargins;
+            a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 80, currentMargins.Bottom);
             FOPlotModel = a;
+        }
+
+        private void foEvent_MouseDown(object sender, OxyMouseDownEventArgs e)
+        {
+            var x = (sender as LineSeries).InverseTransform(e.Position).X;
+            var y = (sender as LineSeries).InverseTransform(e.Position).Y;
+            MessageBox.Show(DateTimeAxis.ToDateTime(x).ToString());
+        }
+
+        private void FrequencyYAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            var fAxis = sender as LinearAxis;
+            Console.WriteLine("frequency axis changed! do stuff!" + fAxis.ActualMaximum.ToString() + ", " + fAxis.ActualMinimum.ToString());
+        }
+
+        private void TimeXAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            var xAxis = sender as DateTimeAxis;
+            Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
         }
 
         private OxyColor _mapFrequencyToColor(float frequency)
         {
             //OxyColor color;
             var colorCount = FilteredResults.Count;
-            var minFreq = FilteredResults.Select(x => x.TypicalFrequency).Min();
-            var maxFreq = FilteredResults.Select(x => x.TypicalFrequency).Max();
+            var minFreq = FilteredResults.Select(x => x.TypicalFrequency).Min() - 0.1;
+            var maxFreq = FilteredResults.Select(x => x.TypicalFrequency).Max() + 0.1;
             var percentage = (frequency - minFreq) / (maxFreq - minFreq);
 
             //blue-green rgb gradient

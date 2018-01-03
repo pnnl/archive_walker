@@ -42,14 +42,14 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                         <Label Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="MaxDuration" HorizontalAlignment="Left"/>
                         <TextBox Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding MaxDuration}" HorizontalAlignment="Left"/>
                     </Grid>
                 </StackPanel>
             </Expander>
             <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
-                <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
             </Button>
         </Grid>
     </Border>

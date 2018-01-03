@@ -49,26 +49,26 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Image Grid.Row="0" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="CoherenceAlarm" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="0" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding CoherenceAlarm}" HorizontalAlignment="Left"/>
-                        <Image Grid.Row="1" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                         <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="CoherenceMin" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding CoherenceMin}" HorizontalAlignment="Left"/>
-                        <Image Grid.Row="2" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                         <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="TimeMin" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="2" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding TimeMin}" HorizontalAlignment="Left"/>
-                        <Image Grid.Row="3" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Image Grid.Row="3" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                         <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="CoherenceCorner" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="3" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding CoherenceCorner}" HorizontalAlignment="Left"/>
-                        <Image Grid.Row="4" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                        <Image Grid.Row="4" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                         <Label Grid.Row="4" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="TimeCorner" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="4" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding TimeCorner}" HorizontalAlignment="Left"/>
                     </Grid>
                 </StackPanel>
             </Expander>
             <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
-                <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
             </Button>
         </Grid>
     </Border>

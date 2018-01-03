@@ -11,11 +11,13 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <local:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
+            <local:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
+            <local:PhasorCreationCommandParameterConverter x:Key="PhasorCreationCommandParameterConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="2" Name="StepPanel">
-        <StackPanel Orientation="Horizontal" Margin="410,0,0,0">
-            <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+        <StackPanel Orientation="Horizontal" Margin="310,0,0,0">
+            <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
                         <Style.Triggers>
@@ -34,50 +36,90 @@
             <TextBlock Margin="250,2,2,2" Text="Ang: "/>
             <TextBlock Margin="250,2,2,2" Text="CustNames: "/>
         </StackPanel>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding OutputInputMappingPair}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox Name="MagPMU" Width="100" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocus" LostFocus="CreatePhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="GotKeyboardFocus">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                            <TextBox Name="Mag" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="2,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocus" LostFocus="CreatePhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="GotKeyboardFocus">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                            <TextBox Name="AngPMU" Width="100" Text="{Binding Path=Value[1].PMUName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocus" LostFocus="CreatePhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="GotKeyboardFocus">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                            <TextBox Name="Ang" Width="150" Text="{Binding Path=Value[1].SignalName}" Margin="2,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocus" LostFocus="CreatePhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="GotKeyboardFocus">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                            <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName}" Margin="30,0"/>
-                            <!--<i:Interaction.Triggers>
+        <Grid>
+            <StackPanel Orientation="Vertical">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding OutputInputMappingPair}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Name="MagPMU" Width="100" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusMag" LostFocus="CreatePhasorTextBoxLostFocusMag" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotKeyboardFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="Value[0]"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <TextBox Name="Mag" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="2,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusMag" LostFocus="CreatePhasorTextBoxLostFocusMag" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotKeyboardFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="Value[0]"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <TextBox Name="AngPMU" Width="100" Text="{Binding Path=Value[1].PMUName}" Margin="20,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusAng" LostFocus="CreatePhasorTextBoxLostFocusAng" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotKeyboardFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="Value[1]"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <TextBox Name="Ang" Width="150" Text="{Binding Path=Value[1].SignalName}" Margin="2,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusAng" LostFocus="CreatePhasorTextBoxLostFocusAng" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotKeyboardFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="Value[1]"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName}" Margin="30,0"/>
+                                    <!--<i:Interaction.Triggers>
                                 <i:EventTrigger EventName="LostFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>-->
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <!--<StackPanel Orientation="Horizontal" Visibility="{Binding OutputInputMappingPair.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}">-->
+                <StackPanel Orientation="Horizontal">
+                    <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}" Width="100" Margin="30,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusMag" LostFocus="CreatePhasorTextBoxLostFocusMag"/>
+                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}"  Width="150" Margin="2,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusMag" LostFocus="CreatePhasorTextBoxLostFocusMag"/>
+                    <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}" Width="100" Margin="20,0,0,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusAng" LostFocus="CreatePhasorTextBoxLostFocusAng"/>
+                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}"  Width="150" Margin="2,0" IsReadOnly="True" GotFocus="CreatePhasorTextBoxGotFocusAng" LostFocus="CreatePhasorTextBoxLostFocusAng"/>
+                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Style="{StaticResource NoItemsTextBoxStyle}" Width="150" Text="{Binding Path=Key.SignalName}" Margin="30,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
         <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonUp">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>

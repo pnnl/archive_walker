@@ -24,7 +24,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                    <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                     <Label Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="AverageWindow" HorizontalAlignment="Left"/>
                     <TextBox Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding AverageWindow}" HorizontalAlignment="Left"/>
                 </Grid>
@@ -36,7 +36,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                    <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                     <Label Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Nominal" HorizontalAlignment="Left"/>
                     <TextBox Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding Nominal}" HorizontalAlignment="Left"/>
                 </Grid>
@@ -94,7 +94,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Image Grid.Row="0" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Type" HorizontalAlignment="Left"/>
                             <ComboBox Grid.Row="0" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource OutOfRangeFrequencyDetectorTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter10}}" HorizontalAlignment="Left"/>
                             <ContentControl Grid.Row="1" Grid.ColumnSpan="3" Content="{Binding}">
@@ -111,25 +111,25 @@
                                     </Style>
                                 </ContentControl.Style>
                             </ContentControl>
-                            <Image Grid.Row="2" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="DurationMax" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="2" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding DurationMax}" HorizontalAlignment="Left"/>
-                            <Image Grid.Row="3" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="3" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="DurationMin" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="3" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding DurationMin}" HorizontalAlignment="Left"/>
-                            <Image Grid.Row="4" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="4" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="4" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Duration" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="4" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding Duration}" HorizontalAlignment="Left"/>
-                            <Image Grid.Row="5" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="5" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="5" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="AnalysisWindow" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="5" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding AnalysisWindow}" HorizontalAlignment="Left"/>
-                            <Image Grid.Row="6" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="6" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="6" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="RateOfChangeMax" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="6" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding RateOfChangeMax}" HorizontalAlignment="Left"/>
-                            <Image Grid.Row="7" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="7" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="7" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="RateOfChangeMin" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="7" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding RateOfChangeMin}" HorizontalAlignment="Left"/>
-                            <Image Grid.Row="8" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Image Grid.Row="8" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
                             <Label Grid.Row="8" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="RateOfChange" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="8" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding RateOfChange}" HorizontalAlignment="Left"/>
                         </Grid>
@@ -137,7 +137,7 @@
                 </Grid>
             </Expander>
             <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
-                <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
             </Button>
         </Grid>
     </Border>

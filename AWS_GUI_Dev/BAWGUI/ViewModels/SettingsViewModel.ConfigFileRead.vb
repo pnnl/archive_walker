@@ -229,6 +229,7 @@ Partial Public Class SettingsViewModel
                 Else
                     _addLog("In step: " & stepCounter & ", type of input magnitude siganl: " & magSignal.SignalName & ", does not match angle signal: " & angSignal.SignalName & ".")
                 End If
+                output.SamplingRate = magSignal.SamplingRate
             End If
             aStep.OutputChannels.Add(output)
             Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
@@ -279,6 +280,7 @@ Partial Public Class SettingsViewModel
                 If letter2 = "P" Then
                     output.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
                 End If
+                output.SamplingRate = input.SamplingRate
             End If
             aStep.OutputChannels.Add(output)
             Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
@@ -314,17 +316,19 @@ Partial Public Class SettingsViewModel
                 _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
             End If
             Dim custSignalName = signal.<CustName>.Value
-            If String.IsNullOrEmpty(custSignalName) Then
-                If input.IsValid Then
-                    custSignalName = input.SignalName
-                Else
-                    custSignalName = "NoCustomSignalNameSpecified"
-                End If
-            End If
-            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
+            'If String.IsNullOrEmpty(custSignalName) Then
+            '    If input.IsValid Then
+            '        custSignalName = input.SignalName
+            '    Else
+            '        custSignalName = "NoCustomSignalNameSpecified"
+            '    End If
+            'End If
+            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname)
             output.IsCustomSignal = True
             If input.IsValid Then
                 output.TypeAbbreviation = input.TypeAbbreviation
+                output.Unit = input.Unit
+                output.SamplingRate = input.SamplingRate
             End If
             aStep.OutputChannels.Add(output)
             Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
@@ -367,10 +371,12 @@ Partial Public Class SettingsViewModel
             aStep.InputChannels.Add(subtrahend)
         End If
         aStep.SubtrahendOrDivisor = subtrahend
-        Dim output = New SignalSignatures(outputName, aStep.CustPMUname, "OTHER")
+        Dim output = New SignalSignatures(outputName, aStep.CustPMUname)
         If minuend.IsValid AndAlso subtrahend.IsValid Then
             If minuend.TypeAbbreviation = subtrahend.TypeAbbreviation Then
                 output.TypeAbbreviation = minuend.TypeAbbreviation
+                output.Unit = minuend.Unit
+                output.SamplingRate = minuend.SamplingRate
             Else
                 _addLog("In step: " & stepCounter & " ," & aStep.Name & ", the types of Minuend and Subtrahend or divisor and dividend do not match!")
             End If
@@ -410,17 +416,28 @@ Partial Public Class SettingsViewModel
                 _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
             End If
             Dim custSignalName = signal.<CustName>.Value
-            If String.IsNullOrEmpty(custSignalName) Then
-                If input.IsValid Then
-                    custSignalName = input.SignalName
-                Else
-                    custSignalName = "NoCustomSignalNameSpecified"
-                End If
-            End If
-            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
+            'If String.IsNullOrEmpty(custSignalName) Then
+            '    If input.IsValid Then
+            '        custSignalName = input.SignalName
+            '    Else
+            '        custSignalName = "NoCustomSignalNameSpecified"
+            '    End If
+            'End If
+            Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname)
             output.IsCustomSignal = True
-            If input.IsValid And input.TypeAbbreviation = "SC" Then
-                output.TypeAbbreviation = "SC"
+            'If input.IsValid And input.TypeAbbreviation = "SC" Then
+            '    output.TypeAbbreviation = "SC"
+            '    output.Unit = "SC"
+            'End If
+            If input.IsValid Then
+                If aStep.Exponent = 1 OrElse input.TypeAbbreviation = "SC" Then
+                    output.TypeAbbreviation = input.TypeAbbreviation
+                    output.Unit = input.Unit
+                Else
+                    output.TypeAbbreviation = "OTHER"
+                    output.Unit = "OTHER"
+                End If
+                output.SamplingRate = input.SamplingRate
             End If
             aStep.OutputChannels.Add(output)
             Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
@@ -467,8 +484,12 @@ Partial Public Class SettingsViewModel
         If Dividend.IsValid AndAlso Divisor.IsValid Then
             If Dividend.TypeAbbreviation = Divisor.TypeAbbreviation Then
                 output.TypeAbbreviation = "SC"
+                output.Unit = "SC"
+                output.SamplingRate = Dividend.SamplingRate
             ElseIf Divisor.TypeAbbreviation = "SC" Then
                 output.TypeAbbreviation = Dividend.TypeAbbreviation
+                output.Unit = Dividend.Unit
+                output.SamplingRate = Dividend.SamplingRate
             Else
                 _addLog("In step: " & stepCounter & " ," & aStep.Name & ", the types of divisor and dividend do not agree!")
             End If
@@ -506,11 +527,12 @@ Partial Public Class SettingsViewModel
         If unit Is Nothing Then
             unit = "SC"
         End If
-        aStep.TimeSourcePMU = params.<TimeSourcePMU>.Value
+        aStep.TimeSourcePMU.PMU = params.<TimeSourcePMU>.Value
 
         Dim output = New SignalSignatures(outputName, aStep.CustPMUname, type)
         output.IsCustomSignal = True
         output.Unit = unit
+        output.SamplingRate = GroupedRawSignalsByPMU.SelectMany(Function(x) x.SignalList).Distinct.Select(Function(y) y.SignalSignature).Where(Function(z) z.PMUName = aStep.TimeSourcePMU.PMU).Select(Function(n) n.SamplingRate).FirstOrDefault()
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
         'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
@@ -527,6 +549,8 @@ Partial Public Class SettingsViewModel
             _lastCustPMUname = aStep.CustPMUname
         End If
         Dim type = ""
+        Dim unit = ""
+        Dim samplingRate = -1
         Dim countNonScalarType = 0
         Dim factors = From factor In params.Elements Where factor.Name = "factor" Select factor
         For Each factor In factors
@@ -538,6 +562,14 @@ Partial Public Class SettingsViewModel
                     If String.IsNullOrEmpty(type) Then
                         type = input.TypeAbbreviation
                     End If
+                    If String.IsNullOrEmpty(unit) Then
+                        unit = input.Unit
+                    End If
+                End If
+                If samplingRate = -1 Then
+                    samplingRate = input.SamplingRate
+                ElseIf samplingRate <> input.SamplingRate Then
+                    _addLog("All factors of multiplication customization have to have the same sampling rate! Different sampling rate found in addition customization step: " & stepCounter & ", with sampling rate: " & samplingRate & " and " & input.SamplingRate & ".")
                 End If
             Else
                 _addLog("Error reading config file! Input signal in step: " & stepCounter & "with channel name: " & factor.<Channel>.Value & ", and in PMU " & factor.<PMU>.Value & " not found!")
@@ -550,11 +582,17 @@ Partial Public Class SettingsViewModel
         Dim output = New SignalSignatures(outputName, aStep.CustPMUname)
         If countNonScalarType = 0 Then
             output.TypeAbbreviation = "SC"
+            output.Unit = "SC"
         ElseIf countNonScalarType = 1 Then
             output.TypeAbbreviation = type
+            output.Unit = unit
+            'TODO: ElseIf countNonScalarType == 2 AndAlso one of them is current magnitude and one of the is voltage magnitude, then we should get power P
+            'TODO: Are there any other multiplication result in legal signal?
         Else
             output.TypeAbbreviation = "OTHER"
+            output.Unit = "OTHER"
         End If
+        output.SamplingRate = samplingRate
         output.IsCustomSignal = True
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
@@ -572,6 +610,8 @@ Partial Public Class SettingsViewModel
             _lastCustPMUname = aStep.CustPMUname
         End If
         Dim type = ""
+        Dim unit = ""
+        Dim samplingRate = -1
         Dim outputName = params.<SignalName>.Value
         If outputName Is Nothing Then
             outputName = ""
@@ -588,12 +628,28 @@ Partial Public Class SettingsViewModel
                 ElseIf type <> input.TypeAbbreviation Then
                     _addLog("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & stepCounter & ", with types: " & type & " and " & input.TypeAbbreviation & ".")
                 End If
+                If String.IsNullOrEmpty(unit) Then
+                    unit = input.Unit
+                ElseIf unit <> input.Unit Then
+                    _addLog("All terms of addition customization have to have the same unit! Different unit found in addition customization step: " & stepCounter & ", with unit: " & unit & " and " & input.Unit & ".")
+                End If
+                If samplingRate = -1 Then
+                    samplingRate = input.SamplingRate
+                ElseIf samplingRate <> input.SamplingRate Then
+                    _addLog("All terms of addition customization have to have the same sampling rate! Different sampling rate found in addition customization step: " & stepCounter & ", with sampling rate: " & samplingRate & " and " & input.SamplingRate & ".")
+                End If
             Else
                 _addLog("Error reading config file! Input signal in step: " & stepCounter & "with channel name: " & term.<Channel>.Value & ", and in PMU " & term.<PMU>.Value & " not found!")
             End If
         Next
         If Not String.IsNullOrEmpty(type) Then
             output.TypeAbbreviation = type
+        End If
+        If Not String.IsNullOrEmpty(unit) Then
+            output.Unit = unit
+        End If
+        If samplingRate <> -1 Then
+            output.SamplingRate = samplingRate
         End If
         aStep.OutputChannels.Add(output)
         collectionOfSteps.Add(aStep)
@@ -639,7 +695,7 @@ Partial Public Class SettingsViewModel
             Dim typeAbbre = aStep.PowType.ToString
             Dim output = New SignalSignatures(signalName, aStep.CustPMUname, typeAbbre)
             output.IsCustomSignal = True
-            aStep.OutputChannels.Add(output)
+            Dim samplingRate = -1
             Dim signals = From el In powers(index).Elements Where el.Name <> "CustName"
             For Each signal In signals
                 Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
@@ -648,9 +704,15 @@ Partial Public Class SettingsViewModel
                     input.IsValid = False
                     input.TypeAbbreviation = "C"
                     _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
+                Else
+                    If samplingRate = -1 Then
+                        samplingRate = input.SamplingRate
+                    End If
                 End If
                 aStep.InputChannels.Add(input)
             Next
+            output.SamplingRate = samplingRate
+            aStep.OutputChannels.Add(output)
             Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
             For Each signal In aStep.InputChannels
                 newPair.Value.Add(signal)
@@ -687,6 +749,7 @@ Partial Public Class SettingsViewModel
                 outputName = input.SignalName
             End If
             Dim output = New SignalSignatures(outputName, aStep.CustPMUname, input.TypeAbbreviation)
+            output.SamplingRate = input.SamplingRate
             output.IsCustomSignal = True
             output.Unit = convert.<NewUnit>.Value
             aStep.OutputChannels.Add(output)
@@ -712,11 +775,14 @@ Partial Public Class SettingsViewModel
         'Dim toConvert = From convert In params.Elements Where convert.Name = "ToConvert" Select convert
         'For Each convert In toConvert
         'Dim input = _searchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
+        Dim samplingRate = -1
         If inputSignal Is Nothing Then
             inputSignal = New SignalSignatures("SignalNotFound")
             inputSignal.IsValid = False
             inputSignal.TypeAbbreviation = "C"
             _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
+        Else
+            samplingRate = inputSignal.SamplingRate
         End If
         aStep.InputChannels.Add(inputSignal)
         Dim outputName = params.<CustName>.Value
@@ -726,6 +792,7 @@ Partial Public Class SettingsViewModel
         Dim output = New SignalSignatures(outputName, aStep.CustPMUname, params.<SigType>.Value)
         output.IsCustomSignal = True
         output.Unit = params.<SigUnit>.Value
+        output.SamplingRate = samplingRate
         aStep.OutputChannels.Add(output)
         Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
         newPair.Value.Add(inputSignal)
@@ -746,47 +813,55 @@ Partial Public Class SettingsViewModel
     ''' <returns></returns>
     Private Function _searchForSignalInTaggedSignals(pmu As String, channel As String) As SignalSignatures
         For Each group In GroupedRawSignalsByPMU
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.PMUName = pmu Then
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.SignalName = channel Then
-                            Return subsubgroup.SignalSignature
-                        End If
-                    Next
-                End If
+            For Each samplingRateSubgroup In group.SignalList
+                For Each subgroup In samplingRateSubgroup.SignalList
+                    If subgroup.SignalSignature.PMUName = pmu Then
+                        For Each subsubgroup In subgroup.SignalList
+                            If subsubgroup.SignalSignature.SignalName = channel Then
+                                Return subsubgroup.SignalSignature
+                            End If
+                        Next
+                    End If
+                Next
             Next
         Next
         For Each group In GroupedSignalByDataConfigStepsOutput
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.PMUName = pmu Then
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.SignalName = channel Then
-                            Return subsubgroup.SignalSignature
-                        End If
-                    Next
-                End If
+            For Each samplingRateSubgroup In group.SignalList
+                For Each subgroup In samplingRateSubgroup.SignalList
+                    If subgroup.SignalSignature.PMUName = pmu Then
+                        For Each subsubgroup In subgroup.SignalList
+                            If subsubgroup.SignalSignature.SignalName = channel Then
+                                Return subsubgroup.SignalSignature
+                            End If
+                        Next
+                    End If
+                Next
             Next
         Next
         For Each group In GroupedSignalByProcessConfigStepsOutput
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.PMUName = pmu Then
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.SignalName = channel Then
-                            Return subsubgroup.SignalSignature
-                        End If
-                    Next
-                End If
+            For Each samplingRateSubgroup In group.SignalList
+                For Each subgroup In samplingRateSubgroup.SignalList
+                    If subgroup.SignalSignature.PMUName = pmu Then
+                        For Each subsubgroup In subgroup.SignalList
+                            If subsubgroup.SignalSignature.SignalName = channel Then
+                                Return subsubgroup.SignalSignature
+                            End If
+                        Next
+                    End If
+                Next
             Next
         Next
         For Each group In GroupedSignalByPostProcessConfigStepsOutput
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.PMUName = pmu Then
-                    For Each subsubgroup In subgroup.SignalList
-                        If subsubgroup.SignalSignature.SignalName = channel Then
-                            Return subsubgroup.SignalSignature
-                        End If
-                    Next
-                End If
+            For Each samplingRateSubgroup In group.SignalList
+                For Each subgroup In samplingRateSubgroup.SignalList
+                    If subgroup.SignalSignature.PMUName = pmu Then
+                        For Each subsubgroup In subgroup.SignalList
+                            If subsubgroup.SignalSignature.SignalName = channel Then
+                                Return subsubgroup.SignalSignature
+                            End If
+                        Next
+                    End If
+                Next
             Next
         Next
         Return Nothing
@@ -1095,8 +1170,10 @@ Partial Public Class SettingsViewModel
                     _readWindRamp(detector, newDetectorList)
                 Case "Periodogram"
                     _readPeriodogram(detector, newDetectorList)
+                    ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "SpectralCoherence"
                     _readSpectralCoherence(detector, newDetectorList)
+                    ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Alarming"
                     _readAlarming(detector)
                 Case Else

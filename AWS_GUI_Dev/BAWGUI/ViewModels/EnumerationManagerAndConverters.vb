@@ -684,3 +684,15 @@ End Class
 '        Return DependencyProperty.UnsetValue
 '    End Function
 'End Class
+
+Public Class PhasorCreationCommandParameterConverter
+    Implements IMultiValueConverter
+
+    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+        Return values.ToList
+    End Function
+
+    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+        Return DependencyProperty.UnsetValue
+    End Function
+End Class

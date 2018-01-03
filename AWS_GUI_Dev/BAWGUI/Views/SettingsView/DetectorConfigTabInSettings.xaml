@@ -26,6 +26,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
@@ -33,7 +34,7 @@
                             <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0" ItemsSource="{Binding DetectorConfigure.DetectorNameList}">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                        <Image Width="16" Height="16" Source="../../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                        <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
                                         <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </MenuItem.Header>
@@ -81,7 +82,7 @@
                             <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0" ItemsSource="{Binding DetectorConfigure.AlarmingDetectorNameList}">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                        <Image Width="16" Height="16" Source="../../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                        <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
                                         <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </MenuItem.Header>
@@ -115,7 +116,25 @@
                             </DataTemplate>
                         </ItemsControl.Resources>
                     </ItemsControl>
-                    <Border Grid.Row="4" Margin="2">
+                    <StackPanel Grid.Row="4" Visibility="{Binding ResultUpdateIntervalVisibility}" Margin="2" Orientation="Horizontal">
+                        <Label Content="Result Update Interval:" FontWeight="Bold" FontSize="18" Grid.Row="4"  Margin="0,20,0,0" Width="300">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Label>
+                        <TextBox Text="{Binding DetectorConfigure.ResultUpdateInterval}"  Margin="0,20,7,0" Height="22" Width="120" VerticalAlignment="Center">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotKeyboardFocus">
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </StackPanel>
+                    <Border Grid.Row="5" Margin="2">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
                                 <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->

@@ -15,5 +15,9 @@
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
             <Setter Property="ScrollViewer.CanContentScroll" Value="True"></Setter>
         </Style>
+        <Style TargetType="TextBox" x:Key="NoItemsTextBoxStyle">
+            <Setter Property="Foreground" Value="#232323" />
+            <Setter Property="FontStyle" Value="Italic" />
+        </Style>
     </Application.Resources>
 </Application>

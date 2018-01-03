@@ -736,6 +736,7 @@ Public Class Customization
         _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         _exponent = "1"
         IsExpanded = False
+        _timeSourcePMU = New PMUWithSamplingRate()
         '_outputInputMultipleMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
     End Sub
 
@@ -854,6 +855,9 @@ Public Class Customization
     '        OnPropertyChanged()
     '    End Set
     'End Property
+    ''' <summary>
+    ''' The key of each item is the output and the value of the item is a collection of input(s)
+    ''' </summary>
     Private _outputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
     Public Property OutputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         Get
@@ -897,13 +901,15 @@ Public Class Customization
             OnPropertyChanged()
         End Set
     End Property
-    Private _timeSourcePMU As String
-    Public Property TimeSourcePMU As String
+    Private _timeSourcePMU As PMUWithSamplingRate
+    Public Property TimeSourcePMU As PMUWithSamplingRate
         Get
             Return _timeSourcePMU
         End Get
-        Set(ByVal value As String)
+        Set(ByVal value As PMUWithSamplingRate)
             _timeSourcePMU = value
+            'OutputChannels.FirstOrDefault.SamplingRate = GroupedRawSignalsByPMU.SelectMany(Function(x) x.SignalList).Distinct.Select(Function(y) y.SignalSignature).Where(Function(z) z.PMUName = aStep.TimeSourcePMU).Select(Function(n) n.SamplingRate).FirstOrDefault()
+            OutputChannels.FirstOrDefault.SamplingRate = _timeSourcePMU.SamplingRate
             OnPropertyChanged()
         End Set
     End Property

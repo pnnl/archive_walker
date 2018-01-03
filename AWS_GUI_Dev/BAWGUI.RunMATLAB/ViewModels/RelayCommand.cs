@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace BAWGUI.Results.ViewModels
+namespace BAWGUI.RunMATLAB.ViewModels
 {
     public class RelayCommand : ICommand
     {

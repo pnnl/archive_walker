@@ -69,6 +69,29 @@
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DocumentationFile>BAWGUI.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DocumentationFile>BAWGUI.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DataReaderBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -135,6 +158,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ValueIfEmptyConverter.vb" />
+    <Compile Include="Model\PMUWithSamplingRate.vb" />
     <Compile Include="ViewModels\SettingsViewModel.ConfigFileRead.vb" />
     <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
     <Compile Include="Model\BaseClassOrSharedClass.vb" />
@@ -443,6 +467,7 @@
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
@@ -454,10 +479,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Asterisk-104.png" />
-    <Resource Include="Images\settings24.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -472,23 +493,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\delete.bmp" />
-    <Resource Include="Images\Save24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\open.gif" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ConfigFiles\Config_JSIS_RingCSV.XML">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\calendar.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\CircledMinus.png" />
-    <Resource Include="Images\CircledPlus.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFiles\Config_MultFileTest_Customizations_2custPMU.XML">
@@ -496,18 +503,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Asterisk.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Add_16x.png" />
-    <Resource Include="Images\Remove_color_16x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\AddCommand.png" />
-    <Resource Include="Images\RemoveCommand_16x.png" />
+    <Folder Include="Initialization\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigFiles\BadConfig_MultFileTest_Customizations_2custPMUError.XML">
@@ -515,26 +511,38 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\saveAs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Settings_16x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Run_16x.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BAWGUI.Results\BAWGUI.Results.csproj">
       <Project>{65fbb914-5df7-4008-ab31-6e1a609327e5}</Project>
       <Name>BAWGUI.Results</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\NewFile_16x.png" />
+    <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
+      <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
+      <Name>BAWGUI.RunMATLAB</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ConfigFiles\UpdatedMultiFile.XML">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\AddCommand.png">
+      <Link>MyResources\AddCommand.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\delete.bmp">
+      <Link>MyResources\delete.bmp</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
+      <Link>MyResources\open.gif</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\RemoveCommand_16x.png">
+      <Link>MyResources\RemoveCommand_16x.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\Save24.png">
+      <Link>MyResources\Save24.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\saveAs.png">
+      <Link>MyResources\saveAs.png</Link>
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

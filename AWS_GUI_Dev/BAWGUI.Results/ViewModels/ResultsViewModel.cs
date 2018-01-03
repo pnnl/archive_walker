@@ -8,6 +8,9 @@ using BAWGUI.Xml;
 using System.Globalization;
 //using System.Windows;
 using System.Windows.Forms;
+using BAWGUI.RunMATLAB.ViewModels;
+using System.Windows.Input;
+using System.IO;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -55,6 +58,7 @@ namespace BAWGUI.Results.ViewModels
             _yearList = new List<string>();
             _monthList = new List<string>();
             _dayList = new List<string>();
+            OpenResultFile = new RelayCommand(_openResultFile);
         }
 
         //public void LoadResults(List<string> filenames, string startDate, string endDate)
@@ -85,8 +89,15 @@ namespace BAWGUI.Results.ViewModels
             //End If
             this._resultsModel.LoadResults(filenames, dates);
             _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
-            _forcedOscillationResultsViewModel.SelectedStartTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
-            _forcedOscillationResultsViewModel.SelectedEndTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            var startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture);
+            _forcedOscillationResultsViewModel.SelectedStartTime = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+            _forcedOscillationResultsViewModel.SelectedEndTime = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            if (_forcedOscillationResultsViewModel.FilteredResults.Count() == 0)
+            {
+                startTime = startTime.AddDays(-1);
+                _forcedOscillationResultsViewModel.SelectedStartTime = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+                _forcedOscillationResultsViewModel.SelectedEndTime = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            }
         }
 
         private Dictionary<string, Dictionary<string, List<string>>> _availableDateDict;
@@ -236,6 +247,87 @@ namespace BAWGUI.Results.ViewModels
                 string date = SelectedYear.Substring(2, 2) + SelectedMonth + SelectedDay;
                 _forcedOscillationResultsViewModel.SelectedStartTime = DateTime.ParseExact(date, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
                 _forcedOscillationResultsViewModel.SelectedEndTime = DateTime.ParseExact(date, "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand OpenResultFile { get; set; }
+        private void _openResultFile(object obj)
+        {
+            FolderBrowserDialog openDirectoryDialog = new FolderBrowserDialog();
+            openDirectoryDialog.Description = "Select the directory that result xml files are located ";
+            if (Directory.Exists(ResultsPath))
+            {
+                openDirectoryDialog.SelectedPath = ResultsPath;
+            }
+            else
+            {
+                openDirectoryDialog.SelectedPath = Environment.CurrentDirectory;
+            }
+            openDirectoryDialog.ShowNewFolderButton = false;
+            DialogResult result = openDirectoryDialog.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                ResultsPath = openDirectoryDialog.SelectedPath;
+                DirectoryInfo folderName = new DirectoryInfo(ResultsPath);
+                List<string> files = new List<string>();
+                List<string> dates = new List<string>();
+                foreach (var file in folderName.GetFiles().OrderBy(x=>x.Name).ToArray())
+                {
+                    List<string> nameFragment = file.Name.Split(new Char [] { '.', '_' }).ToList();
+                    if (file.Extension.ToLower() == ".xml" && nameFragment.Count() == 3 && nameFragment[0].ToLower() == "eventlist")
+                    {
+                        string dateStr = nameFragment[1];
+                        try
+                        {
+                            System.DateTime.ParseExact(dateStr, "yyMMdd", CultureInfo.InvariantCulture);
+                            dates.Add(dateStr);
+                            files.Add(file.FullName);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (file.Name.ToLower() == "eventlist_current.xml")
+                            {
+                                files.Add(file.FullName);
+                            }
+                        }
+                    }
+                }
+                if (files.Count()>0)
+                {
+                    if (files.Count()!=dates.Count())
+                    {
+                        dates.Sort();
+                        string lastDate = dates.LastOrDefault();
+                        dates.Add((Convert.ToInt32(lastDate) + 1).ToString());
+                    }
+                    try
+                    {
+                        LoadResults(files, dates);
+                    }
+                    catch (Exception ex)
+                    {
+                        string errorStr = "Error loading results: " + ex.Message;
+                        if (ex.InnerException != null)
+                        {
+                            errorStr = errorStr + "\n" + ex.InnerException.Message;
+                        }
+                        MessageBox.Show(errorStr, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No valid file found in folder: " + openDirectoryDialog.SelectedPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+        private string _resultsPath;
+        public string ResultsPath
+        {
+            get { return _resultsPath; }
+            set
+            {
+                _resultsPath = value;
                 OnPropertyChanged();
             }
         }

@@ -1,0 +1,12 @@
+********************************************************
+Mode = Archive
+DateTimeStart =  2016-09-14 17:00:00
+DateTimeEnd  =   2016-09-14 17:59:59
+********************************************************
+
+The next focus file should be: C:\Users\wang690\Desktop\projects\ArchiveWalker\Alberta tie in-out\Munro\2016\160914\_20160914_170000.pdat
+The next focus file folder should be C:\Users\wang690\Desktop\projects\ArchiveWalker\Alberta tie in-out\Munro\2016\160914\
+
+Found Future Files - Start FutureCount
+In Archive Mode, No pause...
+FutureCount = 1

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BAWGUI.Xml;
 using System.Collections.ObjectModel;
 using BAWGUI.Results.Models;
+using BAWGUI.RunMATLAB.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {

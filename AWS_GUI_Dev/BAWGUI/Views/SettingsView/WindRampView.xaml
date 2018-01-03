@@ -82,7 +82,7 @@
                 </Grid>
             </Expander>
             <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
-                <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
             </Button>
         </Grid>
     </Border>

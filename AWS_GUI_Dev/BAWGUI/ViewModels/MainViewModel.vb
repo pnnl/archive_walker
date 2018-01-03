@@ -4,6 +4,8 @@ Imports System.IO
 Imports System.Windows.Forms
 Imports System.Windows.Forms.VisualStyles
 Imports BAWGUI.Results.ViewModels
+Imports BAWGUI.RunMATLAB.ViewModels
+
 
 Public Class MainViewModel
     Inherits ViewModelBase
@@ -13,9 +15,14 @@ Public Class MainViewModel
         _showSettingsWindow = New DelegateCommand(AddressOf ShowSettings, AddressOf CanExecute)
         _openFile = New DelegateCommand(AddressOf OpenFileFunc, AddressOf CanExecute)
         _settingsViewModel = New SettingsViewModel
+        _runMatlabViewModel = New RunMATLABViewModel
         _currentView = _resultsViewModel
         _currentViewName = "Settings"
         _toggleResultsSettings = New DelegateCommand(AddressOf _switchView, AddressOf CanExecute)
+        _showSettingsView = New DelegateCommand(AddressOf _showSettings, AddressOf CanExecute)
+        _showResultsView = New DelegateCommand(AddressOf _showResults, AddressOf CanExecute)
+        _mainViewSelected = New DelegateCommand(AddressOf _switchView, AddressOf CanExecute)
+        _isSettingsEnabled = True
     End Sub
 
     Private _settingsWin As SettingsWindow
@@ -160,6 +167,15 @@ Public Class MainViewModel
             OnPropertyChanged()
         End Set
     End Property
+    Private _runMatlabViewModel As RunMATLABViewModel
+    Public Property RunMatlabViewModel As RunMATLABViewModel
+        Get
+            Return _runMatlabViewModel
+        End Get
+        Set(ByVal value As RunMATLABViewModel)
+            _runMatlabViewModel = value
+        End Set
+    End Property
     Private _currentViewName As String
     Public Property CurrentViewName As String
         Get
@@ -179,13 +195,60 @@ Public Class MainViewModel
             _toggleResultsSettings = value
         End Set
     End Property
-    Private Sub _switchView(obj As Object)
-        If CurrentViewName = "Settings" Then
-            CurrentViewName = "Results"
+    Private Sub _switchView(obj As String)
+        If obj = "Settings" Then
             CurrentView = SettingsViewModel
-        Else
-            CurrentViewName = "Settings"
+        ElseIf obj = "Results" Then
             CurrentView = ResultsViewModel
+        Else
+            CurrentView = RunMATLABViewModel
         End If
     End Sub
+    Private _showSettingsView As ICommand
+    Public Property ShowSettingsView As ICommand
+        Get
+            Return _showSettingsView
+        End Get
+        Set(ByVal value As ICommand)
+            _showSettingsView = value
+        End Set
+    End Property
+    Private Sub _showSettings(obj As Object)
+        CurrentView = SettingsViewModel
+        IsSettingsEnabled = False
+    End Sub
+
+    Private _showResultsView As ICommand
+    Public Property ShowResultsView As ICommand
+        Get
+            Return _showResultsView
+        End Get
+        Set(ByVal value As ICommand)
+            _showResultsView = value
+        End Set
+    End Property
+    Private Sub _showResults(obj As Object)
+        CurrentView = ResultsViewModel
+        IsSettingsEnabled = True
+    End Sub
+    Private _isSettingsEnabled As Boolean
+    Public Property IsSettingsEnabled As Boolean
+        Get
+            Return _isSettingsEnabled
+        End Get
+        Set(ByVal value As Boolean)
+            _isSettingsEnabled = value
+            OnPropertyChanged()
+        End Set
+    End Property
+    Private _mainViewSelected As ICommand
+    Public Property MainViewSelected As ICommand
+        Get
+            Return _mainViewSelected
+        End Get
+        Set(ByVal value As ICommand)
+            _mainViewSelected = value
+            OnPropertyChanged()
+        End Set
+    End Property
 End Class

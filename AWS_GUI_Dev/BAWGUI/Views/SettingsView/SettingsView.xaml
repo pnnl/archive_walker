@@ -19,16 +19,16 @@
             <Label Content="Config File:" />
             <TextBox Text="{Binding ConfigFileName}" MinWidth="100" Margin="2"/>
             <Button ToolTip="Open Config File" Width="25" Height="25" Margin="2" Command="{Binding OpenConfigFile}">
-                <Image Source="../../Images/open.gif" Stretch="Uniform"/>
+                <Image Source="/BAWGUI;component/MyResources/open.gif" Stretch="Uniform"/>
             </Button>
             <Button ToolTip="Save Config File" Width="25" Height="25" Margin="2" Command="{Binding SaveConfigFile}">
-                <Image Source="../../Images/Save24.png" Stretch="None"/>
+                <Image Source="/BAWGUI;component/MyResources/Save24.png" Stretch="None"/>
             </Button>
             <Button ToolTip="Save as" Width="25" Height="25" Margin="2" Command="{Binding SaveConfigFileAs}">
-                <Image Source="../../Images/saveAs.png" Stretch="None"/>
+                <Image Source="/BAWGUI;component/MyResources/saveAs.png" Stretch="None"/>
             </Button>
             <Button ToolTip="Delete Config File" Width="25" Height="25" Margin="2">
-                <Image Source="../../Images/delete.bmp" Stretch="None"/>
+                <Image Source="/BAWGUI;component/MyResources/delete.bmp" Stretch="None"/>
             </Button>
         </StackPanel>
         <local:TabControlForSettingsWindow Grid.Row="1" Margin="2"/>

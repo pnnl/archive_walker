@@ -44,6 +44,8 @@ Public Class SignalSignatures
         _isCustomSignal = False
         _passedThroughDQFilter = False
         _passedThroughProcessor = False
+        _samplingRate = -1
+        _unit = "O"
     End Sub
     Public Sub New(name As String)
         _signalName = name
@@ -52,6 +54,8 @@ Public Class SignalSignatures
         _isCustomSignal = False
         _passedThroughDQFilter = False
         _passedThroughProcessor = False
+        _samplingRate = -1
+        _unit = "O"
     End Sub
     Public Sub New(name As String, pmu As String)
         _signalName = name
@@ -61,6 +65,8 @@ Public Class SignalSignatures
         _isCustomSignal = False
         _passedThroughDQFilter = False
         _passedThroughProcessor = False
+        _samplingRate = -1
+        _unit = "O"
     End Sub
     Public Sub New(name As String, pmu As String, type As String)
         _signalName = name
@@ -71,6 +77,8 @@ Public Class SignalSignatures
         _isCustomSignal = False
         _passedThroughDQFilter = False
         _passedThroughProcessor = False
+        _samplingRate = -1
+        _unit = "O"
     End Sub
     'Public Sub Dispose() Implements IDisposable.Dispose
     '    'Dispose(True)
@@ -220,4 +228,8 @@ Public Class SignalSignatures
     Public Shared Operator <>(ByVal x As SignalSignatures, ByVal y As SignalSignatures) As Boolean
         Return x.PMUName <> y.PMUName OrElse x.SignalName <> y.SignalName OrElse x.TypeAbbreviation <> y.TypeAbbreviation
     End Operator
+
+    Public Function IsSignalInformationComplete() As Boolean
+        Return Not String.IsNullOrEmpty(PMUName) AndAlso Not String.IsNullOrEmpty(SignalName) AndAlso Not String.IsNullOrEmpty(TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(Unit) AndAlso (SamplingRate > 0)
+    End Function
 End Class

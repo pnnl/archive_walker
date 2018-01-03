@@ -50,7 +50,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                    <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -62,7 +62,7 @@
                         </Image.Style>
                     </Image>
                     <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewRate" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Column="2" Text="{Binding NewRate}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="8"/>
+                    <TextBox Grid.Column="2" Text="{Binding NewRate, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="8"/>
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="MultiRatePQParameters">
@@ -76,7 +76,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Row="0" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                    <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -89,7 +89,7 @@
                     </Image>
                     <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="p" HorizontalAlignment="Left"/>
                     <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="8"/>
-                    <Image Grid.Row="1" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                    <Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -135,7 +135,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Row="0" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
@@ -148,7 +148,7 @@
                         </Image>
                         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewUnit" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding ProcessConfigure.NameTypeUnitElement.NewUnit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8"/>
-                        <Image Grid.Row="1" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
@@ -172,7 +172,7 @@
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddNameTypeUnit}">
-                            <Image Width="16" Height="16" Source="../../Images/AddCommand.png" />
+                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" />
                         </Button>
                         <Label Content="NameTypeUnit" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
@@ -229,7 +229,7 @@
                                                         </DataTemplate>
                                                     </ListView.ItemTemplate>
                                                 </ListView>-->
-                                                <Image Grid.Row="2" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                <Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Style.Triggers>
@@ -242,7 +242,7 @@
                                                 </Image>
                                                 <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewChannel" HorizontalAlignment="Left" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}"/>
                                                 <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding NewChannel}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}"/>
-                                                <Image Grid.Row="3" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                <Image Grid.Row="3" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Style.Triggers>
@@ -255,7 +255,7 @@
                                                 </Image>
                                                 <Label Grid.Row="4" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewUnit" HorizontalAlignment="Left"/>
                                                 <TextBox Grid.Row="4" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding NewUnit}"/>
-                                                <Image Grid.Row="4" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                <Image Grid.Row="4" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Style.Triggers>
@@ -271,7 +271,7 @@
                                             </Grid>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteNameTypeUnit}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -305,7 +305,7 @@
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddUnwrap}">
-                            <Image Width="16" Height="16" Source="../../Images/AddCommand.png" />
+                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" />
                         </Button>
                         <Label Content="Unwrap" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
@@ -351,7 +351,7 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -369,7 +369,7 @@
                                             </Grid>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteUnwrapStep}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -378,7 +378,7 @@
                     </ItemsControl>
                     <DockPanel Grid.Row="2" LastChildFill="True" Margin="0,0,7,0">
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddInterpolate}">
-                            <Image Width="16" Height="16" Source="../../Images/AddCommand.png" />
+                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" />
                         </Button>
                         <Label Content="Interpolate" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
@@ -441,7 +441,7 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                         </Grid.RowDefinitions>
-                                                        <Image Grid.Row="0" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -454,7 +454,7 @@
                                                         </Image>
                                                         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Limit" HorizontalAlignment="Left"/>
                                                         <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Limit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
-                                                        <Image Grid.Row="1" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -467,7 +467,7 @@
                                                         </Image>
                                                         <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Type" HorizontalAlignment="Left"/>
                                                         <ComboBox Grid.Row="1" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource InterpolateTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter4}}"/>
-                                                        <Image Grid.Row="2" Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -485,7 +485,7 @@
                                             </Grid>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteInterpolateStep}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -497,7 +497,7 @@
                             <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                        <Image Width="16" Height="16" Source="../../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                        <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
                                         <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </MenuItem.Header>
@@ -550,7 +550,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                                                     <StackPanel Orientation="Horizontal" Margin="2">
-                                                        <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -578,7 +578,7 @@
                                                                         <ColumnDefinition Width="Auto"/>
                                                                         <ColumnDefinition Width="*"/>
                                                                     </Grid.ColumnDefinitions>
-                                                                    <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                    <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                                         <Image.Style>
                                                                             <Style TargetType="Image">
                                                                                 <Style.Triggers>
@@ -618,7 +618,7 @@
                                             </Grid>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -669,7 +669,7 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right" Grid.Column="0">
+                                                        <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right" Grid.Column="0">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -681,10 +681,10 @@
                                                             </Image.Style>
                                                         </Image>
                                                         <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="MultiRatePMU" HorizontalAlignment="Left" Grid.Column="1"/>
-                                                        <TextBox Text="{Binding MultiRatePMU}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="100" HorizontalContentAlignment="Right" Margin="8" Grid.Column="2"/>
+                                                        <TextBox Text="{Binding MultiRatePMU, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="100" HorizontalContentAlignment="Right" Margin="8" Grid.Column="2"/>
                                                     </Grid>
                                                     <!--<StackPanel Orientation="Horizontal">
-                                                        <Image Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -719,7 +719,7 @@
                                             </Grid>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -728,7 +728,7 @@
                     </ItemsControl>
                     <DockPanel Grid.Row="6" LastChildFill="True" Margin="0,0,7,0">
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddWrap}">
-                            <Image Width="16" Height="16" Source="../../Images/AddCommand.png" />
+                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" />
                         </Button>
                         <Label Content="Wrap" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
@@ -763,7 +763,7 @@
                                             </StackPanel>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteWrap}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>

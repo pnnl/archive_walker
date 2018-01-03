@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAWGUI.Results.ViewModels
+namespace BAWGUI.RunMATLAB.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {

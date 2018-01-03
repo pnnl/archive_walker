@@ -22,6 +22,38 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+    Private Function _getAllProcessConfigOutputGroupedByType() As ObservableCollection(Of SignalTypeHierachy)
+        Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        For Each uwrp In ProcessConfigure.UnWrapList
+            For Each signal In uwrp.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each itpl In ProcessConfigure.InterpolateList
+            For Each signal In itpl.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each stp In ProcessConfigure.CollectionOfSteps
+            For Each signal In stp.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each wrp In ProcessConfigure.WrapList
+            For Each signal In wrp.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        Return SortSignalByType(allOutputSignals)
+    End Function
     Private _allProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
         Get
@@ -32,6 +64,38 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+    Private Function _getAllProcessConfigOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
+        Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        For Each uwrp In ProcessConfigure.UnWrapList
+            For Each signal In uwrp.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each itpl In ProcessConfigure.InterpolateList
+            For Each signal In itpl.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each stp In ProcessConfigure.CollectionOfSteps
+            For Each signal In stp.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        For Each wrp In ProcessConfigure.WrapList
+            For Each signal In wrp.OutputChannels
+                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                    allOutputSignals.Add(signal)
+                End If
+            Next
+        Next
+        Return SortSignalByPMU(allOutputSignals)
+    End Function
     Private _allProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
         Get
@@ -651,6 +715,7 @@ Partial Public Class SettingsViewModel
                     Next
                 End If
                 _determineFileDirCheckableStatus()
+                '_determineSamplingRateCheckableStatus()
                 For Each signal In processStep.InputChannels
                     signal.IsChecked = True
                 Next
@@ -665,12 +730,14 @@ Partial Public Class SettingsViewModel
                 GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
                 _processConfigDetermineAllParentNodeStatus()
                 _determineFileDirCheckableStatus()
-                
-                if TypeOf processStep Is Unwrap OrElse TypeOf processStep Is Wrap Then
+                '_determineSamplingRateCheckableStatus()
+
+                If TypeOf processStep Is Unwrap OrElse TypeOf processStep Is Wrap Then
                     _disableEnableAllButAngleSignalsInProcessConfig(False)
                 End If
-                
+
                 CurrentSelectedStep = processStep
+                _determineSamplingRateCheckableStatus()
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
             End Try
@@ -679,33 +746,63 @@ Partial Public Class SettingsViewModel
 
     Private Sub _disableEnableAllButAngleSignalsInProcessConfig(isEnabled As Boolean)
         For Each group In GroupedRawSignalsByType
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnabled
-                Else
-                    For Each subsubgroup In subgroup.SignalList
-                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
-                            subsubgroup.SignalSignature.IsEnabled = isEnabled
-                        End If
-                    Next
-                End If
+            For Each subgroupBySamplingRate In group.SignalList
+                For Each subgroup In subgroupBySamplingRate.SignalList
+                    If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
+                        subgroup.SignalSignature.IsEnabled = isEnabled
+                    Else
+                        For Each subsubgroup In subgroup.SignalList
+                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnabled
+                            End If
+                        Next
+                    End If
+                Next
             Next
         Next
         For Each group In GroupedRawSignalsByPMU
-            For Each subgroup In group.SignalList
-                For Each subsubgroup In subgroup.SignalList
-                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnabled
-                    End If
+            For Each subgroupBySamplingRate In group.SignalList
+                For Each subgroup In subgroupBySamplingRate.SignalList
+                    For Each subsubgroup In subgroup.SignalList
+                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+                        End If
+                    Next
                 Next
             Next
         Next
         For Each group In GroupedSignalByProcessConfigStepsInput
-            For Each subgroup In group.SignalList
-                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
-                    subgroup.SignalSignature.IsEnabled = isEnabled
-                Else
+            For Each subgroupBySamplingRate In group.SignalList
+                For Each subgroup In subgroupBySamplingRate.SignalList
+                    If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
+                        subgroup.SignalSignature.IsEnabled = isEnabled
+                    Else
+                        For Each subsubgroup In subgroup.SignalList
+                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnabled
+                            End If
+                        Next
+                    End If
+                Next
+            Next
+        Next
+        For Each group In GroupedSignalByProcessConfigStepsOutput
+            For Each subgroupBySamplingRate In group.SignalList
+                For Each subgroup In subgroupBySamplingRate.SignalList
                     For Each subsubgroup In subgroup.SignalList
+                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
+                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+                        End If
+                    Next
+                Next
+            Next
+        Next
+        For Each group In AllDataConfigOutputGroupedByType
+            For Each subgroupBySamplingRate In group.SignalList
+                If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
+                    subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
+                Else
+                    For Each subsubgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
                             subsubgroup.SignalSignature.IsEnabled = isEnabled
                         End If
@@ -713,31 +810,13 @@ Partial Public Class SettingsViewModel
                 End If
             Next
         Next
-        For Each group In GroupedSignalByProcessConfigStepsOutput
-            For Each subgroup In group.SignalList
-                For Each subsubgroup In subgroup.SignalList
-                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnabled
-                    End If
-                Next
-            Next
-        Next
-        For Each group In AllDataConfigOutputGroupedByType
-            If group.SignalSignature.TypeAbbreviation <> "I" AndAlso group.SignalSignature.TypeAbbreviation <> "V" Then
-                group.SignalSignature.IsEnabled = isEnabled
-            Else
-                For Each subsubgroup In group.SignalList
-                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "A" Then
-                        subsubgroup.SignalSignature.IsEnabled = isEnabled
-                    End If
-                Next
-            End If
-        Next
         For Each group In AllDataConfigOutputGroupedByPMU
-            For Each subgroup In group.SignalList
-                If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
-                    subgroup.SignalSignature.IsEnabled = isEnabled
-                End If
+            For Each subgroupBySamplingRate In group.SignalList
+                For Each subgroup In subgroupBySamplingRate.SignalList
+                    If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
+                        subgroup.SignalSignature.IsEnabled = isEnabled
+                    End If
+                Next
             Next
         Next
     End Sub
@@ -770,8 +849,10 @@ Partial Public Class SettingsViewModel
                 stepsOutputAsSignalHierachy.Add(intplt.ThisStepOutputsAsSignalHierachyByPMU)
             Next
             For Each stp In ProcessConfigure.CollectionOfSteps
+                stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
                 stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                 If TypeOf stp Is Multirate Then
+                    stp.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(stp.InputChannels)
                     stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                 End If
             Next
@@ -815,6 +896,7 @@ Partial Public Class SettingsViewModel
             CurrentSelectedStep.IsStepSelected = False
             CurrentSelectedStep = Nothing
             _determineFileDirCheckableStatus()
+            _determineSamplingRateCheckableStatus()
         End If
     End Sub
 
@@ -841,38 +923,38 @@ Partial Public Class SettingsViewModel
         Next
     End Sub
 
-    Private Sub _groupAllProcessConfigOutputSignal()
-        Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
-        For Each uwrp In ProcessConfigure.UnWrapList
-            For Each signal In uwrp.OutputChannels
-                If Not allOutputSignals.Contains(signal) Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        For Each itpl In ProcessConfigure.InterpolateList
-            For Each signal In itpl.OutputChannels
-                If Not allOutputSignals.Contains(signal) Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        For Each stp In ProcessConfigure.CollectionOfSteps
-            For Each signal In stp.OutputChannels
-                If Not allOutputSignals.Contains(signal) Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        For Each wrp In ProcessConfigure.WrapList
-            For Each signal In wrp.OutputChannels
-                If Not allOutputSignals.Contains(signal) Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        AllProcessConfigOutputGroupedByType = SortSignalByType(allOutputSignals)
-        AllProcessConfigOutputGroupedByPMU = SortSignalByPMU(allOutputSignals)
-    End Sub
+    'Private Sub _groupAllProcessConfigOutputSignal()
+    '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+    '    For Each uwrp In ProcessConfigure.UnWrapList
+    '        For Each signal In uwrp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    For Each itpl In ProcessConfigure.InterpolateList
+    '        For Each signal In itpl.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    For Each stp In ProcessConfigure.CollectionOfSteps
+    '        For Each signal In stp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    For Each wrp In ProcessConfigure.WrapList
+    '        For Each signal In wrp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    AllProcessConfigOutputGroupedByType = SortSignalByType(allOutputSignals)
+    '    AllProcessConfigOutputGroupedByPMU = SortSignalByPMU(allOutputSignals)
+    'End Sub
 
 End Class

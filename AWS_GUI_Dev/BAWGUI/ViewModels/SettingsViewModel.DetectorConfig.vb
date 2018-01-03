@@ -12,6 +12,17 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+
+    Private _resultUpdateIntervalVisibility As Visibility
+    Public Property ResultUpdateIntervalVisibility As Visibility
+        Get
+            Return _resultUpdateIntervalVisibility
+        End Get
+        Set(ByVal value As Visibility)
+            _resultUpdateIntervalVisibility = value
+            OnPropertyChanged()
+        End Set
+    End Property
 #Region "Add, Delete, Select a detector, DeSelect All detector"
     Private _detectorSelectedToAdd As ICommand
     Public Property DetectorSelectedToAdd As ICommand
@@ -35,8 +46,10 @@ Partial Public Class SettingsViewModel
                 newDetector = New WindRampDetector
             Case "Periodogram"
                 newDetector = New PeriodogramDetector
+                ResultUpdateIntervalVisibility = Visibility.Visible
             Case "SpectralCoherence"
                 newDetector = New SpectralCoherenceDetector
+                ResultUpdateIntervalVisibility = Visibility.Visible
             Case Else
                 Throw New Exception("Unknown detector selected to add.")
         End Select
@@ -125,6 +138,7 @@ Partial Public Class SettingsViewModel
             _currentSelectedStep.IsStepSelected = False
             CurrentSelectedStep = Nothing
             _determineFileDirCheckableStatus()
+            _determineSamplingRateCheckableStatus()
         End If
         SignalSelectionTreeViewVisibility = "Visible"
     End Sub
@@ -161,6 +175,7 @@ Partial Public Class SettingsViewModel
                     Next
                 End If
                 _determineFileDirCheckableStatus()
+                '_determineSamplingRateCheckableStatus()
                 detector.IsStepSelected = True
                 If TypeOf detector Is DetectorBase Then
                     For Each signal In detector.InputChannels
@@ -171,6 +186,7 @@ Partial Public Class SettingsViewModel
                 _detectorConfigDetermineAllParentNodeStatus()
 
                 _determineFileDirCheckableStatus()
+                '_determineSamplingRateCheckableStatus()
 
                 If TypeOf detector Is AlarmingDetectorBase Then
                     SignalSelectionTreeViewVisibility = "Collapsed"
@@ -179,6 +195,7 @@ Partial Public Class SettingsViewModel
                 End If
 
                 CurrentSelectedStep = detector
+                _determineSamplingRateCheckableStatus()
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
             End Try
@@ -226,6 +243,18 @@ Partial Public Class SettingsViewModel
                     For index = 1 To GroupedSignalByDetectorInput.Count
                         GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & " Detector " & DetectorConfigure.DetectorList(index - 1).Name
                     Next
+                    If ResultUpdateIntervalVisibility = Visibility.Visible Then
+                        Dim updateResultInterval = False
+                        For Each dtr In DetectorConfigure.DetectorList
+                            If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Then
+                                updateResultInterval = True
+                                Exit For
+                            End If
+                        Next
+                        If Not updateResultInterval Then
+                            ResultUpdateIntervalVisibility = Visibility.Collapsed
+                        End If
+                    End If
                 Else
                     Dim newlist = New ObservableCollection(Of AlarmingDetectorBase)(DetectorConfigure.AlarmingList)
                     newlist.Remove(obj)

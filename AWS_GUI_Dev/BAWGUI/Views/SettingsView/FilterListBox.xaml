@@ -24,6 +24,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TextBlock VerticalAlignment="Bottom" Style="{StaticResource NoItemsTextStyle}" Margin="0,2,2,6" Text="Please select signal(s)" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
+        <TextBlock VerticalAlignment="Bottom" Style="{StaticResource NoItemsTextStyle}" Margin="20,2,2,6" Text="Please select signal(s)" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
     </Grid>
 </UserControl>

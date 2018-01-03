@@ -79,7 +79,7 @@
                             <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0" ItemsSource="{Binding PostProcessConfigure.CustomizationList}">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                        <Image Width="16" Height="16" Source="../../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                        <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
                                         <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </MenuItem.Header>
@@ -181,7 +181,7 @@
                                             </ContentControl>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeletePostProcessStep}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>

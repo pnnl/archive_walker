@@ -92,7 +92,7 @@
                             <MenuItem HorizontalAlignment="Center" Width="Auto" Margin="0,0,0,0">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                        <Image Width="16" Height="16" Source="../../Images/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
+                                        <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
                                         <Path VerticalAlignment="Center" Margin="4,4,0,0" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" HorizontalAlignment="Right"/>
                                     </StackPanel>
                                 </MenuItem.Header>
@@ -174,7 +174,7 @@
                                                                         <ColumnDefinition Width="Auto"/>
                                                                         <ColumnDefinition Width="*"/>
                                                                     </Grid.ColumnDefinitions>
-                                                                    <Image Grid.Column="0" Source="../../Images/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                    <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                                         <Image.Style>
                                                                             <Style TargetType="Image">
                                                                                 <Style.Triggers>
@@ -204,7 +204,7 @@
                                             </Grid>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteDataConfigStep}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -289,7 +289,7 @@
                                             </ContentControl>
                                         </Expander>
                                         <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteDataConfigStep}" CommandParameter="{Binding}">
-                                            <Image Width="16" Height="16" Source="../../Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            <Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                                         </Button>
                                     </Grid>
                                 </Border>

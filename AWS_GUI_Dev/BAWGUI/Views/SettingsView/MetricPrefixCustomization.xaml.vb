@@ -30,9 +30,9 @@
 
     Private Sub StackPanel_LostFocus(sender As Object, e As RoutedEventArgs)
         For Each child In sender.Children
-            child.Background = Brushes.LightGray
+            child.Background = Brushes.White
         Next
-        sender.Background = Brushes.LightGray
+        sender.Background = Brushes.White
     End Sub
 
     Private Sub StackPanel_GotFocus(sender As Object, e As RoutedEventArgs)
@@ -100,13 +100,13 @@
 
     Private Sub PMU_LostFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Brushes.LightGray
+            item.Background = Brushes.White
         Next
     End Sub
 
     Private Sub Channel_LostFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Brushes.LightGray
+            item.Background = Brushes.White
         Next
     End Sub
 End Class
