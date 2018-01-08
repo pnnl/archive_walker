@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
-using BAWSgui2;
+using BAWSgui3;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -34,10 +34,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand RunArchiveWalkerNormal { get; set; }
         private void _runAWNormal(object obj)
         {
-            BAWSgui2.GUI2MAT T = new GUI2MAT();
+            BAWSgui3.GUI2MAT T = new GUI2MAT();
             try
             {
-                T.RunNormalMode(ConfigFileName);
+                System.Threading.Thread t1 = new System.Threading.Thread(() => { T.RunNormalMode(ConfigFileName); });
+                t1.Start();
             }
             catch (Exception ex)
             {

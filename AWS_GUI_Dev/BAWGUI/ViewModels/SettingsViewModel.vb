@@ -1366,8 +1366,8 @@ Partial Public Class SettingsViewModel
                                 <SignalUnit><%= singleStep.OutputChannels(0).Unit %></SignalUnit>
                             </Parameters>
                         </Customization>
-                If Not String.IsNullOrEmpty(singleStep.TimeSourcePMU) Then
-                    aStep.<Parameters>.LastOrDefault.Add(<TimeSourcePMU><%= singleStep.TimeSourcePMU %></TimeSourcePMU>)
+                If Not String.IsNullOrEmpty(singleStep.TimeSourcePMU.PMU) Then
+                    aStep.<Parameters>.LastOrDefault.Add(<TimeSourcePMU><%= singleStep.TimeSourcePMU.PMU %></TimeSourcePMU>)
                 End If
             Case "Addition Customization"
                 aStep = <Customization>

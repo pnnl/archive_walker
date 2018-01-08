@@ -177,7 +177,9 @@
                         <Label Content="NameTypeUnit" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding ProcessConfigStepDeSelected}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
