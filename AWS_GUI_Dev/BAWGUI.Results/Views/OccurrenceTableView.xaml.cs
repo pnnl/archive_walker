@@ -24,5 +24,20 @@ namespace BAWGUI.Results.Views
         {
             InitializeComponent();
         }
+
+        private void DataGridControl_SelectionChanged(object sender, Xceed.Wpf.DataGrid.DataGridSelectionChangedEventArgs e)
+        {
+            var s = (Xceed.Wpf.DataGrid.DataGridControl)sender;
+            if (s.SelectedItem != null)
+            {
+                s.CurrentItem = s.SelectedItem;
+            }
+            //Xceed.Wpf.DataGrid.DataRow row = s.GetContainerFromItem(s.CurrentItem) as Xceed.Wpf.DataGrid.DataRow;
+            //if (row != null)
+            //{
+            //    row.InactiveSelectionBackground = Brushes.Green;
+            //    //row.SelectionForeground = Brushes.White;
+            //}
+        }
     }
 }

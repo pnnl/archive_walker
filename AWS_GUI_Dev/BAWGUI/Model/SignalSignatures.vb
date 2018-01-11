@@ -232,4 +232,37 @@ Public Class SignalSignatures
     Public Function IsSignalInformationComplete() As Boolean
         Return Not String.IsNullOrEmpty(PMUName) AndAlso Not String.IsNullOrEmpty(SignalName) AndAlso Not String.IsNullOrEmpty(TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(Unit) AndAlso (SamplingRate > 0)
     End Function
+
+    Private _newSignalName As String
+    Public Property NewSignalName As String
+        Get
+            Return _newSignalName
+        End Get
+        Set(ByVal value As String)
+            _newSignalName = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _newUnit As String
+    Public Property NewUnit As String
+        Get
+            Return _newUnit
+        End Get
+        Set(ByVal value As String)
+            _newUnit = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _newTypeAbbreviation As String
+    Public Property NewTypeAbbreviation As String
+        Get
+            Return _newTypeAbbreviation
+        End Get
+        Set(ByVal value As String)
+            _newTypeAbbreviation = value
+            OnPropertyChanged()
+        End Set
+    End Property
 End Class

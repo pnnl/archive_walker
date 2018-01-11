@@ -24,6 +24,10 @@ namespace BAWGUI.Results.ViewModels
                 _channels.Add(new ChannelViewModel(ch));
             }
         }
+        public OccurrenceViewModel()
+        {
+
+        }
         private readonly DatedOccurrence _model;
         public DatedOccurrence Model
         {
@@ -144,5 +148,6 @@ namespace BAWGUI.Results.ViewModels
         {
             get { return _channels; }
         }
+        public int trackerKey { get; set; }
     }
 }

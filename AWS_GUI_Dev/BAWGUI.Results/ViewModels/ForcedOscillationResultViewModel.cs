@@ -39,6 +39,10 @@ namespace BAWGUI.Results.ViewModels
                 _filteredOccurrences.Add(new OccurrenceViewModel(ocur));
             }
         }
+        public ForcedOscillationResultViewModel()
+        {
+
+        }
         private readonly DatedForcedOscillationEvent _model;
         public DatedForcedOscillationEvent Model
         {

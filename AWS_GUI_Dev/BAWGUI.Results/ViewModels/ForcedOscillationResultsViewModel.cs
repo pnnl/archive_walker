@@ -35,8 +35,8 @@ namespace BAWGUI.Results.ViewModels
             _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
             _models = new List<DatedForcedOscillationEvent>();
             _foPlotModel = new PlotModel();
-            //_selectedOscillationEvent = null;
-            //_selectedOccurrence = null;
+            _selectedOscillationEvent = new ForcedOscillationResultViewModel();
+            _selectedOccurrence = new OccurrenceViewModel();
         }
 
         //private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
@@ -114,8 +114,8 @@ namespace BAWGUI.Results.ViewModels
         private void _filterTableByTime()
         {
             ObservableCollection<ForcedOscillationResultViewModel> newResults = new ObservableCollection<ForcedOscillationResultViewModel>();
-            DateTime startT = DateTime.Parse(SelectedStartTime);
-            DateTime endT = DateTime.Parse(SelectedEndTime);
+            DateTime startT = DateTime.Parse(_selectedStartTime);
+            DateTime endT = DateTime.Parse(_selectedEndTime);
             foreach (var evnt in _results)
             {
                 DateTime st = DateTime.Parse(evnt.OverallStartTime);
@@ -166,6 +166,22 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedOscillationEvent = value;
                 OnPropertyChanged();
+                if (_selectedOscillationEvent != null)
+                {
+                    bool ocurFound = false;
+                    foreach (var ocur in _selectedOscillationEvent.FilteredOccurrences)
+                    {
+                        if (ocur == _selectedOccurrence)
+                        {
+                            ocurFound = true;
+                            break;
+                        }
+                    }
+                    if (!ocurFound)
+                    {
+                        SelectedOccurrence = _selectedOscillationEvent.FilteredOccurrences.First();
+                    }
+                }
             }
         }
 
@@ -177,6 +193,25 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedOccurrence = value;
                 OnPropertyChanged();
+                if (_selectedOccurrence != null)
+                {
+                    foreach (var item in FOPlotModel.Series)
+                    {
+                        if (item is LineSeries)
+                        {
+                            var it = item as LineSeries;
+                            if (it.StrokeThickness == 10)
+                            {
+                                it.StrokeThickness = 5;
+                            }
+                            if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
+                            {
+                                it.StrokeThickness = 10;
+                                FOPlotModel.InvalidatePlot(true);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -320,6 +355,7 @@ namespace BAWGUI.Results.ViewModels
             a.DefaultColors.Clear();
             var alarmSeries = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerFill = OxyColors.Red, MarkerSize = 4, Title = "Alarms", ColorAxisKey = null};
             //var heatMapData = new List<float>();
+            var trackerKey = 0;
             foreach (var fo in FilteredResults)
             {
                 //OxyColor eventColor = a.DefaultColors[index];
@@ -330,9 +366,16 @@ namespace BAWGUI.Results.ViewModels
                 {
                     //var newSeries = new LineSeries { Title = fo.Label };
                     var newSeries = new LineSeries() { LineStyle= LineStyle.Solid, Color = eventColor, StrokeThickness = 5};
+                    if (ocur == SelectedOccurrence)
+                    {
+                        newSeries.StrokeThickness = 10;
+                    }
                     newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
                     newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
                     a.Series.Add(newSeries);
+                    newSeries.TrackerKey = trackerKey.ToString();
+                    ocur.trackerKey = trackerKey;
+                    trackerKey++;
                     newSeries.MouseDown += foEvent_MouseDown;
                     if (ocur.Alarm == "YES")
                     {
@@ -390,9 +433,46 @@ namespace BAWGUI.Results.ViewModels
 
         private void foEvent_MouseDown(object sender, OxyMouseDownEventArgs e)
         {
-            var x = (sender as LineSeries).InverseTransform(e.Position).X;
-            var y = (sender as LineSeries).InverseTransform(e.Position).Y;
-            MessageBox.Show(DateTimeAxis.ToDateTime(x).ToString());
+            var s = (LineSeries)sender;
+            //var old = Queryable.Where<Series>(FOPlotModel.Series.AsQueryable(), p => p.GetType() is typeof(LineSeries) && p.StrokeThickness==10); //FOPlotModel.Series.Where((LineSeries x) => x == s);
+            //foreach (var item in FOPlotModel.Series)
+            //{
+            //    if(item is LineSeries)
+            //    {
+            //        var it = item as LineSeries;
+            //        if(it.StrokeThickness == 10)
+            //        {
+            //            it.StrokeThickness = 5;
+            //        }
+            //    }
+            //}
+            //old.FirstOrDefault();
+            //var x = (sender as LineSeries).InverseTransform(e.Position).X;
+            //var y = (sender as LineSeries).InverseTransform(e.Position).Y;
+            //s.StrokeThickness = 10;
+            bool ocurFound = false;
+            foreach (var fo in FilteredResults)
+            {
+                foreach (var ocur in fo.FilteredOccurrences)
+                {
+                    if(ocur.trackerKey.ToString() == s.TrackerKey)
+                    {
+                        ocurFound = true;
+                        SelectedOscillationEvent = fo;
+                        SelectedOccurrence = ocur;
+                        break;
+                    }
+                }
+                if (ocurFound)
+                {
+                    break;
+                }
+            }
+            //if (ocurFound)
+            //{
+            //    FOPlotModel.InvalidatePlot(true);
+            //}
+             //MessageBox.Show(DateTimeAxis.ToDateTime(x).ToString());
         }
 
         private void FrequencyYAxis_AxisChanged(object sender, AxisChangedEventArgs e)

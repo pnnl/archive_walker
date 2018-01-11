@@ -25,6 +25,26 @@ namespace BAWGUI.Results.Views
         {
             InitializeComponent();
         }
+
+        private void DataGridControl_SelectionChanged(object sender, Xceed.Wpf.DataGrid.DataGridSelectionChangedEventArgs e)
+        {
+            var s = sender as Xceed.Wpf.DataGrid.DataGridControl;
+            //Xceed.Wpf.DataGrid.DataRow rowOld = s.GetContainerFromItem(s.CurrentItem) as Xceed.Wpf.DataGrid.DataRow;
+            //if (rowOld != null)
+            //{
+            //    rowOld.UpdateDefaultStyle();
+            //}
+            if (s.SelectedItem != null)
+            {
+                s.CurrentItem = s.SelectedItem;
+            }
+            //Xceed.Wpf.DataGrid.DataRow row = s.GetContainerFromItem(s.CurrentItem) as Xceed.Wpf.DataGrid.DataRow;
+            //if (row != null)
+            //{
+            //    row.InactiveSelectionBackground = Brushes.Green;
+            //    row.SelectionForeground = Brushes.White;
+            //}
+        }
     }
     //public partial class DraggablePopup : Popup
     //{

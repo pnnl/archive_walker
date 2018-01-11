@@ -52,6 +52,15 @@ Partial Public Class SettingsViewModel
                 End If
             Next
         Next
+        If NameTypeUnitStatusFlag Then
+
+        Else
+            For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+                For Each signal In change.OutputChannels
+                    'If Not allOutputSignals.Contains(signal) AndAlso signal Then
+                Next
+            Next
+        End If
         Return SortSignalByType(allOutputSignals)
     End Function
     Private _allProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
@@ -108,7 +117,7 @@ Partial Public Class SettingsViewModel
     End Property
     Private _nameTypeUnitStatusFlag As Integer
     ''' <summary>
-    ''' This Flag denotes the rare situation(might never happend since obsolete) when there is NameTypeUnit Element exists and use the first approach in the Processor XML Configuration File specifications
+    ''' This Flag denotes the rare situation(might never happend since obsolete) when there is NameTypeUnit Element exists and use the first approach(1) in the Processor XML Configuration File specifications, otherwise, 2nd approach(0)
     ''' </summary>
     ''' <returns></returns>
     Public Property NameTypeUnitStatusFlag As Integer
@@ -573,6 +582,10 @@ Partial Public Class SettingsViewModel
                 Next
                 ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
                 _deSelectAllProcessConfigSteps()
+                If NameTypeUnitStatusFlag Then
+                Else
+                    'obj.
+                End If
                 _addLog("NameTypeUnit step " & obj.StepCounter & " is deleted!")
             Catch ex As Exception
                 MessageBox.Show("Error deleting a NameTypeUnit step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)

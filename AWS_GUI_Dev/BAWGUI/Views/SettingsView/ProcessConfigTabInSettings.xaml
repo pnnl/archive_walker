@@ -50,7 +50,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                    <!--<Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -60,7 +60,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
-                    </Image>
+                    </Image>-->
                     <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewRate" HorizontalAlignment="Left"/>
                     <TextBox Grid.Column="2" Text="{Binding NewRate, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="8"/>
                 </Grid>
@@ -76,7 +76,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                    <!--<Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -86,10 +86,10 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
-                    </Image>
+                    </Image>-->
                     <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="p" HorizontalAlignment="Left"/>
                     <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="8"/>
-                    <Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                    <!--<Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -99,7 +99,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
-                    </Image>
+                    </Image>-->
                     <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="q" HorizontalAlignment="Left"/>
                     <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="8"/>
                 </Grid>
@@ -135,7 +135,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <!--<Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
@@ -145,10 +145,10 @@
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>
-                        </Image>
+                        </Image>-->
                         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewUnit" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding ProcessConfigure.NameTypeUnitElement.NewUnit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8"/>
-                        <Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <!--<Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
@@ -158,7 +158,7 @@
                                     </Style.Triggers>
                                 </Style>
                             </Image.Style>
-                        </Image>
+                        </Image>-->
                         <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewType" HorizontalAlignment="Left"/>
                         <TextBox Grid.Row="1" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding ProcessConfigure.NameTypeUnitElement.NewType}"/>
                     </Grid>
@@ -231,7 +231,7 @@
                                                         </DataTemplate>
                                                     </ListView.ItemTemplate>
                                                 </ListView>-->
-                                                <Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                <!--<Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Style.Triggers>
@@ -241,10 +241,10 @@
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Image.Style>
-                                                </Image>
+                                                </Image>-->
                                                 <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewChannel" HorizontalAlignment="Left" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}"/>
                                                 <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding NewChannel}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="8" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}"/>
-                                                <Image Grid.Row="3" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                <!--<Image Grid.Row="3" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Style.Triggers>
@@ -254,10 +254,10 @@
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Image.Style>
-                                                </Image>
+                                                </Image>-->
                                                 <Label Grid.Row="4" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewUnit" HorizontalAlignment="Left"/>
                                                 <TextBox Grid.Row="4" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding NewUnit}"/>
-                                                <Image Grid.Row="4" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                <!--<Image Grid.Row="4" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                     <Image.Style>
                                                         <Style TargetType="Image">
                                                             <Style.Triggers>
@@ -267,7 +267,7 @@
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Image.Style>
-                                                </Image>
+                                                </Image>-->
                                                 <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="NewType" HorizontalAlignment="Left"/>
                                                 <TextBox Grid.Row="3" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Text="{Binding NewType}"/>
                                             </Grid>
@@ -353,7 +353,7 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <!--<Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -363,7 +363,7 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Image.Style>
-                                                        </Image>
+                                                        </Image>-->
                                                         <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="MaxNaN" HorizontalAlignment="Left"/>
                                                         <TextBox Grid.Column="2" Text="{Binding MaxNaN}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
                                                     </Grid>
@@ -443,7 +443,7 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                         </Grid.RowDefinitions>
-                                                        <Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <!--<Image Grid.Row="0" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -453,10 +453,10 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Image.Style>
-                                                        </Image>
+                                                        </Image>-->
                                                         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Limit" HorizontalAlignment="Left"/>
                                                         <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Limit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8"/>
-                                                        <Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <!--<Image Grid.Row="1" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -466,10 +466,10 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Image.Style>
-                                                        </Image>
+                                                        </Image>-->
                                                         <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Type" HorizontalAlignment="Left"/>
                                                         <ComboBox Grid.Row="1" Grid.Column="2" Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" ItemsSource="{Binding Source={StaticResource InterpolateTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter4}}"/>
-                                                        <Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <!--<Image Grid.Row="2" Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -479,7 +479,7 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Image.Style>
-                                                        </Image>
+                                                        </Image>-->
                                                         <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="FlagInterp" HorizontalAlignment="Left"/>
                                                         <CheckBox Grid.Row="2" Grid.Column="2" IsChecked="{Binding FlagInterp}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Center"/>
                                                     </Grid>
@@ -552,7 +552,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                                                     <StackPanel Orientation="Horizontal" Margin="2">
-                                                        <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                        <!--<Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -562,7 +562,7 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Image.Style>
-                                                        </Image>
+                                                        </Image>-->
                                                         <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="Filter Type: " HorizontalAlignment="Left"/>
                                                         <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right"/>
                                                     </StackPanel>
@@ -580,7 +580,7 @@
                                                                         <ColumnDefinition Width="Auto"/>
                                                                         <ColumnDefinition Width="*"/>
                                                                     </Grid.ColumnDefinitions>
-                                                                    <Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                    <!--<Image Grid.Column="0" Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                                         <Image.Style>
                                                                             <Style TargetType="Image">
                                                                                 <Style.Triggers>
@@ -590,7 +590,7 @@
                                                                                 </Style.Triggers>
                                                                             </Style>
                                                                         </Image.Style>
-                                                                    </Image>
+                                                                    </Image>-->
                                                                     <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" HorizontalAlignment="Left"/>
                                                                     <ContentControl Content="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" HorizontalAlignment="Right">
                                                                         <ContentControl.Style>
@@ -671,7 +671,7 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right" Grid.Column="0">
+                                                        <!--<Image Source="../../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right" Grid.Column="0">
                                                             <Image.Style>
                                                                 <Style TargetType="Image">
                                                                     <Style.Triggers>
@@ -681,7 +681,7 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Image.Style>
-                                                        </Image>
+                                                        </Image>-->
                                                         <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="MultiRatePMU" HorizontalAlignment="Left" Grid.Column="1"/>
                                                         <TextBox Text="{Binding MultiRatePMU, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="100" HorizontalContentAlignment="Right" Margin="8" Grid.Column="2"/>
                                                     </Grid>

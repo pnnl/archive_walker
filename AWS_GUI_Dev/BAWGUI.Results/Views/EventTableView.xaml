@@ -26,7 +26,7 @@
         </xcdg:DataGridCollectionViewSource.ItemProperties>
     </xcdg:DataGridCollectionViewSource>-->
     <!--<StackPanel Orientation="Vertical">-->
-    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedIndex="5" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="DataGridControl_SelectionChanged" NavigationBehavior="RowOnly">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
@@ -37,6 +37,8 @@
         </i:Interaction.Triggers>
         <xcdg:DataGridControl.Resources>
             <Style TargetType="{x:Type xcdg:DataCell}">
+                <!--<Setter Property="CurrentBackground" Value="Blue"/>-->
+                <!--<Setter Property="CurrentForeground" Value="White"/>-->
                 <Style.Triggers>
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
@@ -55,6 +57,10 @@
             <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
                 <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
             </Style>
+            <Style TargetType="{x:Type xcdg:DataRow}">
+                <Setter Property="SelectionBackground" Value="Green"/>
+                <Setter Property="InactiveSelectionBackground" Value="Green"/>
+            </Style>
         </xcdg:DataGridControl.Resources>
         <xcdg:DataGridControl.View>
             <xcdg:TableflowView UseDefaultHeadersFooters="False">
@@ -65,6 +71,9 @@
                         </DockPanel>
                     </DataTemplate>
                 </xcdg:TableflowView.FixedHeaders>
+                <xcdg:TableflowView.Theme>
+                    <xcdg:Windows8Theme />
+                </xcdg:TableflowView.Theme>
             </xcdg:TableflowView>
         </xcdg:DataGridControl.View>
         <xcdg:DataGridControl.Columns>

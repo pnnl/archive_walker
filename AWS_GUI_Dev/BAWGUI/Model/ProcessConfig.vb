@@ -396,6 +396,7 @@ Public Class NameTypeUnit
         End Get
         Set(value As String)
             _newUnit = value
+            'TODO: how to make all initial signal and all output signal change their unit?
             OnPropertyChanged()
         End Set
     End Property
@@ -407,6 +408,7 @@ Public Class NameTypeUnit
         End Get
         Set(value As String)
             _newType = value
+            'TODO: how to make all initial signal and all output signal change their type?
             OnPropertyChanged()
         End Set
     End Property
@@ -474,8 +476,8 @@ Public Class NameTypeUnitPMU
         End Get
         Set(value As String)
             _newChannel = value
-            if value <> "" And OutputChannels.Count > 0
-                OutputChannels(0).SignalName = value
+            if value <> "" And OutputChannels.Count > 0 Then
+                OutputChannels(0).NewSignalName = value
             End If
             OnPropertyChanged()
         End Set
@@ -489,7 +491,7 @@ Public Class NameTypeUnitPMU
         Set(value As String)
             _newUnit = value
             For Each signal In OutputChannels
-                signal.Unit = value
+                signal.NewUnit = value
             Next
             OnPropertyChanged()
         End Set
@@ -503,7 +505,7 @@ Public Class NameTypeUnitPMU
         Set(value As String)
             _newType = value
             For Each signal In OutputChannels
-                signal.TypeAbbreviation = value
+                signal.NewTypeAbbreviation = value
             Next
             OnPropertyChanged()
         End Set
