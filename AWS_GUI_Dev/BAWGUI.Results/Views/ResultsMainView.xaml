@@ -9,8 +9,8 @@
 
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2,0">
-            <TextBox Text="{Binding ResultsPath}" MinWidth="100" Margin="2"/>
-            <Button Command="{Binding OpenResultFile}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Open results file folder" Margin="2,0">
+            <TextBox Text="{Binding ConfigFilePath}" MinWidth="100" Margin="2"/>
+            <Button Command="{Binding OpenConfigFile}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Open results file folder" Margin="2,0">
                 <Image Source="/BAWGUI.Results;component/MyResources/open.gif"></Image>
             </Button>
         </StackPanel>

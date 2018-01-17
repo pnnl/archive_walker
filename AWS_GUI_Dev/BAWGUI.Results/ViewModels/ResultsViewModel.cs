@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using BAWGUI.RunMATLAB.ViewModels;
 using System.Windows.Input;
 using System.IO;
+using System.Xml.Linq;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -58,7 +59,8 @@ namespace BAWGUI.Results.ViewModels
             _yearList = new List<string>();
             _monthList = new List<string>();
             _dayList = new List<string>();
-            OpenResultFile = new RelayCommand(_openResultFile);
+            OpenConfigFile = new RelayCommand(_openConfigFile);
+            _configFilePath = "";
         }
 
         //public void LoadResults(List<string> filenames, string startDate, string endDate)
@@ -251,83 +253,110 @@ namespace BAWGUI.Results.ViewModels
             }
         }
 
-        public ICommand OpenResultFile { get; set; }
-        private void _openResultFile(object obj)
+        public ICommand OpenConfigFile { get; set; }
+        private void _openConfigFile(object obj)
         {
-            FolderBrowserDialog openDirectoryDialog = new FolderBrowserDialog();
-            openDirectoryDialog.Description = "Select the directory that result xml files are located ";
-            if (Directory.Exists(ResultsPath))
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.FileName = "";
+            openFileDialog.DefaultExt = ".xml";
+            openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
+            if (!string.IsNullOrEmpty(_configFilePath))
             {
-                openDirectoryDialog.SelectedPath = ResultsPath;
+                openFileDialog.InitialDirectory = Path.GetFullPath(_configFilePath);
             }
-            else
+            if (!Directory.Exists(openFileDialog.InitialDirectory))
             {
-                openDirectoryDialog.SelectedPath = Environment.CurrentDirectory;
+                openFileDialog.InitialDirectory = Environment.CurrentDirectory + "\\ConfigFiles";
             }
-            openDirectoryDialog.ShowNewFolderButton = false;
-            DialogResult result = openDirectoryDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.Title = "Please select a configuration file";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                ResultsPath = openDirectoryDialog.SelectedPath;
-                DirectoryInfo folderName = new DirectoryInfo(ResultsPath);
-                List<string> files = new List<string>();
-                List<string> dates = new List<string>();
-                foreach (var file in folderName.GetFiles().OrderBy(x=>x.Name).ToArray())
+                ConfigFilePath = openFileDialog.FileName;
+                try
                 {
-                    List<string> nameFragment = file.Name.Split(new Char [] { '.', '_' }).ToList();
-                    if (file.Extension.ToLower() == ".xml" && nameFragment.Count() == 3 && nameFragment[0].ToLower() == "eventlist")
-                    {
-                        string dateStr = nameFragment[1];
-                        try
-                        {
-                            System.DateTime.ParseExact(dateStr, "yyMMdd", CultureInfo.InvariantCulture);
-                            dates.Add(dateStr);
-                            files.Add(file.FullName);
-                        }
-                        catch (Exception ex)
-                        {
-                            if (file.Name.ToLower() == "eventlist_current.xml")
-                            {
-                                files.Add(file.FullName);
-                            }
-                        }
-                    }
+                    var _configData = XDocument.Load(ConfigFilePath);
+                    var _resultPath = (from el in _configData.Descendants("EventPath") select (string)el).FirstOrDefault();
+                    _openResultFile(_resultPath);
                 }
-                if (files.Count()>0)
+                catch (Exception ex)
                 {
-                    if (files.Count()!=dates.Count())
-                    {
-                        dates.Sort();
-                        string lastDate = dates.LastOrDefault();
-                        dates.Add((Convert.ToInt32(lastDate) + 1).ToString());
-                    }
-                    try
-                    {
-                        LoadResults(files, dates);
-                    }
-                    catch (Exception ex)
-                    {
-                        string errorStr = "Error loading results: " + ex.Message;
-                        if (ex.InnerException != null)
-                        {
-                            errorStr = errorStr + "\n" + ex.InnerException.Message;
-                        }
-                        MessageBox.Show(errorStr, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("No valid file found in folder: " + openDirectoryDialog.SelectedPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
         }
-        private string _resultsPath;
-        public string ResultsPath
+
+        private void _openResultFile(string resultsPath)
         {
-            get { return _resultsPath; }
+            DirectoryInfo folderName = new DirectoryInfo(resultsPath);
+            List<string> files = new List<string>();
+            List<string> dates = new List<string>();
+            foreach (var file in folderName.GetFiles().OrderBy(x=>x.Name).ToArray())
+            {
+                List<string> nameFragment = file.Name.Split(new Char [] { '.', '_' }).ToList();
+                if (file.Extension.ToLower() == ".xml" && nameFragment.Count() == 3 && nameFragment[0].ToLower() == "eventlist")
+                {
+                    string dateStr = nameFragment[1];
+                    try
+                    {
+                        System.DateTime.ParseExact(dateStr, "yyMMdd", CultureInfo.InvariantCulture);
+                        dates.Add(dateStr);
+                        files.Add(file.FullName);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (file.Name.ToLower() == "eventlist_current.xml")
+                        {
+                            files.Add(file.FullName);
+                        }
+                    }
+                }
+            }
+            if (files.Count()>0)
+            {
+                if (files.Count()!=dates.Count())
+                {
+                    dates.Sort();
+                    string lastDate = dates.LastOrDefault();
+                    dates.Add((Convert.ToInt32(lastDate) + 1).ToString());
+                }
+                try
+                {
+                    LoadResults(files, dates);
+                }
+                catch (Exception ex)
+                {
+                    string errorStr = "Error loading results: " + ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        errorStr = errorStr + "\n" + ex.InnerException.Message;
+                    }
+                    MessageBox.Show(errorStr, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No valid file found in folder: " + resultsPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }            
+        }
+        private string _configFilePath;
+        public string ConfigFilePath
+        {
+            get { return _configFilePath; }
             set
             {
-                _resultsPath = value;
+                _configFilePath = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _resultPath;
+        public string ResultPath
+        {
+            get { return _resultPath; }
+            set
+            {
+                _resultPath = value;
                 OnPropertyChanged();
             }
         }
