@@ -168,7 +168,7 @@ Partial Public Class SettingsViewModel
                             _addLog("In a data quality filter step: " & aStep.StepCounter.ToString & " of data config. " & ex.Message)
                         End Try
                         For Each signal In aStep.InputChannels
-                            signal.PassedThroughDQFilter = True
+                            signal.PassedThroughDQFilter = signal.PassedThroughDQFilter + 1
                             aStep.OutputChannels.Add(signal)
                         Next
                         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -894,7 +894,7 @@ Partial Public Class SettingsViewModel
                 _addLog("In unwrap processing step: " & aUnwrap.StepCounter.ToString & ". " & ex.Message)
             End Try
             For Each signal In aUnwrap.InputChannels
-                signal.PassedThroughProcessor = True
+                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                 aUnwrap.OutputChannels.Add(signal)
             Next
             aUnwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aUnwrap.OutputChannels)
@@ -919,7 +919,7 @@ Partial Public Class SettingsViewModel
                 _addLog("In an interpolate processing step: " & anInterpolate.StepCounter.ToString & ". " & ex.Message)
             End Try
             For Each signal In anInterpolate.InputChannels
-                signal.PassedThroughProcessor = True
+                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                 anInterpolate.OutputChannels.Add(signal)
             Next
             anInterpolate.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(anInterpolate.OutputChannels)
@@ -991,7 +991,6 @@ Partial Public Class SettingsViewModel
                     _addLog("In a " & aStep.GetType.ToString & " processing step: " & aStep.StepCounter.ToString & ". " & ex.Message)
                 End Try
                 For Each signal In aStep.InputChannels
-                    signal.PassedThroughProcessor = True
                     If TypeOf aStep Is Multirate Then
                         Dim output = New SignalSignatures(signal.SignalName, aStep.MultiRatePMU, signal.TypeAbbreviation)
                         output.SamplingRate = signal.SamplingRate
@@ -999,6 +998,7 @@ Partial Public Class SettingsViewModel
                         output.IsCustomSignal = True
                         aStep.OutputChannels.Add(output)
                     Else
+                        signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                         aStep.OutputChannels.Add(signal)
                     End If
                 Next
@@ -1026,7 +1026,7 @@ Partial Public Class SettingsViewModel
                 _addLog("In a wrap processing step: " & aWrap.StepCounter.ToString & ". " & ex.Message)
             End Try
             For Each signal In aWrap.InputChannels
-                signal.PassedThroughProcessor = True
+                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                 aWrap.OutputChannels.Add(signal)
             Next
             aWrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aWrap.OutputChannels)
@@ -1041,13 +1041,15 @@ Partial Public Class SettingsViewModel
         If NameTypeUnitExist.Count <> 0 Then
             Dim pmus = From el In configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.Elements() Where el.Name = "PMU" Select el
             If pmus.Count() = 0 Then
-                ProcessConfigure.NameTypeUnitElement.NewUnit = configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewUnit>.Value()
-                ProcessConfigure.NameTypeUnitElement.NewType = configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewType>.Value()
-                NameTypeUnitStatusFlag = 1
+                Dim newUnit = configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewUnit>.Value()
+                Dim newType = configData.<Config>.<ProcessConfig>.<Configuration>.<NameTypeUnit>.<NewType>.Value()
+                If Not newUnit Is Nothing OrElse Not newType Is Nothing Then
+                    ProcessConfigure.NameTypeUnitElement.NewUnit = newUnit
+                    ProcessConfigure.NameTypeUnitElement.NewType = newType
+                    NameTypeUnitStatusFlag = 1
+                End If
             Else
                 Dim newPMU As NameTypeUnitPMU
-                'newPMU.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
-                'newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newPMU.StepCounter.ToString & "-" & newPMU.Name
                 For Each pmu In pmus
                     Dim pmuName = pmu.<Name>.Value
                     Dim CurrentChannel = pmu.<CurrentChannel>.Value
@@ -1055,40 +1057,53 @@ Partial Public Class SettingsViewModel
                     Dim NewUnit = pmu.<NewUnit>.Value
                     Dim NewType = pmu.<NewType>.Value
 
-                    If newPMU Is Nothing OrElse newPMU.NewType <> NewType OrElse newPMU.NewUnit <> NewUnit OrElse CurrentChannel <> NewChannel Then
+                    Dim pmuFound = False
+                    If CurrentChannel = NewChannel Then
+                        For Each pmuItem In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+                            If pmuItem.NewType = NewType AndAlso pmuItem.NewUnit = NewUnit Then
+                                pmuFound = True
+                                newPMU = pmuItem
+                                newPMU.NewChannel = ""
+                                Exit For
+                            End If
+                        Next
+                    End If
 
-                        If newPMU IsNot Nothing Then
-                            newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newPMU.OutputChannels)
-                            GroupedSignalByProcessConfigStepsOutput.Add(newPMU.ThisStepOutputsAsSignalHierachyByPMU)
-                            ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
-                        End If
+                    If Not pmuFound Then
                         newPMU = New NameTypeUnitPMU()
-                        newPMU.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
-                        newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newPMU.StepCounter.ToString & "-" & newPMU.Name
-
                         newPMU.NewType = NewType
                         newPMU.NewUnit = NewUnit
                         newPMU.NewChannel = NewChannel
-
-                    End If
-                    If newPMU.InputChannels.Count > 0 Then
-                        newPMU.NewChannel = ""
+                        ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
                     End If
                     Dim input = _searchForSignalInTaggedSignals(pmuName, CurrentChannel)
                     If input IsNot Nothing Then
-                        newPMU.InputChannels.Add(input)
-                        Dim output = New SignalSignatures(NewChannel, pmuName, NewType)
-                        output.Unit = NewUnit
-                        output.IsCustomSignal = True
-                        newPMU.OutputChannels.Add(output)
+                        If input.IsNameTypeUnitChanged Then
+                            _addLog("Error reading config file! Signal in a NameTypeUnit step : " & CurrentChannel & " in PMU " & pmuName & " has already gone through another NameTypeUnit step, a signal is not allow to go through NameTypeUnit step twice.")
+                        Else
+                            If Not String.IsNullOrEmpty(NewChannel) Then
+                                input.OldSignalName = input.SignalName
+                                input.SignalName = NewChannel
+                            End If
+                            input.OldTypeAbbreviation = input.TypeAbbreviation
+                            input.TypeAbbreviation = NewType
+                            input.OldUnit = input.Unit
+                            input.Unit = NewUnit
+                            input.PassedThroughProcessor = input.PassedThroughProcessor + 1
+                            input.IsNameTypeUnitChanged = True
+                            newPMU.InputChannels.Add(input)
+                            newPMU.OutputChannels.Add(input)
+                        End If
                     Else
-                        _addLog("Error reading config file! Signal in a step of processing with channel name: " & CurrentChannel & " in PMU " & pmuName & " not found!")
+                        _addLog("Error reading config file! Signal in a NameTypeUnit step of processing with channel name: " & CurrentChannel & " in PMU " & pmuName & " not found!")
                     End If
-
                 Next
-                newPMU.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newPMU.OutputChannels)
-                GroupedSignalByProcessConfigStepsOutput.Add(newPMU.ThisStepOutputsAsSignalHierachyByPMU)
-                ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
+                For Each pmuItem In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+                    pmuItem.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
+                    pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & pmuItem.StepCounter.ToString & "-" & pmuItem.Name
+                    pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(pmuItem.OutputChannels)
+                    GroupedSignalByProcessConfigStepsOutput.Add(pmuItem.ThisStepOutputsAsSignalHierachyByPMU)
+                Next
             End If
         End If
     End Sub

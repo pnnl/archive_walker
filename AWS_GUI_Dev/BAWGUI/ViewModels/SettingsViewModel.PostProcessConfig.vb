@@ -23,17 +23,17 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private Function _getAllPostProcessOutputGroupedByTypet() As ObservableCollection(Of SignalTypeHierachy)
-        Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
-        For Each stp In PostProcessConfigure.CollectionOfSteps
-            For Each signal In stp.OutputChannels
-                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        Return SortSignalByType(allOutputSignals)
-    End Function
+    'Private Function _getAllPostProcessOutputGroupedByTypet() As ObservableCollection(Of SignalTypeHierachy)
+    '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+    '    For Each stp In PostProcessConfigure.CollectionOfSteps
+    '        For Each signal In stp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    Return SortSignalByType(allOutputSignals)
+    'End Function
     Private _allPostProcessOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllPostProcessOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
         Get
@@ -44,7 +44,7 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private Function _getAllPostProcessOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
+    Private Function _getAllPostProcessOutput() As ObservableCollection(Of SignalSignatures)
         Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
         For Each stp In PostProcessConfigure.CollectionOfSteps
             For Each signal In stp.OutputChannels
@@ -53,7 +53,7 @@ Partial Public Class SettingsViewModel
                 End If
             Next
         Next
-        Return SortSignalByPMU(allOutputSignals)
+        Return allOutputSignals
     End Function
     Private _allPostProcessOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllPostProcessOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)

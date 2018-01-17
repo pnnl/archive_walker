@@ -22,7 +22,7 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private Function _getAllProcessConfigOutputGroupedByType() As ObservableCollection(Of SignalTypeHierachy)
+    Private Function _getAllprocessOutputSignals() As ObservableCollection(Of SignalSignatures)
         Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
         For Each uwrp In ProcessConfigure.UnWrapList
             For Each signal In uwrp.OutputChannels
@@ -53,15 +53,17 @@ Partial Public Class SettingsViewModel
             Next
         Next
         If NameTypeUnitStatusFlag Then
-
+            'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
         Else
             For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
                 For Each signal In change.OutputChannels
-                    'If Not allOutputSignals.Contains(signal) AndAlso signal Then
+                    If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+                        allOutputSignals.Add(signal)
+                    End If
                 Next
             Next
         End If
-        Return SortSignalByType(allOutputSignals)
+        Return allOutputSignals
     End Function
     Private _allProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
@@ -73,38 +75,49 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private Function _getAllProcessConfigOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
-        Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
-        For Each uwrp In ProcessConfigure.UnWrapList
-            For Each signal In uwrp.OutputChannels
-                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        For Each itpl In ProcessConfigure.InterpolateList
-            For Each signal In itpl.OutputChannels
-                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        For Each stp In ProcessConfigure.CollectionOfSteps
-            For Each signal In stp.OutputChannels
-                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        For Each wrp In ProcessConfigure.WrapList
-            For Each signal In wrp.OutputChannels
-                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        Return SortSignalByPMU(allOutputSignals)
-    End Function
+    'Private Function _getAllProcessConfigOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
+    '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+    '    For Each uwrp In ProcessConfigure.UnWrapList
+    '        For Each signal In uwrp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    For Each itpl In ProcessConfigure.InterpolateList
+    '        For Each signal In itpl.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    For Each stp In ProcessConfigure.CollectionOfSteps
+    '        For Each signal In stp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    For Each wrp In ProcessConfigure.WrapList
+    '        For Each signal In wrp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    If NameTypeUnitStatusFlag Then
+    '        'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
+    '    Else
+    '        For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+    '            For Each signal In change.OutputChannels
+    '                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                    allOutputSignals.Add(signal)
+    '                End If
+    '            Next
+    '        Next
+    '    End If
+    '    Return SortSignalByPMU(allOutputSignals)
+    'End Function
     Private _allProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
         Get
@@ -200,7 +213,7 @@ Partial Public Class SettingsViewModel
         Dim result = MessageBox.Show("Delete an Unwrap step " & obj.StepCounter.ToString & " in Process Configuration: " & obj.Name & " ?", "Warning!", MessageBoxButtons.OKCancel)
         If result = DialogResult.OK Then
             Try
-                ProcessConfigure.UnWrapList.Remove((obj))
+                ProcessConfigure.UnWrapList.Remove(obj)
                 Dim unwraps = New ObservableCollection(Of Unwrap)(ProcessConfigure.UnWrapList)
                 For Each unwrap In unwraps
                     If unwrap.StepCounter > obj.StepCounter Then
@@ -245,6 +258,9 @@ Partial Public Class SettingsViewModel
                     Next
                     ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
                 End If
+                For Each signal In obj.OutputChannels
+                    signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
+                Next
                 _deSelectAllProcessConfigSteps()
                 _addLog("Unwrap step " & obj.StepCounter & " is deleted!")
             Catch ex As Exception
@@ -354,6 +370,9 @@ Partial Public Class SettingsViewModel
                     Next
                     ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
                 End If
+                For Each signal In obj.OutputChannels
+                    signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
+                Next
                 _deSelectAllProcessConfigSteps()
                 _addLog("Interpolate step " & obj.StepCounter & " is deleted!")
             Catch ex As Exception
@@ -458,6 +477,11 @@ Partial Public Class SettingsViewModel
                     Next
                     ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
                 End If
+                If TypeOf obj Is TunableFilter Then
+                    For Each signal In obj.OutputChannels
+                        signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
+                    Next
+                End If
                 _deSelectAllProcessConfigSteps()
                 _addLog("Step " & obj.StepCounter.ToString & ", " & obj.Name & " is deleted!")
             Catch ex As Exception
@@ -529,6 +553,9 @@ Partial Public Class SettingsViewModel
                     Next
                     ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
                 End If
+                For Each signal In obj.OutputChannels
+                    signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
+                Next
                 _deSelectAllProcessConfigSteps()
                 _addLog("Wrap step " & obj.StepCounter & " is deleted!")
             Catch ex As Exception
@@ -583,8 +610,20 @@ Partial Public Class SettingsViewModel
                 ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
                 _deSelectAllProcessConfigSteps()
                 If NameTypeUnitStatusFlag Then
+                    'TODO: NameTypeUnit approach one, obsolete
                 Else
-                    'obj.
+                    If obj.OutputChannels.Count = 1 AndAlso Not String.IsNullOrEmpty(obj.OutputChannels(0).OldSignalName) Then
+                        obj.OutputChannels(0).SignalName = obj.OutputChannels(0).OldSignalName
+                        obj.OutputChannels(0).OldSignalName = ""
+                    End If
+                    For Each signal In obj.OutputChannels
+                        signal.TypeAbbreviation = signal.OldTypeAbbreviation
+                        signal.OldTypeAbbreviation = ""
+                        signal.Unit = signal.OldUnit
+                        signal.OldUnit = ""
+                        signal.IsNameTypeUnitChanged = False
+                        signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
+                    Next
                 End If
                 _addLog("NameTypeUnit step " & obj.StepCounter & " is deleted!")
             Catch ex As Exception
@@ -734,8 +773,11 @@ Partial Public Class SettingsViewModel
                 Next
                 processStep.IsStepSelected = True
                 If CurrentSelectedStep IsNot Nothing Then
-                    if TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap Then
+                    If TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap Then
                         _disableEnableAllButAngleSignalsInProcessConfig(True)
+                    End If
+                    If TypeOf CurrentSelectedStep Is NameTypeUnitPMU Then
+                        _disableEnableSignalPassedThroughNameTypeUnit(True)
                     End If
                 End If
 
@@ -748,12 +790,52 @@ Partial Public Class SettingsViewModel
                 If TypeOf processStep Is Unwrap OrElse TypeOf processStep Is Wrap Then
                     _disableEnableAllButAngleSignalsInProcessConfig(False)
                 End If
+                If TypeOf processStep Is NameTypeUnitPMU Then
+                    _disableEnableSignalPassedThroughNameTypeUnit(False)
+                End If
 
                 CurrentSelectedStep = processStep
                 _determineSamplingRateCheckableStatus()
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
             End Try
+        End If
+    End Sub
+
+    Private Sub _disableEnableSignalPassedThroughNameTypeUnit(isEnabled As Boolean)
+        If NameTypeUnitStatusFlag Then
+            'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
+        Else
+            For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+                For Each signal In change.OutputChannels
+                    signal.IsEnabled = isEnabled
+                Next
+            Next
+        End If
+    End Sub
+
+    Private Sub _reverseSignalPassedThroughNameTypeUnit()
+        If NameTypeUnitStatusFlag Then
+            'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
+        Else
+            For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+                For Each signal In change.OutputChannels
+                    If signal.IsNameTypeUnitChanged Then
+                        Dim temp = ""
+                        If Not String.IsNullOrEmpty(signal.OldSignalName) Then
+                            temp = signal.SignalName
+                            signal.SignalName = signal.OldSignalName
+                            signal.OldSignalName = temp
+                        End If
+                        temp = signal.Unit
+                        signal.Unit = signal.OldUnit
+                        signal.OldUnit = temp
+                        temp = signal.TypeAbbreviation
+                        signal.TypeAbbreviation = signal.OldTypeAbbreviation
+                        signal.OldTypeAbbreviation = temp
+                    End If
+                Next
+            Next
         End If
     End Sub
 
@@ -884,6 +966,9 @@ Partial Public Class SettingsViewModel
             If TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap Then
                 _disableEnableAllButAngleSignalsInProcessConfig(True)
             End If
+            If TypeOf CurrentSelectedStep Is NameTypeUnitPMU Then
+                _disableEnableSignalPassedThroughNameTypeUnit(True)
+            End If
             'If CurrentSelectedDataConfigStep.Name = "Phasor Creation Customization" Then
             '    _disableEnableAllButMagnitudeSignals(True)
             'ElseIf CurrentSelectedDataConfigStep.Name = "Power Calculation Customization" Then
@@ -935,39 +1020,5 @@ Partial Public Class SettingsViewModel
             End If
         Next
     End Sub
-
-    'Private Sub _groupAllProcessConfigOutputSignal()
-    '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
-    '    For Each uwrp In ProcessConfigure.UnWrapList
-    '        For Each signal In uwrp.OutputChannels
-    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-    '                allOutputSignals.Add(signal)
-    '            End If
-    '        Next
-    '    Next
-    '    For Each itpl In ProcessConfigure.InterpolateList
-    '        For Each signal In itpl.OutputChannels
-    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-    '                allOutputSignals.Add(signal)
-    '            End If
-    '        Next
-    '    Next
-    '    For Each stp In ProcessConfigure.CollectionOfSteps
-    '        For Each signal In stp.OutputChannels
-    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-    '                allOutputSignals.Add(signal)
-    '            End If
-    '        Next
-    '    Next
-    '    For Each wrp In ProcessConfigure.WrapList
-    '        For Each signal In wrp.OutputChannels
-    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-    '                allOutputSignals.Add(signal)
-    '            End If
-    '        Next
-    '    Next
-    '    AllProcessConfigOutputGroupedByType = SortSignalByType(allOutputSignals)
-    '    AllProcessConfigOutputGroupedByPMU = SortSignalByPMU(allOutputSignals)
-    'End Sub
 
 End Class

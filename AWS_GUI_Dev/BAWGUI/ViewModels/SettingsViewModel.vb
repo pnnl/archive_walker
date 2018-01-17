@@ -72,6 +72,7 @@ Partial Public Class SettingsViewModel
 
         '_inputFileDirTree = New ObservableCollection(Of Folder)
         _groupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+        _reGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
         _groupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
         _groupedSignalByDataConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
         _groupedSignalByDataConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
@@ -126,6 +127,16 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+    Private _reGroupedRawSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+    Public Property ReGroupedRawSignalsByType As ObservableCollection(Of SignalTypeHierachy)
+        Get
+            Return _reGroupedRawSignalsByType
+        End Get
+        Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+            _reGroupedRawSignalsByType = value
+            OnPropertyChanged()
+        End Set
+    End Property
     Private _groupedRawSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
     Public Property GroupedRawSignalsByPMU As ObservableCollection(Of SignalTypeHierachy)
         Get
@@ -156,7 +167,7 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private Function _getAllDataConfigOutputGroupedByType() As ObservableCollection(Of SignalTypeHierachy)
+    Private Function _getAllDataConfigOutput() As ObservableCollection(Of SignalSignatures)
         Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
         For Each stp In DataConfigure.CollectionOfSteps
             For Each signal In stp.OutputChannels
@@ -165,7 +176,7 @@ Partial Public Class SettingsViewModel
                 End If
             Next
         Next
-        Return SortSignalByType(allOutputSignals)
+        Return allOutputSignals
     End Function
     Private _allDataConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllDataConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
@@ -177,17 +188,17 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
-    Private Function _getAllDataConfigOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
-        Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
-        For Each stp In DataConfigure.CollectionOfSteps
-            For Each signal In stp.OutputChannels
-                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-                    allOutputSignals.Add(signal)
-                End If
-            Next
-        Next
-        Return SortSignalByPMU(allOutputSignals)
-    End Function
+    'Private Function _getAllDataConfigOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
+    '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+    '    For Each stp In DataConfigure.CollectionOfSteps
+    '        For Each signal In stp.OutputChannels
+    '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+    '                allOutputSignals.Add(signal)
+    '            End If
+    '        Next
+    '    Next
+    '    Return SortSignalByPMU(allOutputSignals)
+    'End Function
     Private _allDataConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
     Public Property AllDataConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
         Get
@@ -290,6 +301,7 @@ Partial Public Class SettingsViewModel
         Dim b = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory))
         b.SignalList = fileInfo.GroupedSignalsByType
         GroupedRawSignalsByType.Add(b)
+        ReGroupedRawSignalsByType = GroupedRawSignalsByType
     End Sub
     Private Function SortSignalByType(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
         Dim signalTypeTreeGroupedBySamplingRate As New ObservableCollection(Of SignalTypeHierachy)
@@ -859,6 +871,7 @@ Partial Public Class SettingsViewModel
             Dim b = New SignalTypeHierachy(newSig)
             b.SignalList = fileInfo.GroupedSignalsByType
             GroupedRawSignalsByType.Add(b)
+            ReGroupedRawSignalsByType = GroupedRawSignalsByType
         Else
             Dim PDATSampleFile As New PDATReader
             Try
@@ -2724,11 +2737,11 @@ Partial Public Class SettingsViewModel
                             Throw New Exception("Selected item " & obj.SignalSignature.SignalName & " already exist in this step!")
                         End If
                         If TypeOf _currentSelectedStep Is DQFilter Then
-                            obj.SignalSignature.PassedThroughDQFilter = True
+                            obj.SignalSignature.PassedThroughDQFilter = obj.SignalSignature.PassedThroughDQFilter + 1
                             _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                         End If
                         If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
-                            obj.SignalSignature.PassedThroughProcessor = True
+                            obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
                             _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                         End If
                         If TypeOf _currentSelectedStep Is Multirate Then
@@ -2755,33 +2768,43 @@ Partial Public Class SettingsViewModel
                             _currentSelectedStep.OutputChannels.Add(newOutput)
                         End If
                         If TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
-                            Dim newOutput = New SignalSignatures()
-                            If CurrentSelectedStep.InputChannels.Count > 1 Then
-                                newOutput.SignalName = obj.SignalSignature.SignalName
+                            obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
+                            obj.SignalSignature.IsNameTypeUnitChanged = True
+                            If CurrentSelectedStep.OutputChannels.Count = 0 Then
+                                If CurrentSelectedStep.NewChannel <> "" Then
+                                    obj.SignalSignature.OldSignalName = obj.SignalSignature.SignalName
+                                    obj.SignalSignature.SignalName = CurrentSelectedStep.NewChannel
+                                End If
+                            ElseIf CurrentSelectedStep.OutputChannels.Count = 1 Then
+                                Dim existingSignal = CurrentSelectedStep.OutputChannels(0)
+                                If CurrentSelectedStep.NewChannel <> "" AndAlso existingSignal.OldSignalName <> "" Then
+                                    existingSignal.SignalName = existingSignal.OldSignalName
+                                    existingSignal.OldSignalName = ""
+                                End If
                                 CurrentSelectedStep.NewChannel = ""
                             Else
-                                CurrentSelectedStep.NewChannel = obj.SignalSignature.SignalName
-                                newOutput.SignalName = CurrentSelectedStep.NewChannel
                             End If
-                            newOutput.PMUName = obj.SignalSignature.PMUName
-                            newOutput.TypeAbbreviation = CurrentSelectedStep.NewType
-                            newOutput.Unit = CurrentSelectedStep.NewUnit
-                            newOutput.IsCustomSignal = True
-                            newOutput.SamplingRate = obj.SignalSignature.SamplingRate
-                            _currentSelectedStep.OutputChannels.Add(newOutput)
+                            If CurrentSelectedStep.NewType <> "" Then
+                                obj.SignalSignature.OldTypeAbbreviation = obj.SignalSignature.TypeAbbreviation
+                                obj.SignalSignature.TypeAbbreviation = CurrentSelectedStep.NewType
+                            End If
+                            If CurrentSelectedStep.NewUnit <> "" Then
+                                obj.SignalSignature.OldUnit = obj.SignalSignature.Unit
+                                obj.SignalSignature.Unit = CurrentSelectedStep.NewUnit
+                            End If
+                            _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                         End If
                         _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     Else
                         If TypeOf _currentSelectedStep Is DQFilter Then
-                            obj.SignalSignature.PassedThroughDQFilter = False
+                            obj.SignalSignature.PassedThroughDQFilter = obj.SignalSignature.PassedThroughDQFilter - 1
                             _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
                         End If
                         If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
-                            obj.SignalSignature.PassedThroughProcessor = False
+                            obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor - 1
                             _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
                         End If
                         If TypeOf _currentSelectedStep Is Multirate Then
-
                             For Each output In _currentSelectedStep.OutputChannels
                                 If output.SignalName = obj.SignalSignature.SignalName AndAlso output.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation Then
                                     _currentSelectedStep.OutputChannels.Remove(output)
@@ -2790,17 +2813,40 @@ Partial Public Class SettingsViewModel
                             Next
                         End If
                         If TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
-
-                            If CurrentSelectedStep.OutputChannels.Count = 1 Then
-                                CurrentSelectedStep.OutputChannels.Clear
-                            Else
-                                For Each output In _currentSelectedStep.OutputChannels
-                                    If output.SignalName = obj.SignalSignature.SignalName AndAlso output.PMUName = obj.SignalSignature.PMUName Then
-                                        _currentSelectedStep.OutputChannels.Remove(output)
-                                        Exit For
+                            For Each output In _currentSelectedStep.OutputChannels
+                                If output.SignalName = obj.SignalSignature.SignalName AndAlso output.PMUName = obj.SignalSignature.PMUName Then
+                                    If _currentSelectedStep.OutputChannels.Count = 1 AndAlso Not String.IsNullOrEmpty(output.OldSignalName) Then
+                                        output.SignalName = output.OldSignalName
+                                        output.OldSignalName = ""
                                     End If
-                                Next
-                            End If
+                                    If Not String.IsNullOrEmpty(output.OldUnit) Then
+                                        output.Unit = output.OldUnit
+                                        output.OldUnit = ""
+                                    End If
+                                    If Not String.IsNullOrEmpty(output.OldTypeAbbreviation) Then
+                                        output.TypeAbbreviation = output.OldTypeAbbreviation
+                                        output.OldTypeAbbreviation = ""
+                                    End If
+                                    output.IsNameTypeUnitChanged = False
+                                    output.PassedThroughProcessor = output.PassedThroughProcessor - 1
+                                    _currentSelectedStep.OutputChannels.Remove(output)
+                                    Exit For
+                                End If
+                            Next
+                            'If CurrentSelectedStep.OutputChannels.Count = 1 Then
+                            '    Dim onlySignal = CurrentSelectedStep.OutputChannels(0)
+                            '    CurrentSelectedStep.OutputChannels.Clear
+                            '    onlySignal.SignalName = onlySignal.OldSignalName
+                            '    onlySignal.OldSignalName = ""
+                            '    onlySignal.Unit = onlySignal.OldUnit
+                            '    onlySignal.OldUnit = ""
+                            '    onlySignal.TypeAbbreviation = onlySignal.OldTypeAbbreviation
+                            '    onlySignal.OldTypeAbbreviation = ""
+                            '    onlySignal.IsNameTypeUnitChanged = False
+                            '    onlySignal.PassedThroughProcessor = onlySignal.PassedThroughProcessor - 1
+                            'Else
+
+                            'End If
                         End If
                         _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                     End If
@@ -4195,6 +4241,11 @@ Partial Public Class SettingsViewModel
                         stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
                     End If
                 Next
+                If TypeOf obj Is DQFilter Then
+                    For Each signal In obj.OutputChannels
+                        signal.PassedThroughDQFilter = signal.PassedThroughDQFilter - 1
+                    Next
+                End If
                 _deSelectAllDataConfigSteps()
                 _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                 DataConfigure.CollectionOfSteps = steps
@@ -4403,21 +4454,39 @@ Partial Public Class SettingsViewModel
                     '_groupAllPostProcessConfigOutputSignal()
                     _deSelectAllDetectors()
                 End If
+
+                If (_currentTabIndex <= 1 AndAlso _oldTabIndex >= 2) OrElse (_currentTabIndex >= 2 AndAlso _oldTabIndex <= 1) Then
+                    _reverseSignalPassedThroughNameTypeUnit()
+                    _reGroupRawSignalByType()
+                End If
+
                 If _currentTabIndex = 2 Then
-                    AllDataConfigOutputGroupedByType = _getAllDataConfigOutputGroupedByType()
-                    AllDataConfigOutputGroupedByPMU = _getAllDataConfigOutputGroupedByPMU()
+                    Dim allDataConfigOutputSignals = _getAllDataConfigOutput()
+                    AllDataConfigOutputGroupedByType = SortSignalByType(allDataConfigOutputSignals)
+                    AllDataConfigOutputGroupedByPMU = SortSignalByPMU(allDataConfigOutputSignals)
                 ElseIf _currentTabIndex = 3 Then
-                    AllDataConfigOutputGroupedByType = _getAllDataConfigOutputGroupedByType()
-                    AllDataConfigOutputGroupedByPMU = _getAllDataConfigOutputGroupedByPMU()
-                    AllProcessConfigOutputGroupedByPMU = _getAllProcessConfigOutputGroupedByPMU()
-                    AllProcessConfigOutputGroupedByType = _getAllProcessConfigOutputGroupedByType()
+                    Dim allDataConfigOutputSignals = _getAllDataConfigOutput()
+                    AllDataConfigOutputGroupedByType = SortSignalByType(allDataConfigOutputSignals)
+                    AllDataConfigOutputGroupedByPMU = SortSignalByPMU(allDataConfigOutputSignals)
+                    Dim allProcessOutputSignals = _getAllprocessOutputSignals()
+                    AllProcessConfigOutputGroupedByPMU = SortSignalByPMU(allProcessOutputSignals)
+                    AllProcessConfigOutputGroupedByType = SortSignalByType(allProcessOutputSignals)
+                    If _oldTabIndex = 2 Then
+                        _reGroupRawSignalByType()
+                    End If
                 ElseIf _currentTabIndex = 4 Then
-                    AllDataConfigOutputGroupedByType = _getAllDataConfigOutputGroupedByType()
-                    AllDataConfigOutputGroupedByPMU = _getAllDataConfigOutputGroupedByPMU()
-                    AllProcessConfigOutputGroupedByPMU = _getAllProcessConfigOutputGroupedByPMU()
-                    AllProcessConfigOutputGroupedByType = _getAllProcessConfigOutputGroupedByType()
-                    AllPostProcessOutputGroupedByPMU = _getAllPostProcessOutputGroupedByPMU()
-                    AllPostProcessOutputGroupedByType = _getAllPostProcessOutputGroupedByTypet()
+                    Dim allDataConfigOutputSignals = _getAllDataConfigOutput()
+                    AllDataConfigOutputGroupedByType = SortSignalByType(allDataConfigOutputSignals)
+                    AllDataConfigOutputGroupedByPMU = SortSignalByPMU(allDataConfigOutputSignals)
+                    Dim allProcessOutputSignals = _getAllprocessOutputSignals()
+                    AllProcessConfigOutputGroupedByPMU = SortSignalByPMU(allProcessOutputSignals)
+                    AllProcessConfigOutputGroupedByType = SortSignalByType(allProcessOutputSignals)
+                    Dim allPostProcessOutputSignals = _getAllPostProcessOutput()
+                    AllPostProcessOutputGroupedByPMU = SortSignalByPMU(allPostProcessOutputSignals)
+                    AllPostProcessOutputGroupedByType = SortSignalByType(allPostProcessOutputSignals)
+                    If _oldTabIndex = 2 Then
+                        _reGroupRawSignalByType()
+                    End If
                 End If
             Catch ex As Exception
                 _addLog(ex.Message)
@@ -4427,6 +4496,15 @@ Partial Public Class SettingsViewModel
             OnPropertyChanged()
         End Set
     End Property
+
+    Private Sub _reGroupRawSignalByType()
+        ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+        For Each info In DataConfigure.ReaderProperty.InputFileInfos
+            Dim b = New SignalTypeHierachy(New SignalSignatures(info.FileDirectory))
+            b.SignalList = SortSignalByType(info.TaggedSignals)
+            ReGroupedRawSignalsByType.Add(b)
+        Next
+    End Sub
 
     'Private Sub _groupAllDataConfigOutputSignal()
     '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)

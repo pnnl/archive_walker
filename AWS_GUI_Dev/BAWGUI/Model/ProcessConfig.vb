@@ -397,6 +397,8 @@ Public Class NameTypeUnit
         Set(value As String)
             _newUnit = value
             'TODO: how to make all initial signal and all output signal change their unit?
+            '      this is needed for the first approach of NameTypeUnit which is a shortcut from Jim in the matlab code
+            '      but might not be necessary anymore with the GUI
             OnPropertyChanged()
         End Set
     End Property
@@ -409,6 +411,8 @@ Public Class NameTypeUnit
         Set(value As String)
             _newType = value
             'TODO: how to make all initial signal and all output signal change their type?
+            '      this is needed for the first approach of NameTypeUnit which is a shortcut from Jim in the matlab code
+            '      but might not be necessary anymore with the GUI
             OnPropertyChanged()
         End Set
     End Property
@@ -476,8 +480,16 @@ Public Class NameTypeUnitPMU
         End Get
         Set(value As String)
             _newChannel = value
-            if value <> "" And OutputChannels.Count > 0 Then
-                OutputChannels(0).NewSignalName = value
+            If OutputChannels.Count = 1 Then
+                If String.IsNullOrEmpty(value) Then
+                    If Not String.IsNullOrEmpty(OutputChannels(0).OldSignalName) Then
+                        OutputChannels(0).SignalName = OutputChannels(0).OldSignalName
+                        OutputChannels(0).OldSignalName = ""
+                    End If
+                Else
+                    OutputChannels(0).OldSignalName = OutputChannels(0).SignalName
+                    OutputChannels(0).SignalName = value
+                End If
             End If
             OnPropertyChanged()
         End Set
@@ -490,9 +502,17 @@ Public Class NameTypeUnitPMU
         End Get
         Set(value As String)
             _newUnit = value
-            For Each signal In OutputChannels
-                signal.NewUnit = value
-            Next
+            If String.IsNullOrEmpty(value) Then
+                For Each signal In OutputChannels
+                    signal.Unit = signal.OldUnit
+                    signal.OldUnit = value
+                Next
+            Else
+                For Each signal In OutputChannels
+                    signal.OldUnit = signal.Unit
+                    signal.Unit = value
+                Next
+            End If
             OnPropertyChanged()
         End Set
     End Property
@@ -504,9 +524,17 @@ Public Class NameTypeUnitPMU
         End Get
         Set(value As String)
             _newType = value
-            For Each signal In OutputChannels
-                signal.NewTypeAbbreviation = value
-            Next
+            If String.IsNullOrEmpty(value) Then
+                For Each signal In OutputChannels
+                    signal.TypeAbbreviation = signal.OldTypeAbbreviation
+                    signal.OldTypeAbbreviation = value
+                Next
+            Else
+                For Each signal In OutputChannels
+                    signal.OldTypeAbbreviation = signal.TypeAbbreviation
+                    signal.TypeAbbreviation = value
+                Next
+            End If
             OnPropertyChanged()
         End Set
     End Property

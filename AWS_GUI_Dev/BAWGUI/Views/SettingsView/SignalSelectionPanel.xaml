@@ -67,9 +67,37 @@
                 <Style TargetType="{x:Type TreeView}">
                     <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type">
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="1"/>
+                            </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
-                        </DataTrigger>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="2"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="3"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding ReGroupedRawSignalsByType}"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="4"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding ReGroupedRawSignalsByType}"/>
+                        </MultiDataTrigger>
+                        <!--<DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type">
+                            <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
+                        </DataTrigger>-->
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by PMU">
                             <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByPMU}"/>
                         </DataTrigger>

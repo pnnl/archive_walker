@@ -42,8 +42,9 @@ Public Class SignalSignatures
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
-        _passedThroughDQFilter = False
-        _passedThroughProcessor = False
+        _passedThroughDQFilter = 0
+        _passedThroughProcessor = 0
+        _isNameTypeUnitChanged = False
         _samplingRate = -1
         _unit = "O"
     End Sub
@@ -52,8 +53,9 @@ Public Class SignalSignatures
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
-        _passedThroughDQFilter = False
-        _passedThroughProcessor = False
+        _passedThroughDQFilter = 0
+        _passedThroughProcessor = 0
+        _isNameTypeUnitChanged = False
         _samplingRate = -1
         _unit = "O"
     End Sub
@@ -63,8 +65,9 @@ Public Class SignalSignatures
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
-        _passedThroughDQFilter = False
-        _passedThroughProcessor = False
+        _passedThroughDQFilter = 0
+        _passedThroughProcessor = 0
+        _isNameTypeUnitChanged = False
         _samplingRate = -1
         _unit = "O"
     End Sub
@@ -75,8 +78,9 @@ Public Class SignalSignatures
         _isEnabled = True
         _isValid = True
         _isCustomSignal = False
-        _passedThroughDQFilter = False
-        _passedThroughProcessor = False
+        _passedThroughDQFilter = 0
+        _passedThroughProcessor = 0
+        _isNameTypeUnitChanged = False
         _samplingRate = -1
         _unit = "O"
     End Sub
@@ -189,25 +193,36 @@ Public Class SignalSignatures
             OnPropertyChanged()
         End Set
     End Property
-    
-    Private _passedThroughDQFilter As Boolean
-    Public Property PassedThroughDQFilter As Boolean
+
+    Private _passedThroughDQFilter As Integer
+    Public Property PassedThroughDQFilter As Integer
         Get
             Return _passedThroughDQFilter
         End Get
-        Set(value As Boolean)
+        Set(value As Integer)
             _passedThroughDQFilter = value
             OnPropertyChanged()
         End Set
     End Property
-    
-    Private _passedThroughProcessor As Boolean
-    Public Property PassedThroughProcessor As Boolean
+
+    Private _passedThroughProcessor As Integer
+    Public Property PassedThroughProcessor As Integer
         Get
             Return _passedThroughProcessor
         End Get
-        Set(value As Boolean)
+        Set(value As Integer)
             _passedThroughProcessor = value
+            OnPropertyChanged()
+        End Set
+    End Property
+
+    Private _isNameTypeUnitChanged As Boolean
+    Public Property IsNameTypeUnitChanged As Boolean
+        Get
+            Return _isNameTypeUnitChanged
+        End Get
+        Set(ByVal value As Boolean)
+            _isNameTypeUnitChanged = value
             OnPropertyChanged()
         End Set
     End Property
@@ -217,51 +232,51 @@ Public Class SignalSignatures
             Return False
         End If
         Dim p As SignalSignatures = CType(obj, SignalSignatures)
-        Return Me.PMUName = p.PMUName AndAlso Me.SignalName = p.SignalName AndAlso Me.TypeAbbreviation = p.TypeAbbreviation
+        Return Me.PMUName = p.PMUName AndAlso Me.SignalName = p.SignalName AndAlso Me.TypeAbbreviation = p.TypeAbbreviation AndAlso Me.Unit = p.Unit AndAlso Me.OldSignalName = p.OldSignalName AndAlso Me.OldTypeAbbreviation = p.OldTypeAbbreviation AndAlso Me.OldUnit = p.OldUnit AndAlso Me.SamplingRate = p.SamplingRate
     End Function
     'Public Overrides Function GetHashCode() As Integer
     '    Return MyBase.GetHashCode()
     'End Function
     Public Shared Operator =(ByVal x As SignalSignatures, ByVal y As SignalSignatures) As Boolean
-        Return x.PMUName = y.PMUName AndAlso x.SignalName = y.SignalName AndAlso x.TypeAbbreviation = y.TypeAbbreviation
+        Return x.PMUName = y.PMUName AndAlso x.SignalName = y.SignalName AndAlso x.TypeAbbreviation = y.TypeAbbreviation AndAlso x.Unit = y.Unit AndAlso x.OldSignalName = y.OldSignalName AndAlso x.OldTypeAbbreviation = y.OldTypeAbbreviation AndAlso x.OldUnit = y.OldUnit AndAlso x.SamplingRate = y.SamplingRate
     End Operator
     Public Shared Operator <>(ByVal x As SignalSignatures, ByVal y As SignalSignatures) As Boolean
-        Return x.PMUName <> y.PMUName OrElse x.SignalName <> y.SignalName OrElse x.TypeAbbreviation <> y.TypeAbbreviation
+        Return x.PMUName <> y.PMUName OrElse x.SignalName <> y.SignalName OrElse x.TypeAbbreviation <> y.TypeAbbreviation OrElse x.Unit <> y.Unit OrElse x.OldSignalName <> y.OldSignalName OrElse x.OldTypeAbbreviation <> y.OldTypeAbbreviation OrElse x.OldUnit <> y.OldUnit OrElse x.SamplingRate <> y.SamplingRate
     End Operator
 
     Public Function IsSignalInformationComplete() As Boolean
         Return Not String.IsNullOrEmpty(PMUName) AndAlso Not String.IsNullOrEmpty(SignalName) AndAlso Not String.IsNullOrEmpty(TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(Unit) AndAlso (SamplingRate > 0)
     End Function
 
-    Private _newSignalName As String
-    Public Property NewSignalName As String
+    Private _oldSignalName As String
+    Public Property OldSignalName As String
         Get
-            Return _newSignalName
+            Return _oldSignalName
         End Get
         Set(ByVal value As String)
-            _newSignalName = value
+            _oldSignalName = value
             OnPropertyChanged()
         End Set
     End Property
 
-    Private _newUnit As String
-    Public Property NewUnit As String
+    Private _oldUnit As String
+    Public Property OldUnit As String
         Get
-            Return _newUnit
+            Return _oldUnit
         End Get
         Set(ByVal value As String)
-            _newUnit = value
+            _oldUnit = value
             OnPropertyChanged()
         End Set
     End Property
 
-    Private _newTypeAbbreviation As String
-    Public Property NewTypeAbbreviation As String
+    Private _oldTypeAbbreviation As String
+    Public Property OldTypeAbbreviation As String
         Get
-            Return _newTypeAbbreviation
+            Return _oldTypeAbbreviation
         End Get
         Set(ByVal value As String)
-            _newTypeAbbreviation = value
+            _oldTypeAbbreviation = value
             OnPropertyChanged()
         End Set
     End Property
