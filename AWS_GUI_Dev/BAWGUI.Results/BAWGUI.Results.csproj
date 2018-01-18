@@ -97,10 +97,12 @@
     <Compile Include="Models\DatedForcedOscillationEvent.cs" />
     <Compile Include="Models\DatedOccurrence.cs" />
     <Compile Include="Models\ResultsModel.cs" />
-    <Compile Include="ViewModels\ChannelViewModel.cs" />
+    <Compile Include="Models\RingDownEvent.cs" />
+    <Compile Include="ViewModels\FOOccurrenceChannelViewModel.cs" />
     <Compile Include="ViewModels\DateStruct.cs" />
     <Compile Include="ViewModels\ForcedOscillationResultViewModel.cs" />
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
+    <Compile Include="ViewModels\RingdownEventViewModel.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
       <DependentUpon>AvailableDates.xaml</DependentUpon>
     </Compile>

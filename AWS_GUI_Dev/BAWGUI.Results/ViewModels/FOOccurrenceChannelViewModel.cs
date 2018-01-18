@@ -8,9 +8,9 @@ using BAWGUI.RunMATLAB.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class ChannelViewModel : ViewModelBase
+    public class FOOccurrenceChannelViewModel : ViewModelBase
     {
-        public ChannelViewModel(ForcedOscillationTypeOccurrenceChannel model)
+        public FOOccurrenceChannelViewModel(ForcedOscillationTypeOccurrenceChannel model)
         {
             _model = model;
         }

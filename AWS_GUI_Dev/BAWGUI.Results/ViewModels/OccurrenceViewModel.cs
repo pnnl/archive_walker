@@ -21,7 +21,7 @@ namespace BAWGUI.Results.ViewModels
             _channels.Clear();
             foreach(var ch in _model.Channels)
             {
-                _channels.Add(new ChannelViewModel(ch));
+                _channels.Add(new FOOccurrenceChannelViewModel(ch));
             }
         }
         public OccurrenceViewModel()
@@ -142,9 +142,9 @@ namespace BAWGUI.Results.ViewModels
                 return _model.MaxCoherence;
             }
         }
-        private List<ChannelViewModel> _channels = new List<ChannelViewModel>();
+        private List<FOOccurrenceChannelViewModel> _channels = new List<FOOccurrenceChannelViewModel>();
         //private List<ChannelViewModel> _channels;
-        public List<ChannelViewModel> Channels
+        public List<FOOccurrenceChannelViewModel> Channels
         {
             get { return _channels; }
         }
