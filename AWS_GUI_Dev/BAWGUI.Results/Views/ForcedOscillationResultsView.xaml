@@ -21,7 +21,7 @@
                 <views:FOEventPlot Grid.Row="0" Margin="0,0,22,0"/>
                 <DockPanel Grid.Row="1">
                     <Label Content="Events:" DockPanel.Dock="Top"/>
-                    <views:EventTableView/>
+                    <views:FOEventTableView/>
                 </DockPanel>
             </Grid>
             <Grid Grid.Column="1" Margin="2,0,0,0">
@@ -35,7 +35,7 @@
                 </DockPanel>
                 <DockPanel Grid.Row="1">
                     <Label Content="Channels:" DockPanel.Dock="Top"/>
-                    <views:ChannelTableView/>
+                    <views:FOChannelTableView/>
                 </DockPanel>
             </Grid>
         </Grid>

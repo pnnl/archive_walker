@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BAWSgui3">
-      <HintPath>F:\BPAdemoJan18\NewDLL\BAWSgui3.dll</HintPath>
+      <HintPath>..\libs\BAWSgui3.dll</HintPath>
     </Reference>
     <Reference Include="MWArray, Version=2.17.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -105,6 +105,9 @@
     <Resource Include="..\BAWGUI.Resources\Images\Run_16x.png">
       <Link>MyResources\Run_16x.png</Link>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

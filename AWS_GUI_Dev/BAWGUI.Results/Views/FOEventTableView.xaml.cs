@@ -19,9 +19,9 @@ namespace BAWGUI.Results.Views
     /// <summary>
     /// Interaction logic for EventTableView.xaml
     /// </summary>
-    public partial class EventTableView : UserControl
+    public partial class FOEventTableView : UserControl
     {
-        public EventTableView()
+        public FOEventTableView()
         {
             InitializeComponent();
         }

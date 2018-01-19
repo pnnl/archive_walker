@@ -22,6 +22,7 @@ namespace BAWGUI.Results.Models
         public ResultsModel()
         {
             _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
+            _ringdownEvents = new List<RingDownEvent>();
         }
 
         internal void LoadResults(List<string> filenames, List<string> dates)
@@ -30,6 +31,7 @@ namespace BAWGUI.Results.Models
             //_selectedEndTime = endDate;
 
             List<DatedForcedOscillationEvent> forcedOscillationCompleteList = new List<DatedForcedOscillationEvent>();
+
             foreach (var filename in filenames)
             {
                 var date = Path.GetFileNameWithoutExtension(filename).Split('_').Last();
@@ -48,6 +50,11 @@ namespace BAWGUI.Results.Models
                 {
                     var newfoe = new DatedForcedOscillationEvent(date, foe);
                     forcedOscillationCompleteList.Add(newfoe);
+                }
+                foreach (var rd in content.Ringdown)
+                {
+                    var newrd = new RingDownEvent(rd);
+                    _ringdownEvents.Add(newrd);
                 }
                 //}
             }
@@ -96,6 +103,11 @@ namespace BAWGUI.Results.Models
         public List<DatedForcedOscillationEvent> ForcedOscillationCombinedList
         {
             get { return _forcedOscillationCombinedList; }
+        }
+        private List<RingDownEvent> _ringdownEvents;
+        public List<RingDownEvent> RingdownEvents
+        {
+            get { return _ringdownEvents; }
         }
         //private string _selectedStartTime;
         //public string SelectedStartTime

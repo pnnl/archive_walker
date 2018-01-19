@@ -59,7 +59,7 @@ namespace BAWGUI.Results.ViewModels
             get { return this._models; }
             set
             {
-                //_models = value;
+                _models = value;
                 _results.Clear();
                 _filteredResults.Clear();
                 foreach (var model in value)

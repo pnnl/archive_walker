@@ -90,15 +90,28 @@ namespace BAWGUI.Results.ViewModels
             //    endDate = dates.LastOrDefault
             //End If
             this._resultsModel.LoadResults(filenames, dates);
-            _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
             var startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture);
-            _forcedOscillationResultsViewModel.SelectedStartTime = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-            _forcedOscillationResultsViewModel.SelectedEndTime = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
-            if (_forcedOscillationResultsViewModel.FilteredResults.Count() == 0)
+            var startTimeStr = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+            var endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+
+            _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
+            _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;
+            _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;
+            var findStartTimeHasEvents = startTime;
+            while (_forcedOscillationResultsViewModel.FilteredResults.Count() == 0)
             {
-                startTime = startTime.AddDays(-1);
-                _forcedOscillationResultsViewModel.SelectedStartTime = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-                _forcedOscillationResultsViewModel.SelectedEndTime = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+                findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
+                _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+            }
+
+            _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
+            _ringdownResultsViewModel.SelectedStartTime = startTimeStr;
+            _ringdownResultsViewModel.SelectedEndTime = endTimeStr;
+            findStartTimeHasEvents = startTime;
+            while (_ringdownResultsViewModel.FilteredResults.Count() == 0)
+            {
+                findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
+                _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
             }
         }
 

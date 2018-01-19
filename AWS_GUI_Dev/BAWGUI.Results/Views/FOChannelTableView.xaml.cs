@@ -18,9 +18,9 @@ namespace BAWGUI.Results.Views
     /// <summary>
     /// Interaction logic for ChannelTableView.xaml
     /// </summary>
-    public partial class ChannelTableView : UserControl
+    public partial class FOChannelTableView : UserControl
     {
-        public ChannelTableView()
+        public FOChannelTableView()
         {
             InitializeComponent();
         }

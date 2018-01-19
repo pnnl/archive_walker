@@ -30,5 +30,9 @@ namespace BAWGUI.Results.Models
         {
             get { return _ringDown.End; }
         }
+        public List<RingdownTypeChannel> Channels
+        {
+            get { return _ringDown.Channel.ToList(); }
+        }
     }
 }

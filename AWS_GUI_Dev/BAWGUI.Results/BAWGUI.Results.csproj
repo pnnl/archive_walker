@@ -102,6 +102,7 @@
     <Compile Include="ViewModels\DateStruct.cs" />
     <Compile Include="ViewModels\ForcedOscillationResultViewModel.cs" />
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
+    <Compile Include="ViewModels\RDChannelViewModel.cs" />
     <Compile Include="ViewModels\RingdownEventViewModel.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
       <DependentUpon>AvailableDates.xaml</DependentUpon>
@@ -109,14 +110,14 @@
     <Compile Include="Views\AvailableDates2.xaml.cs">
       <DependentUpon>AvailableDates2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChannelTableView.xaml.cs">
-      <DependentUpon>ChannelTableView.xaml</DependentUpon>
+    <Compile Include="Views\FOChannelTableView.xaml.cs">
+      <DependentUpon>FOChannelTableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChannelTableWindow.xaml.cs">
       <DependentUpon>ChannelTableWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\EventTableView.xaml.cs">
-      <DependentUpon>EventTableView.xaml</DependentUpon>
+    <Compile Include="Views\FOEventTableView.xaml.cs">
+      <DependentUpon>FOEventTableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EventTableView2.xaml.cs">
       <DependentUpon>EventTableView2.xaml</DependentUpon>
@@ -132,6 +133,9 @@
     </Compile>
     <Compile Include="Views\ResultsTabControl.xaml.cs">
       <DependentUpon>ResultsTabControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RingdownEventTable.xaml.cs">
+      <DependentUpon>RingdownEventTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RingdownResultsView.xaml.cs">
       <DependentUpon>RingdownResultsView.xaml</DependentUpon>
@@ -150,7 +154,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ChannelTableView.xaml">
+    <Page Include="Views\FOChannelTableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -158,7 +162,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\EventTableView.xaml">
+    <Page Include="Views\FOEventTableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -206,6 +210,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\ResultsTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RingdownEventTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
