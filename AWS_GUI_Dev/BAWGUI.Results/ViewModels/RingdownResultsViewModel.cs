@@ -136,25 +136,25 @@ namespace BAWGUI.Results.ViewModels
 
         private void _drawRDPlot()
         {
-            PlotModel a = new PlotModel() { PlotAreaBackground = OxyColors.LightGray };
+            PlotModel a = new PlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
             //{ PlotAreaBackground = OxyColors.WhiteSmoke}
             //a.PlotType = PlotType.Cartesian;
             var xAxisFormatString = "";
-            //var startTime = SparseResults.Min(x => x.TimeStamps.FirstOrDefault());
-            //var endTime = SparseResults.Max(x => x.TimeStamps.LastOrDefault());
-            //var time = Convert.ToDateTime(endTime) - Convert.ToDateTime(startTime);
-            //if (time < TimeSpan.FromHours(24))
-            //{
-            //    xAxisFormatString = "HH:mm";
-            //}
-            //else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
-            //{
-            //    xAxisFormatString = "MM/dd\nHH:mm";
-            //}
-            //else
-            //{
-            //    xAxisFormatString = "MM/dd";
-            //}
+            var startTime = SparseResults.Min(x => x.TimeStamps.FirstOrDefault());
+            var endTime = SparseResults.Max(x => x.TimeStamps.LastOrDefault());
+            var time = endTime - startTime;
+            if (time < TimeSpan.FromHours(24))
+            {
+                xAxisFormatString = "HH:mm";
+            }
+            else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+            {
+                xAxisFormatString = "MM/dd\nHH:mm";
+            }
+            else
+            {
+                xAxisFormatString = "MM/dd";
+            }
             OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
             {
                 Position = OxyPlot.Axes.AxisPosition.Bottom,
@@ -168,9 +168,9 @@ namespace BAWGUI.Results.ViewModels
                 IsPanEnabled = true,
                 StringFormat = xAxisFormatString,
             };
-            //a.Axes.Add(timeXAxis);
+            a.Axes.Add(timeXAxis);
             //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
-            OxyPlot.Axes.LinearAxis frequencyYAxis = new OxyPlot.Axes.LinearAxis()
+            OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
             {
                 Position = OxyPlot.Axes.AxisPosition.Left,
                 Title = "Frequency (Hz)",
@@ -183,14 +183,14 @@ namespace BAWGUI.Results.ViewModels
             };
             //frequencyYAxis.AxisChanged += FrequencyYAxis_AxisChanged;
 
-            //float axisMax = SparseResults.Select(x => x.TypicalFrequency).Max() + (float)0.1;
-            //float axisMin = SparseResults.Select(x => x.TypicalFrequency).Min() - (float)0.1;
-            //if (SparseResults.Count > 0)
-            //{
-            //    frequencyYAxis.Maximum = axisMax;
-            //    frequencyYAxis.Minimum = axisMin;
-            //}
-            //a.Axes.Add(frequencyYAxis);
+            double axisMax = SparseResults.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
+            double axisMin = SparseResults.Min(x => x.GetMinOfMinimum()) - (double)0.1;
+            if (SparseResults.Count > 0)
+            {
+                yAxis.Maximum = axisMax;
+                yAxis.Minimum = axisMin;
+            }
+            a.Axes.Add(yAxis);
             //var categoryAxis = new CategoryAxis { Position = AxisPosition.Left };
             //a.DefaultColors = OxyPalettes.BlueWhiteRed(FilteredResults.Count).Colors;
             //int index = 0;
@@ -204,14 +204,19 @@ namespace BAWGUI.Results.ViewModels
                 //foreach (var ocur in fo.FilteredOccurrences)
                 //{
                     //var newSeries = new LineSeries { Title = fo.Label };
-                var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 5 };
+                var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColors.Green, Color2=OxyColor.FromArgb(50, 0, 100, 0), Fill=OxyColor.FromArgb(50,0,50,0)};
+                for (int i = 0; i < rd.Maximum.Count; i++)
+                {
+                    newSeries.Points.Add(new DataPoint(rd.TimeStampNumber[i], rd.Maximum[i]));
+                    newSeries.Points2.Add(new DataPoint(rd.TimeStampNumber[i], rd.Minimum[i]));
+                }
                 //if (ocur == SelectedOccurrence)
                 //{
                 //    newSeries.StrokeThickness = 10;
                 //}
                 //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
                 //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
-                //a.Series.Add(newSeries);
+                a.Series.Add(newSeries);
                 //newSeries.TrackerKey = trackerKey.ToString();
                 //ocur.trackerKey = trackerKey;
                 //trackerKey++;
@@ -232,8 +237,7 @@ namespace BAWGUI.Results.ViewModels
             //    a.DefaultColors.Add(_mapFrequencyToColor(axisMin));
             //    a.Axes.Add(new LinearColorAxis { Palette = new OxyPalette(a.DefaultColors.OrderBy(x => x.G)), Position = AxisPosition.Right, Minimum = axisMin, Maximum = axisMax, Title = "Frequency (Hz)", MajorStep = 0.2 });
             //}
-
-            a.Axes.Add(timeXAxis);
+            
             a.LegendPlacement = LegendPlacement.Outside;
             a.LegendPosition = LegendPosition.TopRight;
             a.LegendPadding = 0.0;

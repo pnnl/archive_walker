@@ -33,7 +33,12 @@ namespace BAWGUI.RunMATLAB.Models
                 }
                 var dataMax = ((double[])(arr.ToVector(MWArrayComponent.Real))).ToList();
                 arr = (MWNumericArray)rslts["t", index];
-                var t = (double[])(arr.ToVector(MWArrayComponent.Real));
+                var t =(double[])(arr.ToVector(MWArrayComponent.Real));
+                var timeStamps = new List<System.DateTime>();
+                foreach (var item in t)
+                {
+                    timeStamps.Add(_numbTimeConvert(item));
+                }
                 var dataPMU = new List<string>();
                 foreach (char[,] item in ((MWCellArray)rslts["DataPMU", index]).ToArray())
                 {
@@ -60,10 +65,13 @@ namespace BAWGUI.RunMATLAB.Models
                         var newResult = new SparseResult();
                         newResult.SignalName = dataChannel[signalCount];
                         newResult.PMUname = dataPMU[signalCount];
-                        newResult.TimeStamps = t.ToList();
+                        newResult.TimeStamps = timeStamps;
+                        newResult.TimeStampNumber = t.ToList();
                         newResult.Minimum = dataMin.GetRange(signalCount * dimEach[0], dimEach[0]);
                         newResult.Maximum = dataMax.GetRange(signalCount * dimEach[0], dimEach[0]);
                         _uniqueSparseResults.Add(newResult);
+                        _dataChannel.Add(dataChannel[signalCount]);
+                        _dataPMU.Add(dataPMU[signalCount]);
                     }
                 }
             }
@@ -121,6 +129,12 @@ namespace BAWGUI.RunMATLAB.Models
             {
                 _uniqueSparseResults = value;
             }
+        }
+        private System.DateTime _numbTimeConvert(double item)
+        {
+            System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            System.DateTime bbb = dtDateTime.AddSeconds((item - 367) * 86400);
+            return bbb;
         }
     }
 }

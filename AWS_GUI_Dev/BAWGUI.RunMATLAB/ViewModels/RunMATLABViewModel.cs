@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
-using BAWSgui3;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -35,7 +34,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
         private void _runAWNormal(object obj)
         {
             Models.MatLabEngine engine = Models.MatLabEngine.Instance;
-            //BAWSgui3.GUI2MAT T = new GUI2MAT();
             try
             {
                 System.Threading.Thread t1 = new System.Threading.Thread(() => { engine.RunNormalMode(ConfigFileName); });

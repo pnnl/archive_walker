@@ -22,7 +22,7 @@
             <DockPanel Grid.Row="1">
                 <Label Content="Events:" DockPanel.Dock="Top"/>
                 <views:RingdownEventTable Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}}"/>
-                <TextBlock VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Events Found in This Run" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
+                <TextBlock VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Ringdown Event Found in This Run" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
             </DockPanel>
             <DockPanel Grid.Row="2" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}}">
                 <Label Content="Channels:" DockPanel.Dock="Top"/>

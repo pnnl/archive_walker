@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
-using BAWSgui3;
+using BAWSengine;
 
 namespace BAWGUI.RunMATLAB.Models
 {
@@ -14,7 +14,7 @@ namespace BAWGUI.RunMATLAB.Models
         private static readonly MatLabEngine _instance = new MatLabEngine();
         private MatLabEngine()
         {
-            _matlabEngine = new BAWSgui3.GUI2MAT();
+            _matlabEngine = new BAWSengine.GUI2MAT();
         }
         public static MatLabEngine Instance
         {
@@ -23,7 +23,7 @@ namespace BAWGUI.RunMATLAB.Models
                 return _instance;
             }
         }
-        private BAWSgui3.GUI2MAT _matlabEngine;
+        private BAWSengine.GUI2MAT _matlabEngine;
         public void RunNormalMode(string configFile)
         {
             _matlabEngine.RunNormalMode(configFile);
@@ -42,7 +42,7 @@ namespace BAWGUI.RunMATLAB.Models
                 int[] dimEach = arr.Dimensions;
                 Console.WriteLine("\tt array dimension is: " + dimEach[0].ToString() + " X " + dimEach[1].ToString());
                 size = t.Length;
-                Console.WriteLine("first in t: " + _numbTimerConvert(t[0]) + " last in t: " + _numbTimerConvert(t[size - 1]));
+                //Console.WriteLine("first in t: " + _numbTimeConvert(t[0]) + " last in t: " + _numbTimeConvert(t[size - 1]));
                 arr = (MWNumericArray)RingdownRerun["Data", index];
                 double[] Data = (double[])arr.ToVector(MWArrayComponent.Real);
                 dimEach = arr.Dimensions;
@@ -114,12 +114,12 @@ namespace BAWGUI.RunMATLAB.Models
             var sparseR = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, configFilePath, detector));
             return sparseR.UniqueSparseResults;
         }
-        private System.DateTime _numbTimerConvert(double item)
-        {
-            System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            System.DateTime bbb = dtDateTime.AddSeconds((item - 367) * 86400);
-            return bbb;
-        }
+        //private System.DateTime _numbTimeConvert(double item)
+        //{
+        //    System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+        //    System.DateTime bbb = dtDateTime.AddSeconds((item - 367) * 86400);
+        //    return bbb;
+        //}
 
     }
 }
