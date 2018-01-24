@@ -31,6 +31,7 @@ namespace BAWGUI.Results.Models
             //_selectedEndTime = endDate;
 
             List<DatedForcedOscillationEvent> forcedOscillationCompleteList = new List<DatedForcedOscillationEvent>();
+            _ringdownEvents = new List<RingDownEvent>();
 
             foreach (var filename in filenames)
             {
@@ -46,15 +47,21 @@ namespace BAWGUI.Results.Models
                 XmlSerializer serializer = new XmlSerializer(typeof(EventSequenceType));
                 FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 var content = serializer.Deserialize(stream) as EventSequenceType;
-                foreach (var foe in content.ForcedOscillation)
+                if (content.ForcedOscillation != null)
                 {
-                    var newfoe = new DatedForcedOscillationEvent(date, foe);
-                    forcedOscillationCompleteList.Add(newfoe);
+                    foreach (var foe in content.ForcedOscillation)
+                    {
+                        var newfoe = new DatedForcedOscillationEvent(date, foe);
+                        forcedOscillationCompleteList.Add(newfoe);
+                    }
                 }
-                foreach (var rd in content.Ringdown)
+                if (content.Ringdown != null)
                 {
-                    var newrd = new RingDownEvent(rd);
-                    _ringdownEvents.Add(newrd);
+                    foreach (var rd in content.Ringdown)
+                    {
+                        var newrd = new RingDownEvent(rd);
+                        _ringdownEvents.Add(newrd);
+                    }
                 }
                 //}
             }

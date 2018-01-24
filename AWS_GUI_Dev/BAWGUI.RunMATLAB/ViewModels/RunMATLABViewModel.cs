@@ -34,10 +34,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand RunArchiveWalkerNormal { get; set; }
         private void _runAWNormal(object obj)
         {
-            BAWSgui3.GUI2MAT T = new GUI2MAT();
+            Models.MatLabEngine engine = Models.MatLabEngine.Instance;
+            //BAWSgui3.GUI2MAT T = new GUI2MAT();
             try
             {
-                System.Threading.Thread t1 = new System.Threading.Thread(() => { T.RunNormalMode(ConfigFileName); });
+                System.Threading.Thread t1 = new System.Threading.Thread(() => { engine.RunNormalMode(ConfigFileName); });
                 t1.Start();
             }
             catch (Exception ex)
@@ -68,5 +69,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 _initialConfigFilePath = openFileDialog.InitialDirectory;
             }
         }
+        //public void RingDownRerun(string start, string end, string configFile)
+        //{
+
+        //}
     }
 }

@@ -27,7 +27,7 @@ namespace BAWGUI.Results.ViewModels
         private RingdownResultsViewModel _ringdownResultsViewModel;
         private WindRampResultsViewModel _windRampResultsViewModel;
         private ResultsModel _resultsModel;
-
+        private RunMATLAB.Models.MatLabEngine _engine;
         public ForcedOscillationResultsViewModel ForcedOscillationResultsViewModel
         {
             get { return this._forcedOscillationResultsViewModel; }
@@ -50,10 +50,7 @@ namespace BAWGUI.Results.ViewModels
 
         public ResultsViewModel()
         {
-            _forcedOscillationResultsViewModel = new ForcedOscillationResultsViewModel();
-            _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
-            _ringdownResultsViewModel = new RingdownResultsViewModel();
-            _windRampResultsViewModel = new WindRampResultsViewModel();
+            _engine = RunMATLAB.Models.MatLabEngine.Instance;
             _resultsModel = new ResultsModel();
             _availableDateDict = new Dictionary<string, Dictionary<string, List<string>>>();
             _yearList = new List<string>();
@@ -61,6 +58,10 @@ namespace BAWGUI.Results.ViewModels
             _dayList = new List<string>();
             OpenConfigFile = new RelayCommand(_openConfigFile);
             _configFilePath = "";
+            _forcedOscillationResultsViewModel = new ForcedOscillationResultsViewModel();
+            _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
+            _ringdownResultsViewModel = new RingdownResultsViewModel();
+            _windRampResultsViewModel = new WindRampResultsViewModel();
         }
 
         //public void LoadResults(List<string> filenames, string startDate, string endDate)
@@ -92,27 +93,37 @@ namespace BAWGUI.Results.ViewModels
             this._resultsModel.LoadResults(filenames, dates);
             var startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture);
             var startTimeStr = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-            var endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            var endTimeStr = startTime.AddDays(1).AddMinutes(-1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
 
             _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
             _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;
             _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;
             var findStartTimeHasEvents = startTime;
-            while (_forcedOscillationResultsViewModel.FilteredResults.Count() == 0)
+            if (_forcedOscillationResultsViewModel.Models.Count() != 0)
             {
-                findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
-                _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                while (_forcedOscillationResultsViewModel.FilteredResults.Count() == 0)
+                {
+                    findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
+                    _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                }
             }
 
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
             _ringdownResultsViewModel.SelectedStartTime = startTimeStr;
             _ringdownResultsViewModel.SelectedEndTime = endTimeStr;
             findStartTimeHasEvents = startTime;
-            while (_ringdownResultsViewModel.FilteredResults.Count() == 0)
+            if(_ringdownResultsViewModel.Models.Count()!= 0)
             {
-                findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
-                _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                while (_ringdownResultsViewModel.FilteredResults.Count() == 0)
+                {
+                    findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
+                    _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                }
             }
+            //if(_ringdownResultsViewModel.FilteredResults.Count() != 0)
+            //{
+            _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
+            //}
         }
 
         private Dictionary<string, Dictionary<string, List<string>>> _availableDateDict;
@@ -291,6 +302,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     var _configData = XDocument.Load(ConfigFilePath);
                     var _resultPath = (from el in _configData.Descendants("EventPath") select (string)el).FirstOrDefault();
+                    _lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
                     _openResultFile(_resultPath);
                 }
                 catch (Exception ex)
@@ -328,12 +340,16 @@ namespace BAWGUI.Results.ViewModels
             }
             if (files.Count()>0)
             {
-                if (files.Count()!=dates.Count())
+                //if (files.Count()!=dates.Count())
+                //{
+                if (!dates.Contains(_lastDateOfTheRun))
                 {
-                    dates.Sort();
-                    string lastDate = dates.LastOrDefault();
-                    dates.Add((Convert.ToInt32(lastDate) + 1).ToString());
+                    dates.Add(_lastDateOfTheRun);
                 }
+                dates.Sort();
+                //string lastDate = dates.LastOrDefault();
+                //dates.Add((Convert.ToInt32(lastDate) + 1).ToString());
+                //}
                 try
                 {
                     LoadResults(files, dates);
@@ -370,6 +386,16 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _resultPath = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _lastDateOfTheRun;
+        public string LastDateOfTheRun
+        {
+            get { return _lastDateOfTheRun; }
+            set
+            {
+                _lastDateOfTheRun = value;
                 OnPropertyChanged();
             }
         }
