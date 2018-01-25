@@ -109,10 +109,10 @@ namespace BAWGUI.RunMATLAB.Models
             }
 
         }
-        public List<SparseResult> GetSparseData(string start, string end, string configFilePath, string detector)
+        public List<SparseDetector> GetSparseData(string start, string end, string configFilePath, string detector)
         {
             var sparseR = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, configFilePath, detector));
-            return sparseR.UniqueSparseResults;
+            return sparseR.SparseDetectorList;
         }
         //private System.DateTime _numbTimeConvert(double item)
         //{

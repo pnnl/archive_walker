@@ -6,28 +6,41 @@
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:con="clr-namespace:BAWGUI.Results.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="900">
     <UserControl.Resources>
         <con:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter" />
     </UserControl.Resources>
-    <DockPanel>
-        <views:TimeFilterView DockPanel.Dock="Top"/>
-        <Grid>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <views:TimeFilterView Height="30" Margin="2"/>
+                <Button Content="Sparse" Height="25" Width="50" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button Content="Rerun" Height="25" Width="50" Margin="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <views:RDEventPlot Grid.Row="1" Margin="0,0,22,0"/>
+        </Grid>
+        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
-                <RowDefinition Height="4*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="6*"/>
             </Grid.RowDefinitions>
-            <views:RDEventPlot Grid.Row="0" Margin="0,0,22,0"/>
-            <DockPanel Grid.Row="1">
-                <Label Content="Events:" DockPanel.Dock="Top"/>
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <Label Content="Events:"/>
                 <views:RingdownEventTable Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}}"/>
-                <TextBlock VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Ringdown Event Found in This Run" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
-            </DockPanel>
-            <DockPanel Grid.Row="2" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}}">
+                <TextBlock VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Ringdown Event Found in This Run" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}"/>
+            </StackPanel>
+            <DockPanel Grid.Row="1" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}}">
                 <Label Content="Channels:" DockPanel.Dock="Top"/>
                 <views:RDchannelTable/>
             </DockPanel>
         </Grid>
-    </DockPanel>
+    </Grid>
 </UserControl>

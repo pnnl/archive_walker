@@ -105,6 +105,7 @@
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
     <Compile Include="ViewModels\RDChannelViewModel.cs" />
     <Compile Include="ViewModels\RingdownEventViewModel.cs" />
+    <Compile Include="ViewModels\SparsePlot.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
       <DependentUpon>AvailableDates.xaml</DependentUpon>
     </Compile>
