@@ -785,7 +785,16 @@
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">
                                 <Setter Property="ContentTemplate" Value="{StaticResource NameTypeUnitApproach2}"/>
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate x:Name="NameTypeUnitApproach2">
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
                                 <Style.Triggers>
+                                    <!--<DataTrigger Binding="{Binding NameTypeUnitStatusFlag}" Value="0">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource NameTypeUnitApproach2}"/>
+                                    </DataTrigger>-->
                                     <DataTrigger Binding="{Binding NameTypeUnitStatusFlag}" Value="1">
                                         <Setter Property="ContentTemplate" Value="{StaticResource NameTypeUnitApproach1}"/>
                                     </DataTrigger>
