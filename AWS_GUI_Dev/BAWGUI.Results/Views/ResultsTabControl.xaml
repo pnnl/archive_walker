@@ -11,13 +11,13 @@
             <views:ForcedOscillationResultsView DataContext="{Binding ForcedOscillationResultsViewModel}" />
         </TabItem>
         <TabItem Header="Out of Range Events">
-            <views:OutOfRangeResultsView DataContext="{Binding OutOfRangeResultsViewModel}"></views:OutOfRangeResultsView>
+            <views:OutOfRangeResultsView DataContext="{Binding OutOfRangeResultsViewModel}"/>
         </TabItem>
         <TabItem Header="Ringdowns">
-            <views:RingdownResultsView DataContext="{Binding RingdownResultsViewModel}"></views:RingdownResultsView>
+            <views:RingdownResultsView DataContext="{Binding RingdownResultsViewModel}"/>
         </TabItem>
         <TabItem Header="Wind Ramps">
-            <views:WindRampResultsView DataContext="{Binding WindRampResultsViewModel}"></views:WindRampResultsView>
+            <views:WindRampResultsView DataContext="{Binding WindRampResultsViewModel}"/>
         </TabItem>
     </TabControl>
 </UserControl>

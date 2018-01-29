@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:BAWGUI"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
-    <TabControl Grid.Row="1" Margin="2" TabStripPlacement="Top" SelectedIndex="{Binding CurrentTabIndex}">
+    <TabControl TabStripPlacement="Top" SelectedIndex="{Binding CurrentTabIndex}">
         <TabItem Header="Reader Properties">
             <local:ReadPropertiesTabInSettings/>
         </TabItem>

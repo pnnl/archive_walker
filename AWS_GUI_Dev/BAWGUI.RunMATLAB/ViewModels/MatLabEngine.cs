@@ -6,14 +6,33 @@ using System.Threading.Tasks;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using BAWSengine;
+using BAWGUI.RunMATLAB.Models;
 
-namespace BAWGUI.RunMATLAB.Models
+namespace BAWGUI.RunMATLAB.ViewModels
 {
-    public class MatLabEngine
+    public class MatLabEngine:ViewModelBase
     {
         private static readonly MatLabEngine _instance = new MatLabEngine();
+        private bool _isMatlabEngineRunning;
+        public bool IsMatlabEngineRunning
+        {
+            get { return _isMatlabEngineRunning; }
+            set
+            {
+                _isMatlabEngineRunning = value;
+                OnPropertyChanged();
+
+            }
+        }
+        private string _controlPath;
+        public string ControlPath
+        {
+            get { return _controlPath; }
+            //set { _controlPath = value; }
+        }
         private MatLabEngine()
         {
+            _isMatlabEngineRunning = false;
             _matlabEngine = new BAWSengine.GUI2MAT();
         }
         public static MatLabEngine Instance
@@ -24,9 +43,13 @@ namespace BAWGUI.RunMATLAB.Models
             }
         }
         private BAWSengine.GUI2MAT _matlabEngine;
-        public void RunNormalMode(string configFile)
+        public void RunNormalMode(string controlPath, string configFile)
         {
-            _matlabEngine.RunNormalMode(configFile);
+            _controlPath = controlPath;
+            IsMatlabEngineRunning = true;
+            _matlabEngine.RunNormalMode(controlPath, configFile);
+            //TODO: ????????????maybe check if run flag exist, if yes, delete it.??????????????????
+            IsMatlabEngineRunning = false;
         }
         public void RingDownRerun(string start, string end, string configFile)
         {
@@ -111,7 +134,9 @@ namespace BAWGUI.RunMATLAB.Models
         }
         public List<SparseDetector> GetSparseData(string start, string end, string configFilePath, string detector)
         {
+            IsMatlabEngineRunning = true;
             var sparseR = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, configFilePath, detector));
+            IsMatlabEngineRunning = false;
             return sparseR.SparseDetectorList;
         }
         //private System.DateTime _numbTimeConvert(double item)

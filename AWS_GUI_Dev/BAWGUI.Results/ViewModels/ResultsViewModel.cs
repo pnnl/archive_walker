@@ -27,7 +27,7 @@ namespace BAWGUI.Results.ViewModels
         private RingdownResultsViewModel _ringdownResultsViewModel;
         private WindRampResultsViewModel _windRampResultsViewModel;
         private ResultsModel _resultsModel;
-        private RunMATLAB.Models.MatLabEngine _engine;
+        private RunMATLAB.ViewModels.MatLabEngine _engine;
         public ForcedOscillationResultsViewModel ForcedOscillationResultsViewModel
         {
             get { return this._forcedOscillationResultsViewModel; }
@@ -50,7 +50,7 @@ namespace BAWGUI.Results.ViewModels
 
         public ResultsViewModel()
         {
-            _engine = RunMATLAB.Models.MatLabEngine.Instance;
+            _engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
             _resultsModel = new ResultsModel();
             _availableDateDict = new Dictionary<string, Dictionary<string, List<string>>>();
             _yearList = new List<string>();
@@ -123,7 +123,24 @@ namespace BAWGUI.Results.ViewModels
             }
             //if(_ringdownResultsViewModel.FilteredResults.Count() != 0)
             //{
-            _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
+            if (_engine.IsMatlabEngineRunning)
+            {
+                var controlPath = _engine.ControlPath;
+                var pauseFlag = controlPath + "PauseFlag.txt";
+                var runFlag = controlPath + "RunFlag.txt";
+                System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
+                fs.Close();
+                File.Delete(runFlag);
+                _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
+                File.Delete(pauseFlag);
+                fs = System.IO.File.Create(runFlag);
+                fs.Close();
+                _engine.RunNormalMode(controlPath, _configFilePath);
+            }
+            else
+            {
+                _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
+            }
             //}
         }
 

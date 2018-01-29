@@ -4,8 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.RunMATLAB"
+             xmlns:converters="clr-namespace:BAWGUI.RunMATLAB.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2,0">
             <TextBox Text="{Binding ConfigFileName}" MinWidth="100" Margin="2" Height="20" VerticalAlignment="Top"/>
@@ -13,7 +19,7 @@
                 <!--<Image Source="..\Resources\open.gif"></Image>-->
                 <Image Source="/BAWGUI.RunMATLAB;component/MyResources/open.gif"/>
             </Button>
-            <Button Command="{Binding RunArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top">
+            <Button IsEnabled="{Binding Engine.IsNormalModeRunning, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding RunArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top">
                 <Image Source="/BAWGUI.RunMATLAB;component/MyResources/Run_16x.png"/>
             </Button>
         </StackPanel>

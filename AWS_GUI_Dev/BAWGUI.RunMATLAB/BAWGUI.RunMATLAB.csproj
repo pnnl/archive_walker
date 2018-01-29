@@ -73,7 +73,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\MatLabEngine.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="ViewModels\MatLabEngine.cs" />
     <Compile Include="Models\RerunResultBase.cs" />
     <Compile Include="Models\SparseDetector.cs" />
     <Compile Include="Models\SparseResults.cs" />

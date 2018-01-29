@@ -18,6 +18,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _initialConfigFilePath = "";
             OpenConfigFile = new RelayCommand(_openConfigFile);
             RunArchiveWalkerNormal = new RelayCommand(_runAWNormal);
+            _engine = MatLabEngine.Instance;
+            //_isNormalModeRunning = false;
         }
         private string _configFileName;
         public string ConfigFileName
@@ -30,18 +32,39 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
         private string _initialConfigFilePath;
+        private MatLabEngine _engine;
+        public MatLabEngine Engine
+        {
+            get { return _engine; }
+        }
+        //private bool _isNormalModeRunning;
+        public bool IsNormalModeRunning
+        {
+            get { return Engine.IsMatlabEngineRunning; }
+            set
+            {
+                Engine.IsMatlabEngineRunning = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand RunArchiveWalkerNormal { get; set; }
         private void _runAWNormal(object obj)
         {
-            Models.MatLabEngine engine = Models.MatLabEngine.Instance;
             try
             {
-                System.Threading.Thread t1 = new System.Threading.Thread(() => { engine.RunNormalMode(ConfigFileName); });
+                IsNormalModeRunning = true;
+                var controlPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\";
+                var runFlag = controlPath + "RunFlag.txt";
+                if (!System.IO.File.Exists(runFlag))
+                {
+                    System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                    fs.Close();
+                }
+                System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
                 t1.Start();
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
             }  
         }
