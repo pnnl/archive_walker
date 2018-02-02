@@ -33,7 +33,15 @@ namespace BAWGUI.RunMATLAB.ViewModels
         private MatLabEngine()
         {
             _isMatlabEngineRunning = false;
-            _matlabEngine = new BAWSengine.GUI2MAT();
+            try
+            {
+                //_matlabEngine = new BAWSengine.GUI2MAT();
+                _matlabEngine = new BAWSengine2.GUI2MAT();
+            }
+            catch (Exception)
+            {
+                
+            }
         }
         public static MatLabEngine Instance
         {
@@ -42,7 +50,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 return _instance;
             }
         }
-        private BAWSengine.GUI2MAT _matlabEngine;
+        //private BAWSengine.GUI2MAT _matlabEngine;
+        private BAWSengine2.GUI2MAT _matlabEngine;
         public void RunNormalMode(string controlPath, string configFile)
         {
             _controlPath = controlPath;

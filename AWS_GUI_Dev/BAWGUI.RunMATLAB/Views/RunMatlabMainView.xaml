@@ -19,7 +19,7 @@
                 <!--<Image Source="..\Resources\open.gif"></Image>-->
                 <Image Source="/BAWGUI.RunMATLAB;component/MyResources/open.gif"/>
             </Button>
-            <Button IsEnabled="{Binding Engine.IsNormalModeRunning, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding RunArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top">
+            <Button IsEnabled="{Binding IsNormalModeRunning, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding RunArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top">
                 <Image Source="/BAWGUI.RunMATLAB;component/MyResources/Run_16x.png"/>
             </Button>
         </StackPanel>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
+using System.Threading;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -47,27 +49,53 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 OnPropertyChanged();
             }
         }
+        private readonly BackgroundWorker _worker = new BackgroundWorker();
+        private void _runNormalMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "normalRunThread";
+            }
+            var controlPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\";
+            var runFlag = controlPath + "RunFlag.txt";
+            if (!System.IO.File.Exists(runFlag))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                fs.Close();
+            }
+            IsNormalModeRunning = true;
+            _engine.RunNormalMode(controlPath, ConfigFileName);
+        }
         public ICommand RunArchiveWalkerNormal { get; set; }
         private void _runAWNormal(object obj)
         {
             try
             {
-                IsNormalModeRunning = true;
-                var controlPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\";
-                var runFlag = controlPath + "RunFlag.txt";
-                if (!System.IO.File.Exists(runFlag))
-                {
-                    System.IO.FileStream fs = System.IO.File.Create(runFlag);
-                    fs.Close();
-                }
-                System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
-                t1.Start();
+                _worker.DoWork += _runNormalMode;
+                _worker.ProgressChanged += _worker_ProgressChanged;
+                _worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
+                _worker.WorkerReportsProgress = true;
+                _worker.WorkerSupportsCancellation = true;
+                _worker.RunWorkerAsync();
+                //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
+                //t1.Start();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
             }  
         }
+
+        private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsNormalModeRunning = false;
+        }
+
+        private void _worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
         public ICommand OpenConfigFile { get; set; }
         private void _openConfigFile(object obj)
         {

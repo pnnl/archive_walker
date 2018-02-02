@@ -131,6 +131,10 @@ namespace BAWGUI.Results.ViewModels
                 System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
                 fs.Close();
                 File.Delete(runFlag);
+                while (_engine.IsMatlabEngineRunning)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
                 _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
                 File.Delete(pauseFlag);
                 fs = System.IO.File.Create(runFlag);
