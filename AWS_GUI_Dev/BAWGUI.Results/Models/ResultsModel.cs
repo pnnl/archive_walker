@@ -9,7 +9,7 @@ using BAWGUI.Xml;
 
 namespace BAWGUI.Results.Models
 {
-    class ResultsModel
+    public class ResultsModel
     {
         //private List<EventSequenceType> _events = new List<EventSequenceType>();
 
@@ -63,6 +63,7 @@ namespace BAWGUI.Results.Models
                         _ringdownEvents.Add(newrd);
                     }
                 }
+                stream.Close();
                 //}
             }
             _combineForcedOscillationEvents(forcedOscillationCompleteList);

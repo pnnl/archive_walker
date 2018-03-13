@@ -17,7 +17,7 @@ namespace BAWGUI.RunMATLAB.Models
             //_dataChannel = new List<string>();
             for (int index = 1; index <= rslts.NumberOfElements; index++)
             {
-                Console.WriteLine("element: " + index.ToString());
+                //Console.WriteLine("element: " + index.ToString());
                 MWNumericArray arr = (MWNumericArray)rslts["DataMin", index];
                 int[] dimEach = arr.Dimensions;
                 if (dimEach.Length != 2)
@@ -35,9 +35,12 @@ namespace BAWGUI.RunMATLAB.Models
                 arr = (MWNumericArray)rslts["t", index];
                 var t =(double[])(arr.ToVector(MWArrayComponent.Real));
                 var timeStamps = new List<System.DateTime>();
+                var timeStampNumbers = new List<double>();
                 foreach (var item in t)
                 {
-                    timeStamps.Add(_numbTimeConvert(item));
+                    var tt = Resources.Utility.Utility.MatlabDateNumToDotNetDateTime(item);
+                    timeStamps.Add(tt);
+                    timeStampNumbers.Add(tt.ToOADate());
                 }
                 var dataPMU = new List<string>();
                 foreach (char[,] item in ((MWCellArray)rslts["DataPMU", index]).ToArray())
@@ -80,6 +83,7 @@ namespace BAWGUI.RunMATLAB.Models
                     dataUnit.Add(unit);
                 }
                 var detector = new SparseDetector();
+                detector.Label = index.ToString();
                 for (int signalCount = 0; signalCount < dimEach[1]; signalCount++)
                 {
                     var newSparseSignal = new SparseSignal();
@@ -88,7 +92,7 @@ namespace BAWGUI.RunMATLAB.Models
                     newSparseSignal.Type = dataType[signalCount];
                     newSparseSignal.Unit = dataUnit[signalCount];
                     newSparseSignal.TimeStamps = timeStamps;
-                    newSparseSignal.TimeStampNumber = t.ToList();
+                    newSparseSignal.TimeStampNumber = timeStampNumbers;
                     newSparseSignal.Minimum = dataMin.GetRange(signalCount * dimEach[0], dimEach[0]);
                     newSparseSignal.Maximum = dataMax.GetRange(signalCount * dimEach[0], dimEach[0]);
                     detector.SparseSignals.Add(newSparseSignal);
@@ -150,11 +154,6 @@ namespace BAWGUI.RunMATLAB.Models
                 _sparseDetectorList = value;
             }
         }
-        private DateTime _numbTimeConvert(double item)
-        {
-            System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            System.DateTime bbb = dtDateTime.AddSeconds((item - 367) * 86400);
-            return bbb;
-        }
+
     }
 }

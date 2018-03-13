@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BAWGUI.RunMATLAB
+namespace BAWGUI.RunMATLAB.Views
 {
     /// <summary>
     /// Interaction logic for RunMatlabMainView.xaml

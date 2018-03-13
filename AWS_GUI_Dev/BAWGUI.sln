@@ -1,13 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.Xml", "BAWGUI.Xml\BAWGUI.Xml.csproj", "{B948A304-8616-4D5F-9563-9805F8A506C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.Results", "BAWGUI.Results\BAWGUI.Results.csproj", "{65FBB914-5DF7-4008-AB31-6E1A609327E5}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6171CA6B-5C9B-4502-BE08-C2E1B050838F} = {6171CA6B-5C9B-4502-BE08-C2E1B050838F}
 		{BF338BCB-0788-4DE9-8D78-5DB5142FBF27} = {BF338BCB-0788-4DE9-8D78-5DB5142FBF27}
 	EndProjectSection
 EndProject
@@ -17,11 +16,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE14B5
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.Test", "BAWGUI.Test\BAWGUI.Test.csproj", "{6171CA6B-5C9B-4502-BE08-C2E1B050838F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65FBB914-5DF7-4008-AB31-6E1A609327E5} = {65FBB914-5DF7-4008-AB31-6E1A609327E5}
+		{135EE078-0D3D-4374-A947-7DD64D83B159} = {135EE078-0D3D-4374-A947-7DD64D83B159}
+		{BF338BCB-0788-4DE9-8D78-5DB5142FBF27} = {BF338BCB-0788-4DE9-8D78-5DB5142FBF27}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.RunMATLAB", "BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj", "{BF338BCB-0788-4DE9-8D78-5DB5142FBF27}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B948A304-8616-4D5F-9563-9805F8A506C2} = {B948A304-8616-4D5F-9563-9805F8A506C2}
-		{6171CA6B-5C9B-4502-BE08-C2E1B050838F} = {6171CA6B-5C9B-4502-BE08-C2E1B050838F}
 	EndProjectSection
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "BAWGUI.Resources", "BAWGUI.Resources\BAWGUI.Resources.shproj", "{C90F12F9-9E00-411C-9B5A-58564D512918}"
@@ -29,12 +32,12 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BAWGUI", "BAWGUI\BAWGUI.vbproj", "{135EE078-0D3D-4374-A947-7DD64D83B159}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B948A304-8616-4D5F-9563-9805F8A506C2} = {B948A304-8616-4D5F-9563-9805F8A506C2}
-		{6171CA6B-5C9B-4502-BE08-C2E1B050838F} = {6171CA6B-5C9B-4502-BE08-C2E1B050838F}
 		{BF338BCB-0788-4DE9-8D78-5DB5142FBF27} = {BF338BCB-0788-4DE9-8D78-5DB5142FBF27}
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		BAWGUI.Resources\Resources.projitems*{bf338bcb-0788-4de9-8d78-5db5142fbf27}*SharedItemsImports = 4
 		BAWGUI.Resources\Resources.projitems*{c90f12f9-9e00-411c-9b5a-58564d512918}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,8 +63,8 @@ Global
 		{65FBB914-5DF7-4008-AB31-6E1A609327E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{65FBB914-5DF7-4008-AB31-6E1A609327E5}.Release|x64.ActiveCfg = Release|x64
 		{65FBB914-5DF7-4008-AB31-6E1A609327E5}.Release|x64.Build.0 = Release|x64
-		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|Any CPU.Build.0 = Debug|x64
 		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|x64.ActiveCfg = Debug|x64
 		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Debug|x64.Build.0 = Debug|x64
 		{6171CA6B-5C9B-4502-BE08-C2E1B050838F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,5 +90,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {36168D44-17DA-4C2E-90AA-ABC0E4CDAEA8}
 	EndGlobalSection
 EndGlobal

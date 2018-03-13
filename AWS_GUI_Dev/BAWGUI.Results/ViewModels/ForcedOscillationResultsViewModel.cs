@@ -37,6 +37,7 @@ namespace BAWGUI.Results.ViewModels
             _foPlotModel = new PlotModel();
             _selectedOscillationEvent = new ForcedOscillationResultViewModel();
             _selectedOccurrence = new OccurrenceViewModel();
+            _configFilePath = "";
         }
 
         //private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
@@ -520,6 +521,17 @@ namespace BAWGUI.Results.ViewModels
             //{
             //    return OxyColor.FromRgb(Convert.ToByte(255 * (1 - percentage)), 255, Convert.ToByte(255 * (1 - percentage)));
             //}
+        }
+
+        private string _configFilePath;
+        public string ConfigFilePath
+        {
+            get { return _configFilePath; }
+            set
+            {
+                _configFilePath = value;
+                OnPropertyChanged();
+            }
         }
     }
 }

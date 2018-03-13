@@ -2,12 +2,20 @@
 using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -19,8 +27,17 @@ namespace BAWGUI.Results.ViewModels
             _filteredResults = new ObservableCollection<RingdownEventViewModel>();
             _models = new List<RingDownEvent>();
             _sparseResults = new List<SparseDetector>();
-            _rdPlotModels = new ObservableCollection<SparsePlot>();
+            _rdSparsePlotModels = new ObservableCollection<SparsePlot>();
+            _rdReRunPlotModels = new ObservableCollection<RDreRunPlot>();
+            RunSparseMode = new RelayCommand(_runSparseMode);
+            RingdownReRun = new RelayCommand(_ringdownRerun);
+            CancelRingdownReRun = new RelayCommand(_cancelRDReRun);
+            _engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
+            _configFilePath = "";
+            _reRunResult = new List<RingdownDetector>();
         }
+
+        private RunMATLAB.ViewModels.MatLabEngine _engine;
         private ObservableCollection<RingdownEventViewModel> _results;
         private ObservableCollection<RingdownEventViewModel> _filteredResults;
         public ObservableCollection<RingdownEventViewModel> FilteredResults
@@ -98,6 +115,7 @@ namespace BAWGUI.Results.ViewModels
             if (SparseResults.Count() != 0)
             {
             }
+            //SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, _configFilePath, "Ringdown");
         }
         private RingdownEventViewModel _selectedRingdownEvent;
         public RingdownEventViewModel SelectedRingdownEvent
@@ -119,29 +137,30 @@ namespace BAWGUI.Results.ViewModels
                 _sparseResults = value;
                 if (SparseResults.Count() != 0)
                 {
-                    _drawRDPlots();
+                    _drawRDSparsePlots();
                 }
                 OnPropertyChanged();
             }
         }
-        private ObservableCollection<SparsePlot> _rdPlotModels;
-        public ObservableCollection<SparsePlot> RDPlotModels
+        private ObservableCollection<SparsePlot> _rdSparsePlotModels;
+        public ObservableCollection<SparsePlot> RDSparsePlotModels
         {
-            get { return _rdPlotModels; }
+            get { return _rdSparsePlotModels; }
             set
             {
-                _rdPlotModels = value;
+                _rdSparsePlotModels = value;
                 OnPropertyChanged();
             }
         }
 
-        private void _drawRDPlots()
+        private void _drawRDSparsePlots()
         {
             var rdPlots = new ObservableCollection<SparsePlot>();
             foreach (var detector in SparseResults)
             {
                 var aPlot = new SparsePlot();
-                var a = new PlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+                aPlot.Label = detector.Label;
+                var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
                 //{ PlotAreaBackground = OxyColors.WhiteSmoke}
                 //a.PlotType = PlotType.Cartesian;
                 var xAxisFormatString = "";
@@ -173,8 +192,8 @@ namespace BAWGUI.Results.ViewModels
                     IsPanEnabled = true,
                     StringFormat = xAxisFormatString,
                 };
+                timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
                 a.Axes.Add(timeXAxis);
-                //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
                 OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
                 {
                     Position = OxyPlot.Axes.AxisPosition.Left,
@@ -186,7 +205,7 @@ namespace BAWGUI.Results.ViewModels
                     IsZoomEnabled = true,
                     IsPanEnabled = true
                 };
-                //frequencyYAxis.AxisChanged += FrequencyYAxis_AxisChanged;
+                yAxis.AxisChanged += YAxis_AxisChanged;
 
                 double axisMax = detector.SparseSignals.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
                 double axisMin = detector.SparseSignals.Min(x => x.GetMinOfMinimum()) - (double)0.1;
@@ -215,6 +234,9 @@ namespace BAWGUI.Results.ViewModels
                         newSeries.Points.Add(new DataPoint(rd.TimeStampNumber[i], rd.Maximum[i]));
                         newSeries.Points2.Add(new DataPoint(rd.TimeStampNumber[i], rd.Minimum[i]));
                     }
+                    newSeries.Title = rd.SignalName;
+                    newSeries.MouseMove += RdSparseSeries_MouseMove;
+                    newSeries.MouseDown += RdSparseSeries_MouseDown;
                     //if (ocur == SelectedOccurrence)
                     //{
                     //    newSeries.StrokeThickness = 10;
@@ -244,19 +266,517 @@ namespace BAWGUI.Results.ViewModels
                 //}
 
                 a.LegendPlacement = LegendPlacement.Outside;
-                a.LegendPosition = LegendPosition.TopRight;
+                a.LegendPosition = LegendPosition.RightMiddle;
                 a.LegendPadding = 0.0;
                 a.LegendSymbolMargin = 0.0;
                 a.LegendMargin = 0;
+
                 var currentArea = a.LegendArea;
                 var currentPlotWithAxis = a.PlotAndAxisArea;
 
                 var currentMargins = a.PlotMargins;
-                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 80, currentMargins.Bottom);
+                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
                 aPlot.SparsePlotModel = a;
                 rdPlots.Add(aPlot);
             }
-            RDPlotModels = rdPlots;
+            RDSparsePlotModels = rdPlots;
+        }
+
+        private void RdSparseSeries_MouseDown(object sender, OxyMouseDownEventArgs e)
+        {
+            var s = (OxyPlot.Series.AreaSeries)sender;
+            Console.WriteLine(s.Title + "clicked");
+        }
+
+        private void RdSparseSeries_MouseMove(object sender, OxyMouseEventArgs e)
+        {
+            var s = (OxyPlot.Series.AreaSeries)sender;
+            Console.WriteLine(s.Title + "moved");
+        }
+
+        private void YAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            var yAxis = sender as OxyPlot.Axes.LinearAxis;
+            foreach (var plot in RDSparsePlotModels)
+            {
+                foreach (var axis in plot.SparsePlotModel.Axes)
+                {
+                    if (axis.IsVertical() && axis.ActualMinimum != yAxis.ActualMinimum)
+                    {
+                        axis.Zoom(yAxis.ActualMinimum, yAxis.ActualMaximum);
+                        plot.SparsePlotModel.InvalidatePlot(false);
+                        break;
+                    }
+                }
+
+            }
+            Console.WriteLine("frequency axis changed! do stuff!" + yAxis.ActualMaximum.ToString() + ", " + yAxis.ActualMinimum.ToString());
+        }
+
+        private void TimeXAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            var xAxis = sender as OxyPlot.Axes.DateTimeAxis;
+            SelectedStartTime = DateTime.FromOADate(xAxis.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss");
+            SelectedEndTime = DateTime.FromOADate(xAxis.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
+            foreach (var plot in RDSparsePlotModels)
+            {
+                //OxyPlot.Axes.DateTimeAxis oldAxis = null;
+                foreach (var axis in plot.SparsePlotModel.Axes)
+                {
+                    if (axis.IsHorizontal() && axis.ActualMinimum != xAxis.ActualMinimum)
+                    {
+                        //oldAxis = axis as OxyPlot.Axes.DateTimeAxis;
+                        axis.Zoom(xAxis.ActualMinimum, xAxis.ActualMaximum);
+                        //axis.Maximum = xAxis.ActualMaximum;
+                        plot.SparsePlotModel.InvalidatePlot(false);
+                        break;
+                    }                    
+                }
+                //if (oldAxis!=null)
+                //{
+                //    plot.SparsePlotModel.Axes.Remove(oldAxis);
+                //    var newAxis = xAxis;
+                //    plot.SparsePlotModel.Axes.Add(newAxis);
+                //    plot.SparsePlotModel.InvalidatePlot(false);
+                //}
+
+            }
+            Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
+        }
+
+        public ICommand RunSparseMode { get; set; }
+        private void _runSparseMode(object obj)
+        {
+            if (File.Exists(_configFilePath))
+            {
+                try
+                {
+                    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, _configFilePath, "Ringdown");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Configuration file not found.", "Error!", MessageBoxButton.OK);
+            }
+        }
+
+        public ICommand RingdownReRun { get; set; }
+        private void _ringdownRerun(object obj)
+        {
+            string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTestRD\";
+            var controlPath = RunPath + "ControlRerun\\";
+            //first stop background normal run if any
+            //start rerun in background
+            if (File.Exists(_configFilePath))
+            {
+                try
+                {
+                    _engine.RDReRunCompletedEvent += _rDReRunCompleted;
+                    _engine.RingDownRerun(SelectedStartTime, SelectedEndTime, _configFilePath, controlPath);
+                    //ReRunResult = _engine.RDReRunResults;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Configuration file not found. Cannot re-run Ringdown", "Error!", MessageBoxButton.OK);
+            }
+        }
+
+        private void _rDReRunCompleted(object sender, List<RingdownDetector> e)
+        {
+            ReRunResult = e;
+        }
+
+        private string _configFilePath;
+        public string ConfigFilePath
+        {
+            get { return _configFilePath; }
+            set
+            {
+                _configFilePath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<RingdownDetector> _reRunResult;
+        public List<RingdownDetector> ReRunResult
+        {
+            get { return _reRunResult; }
+            set
+            {
+                _reRunResult = value;
+                _drawRDReRunPlots();
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<RDreRunPlot> _rdReRunPlotModels;
+        public ObservableCollection<RDreRunPlot> RdReRunPlotModels
+        {
+            get { return _rdReRunPlotModels; }
+            set
+            {
+                _rdReRunPlotModels = value;
+                OnPropertyChanged();
+            }
+        }
+        private void _drawRDReRunPlots()
+        {
+            var rdPlots = new ObservableCollection<RDreRunPlot>();
+            foreach (var detector in ReRunResult)
+            {
+                var aDetector = new RDreRunPlot();
+                aDetector.Label = detector.Label;
+                var allSignalsPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+                //{ PlotAreaBackground = OxyColors.WhiteSmoke}
+                //a.PlotType = PlotType.Cartesian;
+                var xAxisFormatString = "";
+                var startTime = detector.RingdownSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                var endTime = detector.RingdownSignals.Max(x => x.TimeStamps.LastOrDefault());
+                var time = endTime - startTime;
+                if (time < TimeSpan.FromHours(24))
+                {
+                    xAxisFormatString = "HH:mm";
+                }
+                else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+                {
+                    xAxisFormatString = "MM/dd\nHH:mm";
+                }
+                else
+                {
+                    xAxisFormatString = "MM/dd";
+                }
+                OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    //Title = "Time",
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true,
+                    StringFormat = xAxisFormatString,
+                };
+                //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+                allSignalsPlot.Axes.Add(timeXAxis);
+                OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left,
+                    Title = detector.Type + "( " + detector.Unit + " )",
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true
+                };
+                //yAxis.AxisChanged += YAxis_AxisChanged;
+
+                double axisMax = detector.RingdownSignals.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
+                double axisMin = detector.RingdownSignals.Min(x => x.GetMinOfMinimum()) - (double)0.1;
+                if (ReRunResult.Count > 0)
+                {
+                    yAxis.Maximum = axisMax;
+                    yAxis.Minimum = axisMin;
+                }
+                allSignalsPlot.Axes.Add(yAxis);
+                //var categoryAxis = new CategoryAxis { Position = AxisPosition.Left };
+                //a.DefaultColors = OxyPalettes.BlueWhiteRed(FilteredResults.Count).Colors;
+                //int index = 0;
+                //a.DefaultColors.Clear();
+                //var alarmSeries = new OxyPlot.Series.ScatterSeries() { MarkerType = MarkerType.Circle, MarkerFill = OxyColors.Red, MarkerSize = 4, Title = "Alarms", ColorAxisKey = null };
+                //var trackerKey = 0;
+                foreach (var rd in detector.RingdownSignals)
+                {
+                    //OxyColor eventColor = _mapFrequencyToColor(fo.TypicalFrequency);
+                    //a.DefaultColors.Add(eventColor);
+                    //foreach (var ocur in fo.FilteredOccurrences)
+                    //{
+                    //var newSeries = new LineSeries { Title = fo.Label };
+                    var newSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColor.FromArgb(50, 0, 150, 0)};
+                    for (int i = 0; i < rd.Data.Count; i++)
+                    {
+                        newSeries.Points.Add(new DataPoint(rd.TimeStampNumber[i], rd.Data[i]));
+                        //newSeries.Points2.Add(new DataPoint(rd.TimeStampNumber[i], rd.Data[i]));
+                    }
+                    newSeries.Title = rd.SignalName;
+                    newSeries.TrackerKey = rd.Label;
+                    //newSeries.MouseMove += RdReRunSeries_MouseMove;
+                    newSeries.MouseDown += RdReRunSeries_MouseDown;
+                    //if (ocur == SelectedOccurrence)
+                    //{
+                    //    newSeries.StrokeThickness = 10;
+                    //}
+                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
+                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
+                    allSignalsPlot.Series.Add(newSeries);
+                    //ocur.trackerKey = trackerKey;
+                    //trackerKey++;
+                    //newSeries.MouseDown += foEvent_MouseDown;
+                    //if (ocur.Alarm == "YES")
+                    //{
+                    //    var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency, 4, 0);
+                    //    var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency, 4, 0);
+                    //    alarmSeries.Points.Add(startPoint);
+                    //    alarmSeries.Points.Add(endPoint);
+                    //}
+                    //}
+                    var aSignalPlotModel = _drawARDSignal(rd);
+                    var aNewPair = new PlotModelThumbnailPair();
+                    var pngExporter = new PngExporter { Width = 600, Height = 400, Background = OxyColors.WhiteSmoke };
+                    aSignalPlotModel.RdThresholdRMSPlotModel.IsLegendVisible = false;
+                    aSignalPlotModel.RdThresholdRMSPlotModel.TitleFontSize = 24;
+                    aSignalPlotModel.RdThresholdRMSPlotModel.TitleFontWeight = 16;
+                    var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.RdThresholdRMSPlotModel); //bitmapsource object
+                    aNewPair.Label = rd.SignalName;
+                    aNewPair.Thumbnail = _resizeBitmapSource(bitmapSource, 80d);
+                    aSignalPlotModel.RdThresholdRMSPlotModel.IsLegendVisible = true;
+                    aNewPair.SignalPlotModelPair = aSignalPlotModel;
+                    aDetector.ThumbnailPlots.Add(aNewPair);
+                    //aDetector.RDSignalPlotModels.Add(aSignalPlotModel);
+
+                }
+                //a.Series.Add(alarmSeries);
+                //if (a.DefaultColors.Count > 0)
+                //{
+                //    a.DefaultColors.Add(_mapFrequencyToColor(axisMax));
+                //    a.DefaultColors.Add(_mapFrequencyToColor(axisMin));
+                //    a.Axes.Add(new LinearColorAxis { Palette = new OxyPalette(a.DefaultColors.OrderBy(x => x.G)), Position = AxisPosition.Right, Minimum = axisMin, Maximum = axisMax, Title = "Frequency (Hz)", MajorStep = 0.2 });
+                //}
+
+                allSignalsPlot.LegendPlacement = LegendPlacement.Outside;
+                allSignalsPlot.LegendPosition = LegendPosition.RightMiddle;
+                allSignalsPlot.LegendPadding = 0.0;
+                allSignalsPlot.LegendSymbolMargin = 0.0;
+                allSignalsPlot.LegendMargin = 0;
+
+                var currentArea = allSignalsPlot.LegendArea;
+                var currentPlotWithAxis = allSignalsPlot.PlotAndAxisArea;
+
+                var currentMargins = allSignalsPlot.PlotMargins;
+                allSignalsPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                aDetector.RDreRunPlotModel = allSignalsPlot;
+                rdPlots.Add(aDetector);
+            }
+            RdReRunPlotModels = rdPlots;
+        }
+
+        private BitmapSource _resizeBitmapSource(BitmapSource bitmapSource, double v1)
+        {
+            var w = bitmapSource.PixelWidth;
+            //var h = bitmapSource.PixelHeight;
+            var scale = v1 / w;
+            WriteableBitmap writable = new WriteableBitmap(new TransformedBitmap(bitmapSource, new ScaleTransform(scale, scale)));
+            writable.Freeze();
+            return writable;
+        }
+
+        private void RdReRunSeries_MouseDown(object sender, OxyMouseDownEventArgs e)
+        {
+            var s = (OxyPlot.Series.LineSeries)sender;
+            var signalLabel = s.TrackerKey;
+            var detectorLabel = signalLabel.Split('s')[0];
+            foreach (var detector in ReRunResult)
+            {
+                if (detector.Label == detectorLabel)
+                {
+                    foreach (var signal in detector.RingdownSignals)
+                    {
+                        if (signal.Label == signalLabel)
+                        {
+                            Console.WriteLine(s.Title + "found");
+                            //_drawARDSignal(signal);
+                        }
+                    }
+                }
+            }
+        }
+
+        private DataThresholdRMSPlotModelPair _drawARDSignal(RingdownSignal signal)
+        {
+            var aNewPair = new DataThresholdRMSPlotModelPair();
+            var aSignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke, Title = signal.SignalName };
+            var xAxisFormatString = "";
+            var startTime = signal.TimeStamps.FirstOrDefault();
+            var endTime = signal.TimeStamps.LastOrDefault();
+            var time = endTime - startTime;
+            if (time < TimeSpan.FromHours(24))
+            {
+                xAxisFormatString = "HH:mm";
+            }
+            else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+            {
+                xAxisFormatString = "MM/dd\nHH:mm";
+            }
+            else
+            {
+                xAxisFormatString = "MM/dd";
+            }
+            OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Bottom,
+                MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true,
+                StringFormat = xAxisFormatString,
+            };
+            //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+            aSignalPlot.Axes.Add(timeXAxis);
+            OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Left,
+                Title = signal.Type + "( " + signal.Unit + " )",
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true
+            };
+            aSignalPlot.Axes.Add(yAxis);
+            var dataSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2};
+            for (int i = 0; i < signal.Data.Count; i++)
+            {
+                dataSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.Data[i]));
+            }
+            dataSeries.Title = "Data";
+            aSignalPlot.Series.Add(dataSeries);
+            //var thresholdSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2};
+            //for (int i = 0; i < signal.Threshold.Count; i++)
+            //{
+            //    thresholdSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.Threshold[i]));
+            //}
+            //thresholdSeries.Title = "Threshold";
+            //aSignalPlot.Series.Add(thresholdSeries);
+            //var rmsSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2};
+            //for (int i = 0; i < signal.TestStatistic.Count; i++)
+            //{
+            //    rmsSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.TestStatistic[i]));
+            //}
+            //rmsSeries.Title = "Test Statistic";
+            //aSignalPlot.Series.Add(rmsSeries);
+            aSignalPlot.LegendPlacement = LegendPlacement.Outside;
+            aSignalPlot.LegendPosition = LegendPosition.RightMiddle;
+            aSignalPlot.LegendPadding = 0.0;
+            aSignalPlot.LegendSymbolMargin = 0.0;
+            aSignalPlot.LegendMargin = 0;
+
+            var currentArea = aSignalPlot.LegendArea;
+            var currentPlotWithAxis = aSignalPlot.PlotAndAxisArea;
+
+            var currentMargins = aSignalPlot.PlotMargins;
+            aSignalPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+
+            aNewPair.RDSignalPlotModel = aSignalPlot;
+
+            var aThresholdRMSPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke, Title = signal.SignalName };
+            //xAxisFormatString = "";
+            //startTime = signal.TimeStamps.FirstOrDefault();
+            //endTime = signal.TimeStamps.LastOrDefault();
+            //time = endTime - startTime;
+            //if (time < TimeSpan.FromHours(24))
+            //{
+            //    xAxisFormatString = "HH:mm";
+            //}
+            //else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+            //{
+            //    xAxisFormatString = "MM/dd\nHH:mm";
+            //}
+            //else
+            //{
+            //    xAxisFormatString = "MM/dd";
+            //}
+            OxyPlot.Axes.DateTimeAxis timeXAxis2 = new OxyPlot.Axes.DateTimeAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Bottom,
+                MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true,
+                StringFormat = xAxisFormatString,
+            };
+            //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+            aThresholdRMSPlot.Axes.Add(timeXAxis2);
+            OxyPlot.Axes.LinearAxis yAxis2 = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Left,
+                Title = signal.Type + "( " + signal.Unit + " )",
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true
+            };
+            aThresholdRMSPlot.Axes.Add(yAxis2);
+            //var dataSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+            //for (int i = 0; i < signal.Data.Count; i++)
+            //{
+            //    dataSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.Data[i]));
+            //}
+            //dataSeries.Title = "Data";
+            //aSignalPlot.Series.Add(dataSeries);
+            var thresholdSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+            for (int i = 0; i < signal.Threshold.Count; i++)
+            {
+                thresholdSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.Threshold[i]));
+            }
+            thresholdSeries.Title = "Threshold";
+            aThresholdRMSPlot.Series.Add(thresholdSeries);
+            var rmsSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+            for (int i = 0; i < signal.TestStatistic.Count; i++)
+            {
+                rmsSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.TestStatistic[i]));
+            }
+            rmsSeries.Title = "Test Statistic";
+            aThresholdRMSPlot.Series.Add(rmsSeries);
+            aThresholdRMSPlot.LegendPlacement = LegendPlacement.Outside;
+            aThresholdRMSPlot.LegendPosition = LegendPosition.RightMiddle;
+            aThresholdRMSPlot.LegendPadding = 0.0;
+            aThresholdRMSPlot.LegendSymbolMargin = 0.0;
+            aThresholdRMSPlot.LegendMargin = 0;
+
+            currentArea = aThresholdRMSPlot.LegendArea;
+            currentPlotWithAxis = aThresholdRMSPlot.PlotAndAxisArea;
+
+            currentMargins = aThresholdRMSPlot.PlotMargins;
+            aThresholdRMSPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+
+
+            aNewPair.RdThresholdRMSPlotModel = aThresholdRMSPlot;
+
+            return aNewPair;
+        }
+
+        private void RdReRunSeries_MouseMove(object sender, OxyMouseEventArgs e)
+        {
+            var s = (OxyPlot.Series.LineSeries)sender;
+            Console.WriteLine(s.Title + "moved");
+        }
+
+        public ICommand CancelRingdownReRun { get; set; }
+        private void _cancelRDReRun(object obj)
+        {
+            string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTestRD\";
+            var controlPath = RunPath + "ControlRerun\\";
+            _engine.CancelRDReRun(controlPath);
+            //MessageBox.Show("method is not implemented yet!!!", "ERROR!", MessageBoxButton.OK);
         }
     }
 }

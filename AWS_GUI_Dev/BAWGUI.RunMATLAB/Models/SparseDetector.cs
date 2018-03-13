@@ -8,6 +8,7 @@ namespace BAWGUI.RunMATLAB.Models
 {
     public class SparseDetector
     {
+        public string Label;
         public SparseDetector()
         {
             _sparseSignals = new List<SparseSignal>();

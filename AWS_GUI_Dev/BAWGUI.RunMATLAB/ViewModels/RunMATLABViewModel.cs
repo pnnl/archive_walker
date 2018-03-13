@@ -9,6 +9,7 @@ using System.Windows.Input;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using System.Threading;
+using System.IO;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -20,9 +21,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _initialConfigFilePath = "";
             OpenConfigFile = new RelayCommand(_openConfigFile);
             RunArchiveWalkerNormal = new RelayCommand(_runAWNormal);
+            PauseArchiveWalkerNormal = new RelayCommand(_pauseArchiveWalkerNormal);
+            ResumeArchiveWalkerNormal = new RelayCommand(_resumeArchiveWalkerNormal);
+            StopArchiveWalkerNormal = new RelayCommand(_stopArchiveWalkerNormal);
+            BrowseResultsStorage = new RelayCommand(_browseResultsStorage);
             _engine = MatLabEngine.Instance;
-            //_isNormalModeRunning = false;
         }
+
         private string _configFileName;
         public string ConfigFileName
         {
@@ -39,61 +44,28 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             get { return _engine; }
         }
-        //private bool _isNormalModeRunning;
-        public bool IsNormalModeRunning
-        {
-            get { return Engine.IsMatlabEngineRunning; }
-            set
-            {
-                Engine.IsMatlabEngineRunning = value;
-                OnPropertyChanged();
-            }
-        }
-        private readonly BackgroundWorker _worker = new BackgroundWorker();
-        private void _runNormalMode(object sender, DoWorkEventArgs e)
-        {
-            if (Thread.CurrentThread.Name == null)
-            {
-                Thread.CurrentThread.Name = "normalRunThread";
-            }
-            var controlPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\";
-            var runFlag = controlPath + "RunFlag.txt";
-            if (!System.IO.File.Exists(runFlag))
-            {
-                System.IO.FileStream fs = System.IO.File.Create(runFlag);
-                fs.Close();
-            }
-            IsNormalModeRunning = true;
-            _engine.RunNormalMode(controlPath, ConfigFileName);
-        }
+
+        string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTestRD\";
         public ICommand RunArchiveWalkerNormal { get; set; }
         private void _runAWNormal(object obj)
         {
-            try
+            if (File.Exists(ConfigFileName))
             {
-                _worker.DoWork += _runNormalMode;
-                _worker.ProgressChanged += _worker_ProgressChanged;
-                _worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
-                _worker.WorkerReportsProgress = true;
-                _worker.WorkerSupportsCancellation = true;
-                _worker.RunWorkerAsync();
-                //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
-                //t1.Start();
+                var controlPath = RunPath + "ControlRun\\";
+                System.IO.Directory.CreateDirectory(controlPath);
+                try
+                {
+                    Engine.RuNormalModeByBackgroundWorker(controlPath, ConfigFileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
-            }  
-        }
-
-        private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            IsNormalModeRunning = false;
-        }
-
-        private void _worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //throw new NotImplementedException();
+                MessageBox.Show("Config file does not exist. Please specify a valid config file.", "Error!", MessageBoxButtons.OK);
+            }
         }
 
         public ICommand OpenConfigFile { get; set; }
@@ -115,12 +87,61 @@ namespace BAWGUI.RunMATLAB.ViewModels
             if (result == DialogResult.OK)
             {
                 ConfigFileName = openFileDialog.FileName;
-                _initialConfigFilePath = openFileDialog.InitialDirectory;
+                _initialConfigFilePath = Path.GetDirectoryName(ConfigFileName); ;
             }
         }
-        //public void RingDownRerun(string start, string end, string configFile)
-        //{
 
-        //}
+        public ICommand PauseArchiveWalkerNormal { get; set; }
+        public ICommand ResumeArchiveWalkerNormal { get; set; }
+        public ICommand StopArchiveWalkerNormal { get; set; }
+        private void _stopArchiveWalkerNormal(object obj)
+        {
+            try
+            {
+                _engine.StopMatlabNormalRun();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in stop matlab normal run: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+        }
+        private void _pauseArchiveWalkerNormal(object obj)
+        {
+            _engine.PauseMatlabNormalRun();
+        }
+        private void _resumeArchiveWalkerNormal(object obj)
+        {
+            var pauseFlag = RunPath + "ControlRun\\PauseFlag.txt";
+            File.Delete(pauseFlag);
+            _runAWNormal(obj);
+            //_engine.IsNormalRunPaused = false;
+        }
+
+
+        private string _resultsStoragePath;
+        public string ResultsStoragePath
+        {
+            get { return _resultsStoragePath; }
+            set
+            {
+                _resultsStoragePath = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand BrowseResultsStorage { get; set; }
+        private void _browseResultsStorage(object obj)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    ResultsStoragePath = fbd.SelectedPath;
+                    string[] files = Directory.GetFiles(ResultsStoragePath);
+                }
+            }
+        }
+
     }
 }

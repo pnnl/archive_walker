@@ -104,8 +104,10 @@
     <Compile Include="ViewModels\ForcedOscillationResultViewModel.cs" />
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
     <Compile Include="ViewModels\RDChannelViewModel.cs" />
+    <Compile Include="ViewModels\RDReRunPlotsViewModels.cs" />
     <Compile Include="ViewModels\RingdownEventViewModel.cs" />
     <Compile Include="ViewModels\SparsePlot.cs" />
+    <Compile Include="ViewModels\ViewResolvingPlotModel.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
       <DependentUpon>AvailableDates.xaml</DependentUpon>
     </Compile>
@@ -138,6 +140,15 @@
     </Compile>
     <Compile Include="Views\RDEventPlot.xaml.cs">
       <DependentUpon>RDEventPlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RDReRunPlotView.xaml.cs">
+      <DependentUpon>RDReRunPlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RDSparsePlotView.xaml.cs">
+      <DependentUpon>RDSparsePlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RDReRunPlot.xaml.cs">
+      <DependentUpon>RDReRunPlot.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ResultsTabControl.xaml.cs">
       <DependentUpon>ResultsTabControl.xaml</DependentUpon>
@@ -203,6 +214,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RDEventPlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RDReRunPlotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RDSparsePlotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RDReRunPlot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

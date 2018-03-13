@@ -7,9 +7,15 @@ using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using BAWSengine;
 using BAWGUI.RunMATLAB.Models;
+using System.ComponentModel;
+using System.Threading;
+using System.IO;
+using System.Windows.Forms;
+using System.Windows.Input;
 
+[assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
-{
+{ 
     public class MatLabEngine:ViewModelBase
     {
         private static readonly MatLabEngine _instance = new MatLabEngine();
@@ -24,23 +30,39 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
             }
         }
+        private bool _isNormalRunPaused;
+        public bool IsNormalRunPaused
+        {
+            get { return _isNormalRunPaused; }
+            set
+            {
+                _isNormalRunPaused = value;
+                OnPropertyChanged();
+            }
+        }
         private string _controlPath;
         public string ControlPath
         {
             get { return _controlPath; }
             //set { _controlPath = value; }
         }
+        private string _configFilePath;
+        public string ConfigFilePath
+        {
+            get { return _configFilePath; }
+        }
         private MatLabEngine()
         {
             _isMatlabEngineRunning = false;
+            _isNormalRunPaused = false;
             try
             {
                 //_matlabEngine = new BAWSengine.GUI2MAT();
                 _matlabEngine = new BAWSengine2.GUI2MAT();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
+                throw ex;
             }
         }
         public static MatLabEngine Instance
@@ -52,101 +74,142 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         //private BAWSengine.GUI2MAT _matlabEngine;
         private BAWSengine2.GUI2MAT _matlabEngine;
-        public void RunNormalMode(string controlPath, string configFile)
+        //public void RunNormalMode(string controlPath, string configFile)
+        //{
+        //    _controlPath = controlPath;
+        //    IsMatlabEngineRunning = true;
+        //    _matlabEngine.RunNormalMode(controlPath, configFile);
+        //    //TODO: ????????????maybe check if run flag exist, if yes, delete it.??????????????????
+        //    IsMatlabEngineRunning = false;
+        //}
+        public void RingDownRerun(string start, string end, string configFilename, string controlPath)
         {
-            _controlPath = controlPath;
-            IsMatlabEngineRunning = true;
-            _matlabEngine.RunNormalMode(controlPath, configFile);
-            //TODO: ????????????maybe check if run flag exist, if yes, delete it.??????????????????
-            IsMatlabEngineRunning = false;
-        }
-        public void RingDownRerun(string start, string end, string configFile)
-        {
-            int size = 0;
-            int numberOfelements = 0;
-            MWStructArray RingdownRerun = (MWStructArray)_matlabEngine.RerunRingdown(start, end, configFile);
-            numberOfelements = RingdownRerun.NumberOfElements;
-            for (int index = 1; index <= numberOfelements; index++)
+
+            if (IsMatlabEngineRunning)
             {
-                Console.WriteLine("\nelement: " + index.ToString());
-                MWNumericArray arr = (MWNumericArray)RingdownRerun["t", index];
-                double[] t = (double[])(arr.ToVector(MWArrayComponent.Real));
-                int[] dimEach = arr.Dimensions;
-                Console.WriteLine("\tt array dimension is: " + dimEach[0].ToString() + " X " + dimEach[1].ToString());
-                size = t.Length;
-                //Console.WriteLine("first in t: " + _numbTimeConvert(t[0]) + " last in t: " + _numbTimeConvert(t[size - 1]));
-                arr = (MWNumericArray)RingdownRerun["Data", index];
-                double[] Data = (double[])arr.ToVector(MWArrayComponent.Real);
-                dimEach = arr.Dimensions;
-                if (dimEach.Length != 2)
+                //Here the running engine could be running a rerun instead of the normal run,
+                //need to talk to Jim as how to distinguish normal or rerun,
+                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+            IsNormalRunPaused = false;
+            _controlPath = controlPath;
+            _configFilePath = configFilename;
+
+
+            try
+            {
+                //_worker.DoWork += _runNormalMode;
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRDReRunMode);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerRDReRun_RunWorkerCompleted;
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
                 {
-                    Console.WriteLine("matrix dimension out of range.");
+                    Thread.Sleep(500);
                 }
-                size = dimEach[0];
-                Console.WriteLine("\tdata array dimension is: " + dimEach[0].ToString() + " X " + dimEach[1].ToString());
-                //for (int signalCount = 0; signalCount < dimEach[1]; signalCount++)
-                //{
-                //    Console.WriteLine("\nChannel " + (signalCount + 1).ToString() + ": first in Data: " + Data[signalCount * dimEach[0]].ToString() + ", last in Data: " + Data[(signalCount + 1) * dimEach[0] - 1].ToString());
-                //}
-                arr = (MWNumericArray)RingdownRerun["RMS", index];
-                double[] RMS = (double[])arr.ToVector(MWArrayComponent.Real);
-                dimEach = arr.Dimensions;
-                if (dimEach.Length != 2)
-                {
-                    Console.WriteLine("matrix dimension out of range.");
-                }
-                size = dimEach[0];
-                Console.WriteLine("\tRMS array dimension is: " + dimEach[0].ToString() + " X " + dimEach[1].ToString());
-                //for (int signalCount = 0; signalCount < dimEach[1]; signalCount++)
-                //{
-                //    Console.WriteLine("\nChannel " + (signalCount + 1).ToString() + ": first in Data: " + RMS[signalCount * dimEach[0]].ToString() + ", last in Data: " + RMS[(signalCount + 1) * dimEach[0] - 1].ToString());
-                //}
-                arr = (MWNumericArray)RingdownRerun["Threshold", index];
-                double[] Threshold = (double[])arr.ToVector(MWArrayComponent.Real);
-                dimEach = arr.Dimensions;
-                if (dimEach.Length != 2)
-                {
-                    Console.WriteLine("matrix dimension out of range.");
-                }
-                size = dimEach[0];
-                Console.WriteLine("\tThreshold array dimension is: " + dimEach[0].ToString() + " X " + dimEach[1].ToString());
-                //for (int signalCount = 0; signalCount < dimEach[1]; signalCount++)
-                //{
-                //    Console.WriteLine("\nChannel " + (signalCount + 1).ToString() + ": first in Data: " + Threshold[signalCount * dimEach[0]].ToString() + ", last in Data: " + Threshold[(signalCount + 1) * dimEach[0] - 1].ToString());
-                //}
-                List<string> DataPMU = new List<string>();
-                foreach (char[,] item in ((MWCellArray)RingdownRerun["DataPMU", index]).ToArray())
-                {
-                    string pmu = "";
-                    foreach (var c in item)
-                    {
-                        pmu = pmu + c.ToString();
-                    }
-                    DataPMU.Add(pmu);
-                }
-                Console.WriteLine("\tthere are " + DataPMU.Count + " PMUs");
-                //Console.WriteLine("first PMU is: " + DataPMU.FirstOrDefault() + ", last PMU is: " + DataPMU.LastOrDefault());
-                List<string> DataChannel = new List<string>();
-                foreach (char[,] item in ((MWCellArray)RingdownRerun["DataChannel", index]).ToArray())
-                {
-                    string channel = "";
-                    foreach (var c in item)
-                    {
-                        channel = channel + c.ToString();
-                    }
-                    DataChannel.Add(channel);
-                }
-                Console.WriteLine("\tthere are " + DataChannel.Count + " channels");
-                //Console.WriteLine("first data channel is: " + DataChannel.FirstOrDefault() + ", last data channel is: " + DataChannel.LastOrDefault());
+                object[] parameters = new object[] { start, end, configFilename, controlPath };
+                worker.RunWorkerAsync(parameters);
+                //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
+                //t1.Start();
+            }
+            catch (Exception ex)
+            {
+                //ex.Message = "Error in running normal mode by background walker." + ex.Message;
+                throw ex;
+            }
+            //return e.RingdownRerunResults.RingdownDetectorList;
+        }
+        //private List<RingdownDetector> _rdReRunResults = new List<RingdownDetector>();
+        //public List<RingdownDetector> RDReRunResults
+        //{
+        //    get { return _rdReRunResults; }
+        //    set
+        //    {
+        //        _rdReRunResults = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+        private void _workerRDReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsMatlabEngineRunning = false;
+            //RDReRunResults = e.Result as List<RingdownDetector>;
+            OnRDReRunCompletedEvent(e.Result as List<RingdownDetector>);
+        }
+
+        private void _runRDReRunMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "RDReRunThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var start = parameters[0] as string;
+            var end = parameters[1] as string;
+            var configFilename = parameters[2] as string;
+            var controlPath = parameters[3] as string;
+
+            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            var runFlag = controlPath + "RunFlag.txt";
+            if (!System.IO.File.Exists(runFlag))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                fs.Close();
             }
 
+            IsMatlabEngineRunning = true;
+            var RingdownRerunResults = new RDRerunResults((MWStructArray)_matlabEngine.RerunRingdown(start, end, configFilename, controlPath));
+            
+            e.Result = RingdownRerunResults.RingdownDetectorList;
         }
+
+        public event EventHandler<List<RingdownDetector>> RDReRunCompletedEvent;
+        protected virtual void OnRDReRunCompletedEvent(List<RingdownDetector> e)
+        {
+            RDReRunCompletedEvent?.Invoke(this, e);
+        }
+        //private void _runRDReRunMode(string start, string end, string configFilename, string controlPath)
+        //{
+        //    if (Thread.CurrentThread.Name == null)
+        //    {
+        //        Thread.CurrentThread.Name = "RDReRunThread";
+        //    }
+        //    start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
+        //    end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+        //    var runFlag = controlPath + "RunFlag.txt";
+        //    if (!System.IO.File.Exists(runFlag))
+        //    {
+        //        System.IO.FileStream fs = System.IO.File.Create(runFlag);
+        //        fs.Close();
+        //    }
+
+        //    IsMatlabEngineRunning = true;
+        //    var RingdownRerunResults = new RDRerunResults((MWStructArray)_matlabEngine.RerunRingdown(start, end, configFilename, controlPath));
+
+        //    IsMatlabEngineRunning = false;
+        //    //return RingdownRerunResults.RingdownDetectorList;
+        //}
+
         public List<SparseDetector> GetSparseData(string start, string end, string configFilePath, string detector)
         {
+            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            if (IsMatlabEngineRunning)
+            {
+                PauseMatlabNormalRun();
+            }
             IsMatlabEngineRunning = true;
-            var sparseR = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, configFilePath, detector));
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+            var sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, configFilePath, detector));
+            Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;
-            return sparseR.SparseDetectorList;
+            //MessageBox.Show("Resuming normal run in the background.", "Notification", MessageBoxButtons.OK);
+            //File.Delete(pauseFlag);
+            //RuNormalModeByBackgroundWorker(ControlPath, ControlPath);
+            return sparseResults.SparseDetectorList;
         }
         //private System.DateTime _numbTimeConvert(double item)
         //{
@@ -154,6 +217,170 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    System.DateTime bbb = dtDateTime.AddSeconds((item - 367) * 86400);
         //    return bbb;
         //}
+        //public void RuNormalModeByBackgroundWalker()
+        //{
+        //    _runNormalModeByBackgroundWalker();
+        //}
+        public BackgroundWorker worker = new BackgroundWorker();
+        //private void _runNormalMode(object sender, DoWorkEventArgs e)
+        //{
+        //    if (Thread.CurrentThread.Name == null)
+        //    {
+        //        Thread.CurrentThread.Name = "normalRunThread";
+        //    }
+        //    //var controlPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTest\";
+        //    var runFlag = controlPath + "RunFlag.txt";
+        //    if (!System.IO.File.Exists(runFlag))
+        //    {
+        //        System.IO.FileStream fs = System.IO.File.Create(runFlag);
+        //        fs.Close();
+        //    }
+        //    IsMatlabEngineRunning = true;
+        //    RunNormalMode(controlPath, ConfigFileName);
+        //    IsMatlabEngineRunning = true;
+        //    _matlabEngine.RunNormalMode(controlPath, configFile);
+        //    //TODO: ????????????maybe check if run flag exist, if yes, delete it.??????????????????
+        //    IsMatlabEngineRunning = false;
+        //}
+        public void RuNormalModeByBackgroundWorker(string controlPath, string configFilename)
+        {
+            worker = new BackgroundWorker();
+            IsNormalRunPaused = false;
+            _controlPath = controlPath;
+            _configFilePath = configFilename;
+            try
+            {
+                //_worker.DoWork += _runNormalMode;
+                worker.DoWork += (obj, e) => _runNormalMode(controlPath, configFilename);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                worker.RunWorkerAsync();
+                //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
+                //t1.Start();
+            }
+            catch (Exception ex)
+            {
+                //ex.Message = "Error in running normal mode by background walker." + ex.Message;
+                throw ex;
+            }
+        }
 
+        private void _runNormalMode(string controlPath, string configFilename)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "normalRunThread";
+            }
+            var runFlag = controlPath + "RunFlag.txt";
+            if (!System.IO.File.Exists(runFlag))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                fs.Close();
+            }
+            IsMatlabEngineRunning = true;
+            IsNormalRunPaused = false;
+            try
+            {
+                _matlabEngine.RunNormalMode(controlPath, configFilename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error in running matlab normal mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+            //IsMatlabEngineRunning = false;
+        }
+
+        private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsMatlabEngineRunning = false;
+        }
+
+        private void _worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+        public void StopMatlabNormalRun()
+        {
+            if (IsMatlabEngineRunning||IsNormalRunPaused)
+            {
+                DialogResult dialogResult = MessageBox.Show("Are you sure to stop the matlab engine?", "Warning!", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    IsMatlabEngineRunning = false;
+                    IsNormalRunPaused = false;
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                    System.IO.DirectoryInfo dir = new DirectoryInfo(ControlPath);
+                    try
+                    {
+                        foreach (FileInfo file in dir.GetFiles())
+                        {
+                            file.Delete();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error in deleting files in : " + ControlPath + ".\nOriginal exception message is: " + ex.Message);
+                    }
+                    //var runFlag = ControlPath + "RunFlag.txt";
+                    //File.Delete(runFlag);
+                    while (worker.IsBusy)
+                    {
+                        Application.DoEvents();
+                        System.Threading.Thread.Sleep(500);
+                    }
+                    Mouse.OverrideCursor = null;
+
+                }
+            }
+            else
+            {
+                throw new Exception("Matlab engine is not running.");
+            }
+
+        }
+        public void PauseMatlabNormalRun()
+        {
+            MessageBox.Show("Pausing normal run in the background.", "Notification", MessageBoxButtons.OK);
+            IsNormalRunPaused = true;
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+            var pauseFlag = ControlPath + "PauseFlag.txt";
+            var runFlag = ControlPath + "RunFlag.txt";
+            System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
+            fs.Close();
+            File.Delete(runFlag);
+            while (worker.IsBusy)
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(500);
+            }
+            IsMatlabEngineRunning = false;
+            Mouse.OverrideCursor = null;
+        }
+
+        public void CancelRDReRun(string controlPath)
+        {
+            var result = MessageBox.Show("Cancel Ringdown re-run?", "Warning!", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                var pauseFlag = ControlPath + "PauseFlag.txt";
+                var runFlag = ControlPath + "RunFlag.txt";
+                System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
+                fs.Close();
+                File.Delete(runFlag);
+                while (worker.IsBusy)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(500);
+                }
+                Mouse.OverrideCursor = null;
+            }
+        }
     }
 }

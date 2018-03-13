@@ -7,7 +7,7 @@
         xmlns:results="clr-namespace:BAWGUI.Results;assembly=BAWGUI.Results"
         xmlns:rvm="clr-namespace:BAWGUI.Results.ViewModels;assembly=BAWGUI.Results"
         xmlns:runm="clr-namespace:BAWGUI.RunMATLAB.ViewModels;assembly=BAWGUI.RunMATLAB"
-        xmlns:runv="clr-namespace:BAWGUI.RunMATLAB;assembly=BAWGUI.RunMATLAB"
+        xmlns:runv="clr-namespace:BAWGUI.RunMATLAB.Views;assembly=BAWGUI.RunMATLAB"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized">
     <Window.Resources>
@@ -30,43 +30,61 @@
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
-    <DockPanel>
-        <ToolBar DockPanel.Dock="Top">
-            <!--<Button>
-                <Image Source="..\Resources\NewFile_16x.png"></Image>
-            </Button>
-            <Separator></Separator>-->
-            <!--<Button Command="{Binding OpenFile}">
-                <Image Source="..\Resources\open.gif"></Image>
-            </Button>-->
-            <!--<Button>
-                <Image Source="..\Resources\Save24.png"></Image>
-            </Button>-->
-            <!--<Separator></Separator>-->
-            <!--<Button>
-                <Image Source="..\Resources\Run_16x.png"></Image>
-            </Button>-->
-            <!--<Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}">
-                <Image Source="..\Resources\Settings_16x.png"/>
-            </Button>-->
-            <!--<Button ToolTip="settings" Command="{Binding ToggleResultsSettings}" Content="{Binding CurrentViewName}"/>-->
-            <StackPanel Orientation="Horizontal">
-                <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings"/>
-                <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="True" Command="{Binding MainViewSelected}" CommandParameter="Results"/>
-                <RadioButton Content="Run Control" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Run"/>
-            </StackPanel>
-            
-            <!--<Button ToolTip="Configuration of matlab run" Command="{Binding ShowSettingsView}" Content="Settings" IsEnabled="{Binding IsSettingsEnabled}" Style="{StaticResource {x:Type Button}}" Margin="2"/>
-            <Button ToolTip="Results of matlab run" Command="{Binding ShowResultsView}" Content="Results" IsEnabled="{Binding IsSettingsEnabled, Converter={StaticResource InverseBooleanConverter}}" Style="{StaticResource {x:Type Button}}" Margin="2"/>
-            <Button ToolTip="Control of MATLAB background run" Command="{Binding ShowMATLABrunView}" Content="Run Control" IsEnabled="{Binding IsSettingsEnabled, Converter={StaticResource InverseBooleanConverter}}" Style="{StaticResource {x:Type Button}}" Margin="2"/>-->
-            
-            
-            <!--<Separator></Separator>-->
-            <!--<Label Content="Available Event Dates: " Width="300" HorizontalContentAlignment="Right"/>
-            <ComboBox ItemsSource="{Binding }"/>-->
-        </ToolBar>
-        <ContentControl Content="{Binding CurrentView}"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+    <!--<StackPanel Orientation="Horizontal">-->
+        <Expander ExpandDirection="Right" Grid.Column="0">
+            <Expander.Header>
+                <TextBlock Text="BAWGUI Projects">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="-90"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </Expander.Header>
+            <runv:RunMatlabMainView DataContext="{Binding RunMatlabViewModel}"/>
+        </Expander>
+        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1">
+            <ToolBar DockPanel.Dock="Top">
+                <!--<Button>
+            <Image Source="..\Resources\NewFile_16x.png"></Image>
+        </Button>
+        <Separator></Separator>-->
+                <!--<Button Command="{Binding OpenFile}">
+            <Image Source="..\Resources\open.gif"></Image>
+        </Button>-->
+                <!--<Button>
+            <Image Source="..\Resources\Save24.png"></Image>
+        </Button>-->
+                <!--<Separator></Separator>-->
+                <!--<Button>
+            <Image Source="..\Resources\Run_16x.png"></Image>
+        </Button>-->
+                <!--<Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}">
+            <Image Source="..\Resources\Settings_16x.png"/>
+        </Button>-->
+                <!--<Button ToolTip="settings" Command="{Binding ToggleResultsSettings}" Content="{Binding CurrentViewName}"/>-->
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings"/>
+                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="True" Command="{Binding MainViewSelected}" CommandParameter="Results"/>
+                    <!--<RadioButton Content="Run Control" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Run"/>-->
+                </StackPanel>
+
+                <!--<Button ToolTip="Configuration of matlab run" Command="{Binding ShowSettingsView}" Content="Settings" IsEnabled="{Binding IsSettingsEnabled}" Style="{StaticResource {x:Type Button}}" Margin="2"/>
+        <Button ToolTip="Results of matlab run" Command="{Binding ShowResultsView}" Content="Results" IsEnabled="{Binding IsSettingsEnabled, Converter={StaticResource InverseBooleanConverter}}" Style="{StaticResource {x:Type Button}}" Margin="2"/>
+        <Button ToolTip="Control of MATLAB background run" Command="{Binding ShowMATLABrunView}" Content="Run Control" IsEnabled="{Binding IsSettingsEnabled, Converter={StaticResource InverseBooleanConverter}}" Style="{StaticResource {x:Type Button}}" Margin="2"/>-->
+
+
+                <!--<Separator></Separator>-->
+                <!--<Label Content="Available Event Dates: " Width="300" HorizontalContentAlignment="Right"/>
+        <ComboBox ItemsSource="{Binding }"/>-->
+            </ToolBar>
+            <ContentControl Content="{Binding CurrentView}"/>
+        </DockPanel>
+    <!--</StackPanel>-->
+    </Grid>
 
         <!--<results:ResultsMainView DataContext="{Binding ResultsViewModel}"/>-->
-    </DockPanel>
 </Window>

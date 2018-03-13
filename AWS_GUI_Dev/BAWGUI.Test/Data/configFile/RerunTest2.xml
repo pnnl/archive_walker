@@ -1,0 +1,370 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Config>
+  <DataConfig>
+    <Configuration>
+      <ReaderProperties>
+        <FilePath>
+          <FileDirectory>C:\Users\wang690\Desktop\projects\ArchiveWalker\Alberta tie in-out\Munro</FileDirectory>
+          <FileType>pdat</FileType>
+          <Mnemonic>WISPMunro</Mnemonic>
+        </FilePath>
+        <Mode>
+          <Name>Archive</Name>
+          <Params>
+            <DateTimeStart>2016-08-21 23:45:00 GMT</DateTimeStart>
+            <DateTimeEnd>2016-08-22 00:03:00 GMT</DateTimeEnd>
+          </Params>
+        </Mode>
+      </ReaderProperties>
+      <Stages>
+        <Filter>
+          <Name>PMUflagFilt</Name>
+          <Parameters>
+            <SetToNaN>TRUE</SetToNaN>
+            <FlagBit>1</FlagBit>
+          </Parameters>
+          <PMU>
+            <Name>ALSN 500 B1 SA  </Name>
+          </PMU>
+          <PMU>
+            <Name>ALVY 500 B1 SA  </Name>
+          </PMU>
+          <PMU>
+            <Name>ASHE 500 B1 SA  </Name>
+          </PMU>
+        </Filter>
+      </Stages>
+      <SignalSelection></SignalSelection>
+    </Configuration>
+  </DataConfig>
+  <ProcessConfig>
+    <Configuration>
+      <InitializationPath>C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTest\Init</InitializationPath>
+      <Processing>
+        <Unwrap>
+          <MaxNaN>1</MaxNaN>
+          <PMU>
+            <Name>ALSN 500 B1 SA  </Name>
+            <Channel>
+              <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+            </Channel>
+          </PMU>
+          <PMU>
+            <Name>ALVY 500 B1 SA  </Name>
+            <Channel>
+              <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</Name>
+            </Channel>
+          </PMU>
+        </Unwrap>
+        <Stages>
+          <Filter>
+            <Type>Rational</Type>
+            <Parameters>
+              <Numerator>1,-1</Numerator>
+              <Denominator>1</Denominator>
+              <ZeroPhase>false</ZeroPhase>
+            </Parameters>
+            <PMU>
+              <Name>ALSN 500 B1 SA  </Name>
+              <Channel>
+                <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+              </Channel>
+            </PMU>
+            <PMU>
+              <Name>ALVY 500 B1 SA  </Name>
+              <Channel>
+                <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</Name>
+              </Channel>
+            </PMU>
+          </Filter>
+        </Stages>
+      </Processing>
+      <NameTypeUnit>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <CurrentChannel>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</CurrentChannel>
+          <NewChannel>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</NewChannel>
+          <NewUnit>Hz</NewUnit>
+          <NewType>F</NewType>
+        </PMU>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <CurrentChannel>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</CurrentChannel>
+          <NewChannel>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</NewChannel>
+          <NewUnit>Hz</NewUnit>
+          <NewType>F</NewType>
+        </PMU>
+      </NameTypeUnit>
+      <SignalSelection></SignalSelection>
+    </Configuration>
+  </ProcessConfig>
+  <PostProcessCustomizationConfig>
+    <Configuration>
+      <Stages></Stages>
+    </Configuration>
+  </PostProcessCustomizationConfig>
+  <DetectorConfig>
+    <Configuration>
+      <EventPath>C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTest\Event</EventPath>
+      <ResultUpdateInterval>43</ResultUpdateInterval>
+<!--       <Periodogram>
+        <Mode>MultiChannel</Mode>
+        <AnalysisLength>630</AnalysisLength>
+        <WindowType>rectwin</WindowType>
+        <WindowLength>210</WindowLength>
+        <WindowOverlap>105</WindowOverlap>
+        <Pfa>0.001</Pfa>
+        <FrequencyMin>0.1</FrequencyMin>
+        <FrequencyMax>1</FrequencyMax>
+        <FrequencyTolerance>.05</FrequencyTolerance>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </Periodogram> -->
+      <!--  ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG -->
+ <!--      <Periodogram>
+        <Mode>SingleChannel</Mode>
+        <AnalysisLength>630</AnalysisLength>
+        <WindowType>rectwin</WindowType>
+        <WindowLength>210</WindowLength>
+        <WindowOverlap>105</WindowOverlap>
+        <Pfa>0.001</Pfa>
+        <FrequencyMin>0.1</FrequencyMin>
+        <FrequencyMax>1</FrequencyMax>
+        <FrequencyTolerance>.05</FrequencyTolerance>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </Periodogram>
+      <SpectralCoherence>
+        <Mode>SingleChannel</Mode>
+        <AnalysisLength>60</AnalysisLength>
+        <Delay>10</Delay>
+        <NumberDelays>2</NumberDelays>
+        <ThresholdScale>3</ThresholdScale>
+        <WindowType>rectwin</WindowType>
+        <WindowLength>20</WindowLength>
+        <WindowOverlap>10</WindowOverlap>
+        <FrequencyMin>1</FrequencyMin>
+        <FrequencyMax>5</FrequencyMax>
+        <FrequencyTolerance>.05</FrequencyTolerance>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </SpectralCoherence>
+      <SpectralCoherence>
+        <Mode>SingleChannel</Mode>
+        <AnalysisLength>60</AnalysisLength>
+        <Delay>10</Delay>
+        <NumberDelays>2</NumberDelays>
+        <ThresholdScale>3</ThresholdScale>
+        <WindowType>rectwin</WindowType>
+        <WindowLength>20</WindowLength>
+        <WindowOverlap>10</WindowOverlap>
+        <FrequencyMin>1</FrequencyMin>
+        <FrequencyMax>5</FrequencyMax>
+        <FrequencyTolerance>.05</FrequencyTolerance>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </SpectralCoherence>
+      <SpectralCoherence>
+        <Mode>MultiChannel</Mode>
+        <AnalysisLength>60</AnalysisLength>
+        <Delay>10</Delay>
+        <NumberDelays>2</NumberDelays>
+        <ThresholdScale>3</ThresholdScale>
+        <WindowType>rectwin</WindowType>
+        <WindowLength>20</WindowLength>
+        <WindowOverlap>10</WindowOverlap>
+        <FrequencyMin>1</FrequencyMin>
+        <FrequencyMax>5</FrequencyMax>
+        <FrequencyTolerance>.05</FrequencyTolerance>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </SpectralCoherence> -->
+      <Ringdown>
+        <RMSlength>60</RMSlength>
+        <ForgetFactor>0.9</ForgetFactor>
+        <RingThresholdScale>3</RingThresholdScale>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </Ringdown>
+      <Ringdown>
+        <RMSlength>60</RMSlength>
+        <ForgetFactor>0.9</ForgetFactor>
+        <RingThresholdScale>3</RingThresholdScale>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </Ringdown>
+      <OutOfRangeGeneral>
+        <AverageWindow>60</AverageWindow>
+        <DurationMax>1500</DurationMax>
+        <DurationMin>-1500</DurationMin>
+        <Duration>2</Duration>
+        <AnalysisWindow>10</AnalysisWindow>
+        <RateOfChangeMax>1500</RateOfChangeMax>
+        <RateOfChangeMin>-1500</RateOfChangeMin>
+        <RateOfChange>2000</RateOfChange>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+      </OutOfRangeGeneral>
+      <OutOfRangeGeneral>
+        <AverageWindow>60</AverageWindow>
+        <DurationMax>1500</DurationMax>
+        <DurationMin>-1500</DurationMin>
+        <Duration>2</Duration>
+        <AnalysisWindow>10</AnalysisWindow>
+        <RateOfChangeMax>1500</RateOfChangeMax>
+        <RateOfChangeMin>-1500</RateOfChangeMin>
+        <RateOfChange>2000</RateOfChange>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+          </Channel>
+        </PMU>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .L500DIXONVLL_1VP.MAG</Name>
+          </Channel>
+        </PMU>
+      </OutOfRangeGeneral>
+      <OutOfRangeFrequency>
+        <AverageWindow>60</AverageWindow>
+        <DurationMax>.05</DurationMax>
+        <DurationMin>-.05</DurationMin>
+        <Duration>2</Duration>
+        <AnalysisWindow>10</AnalysisWindow>
+        <RateOfChangeMax>.08</RateOfChangeMax>
+        <RateOfChangeMin>-.08</RateOfChangeMin>
+        <RateOfChange>.02</RateOfChange>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .frq</Name>
+          </Channel>
+        </PMU>
+      </OutOfRangeFrequency>
+      <OutOfRangeFrequency>
+        <AverageWindow>60</AverageWindow>
+        <DurationMax>.05</DurationMax>
+        <DurationMin>-.05</DurationMin>
+        <Duration>2</Duration>
+        <AnalysisWindow>10</AnalysisWindow>
+        <RateOfChangeMax>.08</RateOfChangeMax>
+        <RateOfChangeMin>-.08</RateOfChangeMin>
+        <RateOfChange>.02</RateOfChange>
+        <PMU>
+          <Name>ALVY 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALVY 500 B1 SA  .frq</Name>
+          </Channel>
+        </PMU>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .frq</Name>
+          </Channel>
+        </PMU>
+      </OutOfRangeFrequency>
+      <WindRamp>
+        <Fpass>.03</Fpass>
+        <Fstop>.05</Fstop>
+        <Apass>1</Apass>
+        <Astop>60</Astop>
+        <ValMin>50</ValMin>
+        <TimeMin>50</TimeMin>
+        <ValMax>300</ValMax>
+        <TimeMax>300</TimeMax>
+        <PMU>
+          <Name>ALSN 500 B1 SA  </Name>
+          <Channel>
+            <Name>ALSN 500 B1 SA  .A500NAPAVINE_1MW</Name>
+          </Channel>
+        </PMU>
+      </WindRamp>
+      <Alarming>
+        <Periodogram>
+          <SNRalarm>0</SNRalarm>
+          <SNRmin>-10</SNRmin>
+          <TimeMin>90</TimeMin>
+          <SNRcorner>-5</SNRcorner>
+          <TimeCorner>120</TimeCorner>
+        </Periodogram>
+        <SpectralCoherence>
+          <CoherenceAlarm>.9</CoherenceAlarm>
+          <CoherenceMin>.7</CoherenceMin>
+          <TimeMin>90</TimeMin>
+          <CoherenceCorner>.8</CoherenceCorner>
+          <TimeCorner>120</TimeCorner>
+        </SpectralCoherence>
+        <Ringdown>
+          <MaxDuration>60</MaxDuration>
+        </Ringdown>
+      </Alarming>
+    </Configuration>
+  </DetectorConfig>
+    <WindAppConfig>
+        <Configuration></Configuration>
+    </WindAppConfig>
+</Config>

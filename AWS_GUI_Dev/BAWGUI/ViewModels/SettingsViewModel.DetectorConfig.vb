@@ -195,7 +195,9 @@ Partial Public Class SettingsViewModel
                 End If
 
                 CurrentSelectedStep = detector
-                _determineSamplingRateCheckableStatus()
+                If TypeOf CurrentSelectedStep IsNot AlarmingDetectorBase Then
+                    _determineSamplingRateCheckableStatus()
+                End If
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
             End Try

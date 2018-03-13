@@ -28,4 +28,16 @@
     <None Include="$(MSBuildThisFileDirectory)Images\Settings_16x.png" />
     <None Include="$(MSBuildThisFileDirectory)Images\Subtract_16x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Images\stop.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Images\pause.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Images\resume.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Utility.cs" />
+  </ItemGroup>
 </Project>

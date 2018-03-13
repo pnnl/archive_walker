@@ -3416,7 +3416,7 @@ Partial Public Class SettingsViewModel
                     End If
                 Next
             End If
-        Else
+        Else        'enable all to be checkable regardless sampling rate
             If _currentTabIndex = 1 Then
                 For Each group In GroupedSignalByDataConfigStepsInput
                     For Each subgroup In group.SignalList

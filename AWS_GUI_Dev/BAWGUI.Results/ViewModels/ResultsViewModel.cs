@@ -12,6 +12,8 @@ using BAWGUI.RunMATLAB.ViewModels;
 using System.Windows.Input;
 using System.IO;
 using System.Xml.Linq;
+using System.ComponentModel;
+using System.Threading;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -121,31 +123,36 @@ namespace BAWGUI.Results.ViewModels
                     _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
+            _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
             //if(_ringdownResultsViewModel.FilteredResults.Count() != 0)
             //{
-            if (_engine.IsMatlabEngineRunning)
-            {
-                var controlPath = _engine.ControlPath;
-                var pauseFlag = controlPath + "PauseFlag.txt";
-                var runFlag = controlPath + "RunFlag.txt";
-                System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
-                fs.Close();
-                File.Delete(runFlag);
-                while (_engine.IsMatlabEngineRunning)
-                {
-                    System.Threading.Thread.Sleep(100);
-                }
-                _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
-                File.Delete(pauseFlag);
-                fs = System.IO.File.Create(runFlag);
-                fs.Close();
-                _engine.RunNormalMode(controlPath, _configFilePath);
-            }
-            else
-            {
-                _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
-            }
+            //if (_engine.IsMatlabEngineRunning)
+            //{
+            //    var oldControlPath = _engine.ControlPath;
+            //    var oldConfigFilename = _engine.ConfigFilePath;
+            //    var pauseFlag = oldControlPath + "PauseFlag.txt";
+            //    var runFlag = oldControlPath + "RunFlag.txt";
+            //    System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
+            //    fs.Close();
+            //    File.Delete(runFlag);
+            //    while (_engine.worker.IsBusy)
+            //    {
+            //        Application.DoEvents();
+            //        System.Threading.Thread.Sleep(500);
+            //    }
+            //    _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
+            //    File.Delete(pauseFlag);
+            //    //fs = System.IO.File.Create(runFlag);
+            //    //fs.Close();
+            //    _engine.RuNormalModeByBackgroundWorker(oldControlPath, oldConfigFilename);
+            //    //_runAWNormal();
+            //    //_engine.RunNormalMode(controlPath, _configFilePath);
             //}
+            //else
+            //{
+            //    _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
+            //}
+            ////}
         }
 
         private Dictionary<string, Dictionary<string, List<string>>> _availableDateDict;
@@ -322,16 +329,21 @@ namespace BAWGUI.Results.ViewModels
                 ConfigFilePath = openFileDialog.FileName;
                 try
                 {
-                    var _configData = XDocument.Load(ConfigFilePath);
-                    var _resultPath = (from el in _configData.Descendants("EventPath") select (string)el).FirstOrDefault();
-                    _lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
-                    _openResultFile(_resultPath);
+                    _readConfigFile(ConfigFilePath);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
+        }
+
+        private void _readConfigFile(string configFilePath)
+        {
+            var _configData = XDocument.Load(ConfigFilePath);
+            var _resultPath = (from el in _configData.Descendants("EventPath") select (string)el).FirstOrDefault();
+            _lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
+            _openResultFile(_resultPath);
         }
 
         private void _openResultFile(string resultsPath)
@@ -398,6 +410,10 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _configFilePath = value;
+                _forcedOscillationResultsViewModel.ConfigFilePath = _configFilePath;
+                _outOfRangeResultsViewModel.ConfigFilePath = _configFilePath;
+                _ringdownResultsViewModel.ConfigFilePath = _configFilePath;
+                _windRampResultsViewModel.ConfigFilePath = _configFilePath;
                 OnPropertyChanged();
             }
         }
@@ -421,5 +437,51 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
             }
         }
+        //private readonly BackgroundWorker _worker = new BackgroundWorker();
+        //private void _runNormalMode(object sender, DoWorkEventArgs e)
+        //{
+        //    if (Thread.CurrentThread.Name == null)
+        //    {
+        //        Thread.CurrentThread.Name = "normalRunThread";
+        //    }
+        //    //var controlPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTest\";
+        //    var runFlag = _engineWrapper.Engine.ControlPath + "RunFlag.txt";
+        //    if (!System.IO.File.Exists(runFlag))
+        //    {
+        //        System.IO.FileStream fs = System.IO.File.Create(runFlag);
+        //        fs.Close();
+        //    }
+        //    _engineWrapper.IsMatlabEngineRunning = true;
+        //    _engineWrapper.Engine.RunNormalMode(_engineWrapper.Engine.ControlPath, ConfigFilePath);
+        //}
+        //private void _runAWNormal()
+        //{
+        //    try
+        //    {
+        //        _worker.DoWork += _runNormalMode;
+        //        _worker.ProgressChanged += _worker_ProgressChanged;
+        //        _worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
+        //        _worker.WorkerReportsProgress = true;
+        //        _worker.WorkerSupportsCancellation = true;
+        //        _worker.RunWorkerAsync();
+        //        //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
+        //        //t1.Start();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+        //    }
+        //}
+
+        //private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        //{
+        //    _engineWrapper.IsMatlabEngineRunning = false;
+        //}
+
+        //private void _worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        //{
+        //    //throw new NotImplementedException();
+        //}
+
     }
 }
