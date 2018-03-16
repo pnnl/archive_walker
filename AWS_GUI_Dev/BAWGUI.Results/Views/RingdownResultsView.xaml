@@ -13,9 +13,9 @@
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <views:TimeFilterView Height="30" Margin="2"/>
-            <Button Content="Sparse Run" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Re-Run" Command="{Binding RingdownReRun}" Height="25" Width="50" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Cancel Re-Run" Command="{Binding CancelRingdownReRun}" Height="25" Width="100" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Retrieve Detail" Command="{Binding RingdownReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Cancel" Command="{Binding CancelRingdownReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -24,25 +24,30 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <!--<RowDefinition Height="20"/>-->
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <Rectangle Height="30" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>
-                    <TextBlock Text="Sparse plot" FontSize="24" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                    <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                    <TextBlock Text="Data Trends" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Top" Margin="0,0,0,5"/>
                     <!--<Rectangle Height="3" Fill="Green" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>-->
                 </Grid>
-                <ScrollViewer Grid.Row="1" MaxHeight="600">
-                    <views:RDEventPlot/>
-                </ScrollViewer>
-                <Grid Grid.Row="2">
-                    <Rectangle Height="30" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>
-                    <TextBlock Text="Re-Run Results plot" FontSize="24" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                <Expander Grid.Row="0" VerticalAlignment="Top" Margin="0" IsExpanded="True">
+                    <!--<Expander.Header>
+
+                    </Expander.Header>-->
+                    <ScrollViewer Grid.Row="1" MaxHeight="600">
+                        <views:RDEventPlot/>
+                    </ScrollViewer>
+                </Expander>
+                <Grid Grid.Row="1">
+                    <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>
+                    <TextBlock Text="Detection Details" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
                     <!--<Rectangle Height="3" Fill="Green" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>-->
                 </Grid>
-                <ScrollViewer Grid.Row="3" >
+                <ScrollViewer Grid.Row="2" >
                     <views:RDReRunPlot/>
                 </ScrollViewer>
             </Grid>

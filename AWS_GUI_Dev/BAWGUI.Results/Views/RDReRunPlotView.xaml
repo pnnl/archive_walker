@@ -8,9 +8,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <oxy:PlotView Model="{Binding RDreRunPlotModel}" MinHeight="200" x:Name="RDReRunPlot"/>
-            <ListView ItemsSource="{Binding ThumbnailPlots}" SelectedItem="{Binding SelectedSignalPlotModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <!--<StackPanel Orientation="Vertical">-->
+        <oxy:PlotView Grid.Row="0" Model="{Binding RDreRunPlotModel}" MinHeight="150" x:Name="RDReRunPlot"/>
+        <ListView Grid.Row="1" ItemsSource="{Binding ThumbnailPlots}" SelectedItem="{Binding SelectedSignalPlotModel}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />
@@ -36,15 +42,15 @@
                                 </DrawingBrush>
                             </Border.BorderBrush>
                             <StackPanel Orientation="Vertical">
-                                <Label Content="{Binding Label}" Width="120" FontSize="8"/>
-                                <Image Width="120" Height="100" Source="{Binding Thumbnail}" Stretch="Uniform"/>
+                                <Label Content="{Binding Label}" Width="100" FontSize="8"/>
+                                <Image Width="100" Height="80" Source="{Binding Thumbnail}" Stretch="Uniform"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <oxy:PlotView Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}" MinHeight="200" x:Name="RDSignalPlot"/>
-            <oxy:PlotView Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}" MinHeight="200" x:Name="RDThresholdRMSPlot"/>
-        </StackPanel>
+        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}" MinHeight="200" x:Name="RDSignalPlot"/>
+        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}" MinHeight="170" x:Name="RDThresholdRMSPlot"/>
+        <!--</StackPanel>-->
     </Grid>
 </UserControl>

@@ -104,6 +104,9 @@
     <Compile Include="Views\ProjectsBrowserView.xaml.cs">
       <DependentUpon>ProjectsBrowserView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProjectTreeView.xaml.cs">
+      <DependentUpon>ProjectTreeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RunMatlabMainView.xaml.cs">
       <DependentUpon>RunMatlabMainView.xaml</DependentUpon>
     </Compile>
@@ -113,6 +116,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\ProjectsBrowserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProjectTreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

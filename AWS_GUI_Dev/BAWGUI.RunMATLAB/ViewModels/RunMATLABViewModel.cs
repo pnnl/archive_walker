@@ -118,6 +118,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
 
 
+        private ProjectsControlViewModel _projectControl = new ProjectsControlViewModel();
+        public ProjectsControlViewModel ProjectControl
+        {
+            get { return _projectControl; }
+            set
+            {
+                _projectControl = value;
+                OnPropertyChanged();
+            }
+        }
         private string _resultsStoragePath;
         public string ResultsStoragePath
         {
@@ -138,10 +148,41 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     ResultsStoragePath = fbd.SelectedPath;
-                    string[] files = Directory.GetFiles(ResultsStoragePath);
+                    if (Directory.Exists(ResultsStoragePath))
+                    {
+                        ProjectControl = new ProjectsControlViewModel(ResultsStoragePath);
+                        ProjectControl.ProjectSelected += OnProjectSelected;
+                    }
+                    //string[] files = Directory.GetFiles(ResultsStoragePath);
                 }
             }
         }
 
+        private void OnProjectSelected(object sender, AWProjectViewModel e)
+        {
+            SelectedProject = e;
+            SelectedRun = e.SelectedRun;
+        }
+
+        private AWProjectViewModel _selectedProject;
+        public AWProjectViewModel SelectedProject
+        {
+            get { return _selectedProject; }
+            set
+            {
+                _selectedProject = value;
+                OnPropertyChanged();
+            }
+        }
+        private AWRunViewModel _selectedRun;
+        public AWRunViewModel SelectedRun
+        {
+            get { return _selectedRun; }
+            set
+            {
+                _selectedRun = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }
