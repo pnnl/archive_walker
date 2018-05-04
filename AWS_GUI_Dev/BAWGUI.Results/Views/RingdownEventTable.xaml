@@ -63,7 +63,7 @@
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
             <xcdg:Column Title="Start" FieldName="StartTime" ReadOnly="True" Width="150"/>
-            <xcdg:Column Title="End" FieldName="EndTime" ReadOnly="True" Width="150"/>
+            <xcdg:Column Title="Duration" FieldName="Duration" ReadOnly="True" Width="150"/>
             <xcdg:Column Title="Number Of Channels" FieldName="NumberOfChannels" ReadOnly="True" Width="120"/>
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>

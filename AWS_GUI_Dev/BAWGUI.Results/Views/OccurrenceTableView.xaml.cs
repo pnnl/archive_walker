@@ -36,7 +36,7 @@ namespace BAWGUI.Results.Views
             //if (row != null)
             //{
             //    row.InactiveSelectionBackground = Brushes.Green;
-            //    //row.SelectionForeground = Brushes.White;
+            //    //row.SelectionForeground = New Media.SolidColorBrush(Colors.White);
             //}
         }
     }

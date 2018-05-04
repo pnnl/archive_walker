@@ -5,16 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:con="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:con2="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1200">
     <UserControl.Resources>
-        <con:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter" />
+        <con:ResultTableVisibilityConverter x:Key="ResultTableVisibilityConverter" />
+        <con2:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <views:TimeFilterView Height="30" Margin="2"/>
             <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Retrieve Detail" Command="{Binding RingdownReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Retrieve Detail" Command="{Binding RingdownReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
             <Button Content="Cancel" Command="{Binding CancelRingdownReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </StackPanel>
         <Grid>
@@ -58,10 +60,38 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Vertical">
                     <Label Content="Events:"/>
-                    <views:RingdownEventTable Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}}"/>
-                    <TextBlock VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Ringdown Event Found in This Run" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}"/>
+                    <views:RingdownEventTable>
+                        <views:RingdownEventTable.Visibility>
+                            <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="Table">
+                                <Binding Path="FilteredResults.Count"/>
+                                <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                            </MultiBinding>
+                        </views:RingdownEventTable.Visibility>
+                    </views:RingdownEventTable>
+                    <TextBlock VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Ringdown Event Detected in This Run" TextWrapping="WrapWithOverflow">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="NoEvent">
+                                <Binding Path="FilteredResults.Count"/>
+                                <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Results Found in This Task" TextWrapping="WrapWithOverflow">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="NoResult">
+                                <Binding Path="FilteredResults.Count"/>
+                                <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
                 </StackPanel>
-                <DockPanel Grid.Row="1" Visibility="{Binding FilteredResults.Count, Converter={StaticResource VisibleIfNonZeroConverter}}">
+                <DockPanel Grid.Row="1">
+                    <DockPanel.Visibility>
+                        <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="Table">
+                            <Binding Path="FilteredResults.Count"/>
+                            <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                        </MultiBinding>
+                    </DockPanel.Visibility>
                     <Label Content="Channels:" DockPanel.Dock="Top"/>
                     <views:RDchannelTable/>
                 </DockPanel>

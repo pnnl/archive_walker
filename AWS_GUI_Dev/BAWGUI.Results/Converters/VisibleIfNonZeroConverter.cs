@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace BAWGUI.Results.Converters
 {
-    class VisibleIfNonZeroConverter:IValueConverter
+     class VisibleIfNonZeroConverter:IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

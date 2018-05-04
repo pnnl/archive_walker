@@ -57,7 +57,7 @@ namespace BAWGUI.Xml
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("OutOfRangeFrequency")]
+        [System.Xml.Serialization.XmlElementAttribute("OutOfRangeGeneral")]
         public OutOfRangeFrequencyType[] OutOfRangeFrequency
         {
             get { return this.outOfRangeFrequencyField; }
@@ -241,6 +241,10 @@ namespace BAWGUI.Xml
 
         private string endField;
 
+        private string extremaFiled;
+
+        private string extremaFactorField;
+
         private OutOfRangeFrequencyTypeChannel[] channelField;
 
         /// <remarks/>
@@ -262,6 +266,18 @@ namespace BAWGUI.Xml
         {
             get { return this.endField; }
             set { this.endField = value; }
+        }
+
+        public string Extrema
+        {
+            get { return this.extremaFiled; }
+            set { this.extremaFiled = value; }
+        }
+
+        public string ExtremaFactor
+        {
+            get { return this.extremaFactorField; }
+            set { this.extremaFactorField = value; }
         }
 
         /// <remarks/>

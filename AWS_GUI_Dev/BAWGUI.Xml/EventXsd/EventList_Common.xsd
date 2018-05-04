@@ -8,7 +8,7 @@
       <xs:element name="ForcedOscillation" type="ForcedOscillationType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="WindRamp" type="WindRampType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Ringdown" type="RingdownType" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="OutOfRangeFrequency" type="OutOfRangeFrequencyType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="OutOfRangeGeneral" type="OutOfRangeFrequencyType" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
 
@@ -74,6 +74,8 @@
       <xs:element name="ID" type="xs:decimal" />
       <xs:element name="Start" type="xs:string" />
       <xs:element name="End" type="xs:string" />
+      <xs:element name="Extrema" type="xs:string" />
+      <xs:element name="ExtremaFactor" type="xs:string" />
       <xs:element maxOccurs="unbounded" name="Channel">
         <xs:complexType>
           <xs:sequence>

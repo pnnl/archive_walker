@@ -40,4 +40,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Utility.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Images\denominator.PNG" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\numerator.PNG" />
+  </ItemGroup>
 </Project>

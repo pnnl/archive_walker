@@ -10,6 +10,7 @@ using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using System.Threading;
 using System.IO;
+using BAWGUI.RunMATLAB.Models;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -24,7 +25,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             PauseArchiveWalkerNormal = new RelayCommand(_pauseArchiveWalkerNormal);
             ResumeArchiveWalkerNormal = new RelayCommand(_resumeArchiveWalkerNormal);
             StopArchiveWalkerNormal = new RelayCommand(_stopArchiveWalkerNormal);
-            BrowseResultsStorage = new RelayCommand(_browseResultsStorage);
+            //BrowseResultsStorage = new RelayCommand(_browseResultsStorage);
             _engine = MatLabEngine.Instance;
         }
 
@@ -45,17 +46,30 @@ namespace BAWGUI.RunMATLAB.ViewModels
             get { return _engine; }
         }
 
-        string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTestRD\";
+        //string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTestRD\";
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand RunArchiveWalkerNormal { get; set; }
         private void _runAWNormal(object obj)
         {
-            if (File.Exists(ConfigFileName))
+            Run = (AWRunViewModel)obj;
+            if (File.Exists(_run.Model.ConfigFilePath))
             {
-                var controlPath = RunPath + "ControlRun\\";
-                System.IO.Directory.CreateDirectory(controlPath);
+                //var controlPath = RunPath + "ControlRun\\";
+                //var controlPath = _run.ControlRunPath;
+                System.IO.Directory.CreateDirectory(_run.Model.ControlRunPath);
                 try
                 {
-                    Engine.RuNormalModeByBackgroundWorker(controlPath, ConfigFileName);
+                    //Engine.RunSelected += Engine_RunSelected;
+                    Engine.RuNormalModeByBackgroundWorker(_run);
                 }
                 catch (Exception ex)
                 {
@@ -67,6 +81,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show("Config file does not exist. Please specify a valid config file.", "Error!", MessageBoxButtons.OK);
             }
         }
+
 
         public ICommand OpenConfigFile { get; set; }
         private void _openConfigFile(object obj)
@@ -87,7 +102,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
             if (result == DialogResult.OK)
             {
                 ConfigFileName = openFileDialog.FileName;
-                _initialConfigFilePath = Path.GetDirectoryName(ConfigFileName); ;
+                _initialConfigFilePath = Path.GetDirectoryName(ConfigFileName);
+                //_run.ConfigFilePath = ConfigFileName;
+                //_run.ControlRunPath = "C:\\Users\\wang690\\Desktop\\projects\\ArchiveWalker\\RerunTest\\Project_RerunTest\\Run_test\\ControlRun";
+
             }
         }
 
@@ -111,78 +129,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         private void _resumeArchiveWalkerNormal(object obj)
         {
-            var pauseFlag = RunPath + "ControlRun\\PauseFlag.txt";
+            Run = (AWRunViewModel)obj;
+            var pauseFlag = _run.Model.ControlRunPath + "PauseFlag.txt";
             File.Delete(pauseFlag);
             _runAWNormal(obj);
             //_engine.IsNormalRunPaused = false;
         }
 
 
-        private ProjectsControlViewModel _projectControl = new ProjectsControlViewModel();
-        public ProjectsControlViewModel ProjectControl
-        {
-            get { return _projectControl; }
-            set
-            {
-                _projectControl = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _resultsStoragePath;
-        public string ResultsStoragePath
-        {
-            get { return _resultsStoragePath; }
-            set
-            {
-                _resultsStoragePath = value;
-                OnPropertyChanged();
-            }
-        }
-        public ICommand BrowseResultsStorage { get; set; }
-        private void _browseResultsStorage(object obj)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    ResultsStoragePath = fbd.SelectedPath;
-                    if (Directory.Exists(ResultsStoragePath))
-                    {
-                        ProjectControl = new ProjectsControlViewModel(ResultsStoragePath);
-                        ProjectControl.ProjectSelected += OnProjectSelected;
-                    }
-                    //string[] files = Directory.GetFiles(ResultsStoragePath);
-                }
-            }
-        }
-
-        private void OnProjectSelected(object sender, AWProjectViewModel e)
-        {
-            SelectedProject = e;
-            SelectedRun = e.SelectedRun;
-        }
-
-        private AWProjectViewModel _selectedProject;
-        public AWProjectViewModel SelectedProject
-        {
-            get { return _selectedProject; }
-            set
-            {
-                _selectedProject = value;
-                OnPropertyChanged();
-            }
-        }
-        private AWRunViewModel _selectedRun;
-        public AWRunViewModel SelectedRun
-        {
-            get { return _selectedRun; }
-            set
-            {
-                _selectedRun = value;
-                OnPropertyChanged();
-            }
-        }
     }
 }

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BAWGUI.Results
+namespace BAWGUI.Results.Views
 {
     /// <summary>
     /// Interaction logic for the ResultsMainView

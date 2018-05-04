@@ -1,4 +1,5 @@
-﻿using BAWGUI.RunMATLAB.ViewModels;
+﻿using BAWGUI.RunMATLAB.Models;
+using BAWGUI.RunMATLAB.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace BAWGUI.Results.ViewModels
         public WindRampResultsViewModel()
         {
             _configFilePath = "";
+            _run = new AWRunViewModel();
         }
         private string _configFilePath;
         public string ConfigFilePath
@@ -20,6 +22,20 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _configFilePath = value;
+                OnPropertyChanged();
+            }
+        }
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                if (System.IO.File.Exists(_run.Model.ConfigFilePath))
+                {
+                    ConfigFilePath = _run.Model.ConfigFilePath;
+                }
                 OnPropertyChanged();
             }
         }

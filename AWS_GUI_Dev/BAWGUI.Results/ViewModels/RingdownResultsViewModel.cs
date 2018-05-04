@@ -35,9 +35,14 @@ namespace BAWGUI.Results.ViewModels
             _engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
             _configFilePath = "";
             _reRunResult = new List<RingdownDetector>();
+            _run = new AWRunViewModel();
         }
 
         private RunMATLAB.ViewModels.MatLabEngine _engine;
+        public RunMATLAB.ViewModels.MatLabEngine Engine
+        {
+            get { return _engine; }
+        }
         private ObservableCollection<RingdownEventViewModel> _results;
         private ObservableCollection<RingdownEventViewModel> _filteredResults;
         public ObservableCollection<RingdownEventViewModel> FilteredResults
@@ -440,7 +445,7 @@ namespace BAWGUI.Results.ViewModels
             {
                 try
                 {
-                    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, _configFilePath, "Ringdown");
+                    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "Ringdown");
                 }
                 catch (Exception ex)
                 {
@@ -452,20 +457,33 @@ namespace BAWGUI.Results.ViewModels
                 MessageBox.Show("Configuration file not found.", "Error!", MessageBoxButton.OK);
             }
         }
-
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                if (System.IO.File.Exists(_run.Model.ConfigFilePath))
+                {
+                    ConfigFilePath = _run.Model.ConfigFilePath;
+                }
+                OnPropertyChanged();
+            }
+        }
         public ICommand RingdownReRun { get; set; }
         private void _ringdownRerun(object obj)
         {
-            string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\Project_RerunTestRD\Run_test\";
-            var controlPath = RunPath + "ControlRerun\\";
+            //string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\Project_RerunTestRD\Run_test\";
+            //var controlPath = RunPath + "ControlRerun\\";
             //first stop background normal run if any
             //start rerun in background
-            if (File.Exists(_configFilePath))
+            if (File.Exists(ConfigFilePath))
             {
                 try
                 {
                     _engine.RDReRunCompletedEvent += _rDReRunCompleted;
-                    _engine.RingDownRerun(SelectedStartTime, SelectedEndTime, _configFilePath, controlPath);
+                    _engine.RingDownRerun(SelectedStartTime, SelectedEndTime, _run);
                     //ReRunResult = _engine.RDReRunResults;
                 }
                 catch (Exception ex)
@@ -475,7 +493,7 @@ namespace BAWGUI.Results.ViewModels
             }
             else
             {
-                MessageBox.Show("Configuration file not found. Cannot re-run Ringdown", "Error!", MessageBoxButton.OK);
+                MessageBox.Show("Config file not found. Cannot re-run Ringdown", "Error!", MessageBoxButton.OK);
             }
         }
 

@@ -52,6 +52,24 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
@@ -97,17 +115,9 @@
       <Project>{65fbb914-5df7-4008-ab31-6e1a609327e5}</Project>
       <Name>BAWGUI.Results</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
-      <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
-      <Name>BAWGUI.RunMATLAB</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BAWGUI\BAWGUI.vbproj">
-      <Project>{135ee078-0d3d-4374-a947-7dd64d83b159}</Project>
-      <Name>BAWGUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -49,13 +49,30 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BAWSengine">
       <HintPath>..\libs\BAWSengine.dll</HintPath>
     </Reference>
-    <Reference Include="BAWSengine2, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RerunTest\DLL\BAWSengine2.dll</HintPath>
+    <Reference Include="BAWSengine2">
+      <HintPath>..\..\..\matlabdlltest\BAWSengien2\for_redistribution_files_only\BAWSengine2.dll</HintPath>
     </Reference>
     <Reference Include="MWArray, Version=2.17.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -86,6 +103,7 @@
     <Compile Include="Models\RDRerunResults.cs" />
     <Compile Include="Models\RingdownDetector.cs" />
     <Compile Include="Models\RingdownSignal.cs" />
+    <Compile Include="ViewModels\AWRunViewModel.cs" />
     <Compile Include="ViewModels\MatLabEngine.cs" />
     <Compile Include="Models\RerunResultBase.cs" />
     <Compile Include="Models\SparseDetector.cs" />
@@ -97,36 +115,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ProjectsControlViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\RunMATLABViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Views\ProjectsBrowserView.xaml.cs">
-      <DependentUpon>ProjectsBrowserView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ProjectTreeView.xaml.cs">
-      <DependentUpon>ProjectTreeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RunMatlabMainView.xaml.cs">
-      <DependentUpon>RunMatlabMainView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\RunNormalRunView.xaml.cs">
       <DependentUpon>RunNormalRunView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\ProjectsBrowserView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ProjectTreeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\RunMatlabMainView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\RunNormalRunView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,6 +132,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

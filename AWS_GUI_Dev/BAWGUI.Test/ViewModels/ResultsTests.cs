@@ -126,17 +126,3 @@ namespace BAWGUI.Results.ViewModels.Tests
         }
     }
 }
-
-namespace BAWGUI.ViewModels.Tests
-{
-    [TestClass()]
-    public class SettingsTests
-    {
-        [TestMethod()]
-        public void SettingsViewModelTest()
-        {
-            var settingsVM = new SettingsViewModel();
-
-        }
-    }
-}

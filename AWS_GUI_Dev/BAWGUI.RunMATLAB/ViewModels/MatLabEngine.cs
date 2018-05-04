@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using BAWSengine;
+using BAWSengine2;
 using BAWGUI.RunMATLAB.Models;
 using System.ComponentModel;
 using System.Threading;
@@ -18,7 +19,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
 { 
     public class MatLabEngine:ViewModelBase
     {
-        private static readonly MatLabEngine _instance = new MatLabEngine();
         private bool _isMatlabEngineRunning;
         public bool IsMatlabEngineRunning
         {
@@ -40,6 +40,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 OnPropertyChanged();
             }
         }
+        private bool _isReRunRunning;
+        public bool IsReRunRunning
+        {
+            get { return _isReRunRunning; }
+            set
+            {
+                _isReRunRunning = value;
+                OnPropertyChanged();
+            }
+        }
         private string _controlPath;
         public string ControlPath
         {
@@ -55,16 +65,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             _isMatlabEngineRunning = false;
             _isNormalRunPaused = false;
+            _isReRunRunning = false;
+            _run = new AWRunViewModel();
             try
             {
                 //_matlabEngine = new BAWSengine.GUI2MAT();
-                _matlabEngine = new BAWSengine2.GUI2MAT();
+                _matlabEngine = new BAWSengine.GUI2MAT();
             }
             catch (Exception ex)
             {
-                throw ex;
+                System.Windows.Forms.MessageBox.Show("Error getting MATLAB engine! Error message: " + ex.Message, "ERROR!", MessageBoxButtons.OK);
             }
         }
+        private static readonly MatLabEngine _instance = new MatLabEngine();
         public static MatLabEngine Instance
         {
             get
@@ -73,7 +86,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
         //private BAWSengine.GUI2MAT _matlabEngine;
-        private BAWSengine2.GUI2MAT _matlabEngine;
+        private BAWSengine.GUI2MAT _matlabEngine;
         //public void RunNormalMode(string controlPath, string configFile)
         //{
         //    _controlPath = controlPath;
@@ -82,7 +95,17 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    //TODO: ????????????maybe check if run flag exist, if yes, delete it.??????????????????
         //    IsMatlabEngineRunning = false;
         //}
-        public void RingDownRerun(string start, string end, string configFilename, string controlPath)
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                OnPropertyChanged();
+            }
+        }
+        public void RingDownRerun(string start, string end, AWRunViewModel run)
         {
 
             if (IsMatlabEngineRunning)
@@ -93,9 +116,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 PauseMatlabNormalRun();
             }
             worker = new BackgroundWorker();
-            IsNormalRunPaused = false;
-            _controlPath = controlPath;
-            _configFilePath = configFilename;
+            //IsNormalRunPaused = false;
+            Run = run;
+            _controlPath = run.Model.ControlRerunPath;
+            _configFilePath = run.Model.ConfigFilePath;
 
 
             try
@@ -110,8 +134,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     Thread.Sleep(500);
                 }
-                object[] parameters = new object[] { start, end, configFilename, controlPath };
+                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath };
                 worker.RunWorkerAsync(parameters);
+                IsReRunRunning = true;
+                Run.IsTaskRunning = true;
                 //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
                 //t1.Start();
             }
@@ -135,6 +161,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
         private void _workerRDReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsMatlabEngineRunning = false;
+            IsReRunRunning = false;
+            Run.IsTaskRunning = false;
             //RDReRunResults = e.Result as List<RingdownDetector>;
             OnRDReRunCompletedEvent(e.Result as List<RingdownDetector>);
         }
@@ -159,9 +187,17 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 System.IO.FileStream fs = System.IO.File.Create(runFlag);
                 fs.Close();
             }
-
+            var RingdownRerunResults = new RDRerunResults();
             IsMatlabEngineRunning = true;
-            var RingdownRerunResults = new RDRerunResults((MWStructArray)_matlabEngine.RerunRingdown(start, end, configFilename, controlPath));
+            try
+            {
+                RingdownRerunResults = new RDRerunResults((MWStructArray)_matlabEngine.RerunRingdown(start, end, configFilename, controlPath));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
             
             e.Result = RingdownRerunResults.RingdownDetectorList;
         }
@@ -193,7 +229,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    //return RingdownRerunResults.RingdownDetectorList;
         //}
 
-        public List<SparseDetector> GetSparseData(string start, string end, string configFilePath, string detector)
+        public List<SparseDetector> GetSparseData(string start, string end, AWRunViewModel run, string detector)
         {
             start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
             end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
@@ -203,7 +239,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             IsMatlabEngineRunning = true;
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-            var sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, configFilePath, detector));
+            run.IsTaskRunning = true;
+            var sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, run.Model.ConfigFilePath, detector));
+            run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;
             //MessageBox.Show("Resuming normal run in the background.", "Notification", MessageBoxButtons.OK);
@@ -242,16 +280,18 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    //TODO: ????????????maybe check if run flag exist, if yes, delete it.??????????????????
         //    IsMatlabEngineRunning = false;
         //}
-        public void RuNormalModeByBackgroundWorker(string controlPath, string configFilename)
+        public void RuNormalModeByBackgroundWorker(AWRunViewModel run)
         {
+            Run = run;
             worker = new BackgroundWorker();
             IsNormalRunPaused = false;
-            _controlPath = controlPath;
-            _configFilePath = configFilename;
+            IsNormalRunPaused = false;
+            //_controlPath = controlPath;
+            //_configFilePath = configFilename;
             try
             {
                 //_worker.DoWork += _runNormalMode;
-                worker.DoWork += (obj, e) => _runNormalMode(controlPath, configFilename);
+                worker.DoWork += (obj, e) => _runNormalMode(run.Model.ControlRunPath, run.Model.ConfigFilePath);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
                 worker.WorkerReportsProgress = true;
@@ -284,13 +324,17 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 fs.Close();
             }
             IsMatlabEngineRunning = true;
+            Run.IsTaskRunning = true;
             IsNormalRunPaused = false;
+            Run.IsNormalRunPaused = false;
             try
             {
                 _matlabEngine.RunNormalMode(controlPath, configFilename);
             }
             catch (Exception ex)
             {
+                IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
                 MessageBox.Show("Error in running matlab normal mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
             //IsMatlabEngineRunning = false;
@@ -299,8 +343,18 @@ namespace BAWGUI.RunMATLAB.ViewModels
         private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             IsMatlabEngineRunning = false;
+            Run.IsTaskRunning = false;
+            //need to see if the run that is done is selected, if yes, read in results
+            if (_run.IsSelected)
+            {
+                OnRunSelected(_run);
+            }
         }
-
+        public event EventHandler<AWRunViewModel> RunSelected;
+        protected virtual void OnRunSelected(AWRunViewModel e)
+        {
+            RunSelected?.Invoke(this, e);
+        }
         private void _worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             //throw new NotImplementedException();
@@ -314,8 +368,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     IsMatlabEngineRunning = false;
                     IsNormalRunPaused = false;
+                    Run.IsNormalRunPaused = false;
                     Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                    System.IO.DirectoryInfo dir = new DirectoryInfo(ControlPath);
+                    System.IO.DirectoryInfo dir = new DirectoryInfo(Run.Model.ControlRunPath);
                     try
                     {
                         foreach (FileInfo file in dir.GetFiles())
@@ -346,11 +401,29 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         public void PauseMatlabNormalRun()
         {
-            MessageBox.Show("Pausing normal run in the background.", "Notification", MessageBoxButtons.OK);
+            if (IsReRunRunning)
+            {
+                MessageBox.Show("Pausing re-run in the background.", "Notification", MessageBoxButtons.OK);
+            }
+            else
+            {
+                MessageBox.Show("Pausing normal run in the background.", "Notification", MessageBoxButtons.OK);
+            }
             IsNormalRunPaused = true;
+            Run.IsNormalRunPaused = true;
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-            var pauseFlag = ControlPath + "PauseFlag.txt";
-            var runFlag = ControlPath + "RunFlag.txt";
+            var pauseFlag = "";
+            var runFlag = "";
+            if (IsReRunRunning)
+            {
+                pauseFlag = Run.Model.ControlRerunPath + "PauseFlag.txt";
+                runFlag = Run.Model.ControlRerunPath + "RunFlag.txt";
+            }
+            else
+            {
+                pauseFlag = Run.Model.ControlRunPath + "PauseFlag.txt";
+                runFlag = Run.Model.ControlRunPath + "RunFlag.txt";
+            }
             System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
             fs.Close();
             File.Delete(runFlag);
@@ -369,8 +442,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             if (result == DialogResult.Yes)
             {
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                var pauseFlag = ControlPath + "PauseFlag.txt";
-                var runFlag = ControlPath + "RunFlag.txt";
+                var pauseFlag = Run.Model.ControlRerunPath + "PauseFlag.txt";
+                var runFlag = Run.Model.ControlRerunPath + "RunFlag.txt";
                 System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
                 fs.Close();
                 File.Delete(runFlag);
@@ -379,6 +452,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(500);
                 }
+                Run.IsTaskRunning = false;
                 Mouse.OverrideCursor = null;
             }
         }

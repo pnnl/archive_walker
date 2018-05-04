@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace BAWGUI.RunMATLAB.Converters
 {
-    class InverseBooleanConverter : IValueConverter
+    public class InverseBooleanConverter : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -1,0 +1,583 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0EDC5FEF-A2E3-4D51-8079-FC5499C08EBC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BAWGUI.Settings</RootNamespace>
+    <AssemblyName>BAWGUI.Settings</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>BAWGUI.Settings.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>BAWGUI.Settings.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DocumentationFile>BAWGUI.Settings.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DocumentationFile>BAWGUI.Settings.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DocumentationFile>BAWGUI.Settings.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DocumentationFile>BAWGUI.Settings.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DataReaderBase">
+      <HintPath>..\libs\DataReaderBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PDAT_Reader">
+      <HintPath>..\libs\PDAT_Reader.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.3.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.3.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.3.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.3.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.3.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.3.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\ColorConverters.vb" />
+    <Compile Include="Converters\EnumToStringConverters.vb" />
+    <Compile Include="Converters\HeaderConverters.vb" />
+    <Compile Include="Converters\InverseBooleanConverter.vb" />
+    <Compile Include="Converters\MisConverters.vb" />
+    <Compile Include="Converters\TypeUnitDictionaryConverter.vb" />
+    <Compile Include="Converters\ValueIfEmptyConverter.vb" />
+    <Compile Include="Converters\VisibilityConverters.vb" />
+    <Compile Include="Model\BaseClassOrSharedClass.vb" />
+    <Compile Include="Model\DataConfig.vb" />
+    <Compile Include="Model\DetectorConfig.vb" />
+    <Compile Include="Model\Folder.vb" />
+    <Compile Include="Model\PMUWithSamplingRate.vb" />
+    <Compile Include="Model\PostProcessCustomizationConfig.vb" />
+    <Compile Include="Model\ProcessConfig.vb" />
+    <Compile Include="Model\SignalSignatures.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ViewModels\ConfigFileWriter.vb" />
+    <Compile Include="ViewModels\DelegateCommand.vb" />
+    <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.ConfigFileRead.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.DetectorConfig.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.PostProcessConfig.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.ProcessConfig.vb" />
+    <Compile Include="ViewModels\SettingsViewModel.vb" />
+    <Compile Include="ViewModels\ViewModelBase.vb" />
+    <Compile Include="Views\AdditionCustomization.xaml.vb">
+      <DependentUpon>AdditionCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AngleConversionCustomization.xaml.vb">
+      <DependentUpon>AngleConversionCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChannelsListView.xaml.vb">
+      <DependentUpon>ChannelsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreatePhasorCustomization.xaml.vb">
+      <DependentUpon>CreatePhasorCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DataConfigStagesTabInSettings.xaml.vb">
+      <DependentUpon>DataConfigStagesTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetectorConfigTabInSettings.xaml.vb">
+      <DependentUpon>DetectorConfigTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DivisionCustomization.xaml.vb">
+      <DependentUpon>DivisionCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExponentCustomization.xaml.vb">
+      <DependentUpon>ExponentCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExponentCustomizationItem.xaml.vb">
+      <DependentUpon>ExponentCustomizationItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FilterListBox.xaml.vb">
+      <DependentUpon>FilterListBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HighPassFilterParameters.xaml.vb">
+      <DependentUpon>HighPassFilterParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InterpolationView.xaml.vb">
+      <DependentUpon>InterpolationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LowPassFilterParameters.xaml.vb">
+      <DependentUpon>LowPassFilterParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MetricPrefixCustomization.xaml.vb">
+      <DependentUpon>MetricPrefixCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MultiplicationCustomization.xaml.vb">
+      <DependentUpon>MultiplicationCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MultiRateNewRateParameters.xaml.vb">
+      <DependentUpon>MultiRateNewRateParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MultiRatePQParameters.xaml.vb">
+      <DependentUpon>MultiRatePQParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MultirateView.xaml.vb">
+      <DependentUpon>MultirateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NameTypeUnitView.xaml.vb">
+      <DependentUpon>NameTypeUnitView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutOfRangeFrequencyView.xaml.vb">
+      <DependentUpon>OutOfRangeFrequencyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutOfRangeGeneralView.xaml.vb">
+      <DependentUpon>OutOfRangeGeneralView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PeriodogramAlarmingView.xaml.vb">
+      <DependentUpon>PeriodogramAlarmingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PeriodogramDetectorView.xaml.vb">
+      <DependentUpon>PeriodogramDetectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PMUOnlyFilterListBox.xaml.vb">
+      <DependentUpon>PMUOnlyFilterListBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PostProcessingConfigTabInSettings.xaml.vb">
+      <DependentUpon>PostProcessingConfigTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PowerCalculationsCustomization.xaml.vb">
+      <DependentUpon>PowerCalculationsCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProcessConfigTabInSettings.xaml.vb">
+      <DependentUpon>ProcessConfigTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RationalFilterParameters.xaml.vb">
+      <DependentUpon>RationalFilterParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReadPropertiesTabInSettings.xaml.vb">
+      <DependentUpon>ReadPropertiesTabInSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RingdownAlarmingView.xaml.vb">
+      <DependentUpon>RingdownAlarmingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RingdownView.xaml.vb">
+      <DependentUpon>RingdownView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScalarRepCustomization.xaml.vb">
+      <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView.xaml.vb">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsWindow.xaml.vb">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalSelectionPanel.xaml.vb">
+      <DependentUpon>SignalSelectionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SpecifySignalTypeUnitCustomization.xaml.vb">
+      <DependentUpon>SpecifySignalTypeUnitCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SpectralCoherenceAlarmingView.xaml.vb">
+      <DependentUpon>SpectralCoherenceAlarmingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SpectralCoherenceDetectorView.xaml.vb">
+      <DependentUpon>SpectralCoherenceDetectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SubtractionCustomization.xaml.vb">
+      <DependentUpon>SubtractionCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TabControlForSettingsWindow.xaml.vb">
+      <DependentUpon>TabControlForSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TunableFilterView.xaml.vb">
+      <DependentUpon>TunableFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UnaryCustomization.xaml.vb">
+      <DependentUpon>UnaryCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UnWrapView.xaml.vb">
+      <DependentUpon>UnWrapView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WindRampView.xaml.vb">
+      <DependentUpon>WindRampView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WrapAnglesView.xaml.vb">
+      <DependentUpon>WrapAnglesView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="packages.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\delete.bmp">
+      <Link>MyResources\delete.bmp</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
+      <Link>MyResources\open.gif</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\Save24.png">
+      <Link>MyResources\Save24.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\saveAs.png">
+      <Link>MyResources\saveAs.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\AdditionCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AngleConversionCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ChannelsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CreatePhasorCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DataConfigStagesTabInSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DetectorConfigTabInSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DivisionCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ExponentCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ExponentCustomizationItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\FilterListBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\HighPassFilterParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InterpolationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LowPassFilterParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MetricPrefixCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MultiplicationCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MultiRateNewRateParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MultiRatePQParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MultirateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NameTypeUnitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OutOfRangeFrequencyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OutOfRangeGeneralView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PeriodogramAlarmingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PeriodogramDetectorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PMUOnlyFilterListBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PostProcessingConfigTabInSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PowerCalculationsCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ProcessConfigTabInSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RationalFilterParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReadPropertiesTabInSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RingdownAlarmingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RingdownView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ScalarRepCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SignalSelectionPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SpecifySignalTypeUnitCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SpectralCoherenceAlarmingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SpectralCoherenceDetectorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SubtractionCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TabControlForSettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TunableFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UnaryCustomization.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UnWrapView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WindRampView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\WrapAnglesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{94E38DFF-614B-4CBD-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.Results\BAWGUI.Results.csproj">
+      <Project>{65fbb914-5df7-4008-ab31-6e1a609327e5}</Project>
+      <Name>BAWGUI.Results</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
+      <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
+      <Name>BAWGUI.RunMATLAB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
+      <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
+      <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\Asterisk.png">
+      <Link>MyResources\Asterisk.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\AddCommand.png">
+      <Link>MyResources\AddCommand.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\RemoveCommand_16x.png">
+      <Link>MyResources\RemoveCommand_16x.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\denominator.PNG">
+      <Link>MyResources\denominator.PNG</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\numerator.PNG">
+      <Link>MyResources\numerator.PNG</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\filterViews\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>

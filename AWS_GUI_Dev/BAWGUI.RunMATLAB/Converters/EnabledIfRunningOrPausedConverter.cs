@@ -9,13 +9,20 @@ using System.Windows.Data;
 
 namespace BAWGUI.RunMATLAB.Converters
 {
-    class EnabledIfRunningOrPausedConverter : IMultiValueConverter
+    public class EnabledIfRunningOrPausedConverter : IMultiValueConverter
     {
         object IMultiValueConverter.Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool)values[0] || (bool)values[1])
+            if (values[0] != DependencyProperty.UnsetValue && values[1] != DependencyProperty.UnsetValue)
             {
-                return true;
+                if ((bool)values[0] || (bool)values[1])
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {

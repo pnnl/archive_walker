@@ -14,6 +14,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Threading;
+using BAWGUI.RunMATLAB.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -33,26 +34,31 @@ namespace BAWGUI.Results.ViewModels
         public ForcedOscillationResultsViewModel ForcedOscillationResultsViewModel
         {
             get { return this._forcedOscillationResultsViewModel; }
+            set { _forcedOscillationResultsViewModel = value; OnPropertyChanged(); }
         }
 
         public OutOfRangeResultsViewModel OutOfRangeResultsViewModel
         {
             get { return this._outOfRangeResultsViewModel; }
+            set { _outOfRangeResultsViewModel = value; OnPropertyChanged(); }
         }
 
         public RingdownResultsViewModel RingdownResultsViewModel
         {
             get { return this._ringdownResultsViewModel; }
+            set { _ringdownResultsViewModel = value; OnPropertyChanged(); }
         }
 
         public WindRampResultsViewModel WindRampResultsViewModel
         {
             get { return this._windRampResultsViewModel; }
+            set { _windRampResultsViewModel = value; OnPropertyChanged(); }
         }
 
         public ResultsViewModel()
         {
             _engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
+            _engine.RunSelected += _engine_RunSelected;
             _resultsModel = new ResultsModel();
             _availableDateDict = new Dictionary<string, Dictionary<string, List<string>>>();
             _yearList = new List<string>();
@@ -64,8 +70,43 @@ namespace BAWGUI.Results.ViewModels
             _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
             _ringdownResultsViewModel = new RingdownResultsViewModel();
             _windRampResultsViewModel = new WindRampResultsViewModel();
+            _run = new AWRunViewModel();
+            _resultsExist = true;
         }
 
+        private void _engine_RunSelected(object sender, AWRunViewModel e)
+        {
+            _openResultFile(e.Model.EventPath);
+        }
+
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                if (File.Exists(_run.Model.ConfigFilePath))
+                {
+                    ConfigFilePath = _run.Model.ConfigFilePath;
+                }
+                _forcedOscillationResultsViewModel.Run = _run;
+                _outOfRangeResultsViewModel.Run = _run;
+                _ringdownResultsViewModel.Run = _run;
+                _windRampResultsViewModel.Run = _run;
+                OnPropertyChanged();
+            }
+        }
+        private AWProject _project;
+        public AWProject Project
+        {
+            get { return _project; }
+            set
+            {
+                _project = value;
+                OnPropertyChanged();
+            }
+        }
         //public void LoadResults(List<string> filenames, string startDate, string endDate)
         public void LoadResults(List<string> filenames, List<string> dates)
         {
@@ -110,7 +151,8 @@ namespace BAWGUI.Results.ViewModels
                     _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
-
+            _ringdownResultsViewModel.RDSparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
+            _ringdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
             _ringdownResultsViewModel.SelectedStartTime = startTimeStr;
             _ringdownResultsViewModel.SelectedEndTime = endTimeStr;
@@ -123,7 +165,8 @@ namespace BAWGUI.Results.ViewModels
                     _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
-            _ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
+            _outOfRangeResultsViewModel.Models = _resultsModel.OutOfRangeEvents;
+            //_ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
             //if(_ringdownResultsViewModel.FilteredResults.Count() != 0)
             //{
             //if (_engine.IsMatlabEngineRunning)
@@ -342,8 +385,33 @@ namespace BAWGUI.Results.ViewModels
         {
             var _configData = XDocument.Load(ConfigFilePath);
             var _resultPath = (from el in _configData.Descendants("EventPath") select (string)el).FirstOrDefault();
-            _lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
-            _openResultFile(_resultPath);
+            var dateTimeNode = from el in _configData.Descendants("DateTimeEnd") select(string)el;
+            if (dateTimeNode.Any())
+            {
+                _lastDateOfTheRun = System.DateTime.ParseExact(dateTimeNode.FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
+            }
+            //_lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
+            if (!String.IsNullOrEmpty(_resultPath) && Directory.Exists(_resultPath))
+            {
+                _openResultFile(_resultPath);
+            }
+            else
+            {
+                _cleanResults();
+            }
+        }
+
+        private void _cleanResults()
+        {
+            ResultsExist = false;
+            //MessageBox.Show("No valid result file found in project: " + _project.ProjectName +", in run: " + _run.RunName + ".", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            _resultsModel = new ResultsModel();
+            ForcedOscillationResultsViewModel = new ForcedOscillationResultsViewModel();
+            OutOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
+            RingdownResultsViewModel = new RingdownResultsViewModel();
+            RingdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
+            RingdownResultsViewModel.RDSparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
+            WindRampResultsViewModel = new WindRampResultsViewModel();
         }
 
         private void _openResultFile(string resultsPath)
@@ -351,7 +419,16 @@ namespace BAWGUI.Results.ViewModels
             DirectoryInfo folderName = new DirectoryInfo(resultsPath);
             List<string> files = new List<string>();
             List<string> dates = new List<string>();
-            foreach (var file in folderName.GetFiles().OrderBy(x=>x.Name).ToArray())
+            IEnumerable<FileInfo> resultFiles = null;
+            try
+            {
+                resultFiles = folderName.GetFiles().OrderBy(x => x.Name).ToArray();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error finding result file in project: " + _project.ProjectName + ", in run: " + _run.AWRunName + ".\nOriginal error message:\n" + ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            foreach (var file in resultFiles)
             {
                 List<string> nameFragment = file.Name.Split(new Char [] { '.', '_' }).ToList();
                 if (file.Extension.ToLower() == ".xml" && nameFragment.Count() == 3 && nameFragment[0].ToLower() == "eventlist")
@@ -374,8 +451,10 @@ namespace BAWGUI.Results.ViewModels
             }
             if (files.Count()>0)
             {
+                ResultsExist = true;
                 //if (files.Count()!=dates.Count())
                 //{
+                //_lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
                 if (!dates.Contains(_lastDateOfTheRun))
                 {
                     dates.Add(_lastDateOfTheRun);
@@ -400,7 +479,7 @@ namespace BAWGUI.Results.ViewModels
             }
             else
             {
-                MessageBox.Show("No valid file found in folder: " + resultsPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _cleanResults();
             }            
         }
         private string _configFilePath;
@@ -410,10 +489,14 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _configFilePath = value;
-                _forcedOscillationResultsViewModel.ConfigFilePath = _configFilePath;
-                _outOfRangeResultsViewModel.ConfigFilePath = _configFilePath;
-                _ringdownResultsViewModel.ConfigFilePath = _configFilePath;
-                _windRampResultsViewModel.ConfigFilePath = _configFilePath;
+                try
+                {
+                    _readConfigFile(_configFilePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read config file for results. Original error: " + ex.Message);
+                }
                 OnPropertyChanged();
             }
         }
@@ -483,5 +566,25 @@ namespace BAWGUI.Results.ViewModels
         //    //throw new NotImplementedException();
         //}
 
+        private int _currentTabIndex;
+        public int CurrentTabIndex
+        {
+            get { return _currentTabIndex; }
+            set
+            {
+                _currentTabIndex = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _resultsExist;
+        public bool ResultsExist
+        {
+            get { return _resultsExist; }
+            set
+            {
+                _resultsExist = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

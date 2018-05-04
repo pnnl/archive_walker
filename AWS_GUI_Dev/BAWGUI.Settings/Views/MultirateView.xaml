@@ -1,0 +1,193 @@
+﻿<UserControl x:Class="MultirateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ValueTypeConverter x:Key="ValueTypeConverter"/>
+            <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
+            <converters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <converters:NewChannelVisibilityConverter x:Key="NewChannelVisibilityConverter"/>
+            <converters:EnumToStringConverter4 x:Key="EnumToStringConverter4"/>
+            <converters:EnumToStringConverter5 x:Key="EnumToStringConverter5"/>
+            <converters:EnumToStringConverter6 x:Key="EnumToStringConverter6"/>
+            <converters:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
+            <converters:TunableFilterExpanderHeaderConverter x:Key="TunableFilterExpanderHeaderConverter"/>
+            <!--<ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="InterpolateTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="model:InterpolateType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="EndpointsTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="model:EndpointsType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="HandleNaNTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="model:HandleNaNType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="TunableFilterTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="model:TunableFilterType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>-->
+            <DataTemplate x:Key="MultiRateOptionButtons">
+                <StackPanel Orientation="Vertical" Margin="30,0,0,0">
+                    <Button Content="Specify New Sampling Rate" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.MultirateParameterChoice}" CommandParameter="newrate"/>
+                    <Button Content="Specify Upsampling/Downsampling Factors" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.MultirateParameterChoice}" CommandParameter="pqratio"/>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="MultiRateNewRateParameters">
+                <local:MultiRateNewRateParameters/>
+                <!--<Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    --><!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>--><!--
+                    <Label Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="New Sampling Rate (Samples/second)" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Column="2" Text="{Binding NewRate, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Center" Margin="2"/>
+                </Grid>-->
+            </DataTemplate>
+            <DataTemplate x:Key="MultiRatePQParameters">
+                <local:MultiRatePQParameters/>
+                <!--<Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    --><!--<Image Grid.Row="0" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>--><!--
+                    <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Upsampling Factor" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Center" Margin="0,2"/>
+                    --><!--<Image Grid.Row="1" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>--><!--
+                    <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Downsampling Factor" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Center" Margin="0,2"/>
+                </Grid>-->
+            </DataTemplate>
+            <!--<DataTemplate x:Key="ParameterTextBox">
+                <TextBox Text="{Binding Path=Content, RelativeSource={RelativeSource AncestorType=ContentControl}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" Margin="8" HorizontalAlignment="Center"/>
+            </DataTemplate>
+            <DataTemplate x:Key="ParameterCheckBox">
+                <CheckBox IsChecked="{Binding Path=Content, RelativeSource={RelativeSource AncestorType=ContentControl}}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Center"/>
+            </DataTemplate>-->
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Expander IsExpanded="{Binding IsExpanded}">
+            <Expander.Header>
+                <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
+                    <TextBlock Text="{Binding Converter={StaticResource ExpanderHeaderConverter}}"/>
+                    <Button DockPanel.Dock="Right"  Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="0,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteTunableFilterOrMultirate}" CommandParameter="{Binding}">
+                        <Image Width="16" Height="16" Source="/BAWGUI.Settings;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                    </Button>
+                </DockPanel>
+            </Expander.Header>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                        <ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="2,0">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat=" PMU: {0},   Channel: {1}">
+                                                <Binding Path="PMUName"/>
+                                                <Binding Path="SignalName"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Margin="0,2" Width="210" VerticalAlignment="Center" Content="MultiRate PMU:" HorizontalAlignment="Left" Grid.Column="1"/>
+                            <TextBox Text="{Binding MultiRatePMU, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" Width="100" Margin="0,2" Grid.Column="2"/>
+                        </Grid>
+                        <ContentControl Content="{Binding}">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FilterChoice}" Value="0">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource MultiRateOptionButtons}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FilterChoice}" Value="1">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource MultiRateNewRateParameters}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FilterChoice}" Value="2">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource MultiRatePQParameters}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Expander>
+    </Border>
+</UserControl>

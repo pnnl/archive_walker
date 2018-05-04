@@ -14,6 +14,7 @@ using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.Axes;
 using BAWGUI.RunMATLAB.ViewModels;
+using BAWGUI.RunMATLAB.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -38,8 +39,22 @@ namespace BAWGUI.Results.ViewModels
             _selectedOscillationEvent = new ForcedOscillationResultViewModel();
             _selectedOccurrence = new OccurrenceViewModel();
             _configFilePath = "";
+            _run = new AWRunViewModel();
         }
-
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                if (System.IO.File.Exists(_run.Model.ConfigFilePath))
+                {
+                    ConfigFilePath = _run.Model.ConfigFilePath;
+                }
+                OnPropertyChanged();
+            }
+        }
         //private ObservableCollection<ForcedOscillationResultViewModel> _results = new ObservableCollection<ForcedOscillationResultViewModel>();
         //private ObservableCollection<ForcedOscillationResultViewModel> _filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>();
         private ObservableCollection<ForcedOscillationResultViewModel> _results;

@@ -9,7 +9,7 @@ using System.Globalization;
 
 namespace BAWGUI.RunMATLAB.Converters
 {
-    class BooleanVisibilityConverter : IValueConverter
+    public class BooleanVisibilityConverter : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

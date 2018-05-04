@@ -32,6 +32,10 @@ namespace BAWGUI.Results.ViewModels
         {
             get { return _model.EndTime; }
         }
+        public string Duration
+        {
+            get { return _model.Duration; }
+        }
         public string NumberOfChannels
         {
             get { return _model.Channels.Count.ToString(); }

@@ -114,6 +114,12 @@ namespace BAWGUI.RunMATLAB.Models
                 _ringdownDetectorList.Add(newDetector);
             }
         }
+
+        public RDRerunResults()
+        {
+            _ringdownDetectorList = new List<RingdownDetector>();
+        }
+
         private MWStructArray _results;
         public MWStructArray Results
         {

@@ -28,13 +28,13 @@
             <Button IsEnabled="{Binding Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding RunArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top">
                 <Image Source="/BAWGUI.RunMATLAB;component/MyResources/Run_16x.png"/>
             </Button>
-            <Button IsEnabled="{Binding Engine.IsMatlabEngineRunning}" Command="{Binding PauseArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top" Visibility="{Binding Engine.IsNormalRunPaused, Converter={StaticResource InverseBooleanVisibilityConverter}}">
+            <Button IsEnabled="{Binding Engine.IsMatlabEngineRunning}" Command="{Binding PauseArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Pause Archive Walker normal run" Margin="2,0" VerticalAlignment="Top" Visibility="{Binding Engine.IsNormalRunPaused, Converter={StaticResource InverseBooleanVisibilityConverter}}">
                 <Image Source="/BAWGUI.RunMATLAB;component/MyResources/pause.PNG"/>
             </Button>
-            <Button IsEnabled="{Binding Engine.IsNormalRunPaused}"  Command="{Binding ResumeArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top" Visibility="{Binding Engine.IsNormalRunPaused, Converter={StaticResource BooleanVisibilityConverter}}">
+            <Button IsEnabled="{Binding Engine.IsNormalRunPaused}"  Command="{Binding ResumeArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Continue Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top" Visibility="{Binding Engine.IsNormalRunPaused, Converter={StaticResource BooleanVisibilityConverter}}">
                 <Image Source="/BAWGUI.RunMATLAB;component/MyResources/resume.PNG"/>
             </Button>
-            <Button Command="{Binding StopArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Start Archive Walker normal run" Margin="2,0" VerticalAlignment="Top">
+            <Button Command="{Binding StopArchiveWalkerNormal}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Stop Archive Walker normal run" Margin="2,0" VerticalAlignment="Top">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource EnabledIfRunningOrPausedConverter}">
                         <Binding Path="Engine.IsMatlabEngineRunning"/>

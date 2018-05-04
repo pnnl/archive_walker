@@ -30,6 +30,10 @@ namespace BAWGUI.Results.Models
         {
             get { return _ringDown.End; }
         }
+        public string Duration
+        {
+            get { return (DateTime.ParseExact(EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture) - DateTime.ParseExact(StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture)).TotalSeconds.ToString(); }
+        }
         public List<RingdownTypeChannel> Channels
         {
             get { return _ringDown.Channel.ToList(); }
