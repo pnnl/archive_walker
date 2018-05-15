@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="BAWGUI.Results.Views.OutOfRangeEventTable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Results.Views"
+             xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:DateTimeStringConverter x:Key="DateTimeStringConverter"/>
+        <converters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
+    </UserControl.Resources>
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOOREvent}" NavigationBehavior="RowOnly">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDoubleClick">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <xcdg:DataGridControl.Resources>
+            <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
+                <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
+            </Style>
+            <Style TargetType="{x:Type xcdg:DataRow}">
+                <Setter Property="SelectionBackground" Value="Green"/>
+                <Setter Property="InactiveSelectionBackground" Value="Green"/>
+            </Style>
+        </xcdg:DataGridControl.Resources>
+        <xcdg:DataGridControl.View>
+            <xcdg:TableflowView UseDefaultHeadersFooters="False">
+                <xcdg:TableflowView.FixedHeaders>
+                    <DataTemplate>
+                        <DockPanel>
+                            <xcdg:ColumnManagerRow/>
+                        </DockPanel>
+                    </DataTemplate>
+                </xcdg:TableflowView.FixedHeaders>
+                <xcdg:TableflowView.Theme>
+                    <xcdg:Windows8Theme />
+                </xcdg:TableflowView.Theme>
+            </xcdg:TableflowView>
+        </xcdg:DataGridControl.View>
+        <xcdg:DataGridControl.Columns>
+            <xcdg:Column Title="" FieldName=" " Width="20" AllowSort="False">
+                <xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource TableRowIndexConverter} }" />
+                    </DataTemplate>
+                </xcdg:Column.CellContentTemplate>
+            </xcdg:Column>
+            <xcdg:Column Title="Start" FieldName="StartTime" ReadOnly="True" Width="125"/>
+            <xcdg:Column Title="Duration (minutes)" FieldName="Duration" ReadOnly="True" Width="110"/>
+            <xcdg:Column Title="Extrema" FieldName="Extrema" ReadOnly="True" Width="60"/>
+            <xcdg:Column Title="Extrema Factor" FieldName="ExtremaFactor" ReadOnly="True" Width="90"/>
+            <xcdg:Column Title="Number Of Channels" FieldName="NumberOfChannels" ReadOnly="True" Width="120"/>
+        </xcdg:DataGridControl.Columns>
+    </xcdg:DataGridControl>
+</UserControl>

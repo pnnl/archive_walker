@@ -105,6 +105,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 OnPropertyChanged();
             }
         }
+
         public void RingDownRerun(string start, string end, AWRunViewModel run)
         {
 
@@ -436,23 +437,150 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Mouse.OverrideCursor = null;
         }
 
-        public void CancelRDReRun(string controlPath)
+        public void CancelRDReRun(AWRunViewModel run)
         {
             var result = MessageBox.Show("Cancel Ringdown re-run?", "Warning!", MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                var pauseFlag = Run.Model.ControlRerunPath + "PauseFlag.txt";
-                var runFlag = Run.Model.ControlRerunPath + "RunFlag.txt";
-                System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
-                fs.Close();
-                File.Delete(runFlag);
+                System.IO.DirectoryInfo di = new DirectoryInfo(run.Model.ControlRerunPath);
+                foreach (var file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (var dir in di.GetDirectories())
+                {
+                    dir.Delete();
+                }
+                //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
+                //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
+                //System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
+                //fs.Close();
+                //File.Delete(runFlag);
                 while (worker.IsBusy)
                 {
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(500);
                 }
-                Run.IsTaskRunning = false;
+                run.IsTaskRunning = false;
+                Mouse.OverrideCursor = null;
+            }
+        }
+
+        public void OutOfRangeRerun(string start, string end, AWRunViewModel run)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                //Here the running engine could be running a rerun instead of the normal run,
+                //need to talk to Jim as how to distinguish normal or rerun,
+                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+            Run = run;
+            _controlPath = run.Model.ControlRerunPath;
+            _configFilePath = run.Model.ConfigFilePath;
+
+            try
+            {
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runOORReRunMode);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerOORReRun_RunWorkerCompleted;
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath };
+                worker.RunWorkerAsync(parameters);
+                IsReRunRunning = true;
+                Run.IsTaskRunning = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        private void _workerOORReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsMatlabEngineRunning = false;
+            IsReRunRunning = false;
+            Run.IsTaskRunning = false;
+            //RDReRunResults = e.Result as List<RingdownDetector>;
+            OnOORReRunCompletedEvent(e.Result as List<OutOfRangeDetector>);
+        }
+
+        private void OnOORReRunCompletedEvent(List<OutOfRangeDetector> e)
+        {
+            OORReRunCompletedEvent?.Invoke(this, e);
+        }
+
+        private void _runOORReRunMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "OORReRunThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var start = parameters[0] as string;
+            var end = parameters[1] as string;
+            var configFilename = parameters[2] as string;
+            var controlPath = parameters[3] as string;
+
+            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            var runFlag = controlPath + "RunFlag.txt";
+            if (!System.IO.File.Exists(runFlag))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                fs.Close();
+            }
+            var OORRerunResults = new OORRerunResults();
+            IsMatlabEngineRunning = true;
+            try
+            {
+                OORRerunResults = new OORRerunResults((MWStructArray)_matlabEngine.RerunOutOfRange(start, end, configFilename, "OutOfRangeGeneral", controlPath));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab out of range re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+
+            e.Result = OORRerunResults.OORDetectorList;
+        }
+
+        public Action<object, List<OutOfRangeDetector>> OORReRunCompletedEvent { get; set; }
+
+        public void CancelOORReRun(AWRunViewModel run)
+        {
+            var result = MessageBox.Show("Cancel Out-Of-Range re-run?", "Warning!", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                System.IO.DirectoryInfo di = new DirectoryInfo(run.Model.ControlRerunPath);
+                foreach (var file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (var dir in di.GetDirectories())
+                {
+                    dir.Delete();
+                }
+                //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
+                //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
+                //System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
+                //fs.Close();
+                //File.Delete(runFlag);
+                while (worker.IsBusy)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(500);
+                }
+                run.IsTaskRunning = false;
                 Mouse.OverrideCursor = null;
             }
         }

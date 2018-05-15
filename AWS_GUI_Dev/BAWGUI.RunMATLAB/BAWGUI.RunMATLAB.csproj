@@ -100,6 +100,9 @@
     <Compile Include="Converters\InverseBooleanVisibilityConverter.cs" />
     <Compile Include="Models\AWProject.cs" />
     <Compile Include="Models\AWRun.cs" />
+    <Compile Include="Models\OORRerunResults.cs" />
+    <Compile Include="Models\OutOfRangeDetector.cs" />
+    <Compile Include="Models\OutOfRangeSignal.cs" />
     <Compile Include="Models\RDRerunResults.cs" />
     <Compile Include="Models\RingdownDetector.cs" />
     <Compile Include="Models\RingdownSignal.cs" />

@@ -92,67 +92,6 @@ Namespace Model
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     ''''''''''''''''''''''''''''''''Class Filter''''''''''''''''''''''''''''''''''''''''''''''''''''''
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    Public Class Filter
-        Inherits SignalProcessStep
-        Public Sub New()
-            '_filterParameters = New ObservableCollection(Of ParameterValuePair)
-            _fileterParameters = New ObservableCollection(Of ParameterValuePair)
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
-            IsExpanded = False
-        End Sub
-
-        Public Overrides Function CheckStepIsComplete() As Boolean
-            Return True
-        End Function
-
-        Private _name As String
-        Public Overrides Property Name As String
-            Get
-                Return _name
-            End Get
-            Set(value As String)
-                _name = value
-                OnPropertyChanged()
-            End Set
-        End Property
-
-        'Private _filterName As String
-        'Public Property FilterName As String
-        '    Get
-        '        Return _filterName
-        '    End Get
-        '    Set(ByVal value As String)
-        '        _filterName = value
-        '        OnPropertyChanged()
-        '    End Set
-        'End Property
-
-        Private _fileterParameters As ObservableCollection(Of ParameterValuePair)
-        Public Property FilterParameters As ObservableCollection(Of ParameterValuePair)
-            Get
-                Return _fileterParameters
-            End Get
-            Set(ByVal value As ObservableCollection(Of ParameterValuePair))
-                _fileterParameters = value
-                OnPropertyChanged()
-            End Set
-        End Property
-
-        'Private _filterParameters As ObservableCollection(Of ParameterValuePair)
-        'Public Property FilterParameters As ObservableCollection(Of ParameterValuePair)
-        '    Get
-        '        Return _filterParameters
-        '    End Get
-        '    Set(ByVal value As ObservableCollection(Of ParameterValuePair))
-        '        _filterParameters = value
-        '        OnPropertyChanged()
-        '    End Set
-        'End Property
-    End Class
 
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     ''''''''''''''''''''''''''''''''Class SignalProcessStep''''''''''''''''''''''''''''''''''''''''
@@ -244,6 +183,67 @@ Namespace Model
         End Property
 
         Public MustOverride Function CheckStepIsComplete() As Boolean
+    End Class
+    Public Class Filter
+        Inherits SignalProcessStep
+        Public Sub New()
+            '_filterParameters = New ObservableCollection(Of ParameterValuePair)
+            _fileterParameters = New ObservableCollection(Of ParameterValuePair)
+            InputChannels = New ObservableCollection(Of SignalSignatures)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+
+            OutputChannels = New ObservableCollection(Of SignalSignatures)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            IsExpanded = False
+        End Sub
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
+
+        Private _name As String
+        Public Overrides Property Name As String
+            Get
+                Return _name
+            End Get
+            Set(value As String)
+                _name = value
+                OnPropertyChanged()
+            End Set
+        End Property
+
+        'Private _filterName As String
+        'Public Property FilterName As String
+        '    Get
+        '        Return _filterName
+        '    End Get
+        '    Set(ByVal value As String)
+        '        _filterName = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
+
+        Private _fileterParameters As ObservableCollection(Of ParameterValuePair)
+        Public Property FilterParameters As ObservableCollection(Of ParameterValuePair)
+            Get
+                Return _fileterParameters
+            End Get
+            Set(ByVal value As ObservableCollection(Of ParameterValuePair))
+                _fileterParameters = value
+                OnPropertyChanged()
+            End Set
+        End Property
+
+        'Private _filterParameters As ObservableCollection(Of ParameterValuePair)
+        'Public Property FilterParameters As ObservableCollection(Of ParameterValuePair)
+        '    Get
+        '        Return _filterParameters
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of ParameterValuePair))
+        '        _filterParameters = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
     End Class
 
     Public MustInherit Class DetectorBase

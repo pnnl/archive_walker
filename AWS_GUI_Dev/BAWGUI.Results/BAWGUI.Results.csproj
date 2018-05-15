@@ -113,9 +113,11 @@
   <ItemGroup>
     <Compile Include="Converters\DateDictionaryKeyConverter.cs" />
     <Compile Include="Converters\DateTimeStringConverter.cs" />
+    <Compile Include="Converters\ThumbnailVisibilityConverter.cs" />
     <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
     <Compile Include="Converters\TableRowIndexConverter.cs" />
     <Compile Include="Converters\TableValueNANConverter.cs" />
+    <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\DatedForcedOscillationEvent.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
     <Compile Include="Models\OutOfRangeEvent.cs" />
     <Compile Include="ViewModels\OORChannelViewModel.cs" />
+    <Compile Include="ViewModels\OORReRunPlotViewModel.cs" />
     <Compile Include="ViewModels\OutOfRangeEventViewModel.cs" />
     <Compile Include="ViewModels\RDChannelViewModel.cs" />
     <Compile Include="ViewModels\RDReRunPlotsViewModels.cs" />
@@ -161,17 +164,29 @@
     <Compile Include="Views\OccurrenceTableWindow.xaml.cs">
       <DependentUpon>OccurrenceTableWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\OORChannelTable.xaml.cs">
+      <DependentUpon>OORChannelTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OORReRunPlots.xaml.cs">
+      <DependentUpon>OORReRunPlots.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OORReRunPlotView.xaml.cs">
+      <DependentUpon>OORReRunPlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutOfRangeEventTable.xaml.cs">
+      <DependentUpon>OutOfRangeEventTable.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RDchannelTable.xaml.cs">
       <DependentUpon>RDchannelTable.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RDEventPlot.xaml.cs">
-      <DependentUpon>RDEventPlot.xaml</DependentUpon>
+    <Compile Include="Views\SparseEventPlot.xaml.cs">
+      <DependentUpon>SparseEventPlot.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RDReRunPlotView.xaml.cs">
       <DependentUpon>RDReRunPlotView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RDSparsePlotView.xaml.cs">
-      <DependentUpon>RDSparsePlotView.xaml</DependentUpon>
+    <Compile Include="Views\SparsePlotView.xaml.cs">
+      <DependentUpon>SparsePlotView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RDReRunPlot.xaml.cs">
       <DependentUpon>RDReRunPlot.xaml</DependentUpon>
@@ -231,6 +246,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\OORChannelTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OORReRunPlots.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OORReRunPlotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OutOfRangeEventTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\OutOfRangeResultsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -239,7 +270,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RDEventPlot.xaml">
+    <Page Include="Views\SparseEventPlot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -247,7 +278,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RDSparsePlotView.xaml">
+    <Page Include="Views\SparsePlotView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

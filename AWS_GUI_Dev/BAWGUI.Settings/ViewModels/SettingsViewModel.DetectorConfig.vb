@@ -58,7 +58,7 @@ Namespace ViewModels
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & " Detector " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
             GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             DetectorConfigure.DetectorList.Add(newDetector)

@@ -1115,7 +1115,7 @@ Namespace ViewModels
                             _addLog("Error selecting signal(s) for step " & _currentSelectedStep.StepCounter.ToString & " - " & _currentSelectedStep.Name & " ." & ex.Message)
                         End Try
                     ElseIf TypeOf _currentSelectedStep Is Multirate Then
-                        If CurrentSelectedStep.FilterParameters.Count <> 0 Then
+                        If CurrentSelectedStep.FilterChoice <> 0 Then
                             Try
                                 _changeSignalSelection(obj)
                                 _determineFileDirCheckableStatus()
@@ -1515,11 +1515,13 @@ Namespace ViewModels
         Private Sub _changeSignalSelection(obj As SignalTypeHierachy)
             _checkAllChildren(obj, obj.SignalSignature.IsChecked)
             _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
-            If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
+            If TypeOf _currentSelectedStep Is DQFilter Then
                 _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+            ElseIf TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
+                '_currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
             ElseIf TypeOf _currentSelectedStep Is Multirate Then
-                _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
-                _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+                '_currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                '_currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
             Else
                 _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
             End If
@@ -2156,9 +2158,9 @@ Namespace ViewModels
                                 newOutput.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
                                 newOutput.IsCustomSignal = True
                                 newOutput.Unit = obj.SignalSignature.Unit
-                                If _currentSelectedStep.FilterParameters.Count = 2 Then
+                                If _currentSelectedStep.FilterChoice = 1 Then
                                     newOutput.SamplingRate = _currentSelectedStep.NewRate
-                                ElseIf _currentSelectedStep.FilterParameters.Count = 3 Then
+                                ElseIf _currentSelectedStep.FilterChoice = 2 Then
                                     Dim p = 0
                                     Integer.TryParse(_currentSelectedStep.PElement, p)
                                     Dim q = 0
@@ -2911,26 +2913,43 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _dqfilterSelection(obj As Object)
+            Dim thisFilterName = obj.ToString
             Dim newFilter As New DQFilter
+            Select Case thisFilterName
+                Case "Status Flags", "Zeros", "Missing"
+
+                Case "Nominal Voltage"
+                    newFilter = New VoltPhasorDQFilter
+                Case "Nominal Frequency"
+                    newFilter = New FreqDQFilter
+                Case "Outliers"
+                    newFilter = New OutlierDQFilter
+                Case "Stale Data"
+                    newFilter = New StaleDQFilter
+                Case "Data Frame", "Channel", "Entire PMU"
+                    newFilter = New DataFramePMUchanPMUallDQFilter
+                Case "Angle Wrapping"
+                    newFilter = New WrappingFailureDQFilter
+            End Select
             newFilter.IsExpanded = True
-            newFilter.Name = obj.ToString
+            newFilter.Name = thisFilterName
             newFilter.StepCounter = DataConfigure.CollectionOfSteps.Count + 1
             newFilter.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & newFilter.StepCounter.ToString & "-" & newFilter.Name
             newFilter.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & newFilter.StepCounter.ToString & "-" & newFilter.Name
             'GroupedSignalByStepsInput.Add(newFilter.ThisStepInputsAsSignalHerachyByType)
             'GroupedSignalByDataConfigStepsOutput.Add(newFilter.ThisStepOutputsAsSignalHierachyByPMU)
 
-            For Each parameter In DataConfigure.DQFilterNameParametersDictionary(newFilter.Name)
-                If parameter = "FlagAllByFreq" Then
-                    newFilter.FilterParameters.Add(New ParameterValuePair(parameter, False))
-                ElseIf parameter = "SetToNaN" OrElse parameter = "FlagBit" Then
-                    'newFilter.FilterParameters.Add(New ParameterValuePair(parameter, True))
-                    'ElseIf newFilter.Name = "Nominal-Value Frequency Data Quality Filter" And parameter = "FlagBit" Then
-                    '    newFilter.FilterParameters.Add(New ParameterValuePair(parameter, "", False))
-                Else
-                    newFilter.FilterParameters.Add(New ParameterValuePair(parameter, ""))
-                End If
-            Next
+            'For Each parameter In DataConfigure.DQFilterNameParametersDictionary(newFilter.Name)
+            '    If parameter = "FlagAllByFreq" Then
+            '        newFilter.FilterParameters.Add(New ParameterValuePair(parameter, False))
+            '    ElseIf parameter = "SetToNaN" OrElse parameter = "FlagBit" Then
+            '        'newFilter.FilterParameters.Add(New ParameterValuePair(parameter, True))
+            '        'ElseIf newFilter.Name = "Nominal Frequency" And parameter = "FlagBit" Then
+            '        '    newFilter.FilterParameters.Add(New ParameterValuePair(parameter, "", False))
+            '    Else
+            '        newFilter.FilterParameters.Add(New ParameterValuePair(parameter, ""))
+            '    End If
+            'Next
             'newFilter.Parameters
             DataConfigure.CollectionOfSteps.Add(newFilter)
             _stepSelectedToEdit(newFilter)
@@ -2946,20 +2965,25 @@ Namespace ViewModels
         End Property
         Private Sub _customizationStepSelection(obj As Object)
             Dim thisCustmizationName = obj(0).ToString
-            Dim newCustomization As New Customization
+            Dim newCustomization As Customization
             Try
                 Select Case thisCustmizationName
                     Case "Metric Prefix"
                         newCustomization = New MetricPrefixCust
                     Case "Scalar Repetition"
+                        newCustomization = New ScalarRepCust With {
+                            .TimeSourcePMU = AllPMUs.FirstOrDefault
+                        }
                         Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "SC")
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
                     Case "Addition", "Multiplication"
+                        newCustomization = New Customization
                         Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname)
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
                     Case "Subtraction", "Division"
+                        newCustomization = New Customization
                         Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname)
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
@@ -2968,16 +2992,20 @@ Namespace ViewModels
                         newCustomization.MinuendOrDividend = dummy
                         newCustomization.SubtrahendOrDivisor = dummy
                     Case "Exponential"
+                        newCustomization = New Customization
                         newCustomization.Exponent = "1"
                     Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Angle Calculation", "Complex Conjugate", "Phasor Creation", "Angle Conversion"
+                        newCustomization = New Customization
                     'PASS
                     Case "Power Calculation"
+                        newCustomization = New Customization
                         Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, newCustomization.PowType.ToString)
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
                         Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newSignal, New ObservableCollection(Of SignalSignatures))
                         newCustomization.OutputInputMappingPair.Add(newPair)
                     Case "Signal Type/Unit"
+                        newCustomization = New Customization
                         Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)

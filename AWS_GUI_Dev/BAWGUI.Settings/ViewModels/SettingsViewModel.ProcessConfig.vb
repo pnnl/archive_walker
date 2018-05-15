@@ -668,13 +668,18 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _processStepSelectedToEdit(processStep As Object)
-            If processStep IsNot CurrentSelectedStep Then
-                If CurrentSelectedStep IsNot Nothing AndAlso Not CurrentSelectedStep.CheckStepIsComplete() Then
+            If processStep IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
                     'here need to check if the currentSelectedStep is complete, if not, cannot switch
                     MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
                     Exit Sub
                 Else
                     'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+
+                    CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                    If TypeOf CurrentSelectedStep Is Multirate Then
+                        CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+                    End If
                 End If
             End If
             If Not processStep.IsStepSelected Then

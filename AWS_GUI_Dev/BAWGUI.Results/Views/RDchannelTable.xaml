@@ -29,7 +29,7 @@
             </xcdg:TableflowView>
         </xcdg:DataGridControl.View>
         <xcdg:DataGridControl.Columns>
-            <xcdg:Column Title="" FieldName=" " Width="30">
+            <xcdg:Column Title="" FieldName=" " Width="20">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource TableRowIndexConverter} }" />

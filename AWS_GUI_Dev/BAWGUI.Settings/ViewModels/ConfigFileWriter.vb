@@ -6,7 +6,15 @@ Public Class ConfigFileWriter
     Private _svm As SettingsViewModel
     Private _powerTypeDictionary As Dictionary(Of String, String)
     Private _settingsVM As SettingsViewModel
-
+    Private _dqFilterCounter As Integer = 0
+    'Public Property DQFilterCounter() As Integer = 0
+    '    Get
+    '        Return _dqFilterCounter
+    '    End Get
+    '    Set(ByVal value As Integer = 0)
+    '        _dqFilterCounter = value
+    '    End Set
+    'End Property
     Private _saveToRun As RunMATLAB.Models.AWRun
     Public Property SaveToRun As RunMATLAB.Models.AWRun
         Get
@@ -105,7 +113,7 @@ Public Class ConfigFileWriter
                 stage = <Stages></Stages>
                 newStageFlag = True
             End If
-            _writeAStep(stage, aStep, singleStep)
+            _writeAStep(aStep, singleStep)
             stage.Add(aStep)
         Next
         dataConfig.<Configuration>.LastOrDefault.Add(stage)
@@ -274,7 +282,7 @@ Public Class ConfigFileWriter
         If _svm.PostProcessConfigure.CollectionOfSteps.Count > 0 Then
             stage = <Stages></Stages>
             For Each singleStep In _svm.PostProcessConfigure.CollectionOfSteps
-                _writeAStep(stage, aStep, singleStep)
+                _writeAStep(aStep, singleStep)
                 stage.Add(aStep)
             Next
             postProcessConfig.<Configuration>.LastOrDefault.Add(stage)
@@ -303,9 +311,9 @@ Public Class ConfigFileWriter
                 Case GetType(OutOfRangeFrequencyDetector)
                     Dim dt = DirectCast(detector, OutOfRangeFrequencyDetector)
                     element = <OutOfRangeGeneral></OutOfRangeGeneral>
-                    If dt.Type = OutOfRangeFrequencyDetectorType.AvergeWindow Then
+                    If dt.Type = OutOfRangeFrequencyDetectorType.AvergeWindow AndAlso Not String.IsNullOrEmpty(dt.AverageWindow) Then
                         element.Add(<AverageWindow><%= dt.AverageWindow %></AverageWindow>)
-                    ElseIf dt.Type = OutOfRangeFrequencyDetectorType.Nominal Then
+                    ElseIf dt.Type = OutOfRangeFrequencyDetectorType.Nominal AndAlso Not String.IsNullOrEmpty(dt.Nominal) Then
                         element.Add(<Nominal><%= dt.Nominal %></Nominal>)
                     End If
                     If Not String.IsNullOrEmpty(dt.DurationMax) Then
@@ -526,20 +534,30 @@ Public Class ConfigFileWriter
         _configData.Save(filename)
     End Sub
 
-    Private Sub _writeAStep(ByRef stage As XElement, ByRef aStep As XElement, ByRef singleStep As Object)
+    Private Sub _writeAStep(ByRef aStep As XElement, ByRef singleStep As Object)
         Select Case singleStep.Name
             Case "Scalar Repetition"
                 aStep = <Customization>
                             <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                            <Parameters>
-                                <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
-                                <scalar><%= singleStep.Scalar %></scalar>
-                                <SignalType><%= singleStep.OutputChannels(0).TypeAbbreviation %></SignalType>
-                                <SignalUnit><%= singleStep.OutputChannels(0).Unit %></SignalUnit>
-                            </Parameters>
+                            <Parameters></Parameters>
                         </Customization>
-                If Not String.IsNullOrEmpty(singleStep.TimeSourcePMU.PMU) Then
+
+                If Not String.IsNullOrEmpty(singleStep.CustPMUname) Then
+                    aStep.<Parameters>.FirstOrDefault.Add(<CustPMUname><%= singleStep.CustPMUname %></CustPMUname>)
+                End If
+                If Not String.IsNullOrEmpty(singleStep.Scalar) Then
+                    aStep.<Parameters>.FirstOrDefault.Add(<scalar><%= singleStep.Scalar %></scalar>)
+                End If
+                If singleStep.OutputChannels.Count > 0 AndAlso Not String.IsNullOrEmpty(singleStep.OutputChannels(0).SignalName) Then
+                    aStep.<Parameters>.FirstOrDefault.Add(<SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>)
+                End If
+                If singleStep.OutputChannels.Count > 0 AndAlso Not String.IsNullOrEmpty(singleStep.OutputChannels(0).TypeAbbreviation) Then
+                    aStep.<Parameters>.FirstOrDefault.Add(<SignalType><%= singleStep.OutputChannels(0).TypeAbbreviation %></SignalType>)
+                End If
+                If singleStep.OutputChannels.Count > 0 AndAlso Not String.IsNullOrEmpty(singleStep.OutputChannels(0).Unit) Then
+                    aStep.<Parameters>.FirstOrDefault.Add(<SignalUnit><%= singleStep.OutputChannels(0).Unit %></SignalUnit>)
+                End If
+                If singleStep.TimeSourcePMU IsNot Nothing AndAlso Not String.IsNullOrEmpty(singleStep.TimeSourcePMU.PMU) Then
                     aStep.<Parameters>.LastOrDefault.Add(<TimeSourcePMU><%= singleStep.TimeSourcePMU.PMU %></TimeSourcePMU>)
                 End If
             Case "Addition"
@@ -724,86 +742,251 @@ Public Class ConfigFileWriter
                 End If
                 If singleStep.UseCustomPMU Then
                     For Each pair In singleStep.OutputInputMappingPair
-                        Dim toConvert As XElement = <ToConvert>
-                                                        <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                        <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                        <NewUnit><%= pair.Key.Unit %></NewUnit>
-                                                        <CustName><%= pair.Key.SignalName %></CustName>
-                                                    </ToConvert>
+                        Dim toConvert As XElement = <ToConvert></ToConvert>
+                        If Not String.IsNullOrEmpty(pair.Value(0).PMUName) Then
+                            toConvert.Add(<PMU><%= pair.Value(0).PMUName %></PMU>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Value(0).SignalName) Then
+                            toConvert.Add(<Channel><%= pair.Value(0).SignalName %></Channel>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Key.Unit) Then
+                            toConvert.Add(<NewUnit><%= pair.Key.Unit %></NewUnit>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Key.SignalName) Then
+                            toConvert.Add(<CustName><%= pair.Key.SignalName %></CustName>)
+                        End If
                         aStep.<Parameters>.LastOrDefault.Add(toConvert)
                     Next
                 Else
                     For Each pair In singleStep.OutputInputMappingPair
-                        Dim toConvert As XElement = <ToConvert>
-                                                        <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                        <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                        <NewUnit><%= pair.Key.Unit %></NewUnit>
-                                                    </ToConvert>
+                        Dim toConvert As XElement = <ToConvert></ToConvert>
+                        If Not String.IsNullOrEmpty(pair.Value(0).PMUName) Then
+                            toConvert.Add(<PMU><%= pair.Value(0).PMUName %></PMU>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Value(0).SignalName) Then
+                            toConvert.Add(<Channel><%= pair.Value(0).SignalName %></Channel>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Key.Unit) Then
+                            toConvert.Add(<NewUnit><%= pair.Key.Unit %></NewUnit>)
+                        End If
                         aStep.<Parameters>.LastOrDefault.Add(toConvert)
                     Next
                 End If
             Case "Angle Conversion"
                 aStep = <Customization>
-                                                                                                                                    <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                    <Parameters>
-                                                                                                                                        <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                    </Parameters>
-                                                                                                                                </Customization>
+                            <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                            <Parameters>
+                                <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                            </Parameters>
+                        </Customization>
                 For Each pair In singleStep.OutputInputMappingPair
                     Dim toConvert As XElement = <ToConvert>
-                                                                                                                                    <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                                                                                                    <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                                                                                                    <CustName><%= pair.Key.SignalName %></CustName>
-                                                                                                                                </ToConvert>
+                                                    <PMU><%= pair.Value(0).PMUName %></PMU>
+                                                    <Channel><%= pair.Value(0).SignalName %></Channel>
+                                                    <CustName><%= pair.Key.SignalName %></CustName>
+                                                </ToConvert>
                     aStep.<Parameters>.LastOrDefault.Add(toConvert)
                 Next
-            Case Else
+            Case "Status Flags"
+                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
-                                                                                                                                        <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                        <Parameters></Parameters>
-                                                                                                                                    </Filter>
-                For Each parameter In singleStep.FilterParameters
-                    'Dim a = {parameter}ParameterName
-                    'Dim para As XElement = <<%= parameter.ParameterName.ToString %>><%= parameter.Value %></>
-                    Dim para As XElement
-                    If TypeOf parameter.Value Is Boolean Then
-                        If parameter.Value Then
-                            para = New XElement(parameter.ParameterName.ToString, "TRUE")
-                        Else
-                            para = New XElement(parameter.ParameterName.ToString, "FALSE")
-                        End If
-                    Else
-                        para = New XElement(parameter.ParameterName.ToString, parameter.Value)
-                    End If
-                    aStep.<Parameters>.LastOrDefault.Add(para)
-                Next
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            <Parameters></Parameters>
+                        </Filter>
                 aStep.<Parameters>.LastOrDefault.Add(New XElement("SetToNaN", "TRUE"))
-                aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", "1"))
-                If singleStep.Name = "PMU Status Flags Data Quality Filter" Then
-                    For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
-                        For Each subgroup In group.SignalList
-                            Dim PMU As XElement = <PMU>
-                                                                                                                                                    <Name><%= subgroup.SignalSignature.PMUName %></Name>
-                                                                                                                                                </PMU>
-                            aStep.Add(PMU)
-                        Next
+                aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", _dqFilterCounter))
+                For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
+                    For Each subgroup In group.SignalList
+                        Dim PMU As XElement = <PMU>
+                                                  <Name><%= subgroup.SignalSignature.PMUName %></Name>
+                                              </PMU>
+                        aStep.Add(PMU)
                     Next
-                Else
-                    Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
-                    _writePMUElements(aStep, PMUSignalDictionary)
+                Next
+            Case "Zeros", "Missing"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            <Parameters></Parameters>
+                        </Filter>
+                aStep.<Parameters>.LastOrDefault.Add(New XElement("SetToNaN", "TRUE"))
+                aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", _dqFilterCounter))
+                Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            Case "Nominal Voltage"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                        </Filter>
+                Dim para = <Parameters></Parameters>
+                If Not String.IsNullOrEmpty(singleStep.NomVoltage) Then
+                    para.Add(<NomVoltage><%= singleStep.NomVoltage %></NomVoltage>)
                 End If
+                If Not String.IsNullOrEmpty(singleStep.VoltMin) Then
+                    para.Add(<VoltMin><%= singleStep.VoltMin %></VoltMin>)
+                End If
+                If Not String.IsNullOrEmpty(singleStep.VoltMax) Then
+                    para.Add(<VoltMax><%= singleStep.VoltMax %></VoltMax>)
+                End If
+                para.Add(New XElement("SetToNaN", "TRUE"))
+                para.Add(New XElement("FlagBit", _dqFilterCounter))
+                aStep.Add(para)
+                Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            Case "Nominal Frequency"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                        </Filter>
+                Dim para = <Parameters></Parameters>
+                If Not String.IsNullOrEmpty(singleStep.FreqMinChan) Then
+                    para.Add(<FreqMinChan><%= singleStep.FreqMinChan %></FreqMinChan>)
+                End If
+                If Not String.IsNullOrEmpty(singleStep.FreqMaxChan) Then
+                    para.Add(<FreqMaxChan><%= singleStep.FreqMaxChan %></FreqMaxChan>)
+                End If
+                If Not String.IsNullOrEmpty(singleStep.FreqPctChan) Then
+                    para.Add(<FreqPctChan><%= singleStep.FreqPctChan %></FreqPctChan>)
+                End If
+                If Not String.IsNullOrEmpty(singleStep.FreqMinSamp) Then
+                    para.Add(<FreqMinSamp><%= singleStep.FreqMinSamp %></FreqMinSamp>)
+                End If
+                If Not String.IsNullOrEmpty(singleStep.FreqMaxSamp) Then
+                    para.Add(<FreqMaxSamp><%= singleStep.FreqMaxSamp %></FreqMaxSamp>)
+                End If
+                para.Add(New XElement("SetToNaN", "TRUE"))
+                para.Add(<FlagBitChan><%= _dqFilterCounter %></FlagBitChan>)
+                para.Add(<FlagBitSamp><%= _dqFilterCounter %></FlagBitSamp>)
+                aStep.Add(para)
+                Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            Case "Outliers"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                        </Filter>
+                Dim para = <Parameters></Parameters>
+                If Not String.IsNullOrEmpty(singleStep.StdDevMult) Then
+                    para.Add(<StdDevMult><%= singleStep.StdDevMult %></StdDevMult>)
+                End If
+                para.Add(New XElement("SetToNaN", "TRUE"))
+                para.Add(New XElement("FlagBit", _dqFilterCounter))
+                aStep.Add(para)
+                Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            Case "Stale Data"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                        </Filter>
+                Dim para = <Parameters></Parameters>
+                If Not String.IsNullOrEmpty(singleStep.StaleThresh) Then
+                    para.Add(<StaleThresh><%= singleStep.StaleThresh %></StaleThresh>)
+                End If
+                If Not String.IsNullOrEmpty(singleStep.FlagAllByFreq.ToString) Then
+                    para.Add(<FlagAllByFreq><%= singleStep.FlagAllByFreq.ToString.ToUpper %></FlagAllByFreq>)
+                End If
+                para.Add(New XElement("SetToNaN", "TRUE"))
+                para.Add(New XElement("FlagBitFreq", _dqFilterCounter))
+                para.Add(New XElement("FlagBit", _dqFilterCounter))
+                aStep.Add(para)
+                Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            Case "Data Frame", "Channel"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                        </Filter>
+                Dim para = <Parameters></Parameters>
+                If Not String.IsNullOrEmpty(singleStep.PercentBadThresh) Then
+                    para.Add(<PercentBadThresh><%= singleStep.PercentBadThresh %></PercentBadThresh>)
+                End If
+                para.Add(New XElement("SetToNaN", "TRUE"))
+                para.Add(New XElement("FlagBit", _dqFilterCounter))
+                aStep.Add(para)
+                Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            Case "Entire PMU"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                        </Filter>
+                Dim para = <Parameters></Parameters>
+                If Not String.IsNullOrEmpty(singleStep.PercentBadThresh) Then
+                    para.Add(<PercentBadThresh><%= singleStep.PercentBadThresh %></PercentBadThresh>)
+                End If
+                para.Add(New XElement("SetToNaN", "TRUE"))
+                para.Add(New XElement("FlagBit", _dqFilterCounter))
+                aStep.Add(para)
+                For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
+                    For Each subgroup In group.SignalList
+                        Dim PMU As XElement = <PMU>
+                                                  <Name><%= subgroup.SignalSignature.PMUName %></Name>
+                                              </PMU>
+                        aStep.Add(PMU)
+                    Next
+                Next
+            Case "Angle Wrapping"
+                _dqFilterCounter = _dqFilterCounter + 1
+                aStep = <Filter>
+                            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                        </Filter>
+                Dim para = <Parameters></Parameters>
+                If Not String.IsNullOrEmpty(singleStep.AngleThresh) Then
+                    para.Add(<AngleThresh><%= singleStep.AngleThresh %></AngleThresh>)
+                End If
+                para.Add(New XElement("SetToNaN", "TRUE"))
+                para.Add(New XElement("FlagBit", _dqFilterCounter))
+                aStep.Add(para)
+                Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(aStep, PMUSignalDictionary)
+            Case Else
+                'aStep = <Filter>
+                '            <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                '            <Parameters></Parameters>
+                '        </Filter>
+                'For Each parameter In singleStep.FilterParameters
+                '    'Dim a = {parameter}ParameterName
+                '    'Dim para As XElement = <<%= parameter.ParameterName.ToString %>><%= parameter.Value %></>
+                '    Dim para As XElement
+                '    If TypeOf parameter.Value Is Boolean Then
+                '        If parameter.Value Then
+                '            para = New XElement(parameter.ParameterName.ToString, "TRUE")
+                '        Else
+                '            para = New XElement(parameter.ParameterName.ToString, "FALSE")
+                '        End If
+                '    Else
+                '        para = New XElement(parameter.ParameterName.ToString, parameter.Value)
+                '    End If
+                '    aStep.<Parameters>.LastOrDefault.Add(para)
+                'Next
+                'aStep.<Parameters>.LastOrDefault.Add(New XElement("SetToNaN", "TRUE"))
+                'aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", "1"))
+                'If singleStep.Name = "Status Flags" Then
+                '    For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
+                '        For Each subgroup In group.SignalList
+                '            Dim PMU As XElement = <PMU>
+                '                                      <Name><%= subgroup.SignalSignature.PMUName %></Name>
+                '                                  </PMU>
+                '            aStep.Add(PMU)
+                '        Next
+                '    Next
+                'Else
+                '    Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                '    _writePMUElements(aStep, PMUSignalDictionary)
+                'End If
         End Select
     End Sub
 
     Private Sub _writePMUElements(aStep As XElement, pMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures)))
         For Each pmuGroup In pMUSignalDictionary
             Dim PMU As XElement = <PMU>
-                                                                                                                                                    <Name><%= pmuGroup.Key %></Name>
-                                                                                                                                                </PMU>
+                                      <Name><%= pmuGroup.Key %></Name>
+                                  </PMU>
             For Each signal In pmuGroup.Value
                 Dim sglName As XElement = <Channel>
-                                                                                                                                                    <Name><%= signal.SignalName %></Name>
-                                                                                                                                                </Channel>
+                                              <Name><%= signal.SignalName %></Name>
+                                          </Channel>
                 PMU.Add(sglName)
             Next
             aStep.Add(PMU)

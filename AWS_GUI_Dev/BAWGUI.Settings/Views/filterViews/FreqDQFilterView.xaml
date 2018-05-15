@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="FreqDQFilterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+            <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+            <local:FilterListBox/>
+        </StackPanel>
+        <Grid Margin="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>-->
+            <!--<Label Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="{Binding ParameterName}" ContentStringFormat="{}{0}:" HorizontalAlignment="Left"/>-->
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="Limits for Files" FontWeight="Black" HorizontalAlignment="Left"/>
+            <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum (Hz):" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" Text="{Binding FreqMinChan}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum (Hz):" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" Text="{Binding FreqMaxChan}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Portion of File (%):" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" Text="{Binding FreqPctChan}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Content="Limits for Individual Samples" FontWeight="Black" HorizontalAlignment="Left"/>
+            <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum (Hz):" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" Text="{Binding FreqMinSamp}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum (Hz):" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" Text="{Binding FreqMaxSamp}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            <TextBlock Grid.Row="6" Grid.Column="2" Margin="0,1" Width="50" Text="" VerticalAlignment="Center" HorizontalAlignment="Left"/><!-- This line of code is to hold the position so it lines up with other filter that has content in the 3rd column, please don't delete -->
+        </Grid>
+    </Grid>
+</UserControl>

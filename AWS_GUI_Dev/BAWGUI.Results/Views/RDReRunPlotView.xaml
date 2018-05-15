@@ -2,11 +2,18 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters2="clr-namespace:BAWGUI.Results.Converters"
              xmlns:local="clr-namespace:BAWGUI.Results.Views"
              xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters2:VisibleIfNotEqualToOneConverter x:Key="VisibleIfNotEqualToOneConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -15,8 +22,8 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <!--<StackPanel Orientation="Vertical">-->
-        <oxy:PlotView Grid.Row="0" Model="{Binding RDreRunPlotModel}" MinHeight="150" x:Name="RDReRunPlot"/>
-        <ListView Grid.Row="1" ItemsSource="{Binding ThumbnailPlots}" SelectedItem="{Binding SelectedSignalPlotModel}">
+        <oxy:PlotView Grid.Row="0" Model="{Binding RDreRunPlotModel}" MinHeight="150" x:Name="RDReRunPlot" Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}"/>
+        <ListView Grid.Row="1" ItemsSource="{Binding ThumbnailPlots}" SelectedItem="{Binding SelectedSignalPlotModel}"  Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />

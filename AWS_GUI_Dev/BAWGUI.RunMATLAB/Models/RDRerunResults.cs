@@ -94,6 +94,26 @@ namespace BAWGUI.RunMATLAB.Models
                 }
                 //Console.WriteLine("\tthere are " + DataChannel.Count + " channels");
                 //Console.WriteLine("first data channel is: " + DataChannel.FirstOrDefault() + ", last data channel is: " + DataChannel.LastOrDefault());
+                List<string> dataType = new List<string>();
+                foreach (char[,] item in ((MWCellArray)_results["DataType", index]).ToArray())
+                {
+                    string type = "";
+                    foreach (var c in item)
+                    {
+                        type = type + c.ToString();
+                    }
+                    dataType.Add(type);
+                }
+                List<string> dataUnit = new List<string>();
+                foreach (char[,] item in ((MWCellArray)_results["DataUnit", index]).ToArray())
+                {
+                    string unit = "";
+                    foreach (var c in item)
+                    {
+                        unit = unit + c.ToString();
+                    }
+                    dataUnit.Add(unit);
+                }
                 var newDetector = new RingdownDetector();
                 newDetector.Label = index.ToString();
                 for (int signalCount = 0; signalCount < dimEach[1]; signalCount++)
@@ -101,8 +121,8 @@ namespace BAWGUI.RunMATLAB.Models
                     var newRingdownSignal = new RingdownSignal();
                     newRingdownSignal.SignalName = dataChannel[signalCount];
                     newRingdownSignal.PMUname = dataPMU[signalCount];
-                    //newRingdownSignal.Type = dataType[signalCount];
-                    //newRingdownSignal.Unit = dataUnit[signalCount];
+                    newRingdownSignal.Type = dataType[signalCount];
+                    newRingdownSignal.Unit = dataUnit[signalCount];
                     newRingdownSignal.TimeStamps = timeStamps;
                     newRingdownSignal.TimeStampNumber = timeStampNumbers;
                     newRingdownSignal.Threshold = threshold.GetRange(signalCount * dimEach[0], dimEach[0]);

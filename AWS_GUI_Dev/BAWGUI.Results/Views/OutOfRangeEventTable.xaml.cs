@@ -1,5 +1,4 @@
-﻿using OxyPlot;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,17 +16,13 @@ using System.Windows.Shapes;
 namespace BAWGUI.Results.Views
 {
     /// <summary>
-    /// Interaction logic for RDPlotView.xaml
+    /// Interaction logic for OutOfRangeEventTable.xaml
     /// </summary>
-    public partial class RDSparsePlotView : UserControl
+    public partial class OutOfRangeEventTable : UserControl
     {
-        public RDSparsePlotView()
+        public OutOfRangeEventTable()
         {
             InitializeComponent();
-            RDPlot.Controller = new OxyPlot.PlotController();
-            RDPlot.Controller.BindMouseDown(OxyPlot.OxyMouseButton.Left, OxyPlot.PlotCommands.ZoomRectangle);
-            RDPlot.Controller.BindMouseDown(OxyMouseButton.Right, PlotCommands.PanAt);
-            RDPlot.Controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
         }
     }
 }

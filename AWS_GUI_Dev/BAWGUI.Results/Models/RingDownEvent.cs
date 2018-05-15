@@ -32,7 +32,20 @@ namespace BAWGUI.Results.Models
         }
         public string Duration
         {
-            get { return (DateTime.ParseExact(EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture) - DateTime.ParseExact(StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture)).TotalSeconds.ToString(); }
+            get
+            {
+                var timeSpan = (DateTime.ParseExact(EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture) - DateTime.ParseExact(StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture)).TotalSeconds;
+                var rounded = 0d;
+                var power = 0;
+                while (rounded == 0)
+                {
+                    var scaled = timeSpan * Math.Pow(10, power);
+                    rounded = Math.Round(scaled, 1) / Math.Pow(10, power);
+                    power++;
+                }
+                return rounded.ToString();
+                //return Math.Round((DateTime.ParseExact(EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture) - DateTime.ParseExact(StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture)).TotalSeconds, 1).ToString();
+            }
         }
         public List<RingdownTypeChannel> Channels
         {

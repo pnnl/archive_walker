@@ -12,7 +12,8 @@ Namespace Model
             'what If type Is nothing?
             _type = filetype
             'firstFile = Nothing
-            _buildDirTree(filename, firstFile)
+            '_buildDirTree(filename, firstFile)
+            _findFirstFile(filename, firstFile)
         End Sub
         Private _type As String
         Private _name As String
@@ -61,7 +62,29 @@ Namespace Model
                 For Each file In Directory.GetFiles(filename)
                     'what If type Is nothing?
                     If Path.GetExtension(file).Substring(1) = _type Then
-                        _subFolders.Add(New Folder(file, _type, firstFile))
+                        If String.IsNullOrEmpty(firstFile) Then
+                            _subFolders.Add(New Folder(file, _type, firstFile))
+                        End If
+                    End If
+                Next
+            Else
+                Throw New Exception(vbCrLf + "Error: data file path """ + filename + """ does not exists!")
+            End If
+        End Sub
+        Private Sub _findFirstFile(filename, ByRef firstFile)
+            If File.Exists(filename) Then
+                firstFile = filename
+            ElseIf Directory.Exists(filename) Then
+                For Each file In Directory.GetFiles(filename)
+                    _findFirstFile(file, firstFile)
+                    If Not String.IsNullOrEmpty(firstFile) Then
+                        Exit Sub
+                    End If
+                Next
+                For Each path In Directory.GetDirectories(filename)
+                    _findFirstFile(path, firstFile)
+                    If Not String.IsNullOrEmpty(firstFile) Then
+                        Exit Sub
                     End If
                 Next
             Else

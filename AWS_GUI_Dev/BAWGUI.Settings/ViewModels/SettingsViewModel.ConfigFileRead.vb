@@ -117,10 +117,40 @@ Namespace ViewModels
                 Dim steps = From element In stage.Elements Select element
                 For Each stp In steps
                     Dim aStep As Object
-
                     If stp.Name = "Filter" Then
-                        aStep = New DQFilter
-                        aStep.Name = DataConfigure.DQFilterReverseNameDictionary(stp.<Name>.Value)
+                        Dim filterName = DataConfigure.DQFilterReverseNameDictionary(stp.<Name>.Value)
+                        Select Case filterName
+                            Case "Status Flags", "Zeros", "Missing"
+                                aStep = New DQFilter
+                                aStep.Name = filterName
+                                '_readPlainDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Nominal Voltage"
+                                aStep = New VoltPhasorDQFilter
+                                aStep.Name = filterName
+                                _readVoltPhasorDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Nominal Frequency"
+                                aStep = New FreqDQFilter
+                                aStep.Name = filterName
+                                _readFreqDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Outliers"
+                                aStep = New OutlierDQFilter
+                                aStep.Name = filterName
+                                _readOutlierDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Stale Data"
+                                aStep = New StaleDQFilter
+                                aStep.Name = filterName
+                                _readStaleDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Data Frame", "Channel", "Entire PMU"
+                                aStep = New DataFramePMUchanPMUallDQFilter
+                                aStep.Name = filterName
+                                _readDataFramePMUchanPMUallDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Angle Wrapping"
+                                aStep = New WrappingFailureDQFilter
+                                aStep.Name = filterName
+                                _readWrappingFailureDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case Else
+                                Throw New Exception(String.Format("Wrong DQ Filter name found in Config.xml file: {0}", filterName))
+                        End Select
                         'necessaryParams.AddRange(DataConfigure.DQFilterNameParametersDictionary(aStep.Name))
                     ElseIf stp.Name = "Customization" Then
                         Dim thisStepName = DataConfigure.CustomizationReverseNameDictionary(stp.<Name>.Value)
@@ -128,6 +158,11 @@ Namespace ViewModels
                             Case "Metric Prefix"
                                 aStep = New MetricPrefixCust
                                 aStep.Name = thisStepName
+                                _readMetricPrefixCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Scalar Repetition"
+                                aStep = New ScalarRepCust
+                                aStep.Name = thisStepName
+                                _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                             Case Else
                                 aStep = New Customization
                                 aStep.Name = thisStepName
@@ -141,8 +176,10 @@ Namespace ViewModels
 
                     'Dim signalForUnitTypeSpecificationCustomization As SignalSignatures = Nothing
                     Select Case aStep.Name
+                        Case "Status Flags", "Zeros", "Missing", "Nominal Voltage", "Nominal Frequency", "Outliers", "Stale Data", "Data Frame", "Channel", "Entire PMU", "Angle Wrapping", "Metric Prefix"
+                            'pass
                         Case "Scalar Repetition"
-                            _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            'pass
                         Case "Addition"
                             _readAdditionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Subtraction"
@@ -163,47 +200,58 @@ Namespace ViewModels
                             _readSpecTypeUnitCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Power Calculation"
                             _readPowerCalculationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter, 1)
-                        Case "Metric Prefix"
-                            _readMetricPrefixCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Angle Conversion"
                             _readAngleConversionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case Else
-                            Dim params = From ps In stp.<Parameters>.Elements Select ps
-                            For Each pair In params
-                                Dim paraName = pair.Name.ToString
-                                If paraName <> "SetToNaN" And paraName <> "FlagBit" Then
-                                    Dim aPair As New ParameterValuePair
-                                    aPair.ParameterName = paraName
-                                    If pair.Value.ToLower = "false" Then
-                                        aPair.Value = False
-                                    ElseIf pair.Value.ToLower = "true" Then
-                                        aPair.Value = True
-                                        'ElseIf aStep.Name = "Nominal-Value Frequency Data Quality Filter" And paraName = "FlagBit" Then
-                                        '    aPair.IsRequired = False
-                                        '    aPair.Value = pair.Value
-                                    Else
-                                        aPair.Value = pair.Value
-                                    End If
-                                    aStep.FilterParameters.Add(aPair)
-                                End If
-                            Next
-                            Try
-                                aStep.InputChannels = _readPMUElements(stp)
-                            Catch ex As Exception
-                                _addLog("In a data quality filter step: " & aStep.StepCounter.ToString & " of data config. " & ex.Message)
-                            End Try
-                            For Each signal In aStep.InputChannels
-                                signal.PassedThroughDQFilter = signal.PassedThroughDQFilter + 1
-                                aStep.OutputChannels.Add(signal)
-                            Next
+                            Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", aStep.Name))
+                            'Dim params = From ps In stp.<Parameters>.Elements Select ps
+                            'For Each pair In params
+                            '    Dim paraName = pair.Name.ToString
+                            '    If paraName <> "SetToNaN" And paraName <> "FlagBit" Then
+                            '        Dim aPair As New ParameterValuePair
+                            '        aPair.ParameterName = paraName
+                            '        If pair.Value.ToLower = "false" Then
+                            '            aPair.Value = False
+                            '        ElseIf pair.Value.ToLower = "true" Then
+                            '            aPair.Value = True
+                            '            'ElseIf aStep.Name = "Nominal Frequency" And paraName = "FlagBit" Then
+                            '            '    aPair.IsRequired = False
+                            '            '    aPair.Value = pair.Value
+                            '        Else
+                            '            aPair.Value = pair.Value
+                            '        End If
+                            '        aStep.FilterParameters.Add(aPair)
+                            '    End If
+                            'Next
+                            'Try
+                            '    aStep.InputChannels = _readPMUElements(stp)
+                            'Catch ex As Exception
+                            '    _addLog("In a data quality filter step: " & aStep.StepCounter.ToString & " of data config. " & ex.Message)
+                            'End Try
+                            'For Each signal In aStep.InputChannels
+                            '    signal.PassedThroughDQFilter = signal.PassedThroughDQFilter + 1
+                            '    aStep.OutputChannels.Add(signal)
+                            'Next
                             ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
                             ' to add this step that is for sure a DQ filter to the list of step for signal manipulation and customization.
                             ' Don't not move it outside the select case loop!!!!!
                             ' Or it will cause customization steps being added twice.
-                            CollectionOfSteps.Add(aStep)
+                            'CollectionOfSteps.Add(aStep)
                             ' Leave this line here! Don't move it!
                             ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
                     End Select
+                    If TypeOf aStep Is DQFilter Then
+                        Try
+                            aStep.InputChannels = _readPMUElements(stp)
+                        Catch ex As Exception
+                            _addLog("In a data quality filter step: " & aStep.StepCounter.ToString & " of data config. " & ex.Message)
+                        End Try
+                        For Each signal In aStep.InputChannels
+                            signal.PassedThroughDQFilter = signal.PassedThroughDQFilter + 1
+                            aStep.OutputChannels.Add(signal)
+                        Next
+                        CollectionOfSteps.Add(aStep)
+                    End If
                     If TypeOf aStep Is Customization Then
                         aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
                         GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
@@ -213,6 +261,96 @@ Namespace ViewModels
                 Next
             Next
             DataConfigure.CollectionOfSteps = CollectionOfSteps
+        End Sub
+
+        Private Sub _readWrappingFailureDQFilter(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
+            Dim angle = params.<AngleThresh>.Value
+            If angle IsNot Nothing Then
+                aStep.AngleThresh = angle
+            End If
+        End Sub
+
+        Private Sub _readDataFramePMUchanPMUallDQFilter(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
+            Dim per = params.<PercentBadThresh>.Value
+            If per IsNot Nothing Then
+                aStep.PercentBadThresh = per
+            End If
+        End Sub
+
+        Private Sub _readStaleDQFilter(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
+            Dim par = params.<StaleThresh>.Value
+            If par IsNot Nothing Then
+                aStep.StaleThresh = par
+            End If
+            par = params.<FlagAllByFreq>.Value
+            If par IsNot Nothing Then
+                If par.ToLower = "true" Then
+                    aStep.FlagAllByFreq = True
+                Else
+                    aStep.FlagAllByFreq = False
+                End If
+            End If
+            'par = params.<FlagBitFreq>.Value
+            'If par IsNot Nothing Then
+            '    aStep.FlagBitFreq = par
+            'End If
+        End Sub
+
+        Private Sub _readOutlierDQFilter(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
+            Dim par = params.<StdDevMult>.Value
+            If par IsNot Nothing Then
+                aStep.StdDevMult = par
+            End If
+        End Sub
+
+        Private Sub _readFreqDQFilter(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
+            Dim par = params.<FreqMaxChan>.Value
+            If par IsNot Nothing Then
+                aStep.FreqMaxChan = par
+            End If
+            par = params.<FreqMinChan>.Value
+            If par IsNot Nothing Then
+                aStep.FreqMinChan = par
+            End If
+            par = params.<FreqPctChan>.Value
+            If par IsNot Nothing Then
+                aStep.FreqPctChan = par
+            End If
+            par = params.<FreqMinSamp>.Value
+            If par IsNot Nothing Then
+                aStep.FreqMinSamp = par
+            End If
+            par = params.<FreqMaxSamp>.Value
+            If par IsNot Nothing Then
+                aStep.FreqMaxSamp = par
+            End If
+            'par = params.<FlagBitChan>.Value
+            'If par IsNot Nothing Then
+            '    aStep.FlagBitChan = par
+            'End If
+            'par = params.<FlagBitSamp>.Value
+            'If par IsNot Nothing Then
+            '    aStep.FlagBitSamp = par
+            'End If
+        End Sub
+
+        Private Sub _readVoltPhasorDQFilter(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
+            Dim par = params.<VoltMin>.Value
+            If par IsNot Nothing Then
+                aStep.VoltMin = par
+            End If
+            par = params.<VoltMax>.Value
+            If par IsNot Nothing Then
+                aStep.VoltMax = par
+            End If
+            par = params.<NomVoltage>.Value
+            If par IsNot Nothing Then
+                aStep.NomVoltage = par
+            End If
+        End Sub
+
+        Private Sub _readPlainDQFilter(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As ObservableCollection(Of Object), stepCounter As Integer)
+
         End Sub
 
         Private Sub _readPhasorCreationCustomization(aStep As Object, params As IEnumerable(Of XElement), collectionOfSteps As Object, stepCounter As Integer)
@@ -552,12 +690,16 @@ Namespace ViewModels
             If unit Is Nothing Then
                 unit = "SC"
             End If
-            aStep.TimeSourcePMU.PMU = params.<TimeSourcePMU>.Value
-
+            Dim pmu = params.<TimeSourcePMU>.Value
+            aStep.TimeSourcePMU = AllPMUs.Where(Function(x) x.PMU = pmu).FirstOrDefault()
+            aStep.Unit = unit
+            aStep.Type = type
             Dim output = New SignalSignatures(outputName, aStep.CustPMUname, type)
             output.IsCustomSignal = True
             output.Unit = unit
-            output.SamplingRate = GroupedRawSignalsByPMU.SelectMany(Function(x) x.SignalList).Distinct.Select(Function(y) y.SignalSignature).Where(Function(z) z.PMUName = aStep.TimeSourcePMU.PMU).Select(Function(n) n.SamplingRate).FirstOrDefault()
+            If aStep.TimeSourcePMU IsNot Nothing Then
+                output.SamplingRate = aStep.TimeSourcePMU.SamplingRate
+            End If
             aStep.OutputChannels.Add(output)
             collectionOfSteps.Add(aStep)
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
@@ -1035,7 +1177,7 @@ Namespace ViewModels
                         '        aPair.Value = [Enum].Parse(GetType(EndpointsType), pair.Value)
                         '    ElseIf paraName = "HandleNaN" Then
                         '        aPair.Value = [Enum].Parse(GetType(HandleNaNType), pair.Value)
-                        '        'ElseIf aStep.Name = "Nominal-Value Frequency Data Quality Filter" And paraName = "FlagBit" Then
+                        '        'ElseIf aStep.Name = "Nominal Frequency" And paraName = "FlagBit" Then
                         '        '    aPair.IsRequired = False
                         '        '    aPair.Value = pair.Value
                         '    Else
@@ -1321,7 +1463,7 @@ Namespace ViewModels
 
         Private Sub _readSpectralCoherence(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New SpectralCoherenceDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Mode = [Enum].Parse(GetType(DetectorModeType), detector.<Mode>.Value)
             newDetector.AnalysisLength = detector.<AnalysisLength>.Value
             newDetector.Delay = detector.<Delay>.Value
@@ -1346,7 +1488,7 @@ Namespace ViewModels
 
         Private Sub _readPeriodogram(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New PeriodogramDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & " Detector " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " Detector " & newDetector.Name
             newDetector.Mode = [Enum].Parse(GetType(DetectorModeType), detector.<Mode>.Value)
             newDetector.AnalysisLength = detector.<AnalysisLength>.Value
             newDetector.WindowType = [Enum].Parse(GetType(DetectorWindowType), detector.<WindowType>.Value)
@@ -1370,8 +1512,13 @@ Namespace ViewModels
 
         Private Sub _readWindRamp(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New WindRampDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Fpass = detector.<Fpass>.Value
+            If Not String.IsNullOrEmpty(newDetector.Fpass) AndAlso newDetector.Fpass = "0.00005" Then
+                newDetector.IsLongTrend = True
+            Else
+                newDetector.IsLongTrend = False
+            End If
             newDetector.Fstop = detector.<Fstop>.Value
             newDetector.Apass = detector.<Apass>.Value
             newDetector.Astop = detector.<Astop>.Value
@@ -1391,7 +1538,7 @@ Namespace ViewModels
 
         Private Sub _readRingdown(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New RingdownDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.RMSlength = detector.<RMSlength>.Value
             'newDetector.ForgetFactor = detector.<ForgetFactor>.Value
             newDetector.RingThresholdScale = detector.<RingThresholdScale>.Value
@@ -1409,7 +1556,7 @@ Namespace ViewModels
 
         Private Sub _readOutOfRangeFrequency(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New OutOfRangeFrequencyDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             Dim type = From el In detector.Elements Where el.Name = "AverageWindow" Select el
             If type.Count = 0 Then
                 newDetector.Type = OutOfRangeFrequencyDetectorType.Nominal
@@ -1438,7 +1585,7 @@ Namespace ViewModels
 
         Private Sub _readOutOfRangeGeneral(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New OutOfRangeGeneralDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = (GroupedSignalByDetectorInput.Count + 1).ToString & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Max = detector.<Max>.Value
             newDetector.Min = detector.<Min>.Value
             newDetector.AnalysisWindow = detector.<AnalysisWindow>.Value

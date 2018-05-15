@@ -10,31 +10,31 @@ Namespace Model
             MyBase.New
             _readerProperty = New ReaderProperties
             _collectionOfSteps = New ObservableCollection(Of Object)
-            _dqFilterNameDictionary = New Dictionary(Of String, String) From {{"PMU Status Flags Data Quality Filter", "PMUflagFilt"},
-                                                                            {"Replaced-by-Zero Dropout Data Quality Filter", "DropOutZeroFilt"},
-                                                                            {"Replaced-by-Missing Dropout Data Quality Filter", "DropOutMissingFilt"},
-                                                                            {"Nominal-Value Voltage Phasor Data Quality Filter", "VoltPhasorFilt"},
-                                                                            {"Nominal-Value Frequency Data Quality Filter", "FreqFilt"},
-                                                                            {"Outlier Data Quality Filter", "OutlierFilt"},
-                                                                            {"Stale Measurements Data Quality Filter", "StaleFilt"},
-                                                                            {"Measurement Frame Data Quality Filter", "DataFrameFilt"},
-                                                                            {"Entire Channel Data Quality Filter", "PMUchanFilt"},
-                                                                            {"Entire PMU Data Quality Filter", "PMUallFilt"},
-                                                                            {"Angle Wrapping Failure Filter", "WrappingFailureFilt"}}
+            _dqFilterNameDictionary = New Dictionary(Of String, String) From {{"Status Flags", "PMUflagFilt"},
+                                                                            {"Zeros", "DropOutZeroFilt"},
+                                                                            {"Missing", "DropOutMissingFilt"},
+                                                                            {"Nominal Voltage", "VoltPhasorFilt"},
+                                                                            {"Nominal Frequency", "FreqFilt"},
+                                                                            {"Outliers", "OutlierFilt"},
+                                                                            {"Stale Data", "StaleFilt"},
+                                                                            {"Data Frame", "DataFrameFilt"},
+                                                                            {"Channel", "PMUchanFilt"},
+                                                                            {"Entire PMU", "PMUallFilt"},
+                                                                            {"Angle Wrapping", "WrappingFailureFilt"}}
             _dqFilterReverseNameDictionary = _dqFilterNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
             _dqFilterList = _dqFilterNameDictionary.Keys.ToList
 
-            _dqFilterNameParametersDictionary = New Dictionary(Of String, List(Of String)) From {{"PMU Status Flags Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
-                                                                            {"Replaced-by-Zero Dropout Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
-                                                                            {"Replaced-by-Missing Dropout Data Quality Filter", {"SetToNaN", "FlagBit"}.ToList},
-                                                                            {"Nominal-Value Voltage Phasor Data Quality Filter", {"SetToNaN", "FlagBit", "VoltMin", "VoltMax", "NomVoltage"}.ToList},
-                                                                            {"Nominal-Value Frequency Data Quality Filter", {"SetToNaN", "FreqMinChan", "FreqMaxChan", "FreqPctChan", "FreqMinSamp", "FreqMaxSamp", "FlagBitChan", "FlagBitSamp"}.ToList},
-                                                                            {"Outlier Data Quality Filter", {"SetToNaN", "FlagBit", "StdDevMult"}.ToList},
-                                                                            {"Stale Measurements Data Quality Filter", {"SetToNaN", "FlagBit", "StaleThresh", "FlagAllByFreq", "FlagBitFreq"}.ToList},
-                                                                            {"Measurement Frame Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
-                                                                            {"Entire Channel Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
-                                                                            {"Entire PMU Data Quality Filter", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
-                                                                            {"Angle Wrapping Failure Filter", {"SetToNaN", "FlagBit", "AngleThresh"}.ToList}}
+            _dqFilterNameParametersDictionary = New Dictionary(Of String, List(Of String)) From {{"Status Flags", {"SetToNaN", "FlagBit"}.ToList},
+                                                                            {"Zeros", {"SetToNaN", "FlagBit"}.ToList},
+                                                                            {"Missing", {"SetToNaN", "FlagBit"}.ToList},
+                                                                            {"Nominal Voltage", {"SetToNaN", "FlagBit", "VoltMin", "VoltMax", "NomVoltage"}.ToList},
+                                                                            {"Nominal Frequency", {"SetToNaN", "FreqMinChan", "FreqMaxChan", "FreqPctChan", "FreqMinSamp", "FreqMaxSamp", "FlagBitChan", "FlagBitSamp"}.ToList},
+                                                                            {"Outliers", {"SetToNaN", "FlagBit", "StdDevMult"}.ToList},
+                                                                            {"Stale Data", {"SetToNaN", "FlagBit", "StaleThresh", "FlagAllByFreq", "FlagBitFreq"}.ToList},
+                                                                            {"Data Frame", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
+                                                                            {"Channel", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
+                                                                            {"Entire PMU", {"SetToNaN", "FlagBit", "PercentBadThresh"}.ToList},
+                                                                            {"Angle Wrapping", {"SetToNaN", "FlagBit", "AngleThresh"}.ToList}}
 
             '_customizationNameDictionary = New Dictionary(Of String, String) From {{"Scalar Repetition", "ScalarRep"},
             '                                                                    {"Addition", "Addition"},
@@ -209,7 +209,7 @@ Namespace Model
 
             _dateTimeStart = ""
             _dateTimeEnd = ""
-            _selectedTimeZone = TimeZoneInfo.Local
+            _selectedTimeZone = TimeZoneInfo.Utc
 
             _inputFileInfos = New ObservableCollection(Of InputFileInfo)
         End Sub
@@ -711,8 +711,24 @@ Namespace Model
 
         Public Sub New()
             MyBase.New
+            '_flagBitCounter = _flagBitCounter + 1
+            'FlagBit = _flagBitCounter.ToString
+            _setToNaN = True
         End Sub
 
+        'Private Shared _flagBitCounter As Integer = 0
+        'Public ReadOnly Property FlagBit As String
+
+        Private _setToNaN As String
+        Public Property SetToNaN As String
+            Get
+                Return _setToNaN
+            End Get
+            Set(ByVal value As String)
+                _setToNaN = value
+                OnPropertyChanged()
+            End Set
+        End Property
         'Private _PMUs As ObservableCollection(Of PMU)
         'Public Property PMUs As ObservableCollection(Of PMU)
         '    Get
@@ -728,6 +744,183 @@ Namespace Model
 
     End Class
 
+    Public Class VoltPhasorDQFilter
+        Inherits DQFilter
+        Public Sub New()
+            MyBase.New
+        End Sub
+        Private _voltMin As String
+        Public Property VoltMin As String
+            Get
+                Return _voltMin
+            End Get
+            Set(ByVal value As String)
+                _voltMin = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _voltMax As String
+        Public Property VoltMax As String
+            Get
+                Return _voltMax
+            End Get
+            Set(ByVal value As String)
+                _voltMax = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _nomVoltage As String
+        Public Property NomVoltage As String
+            Get
+                Return _nomVoltage
+            End Get
+            Set(ByVal value As String)
+                _nomVoltage = value
+                OnPropertyChanged()
+            End Set
+        End Property
+    End Class
+
+    Public Class FreqDQFilter
+        Inherits DQFilter
+        Public Sub New()
+            MyBase.New
+            'FlagBitChan = FlagBit
+            'FlagBitSamp = FlagBit
+        End Sub
+        Private _freqMaxChan As String
+        Public Property FreqMaxChan As String
+            Get
+                Return _freqMaxChan
+            End Get
+            Set(ByVal value As String)
+                _freqMaxChan = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _freqMinChan As String
+        Public Property FreqMinChan As String
+            Get
+                Return _freqMinChan
+            End Get
+            Set(ByVal value As String)
+                _freqMinChan = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _freqPctChan As String
+        Public Property FreqPctChan As String
+            Get
+                Return _freqPctChan
+            End Get
+            Set(ByVal value As String)
+                _freqPctChan = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _freqMinSamp As String
+        Public Property FreqMinSamp As String
+            Get
+                Return _freqMinSamp
+            End Get
+            Set(ByVal value As String)
+                _freqMinSamp = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _freqMaxSamp As String
+        Public Property FreqMaxSamp As String
+            Get
+                Return _freqMaxSamp
+            End Get
+            Set(ByVal value As String)
+                _freqMaxSamp = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        'Public ReadOnly Property FlagBitChan As String
+        'Public ReadOnly Property FlagBitSamp As String
+    End Class
+
+    Public Class OutlierDQFilter
+        Inherits DQFilter
+        Public Sub New()
+            MyBase.New
+        End Sub
+        Private _stdDevMult As String
+        Public Property StdDevMult As String
+            Get
+                Return _stdDevMult
+            End Get
+            Set(ByVal value As String)
+                _stdDevMult = value
+                OnPropertyChanged()
+            End Set
+        End Property
+    End Class
+
+    Public Class StaleDQFilter
+        Inherits DQFilter
+        Public Sub New()
+            MyBase.New
+            'FlagBitFreq = FlagBit
+        End Sub
+        Private _staleThresh As String
+        Public Property StaleThresh As String
+            Get
+                Return _staleThresh
+            End Get
+            Set(ByVal value As String)
+                _staleThresh = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _flagAllByFreq As Boolean
+        Public Property FlagAllByFreq As Boolean
+            Get
+                Return _flagAllByFreq
+            End Get
+            Set(ByVal value As Boolean)
+                _flagAllByFreq = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        'Public ReadOnly Property FlagBitFreq As String
+    End Class
+
+    Public Class DataFramePMUchanPMUallDQFilter
+        Inherits DQFilter
+        Public Sub New()
+            MyBase.New
+        End Sub
+        Private _percentBadThresh As String
+        Public Property PercentBadThresh As String
+            Get
+                Return _percentBadThresh
+            End Get
+            Set(ByVal value As String)
+                _percentBadThresh = value
+                OnPropertyChanged()
+            End Set
+        End Property
+    End Class
+    Public Class WrappingFailureDQFilter
+        Inherits DQFilter
+        Public Sub New()
+            MyBase.New
+        End Sub
+        Private _angleThresh As String
+        Public Property AngleThresh As String
+            Get
+                Return _angleThresh
+            End Get
+            Set(ByVal value As String)
+                _angleThresh = value
+                OnPropertyChanged()
+            End Set
+        End Property
+    End Class
+
     Public Class Customization
         Inherits SignalProcessStep
         Public Sub New()
@@ -738,7 +931,7 @@ Namespace Model
             _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
             _exponent = "1"
             IsExpanded = False
-            _timeSourcePMU = New PMUWithSamplingRate()
+            '_timeSourcePMU = New PMUWithSamplingRate()
             '_outputInputMultipleMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
         End Sub
 
@@ -897,28 +1090,6 @@ Namespace Model
                 OnPropertyChanged()
             End Set
         End Property
-        Private _scalar As String
-        Public Property Scalar As String
-            Get
-                Return _scalar
-            End Get
-            Set(ByVal value As String)
-                _scalar = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _timeSourcePMU As PMUWithSamplingRate
-        Public Property TimeSourcePMU As PMUWithSamplingRate
-            Get
-                Return _timeSourcePMU
-            End Get
-            Set(ByVal value As PMUWithSamplingRate)
-                _timeSourcePMU = value
-                'OutputChannels.FirstOrDefault.SamplingRate = GroupedRawSignalsByPMU.SelectMany(Function(x) x.SignalList).Distinct.Select(Function(y) y.SignalSignature).Where(Function(z) z.PMUName = aStep.TimeSourcePMU).Select(Function(n) n.SamplingRate).FirstOrDefault()
-                OutputChannels.FirstOrDefault.SamplingRate = _timeSourcePMU.SamplingRate
-                OnPropertyChanged()
-            End Set
-        End Property
     End Class
 
     Public Class MetricPrefixCust
@@ -937,7 +1108,63 @@ Namespace Model
             End Set
         End Property
     End Class
-
+    Public Class ScalarRepCust
+        Inherits Customization
+        Public Sub New()
+            MyBase.New
+            _timeSourcePMU = New PMUWithSamplingRate
+        End Sub
+        Private _scalar As String
+        Public Property Scalar As String
+            Get
+                Return _scalar
+            End Get
+            Set(ByVal value As String)
+                _scalar = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _timeSourcePMU As PMUWithSamplingRate
+        Public Property TimeSourcePMU As PMUWithSamplingRate
+            Get
+                Return _timeSourcePMU
+            End Get
+            Set(ByVal value As PMUWithSamplingRate)
+                _timeSourcePMU = value
+                'OutputChannels.FirstOrDefault.SamplingRate = GroupedRawSignalsByPMU.SelectMany(Function(x) x.SignalList).Distinct.Select(Function(y) y.SignalSignature).Where(Function(z) z.PMUName = aStep.TimeSourcePMU).Select(Function(n) n.SamplingRate).FirstOrDefault()
+                If _timeSourcePMU IsNot Nothing AndAlso OutputChannels.Count > 0 Then
+                    OutputChannels.FirstOrDefault.SamplingRate = _timeSourcePMU.SamplingRate
+                End If
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _type As String
+        Public Property Type As String
+            Get
+                Return _type
+            End Get
+            Set(ByVal value As String)
+                _type = value
+                If OutputChannels.Count > 0 AndAlso Not String.IsNullOrEmpty(_type) Then
+                    OutputChannels.FirstOrDefault.TypeAbbreviation = _type
+                End If
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _unit As String
+        Public Property Unit As String
+            Get
+                Return _unit
+            End Get
+            Set(ByVal value As String)
+                _unit = value
+                If OutputChannels.Count > 0 AndAlso Not String.IsNullOrEmpty(_unit) Then
+                    OutputChannels.FirstOrDefault.Unit = _unit
+                End If
+                OnPropertyChanged()
+            End Set
+        End Property
+    End Class
     'Public Class SpecifySignalTypeUnitCust
     '    Inherits Customization
     '    Private _selectedSignalType As String

@@ -57,30 +57,30 @@ Namespace Converters
                     Case 2
                         value1 = {"All Initial Input Channels by Signal Type",
                                            "All Initial Input Channels by PMU",
-                                           "Output from SignalSelectionAndManipulation by Signal Type",
-                                           "Output from SignalSelectionAndManipulation by PMU",
+                                           "Output from Data Quality and Customization by Signal Type",
+                                           "Output from Data Quality and Customization by PMU",
                                            "Input to MultiRate steps",
                                            "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
                     Case 3
                         value1 = {"All Initial Input Channels by Signal Type",
                                            "All Initial Input Channels by PMU",
-                                           "Output from SignalSelectionAndManipulation by Signal Type",
-                                           "Output from SignalSelectionAndManipulation by PMU",
-                                           "Output from ProcessConfig by Signal Type",
-                                           "Output from ProcessConfig by PMU",
+                                           "Output from Data Quality and Customization by Signal Type",
+                                           "Output from Data Quality and Customization by PMU",
+                                           "Output from Signal Processing by Signal Type",
+                                           "Output from Signal Processing by PMU",
                                            "Input Channels by Step",
                                            "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "NOT Implemented Yet!"
                     Case 4
                         value1 = {"All Initial Input Channels by Signal Type",
                                            "All Initial Input Channels by PMU",
-                                           "Output from SignalSelectionAndManipulation by Signal Type",
-                                           "Output from SignalSelectionAndManipulation by PMU",
-                                           "Output from ProcessConfig by Signal Type",
-                                           "Output from ProcessConfig by PMU",
-                                           "Output from Post ProcessConfig by Signal Type",
-                                           "Output from Post ProcessConfig by PMU",
+                                           "Output from Data Quality and Customization by Signal Type",
+                                           "Output from Data Quality and Customization by PMU",
+                                           "Output from Signal Processing by Signal Type",
+                                           "Output from Signal Processing by PMU",
+                                           "Output from Post-Processing Customization by Signal Type",
+                                           "Output from Post-Processing Customization by PMU",
                                            "Input Channels by Step"}.ToList
                 End Select
             End If

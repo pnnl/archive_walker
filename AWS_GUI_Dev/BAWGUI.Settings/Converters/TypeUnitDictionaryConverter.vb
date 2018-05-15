@@ -8,10 +8,11 @@ Namespace Converters
 
         Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
             Dim key = values(1)
+            Dim dict = values(0)
             If String.IsNullOrEmpty(key) Then
                 Return DependencyProperty.UnsetValue
             Else
-                Return values(0)(key)
+                Return dict(key)
             End If
         End Function
 

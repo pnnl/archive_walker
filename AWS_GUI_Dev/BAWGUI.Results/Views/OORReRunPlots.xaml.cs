@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace BAWGUI.Results.Views
 {
     /// <summary>
-    /// Interaction logic for RDEventPlot.xaml
+    /// Interaction logic for OORReRunPlot.xaml
     /// </summary>
-    public partial class RDEventPlot : UserControl
+    public partial class OORReRunPlots : UserControl
     {
-        public RDEventPlot()
+        public OORReRunPlots()
         {
             InitializeComponent();
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Resources.Utility
 {
@@ -16,5 +17,16 @@ namespace Resources.Utility
 
         //public static Color HighlightColor = Colors.Cornsilk;
         public static System.Windows.Media.SolidColorBrush HighlightColor = new System.Windows.Media.SolidColorBrush(Colors.Cornsilk);
+
+
+        public static BitmapSource ResizeBitmapSource(BitmapSource bitmapSource, double v1)
+        {
+            var w = bitmapSource.PixelWidth;
+            //var h = bitmapSource.PixelHeight;
+            var scale = v1 / w;
+            WriteableBitmap writable = new WriteableBitmap(new TransformedBitmap(bitmapSource, new ScaleTransform(scale, scale)));
+            writable.Freeze();
+            return writable;
+        }
     }
 }

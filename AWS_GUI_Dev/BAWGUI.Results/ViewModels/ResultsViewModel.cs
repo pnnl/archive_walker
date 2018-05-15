@@ -151,7 +151,7 @@ namespace BAWGUI.Results.ViewModels
                     _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
-            _ringdownResultsViewModel.RDSparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
+            _ringdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             _ringdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
             _ringdownResultsViewModel.SelectedStartTime = startTimeStr;
@@ -162,10 +162,23 @@ namespace BAWGUI.Results.ViewModels
                 while (_ringdownResultsViewModel.FilteredResults.Count() == 0)
                 {
                     findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
-                    _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                    _ringdownResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
+            _outOfRangeResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
+            _outOfRangeResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
             _outOfRangeResultsViewModel.Models = _resultsModel.OutOfRangeEvents;
+            _outOfRangeResultsViewModel.SelectedStartTime = startTimeStr;
+            _outOfRangeResultsViewModel.SelectedEndTime = endTimeStr;
+            findStartTimeHasEvents = startTime;
+            if (_outOfRangeResultsViewModel.Models.Count() != 0)
+            {
+                while (_outOfRangeResultsViewModel.FilteredResults.Count() == 0)
+                {
+                    findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
+                    _outOfRangeResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                }
+            }
             //_ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
             //if(_ringdownResultsViewModel.FilteredResults.Count() != 0)
             //{
@@ -410,7 +423,7 @@ namespace BAWGUI.Results.ViewModels
             OutOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
             RingdownResultsViewModel = new RingdownResultsViewModel();
             RingdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
-            RingdownResultsViewModel.RDSparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
+            RingdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             WindRampResultsViewModel = new WindRampResultsViewModel();
         }
 

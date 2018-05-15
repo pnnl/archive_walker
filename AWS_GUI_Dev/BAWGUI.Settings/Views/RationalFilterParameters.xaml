@@ -31,7 +31,7 @@
         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" HorizontalAlignment="Left">
             <Label.Content>
                 <TextBlock>
-                    <Run Text="Nmberator (b"/><Run 
+                    <Run Text="Numerator (b"/><Run 
                         Text="0" Typography.Variants="Subscript" FontSize="8"/><Run
                         Text=", b"/><Run
                         Text="1" Typography.Variants="Subscript" FontSize="8"/><Run

@@ -111,7 +111,7 @@
                             <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="Baseline Creation" FontWeight="Black" HorizontalAlignment="Left"/>
                             <!--<Image Grid.Row="1" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
                             <!--<Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Type:" HorizontalAlignment="Left"/>-->
-                            <ComboBox Grid.Row="1" Grid.Column="0" Margin="0,1" Width="180" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource OutOfRangeFrequencyDetectorTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter10}}" HorizontalAlignment="Left"/>
+                            <ComboBox Grid.Row="1" Grid.Column="0" Margin="5,1" Width="180" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource OutOfRangeFrequencyDetectorTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter10}}" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <TextBox.Style>
                                     <Style TargetType="{x:Type TextBox}">

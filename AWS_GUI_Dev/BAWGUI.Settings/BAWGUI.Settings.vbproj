@@ -214,6 +214,33 @@
     <Compile Include="Views\FilterListBox.xaml.vb">
       <DependentUpon>FilterListBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\filterViews\DataFramePMUchanDQFilterView.xaml.vb">
+      <DependentUpon>DataFramePMUchanDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\EntirePMUDQFilterView.xaml.vb">
+      <DependentUpon>EntirePMUDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\FreqDQFilterView.xaml.vb">
+      <DependentUpon>FreqDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\OutliersDQFilterView.xaml.vb">
+      <DependentUpon>OutliersDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\StaleDQFilterView.xaml.vb">
+      <DependentUpon>StaleDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\StatusFlagDQFilterView.xaml.vb">
+      <DependentUpon>StatusFlagDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\VoltPhasorDQFilterView.xaml.vb">
+      <DependentUpon>VoltPhasorDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\WrappingFailureDQFilterView.xaml.vb">
+      <DependentUpon>WrappingFailureDQFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\filterViews\ZerosMissingDQFilterView.xaml.vb">
+      <DependentUpon>ZerosMissingDQFilterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HighPassFilterParameters.xaml.vb">
       <DependentUpon>HighPassFilterParameters.xaml</DependentUpon>
     </Compile>
@@ -397,6 +424,42 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\filterViews\DataFramePMUchanDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\EntirePMUDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\FreqDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\OutliersDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\StaleDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\StatusFlagDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\VoltPhasorDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\WrappingFailureDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\filterViews\ZerosMissingDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HighPassFilterParameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -576,8 +639,6 @@
       <Link>MyResources\numerator.PNG</Link>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\filterViews\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

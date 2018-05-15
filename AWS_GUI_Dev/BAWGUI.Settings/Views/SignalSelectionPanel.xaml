@@ -116,10 +116,10 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding GroupedSignalByDataConfigStepsOutput}"/>
                         </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from SignalSelectionAndManipulation by Signal Type">
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Data Quality and Customization by Signal Type">
                             <Setter Property="ItemsSource" Value="{Binding AllDataConfigOutputGroupedByType}"/>
                         </DataTrigger> 
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from SignalSelectionAndManipulation by PMU">
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Data Quality and Customization by PMU">
                             <Setter Property="ItemsSource" Value="{Binding AllDataConfigOutputGroupedByPMU}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Input to MultiRate steps">
@@ -132,10 +132,10 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding GroupedSignalByProcessConfigStepsOutput}"/>
                         </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from ProcessConfig by Signal Type">
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Signal Processing by Signal Type">
                             <Setter Property="ItemsSource" Value="{Binding AllProcessConfigOutputGroupedByType}"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from ProcessConfig by PMU">
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Signal Processing by PMU">
                             <Setter Property="ItemsSource" Value="{Binding AllProcessConfigOutputGroupedByPMU}"/>
                         </DataTrigger>
                         <MultiDataTrigger>
@@ -152,10 +152,10 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding GroupedSignalByPostProcessConfigStepsOutput}"/>
                         </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post ProcessConfig by Signal Type">
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post-Processing Customization by Signal Type">
                             <Setter Property="ItemsSource" Value="{Binding AllPostProcessOutputGroupedByType}"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post ProcessConfig by PMU">
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post-Processing Customization by PMU">
                             <Setter Property="ItemsSource" Value="{Binding AllPostProcessOutputGroupedByPMU}"/>
                         </DataTrigger>
                         <MultiDataTrigger>

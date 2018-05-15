@@ -51,6 +51,33 @@
             <DataTemplate x:Key="AngleConversionCustomization">
                 <local:AngleConversionCustomization/>
             </DataTemplate>
+            <DataTemplate x:Key="StatusFlagDQFilterView">
+                <local:StatusFlagDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="ZerosMissingDQFilterView">
+                <local:ZerosMissingDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="VoltPhasorDQFilterView">
+                <local:VoltPhasorDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="FreqDQFilterView">
+                <local:FreqDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="OutliersDQFilterView">
+                <local:OutliersDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="StaleDQFilterView">
+                <local:StaleDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="DataFramePMUchanDQFilterView">
+                <local:DataFramePMUchanDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="EntirePMUDQFilterView">
+                <local:EntirePMUDQFilterView/>
+            </DataTemplate>
+            <DataTemplate x:Key="WrappingFailureDQFilterView">
+                <local:WrappingFailureDQFilterView/>
+            </DataTemplate>
             <DataTemplate x:Key="FilterListBox">
                 <local:FilterListBox/>
             </DataTemplate>
@@ -152,7 +179,7 @@
                                             </DockPanel>
                                         </Expander.Header>
                                         <ScrollViewer Margin="2" HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Hidden">
-                                            <Grid>
+                                            <!--<Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="6*"/>
                                                     <ColumnDefinition Width="4*"/>
@@ -164,10 +191,10 @@
                                                             <Style TargetType="ContentControl">
                                                                 <Setter Property="ContentTemplate" Value="{StaticResource FilterListBox}"/>
                                                                 <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding Name}" Value="PMU Status Flags Data Quality Filter">
+                                                                    <DataTrigger Binding="{Binding Name}" Value="Status Flags">
                                                                         <Setter Property="ContentTemplate" Value="{StaticResource PMUOnlyFilterListBox}"/>
                                                                     </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Name}" Value="Entire PMU Data Quality Filter">
+                                                                    <DataTrigger Binding="{Binding Name}" Value="Entire PMU">
                                                                         <Setter Property="ContentTemplate" Value="{StaticResource PMUOnlyFilterListBox}"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
@@ -175,8 +202,8 @@
                                                         </ContentControl.Style>
                                                     </ContentControl>
                                                 </StackPanel>
-                                                <!--<StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
-                                                    <Label Content="Parameters:" Margin="2"/>-->
+                                                <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                                                    <Label Content="Parameters:" Margin="2"/>
                                                 <ItemsControl ItemsSource="{Binding FilterParameters}" Margin="2" Grid.Column="1">
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
@@ -186,7 +213,7 @@
                                                                         <ColumnDefinition Width="Auto"/>
                                                                         <ColumnDefinition Width="*"/>
                                                                     </Grid.ColumnDefinitions>
-                                                                    <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
+                                                                    <Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                                         <Image.Style>
                                                                             <Style TargetType="Image">
                                                                                 <Style.Triggers>
@@ -196,7 +223,7 @@
                                                                                 </Style.Triggers>
                                                                             </Style>
                                                                         </Image.Style>
-                                                                    </Image>-->
+                                                                    </Image>
                                                                 <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="{Binding ParameterName}" ContentStringFormat="{}{0}:" HorizontalAlignment="Left"/>
                                                                 <ContentPresenter Content="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Grid.Column="2">
                                                                         <ContentPresenter.Resources>
@@ -212,67 +239,49 @@
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
-                                                <!--</StackPanel>-->
-                                            </Grid>
-                                            <!--<ContentControl Content="{Binding}" Name="Steps">
+                                                </StackPanel>
+                                            </Grid>-->
+                                            <ContentControl Content="{Binding}" Name="FilterSteps">
                                                 <ContentControl.Style>
                                                     <Style TargetType="ContentControl">
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Scalar Repetition">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource ScalarRepCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Status Flags">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource StatusFlagDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Addition">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource AdditionCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Zeros">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource ZerosMissingDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Subtraction">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource SubtractionCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Missing">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource ZerosMissingDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Multiplication">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource MultiplicationCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Nominal Voltage">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource VoltPhasorDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Division">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource DivisionCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Nominal Frequency">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource FreqDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Exponential">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource ExponentCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Outliers">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource OutliersDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Sign Reversal">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Stale Data">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource StaleDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Absolute Value">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Data Frame">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource DataFramePMUchanDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Real Component">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Channel">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource DataFramePMUchanDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Imaginary Component">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Entire PMU">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource EntirePMUDQFilterView}"/>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Angle Calculation">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Complex Conjugate">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource UnaryCustomization}"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Phasor Creation">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource CreatePhasorCustomization}"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Power Calculation">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource PowerCalculationsCustomization}"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Signal Type/Unit">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource SpecifySignalTypeUnitCustomization}"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Metric Prefix">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource MetricPrefixCustomization}"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name}" Value="Angle Conversion">
-                                                                <Setter Property="ContentTemplate" Value="{StaticResource AngleConversionCustomization}"/>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Angle Wrapping">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource WrappingFailureDQFilterView}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </ContentControl.Style>
-                                            </ContentControl>-->
+                                            </ContentControl>
                                         </ScrollViewer>
                                     </Expander>
                                         <!--<Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DeleteDataConfigStep}" CommandParameter="{Binding}">

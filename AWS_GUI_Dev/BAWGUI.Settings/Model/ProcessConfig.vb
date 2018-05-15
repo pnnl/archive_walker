@@ -144,7 +144,8 @@ Namespace Model
         Public Overrides Property Name As String
 
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Throw New NotImplementedException()
+            'Throw New NotImplementedException()
+            Return True
         End Function
         'Private _inputChannels As ObservableCollection(Of SignalSignatures)
         'Public Property InputChannels As ObservableCollection(Of SignalSignatures)
@@ -186,7 +187,8 @@ Namespace Model
         End Sub
 
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Throw New NotImplementedException()
+            'Throw New NotImplementedException()
+            Return True
         End Function
 
         Public Overrides Property Name As String
@@ -271,7 +273,8 @@ Namespace Model
         Public Overrides Property Name As String
 
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Throw New NotImplementedException()
+            'Throw New NotImplementedException()
+            Return True
         End Function
     End Class
 
@@ -617,7 +620,8 @@ Namespace Model
         End Sub
 
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Throw New NotImplementedException()
+            'Throw New NotImplementedException()
+            Return True
         End Function
 
         Private _name As String
