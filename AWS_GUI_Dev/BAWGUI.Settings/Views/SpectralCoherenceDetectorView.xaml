@@ -11,6 +11,11 @@
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
+    <!--<i:Interaction.Triggers>
+        <i:EventTrigger EventName="LostFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorStepDeSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+    </i:Interaction.Triggers>-->
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>

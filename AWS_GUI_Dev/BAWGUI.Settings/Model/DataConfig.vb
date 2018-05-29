@@ -345,7 +345,7 @@ Namespace Model
             Set(ByVal value As String)
                 _dateTimeStart = value
                 'If SelectUTCTime Then
-                _convertStartTimeToSelectedTimeZone()
+                '_convertStartTimeToSelectedTimeZone()
                 'End If
                 OnPropertyChanged("DateTimeStart")
             End Set
@@ -383,7 +383,7 @@ Namespace Model
             End Get
             Set(ByVal value As String)
                 _dateTimeEnd = value
-                _convertEndTimeToSelectedTimeZone()
+                '_convertEndTimeToSelectedTimeZone()
                 OnPropertyChanged("DateTimeEnd")
             End Set
         End Property
@@ -1104,9 +1104,58 @@ Namespace Model
             End Get
             Set(ByVal value As Boolean)
                 _useCustomPMU = value
+                If value Then
+                    'use custom PMU, generate new PMU and new signal as the output signal
+                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+                    OutputChannels.Clear()
+                    For Each pair In OutputInputMappingPair
+                        Dim input = pair.Value.FirstOrDefault
+                        Dim output = New SignalSignatures(input.SignalName, CustPMUname, input.TypeAbbreviation)
+                        output.Unit = input.Unit
+                        output.IsCustomSignal = True
+                        output.OldUnit = output.Unit
+                        output.SamplingRate = input.SamplingRate
+                        Dim aNewPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                        input.Unit = input.OldUnit
+                        aNewPair.Value.Add(input)
+                        newOutputInputMappingPairs.Add(aNewPair)
+                        OutputChannels.Add(output)
+                    Next
+                    OutputInputMappingPair = newOutputInputMappingPairs
+                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(OutputChannels)
+                Else
+                    'use current PMU, so overwrite the current signal
+                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+                    OutputChannels.Clear()
+                    For Each pair In OutputInputMappingPair
+                        Dim output = pair.Key
+                        Dim input = pair.Value.FirstOrDefault
+                        'Dim newUnit = ""
+                        If output IsNot Nothing AndAlso Not String.IsNullOrEmpty(output.Unit) Then
+                            Dim newUnit = output.Unit
+                            input.OldUnit = input.Unit
+                            input.Unit = newUnit
+                        End If
+                        OutputChannels.Add(input)
+                        Dim aNewPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(input, New ObservableCollection(Of SignalSignatures))
+                        aNewPair.Value.Add(input)
+                        newOutputInputMappingPairs.Add(aNewPair)
+                    Next
+                    OutputInputMappingPair = newOutputInputMappingPairs
+                End If
                 OnPropertyChanged()
             End Set
         End Property
+        'Private _newUnit As String
+        'Public Property NewUnit As String
+        '    Get
+        '        Return _newUnit
+        '    End Get
+        '    Set(ByVal value As String)
+        '        _newUnit = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
     End Class
     Public Class ScalarRepCust
         Inherits Customization

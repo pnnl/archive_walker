@@ -408,6 +408,10 @@ namespace BAWGUI.Xml
 
         private decimal trendValueField;
 
+        private decimal valueStartField;
+
+        private decimal valueEndField;
+
         /// <remarks/>
         public decimal ID
         {
@@ -448,6 +452,20 @@ namespace BAWGUI.Xml
         {
             get { return this.trendValueField; }
             set { this.trendValueField = value; }
+        }
+
+        /// <remarks/>
+        public decimal ValueStart
+        {
+            get { return this.valueStartField; }
+            set { this.valueStartField = value; }
+        }
+
+        /// <remarks/>
+        public decimal ValueEnd
+        {
+            get { return this.valueEndField; }
+            set { this.valueEndField = value; }
         }
     }
 

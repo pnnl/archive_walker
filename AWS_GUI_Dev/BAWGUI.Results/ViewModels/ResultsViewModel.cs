@@ -140,8 +140,8 @@ namespace BAWGUI.Results.ViewModels
             var endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
 
             _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
-            _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;
             _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;
+            _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;
             var findStartTimeHasEvents = startTime;
             if (_forcedOscillationResultsViewModel.Models.Count() != 0)
             {
@@ -154,8 +154,8 @@ namespace BAWGUI.Results.ViewModels
             _ringdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             _ringdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
-            _ringdownResultsViewModel.SelectedStartTime = startTimeStr;
             _ringdownResultsViewModel.SelectedEndTime = endTimeStr;
+            _ringdownResultsViewModel.SelectedStartTime = startTimeStr;
             findStartTimeHasEvents = startTime;
             if(_ringdownResultsViewModel.Models.Count()!= 0)
             {
@@ -168,8 +168,8 @@ namespace BAWGUI.Results.ViewModels
             _outOfRangeResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             _outOfRangeResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
             _outOfRangeResultsViewModel.Models = _resultsModel.OutOfRangeEvents;
-            _outOfRangeResultsViewModel.SelectedStartTime = startTimeStr;
             _outOfRangeResultsViewModel.SelectedEndTime = endTimeStr;
+            _outOfRangeResultsViewModel.SelectedStartTime = startTimeStr;
             findStartTimeHasEvents = startTime;
             if (_outOfRangeResultsViewModel.Models.Count() != 0)
             {
@@ -177,6 +177,19 @@ namespace BAWGUI.Results.ViewModels
                 {
                     findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
                     _outOfRangeResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                }
+            }
+            _windRampResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
+            _windRampResultsViewModel.Models = _resultsModel.WindRampEvents;
+            _windRampResultsViewModel.SelectedEndTime = endTimeStr;
+            _windRampResultsViewModel.SelectedStartTime = startTimeStr;
+            findStartTimeHasEvents = startTime;
+            if (_windRampResultsViewModel.Models.Count() != 0)
+            {
+                while (_windRampResultsViewModel.FilteredResults.Count() == 0)
+                {
+                    findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
+                    _windRampResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
             //_ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
@@ -421,6 +434,8 @@ namespace BAWGUI.Results.ViewModels
             _resultsModel = new ResultsModel();
             ForcedOscillationResultsViewModel = new ForcedOscillationResultsViewModel();
             OutOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
+            OutOfRangeResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
+            OutOfRangeResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             RingdownResultsViewModel = new RingdownResultsViewModel();
             RingdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
             RingdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();

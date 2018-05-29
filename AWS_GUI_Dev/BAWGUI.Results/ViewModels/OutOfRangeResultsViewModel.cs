@@ -98,11 +98,17 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedStartTime = value;
-                if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedEndTime))
+                OnPropertyChanged();
+                var startTime = Convert.ToDateTime(value);
+                var endTime = Convert.ToDateTime(_selectedEndTime);
+                if (startTime <= endTime)
                 {
                     _filterTableByTime();
                 }
-                OnPropertyChanged();
+                else
+                {
+                    //MessageBox.Show("Selected start time is later than end time.", "Error!", MessageBoxButtons.OK);
+                }
             }
         }
 
@@ -113,11 +119,20 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedEndTime = value;
+                OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    _filterTableByTime();
+                    var startTime = Convert.ToDateTime(_selectedStartTime);
+                    var endTime = Convert.ToDateTime(value);
+                    if (startTime <= endTime)
+                    {
+                        _filterTableByTime();
+                    }
+                    else
+                    {
+                        //MessageBox.Show("Selected end time is earlier than start time.", "Error!", MessageBoxButtons.OK);
+                    }
                 }
-                OnPropertyChanged();
             }
         }
         private void _filterTableByTime()
@@ -196,10 +211,13 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _sparseResults = value;
-                if (SparseResults.Count() != 0)
+                if (_sparseResults.Count() != 0)
                 {
                     _drawOORSparsePlots();
-                    SelectedOOREvent = FilteredResults.FirstOrDefault();
+                    if (FilteredResults.Count > 0)
+                    {
+                        SelectedOOREvent = FilteredResults.FirstOrDefault();
+                    }
                 }
                 OnPropertyChanged();
             }
@@ -209,18 +227,35 @@ namespace BAWGUI.Results.ViewModels
         {
             if (File.Exists(_configFilePath))
             {
-                try
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
                 {
-                    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "OutOfRangeGeneral");
+                    try
+                    {
+                        SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "OutOfRangeGeneral");
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                    System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
+                //try
+                //{
+                //    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "OutOfRangeGeneral");
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                //}
             }
             else
             {
-                MessageBox.Show("Configuration file not found.", "Error!", MessageBoxButtons.OK);
+                System.Windows.Forms.MessageBox.Show("Configuration file not found.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
             }
         }
         private void _drawOORSparsePlots()
@@ -397,7 +432,7 @@ namespace BAWGUI.Results.ViewModels
                 //}
 
             }
-            Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
+            //Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
         }
 
         public ICommand OutOfRangeReRun { get; set; }
@@ -405,20 +440,29 @@ namespace BAWGUI.Results.ViewModels
         {
             if (File.Exists(_run.Model.ConfigFilePath))
             {
-                try
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
                 {
+                    try
+                    {
                     _engine.OORReRunCompletedEvent += _oorReRunCompleted;
                     _engine.OutOfRangeRerun(SelectedStartTime, SelectedEndTime, _run);
                     //ReRunResult = _engine.RDReRunResults;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                    System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
             }
             else
             {
-                MessageBox.Show("Config file not found. Cannot re-run Out of Range", "Error!", MessageBoxButtons.OK);
+                System.Windows.Forms.MessageBox.Show("Config file not found. Cannot re-run Out of Range", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
             }
         }
         private void _oorReRunCompleted(object sender, List<OutOfRangeDetector> e)

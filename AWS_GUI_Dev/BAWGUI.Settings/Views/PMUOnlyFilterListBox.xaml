@@ -10,7 +10,7 @@
         <converters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
     </UserControl.Resources>
     <Grid>
-        <ListView Margin="20,2,2,2" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding ThisStepOutputsAsSignalHierachyByPMU.SignalList}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListView Margin="20,2,2,2" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding ThisStepOutputsAsSignalHierachyByPMU.SignalList}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ItemsControl ItemsSource="{Binding SignalList}">

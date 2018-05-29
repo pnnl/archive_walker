@@ -131,6 +131,9 @@ Namespace Model
             End Get
             Set(ByVal value As String)
                 _signalName = value
+                If Not String.IsNullOrEmpty(value) AndAlso String.IsNullOrEmpty(OldSignalName) Then
+                    OldSignalName = value
+                End If
                 OnPropertyChanged()
             End Set
         End Property
@@ -141,6 +144,9 @@ Namespace Model
             End Get
             Set(ByVal value As String)
                 _typeAbbreviation = value
+                If Not String.IsNullOrEmpty(value) AndAlso String.IsNullOrEmpty(OldTypeAbbreviation) Then
+                    OldTypeAbbreviation = value
+                End If
                 OnPropertyChanged()
             End Set
         End Property
@@ -151,6 +157,9 @@ Namespace Model
             End Get
             Set(ByVal value As String)
                 _unit = value
+                If Not String.IsNullOrEmpty(value) AndAlso String.IsNullOrEmpty(OldUnit) Then
+                    OldUnit = value
+                End If
                 OnPropertyChanged()
             End Set
         End Property

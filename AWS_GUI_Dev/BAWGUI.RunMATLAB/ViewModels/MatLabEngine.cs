@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using BAWSengine;
-using BAWSengine2;
 using BAWGUI.RunMATLAB.Models;
 using System.ComponentModel;
 using System.Threading;

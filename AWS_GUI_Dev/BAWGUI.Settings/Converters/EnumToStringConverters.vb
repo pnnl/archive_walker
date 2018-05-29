@@ -222,15 +222,15 @@ Namespace Converters
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
             Select Case value
-                Case DetectorWindowType.Hann
+                Case DetectorWindowType.hann
                     Return "Hann"
-                Case DetectorWindowType.Bartlett
+                Case DetectorWindowType.bartlett
                     Return "Bartlett"
-                Case DetectorWindowType.Blackman
+                Case DetectorWindowType.blackman
                     Return "Blackman"
-                Case DetectorWindowType.Hamming
+                Case DetectorWindowType.hamming
                     Return "Hamming"
-                Case DetectorWindowType.Rectangular
+                Case DetectorWindowType.rectwin
                     Return "Rectangular"
                 Case Else
                     Throw New Exception("Detector window type not valid!")
@@ -240,15 +240,15 @@ Namespace Converters
         Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
             Select Case value
                 Case "Hann"
-                    Return DetectorWindowType.Hann
+                    Return DetectorWindowType.hann
                 Case "Bartlett"
-                    Return DetectorWindowType.Bartlett
+                    Return DetectorWindowType.bartlett
                 Case "Blackman"
-                    Return DetectorWindowType.Blackman
+                    Return DetectorWindowType.blackman
                 Case "Hamming"
-                    Return DetectorWindowType.Hamming
+                    Return DetectorWindowType.hamming
                 Case "Rectangular"
-                    Return DetectorWindowType.Rectangular
+                    Return DetectorWindowType.rectwin
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

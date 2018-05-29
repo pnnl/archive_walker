@@ -20,6 +20,8 @@
       <xs:element name="TrendStart" type="xs:string" />
       <xs:element name="TrendEnd" type="xs:string" />
       <xs:element name="TrendValue" type="xs:decimal" />
+      <xs:element name="ValueStart" type="xs:decimal" />
+      <xs:element name="ValueEnd" type="xs:decimal" />
     </xs:sequence>
   </xs:complexType>
   

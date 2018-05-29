@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:BAWGUI.Settings"
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -75,7 +76,7 @@
             <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="Signal Type:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
             <!--<TextBox Text="{Binding OutputChannels[0].TypeAbbreviation}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>-->
             <!--<ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding OutputChannels[0].TypeAbbreviation}" ItemsSource="{Binding Path=DataContext.DataConfigure.TypeUnitDictionary, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}}" SelectedValuePath="Key" DisplayMemberPath="Key"/>-->
-            <ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding Type}" SelectedValuePath="Key" ItemsSource="{Binding Path=DataContext.DataConfigure.TypeUnitDictionary, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}}" DisplayMemberPath="Key"/>
+            <ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding Type}" SelectedValuePath="Key" vm:ComboBoxItemsSourceDecorator.ItemsSource="{Binding Path=DataContext.DataConfigure.TypeUnitDictionary, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}}" DisplayMemberPath="Key"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -93,12 +94,14 @@
             <!--<TextBox Text="{Binding OutputChannels[0].Unit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>-->
             <!--<ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding OutputChannels[0].Unit}" >-->
             <ComboBox SelectedValue="{Binding Unit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8">
-                    <ComboBox.ItemsSource>
-                    <MultiBinding Converter="{StaticResource TypeUnitDictionaryConverter}">
-                        <Binding Path="DataContext.DataConfigure.TypeUnitDictionary" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}"/>
-                        <Binding Path="Type"/>
-                    </MultiBinding>
-                </ComboBox.ItemsSource>
+                <!--<ComboBox.ItemsSource>-->
+                    <vm:ComboBoxItemsSourceDecorator.ItemsSource>
+                        <MultiBinding Converter="{StaticResource TypeUnitDictionaryConverter}">
+                            <Binding Path="DataContext.DataConfigure.TypeUnitDictionary" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}"/>
+                            <Binding Path="Type"/>
+                        </MultiBinding>
+                    </vm:ComboBoxItemsSourceDecorator.ItemsSource>
+                <!--</ComboBox.ItemsSource>-->
             </ComboBox>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
@@ -114,7 +117,7 @@
                 </Image.Style>
             </Image>-->
             <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="PMU for Time Source:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <ComboBox SelectedItem="{Binding TimeSourcePMU, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="PMU" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.AllPMUs}" DisplayMemberPath="PMU" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Right"/>
+            <ComboBox SelectedItem="{Binding TimeSourcePMU, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="PMU" SelectedValuePath="PMU" vm:SelectorBehavior.KeepSelection="True" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.AllPMUs}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" Margin="8" HorizontalContentAlignment="Right"/>
         </StackPanel>
         <!--<ItemsControl ItemsSource="{Binding Parameters}" Margin="2">
             <ItemsControl.ItemTemplate>

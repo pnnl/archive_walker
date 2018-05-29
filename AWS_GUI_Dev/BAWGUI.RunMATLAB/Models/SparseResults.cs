@@ -89,6 +89,7 @@ namespace BAWGUI.RunMATLAB.Models
                     var newSparseSignal = new SparseSignal();
                     newSparseSignal.SignalName = dataChannel[signalCount];
                     newSparseSignal.PMUname = dataPMU[signalCount];
+                    newSparseSignal.Label = newSparseSignal.PMUname + newSparseSignal.SignalName;
                     newSparseSignal.Type = dataType[signalCount];
                     newSparseSignal.Unit = dataUnit[signalCount];
                     newSparseSignal.TimeStamps = timeStamps;

@@ -28,5 +28,27 @@ namespace Resources.Utility
             writable.Freeze();
             return writable;
         }
+
+        public static List<string> SaturatedColors = new List<string>{  "Blue",
+                                                                        "Orange",
+                                                                        "Black",
+                                                                        "Purple",
+                                                                        "Cyan",
+                                                                        "Maroon",
+                                                                        "Brown",
+                                                                        "Magenta",
+                                                                        "Lime",
+                                                                        "Pink",
+                                                                        "Teal",
+                                                                        "Coral",
+                                                                        "Olive",
+                                                                        "Turquoise",
+                                                                        "Mint",
+                                                                        "Red",
+                                                                        "Green",
+                                                                        "Yellow",
+                                                                        "RoyalBlue",
+                                                                        "LimeGreen"
+        };
     }
 }

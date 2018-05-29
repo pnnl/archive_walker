@@ -38,6 +38,7 @@
     <None Include="$(MSBuildThisFileDirectory)Images\resume.PNG" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\ComboBoxItemsSourceDecorator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Utility.cs" />
   </ItemGroup>
   <ItemGroup>

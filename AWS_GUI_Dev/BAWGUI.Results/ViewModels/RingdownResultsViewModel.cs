@@ -79,11 +79,17 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedStartTime = value;
-                if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedEndTime))
+                OnPropertyChanged();
+                var startTime = Convert.ToDateTime(value);
+                var endTime = Convert.ToDateTime(_selectedEndTime);
+                if (startTime <= endTime)
                 {
                     _filterTableByTime();
                 }
-                OnPropertyChanged();
+                else
+                {
+                    //System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+                }
             }
         }
 
@@ -94,11 +100,20 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedEndTime = value;
+                OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    _filterTableByTime();
+                    var startTime = Convert.ToDateTime(_selectedStartTime);
+                    var endTime = Convert.ToDateTime(value);
+                    if (startTime <= endTime)
+                    {
+                        _filterTableByTime();
+                    }
+                    else
+                    {
+                        //System.Windows.Forms.MessageBox.Show("Selected end time is earlier than start time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
                 }
-                OnPropertyChanged();
             }
         }
 
@@ -182,12 +197,15 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _sparseResults = value;
-                if (SparseResults.Count() != 0)
+                if (_sparseResults.Count() != 0)
                 {
                     try
                     {
                         _drawRDSparsePlots();
-                        SelectedRingdownEvent = FilteredResults.FirstOrDefault();
+                        if (FilteredResults.Count > 0)
+                        {
+                            SelectedRingdownEvent = FilteredResults.FirstOrDefault();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -453,14 +471,31 @@ namespace BAWGUI.Results.ViewModels
         {
             if (File.Exists(_configFilePath))
             {
-                try
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
                 {
-                    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "Ringdown");
+                    try
+                    {
+                        SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "Ringdown");
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                    System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
+                //try
+                //{
+                //    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "Ringdown");
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                //}
             }
             else
             {
@@ -490,20 +525,29 @@ namespace BAWGUI.Results.ViewModels
             //start rerun in background
             if (File.Exists(ConfigFilePath))
             {
-                try
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
                 {
-                    _engine.RDReRunCompletedEvent += _rDReRunCompleted;
-                    _engine.RingDownRerun(SelectedStartTime, SelectedEndTime, _run);
-                    //ReRunResult = _engine.RDReRunResults;
+                    try
+                    {
+                        _engine.RDReRunCompletedEvent += _rDReRunCompleted;
+                        _engine.RingDownRerun(SelectedStartTime, SelectedEndTime, _run);
+                        //ReRunResult = _engine.RDReRunResults;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                    System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
             }
             else
             {
-                MessageBox.Show("Config file not found. Cannot re-run Ringdown", "Error!", MessageBoxButton.OK);
+                System.Windows.Forms.MessageBox.Show("Config file not found. Cannot re-run Ringdown", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
             }
         }
 

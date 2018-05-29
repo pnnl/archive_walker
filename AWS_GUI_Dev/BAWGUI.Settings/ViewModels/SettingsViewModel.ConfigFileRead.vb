@@ -106,7 +106,7 @@ Namespace ViewModels
             Return inputSignalList
         End Function
 
-#Region "Read Data Config Customization Steps From XML Configure File"
+#Region "Read Data Config DQ filter and Customization Steps From XML Configure File"
         Private Sub _readDataConfigStages(configData As XDocument)
             Dim CollectionOfSteps As New ObservableCollection(Of Object)
             GroupedSignalByDataConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
@@ -394,6 +394,9 @@ Namespace ViewModels
                     End If
                     output.SamplingRate = magSignal.SamplingRate
                 End If
+                output.OldUnit = output.Unit
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
                 newPair.Value.Add(magSignal)
@@ -445,6 +448,9 @@ Namespace ViewModels
                     End If
                     output.SamplingRate = input.SamplingRate
                 End If
+                output.OldUnit = output.Unit
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
                 newPair.Value.Add(input)
@@ -493,6 +499,9 @@ Namespace ViewModels
                     output.Unit = input.Unit
                     output.SamplingRate = input.SamplingRate
                 End If
+                output.OldUnit = output.Unit
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
                 newPair.Value.Add(input)
@@ -545,6 +554,9 @@ Namespace ViewModels
                 End If
             End If
             output.IsCustomSignal = True
+            output.OldUnit = output.Unit
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldSignalName = output.SignalName
             aStep.OutputChannels.Add(output)
             collectionOfSteps.Add(aStep)
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
@@ -602,6 +614,9 @@ Namespace ViewModels
                     End If
                     output.SamplingRate = input.SamplingRate
                 End If
+                output.OldUnit = output.Unit
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
                 newPair.Value.Add(input)
@@ -658,6 +673,9 @@ Namespace ViewModels
                 End If
             End If
             output.IsCustomSignal = True
+            output.OldUnit = output.Unit
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldSignalName = output.SignalName
             aStep.OutputChannels.Add(output)
             collectionOfSteps.Add(aStep)
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
@@ -700,6 +718,9 @@ Namespace ViewModels
             If aStep.TimeSourcePMU IsNot Nothing Then
                 output.SamplingRate = aStep.TimeSourcePMU.SamplingRate
             End If
+            output.OldUnit = output.Unit
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldSignalName = output.SignalName
             aStep.OutputChannels.Add(output)
             collectionOfSteps.Add(aStep)
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
@@ -761,6 +782,9 @@ Namespace ViewModels
             End If
             output.SamplingRate = samplingRate
             output.IsCustomSignal = True
+            output.OldUnit = output.Unit
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldSignalName = output.SignalName
             aStep.OutputChannels.Add(output)
             collectionOfSteps.Add(aStep)
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
@@ -818,6 +842,9 @@ Namespace ViewModels
             If samplingRate <> -1 Then
                 output.SamplingRate = samplingRate
             End If
+            output.OldUnit = output.Unit
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldSignalName = output.SignalName
             aStep.OutputChannels.Add(output)
             collectionOfSteps.Add(aStep)
             'aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
@@ -878,7 +905,18 @@ Namespace ViewModels
                     End If
                     aStep.InputChannels.Add(input)
                 Next
+                Select Case output.TypeAbbreviation
+                    Case "CP", "S"
+                        output.Unit = "MVA"
+                    Case "Q"
+                        output.Unit = "MVAR"
+                    Case "P"
+                        output.Unit = "MW"
+                End Select
                 output.SamplingRate = samplingRate
+                output.OldUnit = output.Unit
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
                 For Each signal In aStep.InputChannels
@@ -915,13 +953,20 @@ Namespace ViewModels
                 If outputName Is Nothing Then
                     outputName = input.SignalName
                 End If
-                Dim output = New SignalSignatures(outputName, input.PMUName, input.TypeAbbreviation)
+                Dim newUnit = convert.<NewUnit>.Value
+                Dim output = input
                 If aStep.UseCustomPMU Then
-                    output.PMUName = CustPMUname
+                    output = New SignalSignatures(outputName, CustPMUname, input.TypeAbbreviation)
+                    output.SamplingRate = input.SamplingRate
+                    output.Unit = newUnit
+                    output.OldSignalName = output.SignalName
+                    output.OldTypeAbbreviation = output.TypeAbbreviation
+                    output.OldUnit = output.Unit
+                Else
+                    output.OldUnit = output.Unit
+                    output.Unit = newUnit
                 End If
-                output.SamplingRate = input.SamplingRate
                 output.IsCustomSignal = True
-                output.Unit = convert.<NewUnit>.Value
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
                 newPair.Value.Add(input)
@@ -960,6 +1005,9 @@ Namespace ViewModels
                 output.SamplingRate = input.SamplingRate
                 output.IsCustomSignal = True
                 output.Unit = convert.<NewUnit>.Value
+                output.OldSignalName = output.SignalName
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldUnit = output.Unit
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
                 newPair.Value.Add(input)
@@ -1001,6 +1049,9 @@ Namespace ViewModels
             output.IsCustomSignal = True
             output.Unit = params.<SigUnit>.Value
             output.SamplingRate = samplingRate
+            output.OldSignalName = output.SignalName
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldUnit = output.Unit
             aStep.OutputChannels.Add(output)
             Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
             newPair.Value.Add(inputSignal)
@@ -1219,9 +1270,12 @@ Namespace ViewModels
                     For Each signal In aStep.InputChannels
                         If TypeOf aStep Is Multirate Then
                             Dim output = New SignalSignatures(signal.SignalName, aStep.MultiRatePMU, signal.TypeAbbreviation)
-                            output.SamplingRate = signal.SamplingRate
+                            output.SamplingRate = aStep.NewRate
                             output.Unit = signal.Unit
                             output.IsCustomSignal = True
+                            output.OldSignalName = output.SignalName
+                            output.OldTypeAbbreviation = output.TypeAbbreviation
+                            output.OldUnit = output.Unit
                             aStep.OutputChannels.Add(output)
                         Else
                             signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
@@ -1343,45 +1397,81 @@ Namespace ViewModels
             For Each stage In stages
                 Dim steps = From element In stage.Elements Select element
                 For Each stp In steps
-                    Dim aStep = New Customization
-                    aStep.Name = PostProcessConfigure.CustomizationReverseNameDictionary(stp.<Name>.Value)
-                    stepCounter += 1
-                    aStep.StepCounter = stepCounter
-                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                    Dim aStep = New Object
+                    'aStep.Name = PostProcessConfigure.CustomizationReverseNameDictionary(stp.<Name>.Value)
+
+                    Dim thisStepName = PostProcessConfigure.CustomizationReverseNameDictionary(stp.<Name>.Value)
+
+                    'stepCounter += 1
+                    'aStep.StepCounter = stepCounter
+                    'aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                    'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
 
                     'Dim signalForUnitTypeSpecificationCustomization As SignalSignatures = Nothing
-                    Select Case aStep.Name
+                    Select Case thisStepName
                         Case "Scalar Repetition"
+                            aStep = New ScalarRepCust
+                            aStep.Name = thisStepName
                             _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Addition"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readAdditionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Subtraction"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readSubtractionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Division"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readDivisionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Multiplication"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readMultiplicationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Exponential"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readRaiseExpCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readUnaryCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Angle Calculation"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readAngleCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Phasor Creation"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readPhasorCreationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Signal Type/Unit"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readSpecTypeUnitCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Power Calculation"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readPowerCalculationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter, 3)
                         Case "Metric Prefix"
+                            aStep = New MetricPrefixCust
+                            aStep.Name = thisStepName
                             _readMetricPrefixCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case "Angle Conversion"
+                            aStep = New Customization
+                            aStep.Name = thisStepName
                             _readAngleConversionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                         Case Else
                             _addLog("Cutomization not recognized in Post process configuration.")
                             Throw New Exception("Cutomization not recognized in Post process configuration.")
                     End Select
+
+
+                    stepCounter += 1
+                    aStep.StepCounter = stepCounter
+                    aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
+
                     If TypeOf aStep Is Customization Then
                         aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
                         GroupedSignalByPostProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
@@ -1514,6 +1604,8 @@ Namespace ViewModels
             Dim newDetector = New WindRampDetector
             newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Fpass = detector.<Fpass>.Value
+            'Determin whether it is long trend or short trend wind ramp detector by checking the value of Fpass
+            'This value could be changed later
             If Not String.IsNullOrEmpty(newDetector.Fpass) AndAlso newDetector.Fpass = "0.00005" Then
                 newDetector.IsLongTrend = True
             Else

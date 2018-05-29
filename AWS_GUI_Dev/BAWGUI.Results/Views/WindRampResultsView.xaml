@@ -3,9 +3,119 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:views="clr-namespace:BAWGUI.Results.Views"
+             xmlns:con="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:con2="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
+             xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+    <UserControl.Resources>
+        <con:ResultTableVisibilityConverter x:Key="ResultTableVisibilityConverter" />
+        <con2:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </UserControl.Resources>
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <views:TimeFilterView Height="30" Margin="2"/>
+            <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+            <!--<Button Content="Retrieve Detail" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>-->
+            <!--<Button Content="Cancel" Command="{Binding CancelWindRampReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>-->
+        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,2">
+                <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>-->
+                <!--<Grid Grid.Row="0">
+                    <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                    <TextBlock Text="Data Trends" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Top" Margin="0,0,0,5"/>
+                </Grid>-->
+                <!--<views:WindRampEventPlot Grid.Column="0"/>-->
+                <!--<oxy:PlotView Model="{Binding WREventPlotModel}" Grid.Column="0" x:Name="EventPlot"/>-->
+                <!--<Grid Grid.Column="1">-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!--<StackPanel Grid.Row="0" Orientation="Vertical">-->
+                    <!--<DockPanel Grid.Row="0">-->
+                    <Label Grid.Row="0" Content="Events:" FontWeight="Black"/>
+                    <views:WindRampEventTable Grid.Row="1" MaxHeight="250">
+                        <views:WindRampEventTable.Visibility>
+                            <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="Table">
+                                <Binding Path="FilteredResults.Count"/>
+                                <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                            </MultiBinding>
+                        </views:WindRampEventTable.Visibility>
+                    </views:WindRampEventTable>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Windramp Event Detected in This Run" TextWrapping="WrapWithOverflow">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="NoEvent">
+                                <Binding Path="FilteredResults.Count"/>
+                                <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Results Found in This Task" TextWrapping="WrapWithOverflow">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="NoResult">
+                                <Binding Path="FilteredResults.Count"/>
+                                <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
+                    <!--</DockPanel>-->
+                    <!--</StackPanel>-->
+                    <!--<DockPanel Grid.Row="2">
+                    <DockPanel.Visibility>
+                        <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="Table">
+                            <Binding Path="FilteredResults.Count"/>
+                            <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                        </MultiBinding>
+                    </DockPanel.Visibility>-->
+                    <!--<Label Grid.Row="2" Content="Channels:" DockPanel.Dock="Top" FontWeight="Black">
+                    <Label.Visibility>
+                        <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="Table">
+                            <Binding Path="FilteredResults.Count"/>
+                            <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                        </MultiBinding>
+                    </Label.Visibility>
+                </Label>
+                <views:OORChannelTable Grid.Row="3" MaxHeight="200">
+                    <views:OORChannelTable.Visibility>
+                        <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="Table">
+                            <Binding Path="FilteredResults.Count"/>
+                            <Binding Path="DataContext.ResultsExist" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorLevel=2, AncestorType=UserControl}"/>
+                        </MultiBinding>
+                    </views:OORChannelTable.Visibility>
+                </views:OORChannelTable>-->
+                    <!--</DockPanel>-->
+                </Grid>
+
+                <!--<Expander Grid.Row="0" VerticalAlignment="Top" Margin="0" IsExpanded="True">
+                    <ScrollViewer Grid.Row="1" MaxHeight="600">
+                        <views:SparseEventPlot/>
+                    </ScrollViewer>
+                </Expander>-->
+                <!--<Grid Grid.Row="1">
+                    <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>
+                    <TextBlock Text="Detection Details" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                </Grid>
+                <ScrollViewer Grid.Row="2" >
+                    <views:WRReRunPlots/>
+                </ScrollViewer>-->
+            <!--</Grid>-->
+            <!--<Expander Grid.Row="1" VerticalAlignment="Top" Margin="0" IsExpanded="True">-->
+                <ScrollViewer Grid.Row="1" MaxHeight="500" Margin="0,2">
+                    <views:SparseEventPlot/>
+                </ScrollViewer>
+            <!--</Expander>-->
+        </Grid>
+    </DockPanel>
 </UserControl>

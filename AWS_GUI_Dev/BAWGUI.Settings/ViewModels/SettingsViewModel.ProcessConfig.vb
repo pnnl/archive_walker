@@ -791,7 +791,7 @@ Namespace ViewModels
                             _disableEnableAllButAngleSignalsInProcessConfig(True)
                         End If
                         If TypeOf CurrentSelectedStep Is NameTypeUnitPMU Then
-                            _disableEnableSignalPassedThroughNameTypeUnit(True)
+                            _disableEnableSignalPassedThroughNameTypeUnit(True, CurrentSelectedStep)
                         End If
                     End If
 
@@ -805,7 +805,7 @@ Namespace ViewModels
                         _disableEnableAllButAngleSignalsInProcessConfig(False)
                     End If
                     If TypeOf processStep Is NameTypeUnitPMU Then
-                        _disableEnableSignalPassedThroughNameTypeUnit(False)
+                        _disableEnableSignalPassedThroughNameTypeUnit(False, processStep)
                     End If
 
                     CurrentSelectedStep = processStep
@@ -816,13 +816,15 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _disableEnableSignalPassedThroughNameTypeUnit(isEnabled As Boolean)
+        Private Sub _disableEnableSignalPassedThroughNameTypeUnit(isEnabled As Boolean, thisStep As NameTypeUnitPMU)
             If NameTypeUnitStatusFlag Then
                 'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
             Else
                 For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
                     For Each signal In change.OutputChannels
-                        signal.IsEnabled = isEnabled
+                        If Not thisStep.OutputChannels.Contains(signal) Then
+                            signal.IsEnabled = isEnabled
+                        End If
                     Next
                 Next
             End If
@@ -981,7 +983,7 @@ Namespace ViewModels
                     _disableEnableAllButAngleSignalsInProcessConfig(True)
                 End If
                 If TypeOf CurrentSelectedStep Is NameTypeUnitPMU Then
-                    _disableEnableSignalPassedThroughNameTypeUnit(True)
+                    _disableEnableSignalPassedThroughNameTypeUnit(True, CurrentSelectedStep)
                 End If
                 'If CurrentSelectedDataConfigStep.Name = "Phasor Creation" Then
                 '    _disableEnableAllButMagnitudeSignals(True)

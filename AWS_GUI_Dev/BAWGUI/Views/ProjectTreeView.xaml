@@ -25,6 +25,7 @@
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <EventSetter Event="TreeViewItem.PreviewMouseRightButtonDown" Handler="myProjectTreeView_PreviewMouseRightButtonDown"/>
                         <!--<Setter Property="vm:FocusExtension.IsFocused" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
                         <!--<Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />-->
                         <!--<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BooleanBackgroundConverter}}"/>-->
@@ -39,6 +40,11 @@
                 </TreeView.ItemContainerStyle>-->
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding AWRuns}" x:Name="myProject2">
+                        <!--<HierarchicalDataTemplate.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <EventSetter Event="TreeViewItem.MouseRightButtonDown" Handler="myProjectTreeView_PreviewMouseRightButtonDown"/>
+                            </Style>
+                        </HierarchicalDataTemplate.ItemContainerStyle>-->
                         <TextBlock Text="{Binding ProjectName}" Name="myProject" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeView}}}">
                             <TextBlock.ContextMenu>
                                 <ContextMenu  DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">

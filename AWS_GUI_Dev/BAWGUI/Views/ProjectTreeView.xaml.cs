@@ -29,5 +29,29 @@ namespace BAWGUI.Views
         {
 
         }
+
+        private void myProjectTreeView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TreeViewItem treeViewItem = VisualUpwardSearch<TreeViewItem>(e.OriginalSource as DependencyObject) as TreeViewItem;
+
+            if (treeViewItem != null)
+            {
+                treeViewItem.Focus();
+                e.Handled = true;
+            }
+            //treeViewItem.DataContext.IsSelected = true;
+            var selectedProject = sender as TreeViewItem;
+            var st = selectedProject.DataContext as RunMATLAB.ViewModels.AWProjectViewModel;
+            st.SelectedRun.IsSelected = false;
+            var selectedRun = treeViewItem.DataContext as RunMATLAB.ViewModels.AWRunViewModel;
+            selectedRun.IsSelected = true;
+        }
+        static DependencyObject VisualUpwardSearch<T>(DependencyObject source)
+        {
+            while (source != null && source.GetType() != typeof(T))
+                source = VisualTreeHelper.GetParent(source);
+
+            return source;
+        }
     }
 }

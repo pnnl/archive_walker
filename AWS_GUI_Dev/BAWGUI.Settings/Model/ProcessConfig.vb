@@ -15,7 +15,7 @@ Namespace Model
                                                                                    {"VMA", {"kV", "V"}.ToList},
                                                                                    {"VMB", {"kV", "V"}.ToList},
                                                                                    {"VMC", {"kV", "V"}.ToList},
-                                                                                   {"AP", {"DEG", "RAD"}.ToList},
+                                                                                   {"VAP", {"DEG", "RAD"}.ToList},
                                                                                    {"VAA", {"DEG", "RAD"}.ToList},
                                                                                    {"VAB", {"DEG", "RAD"}.ToList},
                                                                                    {"VAC", {"DEG", "RAD"}.ToList},
@@ -668,7 +668,7 @@ Namespace Model
                     If String.IsNullOrEmpty(value) Then
                         If Not String.IsNullOrEmpty(OutputChannels(0).OldSignalName) Then
                             OutputChannels(0).SignalName = OutputChannels(0).OldSignalName
-                            OutputChannels(0).OldSignalName = ""
+                            'OutputChannels(0).OldSignalName = ""
                         End If
                     Else
                         OutputChannels(0).OldSignalName = OutputChannels(0).SignalName
@@ -689,7 +689,7 @@ Namespace Model
                 If String.IsNullOrEmpty(value) Then
                     For Each signal In OutputChannels
                         signal.Unit = signal.OldUnit
-                        signal.OldUnit = value
+                        'signal.OldUnit = value
                     Next
                 Else
                     For Each signal In OutputChannels
@@ -711,7 +711,7 @@ Namespace Model
                 If String.IsNullOrEmpty(value) Then
                     For Each signal In OutputChannels
                         signal.TypeAbbreviation = signal.OldTypeAbbreviation
-                        signal.OldTypeAbbreviation = value
+                        'signal.OldTypeAbbreviation = value
                     Next
                 Else
                     For Each signal In OutputChannels

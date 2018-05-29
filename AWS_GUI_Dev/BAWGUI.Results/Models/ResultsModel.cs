@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ namespace BAWGUI.Results.Models
             _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
             _ringdownEvents = new List<RingDownEvent>();
             _outOfRangeEvents = new List<OutOfRangeEvent>();
+            _windRampEvents = new List<WindRampEvent>();
         }
 
         internal void LoadResults(List<string> filenames, List<string> dates)
@@ -32,8 +34,9 @@ namespace BAWGUI.Results.Models
             //_selectedEndTime = endDate;
 
             List<DatedForcedOscillationEvent> forcedOscillationCompleteList = new List<DatedForcedOscillationEvent>();
-            _ringdownEvents = new List<RingDownEvent>();
-            _outOfRangeEvents = new List<OutOfRangeEvent>();
+            var ringdownEvents = new List<RingDownEvent>();
+            var outOfRangeEvents = new List<OutOfRangeEvent>();
+            var windRampEvents = new List<WindRampEvent>();
 
             foreach (var filename in filenames)
             {
@@ -61,23 +64,37 @@ namespace BAWGUI.Results.Models
                 {
                     foreach (var rd in content.Ringdown)
                     {
-                        var newrd = new RingDownEvent(rd);
-                        _ringdownEvents.Add(newrd);
+                        var newrd = new RingDownEvent(rd, date);
+                        ringdownEvents.Add(newrd);
                     }
                 }
                 if (content.OutOfRangeFrequency != null)
                 {
                     foreach (var oor in content.OutOfRangeFrequency)
                     {
-                        var newoor = new OutOfRangeEvent(oor);
-                        _outOfRangeEvents.Add(newoor);
+                        var newoor = new OutOfRangeEvent(oor, date);
+                        outOfRangeEvents.Add(newoor);
+                    }
+                }
+                if (content.WindRamp != null)
+                {
+                    foreach (var wr in content.WindRamp)
+                    {
+                        var newwr = new WindRampEvent(wr, date);
+                        windRampEvents.Add(newwr);
                     }
                 }
                 stream.Close();
                 //}
             }
             _combineForcedOscillationEvents(forcedOscillationCompleteList);
+            _combineEventList(ringdownEvents, outOfRangeEvents, windRampEvents);
         }
+
+        //private void _combineEventList(List<RingDownEvent> ringdownEvents, List<OutOfRangeEvent> outOfRangeEvents, List<WindRampEvent> windRampEvents)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private void _combineForcedOscillationEvents(List<DatedForcedOscillationEvent> forcedOscillationCompleteList)
         {
@@ -115,7 +132,56 @@ namespace BAWGUI.Results.Models
                 _forcedOscillationCombinedList.Add(aEvent);
             }
         }
-        
+        private void _combineEventList(List<RingDownEvent> ringdownEvents, List<OutOfRangeEvent> outOfRangeEvents, List<WindRampEvent> windRampEvents)
+        {
+            var ringdownEventsCombined = new List<RingDownEvent>();
+            var outOfRangeEventsCombined = new List<OutOfRangeEvent>();
+            var windRampEventsCombined = new List<WindRampEvent>();
+
+            var rdByID = ringdownEvents.GroupBy(x => x.ID).ToDictionary(p => p.Key, p => p.ToList());
+            foreach (var rd in rdByID)
+            {
+                if (rd.Value.Count > 1)
+                {
+                    var keep = rd.Value.Aggregate((x1, x2) => DateTime.ParseExact(x1.Date, "yyMMdd", CultureInfo.InvariantCulture) > DateTime.ParseExact(x2.Date, "yyMMdd", CultureInfo.InvariantCulture) ? x1 : x2);
+                    ringdownEventsCombined.Add(keep);
+                }
+                else
+                {
+                    ringdownEventsCombined.Add(rd.Value.FirstOrDefault());
+                }
+            }
+            var oorByID = outOfRangeEvents.GroupBy(x => x.ID).ToDictionary(p => p.Key, p => p.ToList());
+            foreach (var oor in oorByID)
+            {
+                if (oor.Value.Count > 1)
+                {
+                    var keep = oor.Value.Aggregate((x1, x2) => DateTime.ParseExact(x1.Date, "yyMMdd", CultureInfo.InvariantCulture) > DateTime.ParseExact(x2.Date, "yyMMdd", CultureInfo.InvariantCulture) ? x1 : x2);
+                    outOfRangeEventsCombined.Add(keep);
+                }
+                else
+                {
+                    outOfRangeEventsCombined.Add(oor.Value.FirstOrDefault());
+                }
+            }
+            var wrByID = windRampEvents.GroupBy(x => x.ID).ToDictionary(p => p.Key, p => p.ToList());
+            foreach (var wr in wrByID)
+            {
+                if (wr.Value.Count > 1)
+                {
+                    var keep = wr.Value.Aggregate((x1, x2) => DateTime.ParseExact(x1.Date, "yyMMdd", CultureInfo.InvariantCulture) > DateTime.ParseExact(x2.Date, "yyMMdd", CultureInfo.InvariantCulture) ? x1 : x2);
+                    windRampEventsCombined.Add(keep);
+                }
+                else
+                {
+                    windRampEventsCombined.Add(wr.Value.FirstOrDefault());
+                }
+            }
+
+            _ringdownEvents = ringdownEventsCombined;
+            _outOfRangeEvents = outOfRangeEventsCombined;
+            _windRampEvents = windRampEventsCombined;
+        }
         //private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
         private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList;
         public List<DatedForcedOscillationEvent> ForcedOscillationCombinedList
@@ -131,6 +197,11 @@ namespace BAWGUI.Results.Models
         public List<OutOfRangeEvent> OutOfRangeEvents
         {
             get { return _outOfRangeEvents; }
+        }
+        private List<WindRampEvent> _windRampEvents;
+        public List<WindRampEvent> WindRampEvents
+        {
+            get { return _windRampEvents; }
         }
         //private string _selectedStartTime;
         //public string SelectedStartTime

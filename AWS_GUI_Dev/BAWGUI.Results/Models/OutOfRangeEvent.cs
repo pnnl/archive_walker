@@ -9,10 +9,12 @@ namespace BAWGUI.Results.Models
 {
     public class OutOfRangeEvent
     {
-        public OutOfRangeEvent(OutOfRangeFrequencyType oor)
+        public OutOfRangeEvent(OutOfRangeFrequencyType oor, string date)
         {
             _outOfRange = oor;
+            Date = date;
         }
+        public string Date { get; }
         private OutOfRangeFrequencyType _outOfRange;
         public OutOfRangeFrequencyType OutOfRange
         {

@@ -38,6 +38,7 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _addSelectedDetector(obj As String)
+            _aDetectorStepDeSelected()
             Dim newDetector As Object
             Select Case obj
                 'Case "Out-of-Range"
@@ -74,6 +75,7 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _addSelectedAlarmingDetector(obj As String)
+            _aDetectorStepDeSelected()
             Select Case obj
                 Case "Ringdown Detector"
                     For Each item In DetectorConfigure.AlarmingList
@@ -122,6 +124,7 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _deSelectAllDetectors()
+            _aDetectorStepDeSelected()
             If CurrentSelectedStep IsNot Nothing Then
                 If TypeOf CurrentSelectedStep Is DetectorBase Then
                     For Each signal In _currentSelectedStep.InputChannels
@@ -157,9 +160,13 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _selectedADetector(detector As Object)
-            ' if processStep is already selected, then the selection is not changed, nothing needs to be done.
-            ' however, if processStep is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
+            ' if detector is already selected, then the selection is not changed, nothing needs to be done.
+            ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
             If Not detector.IsStepSelected Then
+                _aDetectorStepDeSelected()
+                'If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso CurrentSelectedStep.InputChannels.Count = 0 Then
+                '    'Forms.MessageBox.Show("Detectors have to have input signals!", "Error!", MessageBoxButtons.OK)
+                'Else
                 Try
                     Dim selectedFound = False
                     For Each dt In DetectorConfigure.DetectorList
@@ -206,6 +213,9 @@ Namespace ViewModels
                 Catch ex As Exception
                     Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                 End Try
+
+                'End If
+
             End If
         End Sub
 
@@ -239,6 +249,9 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _deleteADetector(obj As Object)
+            If CurrentSelectedStep IsNot obj Then
+                _aDetectorStepDeSelected()
+            End If
             Dim result = Forms.MessageBox.Show("Delete detector " & obj.Name & " in Detector Configuration?", "Warning!", MessageBoxButtons.OKCancel)
             If result = DialogResult.OK Then
                 Try
@@ -277,6 +290,22 @@ Namespace ViewModels
                 Exit Sub
             End If
         End Sub
+        Private _detectorStepDeSelected As ICommand
+        Public Property DetectorStepDeSelected As ICommand
+            Get
+                Return _detectorStepDeSelected
+            End Get
+            Set(ByVal value As ICommand)
+                _detectorStepDeSelected = value
+            End Set
+        End Property
+
+        Private Sub _aDetectorStepDeSelected()
+            If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso CurrentSelectedStep.InputChannels.Count = 0 Then
+                Forms.MessageBox.Show("Detectors have to have input signals!", "Error!", MessageBoxButtons.OK)
+            End If
+        End Sub
+
 #End Region
 
 

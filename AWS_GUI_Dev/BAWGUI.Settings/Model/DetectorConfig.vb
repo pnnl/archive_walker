@@ -776,11 +776,16 @@ Namespace Model
     End Enum
 
     Public Enum DetectorWindowType
-        Hann
-        Rectangular
-        Bartlett
-        Hamming
-        Blackman
+        <ComponentModel.Description("Hann")>
+        hann
+        <ComponentModel.Description("Rectangular")>
+        rectwin
+        <ComponentModel.Description("Bartlett")>
+        bartlett
+        <ComponentModel.Description("Hamming")>
+        hamming
+        <ComponentModel.Description("Blackman")>
+        blackman
     End Enum
 
     Public Enum OutOfRangeFrequencyDetectorType

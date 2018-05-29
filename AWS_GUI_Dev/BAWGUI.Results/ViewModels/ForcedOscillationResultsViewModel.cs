@@ -15,6 +15,7 @@ using OxyPlot.Series;
 using OxyPlot.Axes;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.RunMATLAB.Models;
+using System.Windows.Forms;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -104,11 +105,17 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedStartTime = value;
-                if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedEndTime))
+                OnPropertyChanged();
+                var startTime = Convert.ToDateTime(value);
+                var endTime = Convert.ToDateTime(_selectedEndTime);
+                if (startTime <= endTime)
                 {
                     _filterTableByTime();
                 }
-                OnPropertyChanged();
+                else
+                {
+                    //System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", MessageBoxButtons.OK);
+                }
             }
         }
 
@@ -119,11 +126,20 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedEndTime = value;
+                OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    _filterTableByTime();
+                    var startTime = Convert.ToDateTime(_selectedStartTime);
+                    var endTime = Convert.ToDateTime(value);
+                    if (startTime <= endTime)
+                    {
+                        _filterTableByTime();
+                    }
+                    else
+                    {
+                        //System.Windows.Forms.MessageBox.Show("Selected end time is earlier than start time.", "Error!", MessageBoxButtons.OK);
+                    }
                 }
-                OnPropertyChanged();
             }
         }
 
@@ -236,7 +252,7 @@ namespace BAWGUI.Results.ViewModels
         private void _showOccurrenceWindow(object obj)
         {
             bool isWindowOpen = false;
-            foreach(var w in Application.Current.Windows)
+            foreach(var w in System.Windows.Application.Current.Windows)
             {
                 if( w is OccurrenceTableWindow)
                 {
@@ -249,7 +265,7 @@ namespace BAWGUI.Results.ViewModels
             {
                 _occurrenceTableWin = new OccurrenceTableWindow();
                 _occurrenceTableWin.DataContext = this;
-                _occurrenceTableWin.Owner = Application.Current.MainWindow;
+                _occurrenceTableWin.Owner = System.Windows.Application.Current.MainWindow;
                 _occurrenceTableWin.Show();
             }
         }
@@ -259,7 +275,7 @@ namespace BAWGUI.Results.ViewModels
         private void _showChannelWindow(object obj)
         {
             bool isWindowOpen = false;
-            foreach (var w in Application.Current.Windows)
+            foreach (var w in System.Windows.Application.Current.Windows)
             {
                 if (w is ChannelTableWindow)
                 {
@@ -314,8 +330,13 @@ namespace BAWGUI.Results.ViewModels
             //{ PlotAreaBackground = OxyColors.WhiteSmoke}
             //a.PlotType = PlotType.Cartesian;
             var xAxisFormatString = "";
-            var startTime = FilteredResults.Min(x => x.GetFirstStartOfFilteredOccurrences());
-            var endTime = FilteredResults.Max(x => x.GetLastEndOfFilteredOccurrences());
+            var startTime = new DateTime();
+            var endTime = new DateTime();
+            if (FilteredResults.Count > 0)
+            {
+                startTime = Convert.ToDateTime(FilteredResults.Min(x => x.GetFirstStartOfFilteredOccurrences()));
+                endTime = Convert.ToDateTime(FilteredResults.Max(x => x.GetLastEndOfFilteredOccurrences()));
+            }
             var time = Convert.ToDateTime(endTime) - Convert.ToDateTime(startTime);
             if(time < TimeSpan.FromHours(24))
             {

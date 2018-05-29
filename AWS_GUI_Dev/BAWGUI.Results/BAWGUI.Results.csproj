@@ -44,7 +44,7 @@
     <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -111,6 +111,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\DataContexTypeConverter.cs" />
     <Compile Include="Converters\DateDictionaryKeyConverter.cs" />
     <Compile Include="Converters\DateTimeStringConverter.cs" />
     <Compile Include="Converters\ThumbnailVisibilityConverter.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Converters\TableValueNANConverter.cs" />
     <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
+    <Compile Include="Models\WindRampEvent.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\DatedForcedOscillationEvent.cs" />
     <Compile Include="Models\DatedOccurrence.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="ViewModels\RingdownEventViewModel.cs" />
     <Compile Include="ViewModels\SparsePlot.cs" />
     <Compile Include="ViewModels\ViewResolvingPlotModel.cs" />
+    <Compile Include="ViewModels\WindRampEventViewModel.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
       <DependentUpon>AvailableDates.xaml</DependentUpon>
     </Compile>
@@ -202,6 +205,9 @@
     </Compile>
     <Compile Include="Views\TimeFilterView.xaml.cs">
       <DependentUpon>TimeFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WindRampEventTable.xaml.cs">
+      <DependentUpon>WindRampEventTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindRampResultsView.xaml.cs">
       <DependentUpon>WindRampResultsView.xaml</DependentUpon>
@@ -318,6 +324,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TimeFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WindRampEventTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -9,10 +9,12 @@ namespace BAWGUI.Results.Models
 {
     public class RingDownEvent
     {
-        public RingDownEvent(RingdownType rd)
+        public RingDownEvent(RingdownType rd, string date)
         {
             _ringDown = rd;
+            Date = date;
         }
+        public string Date { get; }
         private RingdownType _ringDown;
         public RingdownType RingDown
         {

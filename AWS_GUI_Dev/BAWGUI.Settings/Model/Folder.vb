@@ -6,14 +6,14 @@ Imports BAWGUI.Settings.ViewModels
 Namespace Model
     Public Class Folder
         Inherits ViewModelBase
-        Public Sub New(filename, filetype, ByRef firstFile)
+        Public Sub New(filename As String, filetype As String, ByRef firstFile As String)
             _name = Path.GetFileName(filename)
             _fullName = filename
             'what If type Is nothing?
             _type = filetype
             'firstFile = Nothing
             '_buildDirTree(filename, firstFile)
-            _findFirstFile(filename, firstFile)
+            _findFirstFile(filename, filetype, firstFile)
         End Sub
         Private _type As String
         Private _name As String
@@ -46,7 +46,7 @@ Namespace Model
                 OnPropertyChanged()
             End Set
         End Property
-        Private Sub _buildDirTree(filename, ByRef firstFile)
+        Private Sub _buildDirTree(filename As String, ByRef firstFile As String)
             If File.Exists(filename) Then
                 If String.IsNullOrEmpty(firstFile) Then
                     firstFile = filename
@@ -71,18 +71,20 @@ Namespace Model
                 Throw New Exception(vbCrLf + "Error: data file path """ + filename + """ does not exists!")
             End If
         End Sub
-        Private Sub _findFirstFile(filename, ByRef firstFile)
+        Private Sub _findFirstFile(filename As String, filetype As String, ByRef firstFile As String)
             If File.Exists(filename) Then
-                firstFile = filename
+                If Path.GetExtension(filename).Substring(1).ToLower() = filetype Then
+                    firstFile = filename
+                End If
             ElseIf Directory.Exists(filename) Then
                 For Each file In Directory.GetFiles(filename)
-                    _findFirstFile(file, firstFile)
+                    _findFirstFile(file, filetype, firstFile)
                     If Not String.IsNullOrEmpty(firstFile) Then
                         Exit Sub
                     End If
                 Next
                 For Each path In Directory.GetDirectories(filename)
-                    _findFirstFile(path, firstFile)
+                    _findFirstFile(path, filetype, firstFile)
                     If Not String.IsNullOrEmpty(firstFile) Then
                         Exit Sub
                     End If

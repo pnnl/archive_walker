@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:vm="clr-namespace:BAWGUI.Settings"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
@@ -116,7 +117,7 @@
                                                         </Image.Style>
                                                     </Image>-->
                                         <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="210" VerticalAlignment="Center" Content="New Type" HorizontalAlignment="Left"/>
-                                        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,1" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" SelectedValue="{Binding NewType}" HorizontalAlignment="Center" ItemsSource="{Binding Path=DataContext.ProcessConfigure.TypeUnitDictionary, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=UserControl}}" SelectedValuePath="Key" DisplayMemberPath="Key"/>
+                                        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,1" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" SelectedValue="{Binding NewType}" HorizontalAlignment="Center" vm:ComboBoxItemsSourceDecorator.ItemsSource="{Binding Path=DataContext.ProcessConfigure.TypeUnitDictionary, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=UserControl}}" SelectedValuePath="Key" DisplayMemberPath="Key"/>
                                         <!--<Image Grid.Row="3" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                         <Image.Style>
                                                             <Style TargetType="Image">
@@ -130,12 +131,12 @@
                                                     </Image>-->
                                         <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="210" VerticalAlignment="Center" Content="New Unit" HorizontalAlignment="Left"/>
                                         <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,1" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" SelectedValue="{Binding NewUnit}" HorizontalAlignment="Center">
-                                            <ComboBox.ItemsSource>
+                                            <vm:ComboBoxItemsSourceDecorator.ItemsSource>
                                                 <MultiBinding Converter="{StaticResource TypeUnitDictionaryConverter}">
                                                     <Binding Path="DataContext.ProcessConfigure.TypeUnitDictionary" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=UserControl}"/>
                                                     <Binding Path="NewType"/>
                                                 </MultiBinding>
-                                            </ComboBox.ItemsSource>
+                                            </vm:ComboBoxItemsSourceDecorator.ItemsSource>
                                         </ComboBox>
                                     </Grid>
                                 </Grid>

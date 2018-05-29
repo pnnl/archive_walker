@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OxyPlot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace BAWGUI.Results.Views
         public WindRampResultsView()
         {
             InitializeComponent();
+            //EventPlot.Controller = new OxyPlot.PlotController();
+            //EventPlot.Controller.BindMouseDown(OxyPlot.OxyMouseButton.Left, OxyPlot.PlotCommands.ZoomRectangle);
+            //EventPlot.Controller.BindMouseDown(OxyMouseButton.Right, PlotCommands.PanAt);
+            ////RDPlot.Controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
+            //EventPlot.Controller.BindMouseDown(OxyMouseButton.Middle, PlotCommands.PointsOnlyTrack);
         }
     }
 }

@@ -77,6 +77,7 @@ Namespace ViewModels
             _specifyInitializationPath = New DelegateCommand(AddressOf _openInitializationPathFolder, AddressOf CanExecute)
             _specifyEventPath = New DelegateCommand(AddressOf _openEventPathFolder, AddressOf CanExecute)
             _setCurrentPhasorCreationFocusedTextBox = New DelegateCommand(AddressOf _phasrCreationCurrentFocusedTextBoxChanged, AddressOf CanExecute)
+            '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
             '_inputFileDirTree = New ObservableCollection(Of Folder)
@@ -112,10 +113,13 @@ Namespace ViewModels
             _resultUpdateIntervalVisibility = Visibility.Collapsed
 
             _dummySignature = New SignalSignatures("", "", "")
+            _dummySignature.Unit = ""
             _dummySignature.IsValid = False
             _dummySignature.IsCustomSignal = True
+            _dummySignature.OldSignalName = _dummySignature.SignalName
+            _dummySignature.OldTypeAbbreviation = _dummySignature.TypeAbbreviation
+            _dummySignature.OldUnit = _dummySignature.Unit
         End Sub
-
         'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
         'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
         '    Get
@@ -313,6 +317,9 @@ Namespace ViewModels
                 Else
                     Throw New Exception("Error! Invalid signal name " & name & " found!")
                 End If
+                signal.OldSignalName = signal.SignalName
+                signal.OldTypeAbbreviation = signal.TypeAbbreviation
+                signal.OldUnit = signal.Unit
                 newSignalList.Add(signal)
             Next
             fileInfo.TaggedSignals = newSignalList
@@ -886,6 +893,9 @@ Namespace ViewModels
                         Case Else
                             Throw New Exception("Error! Invalid signal type " & signalTypes(index) & " found in file: " & sampleFile & " !")
                     End Select
+                    newSignal.OldSignalName = newSignal.SignalName
+                    newSignal.OldTypeAbbreviation = newSignal.TypeAbbreviation
+                    newSignal.OldUnit = newSignal.Unit
                     signalSignatureList.Add(newSignal)
                 Next
                 fileInfo.SignalList = signalList
@@ -1656,7 +1666,7 @@ Namespace ViewModels
                     '    targetPairs.FirstOrDefault.Key.TypeAbbreviation = ang.TypeAbbreviation.Substring(0, 1) & "P" & ang.TypeAbbreviation.Substring(2, 1)
                     '    'targetPairs.FirstOrDefault.Key.TypeAbbreviation = ang.SamplingRate
                     '    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-                    '    ' How about unit of the new phasor signal? What should it be? '
+                    '    ' How about unit of the new phasor signal? What should it be? 'It should be the same as the magnitude'
                     '    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
                     'Else
                     '    _currentInputOutputPair = Nothing
@@ -2084,15 +2094,19 @@ Namespace ViewModels
                     Next
                 Else
                     If TypeOf _currentSelectedStep Is MetricPrefixCust Then
-                        Dim newOutput = New SignalSignatures(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
+                        Dim newOutput = obj.SignalSignature
                         If _currentSelectedStep.UseCustomPMU Then
+                            newOutput = New SignalSignatures(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
                             newOutput.PMUName = _currentSelectedStep.CustPMUname
+                            newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         End If
                         newOutput.IsCustomSignal = True
-                        newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         Dim units = New List(Of String)(PostProcessConfigure.TypeUnitDictionary(obj.SignalSignature.TypeAbbreviation))
                         units.Remove(obj.SignalSignature.Unit)
+                        newOutput.OldUnit = newOutput.Unit
                         newOutput.Unit = units.FirstOrDefault()
+                        newOutput.OldSignalName = newOutput.SignalName
+                        newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
                         _currentSelectedStep.outputChannels.Add(newOutput)
                         Dim targetkey = (From kvp In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where kvp.Key = newOutput Select kvp Distinct).ToList()
                         If targetkey.Count = 0 Then
@@ -2105,6 +2119,9 @@ Namespace ViewModels
                         newOutput.IsCustomSignal = True
                         newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         newOutput.Unit = obj.SignalSignature.Unit
+                        newOutput.OldSignalName = newOutput.SignalName
+                        newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                        newOutput.OldUnit = newOutput.Unit
                         _currentSelectedStep.outputChannels.Add(newOutput)
                         Dim targetkey = (From kvp In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where kvp.Key = newOutput Select kvp Distinct).ToList()
                         If targetkey.Count = 0 Then
@@ -2169,30 +2186,33 @@ Namespace ViewModels
                                         newOutput.SamplingRate = obj.SignalSignature.SamplingRate * p / q
                                     End If
                                 End If
+                                newOutput.OldSignalName = newOutput.SignalName
+                                newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                                newOutput.OldUnit = newOutput.Unit
                                 _currentSelectedStep.OutputChannels.Add(newOutput)
                             End If
                             If TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
                                 obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
                                 obj.SignalSignature.IsNameTypeUnitChanged = True
                                 If CurrentSelectedStep.OutputChannels.Count = 0 Then
-                                    If CurrentSelectedStep.NewChannel <> "" Then
+                                    If Not String.IsNullOrEmpty(CurrentSelectedStep.NewChannel) Then
                                         obj.SignalSignature.OldSignalName = obj.SignalSignature.SignalName
                                         obj.SignalSignature.SignalName = CurrentSelectedStep.NewChannel
                                     End If
                                 ElseIf CurrentSelectedStep.OutputChannels.Count = 1 Then
                                     Dim existingSignal = CurrentSelectedStep.OutputChannels(0)
-                                    If CurrentSelectedStep.NewChannel <> "" AndAlso existingSignal.OldSignalName <> "" Then
+                                    If Not String.IsNullOrEmpty(CurrentSelectedStep.NewChannel) AndAlso Not String.IsNullOrEmpty(existingSignal.OldSignalName) Then
                                         existingSignal.SignalName = existingSignal.OldSignalName
-                                        existingSignal.OldSignalName = ""
+                                        'existingSignal.OldSignalName = ""
                                     End If
                                     CurrentSelectedStep.NewChannel = ""
                                 Else
                                 End If
-                                If CurrentSelectedStep.NewType <> "" Then
+                                If Not String.IsNullOrEmpty(CurrentSelectedStep.NewType) Then
                                     obj.SignalSignature.OldTypeAbbreviation = obj.SignalSignature.TypeAbbreviation
                                     obj.SignalSignature.TypeAbbreviation = CurrentSelectedStep.NewType
                                 End If
-                                If CurrentSelectedStep.NewUnit <> "" Then
+                                If Not String.IsNullOrEmpty(CurrentSelectedStep.NewUnit) Then
                                     obj.SignalSignature.OldUnit = obj.SignalSignature.Unit
                                     obj.SignalSignature.Unit = CurrentSelectedStep.NewUnit
                                 End If
@@ -2221,15 +2241,15 @@ Namespace ViewModels
                                     If output.SignalName = obj.SignalSignature.SignalName AndAlso output.PMUName = obj.SignalSignature.PMUName Then
                                         If _currentSelectedStep.OutputChannels.Count = 1 AndAlso Not String.IsNullOrEmpty(output.OldSignalName) Then
                                             output.SignalName = output.OldSignalName
-                                            output.OldSignalName = ""
+                                            'output.OldSignalName = ""
                                         End If
                                         If Not String.IsNullOrEmpty(output.OldUnit) Then
                                             output.Unit = output.OldUnit
-                                            output.OldUnit = ""
+                                            'output.OldUnit = ""
                                         End If
                                         If Not String.IsNullOrEmpty(output.OldTypeAbbreviation) Then
                                             output.TypeAbbreviation = output.OldTypeAbbreviation
-                                            output.OldTypeAbbreviation = ""
+                                            'output.OldTypeAbbreviation = ""
                                         End If
                                         output.IsNameTypeUnitChanged = False
                                         output.PassedThroughProcessor = output.PassedThroughProcessor - 1
@@ -2278,6 +2298,7 @@ Namespace ViewModels
                     End If
                     Dim type = obj.SignalSignature.TypeAbbreviation.Substring(0, 1) & "P" & obj.SignalSignature.TypeAbbreviation.Substring(2, 1)
                     Dim newOutput = New SignalSignatures("", pmu, type)
+                    newOutput.Unit = obj.SignalSignature.Unit
                     newOutput.IsCustomSignal = True
                     Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newOutput, New ObservableCollection(Of SignalSignatures))
                     newPair.Value.Add(obj.SignalSignature)
@@ -2286,6 +2307,9 @@ Namespace ViewModels
                     newPair.Value.Add(DummySignature)
                     _currentSelectedStep.OutputInputMappingPair.Add(newPair)
                     _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    newOutput.OldSignalName = newOutput.SignalName
+                    newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                    newOutput.OldUnit = newOutput.Unit
                     _currentSelectedStep.OutputChannels.Add(newOutput)
                 ElseIf obj.SignalSignature.TypeAbbreviation.Length = 3 AndAlso obj.SignalSignature.TypeAbbreviation.Substring(1, 1) = "A" Then
                     Dim pmu = _currentSelectedStep.CustPMUname
@@ -2294,6 +2318,7 @@ Namespace ViewModels
                     End If
                     Dim type = obj.SignalSignature.TypeAbbreviation.Substring(0, 1) & "P" & obj.SignalSignature.TypeAbbreviation.Substring(2, 1)
                     Dim newOutput = New SignalSignatures("", pmu, type)
+                    'newOutput.Unit = ""
                     newOutput.IsCustomSignal = True
                     Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newOutput, New ObservableCollection(Of SignalSignatures))
                     'Dim dummy = New SignalSignatures()
@@ -2302,6 +2327,9 @@ Namespace ViewModels
                     newPair.Value.Add(obj.SignalSignature)
                     _currentSelectedStep.OutputInputMappingPair.Add(newPair)
                     _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    newOutput.OldSignalName = newOutput.SignalName
+                    newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                    newOutput.OldUnit = newOutput.Unit
                     _currentSelectedStep.OutputChannels.Add(newOutput)
                     'Dim ang = _findMatchingAng(obj.SignalSignature)
                     'If ang IsNot Nothing Then
@@ -3600,9 +3628,18 @@ Namespace ViewModels
                 Dim stepsOutputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
                 For Each stp In DataConfigure.CollectionOfSteps
                     If TypeOf (stp) Is Customization Then
+                        stp.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(stp.InputChannels)
                         stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                     End If
+                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
                     stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
+                    'If TypeOf (stp) Is Customization Then
+                    '    stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
+                    'End If
+                    'If TypeOf (stp) Is MetricPrefixCust Then
+                    '    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
+                    'End If
+                    'stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                 Next
                 GroupedSignalByDataConfigStepsInput = stepsInputAsSignalHierachy
                 GroupedSignalByDataConfigStepsOutput = stepsOutputAsSignalHierachy

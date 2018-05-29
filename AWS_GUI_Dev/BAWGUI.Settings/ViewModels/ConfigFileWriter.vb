@@ -788,12 +788,12 @@ Public Class ConfigFileWriter
                     aStep.<Parameters>.LastOrDefault.Add(toConvert)
                 Next
             Case "Status Flags"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                             <Parameters></Parameters>
                         </Filter>
                 aStep.<Parameters>.LastOrDefault.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", _dqFilterCounter))
                 For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
                     For Each subgroup In group.SignalList
@@ -804,17 +804,16 @@ Public Class ConfigFileWriter
                     Next
                 Next
             Case "Zeros", "Missing"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                             <Parameters></Parameters>
                         </Filter>
                 aStep.<Parameters>.LastOrDefault.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", _dqFilterCounter))
                 Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 _writePMUElements(aStep, PMUSignalDictionary)
             Case "Nominal Voltage"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                         </Filter>
@@ -829,12 +828,12 @@ Public Class ConfigFileWriter
                     para.Add(<VoltMax><%= singleStep.VoltMax %></VoltMax>)
                 End If
                 para.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(New XElement("FlagBit", _dqFilterCounter))
                 aStep.Add(para)
                 Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 _writePMUElements(aStep, PMUSignalDictionary)
             Case "Nominal Frequency"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                         </Filter>
@@ -855,13 +854,14 @@ Public Class ConfigFileWriter
                     para.Add(<FreqMaxSamp><%= singleStep.FreqMaxSamp %></FreqMaxSamp>)
                 End If
                 para.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(<FlagBitChan><%= _dqFilterCounter %></FlagBitChan>)
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(<FlagBitSamp><%= _dqFilterCounter %></FlagBitSamp>)
                 aStep.Add(para)
                 Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 _writePMUElements(aStep, PMUSignalDictionary)
             Case "Outliers"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                         </Filter>
@@ -870,12 +870,12 @@ Public Class ConfigFileWriter
                     para.Add(<StdDevMult><%= singleStep.StdDevMult %></StdDevMult>)
                 End If
                 para.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(New XElement("FlagBit", _dqFilterCounter))
                 aStep.Add(para)
                 Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 _writePMUElements(aStep, PMUSignalDictionary)
             Case "Stale Data"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                         </Filter>
@@ -887,13 +887,14 @@ Public Class ConfigFileWriter
                     para.Add(<FlagAllByFreq><%= singleStep.FlagAllByFreq.ToString.ToUpper %></FlagAllByFreq>)
                 End If
                 para.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(New XElement("FlagBitFreq", _dqFilterCounter))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(New XElement("FlagBit", _dqFilterCounter))
                 aStep.Add(para)
                 Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 _writePMUElements(aStep, PMUSignalDictionary)
             Case "Data Frame", "Channel"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                         </Filter>
@@ -902,12 +903,12 @@ Public Class ConfigFileWriter
                     para.Add(<PercentBadThresh><%= singleStep.PercentBadThresh %></PercentBadThresh>)
                 End If
                 para.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(New XElement("FlagBit", _dqFilterCounter))
                 aStep.Add(para)
                 Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 _writePMUElements(aStep, PMUSignalDictionary)
             Case "Entire PMU"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                         </Filter>
@@ -916,6 +917,7 @@ Public Class ConfigFileWriter
                     para.Add(<PercentBadThresh><%= singleStep.PercentBadThresh %></PercentBadThresh>)
                 End If
                 para.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(New XElement("FlagBit", _dqFilterCounter))
                 aStep.Add(para)
                 For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
@@ -927,7 +929,6 @@ Public Class ConfigFileWriter
                     Next
                 Next
             Case "Angle Wrapping"
-                _dqFilterCounter = _dqFilterCounter + 1
                 aStep = <Filter>
                             <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
                         </Filter>
@@ -936,6 +937,7 @@ Public Class ConfigFileWriter
                     para.Add(<AngleThresh><%= singleStep.AngleThresh %></AngleThresh>)
                 End If
                 para.Add(New XElement("SetToNaN", "TRUE"))
+                _dqFilterCounter = _dqFilterCounter + 1
                 para.Add(New XElement("FlagBit", _dqFilterCounter))
                 aStep.Add(para)
                 Dim PMUSignalDictionary = DirectCast(singleStep, DQFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)

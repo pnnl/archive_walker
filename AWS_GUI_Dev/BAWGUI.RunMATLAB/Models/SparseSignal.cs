@@ -8,6 +8,7 @@ namespace BAWGUI.RunMATLAB.Models
 {
     public class SparseSignal
     {
+        public string Label;
         public string SignalName;
         public string PMUname;
         public string Type;
