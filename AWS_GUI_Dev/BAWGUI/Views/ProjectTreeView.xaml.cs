@@ -40,11 +40,17 @@ namespace BAWGUI.Views
                 e.Handled = true;
             }
             //treeViewItem.DataContext.IsSelected = true;
-            var selectedProject = sender as TreeViewItem;
-            var st = selectedProject.DataContext as RunMATLAB.ViewModels.AWProjectViewModel;
-            st.SelectedRun.IsSelected = false;
+            var st = sender as TreeViewItem;
+            var selectedProject = st.DataContext as RunMATLAB.ViewModels.AWProjectViewModel;
+            if (selectedProject.SelectedRun != null)
+            {
+                selectedProject.SelectedRun.IsSelected = false;
+            }
             var selectedRun = treeViewItem.DataContext as RunMATLAB.ViewModels.AWRunViewModel;
-            selectedRun.IsSelected = true;
+            if (selectedRun != null)
+            {
+                selectedRun.IsSelected = true;
+            }
         }
         static DependencyObject VisualUpwardSearch<T>(DependencyObject source)
         {
