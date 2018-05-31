@@ -1510,6 +1510,7 @@ Namespace ViewModels
                         ResultUpdateIntervalVisibility = Visibility.Visible
                     Case "Alarming"
                         _readAlarming(detector)
+                    Case "Thevenin"
                     Case Else
                         Throw New Exception("Unknown element found in DetectorConfig in config file.")
                 End Select
