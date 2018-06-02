@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BAWGUI.Core.Resources;
 using MathWorks.MATLAB.NET.Arrays;
 
 namespace BAWGUI.RunMATLAB.Models
@@ -38,7 +39,7 @@ namespace BAWGUI.RunMATLAB.Models
                 var timeStampNumbers = new List<double>();
                 foreach (var item in t)
                 {
-                    var tt = Resources.Utility.Utility.MatlabDateNumToDotNetDateTime(item);
+                    var tt =Utility.MatlabDateNumToDotNetDateTime(item);
                     timeStamps.Add(tt);
                     timeStampNumbers.Add(tt.ToOADate());
                 }

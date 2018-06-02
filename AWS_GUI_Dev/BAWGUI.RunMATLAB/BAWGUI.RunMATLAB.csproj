@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BAWGUI.RunMATLAB</RootNamespace>
     <AssemblyName>BAWGUI.RunMATLAB</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -115,9 +115,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\RunMATLABViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\RunNormalRunView.xaml.cs">
       <DependentUpon>RunNormalRunView.xaml</DependentUpon>
     </Compile>
@@ -136,28 +134,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
-      <Link>MyResources\open.gif</Link>
-    </Resource>
-    <Resource Include="..\BAWGUI.Resources\Images\Run_16x.png">
-      <Link>MyResources\Run_16x.png</Link>
-    </Resource>
+    <Folder Include="MyResources\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\BAWGUI.Resources\Images\pause.PNG">
-      <Link>MyResources\pause.PNG</Link>
-    </Resource>
-    <Resource Include="..\BAWGUI.Resources\Images\stop.PNG">
-      <Link>MyResources\stop.PNG</Link>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\BAWGUI.Resources\Images\resume.PNG">
-      <Link>MyResources\resume.PNG</Link>
-    </Resource>
+    <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
+      <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
+      <Name>BAWGUI.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\BAWGUI.Resources\Resources.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

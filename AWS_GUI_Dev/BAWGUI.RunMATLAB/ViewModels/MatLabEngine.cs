@@ -12,6 +12,7 @@ using System.Threading;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
+using BAWGUI.Core;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels

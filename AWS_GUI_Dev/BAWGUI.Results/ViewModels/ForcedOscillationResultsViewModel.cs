@@ -16,6 +16,7 @@ using OxyPlot.Axes;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.RunMATLAB.Models;
 using System.Windows.Forms;
+using BAWGUI.Core;
 
 namespace BAWGUI.Results.ViewModels
 {

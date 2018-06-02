@@ -1,10 +1,11 @@
-﻿using BAWGUI.RunMATLAB.ViewModels;
+﻿using BAWGUI.Core;
+using BAWGUI.RunMATLAB.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class OORReRunPlot:ViewModelBase
+    public class OORReRunPlot: Core.ViewModelBase
     {
         private string _label;
         public string Label

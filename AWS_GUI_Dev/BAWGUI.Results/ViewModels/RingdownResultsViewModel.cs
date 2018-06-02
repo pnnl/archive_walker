@@ -16,6 +16,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using BAWGUI.Core;
+using BAWGUI.Core.Resources;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -703,7 +705,7 @@ namespace BAWGUI.Results.ViewModels
                     //aSignalPlotModel.RdThresholdRMSPlotModel.TitleFontWeight = 16;
                     var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.RdThresholdRMSPlotModel); //bitmapsource object
                     aNewPair.Label = rd.SignalName;
-                    aNewPair.Thumbnail = Resources.Utility.Utility.ResizeBitmapSource(bitmapSource, 80d);
+                    aNewPair.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
                     //aSignalPlotModel.RdThresholdRMSPlotModel.TitleFontSize = originalTitleFontSize;
                     //aSignalPlotModel.RdThresholdRMSPlotModel.TitleFontWeight = originalTitleFontWeight;
                     aSignalPlotModel.RdThresholdRMSPlotModel.IsLegendVisible = true;

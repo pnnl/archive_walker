@@ -1,4 +1,6 @@
-﻿using BAWGUI.Results.Models;
+﻿using BAWGUI.Core;
+using BAWGUI.Core.Resources;
+using BAWGUI.Results.Models;
 using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using OxyPlot;
@@ -82,7 +84,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     if (!_wrSignals.ContainsKey(model.PMU + model.Channel))
                     {
-                        randColor = Resources.Utility.Utility.SaturatedColors[signalCounter % 20];
+                        randColor = Utility.SaturatedColors[signalCounter % 20];
                         _wrSignals[model.PMU + model.Channel] = randColor;
                         signalCounter++;
                     }

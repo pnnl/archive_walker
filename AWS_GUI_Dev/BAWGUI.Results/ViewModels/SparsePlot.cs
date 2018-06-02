@@ -1,4 +1,5 @@
-﻿using BAWGUI.RunMATLAB.ViewModels;
+﻿using BAWGUI.Core;
+using BAWGUI.RunMATLAB.ViewModels;
 using OxyPlot;
 using System;
 using System.Collections.Generic;

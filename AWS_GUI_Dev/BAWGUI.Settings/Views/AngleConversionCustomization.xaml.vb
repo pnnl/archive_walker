@@ -1,8 +1,8 @@
 ﻿Imports System.Drawing
 Imports System.Windows
 Imports System.Windows.Media
+Imports BAWGUI.Core.Resources
 Imports BAWGUI.Settings.ViewModels
-Imports Resources
 
 Public Class AngleConversionCustomization
 
@@ -10,10 +10,10 @@ Public Class AngleConversionCustomization
     Private Sub ExpTextBoxGotFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMU" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "Channel" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub

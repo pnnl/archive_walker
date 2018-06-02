@@ -2,16 +2,16 @@
 Imports System.Windows
 Imports System.Windows.Input
 Imports System.Windows.Media
-Imports Resources
+Imports BAWGUI.Core.Resources
 
 Public Class SpecifySignalTypeUnitCustomization
     Private Sub WatermarkTextBox_GotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMUnameBox" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "SignalNameBox" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub

@@ -2,17 +2,17 @@
 Imports System.Windows
 Imports System.Windows.Input
 Imports System.Windows.Media
-Imports Resources
+Imports BAWGUI.Core.Resources
 
 Public Class SubtractionCustomization
     Private Sub MinuendOrDividentTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
         sender.datacontext.CurrentCursor = "MinuendOrDividend"
         For Each item In sender.Parent.Children
             If item.Name = "MDPMU" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "MinuendOrDividend" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub
@@ -21,10 +21,10 @@ Public Class SubtractionCustomization
         sender.datacontext.CurrentCursor = "SubtrahendOrDivisor"
         For Each item In sender.Parent.Children
             If item.Name = "SDPMU" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "SubtrahendOrDivisor" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub
