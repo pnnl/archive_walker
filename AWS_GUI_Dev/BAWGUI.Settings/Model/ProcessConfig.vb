@@ -1,5 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
+Imports BAWGUI.Core
+Imports BAWGUI.Settings.ViewModel
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Model
@@ -134,10 +136,10 @@ Namespace Model
         Inherits SignalProcessStep
 
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
             Name = "Unwrap"
             IsExpanded = False
         End Sub
@@ -177,10 +179,10 @@ Namespace Model
     Public Class Interpolate
         Inherits SignalProcessStep
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
             Name = "Interpolation"
             IsExpanded = False
             _flagInterp = False
@@ -262,10 +264,10 @@ Namespace Model
     Public Class Wrap
         Inherits SignalProcessStep
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
             Name = "Wrap"
             IsExpanded = False
         End Sub
@@ -287,10 +289,10 @@ Namespace Model
                                                                                                     {TunableFilterType.HighPass, {"Order", "Cutoff"}.ToList()},
                                                                                                     {TunableFilterType.LowPass, {"PassRipple", "StopRipple", "PassCutoff", "StopCutoff"}.ToList()}}
             '{TunableFilterType.Median, {"Order", "Endpoints", "HandleNaN"}.ToList()}}
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
             Name = "Filter"
             Type = TunableFilterType.Rational
             IsExpanded = False
@@ -430,10 +432,10 @@ Namespace Model
     Public Class Multirate
         Inherits Filter
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(signature:=New SignalSignatureViewModel)
             _name = "Multirate"
             '_pElement = 1
             '_qElement = 1
@@ -611,10 +613,10 @@ Namespace Model
     Public Class NameTypeUnitPMU
         Inherits SignalProcessStep
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
             _name = "Signal Type and Unit Specification"
             IsExpanded = False
         End Sub

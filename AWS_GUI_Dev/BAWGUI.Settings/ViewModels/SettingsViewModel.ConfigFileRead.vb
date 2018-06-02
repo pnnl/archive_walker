@@ -8,6 +8,7 @@ Imports System.Linq
 Imports Microsoft.Expression.Interactivity.Core
 Imports BAWGUI.Settings.Model
 Imports System.Windows
+Imports BAWGUI.Settings.ViewModel
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -67,8 +68,8 @@ Namespace ViewModels
             _readDetectorConfig(configData)
         End Sub
 
-        Private Function _readPMUElements(stp As XElement) As ObservableCollection(Of SignalSignatures)
-            Dim inputSignalList = New ObservableCollection(Of SignalSignatures)
+        Private Function _readPMUElements(stp As XElement) As ObservableCollection(Of SignalSignatureViewModel)
+            Dim inputSignalList = New ObservableCollection(Of SignalSignatureViewModel)
             Dim inputs = From el In stp.Elements Where el.Name = "PMU" Select el
             If inputs.ToList.Count > 0 Then
 
@@ -366,7 +367,7 @@ Namespace ViewModels
                 If magSignal IsNot Nothing Then
                     aStep.InputChannels.Add(magSignal)
                 Else
-                    magSignal = New SignalSignatures("ErrorReadingMag")
+                    magSignal = New SignalSignatureViewModel("ErrorReadingMag")
                     magSignal.IsValid = False
                     _addLog("Error reading config file! Signal in step: " & stepCounter & ", channel name: " & phasor.<mag>.<Channel>.Value & " in PMU " & phasor.<mag>.<PMU>.Value & " not found!")
                 End If
@@ -374,7 +375,7 @@ Namespace ViewModels
                 If angSignal IsNot Nothing Then
                     aStep.InputChannels.Add(angSignal)
                 Else
-                    angSignal = New SignalSignatures("ErrorReadingAng")
+                    angSignal = New SignalSignatureViewModel("ErrorReadingAng")
                     angSignal.IsValid = False
                     _addLog("Error reading config file! Signal in step: " & stepCounter & ", channel name: " & phasor.<ang>.<Channel>.Value & " in PMU " & phasor.<ang>.<PMU>.Value & " not found!")
                 End If
@@ -382,7 +383,7 @@ Namespace ViewModels
                 If String.IsNullOrEmpty(custSignalName) Then
                     custSignalName = "CustomSignalNameRequired"
                 End If
-                Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
+                Dim output = New SignalSignatureViewModel(custSignalName, aStep.CustPMUname, "OTHER")
                 output.IsCustomSignal = True
                 If magSignal.IsValid AndAlso angSignal.IsValid Then
                     Dim mtype = magSignal.TypeAbbreviation.ToArray
@@ -398,7 +399,7 @@ Namespace ViewModels
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(magSignal)
                 newPair.Value.Add(angSignal)
                 aStep.OutputInputMappingPair.Add(newPair)
@@ -427,7 +428,7 @@ Namespace ViewModels
                         aStep.InputChannels.Add(input)
                     End If
                 Else
-                    input = New SignalSignatures("SignalNotFound")
+                    input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
                     _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
                 End If
@@ -439,7 +440,7 @@ Namespace ViewModels
                         custSignalName = "CustomSignalNameRequired"
                     End If
                 End If
-                Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname, "OTHER")
+                Dim output = New SignalSignatureViewModel(custSignalName, aStep.CustPMUname, "OTHER")
                 output.IsCustomSignal = True
                 If input.IsValid AndAlso input.TypeAbbreviation.Length = 3 Then
                     Dim letter2 = input.TypeAbbreviation.ToArray(1)
@@ -452,7 +453,7 @@ Namespace ViewModels
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(input)
                 aStep.OutputInputMappingPair.Add(newPair)
             Next
@@ -480,7 +481,7 @@ Namespace ViewModels
                         aStep.InputChannels.Add(input)
                     End If
                 Else
-                    input = New SignalSignatures("SignalNotFound")
+                    input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
                     _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
                 End If
@@ -492,7 +493,7 @@ Namespace ViewModels
                 '        custSignalName = "NoCustomSignalNameSpecified"
                 '    End If
                 'End If
-                Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname)
+                Dim output = New SignalSignatureViewModel(custSignalName, aStep.CustPMUname)
                 output.IsCustomSignal = True
                 If input.IsValid Then
                     output.TypeAbbreviation = input.TypeAbbreviation
@@ -503,7 +504,7 @@ Namespace ViewModels
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(input)
                 aStep.OutputInputMappingPair.Add(newPair)
             Next
@@ -527,7 +528,7 @@ Namespace ViewModels
             End If
             Dim minuend = _searchForSignalInTaggedSignals(params.<minuend>.<PMU>.Value, params.<minuend>.<Channel>.Value)
             If minuend Is Nothing Then
-                minuend = New SignalSignatures("MinuentNotFound")
+                minuend = New SignalSignatureViewModel("MinuentNotFound")
                 minuend.IsValid = False
                 _addLog("Error reading config file! Minuend in step: " & stepCounter & " with PMU: " & params.<minuend>.<PMU>.Value & ", and Channel: " & params.<minuend>.<Channel>.Value & " not found!")
             Else
@@ -536,14 +537,14 @@ Namespace ViewModels
             aStep.MinuendOrDividend = minuend
             Dim subtrahend = _searchForSignalInTaggedSignals(params.<subtrahend>.<PMU>.Value, params.<subtrahend>.<Channel>.Value)
             If subtrahend Is Nothing Then
-                subtrahend = New SignalSignatures("SubtrahendNotFound")
+                subtrahend = New SignalSignatureViewModel("SubtrahendNotFound")
                 subtrahend.IsValid = False
                 _addLog("Error reading config file! Subtrahend in step: " & stepCounter & " with PMU: " & params.<subtrahend>.<PMU>.Value & ", and Channel: " & params.<subtrahend>.<Channel>.Value & " not found!")
             Else
                 aStep.InputChannels.Add(subtrahend)
             End If
             aStep.SubtrahendOrDivisor = subtrahend
-            Dim output = New SignalSignatures(outputName, aStep.CustPMUname)
+            Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname)
             If minuend.IsValid AndAlso subtrahend.IsValid Then
                 If minuend.TypeAbbreviation = subtrahend.TypeAbbreviation Then
                     output.TypeAbbreviation = minuend.TypeAbbreviation
@@ -586,7 +587,7 @@ Namespace ViewModels
                         aStep.InputChannels.Add(input)
                     End If
                 Else
-                    input = New SignalSignatures("SignalNotFound")
+                    input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
                     _addLog("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.<Channel>.Value & " in PMU " & signal.<PMU>.Value & " not found!")
                 End If
@@ -598,7 +599,7 @@ Namespace ViewModels
                 '        custSignalName = "NoCustomSignalNameSpecified"
                 '    End If
                 'End If
-                Dim output = New SignalSignatures(custSignalName, aStep.CustPMUname)
+                Dim output = New SignalSignatureViewModel(custSignalName, aStep.CustPMUname)
                 output.IsCustomSignal = True
                 'If input.IsValid And input.TypeAbbreviation = "SC" Then
                 '    output.TypeAbbreviation = "SC"
@@ -618,7 +619,7 @@ Namespace ViewModels
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(input)
                 aStep.OutputInputMappingPair.Add(newPair)
             Next
@@ -642,7 +643,7 @@ Namespace ViewModels
             End If
             Dim Dividend = _searchForSignalInTaggedSignals(params.<dividend>.<PMU>.Value, params.<dividend>.<Channel>.Value)
             If Dividend Is Nothing Then
-                Dividend = New SignalSignatures("DividendNotFound")
+                Dividend = New SignalSignatureViewModel("DividendNotFound")
                 Dividend.IsValid = False
                 _addLog("Error reading config file! Dividend in step: " & stepCounter & ", with PMU: " & params.<dividend>.<PMU>.Value & ", and Channel: " & params.<dividend>.<Channel>.Value & " not found!")
             Else
@@ -651,14 +652,14 @@ Namespace ViewModels
             aStep.MinuendOrDividend = Dividend
             Dim Divisor = _searchForSignalInTaggedSignals(params.<divisor>.<PMU>.Value, params.<divisor>.<Channel>.Value)
             If Divisor Is Nothing Then
-                Divisor = New SignalSignatures("DivisorNotFound")
+                Divisor = New SignalSignatureViewModel("DivisorNotFound")
                 Divisor.IsValid = False
                 _addLog("Error reading config file! Divisor in step: " & stepCounter & ", with PMU: " & params.<divisor>.<PMU>.Value & ", and Channel: " & params.<divisor>.<Channel>.Value & " not found!")
             Else
                 aStep.InputChannels.Add(Divisor)
             End If
             aStep.SubtrahendOrDivisor = Divisor
-            Dim output = New SignalSignatures(outputName, aStep.CustPMUname, "OTHER")
+            Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname, "OTHER")
             If Dividend.IsValid AndAlso Divisor.IsValid Then
                 If Dividend.TypeAbbreviation = Divisor.TypeAbbreviation Then
                     output.TypeAbbreviation = "SC"
@@ -712,7 +713,7 @@ Namespace ViewModels
             aStep.TimeSourcePMU = AllPMUs.Where(Function(x) x.PMU = pmu).FirstOrDefault()
             aStep.Unit = unit
             aStep.Type = type
-            Dim output = New SignalSignatures(outputName, aStep.CustPMUname, type)
+            Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname, type)
             output.IsCustomSignal = True
             output.Unit = unit
             If aStep.TimeSourcePMU IsNot Nothing Then
@@ -767,7 +768,7 @@ Namespace ViewModels
             If outputName Is Nothing Then
                 outputName = ""
             End If
-            Dim output = New SignalSignatures(outputName, aStep.CustPMUname)
+            Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname)
             If countNonScalarType = 0 Then
                 output.TypeAbbreviation = "SC"
                 output.Unit = "SC"
@@ -807,7 +808,7 @@ Namespace ViewModels
             If outputName Is Nothing Then
                 outputName = ""
             End If
-            Dim output = New SignalSignatures(outputName, aStep.CustPMUname, "OTHER")
+            Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname, "OTHER")
             output.IsCustomSignal = True
             Dim terms = From term In params.Elements Where term.Name = "term" Select term
             For Each term In terms
@@ -887,14 +888,14 @@ Namespace ViewModels
                     signalName = "CustomSignalNameRequired"
                 End If
                 Dim typeAbbre = aStep.PowType.ToString
-                Dim output = New SignalSignatures(signalName, aStep.CustPMUname, typeAbbre)
+                Dim output = New SignalSignatureViewModel(signalName, aStep.CustPMUname, typeAbbre)
                 output.IsCustomSignal = True
                 Dim samplingRate = -1
                 Dim signals = From el In powers(index).Elements Where el.Name <> "CustName"
                 For Each signal In signals
                     Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
                     If input Is Nothing Then
-                        input = New SignalSignatures("SignalNotFound")
+                        input = New SignalSignatureViewModel("SignalNotFound")
                         input.IsValid = False
                         input.TypeAbbreviation = "C"
                         _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
@@ -918,7 +919,7 @@ Namespace ViewModels
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldSignalName = output.SignalName
                 aStep.OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 For Each signal In aStep.InputChannels
                     newPair.Value.Add(signal)
                 Next
@@ -944,7 +945,7 @@ Namespace ViewModels
                 If input IsNot Nothing Then
                     aStep.InputChannels.Add(input)
                 Else
-                    input = New SignalSignatures("SignalNotFound")
+                    input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
                     input.TypeAbbreviation = "C"
                     _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
@@ -956,7 +957,7 @@ Namespace ViewModels
                 Dim newUnit = convert.<NewUnit>.Value
                 Dim output = input
                 If aStep.UseCustomPMU Then
-                    output = New SignalSignatures(outputName, CustPMUname, input.TypeAbbreviation)
+                    output = New SignalSignatureViewModel(outputName, CustPMUname, input.TypeAbbreviation)
                     output.SamplingRate = input.SamplingRate
                     output.Unit = newUnit
                     output.OldSignalName = output.SignalName
@@ -968,7 +969,7 @@ Namespace ViewModels
                 End If
                 output.IsCustomSignal = True
                 aStep.OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(input)
                 aStep.OutputInputMappingPair.Add(newPair)
             Next
@@ -992,7 +993,7 @@ Namespace ViewModels
                 If input IsNot Nothing Then
                     aStep.InputChannels.Add(input)
                 Else
-                    input = New SignalSignatures("SignalNotFound")
+                    input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
                     input.TypeAbbreviation = "C"
                     _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
@@ -1001,7 +1002,7 @@ Namespace ViewModels
                 If outputName Is Nothing Then
                     outputName = input.SignalName
                 End If
-                Dim output = New SignalSignatures(outputName, aStep.CustPMUname, input.TypeAbbreviation)
+                Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname, input.TypeAbbreviation)
                 output.SamplingRate = input.SamplingRate
                 output.IsCustomSignal = True
                 output.Unit = convert.<NewUnit>.Value
@@ -1009,7 +1010,7 @@ Namespace ViewModels
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldUnit = output.Unit
                 aStep.OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(input)
                 aStep.OutputInputMappingPair.Add(newPair)
             Next
@@ -1033,7 +1034,7 @@ Namespace ViewModels
             'Dim input = _searchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
             Dim samplingRate = -1
             If inputSignal Is Nothing Then
-                inputSignal = New SignalSignatures("SignalNotFound")
+                inputSignal = New SignalSignatureViewModel("SignalNotFound")
                 inputSignal.IsValid = False
                 inputSignal.TypeAbbreviation = "C"
                 _addLog("Error reading config file! Input signal in step: " & stepCounter & " with PMU: " & params.<PMU>.Value & ", and Channel: " & params.<Channel>.Value & " not found!")
@@ -1045,7 +1046,7 @@ Namespace ViewModels
             If outputName Is Nothing Then
                 outputName = inputSignal.SignalName
             End If
-            Dim output = New SignalSignatures(outputName, aStep.CustPMUname, params.<SigType>.Value)
+            Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname, params.<SigType>.Value)
             output.IsCustomSignal = True
             output.Unit = params.<SigUnit>.Value
             output.SamplingRate = samplingRate
@@ -1053,7 +1054,7 @@ Namespace ViewModels
             output.OldTypeAbbreviation = output.TypeAbbreviation
             output.OldUnit = output.Unit
             aStep.OutputChannels.Add(output)
-            Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+            Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
             newPair.Value.Add(inputSignal)
             aStep.OutputInputMappingPair.Add(newPair)
             'Next
@@ -1070,7 +1071,7 @@ Namespace ViewModels
         ''' <param name="pmu"></param>
         ''' <param name="channel"></param>
         ''' <returns></returns>
-        Private Function _searchForSignalInTaggedSignals(pmu As String, channel As String) As SignalSignatures
+        Private Function _searchForSignalInTaggedSignals(pmu As String, channel As String) As SignalSignatureViewModel
             For Each group In GroupedRawSignalsByPMU
                 For Each samplingRateSubgroup In group.SignalList
                     For Each subgroup In samplingRateSubgroup.SignalList
@@ -1269,7 +1270,7 @@ Namespace ViewModels
                     End Try
                     For Each signal In aStep.InputChannels
                         If TypeOf aStep Is Multirate Then
-                            Dim output = New SignalSignatures(signal.SignalName, aStep.MultiRatePMU, signal.TypeAbbreviation)
+                            Dim output = New SignalSignatureViewModel(signal.SignalName, aStep.MultiRatePMU, signal.TypeAbbreviation)
                             output.SamplingRate = aStep.NewRate
                             output.Unit = signal.Unit
                             output.IsCustomSignal = True

@@ -1,4 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
+Imports BAWGUI.Core
+Imports BAWGUI.Settings.ViewModel
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Model
@@ -127,12 +129,12 @@ Namespace Model
             End Set
         End Property
 
-        Private _inputChannels As ObservableCollection(Of SignalSignatures)
-        Public Property InputChannels As ObservableCollection(Of SignalSignatures)
+        Private _inputChannels As ObservableCollection(Of SignalSignatureViewModel)
+        Public Property InputChannels As ObservableCollection(Of SignalSignatureViewModel)
             Get
                 Return _inputChannels
             End Get
-            Set(ByVal value As ObservableCollection(Of SignalSignatures))
+            Set(ByVal value As ObservableCollection(Of SignalSignatureViewModel))
                 _inputChannels = value
                 OnPropertyChanged()
             End Set
@@ -149,12 +151,12 @@ Namespace Model
             End Set
         End Property
 
-        Private _outputChannels As ObservableCollection(Of SignalSignatures)
-        Public Property OutputChannels As ObservableCollection(Of SignalSignatures)
+        Private _outputChannels As ObservableCollection(Of SignalSignatureViewModel)
+        Public Property OutputChannels As ObservableCollection(Of SignalSignatureViewModel)
             Get
                 Return _outputChannels
             End Get
-            Set(value As ObservableCollection(Of SignalSignatures))
+            Set(value As ObservableCollection(Of SignalSignatureViewModel))
                 _outputChannels = value
                 OnPropertyChanged()
             End Set
@@ -189,11 +191,11 @@ Namespace Model
         Public Sub New()
             '_filterParameters = New ObservableCollection(Of ParameterValuePair)
             _fileterParameters = New ObservableCollection(Of ParameterValuePair)
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
 
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
             IsExpanded = False
         End Sub
 
@@ -262,12 +264,12 @@ Namespace Model
             End Set
         End Property
 
-        Private _inputChannels As ObservableCollection(Of SignalSignatures)
-        Public Property InputChannels As ObservableCollection(Of SignalSignatures)
+        Private _inputChannels As ObservableCollection(Of SignalSignatureViewModel)
+        Public Property InputChannels As ObservableCollection(Of SignalSignatureViewModel)
             Get
                 Return _inputChannels
             End Get
-            Set(ByVal value As ObservableCollection(Of SignalSignatures))
+            Set(ByVal value As ObservableCollection(Of SignalSignatureViewModel))
                 _inputChannels = value
                 OnPropertyChanged()
             End Set

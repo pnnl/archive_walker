@@ -13,12 +13,14 @@ Imports System.Windows
 Imports System.Drawing
 Imports BAWGUI.RunMATLAB.Models
 Imports BAWGUI.RunMATLAB.ViewModels
+Imports BAWGUI.Settings.ViewModel
+Imports BAWGUI.Core
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
 Namespace ViewModels
     Partial Public Class SettingsViewModel
-        Inherits ViewModelBase
+        Inherits Core.ViewModelBase
 
         Public Sub New()
             _configFileName = ""
@@ -112,7 +114,7 @@ Namespace ViewModels
             _nameTypeUnitStatusFlag = 0
             _resultUpdateIntervalVisibility = Visibility.Collapsed
 
-            _dummySignature = New SignalSignatures("", "", "")
+            _dummySignature = New SignalSignatureViewModel("", "", "")
             _dummySignature.Unit = ""
             _dummySignature.IsValid = False
             _dummySignature.IsCustomSignal = True
@@ -180,8 +182,8 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private Function _getAllDataConfigOutput() As ObservableCollection(Of SignalSignatures)
-            Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        Private Function _getAllDataConfigOutput() As ObservableCollection(Of SignalSignatureViewModel)
+            Dim allOutputSignals = New ObservableCollection(Of SignalSignatureViewModel)
             For Each stp In DataConfigure.CollectionOfSteps
                 For Each signal In stp.OutputChannels
                     If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
@@ -246,9 +248,9 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _tagSignals(fileInfo As InputFileInfo, signalList As List(Of String))
-            Dim newSignalList As New ObservableCollection(Of SignalSignatures)
+            Dim newSignalList As New ObservableCollection(Of SignalSignatureViewModel)
             For Each name In signalList
-                Dim signal As New SignalSignatures
+                Dim signal As New SignalSignatureViewModel
                 'signal.SignalName = name
                 Dim nameParts = name.Split(".")
                 signal.PMUName = nameParts(0)
@@ -330,25 +332,25 @@ Namespace ViewModels
             '    End If
             'Next
             'Dim a = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second"))
-            Dim a = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory))
+            Dim a = New SignalTypeHierachy(New SignalSignatureViewModel(fileInfo.FileDirectory))
             a.SignalList = fileInfo.GroupedSignalsByPMU
             GroupedRawSignalsByPMU.Add(a)
             'GroupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)(GroupedRawSignalsByPMU.Concat(fileInfo.GroupedSignalsByPMU))
             fileInfo.GroupedSignalsByType = SortSignalByType(newSignalList)
             'Dim b = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second"))
-            Dim b = New SignalTypeHierachy(New SignalSignatures(fileInfo.FileDirectory))
+            Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(fileInfo.FileDirectory))
             b.SignalList = fileInfo.GroupedSignalsByType
             GroupedRawSignalsByType.Add(b)
             ReGroupedRawSignalsByType = GroupedRawSignalsByType
         End Sub
-        Private Function SortSignalByType(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
+        Private Function SortSignalByType(signalList As ObservableCollection(Of SignalSignatureViewModel)) As ObservableCollection(Of SignalTypeHierachy)
             Dim signalTypeTreeGroupedBySamplingRate As New ObservableCollection(Of SignalTypeHierachy)
             Dim signalTypeGroupBySamplingRate = signalList.GroupBy(Function(x) x.SamplingRate)
             For Each rateGroup In signalTypeGroupBySamplingRate
                 Dim rate = rateGroup.Key
                 Dim subSignalGroup = rateGroup.ToList
                 Dim signalTypeTree As New ObservableCollection(Of SignalTypeHierachy)
-                Dim signalTypeDictionary = subSignalGroup.GroupBy(Function(x) x.TypeAbbreviation.ToArray(0).ToString).ToDictionary(Function(x) x.Key, Function(x) New ObservableCollection(Of SignalSignatures)(x.ToList))
+                Dim signalTypeDictionary = subSignalGroup.GroupBy(Function(x) x.TypeAbbreviation.ToArray(0).ToString).ToDictionary(Function(x) x.Key, Function(x) New ObservableCollection(Of SignalSignatureViewModel)(x.ToList))
                 For Each signalType In signalTypeDictionary
                     Select Case signalType.Key
                         Case "S"
@@ -356,14 +358,14 @@ Namespace ViewModels
                             For Each group In groups
                                 Select Case group.Key
                                     Case "S"
-                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Apparent"))
+                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Apparent"))
                                         newHierachy.SignalSignature.TypeAbbreviation = "S"
                                         For Each signal In group
                                             newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
                                         Next
                                         signalTypeTree.Add(newHierachy)
                                     Case "SC"
-                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Scalar"))
+                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Scalar"))
                                         newHierachy.SignalSignature.TypeAbbreviation = "SC"
                                         For Each signal In group
                                             newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
@@ -374,7 +376,7 @@ Namespace ViewModels
                                 End Select
                             Next
                         Case "O"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Other"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Other"))
                             newHierachy.SignalSignature.TypeAbbreviation = "OTHER"
                             For Each signal In signalType.Value
                                 newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
@@ -386,14 +388,14 @@ Namespace ViewModels
                             For Each group In groups
                                 Select Case group.Key
                                     Case "C"
-                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("CustomizedSignal"))
+                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("CustomizedSignal"))
                                         newHierachy.SignalSignature.TypeAbbreviation = "C"
                                         For Each signal In group
                                             newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
                                         Next
                                         signalTypeTree.Add(newHierachy)
                                     Case "CP"
-                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Complex"))
+                                        Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Complex"))
                                         newHierachy.SignalSignature.TypeAbbreviation = "CP"
                                         For Each signal In group
                                             newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
@@ -404,75 +406,75 @@ Namespace ViewModels
                                 End Select
                             Next
                         Case "D"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Digital"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Digital"))
                             newHierachy.SignalSignature.TypeAbbreviation = "D"
                             For Each signal In signalType.Value
                                 newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
                             Next
                             signalTypeTree.Add(newHierachy)
                         Case "F"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Frequency"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Frequency"))
                             newHierachy.SignalSignature.TypeAbbreviation = "F"
                             For Each signal In signalType.Value
                                 newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
                             Next
                             signalTypeTree.Add(newHierachy)
                         Case "R"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Rate of Change of Frequency"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Rate of Change of Frequency"))
                             newHierachy.SignalSignature.TypeAbbreviation = "R"
                             For Each signal In signalType.Value
                                 newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
                             Next
                             signalTypeTree.Add(newHierachy)
                         Case "Q"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Reactive Power"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Reactive Power"))
                             newHierachy.SignalSignature.TypeAbbreviation = "Q"
                             For Each signal In signalType.Value
                                 newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
                             Next
                             signalTypeTree.Add(newHierachy)
                         Case "P"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Active Power"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Active Power"))
                             newHierachy.SignalSignature.TypeAbbreviation = "P"
                             For Each signal In signalType.Value
                                 newHierachy.SignalList.Add(New SignalTypeHierachy(signal))
                             Next
                             signalTypeTree.Add(newHierachy)
                         Case "V"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Voltage"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Voltage"))
                             newHierachy.SignalSignature.TypeAbbreviation = "V"
                             Dim voltageHierachy = signalType.Value.GroupBy(Function(y) y.TypeAbbreviation.ToArray(1).ToString)
                             For Each group In voltageHierachy
                                 Select Case group.Key
                                     Case "M"
-                                        Dim mGroup = New SignalTypeHierachy(New SignalSignatures("Magnitude"))
+                                        Dim mGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Magnitude"))
                                         mGroup.SignalSignature.TypeAbbreviation = "VM"
                                         Dim mGroupHierachky = group.GroupBy(Function(z) z.TypeAbbreviation.ToArray(2).ToString)
                                         For Each phase In mGroupHierachky
                                             Select Case phase.Key
                                                 Case "P"
-                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatures("Positive Sequence"))
+                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Positive Sequence"))
                                                     positiveGroup.SignalSignature.TypeAbbreviation = "VMP"
                                                     For Each signal In phase
                                                         positiveGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     mGroup.SignalList.Add(positiveGroup)
                                                 Case "A"
-                                                    Dim AGroup = New SignalTypeHierachy(New SignalSignatures("Phase A"))
+                                                    Dim AGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phase A"))
                                                     AGroup.SignalSignature.TypeAbbreviation = "VMA"
                                                     For Each signal In phase
                                                         AGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     mGroup.SignalList.Add(AGroup)
                                                 Case "B"
-                                                    Dim BGroup = New SignalTypeHierachy(New SignalSignatures("Phase B"))
+                                                    Dim BGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phase B"))
                                                     BGroup.SignalSignature.TypeAbbreviation = "VMB"
                                                     For Each signal In phase
                                                         BGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     mGroup.SignalList.Add(BGroup)
                                                 Case "C"
-                                                    Dim CGroup = New SignalTypeHierachy(New SignalSignatures("Phase C"))
+                                                    Dim CGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phase C"))
                                                     CGroup.SignalSignature.TypeAbbreviation = "VMC"
                                                     For Each signal In phase
                                                         CGroup.SignalList.Add(New SignalTypeHierachy(signal))
@@ -484,34 +486,34 @@ Namespace ViewModels
                                         Next
                                         newHierachy.SignalList.Add(mGroup)
                                     Case "A"
-                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatures("Angle"))
+                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Angle"))
                                         aGroup.SignalSignature.TypeAbbreviation = "VA"
                                         Dim aGroupHierachky = group.GroupBy(Function(z) z.TypeAbbreviation.ToArray(2).ToString)
                                         For Each phase In aGroupHierachky
                                             Select Case phase.Key
                                                 Case "P"
-                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatures("Positive Sequence"))
+                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Positive Sequence"))
                                                     positiveGroup.SignalSignature.TypeAbbreviation = "VAP"
                                                     For Each signal In phase
                                                         positiveGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(positiveGroup)
                                                 Case "A"
-                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatures("Phase A"))
+                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatureViewModel("Phase A"))
                                                     GroupA.SignalSignature.TypeAbbreviation = "VAA"
                                                     For Each signal In phase
                                                         GroupA.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupA)
                                                 Case "B"
-                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatures("Phase B"))
+                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatureViewModel("Phase B"))
                                                     GroupB.SignalSignature.TypeAbbreviation = "VAB"
                                                     For Each signal In phase
                                                         GroupB.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupB)
                                                 Case "C"
-                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatures("Phase C"))
+                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatureViewModel("Phase C"))
                                                     GroupC.SignalSignature.TypeAbbreviation = "VAC"
                                                     For Each signal In phase
                                                         GroupC.SignalList.Add(New SignalTypeHierachy(signal))
@@ -523,34 +525,34 @@ Namespace ViewModels
                                         Next
                                         newHierachy.SignalList.Add(aGroup)
                                     Case "P"
-                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatures("Phasor"))
+                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phasor"))
                                         aGroup.SignalSignature.TypeAbbreviation = "VP"
                                         Dim aGroupHierachky = group.GroupBy(Function(z) z.TypeAbbreviation.ToArray(2).ToString)
                                         For Each phase In aGroupHierachky
                                             Select Case phase.Key
                                                 Case "P"
-                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatures("Positive Sequence"))
+                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Positive Sequence"))
                                                     positiveGroup.SignalSignature.TypeAbbreviation = "VPP"
                                                     For Each signal In phase
                                                         positiveGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(positiveGroup)
                                                 Case "A"
-                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatures("Phase A"))
+                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatureViewModel("Phase A"))
                                                     GroupA.SignalSignature.TypeAbbreviation = "VPA"
                                                     For Each signal In phase
                                                         GroupA.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupA)
                                                 Case "B"
-                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatures("Phase B"))
+                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatureViewModel("Phase B"))
                                                     GroupB.SignalSignature.TypeAbbreviation = "VPB"
                                                     For Each signal In phase
                                                         GroupB.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupB)
                                                 Case "C"
-                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatures("Phase C"))
+                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatureViewModel("Phase C"))
                                                     GroupC.SignalSignature.TypeAbbreviation = "VPC"
                                                     For Each signal In phase
                                                         GroupC.SignalList.Add(New SignalTypeHierachy(signal))
@@ -567,40 +569,40 @@ Namespace ViewModels
                             Next
                             signalTypeTree.Add(newHierachy)
                         Case "I"
-                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatures("Current"))
+                            Dim newHierachy = New SignalTypeHierachy(New SignalSignatureViewModel("Current"))
                             newHierachy.SignalSignature.TypeAbbreviation = "I"
                             Dim currentHierachy = signalType.Value.GroupBy(Function(y) y.TypeAbbreviation.ToArray(1).ToString)
                             For Each group In currentHierachy
                                 Select Case group.Key
                                     Case "M"
-                                        Dim mGroup = New SignalTypeHierachy(New SignalSignatures("Magnitude"))
+                                        Dim mGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Magnitude"))
                                         mGroup.SignalSignature.TypeAbbreviation = "IM"
                                         Dim mGroupHierachky = group.GroupBy(Function(z) z.TypeAbbreviation.ToArray(2).ToString)
                                         For Each phase In mGroupHierachky
                                             Select Case phase.Key
                                                 Case "P"
-                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatures("Positive Sequence"))
+                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Positive Sequence"))
                                                     positiveGroup.SignalSignature.TypeAbbreviation = "IMP"
                                                     For Each signal In phase
                                                         positiveGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     mGroup.SignalList.Add(positiveGroup)
                                                 Case "A"
-                                                    Dim AGroup = New SignalTypeHierachy(New SignalSignatures("Phase A"))
+                                                    Dim AGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phase A"))
                                                     AGroup.SignalSignature.TypeAbbreviation = "IMA"
                                                     For Each signal In phase
                                                         AGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     mGroup.SignalList.Add(AGroup)
                                                 Case "B"
-                                                    Dim BGroup = New SignalTypeHierachy(New SignalSignatures("Phase B"))
+                                                    Dim BGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phase B"))
                                                     BGroup.SignalSignature.TypeAbbreviation = "IMB"
                                                     For Each signal In phase
                                                         BGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     mGroup.SignalList.Add(BGroup)
                                                 Case "C"
-                                                    Dim CGroup = New SignalTypeHierachy(New SignalSignatures("Phase C"))
+                                                    Dim CGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phase C"))
                                                     CGroup.SignalSignature.TypeAbbreviation = "IMC"
                                                     For Each signal In phase
                                                         CGroup.SignalList.Add(New SignalTypeHierachy(signal))
@@ -612,34 +614,34 @@ Namespace ViewModels
                                         Next
                                         newHierachy.SignalList.Add(mGroup)
                                     Case "A"
-                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatures("Angle"))
+                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Angle"))
                                         aGroup.SignalSignature.TypeAbbreviation = "IA"
                                         Dim aGroupHierachky = group.GroupBy(Function(z) z.TypeAbbreviation.ToArray(2).ToString)
                                         For Each phase In aGroupHierachky
                                             Select Case phase.Key
                                                 Case "P"
-                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatures("Positive Sequence"))
+                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Positive Sequence"))
                                                     positiveGroup.SignalSignature.TypeAbbreviation = "IAP"
                                                     For Each signal In phase
                                                         positiveGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(positiveGroup)
                                                 Case "A"
-                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatures("Phase A"))
+                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatureViewModel("Phase A"))
                                                     GroupA.SignalSignature.TypeAbbreviation = "IAA"
                                                     For Each signal In phase
                                                         GroupA.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupA)
                                                 Case "B"
-                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatures("Phase B"))
+                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatureViewModel("Phase B"))
                                                     GroupB.SignalSignature.TypeAbbreviation = "IAB"
                                                     For Each signal In phase
                                                         GroupB.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupB)
                                                 Case "C"
-                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatures("Phase C"))
+                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatureViewModel("Phase C"))
                                                     GroupC.SignalSignature.TypeAbbreviation = "IAC"
                                                     For Each signal In phase
                                                         GroupC.SignalList.Add(New SignalTypeHierachy(signal))
@@ -651,34 +653,34 @@ Namespace ViewModels
                                         Next
                                         newHierachy.SignalList.Add(aGroup)
                                     Case "P"
-                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatures("Phasor"))
+                                        Dim aGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Phasor"))
                                         aGroup.SignalSignature.TypeAbbreviation = "IP"
                                         Dim aGroupHierachky = group.GroupBy(Function(z) z.TypeAbbreviation.ToArray(2).ToString)
                                         For Each phase In aGroupHierachky
                                             Select Case phase.Key
                                                 Case "P"
-                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatures("Positive Sequence"))
+                                                    Dim positiveGroup = New SignalTypeHierachy(New SignalSignatureViewModel("Positive Sequence"))
                                                     positiveGroup.SignalSignature.TypeAbbreviation = "IPP"
                                                     For Each signal In phase
                                                         positiveGroup.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(positiveGroup)
                                                 Case "A"
-                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatures("Phase A"))
+                                                    Dim GroupA = New SignalTypeHierachy(New SignalSignatureViewModel("Phase A"))
                                                     GroupA.SignalSignature.TypeAbbreviation = "IPA"
                                                     For Each signal In phase
                                                         GroupA.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupA)
                                                 Case "B"
-                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatures("Phase B"))
+                                                    Dim GroupB = New SignalTypeHierachy(New SignalSignatureViewModel("Phase B"))
                                                     GroupB.SignalSignature.TypeAbbreviation = "IPB"
                                                     For Each signal In phase
                                                         GroupB.SignalList.Add(New SignalTypeHierachy(signal))
                                                     Next
                                                     aGroup.SignalList.Add(GroupB)
                                                 Case "C"
-                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatures("Phase C"))
+                                                    Dim GroupC = New SignalTypeHierachy(New SignalSignatureViewModel("Phase C"))
                                                     GroupC.SignalSignature.TypeAbbreviation = "IPC"
                                                     For Each signal In phase
                                                         GroupC.SignalList.Add(New SignalTypeHierachy(signal))
@@ -698,7 +700,7 @@ Namespace ViewModels
                             Throw New Exception("Error! Invalid signal type found: " & signalType.Key)
                     End Select
                 Next
-                Dim newSig = New SignalSignatures("Sampling Rate: " & rate.ToString & "/Second")
+                Dim newSig = New SignalSignatureViewModel("Sampling Rate: " & rate.ToString & "/Second")
                 newSig.SamplingRate = rate
                 Dim a = New SignalTypeHierachy(newSig)
                 a.SignalList = signalTypeTree
@@ -706,7 +708,7 @@ Namespace ViewModels
             Next
             Return signalTypeTreeGroupedBySamplingRate
         End Function
-        Private Function SortSignalByPMU(signalList As ObservableCollection(Of SignalSignatures)) As ObservableCollection(Of SignalTypeHierachy)
+        Private Function SortSignalByPMU(signalList As ObservableCollection(Of SignalSignatureViewModel)) As ObservableCollection(Of SignalTypeHierachy)
             Dim groupBySamplingRate = signalList.GroupBy(Function(x) x.SamplingRate)
             Dim pmuSignalTreeGroupedBySamplingRate = New ObservableCollection(Of SignalTypeHierachy)
             For Each group In groupBySamplingRate
@@ -715,7 +717,7 @@ Namespace ViewModels
                 Dim PMUSignalDictionary = subSignalList.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 Dim pmuSignalTree = New ObservableCollection(Of SignalTypeHierachy)
                 For Each subgroup In PMUSignalDictionary
-                    Dim newPMUSignature = New SignalSignatures(subgroup.Key, subgroup.Key)
+                    Dim newPMUSignature = New SignalSignatureViewModel(subgroup.Key, subgroup.Key)
                     Dim newGroup = New SignalTypeHierachy(newPMUSignature)
                     For Each signal In subgroup.Value
                         newGroup.SignalList.Add(New SignalTypeHierachy(signal))
@@ -723,7 +725,7 @@ Namespace ViewModels
                     newGroup.SignalSignature.SamplingRate = subgroup.Value.FirstOrDefault.SamplingRate
                     pmuSignalTree.Add(newGroup)
                 Next
-                Dim newSig = New SignalSignatures("Sampling Rate: " & rate.ToString & "/Second")
+                Dim newSig = New SignalSignatureViewModel("Sampling Rate: " & rate.ToString & "/Second")
                 newSig.SamplingRate = rate
                 Dim a = New SignalTypeHierachy(newSig)
                 a.SignalList = pmuSignalTree
@@ -782,7 +784,7 @@ Namespace ViewModels
                         Exit For
                     End If
                 Next
-                obj.TaggedSignals = New ObservableCollection(Of SignalSignatures)
+                obj.TaggedSignals = New ObservableCollection(Of SignalSignatureViewModel)
                 'For Each signal In obj.TaggedSignals
                 '    signal.Dispose()
                 'Next
@@ -856,9 +858,9 @@ Namespace ViewModels
                 Dim type = ""
                 Dim signalName = ""
                 Dim signalList = New List(Of String)
-                Dim signalSignatureList = New ObservableCollection(Of SignalSignatures)
+                Dim signalSignatureList = New ObservableCollection(Of SignalSignatureViewModel)
                 For index = 0 To signalNames.Count - 1
-                    Dim newSignal = New SignalSignatures
+                    Dim newSignal = New SignalSignatureViewModel
                     newSignal.PMUName = pmuName
                     newSignal.Unit = signalUnits(index)
                     newSignal.SignalName = signalNames(index)
@@ -901,13 +903,13 @@ Namespace ViewModels
                 fileInfo.SignalList = signalList
                 fileInfo.TaggedSignals = signalSignatureList
                 fileInfo.GroupedSignalsByPMU = SortSignalByPMU(signalSignatureList)
-                Dim newSig = New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
+                Dim newSig = New SignalSignatureViewModel(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
                 newSig.SamplingRate = fileInfo.SamplingRate
                 Dim a = New SignalTypeHierachy(newSig)
                 a.SignalList = fileInfo.GroupedSignalsByPMU
                 GroupedRawSignalsByPMU.Add(a)
                 fileInfo.GroupedSignalsByType = SortSignalByType(signalSignatureList)
-                newSig = New SignalSignatures(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
+                newSig = New SignalSignatureViewModel(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
                 newSig.SamplingRate = fileInfo.SamplingRate
                 Dim b = New SignalTypeHierachy(newSig)
                 b.SignalList = fileInfo.GroupedSignalsByType
@@ -1008,8 +1010,8 @@ Namespace ViewModels
             End Set
         End Property
 
-        Private ReadOnly _dummySignature As SignalSignatures
-        Public ReadOnly Property DummySignature As SignalSignatures
+        Private ReadOnly _dummySignature As SignalSignatureViewModel
+        Public ReadOnly Property DummySignature As SignalSignatureViewModel
             Get
                 Return _dummySignature
             End Get
@@ -1424,7 +1426,7 @@ Namespace ViewModels
                             Else
                                 _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                             End If
-                            Dim dummy = New SignalSignatures("", "")
+                            Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
                             _currentSelectedStep.MinuendOrDividend = dummy
                         End If
@@ -1453,7 +1455,7 @@ Namespace ViewModels
                             Else
                                 _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                             End If
-                            Dim dummy = New SignalSignatures("", "")
+                            Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
                             _currentSelectedStep.SubtrahendOrDivisor = dummy
                         End If
@@ -1696,7 +1698,7 @@ Namespace ViewModels
         ''' find matching Ang signal given a Mag signal
         ''' </summary>
         ''' <param name="mag"></param>
-        Private Function _findMatchingAng(mag As SignalSignatures) As SignalSignatures
+        Private Function _findMatchingAng(mag As SignalSignatureViewModel) As SignalSignatureViewModel
             Dim type = mag.TypeAbbreviation
             Dim signalName = mag.SignalName
             Dim parts = signalName.Split(".")
@@ -2096,7 +2098,7 @@ Namespace ViewModels
                     If TypeOf _currentSelectedStep Is MetricPrefixCust Then
                         Dim newOutput = obj.SignalSignature
                         If _currentSelectedStep.UseCustomPMU Then
-                            newOutput = New SignalSignatures(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
+                            newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
                             newOutput.PMUName = _currentSelectedStep.CustPMUname
                             newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         End If
@@ -2110,12 +2112,12 @@ Namespace ViewModels
                         _currentSelectedStep.outputChannels.Add(newOutput)
                         Dim targetkey = (From kvp In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where kvp.Key = newOutput Select kvp Distinct).ToList()
                         If targetkey.Count = 0 Then
-                            Dim kvp = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newOutput, New ObservableCollection(Of SignalSignatures))
+                            Dim kvp = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newOutput, New ObservableCollection(Of SignalSignatureViewModel))
                             kvp.Value.Add(obj.SignalSignature)
                             _currentSelectedStep.OutputInputMappingPair.Add(kvp)
                         End If
                     Else
-                        Dim newOutput = New SignalSignatures("Cust_" & obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                        Dim newOutput = New SignalSignatureViewModel("Cust_" & obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
                         newOutput.IsCustomSignal = True
                         newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         newOutput.Unit = obj.SignalSignature.Unit
@@ -2125,7 +2127,7 @@ Namespace ViewModels
                         _currentSelectedStep.outputChannels.Add(newOutput)
                         Dim targetkey = (From kvp In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where kvp.Key = newOutput Select kvp Distinct).ToList()
                         If targetkey.Count = 0 Then
-                            Dim kvp = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newOutput, New ObservableCollection(Of SignalSignatures))
+                            Dim kvp = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newOutput, New ObservableCollection(Of SignalSignatureViewModel))
                             kvp.Value.Add(obj.SignalSignature)
                             _currentSelectedStep.OutputInputMappingPair.Add(kvp)
                         End If
@@ -2166,7 +2168,7 @@ Namespace ViewModels
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                             End If
                             If TypeOf _currentSelectedStep Is Multirate Then
-                                Dim newOutput = New SignalSignatures(obj.SignalSignature.SignalName)
+                                Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName)
                                 If String.IsNullOrEmpty(_currentSelectedStep.MultiRatePMU) Then
                                     'Throw New Exception("Please enter a PMU name for this multirate step.")
                                 Else
@@ -2297,10 +2299,10 @@ Namespace ViewModels
                         pmu = _lastCustPMUname
                     End If
                     Dim type = obj.SignalSignature.TypeAbbreviation.Substring(0, 1) & "P" & obj.SignalSignature.TypeAbbreviation.Substring(2, 1)
-                    Dim newOutput = New SignalSignatures("", pmu, type)
+                    Dim newOutput = New SignalSignatureViewModel("", pmu, type)
                     newOutput.Unit = obj.SignalSignature.Unit
                     newOutput.IsCustomSignal = True
-                    Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newOutput, New ObservableCollection(Of SignalSignatures))
+                    Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newOutput, New ObservableCollection(Of SignalSignatureViewModel))
                     newPair.Value.Add(obj.SignalSignature)
                     'Dim dummy = New SignalSignatures()
                     'dummy.IsValid = False
@@ -2317,10 +2319,10 @@ Namespace ViewModels
                         pmu = _lastCustPMUname
                     End If
                     Dim type = obj.SignalSignature.TypeAbbreviation.Substring(0, 1) & "P" & obj.SignalSignature.TypeAbbreviation.Substring(2, 1)
-                    Dim newOutput = New SignalSignatures("", pmu, type)
+                    Dim newOutput = New SignalSignatureViewModel("", pmu, type)
                     'newOutput.Unit = ""
                     newOutput.IsCustomSignal = True
-                    Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newOutput, New ObservableCollection(Of SignalSignatures))
+                    Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newOutput, New ObservableCollection(Of SignalSignatureViewModel))
                     'Dim dummy = New SignalSignatures()
                     'dummy.IsValid = False
                     newPair.Value.Add(DummySignature)
@@ -2412,7 +2414,7 @@ Namespace ViewModels
         ''' <summary>
         ''' This points to the current selected textbox of a Unary operation step which is a pair of input output.
         ''' </summary>
-        Private _currentInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))? = Nothing
+        Private _currentInputOutputPair As KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))? = Nothing
         'Private _currentMultipleInputOutputPair As KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)) ? = Nothing
         Private _setCurrentFocusedTextboxUnarySteps As ICommand
         Public Property SetCurrentFocusedTextboxUnarySteps As ICommand
@@ -2440,7 +2442,7 @@ Namespace ViewModels
             _currentFocusedTextBoxChanged(obj)
             _currentFocusedPhasorSignalForPowerCalculation = obj
         End Sub
-        Private _currentFocusedPhasorSignalForPowerCalculation As SignalSignatures
+        Private _currentFocusedPhasorSignalForPowerCalculation As SignalSignatureViewModel
         Private _setCurrentPhasorCreationFocusedTextBox As ICommand
         Public Property SetCurrentPhasorCreationFocusedTextBox As ICommand
             Get
@@ -3002,20 +3004,20 @@ Namespace ViewModels
                         newCustomization = New ScalarRepCust With {
                             .TimeSourcePMU = AllPMUs.FirstOrDefault
                         }
-                        Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "SC")
+                        Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname, "SC")
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
                     Case "Addition", "Multiplication"
                         newCustomization = New Customization
-                        Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname)
+                        Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname)
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
                     Case "Subtraction", "Division"
                         newCustomization = New Customization
-                        Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname)
+                        Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname)
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
-                        Dim dummy = New SignalSignatures("", "")
+                        Dim dummy = New SignalSignatureViewModel("", "")
                         dummy.IsValid = False
                         newCustomization.MinuendOrDividend = dummy
                         newCustomization.SubtrahendOrDivisor = dummy
@@ -3027,17 +3029,17 @@ Namespace ViewModels
                     'PASS
                     Case "Power Calculation"
                         newCustomization = New Customization
-                        Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, newCustomization.PowType.ToString)
+                        Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname, newCustomization.PowType.ToString)
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
-                        Dim newPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(newSignal, New ObservableCollection(Of SignalSignatures))
+                        Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newSignal, New ObservableCollection(Of SignalSignatureViewModel))
                         newCustomization.OutputInputMappingPair.Add(newPair)
                     Case "Signal Type/Unit"
                         newCustomization = New Customization
-                        Dim newSignal = New SignalSignatures("", newCustomization.CustPMUname, "")
+                        Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname, "")
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
-                        Dim dummy = New SignalSignatures("", "", "OTHER")
+                        Dim dummy = New SignalSignatureViewModel("", "", "OTHER")
                         dummy.IsValid = False
                         newCustomization.InputChannels.Add(dummy)
                     Case Else
@@ -3081,10 +3083,10 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _powerCalculationPhasorOption(obj As Object)
-            Dim vPhasor = New SignalSignatures("", _currentSelectedStep.CustPMUname)
+            Dim vPhasor = New SignalSignatureViewModel("", _currentSelectedStep.CustPMUname)
             vPhasor.IsValid = False
             _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vPhasor)
-            Dim iPhasor = New SignalSignatures("", _currentSelectedStep.CustPMUname)
+            Dim iPhasor = New SignalSignatureViewModel("", _currentSelectedStep.CustPMUname)
             iPhasor.IsValid = False
             _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iPhasor)
             _disableEnableAllButPhasorSignalsInDataConfig(False)
@@ -3100,16 +3102,16 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _powerCalculationMagAngOption(obj As Object)
-            Dim vMag = New SignalSignatures("", _currentSelectedStep.CustPMUname)
+            Dim vMag = New SignalSignatureViewModel("", _currentSelectedStep.CustPMUname)
             vMag.IsValid = False
             _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vMag)
-            Dim vAng = New SignalSignatures("", _currentSelectedStep.CustPMUname)
+            Dim vAng = New SignalSignatureViewModel("", _currentSelectedStep.CustPMUname)
             vAng.IsValid = False
             _currentSelectedStep.OutputInputMappingPair(0).Value.Add(vAng)
-            Dim iMag = New SignalSignatures("", _currentSelectedStep.CustPMUname)
+            Dim iMag = New SignalSignatureViewModel("", _currentSelectedStep.CustPMUname)
             iMag.IsValid = False
             _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iMag)
-            Dim iAng = New SignalSignatures("", _currentSelectedStep.CustPMUname)
+            Dim iAng = New SignalSignatureViewModel("", _currentSelectedStep.CustPMUname)
             iAng.IsValid = False
             _currentSelectedStep.OutputInputMappingPair(0).Value.Add(iAng)
             _disableEnableAllButMagnitudeAngleSignalsInDataConfig(False)
@@ -3974,7 +3976,7 @@ Namespace ViewModels
         Private Sub _reGroupRawSignalByType()
             ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                Dim b = New SignalTypeHierachy(New SignalSignatures(info.FileDirectory))
+                Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
                 b.SignalList = SortSignalByType(info.TaggedSignals)
                 ReGroupedRawSignalsByType.Add(b)
             Next

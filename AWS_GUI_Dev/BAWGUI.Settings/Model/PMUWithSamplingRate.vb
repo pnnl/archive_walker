@@ -1,4 +1,5 @@
-﻿Imports BAWGUI.Settings.ViewModels
+﻿Imports BAWGUI.Core
+Imports BAWGUI.Settings.ViewModels
 
 Namespace Model
     Public Class PMUWithSamplingRate
