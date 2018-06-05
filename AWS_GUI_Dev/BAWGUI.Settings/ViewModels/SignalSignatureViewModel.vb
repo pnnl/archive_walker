@@ -1,90 +1,60 @@
-﻿Imports System.Collections.ObjectModel
+﻿Imports BAWGUI.Core
 Imports BAWGUI.Settings.ViewModels
 
-Namespace Model
-    Public Class SignalTypeHierachy
-        Inherits ViewModelBase
-        Public Sub New()
-            _signalSignature = New SignalSignatures
-            _signalList = New ObservableCollection(Of SignalTypeHierachy)
-        End Sub
-        Public Sub New(signature As SignalSignatures)
-            _signalSignature = signature
-            _signalList = New ObservableCollection(Of SignalTypeHierachy)
-        End Sub
-        Public Sub New(signature As SignalSignatures, list As ObservableCollection(Of SignalTypeHierachy))
-            _signalSignature = signature
-            _signalList = list
-        End Sub
-        Private _signalSignature As SignalSignatures
-        Public Property SignalSignature As SignalSignatures
-            Get
-                Return _signalSignature
-            End Get
-            Set(ByVal value As SignalSignatures)
-                _signalSignature = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _signalList As ObservableCollection(Of SignalTypeHierachy)
-        Public Property SignalList As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _signalList
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _signalList = value
-                OnPropertyChanged()
-            End Set
-        End Property
-    End Class
-    Public Class SignalSignatures
+Namespace ViewModel
+    Public Class SignalSignatureViewModel
         Inherits ViewModelBase
         'Implements IDisposable
+        Private _model As BAWGUI.Core.SignalSignatures
         Public Sub New()
-            _isEnabled = True
-            _isValid = True
-            _isCustomSignal = False
-            _passedThroughDQFilter = 0
-            _passedThroughProcessor = 0
-            _isNameTypeUnitChanged = False
-            _samplingRate = -1
-            _unit = "O"
+            _model = New Core.SignalSignatures
+            '_model.IsEnabled = True
+            '_model.IsValid = True
+            '_model.IsCustomSignal = False
+            _model.PassedThroughDQFilter = 0
+            _model.PassedThroughProcessor = 0
+            '_model.IsNameTypeUnitChanged = False
+            _model.SamplingRate = -1
+            _model.Unit = "O"
         End Sub
         Public Sub New(name As String)
-            _signalName = name
-            _isEnabled = True
-            _isValid = True
-            _isCustomSignal = False
-            _passedThroughDQFilter = 0
-            _passedThroughProcessor = 0
-            _isNameTypeUnitChanged = False
-            _samplingRate = -1
-            _unit = "O"
+            _model = New Core.SignalSignatures
+            _model.SignalName = name
+            '_model.IsEnabled = True
+            '_model.IsValid = True
+            '_model.IsCustomSignal = False
+            _model.PassedThroughDQFilter = 0
+            _model.PassedThroughProcessor = 0
+            '_model.IsNameTypeUnitChanged = False
+            _model.SamplingRate = -1
+            _model.Unit = "O"
         End Sub
         Public Sub New(name As String, pmu As String)
-            _signalName = name
-            _PMUName = pmu
-            _isEnabled = True
-            _isValid = True
-            _isCustomSignal = False
-            _passedThroughDQFilter = 0
-            _passedThroughProcessor = 0
-            _isNameTypeUnitChanged = False
-            _samplingRate = -1
-            _unit = "O"
+            _model = New Core.SignalSignatures
+            _model.SignalName = name
+            _model.PMUName = pmu
+            '_model.IsEnabled = True
+            '_model.IsValid = True
+            '_model.IsCustomSignal = False
+            _model.PassedThroughDQFilter = 0
+            _model.PassedThroughProcessor = 0
+            '_model.IsNameTypeUnitChanged = False
+            _model.SamplingRate = -1
+            _model.Unit = "O"
         End Sub
         Public Sub New(name As String, pmu As String, type As String)
-            _signalName = name
-            _PMUName = pmu
-            _typeAbbreviation = type
-            _isEnabled = True
-            _isValid = True
-            _isCustomSignal = False
-            _passedThroughDQFilter = 0
-            _passedThroughProcessor = 0
-            _isNameTypeUnitChanged = False
-            _samplingRate = -1
-            _unit = "O"
+            _model = New Core.SignalSignatures
+            _model.SignalName = name
+            _model.PMUName = pmu
+            _model.TypeAbbreviation = type
+            '_model.IsEnabled = True
+            '_model.IsValid = True
+            '_model.IsCustomSignal = False
+            _model.PassedThroughDQFilter = 0
+            _model.PassedThroughProcessor = 0
+            '_model.IsNameTypeUnitChanged = False
+            _model.SamplingRate = -1
+            _model.Unit = "O"
         End Sub
         'Public Sub Dispose() Implements IDisposable.Dispose
         '    'Dispose(True)
@@ -107,30 +77,30 @@ Namespace Model
         Private _isValid As Boolean
         Public Property IsValid As Boolean
             Get
-                Return _isValid
+                Return _model.IsValid
             End Get
             Set(ByVal value As Boolean)
-                _isValid = value
+                _model.IsValid = value
                 OnPropertyChanged()
             End Set
         End Property
         Private _PMUName As String
         Public Property PMUName As String
             Get
-                Return _PMUName
+                Return _model.PMUName
             End Get
             Set(ByVal value As String)
-                _PMUName = value
+                _model.PMUName = value
                 OnPropertyChanged()
             End Set
         End Property
         Private _signalName As String
         Public Property SignalName As String
             Get
-                Return _signalName
+                Return _model.SignalName
             End Get
             Set(ByVal value As String)
-                _signalName = value
+                _model.SignalName = value
                 If Not String.IsNullOrEmpty(value) AndAlso String.IsNullOrEmpty(OldSignalName) Then
                     OldSignalName = value
                 End If
@@ -140,10 +110,10 @@ Namespace Model
         Private _typeAbbreviation As String
         Public Property TypeAbbreviation As String
             Get
-                Return _typeAbbreviation
+                Return _model.TypeAbbreviation
             End Get
             Set(ByVal value As String)
-                _typeAbbreviation = value
+                _model.TypeAbbreviation = value
                 If Not String.IsNullOrEmpty(value) AndAlso String.IsNullOrEmpty(OldTypeAbbreviation) Then
                     OldTypeAbbreviation = value
                 End If
@@ -153,10 +123,10 @@ Namespace Model
         Private _unit As String
         Public Property Unit As String
             Get
-                Return _unit
+                Return _model.Unit
             End Get
             Set(ByVal value As String)
-                _unit = value
+                _model.Unit = value
                 If Not String.IsNullOrEmpty(value) AndAlso String.IsNullOrEmpty(OldUnit) Then
                     OldUnit = value
                 End If
@@ -166,30 +136,30 @@ Namespace Model
         Private _isChecked? As Boolean = False
         Public Property IsChecked As Boolean?
             Get
-                Return _isChecked
+                Return _model.IsChecked
             End Get
             Set(ByVal value As Boolean?)
-                _isChecked = value
+                _model.IsChecked = value
                 OnPropertyChanged()
             End Set
         End Property
         Private _isEnabled As Boolean
         Public Property IsEnabled As Boolean
             Get
-                Return _isEnabled
+                Return _model.IsEnabled
             End Get
             Set(ByVal value As Boolean)
-                _isEnabled = value
+                _model.IsEnabled = value
                 OnPropertyChanged()
             End Set
         End Property
         Private _isCustomSignal As Boolean
         Public Property IsCustomSignal As Boolean
             Get
-                Return _isCustomSignal
+                Return _model.IsCustomSignal
             End Get
             Set(ByVal value As Boolean)
-                _isCustomSignal = value
+                _model.IsCustomSignal = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -197,10 +167,10 @@ Namespace Model
         Private _samplingRate As Integer
         Public Property SamplingRate As Integer
             Get
-                Return _samplingRate
+                Return _model.SamplingRate
             End Get
             Set(value As Integer)
-                _samplingRate = value
+                _model.SamplingRate = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -208,10 +178,10 @@ Namespace Model
         Private _passedThroughDQFilter As Integer
         Public Property PassedThroughDQFilter As Integer
             Get
-                Return _passedThroughDQFilter
+                Return _model.PassedThroughDQFilter
             End Get
             Set(value As Integer)
-                _passedThroughDQFilter = value
+                _model.PassedThroughDQFilter = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -219,10 +189,10 @@ Namespace Model
         Private _passedThroughProcessor As Integer
         Public Property PassedThroughProcessor As Integer
             Get
-                Return _passedThroughProcessor
+                Return _model.PassedThroughProcessor
             End Get
             Set(value As Integer)
-                _passedThroughProcessor = value
+                _model.PassedThroughProcessor = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -230,10 +200,10 @@ Namespace Model
         Private _isNameTypeUnitChanged As Boolean
         Public Property IsNameTypeUnitChanged As Boolean
             Get
-                Return _isNameTypeUnitChanged
+                Return _model.IsNameTypeUnitChanged
             End Get
             Set(ByVal value As Boolean)
-                _isNameTypeUnitChanged = value
+                _model.IsNameTypeUnitChanged = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -242,16 +212,16 @@ Namespace Model
             If obj Is Nothing OrElse Not Me.GetType Is obj.GetType Then
                 Return False
             End If
-            Dim p As SignalSignatures = CType(obj, SignalSignatures)
+            Dim p As SignalSignatureViewModel = CType(obj, SignalSignatureViewModel)
             Return Me.PMUName = p.PMUName AndAlso Me.SignalName = p.SignalName AndAlso Me.TypeAbbreviation = p.TypeAbbreviation AndAlso Me.Unit = p.Unit AndAlso Me.OldSignalName = p.OldSignalName AndAlso Me.OldTypeAbbreviation = p.OldTypeAbbreviation AndAlso Me.OldUnit = p.OldUnit AndAlso Me.SamplingRate = p.SamplingRate
         End Function
         'Public Overrides Function GetHashCode() As Integer
         '    Return MyBase.GetHashCode()
         'End Function
-        Public Shared Operator =(ByVal x As SignalSignatures, ByVal y As SignalSignatures) As Boolean
+        Public Shared Operator =(ByVal x As SignalSignatureViewModel, ByVal y As SignalSignatureViewModel) As Boolean
             Return x.PMUName = y.PMUName AndAlso x.SignalName = y.SignalName AndAlso x.TypeAbbreviation = y.TypeAbbreviation AndAlso x.Unit = y.Unit AndAlso x.OldSignalName = y.OldSignalName AndAlso x.OldTypeAbbreviation = y.OldTypeAbbreviation AndAlso x.OldUnit = y.OldUnit AndAlso x.SamplingRate = y.SamplingRate
         End Operator
-        Public Shared Operator <>(ByVal x As SignalSignatures, ByVal y As SignalSignatures) As Boolean
+        Public Shared Operator <>(ByVal x As SignalSignatureViewModel, ByVal y As SignalSignatureViewModel) As Boolean
             Return x.PMUName <> y.PMUName OrElse x.SignalName <> y.SignalName OrElse x.TypeAbbreviation <> y.TypeAbbreviation OrElse x.Unit <> y.Unit OrElse x.OldSignalName <> y.OldSignalName OrElse x.OldTypeAbbreviation <> y.OldTypeAbbreviation OrElse x.OldUnit <> y.OldUnit OrElse x.SamplingRate <> y.SamplingRate
         End Operator
 
@@ -262,10 +232,10 @@ Namespace Model
         Private _oldSignalName As String
         Public Property OldSignalName As String
             Get
-                Return _oldSignalName
+                Return _model.OldSignalName
             End Get
             Set(ByVal value As String)
-                _oldSignalName = value
+                _model.OldSignalName = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -273,10 +243,10 @@ Namespace Model
         Private _oldUnit As String
         Public Property OldUnit As String
             Get
-                Return _oldUnit
+                Return _model.OldUnit
             End Get
             Set(ByVal value As String)
-                _oldUnit = value
+                _model.OldUnit = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -284,10 +254,10 @@ Namespace Model
         Private _oldTypeAbbreviation As String
         Public Property OldTypeAbbreviation As String
             Get
-                Return _oldTypeAbbreviation
+                Return _model.OldTypeAbbreviation
             End Get
             Set(ByVal value As String)
-                _oldTypeAbbreviation = value
+                _model.OldTypeAbbreviation = value
                 OnPropertyChanged()
             End Set
         End Property

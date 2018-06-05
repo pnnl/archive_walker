@@ -1,5 +1,6 @@
 ﻿Imports System.Globalization
 Imports BAWGUI.Settings.Model
+Imports BAWGUI.Settings.ViewModel
 Imports BAWGUI.Settings.ViewModels
 
 Public Class ConfigFileWriter
@@ -139,12 +140,12 @@ Public Class ConfigFileWriter
         Next
         For Each itrplt In _svm.ProcessConfigure.InterpolateList
             aStep = <Interpolate>
-                            <Parameters>
-                                <Limit><%= itrplt.Limit %></Limit>
-                                <Type><%= itrplt.Type %></Type>
-                                <FlagInterp><%= itrplt.FlagInterp %></FlagInterp>
-                            </Parameters>
-                        </Interpolate>
+                        <Parameters>
+                            <Limit><%= itrplt.Limit %></Limit>
+                            <Type><%= itrplt.Type %></Type>
+                            <FlagInterp><%= itrplt.FlagInterp %></FlagInterp>
+                        </Parameters>
+                    </Interpolate>
             Dim PMUSignalDictionary = itrplt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
             _writePMUElements(aStep, PMUSignalDictionary)
             processing.Add(aStep)
@@ -205,10 +206,10 @@ Public Class ConfigFileWriter
                 _writePMUElements(aStep, PMUSignalDictionary)
             ElseIf TypeOf stp Is Multirate Then
                 aStep = <Multirate>
-                                <Parameters>
-                                    <MultiRatePMU><%= stp.MultiRatePMU %></MultiRatePMU>
-                                </Parameters>
-                            </Multirate>
+                            <Parameters>
+                                <MultiRatePMU><%= stp.MultiRatePMU %></MultiRatePMU>
+                            </Parameters>
+                        </Multirate>
                 If stp.FilterChoice = 1 Then
                     Dim newR = <NewRate><%= stp.NewRate %></NewRate>
                     aStep.<Parameters>.LastOrDefault.Add(newR)
@@ -267,7 +268,7 @@ Public Class ConfigFileWriter
             End If
             Dim type = _svm.ProcessConfigure.NameTypeUnitElement.NewType
             If Not String.IsNullOrEmpty(type) Then
-                nameTypeUnit.Add(<NewType><%= Type %></NewType>)
+                nameTypeUnit.Add(<NewType><%= type %></NewType>)
             End If
         End If
         processConfig.<Configuration>.LastOrDefault.Add(nameTypeUnit)
@@ -496,28 +497,28 @@ Public Class ConfigFileWriter
                 Case GetType(AlarmingPeriodogram)
                     Dim al = DirectCast(alarm, AlarmingPeriodogram)
                     element = <Periodogram>
-                                                                                        <SNRalarm><%= al.SNRalarm %></SNRalarm>
-                                                                                        <SNRmin><%= al.SNRmin %></SNRmin>
-                                                                                        <TimeMin><%= al.TimeMin %></TimeMin>
-                                                                                        <SNRcorner><%= al.SNRcorner %></SNRcorner>
-                                                                                        <TimeCorner><%= al.TimeCorner %></TimeCorner>
-                                                                                    </Periodogram>
+                                  <SNRalarm><%= al.SNRalarm %></SNRalarm>
+                                  <SNRmin><%= al.SNRmin %></SNRmin>
+                                  <TimeMin><%= al.TimeMin %></TimeMin>
+                                  <SNRcorner><%= al.SNRcorner %></SNRcorner>
+                                  <TimeCorner><%= al.TimeCorner %></TimeCorner>
+                              </Periodogram>
                 Case GetType(AlarmingRingdown)
                     Dim al = DirectCast(alarm, AlarmingRingdown)
                     If Not String.IsNullOrEmpty(al.MaxDuration) Then
                         element = <Ringdown>
-                                                                                        <MaxDuration><%= al.MaxDuration %></MaxDuration>
-                                                                                    </Ringdown>
+                                      <MaxDuration><%= al.MaxDuration %></MaxDuration>
+                                  </Ringdown>
                     End If
                 Case GetType(AlarmingSpectralCoherence)
                     Dim al = DirectCast(alarm, AlarmingSpectralCoherence)
                     element = <SpectralCoherence>
-                                                                                        <CoherenceAlarm><%= al.CoherenceAlarm %></CoherenceAlarm>
-                                                                                        <CoherenceMin><%= al.CoherenceMin %></CoherenceMin>
-                                                                                        <TimeMin><%= al.TimeMin %></TimeMin>
-                                                                                        <CoherenceCorner><%= al.CoherenceCorner %></CoherenceCorner>
-                                                                                        <TimeCorner><%= al.TimeCorner %></TimeCorner>
-                                                                                    </SpectralCoherence>
+                                  <CoherenceAlarm><%= al.CoherenceAlarm %></CoherenceAlarm>
+                                  <CoherenceMin><%= al.CoherenceMin %></CoherenceMin>
+                                  <TimeMin><%= al.TimeMin %></TimeMin>
+                                  <CoherenceCorner><%= al.CoherenceCorner %></CoherenceCorner>
+                                  <TimeCorner><%= al.TimeCorner %></TimeCorner>
+                              </SpectralCoherence>
                 Case Else
                     Throw New Exception("Error! Unrecognized alarming detector type: " & alarm.GetType.ToString & ".")
             End Select
@@ -528,8 +529,8 @@ Public Class ConfigFileWriter
         '''''''''''Write wind application''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         Dim windApplication As XElement = <WindAppConfig>
-                                                                                                <Configuration></Configuration>
-                                                                                            </WindAppConfig>
+                                              <Configuration></Configuration>
+                                          </WindAppConfig>
         _configData.Add(windApplication)
         _configData.Save(filename)
     End Sub
@@ -980,7 +981,7 @@ Public Class ConfigFileWriter
         End Select
     End Sub
 
-    Private Sub _writePMUElements(aStep As XElement, pMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures)))
+    Private Sub _writePMUElements(aStep As XElement, pMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatureViewModel)))
         For Each pmuGroup In pMUSignalDictionary
             Dim PMU As XElement = <PMU>
                                       <Name><%= pmuGroup.Key %></Name>

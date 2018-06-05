@@ -5,10 +5,11 @@ using BAWGUI.Settings;
 using BAWGUI.Settings.ViewModels;
 using System.Windows.Input;
 using System.IO;
+using BAWGUI.Core;
 
 namespace BAWGUI.ViewModels
 {
-    public class MainViewModel: RunMATLAB.ViewModels.ViewModelBase
+    public class MainViewModel: Core.ViewModelBase
     {
         public MainViewModel()
         {

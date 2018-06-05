@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BAWGUI.Core;
 using BAWGUI.RunMATLAB.ViewModels;
 
 namespace BAWGUI.Results.ViewModels

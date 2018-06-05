@@ -1,4 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
+Imports BAWGUI.Core
+Imports BAWGUI.Settings.ViewModel
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Model
@@ -82,11 +84,11 @@ Namespace Model
         Inherits DetectorBase
         Public Sub New()
             _pfa = "0.01"
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             IsExpanded = False
             _analysisLength = 600
-            _windowType = DetectorWindowType.Hann
+            _windowType = DetectorWindowType.hann
             _windowLength = 200
             _windowOverlap = 100
             _pfa = "0.001"
@@ -220,14 +222,14 @@ Namespace Model
             _delay = 10
             _numberDelays = 2
             _thresholdScale = 3
-            _windowType = DetectorWindowType.Hann
+            _windowType = DetectorWindowType.hann
             _windowLength = 12
             _windowOverlap = 6
             _frequencyMin = "0.1"
             _frequencyMax = "15"
             _frequencyTolerance = "0.05"
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             IsExpanded = False
             '_windowLength = _analysisLength / 5
         End Sub
@@ -372,8 +374,8 @@ Namespace Model
     Public Class RingdownDetector
         Inherits DetectorBase
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             IsExpanded = False
             RMSlength = "15"
             RMSmedianFilterTime = "120"
@@ -449,8 +451,8 @@ Namespace Model
     Public Class OutOfRangeGeneralDetector
         Inherits DetectorBase
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             IsExpanded = False
         End Sub
         Public Overrides ReadOnly Property Name As String
@@ -503,8 +505,8 @@ Namespace Model
     Public Class OutOfRangeFrequencyDetector
         Inherits DetectorBase
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             IsExpanded = False
         End Sub
         Public Overrides ReadOnly Property Name As String
@@ -640,8 +642,8 @@ Namespace Model
     Public Class WindRampDetector
         Inherits DetectorBase
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             IsExpanded = False
             _isLongTrend = True
             _apass = "1"

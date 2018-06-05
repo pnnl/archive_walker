@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using System.ComponentModel;
 using System.Threading;
 using BAWGUI.RunMATLAB.Models;
+using BAWGUI.Core;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -138,7 +139,7 @@ namespace BAWGUI.Results.ViewModels
             //var endTime = startTime.AddDays(1).AddSeconds(-1);
             var startTimeStr = startTime.ToString("MM/dd/yyyy HH:mm:ss");
             var endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
-
+            _forcedOscillationResultsViewModel.FOPlotModel = new OxyPlot.PlotModel();
             _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
             _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;
             _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;

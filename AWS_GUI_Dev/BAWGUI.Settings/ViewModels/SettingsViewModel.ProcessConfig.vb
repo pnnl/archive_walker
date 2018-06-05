@@ -2,6 +2,7 @@
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Settings.Model
+Imports BAWGUI.Settings.ViewModel
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -25,8 +26,8 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private Function _getAllprocessOutputSignals() As ObservableCollection(Of SignalSignatures)
-            Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        Private Function _getAllprocessOutputSignals() As ObservableCollection(Of SignalSignatureViewModel)
+            Dim allOutputSignals = New ObservableCollection(Of SignalSignatureViewModel)
             For Each uwrp In ProcessConfigure.UnWrapList
                 For Each signal In uwrp.OutputChannels
                     If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then

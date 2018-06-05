@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports BAWGUI.Core
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Model

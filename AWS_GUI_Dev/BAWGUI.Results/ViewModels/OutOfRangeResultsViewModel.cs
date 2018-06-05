@@ -1,4 +1,6 @@
-﻿using BAWGUI.Results.Models;
+﻿using BAWGUI.Core;
+using BAWGUI.Core.Resources;
+using BAWGUI.Results.Models;
 using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using OxyPlot;
@@ -545,7 +547,7 @@ namespace BAWGUI.Results.ViewModels
                             aSignalPlotModel.OORDurationPlotModel.IsLegendVisible = false;
                             var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.OORDurationPlotModel); //bitmapsource object
                             aNewTriple.Label = oor.SignalName;
-                            aNewTriple.Thumbnail = Resources.Utility.Utility.ResizeBitmapSource(bitmapSource, 80d);
+                            aNewTriple.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
                             aSignalPlotModel.OORDurationPlotModel.IsLegendVisible = true;
                         }
                         else
@@ -553,7 +555,7 @@ namespace BAWGUI.Results.ViewModels
                             aSignalPlotModel.OORROCPlotModel.IsLegendVisible = false;
                             var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.OORROCPlotModel); //bitmapsource object
                             aNewTriple.Label = oor.SignalName;
-                            aNewTriple.Thumbnail = Resources.Utility.Utility.ResizeBitmapSource(bitmapSource, 80d);
+                            aNewTriple.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
                             aSignalPlotModel.OORROCPlotModel.IsLegendVisible = true;
                         }
                         aNewTriple.SignalPlotModelTriple = aSignalPlotModel;

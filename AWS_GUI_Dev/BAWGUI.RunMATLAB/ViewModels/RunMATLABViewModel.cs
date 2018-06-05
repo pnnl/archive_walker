@@ -11,10 +11,11 @@ using MathWorks.MATLAB.NET.Utility;
 using System.Threading;
 using System.IO;
 using BAWGUI.RunMATLAB.Models;
+using BAWGUI.Core;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
-    public class RunMATLABViewModel : ViewModelBase
+    public class RunMATLABViewModel : BAWGUI.Core.ViewModelBase
     {
         public RunMATLABViewModel()
         {

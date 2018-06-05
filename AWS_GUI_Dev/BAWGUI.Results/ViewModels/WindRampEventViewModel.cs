@@ -5,7 +5,7 @@ using OxyPlot;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class WindRampEventViewModel: RunMATLAB.ViewModels.ViewModelBase
+    public class WindRampEventViewModel: Core.ViewModelBase
     {
         private WindRampEvent _model;
         public KnownColor RandColor { get; }

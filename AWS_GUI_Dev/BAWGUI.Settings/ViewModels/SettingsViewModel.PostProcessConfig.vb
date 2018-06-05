@@ -2,6 +2,7 @@
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Settings.Model
+Imports BAWGUI.Settings.ViewModel
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -47,8 +48,8 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private Function _getAllPostProcessOutput() As ObservableCollection(Of SignalSignatures)
-            Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        Private Function _getAllPostProcessOutput() As ObservableCollection(Of SignalSignatureViewModel)
+            Dim allOutputSignals = New ObservableCollection(Of SignalSignatureViewModel)
             For Each stp In PostProcessConfigure.CollectionOfSteps
                 For Each signal In stp.OutputChannels
                     If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace BAWGUI.RunMATLAB.ViewModels
+namespace BAWGUI.Core
 {
     public class RelayCommand : ICommand
     {
@@ -40,13 +40,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             add
             {
-                CommandManager.RequerySuggested += value;
+                System.Windows.Input.CommandManager.RequerySuggested += value;
                 this.CanExecuteChangedInternal += value;
             }
 
             remove
             {
-                CommandManager.RequerySuggested -= value;
+                System.Windows.Input.CommandManager.RequerySuggested -= value;
                 this.CanExecuteChangedInternal -= value;
             }
         }

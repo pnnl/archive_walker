@@ -2,14 +2,14 @@
 Imports System.Windows
 Imports System.Windows.Input
 Imports System.Windows.Media
-Imports Resources
+Imports BAWGUI.Core.Resources
 
 Public Class MetricPrefixCustomization
     Private Sub ExpTextBoxGotFocus(sender As Object, e As RoutedEventArgs)
         'For Each child In sender.Child
         '    child.Background = Brushes.Yellow
         'Next
-        sender.Background = Utility.Utility.HighlightColor
+        sender.Background = Utility.HighlightColor
         'For Each item In sender.Parent.Children
         '    If item.Name = "PMU" Then
         '        item.Background = Brushes.Yellow
@@ -43,18 +43,18 @@ Public Class MetricPrefixCustomization
 
     Private Sub StackPanel_GotFocus(sender As Object, e As RoutedEventArgs)
         For Each child In sender.Children
-            child.Background = Utility.Utility.HighlightColor
+            child.Background = Utility.HighlightColor
         Next
-        sender.Background = Utility.Utility.HighlightColor
+        sender.Background = Utility.HighlightColor
     End Sub
 
     Private Sub PMU_GotFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMU" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "Channel" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub
@@ -62,10 +62,10 @@ Public Class MetricPrefixCustomization
     Private Sub Channel_GotFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "PMU" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "Channel" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub
@@ -73,7 +73,7 @@ Public Class MetricPrefixCustomization
     Private Sub PMU_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         For Each item In sender.Parent.Children
             'If item.Name = "PMU" Then
-            item.Background = Utility.Utility.HighlightColor
+            item.Background = Utility.HighlightColor
             'End If
             'If item.Name = "Channel" Then
             '    item.Background = Brushes.Yellow
@@ -84,7 +84,7 @@ Public Class MetricPrefixCustomization
     Private Sub Channel_MouseDown(sender As Object, e As MouseButtonEventArgs)
         For Each item In sender.Parent.Children
             'If item.Name = "PMU" Then
-            item.Background = Utility.Utility.HighlightColor
+            item.Background = Utility.HighlightColor
             'End If
             'If item.Name = "Channel" Then
             '    item.Background = Brushes.Yellow
@@ -94,13 +94,13 @@ Public Class MetricPrefixCustomization
 
     Private Sub PMU_GotFocus_1(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Utility.Utility.HighlightColor
+            item.Background = Utility.HighlightColor
         Next
     End Sub
 
     Private Sub Channel_GotFocus_1(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Utility.Utility.HighlightColor
+            item.Background = Utility.HighlightColor
         Next
     End Sub
 

@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Resources.Utility
+namespace BAWGUI.Core.Resources
 {
     public class Utility
     {

@@ -1,6 +1,8 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.Globalization
+Imports BAWGUI.Core
+Imports BAWGUI.Settings.ViewModel
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Model
@@ -561,7 +563,7 @@ Namespace Model
             _inputFileTree = New ObservableCollection(Of Folder)
             _groupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
             _groupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
-            _taggedSignals = New ObservableCollection(Of SignalSignatures)
+            _taggedSignals = New ObservableCollection(Of SignalSignatureViewModel)
             _isExpanded = False
         End Sub
         Private _fileDirectory As String
@@ -625,12 +627,12 @@ Namespace Model
                 OnPropertyChanged()
             End Set
         End Property
-        Private _taggedSignals As ObservableCollection(Of SignalSignatures)
-        Public Property TaggedSignals As ObservableCollection(Of SignalSignatures)
+        Private _taggedSignals As ObservableCollection(Of SignalSignatureViewModel)
+        Public Property TaggedSignals As ObservableCollection(Of SignalSignatureViewModel)
             Get
                 Return _taggedSignals
             End Get
-            Set(ByVal value As ObservableCollection(Of SignalSignatures))
+            Set(ByVal value As ObservableCollection(Of SignalSignatureViewModel))
                 _taggedSignals = value
                 OnPropertyChanged()
             End Set
@@ -924,11 +926,11 @@ Namespace Model
     Public Class Customization
         Inherits SignalProcessStep
         Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatures)
-            OutputChannels = New ObservableCollection(Of SignalSignatures)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatures)
-            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatures)
-            _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
+            _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
             _exponent = "1"
             IsExpanded = False
             '_timeSourcePMU = New PMUWithSamplingRate()
@@ -986,22 +988,22 @@ Namespace Model
         '        OnPropertyChanged()
         '    End Set
         'End Property
-        Private _minuendOrDividend As SignalSignatures
-        Public Property MinuendOrDividend As SignalSignatures
+        Private _minuendOrDividend As SignalSignatureViewModel
+        Public Property MinuendOrDividend As SignalSignatureViewModel
             Get
                 Return _minuendOrDividend
             End Get
-            Set(ByVal value As SignalSignatures)
+            Set(ByVal value As SignalSignatureViewModel)
                 _minuendOrDividend = value
                 OnPropertyChanged()
             End Set
         End Property
-        Private _subtrahendOrDivisor As SignalSignatures
-        Public Property SubtrahendOrDivisor As SignalSignatures
+        Private _subtrahendOrDivisor As SignalSignatureViewModel
+        Public Property SubtrahendOrDivisor As SignalSignatureViewModel
             Get
                 Return _subtrahendOrDivisor
             End Get
-            Set(ByVal value As SignalSignatures)
+            Set(ByVal value As SignalSignatureViewModel)
                 _subtrahendOrDivisor = value
                 OnPropertyChanged()
             End Set
@@ -1057,12 +1059,12 @@ Namespace Model
         ''' <summary>
         ''' The key of each item is the output and the value of the item is a collection of input(s)
         ''' </summary>
-        Private _outputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
-        Public Property OutputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+        Private _outputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
+        Public Property OutputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
             Get
                 Return _outputInputMappingPair
             End Get
-            Set(ByVal value As ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))))
+            Set(ByVal value As ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))))
                 _outputInputMappingPair = value
                 OnPropertyChanged()
             End Set
@@ -1106,16 +1108,16 @@ Namespace Model
                 _useCustomPMU = value
                 If value Then
                     'use custom PMU, generate new PMU and new signal as the output signal
-                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
                     OutputChannels.Clear()
                     For Each pair In OutputInputMappingPair
                         Dim input = pair.Value.FirstOrDefault
-                        Dim output = New SignalSignatures(input.SignalName, CustPMUname, input.TypeAbbreviation)
+                        Dim output = New SignalSignatureViewModel(input.SignalName, CustPMUname, input.TypeAbbreviation)
                         output.Unit = input.Unit
                         output.IsCustomSignal = True
                         output.OldUnit = output.Unit
                         output.SamplingRate = input.SamplingRate
-                        Dim aNewPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(output, New ObservableCollection(Of SignalSignatures))
+                        Dim aNewPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                         input.Unit = input.OldUnit
                         aNewPair.Value.Add(input)
                         newOutputInputMappingPairs.Add(aNewPair)
@@ -1125,7 +1127,7 @@ Namespace Model
                     'ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(OutputChannels)
                 Else
                     'use current PMU, so overwrite the current signal
-                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures)))
+                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
                     OutputChannels.Clear()
                     For Each pair In OutputInputMappingPair
                         Dim output = pair.Key
@@ -1137,7 +1139,7 @@ Namespace Model
                             input.Unit = newUnit
                         End If
                         OutputChannels.Add(input)
-                        Dim aNewPair = New KeyValuePair(Of SignalSignatures, ObservableCollection(Of SignalSignatures))(input, New ObservableCollection(Of SignalSignatures))
+                        Dim aNewPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(input, New ObservableCollection(Of SignalSignatureViewModel))
                         aNewPair.Value.Add(input)
                         newOutputInputMappingPairs.Add(aNewPair)
                     Next

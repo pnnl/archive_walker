@@ -1,16 +1,16 @@
 ﻿Imports System.Drawing
 Imports System.Windows
 Imports System.Windows.Media
-Imports Resources
+Imports BAWGUI.Core.Resources
 
 Public Class CreatePhasorCustomization
     Private Sub CreatePhasorTextBoxGotFocusMag(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "Mag" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "MagPMU" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub
@@ -31,10 +31,10 @@ Public Class CreatePhasorCustomization
     Private Sub CreatePhasorTextBoxGotFocusAng(sender As Object, e As Windows.RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "Ang" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
             If item.Name = "AngPMU" Then
-                item.Background = Utility.Utility.HighlightColor
+                item.Background = Utility.HighlightColor
             End If
         Next
     End Sub
