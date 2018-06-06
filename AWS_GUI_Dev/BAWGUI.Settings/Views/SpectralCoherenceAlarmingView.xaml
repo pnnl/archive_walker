@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <converters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">

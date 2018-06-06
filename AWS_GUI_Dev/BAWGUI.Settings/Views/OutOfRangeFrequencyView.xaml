@@ -14,7 +14,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <converters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
             <converters:EnumToStringConverter10 x:Key="EnumToStringConverter10"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="OutOfRangeFrequencyDetectorTypeValues">
                 <ObjectDataProvider.MethodParameters>
