@@ -1486,7 +1486,7 @@ Namespace ViewModels
 #Region "Reading detector config"
         Private Sub _readDetectorConfig(ByRef configData As XDocument)
             GroupedSignalByDetectorInput = New ObservableCollection(Of SignalTypeHierachy)
-            Dim newDetectorList = New ObservableCollection(Of Object)
+            Dim newDetectorList = New ObservableCollection(Of DetectorBase)
             Dim detectors = From el In configData.<Config>.<DetectorConfig>.<Configuration>.Elements Select el
             Dim previousVoltageStabilityDetector As VoltageStability.Models.VoltageStabilityDetector
             For Each detector In detectors
@@ -1573,7 +1573,7 @@ Namespace ViewModels
             Next
         End Sub
 
-        Private Sub _readSpectralCoherence(detector As XElement, ByRef newList As ObservableCollection(Of Object))
+        Private Sub _readSpectralCoherence(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New SpectralCoherenceDetector
             newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Mode = [Enum].Parse(GetType(DetectorModeType), detector.<Mode>.Value)
@@ -1598,7 +1598,7 @@ Namespace ViewModels
             newList.Add(newDetector)
         End Sub
 
-        Private Sub _readPeriodogram(detector As XElement, ByRef newList As ObservableCollection(Of Object))
+        Private Sub _readPeriodogram(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New PeriodogramDetector
             newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " Detector " & newDetector.Name
             newDetector.Mode = [Enum].Parse(GetType(DetectorModeType), detector.<Mode>.Value)
@@ -1622,7 +1622,7 @@ Namespace ViewModels
             newList.Add(newDetector)
         End Sub
 
-        Private Sub _readWindRamp(detector As XElement, ByRef newList As ObservableCollection(Of Object))
+        Private Sub _readWindRamp(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New WindRampDetector
             newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Fpass = detector.<Fpass>.Value
@@ -1650,7 +1650,7 @@ Namespace ViewModels
             newList.Add(newDetector)
         End Sub
 
-        Private Sub _readRingdown(detector As XElement, ByRef newList As ObservableCollection(Of Object))
+        Private Sub _readRingdown(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New RingdownDetector
             newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.RMSlength = detector.<RMSlength>.Value
@@ -1668,7 +1668,7 @@ Namespace ViewModels
             newList.Add(newDetector)
         End Sub
 
-        Private Sub _readOutOfRangeFrequency(detector As XElement, ByRef newList As ObservableCollection(Of Object))
+        Private Sub _readOutOfRangeFrequency(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New OutOfRangeFrequencyDetector
             newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             Dim type = From el In detector.Elements Where el.Name = "AverageWindow" Select el

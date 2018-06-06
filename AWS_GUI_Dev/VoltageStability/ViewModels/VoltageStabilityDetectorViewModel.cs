@@ -8,7 +8,7 @@ using VoltageStability.Models;
 
 namespace VoltageStability.ViewModels
 {
-    public class VoltageStabilityDetectorViewModel:ViewModelBase
+    public class VoltageStabilityDetectorViewModel:DetectorBase
     {
         public VoltageStabilityDetectorViewModel()
         {
@@ -19,5 +19,10 @@ namespace VoltageStability.ViewModels
             _model = model;
         }
         private VoltageStabilityDetector _model;
+
+        public override string Name
+        {
+            get { return "Voltage Stability Detector"; }
+        }
     }
 }

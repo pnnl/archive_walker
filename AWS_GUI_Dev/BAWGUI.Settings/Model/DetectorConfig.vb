@@ -7,7 +7,7 @@ Namespace Model
     Public Class DetectorConfig
         Inherits ViewModelBase
         Public Sub New()
-            _detectorList = New ObservableCollection(Of Object)
+            _detectorList = New ObservableCollection(Of DetectorBase)
             _alarmingList = New ObservableCollection(Of AlarmingDetectorBase)
             _detectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                           "Spectral Coherence Forced Oscillation Detector",
@@ -39,12 +39,12 @@ Namespace Model
                 OnPropertyChanged()
             End Set
         End Property
-        Private _detectorList As ObservableCollection(Of Object)
-        Public Property DetectorList As ObservableCollection(Of Object)
+        Private _detectorList As ObservableCollection(Of DetectorBase)
+        Public Property DetectorList As ObservableCollection(Of DetectorBase)
             Get
                 Return _detectorList
             End Get
-            Set(ByVal value As ObservableCollection(Of Object))
+            Set(ByVal value As ObservableCollection(Of DetectorBase))
                 _detectorList = value
                 OnPropertyChanged()
             End Set

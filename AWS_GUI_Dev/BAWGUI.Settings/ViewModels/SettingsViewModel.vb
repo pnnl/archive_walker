@@ -13,7 +13,6 @@ Imports System.Windows
 Imports System.Drawing
 Imports BAWGUI.RunMATLAB.Models
 Imports BAWGUI.RunMATLAB.ViewModels
-Imports BAWGUI.Settings.ViewModel
 Imports BAWGUI.Core
 
 'Public Shared HighlightColor = Brushes.Cornsilk

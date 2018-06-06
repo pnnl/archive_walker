@@ -40,7 +40,7 @@ Namespace ViewModels
         End Property
         Private Sub _addSelectedDetector(obj As String)
             _aDetectorStepDeSelected()
-            Dim newDetector As Object
+            Dim newDetector As DetectorBase
             Select Case obj
                 'Case "Out-of-Range"
                 '    newDetector = New OutOfRangeGeneralDetector
@@ -259,7 +259,7 @@ Namespace ViewModels
             If result = DialogResult.OK Then
                 Try
                     If TypeOf obj Is DetectorBase Then
-                        Dim newlist = New ObservableCollection(Of Object)(DetectorConfigure.DetectorList)
+                        Dim newlist = New ObservableCollection(Of DetectorBase)(DetectorConfigure.DetectorList)
                         newlist.Remove(obj)
                         DetectorConfigure.DetectorList = newlist
                         _addLog("Detector " & obj.Name & " is deleted!")
