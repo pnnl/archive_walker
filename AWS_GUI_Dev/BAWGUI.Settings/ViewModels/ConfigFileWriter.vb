@@ -1,6 +1,6 @@
 ﻿Imports System.Globalization
 Imports BAWGUI.Settings.Model
-Imports BAWGUI.Settings.ViewModel
+Imports BAWGUI.Core
 Imports BAWGUI.Settings.ViewModels
 
 Public Class ConfigFileWriter

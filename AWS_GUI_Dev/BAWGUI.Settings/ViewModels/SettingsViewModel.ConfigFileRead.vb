@@ -8,7 +8,7 @@ Imports System.Linq
 Imports Microsoft.Expression.Interactivity.Core
 Imports BAWGUI.Settings.Model
 Imports System.Windows
-Imports BAWGUI.Settings.ViewModel
+Imports BAWGUI.Core
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
