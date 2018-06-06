@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <converters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
             <!--<local:EnumToStringConverter8 x:Key="EnumToStringConverter8"/>
             <local:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type local:EnumerationManager}" x:Key="DetectorModeTypeValues">
