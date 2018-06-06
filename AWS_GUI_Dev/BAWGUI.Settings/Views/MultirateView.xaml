@@ -6,14 +6,15 @@
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:ValueTypeConverter x:Key="ValueTypeConverter"/>
             <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
-            <converters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <converters:NewChannelVisibilityConverter x:Key="NewChannelVisibilityConverter"/>
             <converters:EnumToStringConverter4 x:Key="EnumToStringConverter4"/>
             <converters:EnumToStringConverter5 x:Key="EnumToStringConverter5"/>

@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:model="clr-namespace:BAWGUI.Settings.Model"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
@@ -18,7 +19,7 @@
     </i:Interaction.Triggers>-->
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <converters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
             <converters:EnumToStringConverter8 x:Key="EnumToStringConverter8"/>
             <converters:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
