@@ -152,15 +152,12 @@
     <Compile Include="Converters\TypeUnitDictionaryConverter.vb" />
     <Compile Include="Converters\ValueIfEmptyConverter.vb" />
     <Compile Include="Converters\VisibilityConverters.vb" />
-    <Compile Include="Model\BaseClassOrSharedClass.vb" />
     <Compile Include="Model\DataConfig.vb" />
     <Compile Include="Model\DetectorConfig.vb" />
     <Compile Include="Model\Folder.vb" />
     <Compile Include="Model\PMUWithSamplingRate.vb" />
     <Compile Include="Model\PostProcessCustomizationConfig.vb" />
     <Compile Include="Model\ProcessConfig.vb" />
-    <Compile Include="ViewModels\SignalSignatureViewModel.vb" />
-    <Compile Include="Model\SignalTypeHierachy.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

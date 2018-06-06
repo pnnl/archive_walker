@@ -2,6 +2,7 @@
 Imports System.Windows
 Imports System.Windows.Data
 Imports BAWGUI.Settings.Model
+Imports BAWGUI.Core
 
 Namespace Converters
     Public Class ExpanderHeaderConverter

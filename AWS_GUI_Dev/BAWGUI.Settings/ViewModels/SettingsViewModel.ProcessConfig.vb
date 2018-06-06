@@ -2,7 +2,7 @@
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Settings.Model
-Imports BAWGUI.Settings.ViewModel
+Imports BAWGUI.Core
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
