@@ -47,7 +47,7 @@ Namespace Converters
                     str = (values(1).IndexOf(values(0)) + 1).ToString & " - " & values(0).Name
                 End If
                 If TypeOf values(0) Is AlarmingDetectorBase Then
-                    str = (values(2).IndexOf(values(0)) + 1).ToString & " - Alarming Detector " & values(0).Name
+                    str = (values(2).IndexOf(values(0)) + 1).ToString & " - Alarm Configuration: " & values(0).Name
                 End If
             Else
                 str = "No detector Selected Yet!"
