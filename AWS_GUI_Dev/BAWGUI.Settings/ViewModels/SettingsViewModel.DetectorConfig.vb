@@ -55,6 +55,8 @@ Namespace ViewModels
                 Case "Spectral Coherence Forced Oscillation Detector"
                     newDetector = New SpectralCoherenceDetector
                     ResultUpdateIntervalVisibility = Visibility.Visible
+                Case "Voltage Stability"
+                    newDetector = New VoltageStability.ViewModels.VoltageStabilityDetectorViewModel
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
@@ -256,7 +258,7 @@ Namespace ViewModels
             If result = DialogResult.OK Then
                 Try
                     If TypeOf obj Is DetectorBase Then
-                        Dim newlist = New ObservableCollection(Of DetectorBase)(DetectorConfigure.DetectorList)
+                        Dim newlist = New ObservableCollection(Of Object)(DetectorConfigure.DetectorList)
                         newlist.Remove(obj)
                         DetectorConfigure.DetectorList = newlist
                         _addLog("Detector " & obj.Name & " is deleted!")

@@ -1,4 +1,4 @@
-﻿using BAWGUI.Settings.Model;
+﻿using BAWGUI.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

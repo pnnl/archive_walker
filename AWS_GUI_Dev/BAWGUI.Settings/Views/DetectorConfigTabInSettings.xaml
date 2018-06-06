@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:model="clr-namespace:BAWGUI.Settings.Model"
+             xmlns:vsmodel="clr-namespace:VoltageStability.Models;assembly=VoltageStability"
              xmlns:views="clr-namespace:BAWGUI.Settings"
+             xmlns:vsviews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -74,9 +76,9 @@
                             <DataTemplate DataType="{x:Type model:OutOfRangeFrequencyDetector}">
                                 <views:OutOfRangeFrequencyView/>
                             </DataTemplate>
-                            <!--<DataTemplate DataType="{x:Type model:OutOfRangeGeneralDetector}">
-                                <views:OutOfRangeGeneralView/>
-                            </DataTemplate>-->
+                            <DataTemplate DataType="{x:Type vsmodel:VoltageStabilityDetector}">
+                                <vsviews:VoltageStabilityDetectorView/>
+                            </DataTemplate>
                         </ItemsControl.Resources>
                     </ItemsControl>
                     <StackPanel Grid.Row="2" Visibility="{Binding ResultUpdateIntervalVisibility}" Margin="2" Orientation="Horizontal">

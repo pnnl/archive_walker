@@ -308,6 +308,7 @@ Public Class ConfigFileWriter
 
         For Each detector In _svm.DetectorConfigure.DetectorList
             Dim element As XElement
+            Dim PMUSignalDictionary = New Dictionary(Of String, List(Of SignalSignatureViewModel))()
             Select Case detector.GetType
                 Case GetType(OutOfRangeFrequencyDetector)
                     Dim dt = DirectCast(detector, OutOfRangeFrequencyDetector)
@@ -341,6 +342,7 @@ Public Class ConfigFileWriter
                     If Not String.IsNullOrEmpty(dt.EventMergeWindow) Then
                         element.Add(<EventMergeWindow><%= dt.EventMergeWindow %></EventMergeWindow>)
                     End If
+                    PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 'Case GetType(OutOfRangeGeneralDetector)
                 '    Dim dt = DirectCast(detector, OutOfRangeGeneralDetector)
                 '    element = <OutOfRangeGeneral>
@@ -388,6 +390,7 @@ Public Class ConfigFileWriter
                     If Not String.IsNullOrEmpty(dt.FrequencyTolerance) Then
                         element.Add(<FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>)
                     End If
+                    PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 Case GetType(Model.RingdownDetector)
                     Dim dt = DirectCast(detector, Model.RingdownDetector)
                     'element = <Ringdown>
@@ -405,6 +408,7 @@ Public Class ConfigFileWriter
                     If Not String.IsNullOrEmpty(dt.RingThresholdScale) Then
                         element.Add(<RingThresholdScale><%= dt.RingThresholdScale %></RingThresholdScale>)
                     End If
+                    PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 Case GetType(WindRampDetector)
                     Dim dt = DirectCast(detector, WindRampDetector)
                     element = <WindRamp></WindRamp>
@@ -432,6 +436,7 @@ Public Class ConfigFileWriter
                     If Not String.IsNullOrEmpty(dt.TimeMax) Then
                         element.Add(<TimeMax><%= dt.TimeMax %></TimeMax>)
                     End If
+                    PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 Case GetType(PeriodogramDetector)
                     Dim dt = DirectCast(detector, PeriodogramDetector)
                     element = <Periodogram></Periodogram>
@@ -468,6 +473,7 @@ Public Class ConfigFileWriter
                     If Not String.IsNullOrEmpty(dt.FrequencyTolerance) Then
                         element.Add(<FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>)
                     End If
+                    PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
 
                     '    <Mode><%= dt.Mode.ToString %></Mode>
                     '    <AnalysisLength><%= dt.AnalysisLength %></AnalysisLength>
@@ -485,7 +491,7 @@ Public Class ConfigFileWriter
                     Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
             End Select
             'If element.HasElements Then
-            Dim PMUSignalDictionary = detector.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+            'Dim PMUSignalDictionary = detector.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
             _writePMUElements(element, PMUSignalDictionary)
             detectorConfig.<Configuration>.LastOrDefault.Add(element)
             'End If
