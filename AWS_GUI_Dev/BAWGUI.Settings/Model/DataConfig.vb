@@ -2,8 +2,6 @@
 Imports System.ComponentModel
 Imports System.Globalization
 Imports BAWGUI.Core
-Imports BAWGUI.Settings.ViewModel
-Imports BAWGUI.Settings.ViewModels
 
 Namespace Model
     Public Class DataConfig

@@ -1,7 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
 Imports BAWGUI.Core
-Imports BAWGUI.Settings.ViewModel
-Imports BAWGUI.Settings.ViewModels
 
 Namespace Model
     Public Class DetectorConfig

@@ -13,7 +13,6 @@ Imports System.Windows
 Imports System.Drawing
 Imports BAWGUI.RunMATLAB.Models
 Imports BAWGUI.RunMATLAB.ViewModels
-Imports BAWGUI.Settings.ViewModel
 Imports BAWGUI.Core
 
 'Public Shared HighlightColor = Brushes.Cornsilk
@@ -34,7 +33,7 @@ Namespace ViewModels
             _run = New AWRunViewModel()
             _project = New AWProject()
 
-            _openConfigFile = New DelegateCommand(AddressOf openConfigXMLFile, AddressOf CanExecute)
+            '_openConfigFile = New DelegateCommand(AddressOf openConfigXMLFile, AddressOf CanExecute)
             _browseInputFileDir = New DelegateCommand(AddressOf _browseInputFileFolder, AddressOf CanExecute)
             _fileTypeChanged = New DelegateCommand(AddressOf _buildInputFileFolderTree, AddressOf CanExecute)
             _dqfilterSelected = New DelegateCommand(AddressOf _dqfilterSelection, AddressOf CanExecute)
@@ -1017,44 +1016,41 @@ Namespace ViewModels
             End Get
         End Property
 
-        Private _openConfigFile As ICommand
-        Public Property OpenConfigFile As ICommand
-            Get
-                Return _openConfigFile
-            End Get
-            Set(ByVal value As ICommand)
-                _openConfigFile = value
-            End Set
-        End Property
-        Private Sub openConfigXMLFile()
-            Dim openFileDialog As New Microsoft.Win32.OpenFileDialog()
-            openFileDialog.RestoreDirectory = True
-            openFileDialog.FileName = ""
-            openFileDialog.DefaultExt = ".xml"
-            openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
-            openFileDialog.InitialDirectory = CurDir() + "\ConfigFiles"
+        'Private _openConfigFile As ICommand
+        'Public Property OpenConfigFile As ICommand
+        '    Get
+        '        Return _openConfigFile
+        '    End Get
+        '    Set(ByVal value As ICommand)
+        '        _openConfigFile = value
+        '    End Set
+        'End Property
+        'Private Sub openConfigXMLFile()
+        '    Dim openFileDialog As New Microsoft.Win32.OpenFileDialog()
+        '    openFileDialog.RestoreDirectory = True
+        '    openFileDialog.FileName = ""
+        '    openFileDialog.DefaultExt = ".xml"
+        '    openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*"
+        '    openFileDialog.InitialDirectory = CurDir() + "\ConfigFiles"
 
-            Dim DialogResult? As Boolean = openFileDialog.ShowDialog
-            If DialogResult Then
-                ConfigFileName = openFileDialog.FileName
-                _addLog("Open file: " & ConfigFileName & " successfully!")
-                GroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
-                GroupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
-                NameTypeUnitStatusFlag = 0
-                Try
-                    _configData = XDocument.Load(_configFileName)
-                    _addLog("Reading " & ConfigFileName)
-                    _readConfigFile(_configData)
-                    _addLog("Done reading " & ConfigFileName & " .")
-                    '_groupAllDataConfigOutputSignal()
-                    '_groupAllProcessConfigOutputSignal()
-                    '_groupAllPostProcessConfigOutputSignal()
-                Catch ex As Exception
-                    _addLog("Error reading config file!" & vbCrLf & ex.Message)
-                    Forms.MessageBox.Show("Error reading config file!" & vbCrLf & ex.Message & vbCrLf & "Please see logs below!", "Error!", MessageBoxButtons.OK)
-                End Try
-            End If
-        End Sub
+        '    Dim DialogResult? As Boolean = openFileDialog.ShowDialog
+        '    If DialogResult Then
+        '        ConfigFileName = openFileDialog.FileName
+        '        _addLog("Open file: " & ConfigFileName & " successfully!")
+        '        GroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+        '        GroupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
+        '        NameTypeUnitStatusFlag = 0
+        '        Try
+        '            _configData = XDocument.Load(_configFileName)
+        '            _addLog("Reading " & ConfigFileName)
+        '            _readConfigFile(_configData)
+        '            _addLog("Done reading " & ConfigFileName & " .")
+        '        Catch ex As Exception
+        '            _addLog("Error reading config file!" & vbCrLf & ex.Message)
+        '            Forms.MessageBox.Show("Error reading config file!" & vbCrLf & ex.Message & vbCrLf & "Please see logs below!", "Error!", MessageBoxButtons.OK)
+        '        End Try
+        '    End If
+        'End Sub
 
         Private _specifyInitializationPath As ICommand
         Public Property SpecifyInitializationPath As ICommand
