@@ -230,9 +230,9 @@ Namespace ViewModels
             End Get
             Set(ByVal value As AWRunViewModel)
                 _run = value
-                If File.Exists(_run.Model.ConfigFilePath) Then
-                    ConfigFileName = _run.Model.ConfigFilePath
-                End If
+                'If File.Exists(_run.Model.ConfigFilePath) Then
+                '    ConfigFileName = _run.Model.ConfigFilePath
+                'End If
                 OnPropertyChanged()
             End Set
         End Property
@@ -947,13 +947,12 @@ Namespace ViewModels
                 GroupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
                 NameTypeUnitStatusFlag = 0
                 Try
-                    _configData = XDocument.Load(_configFileName)
-                    _addLog("Reading " & _configFileName)
-                    _readConfigFile(_configData)
-                    _addLog("Done reading " & _configFileName & " .")
-                    '_groupAllDataConfigOutputSignal()
-                    '_groupAllProcessConfigOutputSignal()
-                    '_groupAllPostProcessConfigOutputSignal()
+                    Dim x = New ReadConfigXml.ConfigFileReader(value)
+
+                    '_configData = XDocument.Load(_configFileName)
+                    '_addLog("Reading " & _configFileName)
+                    '_readConfigFile(_configData)
+                    '_addLog("Done reading " & _configFileName & " .")
                 Catch ex As Exception
                     _addLog("Error reading config file!" & vbCrLf & ex.Message)
                     Forms.MessageBox.Show("Error reading config file!" & vbCrLf & ex.Message & vbCrLf & "Please see logs below!", "Error!", MessageBoxButtons.OK)

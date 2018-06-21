@@ -240,6 +240,10 @@
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.ReadConfigXml\BAWGUI.ReadConfigXml.csproj">
+      <Project>{45b27ec1-0a7d-4b08-a11e-04001e70f316}</Project>
+      <Name>BAWGUI.ReadConfigXml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Results\BAWGUI.Results.csproj">
       <Project>{65fbb914-5df7-4008-ab31-6e1a609327e5}</Project>
       <Name>BAWGUI.Results</Name>

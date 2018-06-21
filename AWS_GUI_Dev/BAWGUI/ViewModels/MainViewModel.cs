@@ -111,6 +111,11 @@ namespace BAWGUI.ViewModels
                 SettingsVM.Run = e.SelectedRun;
                 //ResultsVM.Project = e;
                 ResultsVM.Run = e.SelectedRun;
+                var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
+                foreach (var item in config.DataConfigure.ReaderProperty.InputFileInfos)
+                {
+                    //item.FileDirectory
+                }
             }
         }
         //private void _projectControlVM_RunSelected(object sender, AWRunViewModel e)
