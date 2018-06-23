@@ -1,7 +1,6 @@
 ﻿Imports System.Globalization
-Imports BAWGUI.Settings.Model
-Imports BAWGUI.Core
 Imports BAWGUI.Settings.ViewModels
+Imports BAWGUI.SignalManagement.ViewModels
 
 Public Class ConfigFileWriter
     Private _svm As SettingsViewModel
@@ -389,8 +388,8 @@ Public Class ConfigFileWriter
                     If Not String.IsNullOrEmpty(dt.FrequencyTolerance) Then
                         element.Add(<FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>)
                     End If
-                Case GetType(Model.RingdownDetector)
-                    Dim dt = DirectCast(detector, Model.RingdownDetector)
+                Case GetType(RingdownDetector)
+                    Dim dt = DirectCast(detector, RingdownDetector)
                     'element = <Ringdown>
                     '              <RMSmedianFilterTime><%= dt.RMSmedianFilterTime %></RMSmedianFilterTime>
                     '              <RMSlength><%= dt.RMSlength %></RMSlength>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BAWGUI.Core.Resources;
+using BAWGUI.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
 namespace BAWGUI.RunMATLAB.Models

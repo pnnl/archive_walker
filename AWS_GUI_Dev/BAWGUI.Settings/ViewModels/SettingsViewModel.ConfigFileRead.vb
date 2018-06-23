@@ -1,72 +1,66 @@
 ﻿Imports System.Collections.ObjectModel
-Imports System.ComponentModel
-Imports System.Globalization
-Imports System.Windows.Forms
-Imports BAWGUI
-'Imports PDAT_Reader
-Imports System.Linq
-Imports Microsoft.Expression.Interactivity.Core
-Imports BAWGUI.Settings.Model
+
 Imports System.Windows
 Imports BAWGUI.Core
+Imports BAWGUI.SignalManagement.ViewModels
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
-        Private Sub _readConfigFile(ByRef configData As XDocument)
+        'Private Sub _readConfigFile(ByRef configData As XDocument)
 
-            '''''''''''''''''''''' Read DataConfig''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-            Dim fileInfoList = New ObservableCollection(Of InputFileInfo)
-            Dim inputInformation = From el In configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements Where el.Name = "FilePath" Select el
-            For Each el In inputInformation
-                Dim info = New InputFileInfo
-                info.FileDirectory = el.<FileDirectory>.Value
-                Dim type = el.<FileType>.Value
-                If type IsNot Nothing Then
-                    info.FileType = [Enum].Parse(GetType(DataFileType), type.ToLower)
-                End If
-                info.Mnemonic = el.<Mnemonic>.Value
-                fileInfoList.Add(info)
-                _buildInputFileFolderTree(info)
-            Next
+        '    '''''''''''''''''''''' Read DataConfig''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '    Dim fileInfoList = New ObservableCollection(Of InputFileInfo)
+        '    Dim inputInformation = From el In configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements Where el.Name = "FilePath" Select el
+        '    For Each el In inputInformation
+        '        Dim info = New InputFileInfo
+        '        info.FileDirectory = el.<FileDirectory>.Value
+        '        Dim type = el.<FileType>.Value
+        '        If type IsNot Nothing Then
+        '            info.FileType = [Enum].Parse(GetType(DataFileType), type.ToLower)
+        '        End If
+        '        info.Mnemonic = el.<Mnemonic>.Value
+        '        fileInfoList.Add(info)
+        '        '_buildInputFileFolderTree(info)
+        '    Next
 
-            DataConfigure.ReaderProperty.InputFileInfos = fileInfoList
-            Try
-                DataConfigure.ReaderProperty.ModeName = [Enum].Parse(GetType(ModeType), configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Name>.Value)
-            Catch ex As Exception
-                DataConfigure.ReaderProperty.ModeName = ModeType.Archive
-            End Try
-            'Dim modeNameValue = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Name>.Value
-            'If modeNameValue IsNot Nothing Then
-            '    DataConfigure.ReaderProperty.ModeName = [Enum].Parse(GetType(ModeType), modeNameValue)
-            'Else
-            '    DataConfigure.ReaderProperty.ModeName = ""
-            'End If
-            Select Case DataConfigure.ReaderProperty.ModeName
-                Case ModeType.Archive
-                    DataConfigure.ReaderProperty.DateTimeStart = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeStart>.Value
-                    DataConfigure.ReaderProperty.DateTimeEnd = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeEnd>.Value
-                Case ModeType.Hybrid
-                    DataConfigure.ReaderProperty.DateTimeStart = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeStart>.Value
-                    DataConfigure.ReaderProperty.NoFutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<NoFutureWait>.Value
-                    DataConfigure.ReaderProperty.MaxNoFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxNoFutureCount>.Value
-                    DataConfigure.ReaderProperty.FutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<FutureWait>.Value
-                    DataConfigure.ReaderProperty.MaxFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxFutureCount>.Value
-                    DataConfigure.ReaderProperty.RealTimeRange = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<RealTimeRange>.Value
-                Case ModeType.RealTime
-                    DataConfigure.ReaderProperty.NoFutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<NoFutureWait>.Value
-                    DataConfigure.ReaderProperty.MaxNoFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxNoFutureCount>.Value
-                    DataConfigure.ReaderProperty.FutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<FutureWait>.Value
-                    DataConfigure.ReaderProperty.MaxFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxFutureCount>.Value
-                Case Else
-                    Throw New Exception("Error: invalid mode type found in config file.")
-            End Select
-            _readDataConfigStages(configData)
-            '''''''''''''''''''''''''''''''''Read ProcessConfig and PostProcessConfig''''''''''''''''''''''''''''''''''''''''''''''''''''
-            _readProcessConfig(configData)
-            _readPostProcessConfig(configData)
-            '''''''''''''''''''''''''''''''''Read DetectorConfig'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-            _readDetectorConfig(configData)
-        End Sub
+        '    DataConfigure.ReaderProperty.InputFileInfos = fileInfoList
+        '    Try
+        '        DataConfigure.ReaderProperty.ModeName = [Enum].Parse(GetType(ModeType), configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Name>.Value)
+        '    Catch ex As Exception
+        '        DataConfigure.ReaderProperty.ModeName = ModeType.Archive
+        '    End Try
+        '    'Dim modeNameValue = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Name>.Value
+        '    'If modeNameValue IsNot Nothing Then
+        '    '    DataConfigure.ReaderProperty.ModeName = [Enum].Parse(GetType(ModeType), modeNameValue)
+        '    'Else
+        '    '    DataConfigure.ReaderProperty.ModeName = ""
+        '    'End If
+        '    Select Case DataConfigure.ReaderProperty.ModeName
+        '        Case ModeType.Archive
+        '            DataConfigure.ReaderProperty.DateTimeStart = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeStart>.Value
+        '            DataConfigure.ReaderProperty.DateTimeEnd = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeEnd>.Value
+        '        Case ModeType.Hybrid
+        '            DataConfigure.ReaderProperty.DateTimeStart = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<DateTimeStart>.Value
+        '            DataConfigure.ReaderProperty.NoFutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<NoFutureWait>.Value
+        '            DataConfigure.ReaderProperty.MaxNoFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxNoFutureCount>.Value
+        '            DataConfigure.ReaderProperty.FutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<FutureWait>.Value
+        '            DataConfigure.ReaderProperty.MaxFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxFutureCount>.Value
+        '            DataConfigure.ReaderProperty.RealTimeRange = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<RealTimeRange>.Value
+        '        Case ModeType.RealTime
+        '            DataConfigure.ReaderProperty.NoFutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<NoFutureWait>.Value
+        '            DataConfigure.ReaderProperty.MaxNoFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxNoFutureCount>.Value
+        '            DataConfigure.ReaderProperty.FutureWait = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<FutureWait>.Value
+        '            DataConfigure.ReaderProperty.MaxFutureCount = configData.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.<Params>.<MaxFutureCount>.Value
+        '        Case Else
+        '            Throw New Exception("Error: invalid mode type found in config file.")
+        '    End Select
+        '    _readDataConfigStages(configData)
+        '    '''''''''''''''''''''''''''''''''Read ProcessConfig and PostProcessConfig''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '    _readProcessConfig(configData)
+        '    _readPostProcessConfig(configData)
+        '    '''''''''''''''''''''''''''''''''Read DetectorConfig'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '    _readDetectorConfig(configData)
+        'End Sub
 
         Private Function _readPMUElements(stp As XElement) As ObservableCollection(Of SignalSignatureViewModel)
             Dim inputSignalList = New ObservableCollection(Of SignalSignatureViewModel)
@@ -88,7 +82,7 @@ Namespace ViewModels
                             End If
                         Next
                     Else
-                        For Each group In GroupedRawSignalsByPMU
+                        For Each group In _signalMgr.GroupedRawSignalsByPMU
                             For Each subgroup In group.SignalList
                                 For Each subsubgroup In subgroup.SignalList
                                     If subsubgroup.SignalSignature.PMUName = pmuName Then
@@ -110,8 +104,8 @@ Namespace ViewModels
 #Region "Read Data Config DQ filter and Customization Steps From XML Configure File"
         Private Sub _readDataConfigStages(configData As XDocument)
             Dim CollectionOfSteps As New ObservableCollection(Of Object)
-            GroupedSignalByDataConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
-            GroupedSignalByDataConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
+            _signalMgr.GroupedSignalByDataConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)
+            _signalMgr.GroupedSignalByDataConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)
             Dim stepCounter As Integer = 0
             Dim stages = From el In configData.<Config>.<DataConfig>.<Configuration>.Elements Where el.Name = "Stages" Select el
             For Each stage In stages
@@ -254,11 +248,11 @@ Namespace ViewModels
                         CollectionOfSteps.Add(aStep)
                     End If
                     If TypeOf aStep Is Customization Then
-                        aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                        GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
+                        aStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(aStep.InputChannels)
+                        _signalMgr.GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
                     End If
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-                    GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(aStep.OutputChannels)
+                    _signalMgr.GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                 Next
             Next
             DataConfigure.CollectionOfSteps = CollectionOfSteps
@@ -867,14 +861,14 @@ Namespace ViewModels
             For index = 0 To powers.Count - 1
                 'For Each power In powers
                 If index > 0 Then
-                    aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
+                    aStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(aStep.InputChannels)
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(aStep.OutputChannels)
                     If sectionFlag = 1 Then
-                        GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                        GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                        _signalMgr.GroupedSignalByDataConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
+                        _signalMgr.GroupedSignalByDataConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                     ElseIf sectionFlag = 3 Then
-                        GroupedSignalByPostProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
-                        GroupedSignalByPostProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                        _signalMgr.GroupedSignalByPostProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
+                        _signalMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                     End If
                     Dim oldStep = aStep
                     aStep = New Customization(oldStep)
@@ -1072,7 +1066,7 @@ Namespace ViewModels
         ''' <param name="channel"></param>
         ''' <returns></returns>
         Private Function _searchForSignalInTaggedSignals(pmu As String, channel As String) As SignalSignatureViewModel
-            For Each group In GroupedRawSignalsByPMU
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
                 For Each samplingRateSubgroup In group.SignalList
                     For Each subgroup In samplingRateSubgroup.SignalList
                         If subgroup.SignalSignature.PMUName = pmu Then
@@ -1085,7 +1079,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByDataConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
                 For Each samplingRateSubgroup In group.SignalList
                     For Each subgroup In samplingRateSubgroup.SignalList
                         If subgroup.SignalSignature.PMUName = pmu Then
@@ -1098,7 +1092,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByProcessConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByProcessConfigStepsOutput
                 For Each samplingRateSubgroup In group.SignalList
                     For Each subgroup In samplingRateSubgroup.SignalList
                         If subgroup.SignalSignature.PMUName = pmu Then
@@ -1111,7 +1105,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
                 For Each samplingRateSubgroup In group.SignalList
                     For Each subgroup In samplingRateSubgroup.SignalList
                         If subgroup.SignalSignature.PMUName = pmu Then
@@ -1129,8 +1123,8 @@ Namespace ViewModels
 #End Region
 #Region "Read Process Config"
         Private Sub _readProcessConfig(configData As XDocument)
-            GroupedSignalByProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
-            GroupedSignalByProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
+            _signalMgr.GroupedSignalByProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
+            _signalMgr.GroupedSignalByProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
             ProcessConfigure.InitializationPath = configData.<Config>.<ProcessConfig>.<Configuration>.<InitializationPath>.Value
             _readUnwrap(configData)
             _readInterpolate(configData)
@@ -1144,7 +1138,7 @@ Namespace ViewModels
             Dim unWraps = From el In configData.<Config>.<ProcessConfig>.<Configuration>.<Processing>.Elements Where el.Name = "Unwrap" Select el
             For Each unWrap As XElement In unWraps
                 Dim aUnwrap = New Unwrap
-                aUnwrap.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
+                aUnwrap.StepCounter = _signalMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
                 'aUnwrap.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aUnwrap.StepCounter.ToString & "-" & aUnwrap.Name
                 aUnwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aUnwrap.StepCounter.ToString & "-" & aUnwrap.Name
                 'aUnwrap.MaxNaN = unWrap.<MaxNaN>.Value()
@@ -1157,8 +1151,8 @@ Namespace ViewModels
                     signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                     aUnwrap.OutputChannels.Add(signal)
                 Next
-                aUnwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aUnwrap.OutputChannels)
-                GroupedSignalByProcessConfigStepsOutput.Add(aUnwrap.ThisStepOutputsAsSignalHierachyByPMU)
+                aUnwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(aUnwrap.OutputChannels)
+                _signalMgr.GroupedSignalByProcessConfigStepsOutput.Add(aUnwrap.ThisStepOutputsAsSignalHierachyByPMU)
                 newUnWrapList.Add(aUnwrap)
             Next
             ProcessConfigure.UnWrapList = newUnWrapList
@@ -1168,7 +1162,7 @@ Namespace ViewModels
             Dim interpolates = From el In configData.<Config>.<ProcessConfig>.<Configuration>.<Processing>.Elements Where el.Name = "Interpolate" Select el
             For Each interpolate As XElement In interpolates
                 Dim anInterpolate = New Interpolate
-                anInterpolate.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
+                anInterpolate.StepCounter = _signalMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
                 anInterpolate.Limit = interpolate.<Parameters>.<Limit>.Value
                 anInterpolate.Type = [Enum].Parse(GetType(InterpolateType), interpolate.<Parameters>.<Type>.Value)
                 anInterpolate.FlagInterp = Convert.ToBoolean(interpolate.<Parameters>.<FlagInterp>.Value)
@@ -1182,15 +1176,15 @@ Namespace ViewModels
                     signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                     anInterpolate.OutputChannels.Add(signal)
                 Next
-                anInterpolate.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(anInterpolate.OutputChannels)
-                GroupedSignalByProcessConfigStepsOutput.Add(anInterpolate.ThisStepOutputsAsSignalHierachyByPMU)
+                anInterpolate.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(anInterpolate.OutputChannels)
+                _signalMgr.GroupedSignalByProcessConfigStepsOutput.Add(anInterpolate.ThisStepOutputsAsSignalHierachyByPMU)
                 newInterpolateList.Add(anInterpolate)
             Next
             ProcessConfigure.InterpolateList = newInterpolateList
         End Sub
         Private Sub _readProcessConfigStages(configData As XDocument)
             Dim CollectionOfSteps As New ObservableCollection(Of Object)
-            Dim stepCounter = GroupedSignalByProcessConfigStepsOutput.Count
+            Dim stepCounter = _signalMgr.GroupedSignalByProcessConfigStepsOutput.Count
             Dim stages = From el In configData.<Config>.<ProcessConfig>.<Configuration>.<Processing>.Elements Where el.Name = "Stages" Select el
             For Each stage In stages
                 Dim steps = From element In stage.Elements Select element
@@ -1284,11 +1278,11 @@ Namespace ViewModels
                         End If
                     Next
                     If TypeOf aStep Is Multirate Then
-                        aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                        GroupedSignalByProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
+                        aStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(aStep.InputChannels)
+                        _signalMgr.GroupedSignalByProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
                     End If
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-                    GroupedSignalByProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(aStep.OutputChannels)
+                    _signalMgr.GroupedSignalByProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                     CollectionOfSteps.Add(aStep)
                 Next
             Next
@@ -1299,7 +1293,7 @@ Namespace ViewModels
             Dim Wraps = From el In configData.<Config>.<ProcessConfig>.<Configuration>.<Processing>.Elements Where el.Name = "Wrap" Select el
             For Each Wrap As XElement In Wraps
                 Dim aWrap = New Wrap
-                aWrap.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
+                aWrap.StepCounter = _signalMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
                 aWrap.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aWrap.StepCounter.ToString & "-" & aWrap.Name
                 Try
                     aWrap.InputChannels = _readPMUElements(Wrap)
@@ -1310,8 +1304,8 @@ Namespace ViewModels
                     signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                     aWrap.OutputChannels.Add(signal)
                 Next
-                aWrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aWrap.OutputChannels)
-                GroupedSignalByProcessConfigStepsOutput.Add(aWrap.ThisStepOutputsAsSignalHierachyByPMU)
+                aWrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(aWrap.OutputChannels)
+                _signalMgr.GroupedSignalByProcessConfigStepsOutput.Add(aWrap.ThisStepOutputsAsSignalHierachyByPMU)
                 newWrapList.Add(aWrap)
             Next
             ProcessConfigure.WrapList = newWrapList
@@ -1380,18 +1374,18 @@ Namespace ViewModels
                         End If
                     Next
                     For Each pmuItem In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
-                        pmuItem.StepCounter = GroupedSignalByProcessConfigStepsOutput.Count + 1
+                        pmuItem.StepCounter = _signalMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
                         pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & pmuItem.StepCounter.ToString & "-" & pmuItem.Name
-                        pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(pmuItem.OutputChannels)
-                        GroupedSignalByProcessConfigStepsOutput.Add(pmuItem.ThisStepOutputsAsSignalHierachyByPMU)
+                        pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(pmuItem.OutputChannels)
+                        _signalMgr.GroupedSignalByProcessConfigStepsOutput.Add(pmuItem.ThisStepOutputsAsSignalHierachyByPMU)
                     Next
                 End If
             End If
         End Sub
 #End Region
         Private Sub _readPostProcessConfig(configData As XDocument)
-            GroupedSignalByPostProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
-            GroupedSignalByPostProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
+            _signalMgr.GroupedSignalByPostProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
+            _signalMgr.GroupedSignalByPostProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
             Dim CollectionOfSteps As New ObservableCollection(Of Customization)
             Dim stepCounter As Integer = 0
             Dim stages = From el In configData.<Config>.<PostProcessCustomizationConfig>.<Configuration>.Elements Where el.Name = "Stages" Select el
@@ -1474,18 +1468,18 @@ Namespace ViewModels
                     aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
 
                     If TypeOf aStep Is Customization Then
-                        aStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(aStep.InputChannels)
-                        GroupedSignalByPostProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
+                        aStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(aStep.InputChannels)
+                        _signalMgr.GroupedSignalByPostProcessConfigStepsInput.Add(aStep.ThisStepInputsAsSignalHerachyByType)
                     End If
-                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(aStep.OutputChannels)
-                    GroupedSignalByPostProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
+                    aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(aStep.OutputChannels)
+                    _signalMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                 Next
             Next
             PostProcessConfigure.CollectionOfSteps = CollectionOfSteps
         End Sub
 #Region "Reading detector config"
         Private Sub _readDetectorConfig(ByRef configData As XDocument)
-            GroupedSignalByDetectorInput = New ObservableCollection(Of SignalTypeHierachy)
+            _signalMgr.GroupedSignalByDetectorInput = New ObservableCollection(Of SignalTypeHierachy)
             Dim newDetectorList = New ObservableCollection(Of DetectorBase)
             Dim detectors = From el In configData.<Config>.<DetectorConfig>.<Configuration>.Elements Select el
             For Each detector In detectors
@@ -1554,7 +1548,7 @@ Namespace ViewModels
 
         Private Sub _readSpectralCoherence(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New SpectralCoherenceDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Mode = [Enum].Parse(GetType(DetectorModeType), detector.<Mode>.Value)
             newDetector.AnalysisLength = detector.<AnalysisLength>.Value
             newDetector.Delay = detector.<Delay>.Value
@@ -1572,14 +1566,14 @@ Namespace ViewModels
             Catch ex As Exception
                 _addLog("In Spectral Coherence detector: " & ex.Message)
             End Try
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
-            GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             newList.Add(newDetector)
         End Sub
 
         Private Sub _readPeriodogram(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New PeriodogramDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " Detector " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " Detector " & newDetector.Name
             newDetector.Mode = [Enum].Parse(GetType(DetectorModeType), detector.<Mode>.Value)
             newDetector.AnalysisLength = detector.<AnalysisLength>.Value
             newDetector.WindowType = [Enum].Parse(GetType(DetectorWindowType), detector.<WindowType>.Value)
@@ -1596,14 +1590,14 @@ Namespace ViewModels
             Catch ex As Exception
                 _addLog("In Periodogram detector: " & ex.Message)
             End Try
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
-            GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             newList.Add(newDetector)
         End Sub
 
         Private Sub _readWindRamp(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New WindRampDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Fpass = detector.<Fpass>.Value
             'Determin whether it is long trend or short trend wind ramp detector by checking the value of Fpass
             'This value could be changed later
@@ -1624,14 +1618,14 @@ Namespace ViewModels
             Catch ex As Exception
                 _addLog("In Windramp detector" & ex.Message)
             End Try
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
-            GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             newList.Add(newDetector)
         End Sub
 
         Private Sub _readRingdown(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New RingdownDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.RMSlength = detector.<RMSlength>.Value
             'newDetector.ForgetFactor = detector.<ForgetFactor>.Value
             newDetector.RingThresholdScale = detector.<RingThresholdScale>.Value
@@ -1642,14 +1636,14 @@ Namespace ViewModels
             Catch ex As Exception
                 _addLog("In Ringdown detector" & ex.Message)
             End Try
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
-            GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             newList.Add(newDetector)
         End Sub
 
         Private Sub _readOutOfRangeFrequency(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New OutOfRangeFrequencyDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             Dim type = From el In detector.Elements Where el.Name = "AverageWindow" Select el
             If type.Count = 0 Then
                 newDetector.Type = OutOfRangeFrequencyDetectorType.Nominal
@@ -1671,14 +1665,14 @@ Namespace ViewModels
             Catch ex As Exception
                 _addLog("In out of range frequency detector" & ex.Message)
             End Try
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
-            GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             newList.Add(newDetector)
         End Sub
 
         Private Sub _readOutOfRangeGeneral(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
             Dim newDetector = New OutOfRangeGeneralDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
             newDetector.Max = detector.<Max>.Value
             newDetector.Min = detector.<Min>.Value
             newDetector.AnalysisWindow = detector.<AnalysisWindow>.Value
@@ -1688,8 +1682,8 @@ Namespace ViewModels
             Catch ex As Exception
                 _addLog("In out of range general detector" & ex.Message)
             End Try
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
-            GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             newList.Add(newDetector)
         End Sub
 #End Region

@@ -1,6 +1,6 @@
 ﻿Imports System.Globalization
 Imports System.Windows.Data
-Imports BAWGUI.Settings.Model
+Imports BAWGUI.Settings.ViewModels
 
 Namespace Converters
     Public Class EnumToStringConverter1

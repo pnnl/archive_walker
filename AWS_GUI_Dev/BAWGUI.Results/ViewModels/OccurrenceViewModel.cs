@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Core;
+using BAWGUI.Utilities;
 
 namespace BAWGUI.Results.ViewModels
 {

@@ -1,7 +1,7 @@
 ﻿Imports System.Drawing
 Imports System.Windows
 Imports System.Windows.Media
-Imports BAWGUI.Core.Resources
+Imports BAWGUI.Utilities
 
 Public Class ExponentCustomization
     Private Sub ExpTextBoxGotFocus(sender As Object, e As RoutedEventArgs)

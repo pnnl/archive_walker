@@ -1,9 +1,12 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports BAWGUI.Core
+Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.Settings.ViewModels
+Imports BAWGUI.SignalManagement.ViewModels
+Imports BAWGUI.Utilities
 
-Namespace Model
+Namespace ViewModels
     Public Class ProcessConfig
         Inherits ViewModelBase
         Public Sub New()
@@ -45,6 +48,10 @@ Namespace Model
                                                                                    {"D", {"D"}.ToList},
                                                                                    {"SC", {"SC"}.ToList},
                                                                                    {"OTHER", {"O"}.ToList}}
+        End Sub
+
+        Public Sub New(processConfigure As ReadConfigXml.ProcessConfig)
+            Me.processConfigure = processConfigure
         End Sub
 
         Private _unWrapList As ObservableCollection(Of Unwrap)
@@ -113,6 +120,8 @@ Namespace Model
             End Set
         End Property
         Private _typeUnitDictionary As Dictionary(Of String, List(Of String))
+        Private processConfigure As ReadConfigXml.ProcessConfig
+
         Public Property TypeUnitDictionary As Dictionary(Of String, List(Of String))
             Get
                 Return _typeUnitDictionary
@@ -122,7 +131,16 @@ Namespace Model
                 OnPropertyChanged()
             End Set
         End Property
-
+        Private _model As ReadConfigXml.ProcessConfig
+        Public Property Model As ReadConfigXml.ProcessConfig
+            Get
+                Return _model
+            End Get
+            Set(value As ReadConfigXml.ProcessConfig)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
     End Class
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

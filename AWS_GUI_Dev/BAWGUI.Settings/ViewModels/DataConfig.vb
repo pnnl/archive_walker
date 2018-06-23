@@ -2,8 +2,11 @@
 Imports System.ComponentModel
 Imports System.Globalization
 Imports BAWGUI.Core
+Imports BAWGUI.ReadConfigXml
+Imports BAWGUI.SignalManagement.ViewModels
+Imports BAWGUI.Utilities
 
-Namespace Model
+Namespace ViewModels
     Public Class DataConfig
         Inherits PostProcessCustomizationConfig
         Public Sub New()
@@ -76,6 +79,48 @@ Namespace Model
             '_collectionOfSteps = New ObservableCollection(Of Object)
         End Sub
 
+        Public Sub New(dataConfigure As ReadConfigXml.DataConfig)
+            Me.New
+            _model = dataConfigure
+            ReaderProperty = New ReaderProperties(_model.ReaderProperty)
+            For Each stp In _model.CollectionOfSteps
+                Dim name = stp.Name
+                Select Case name
+                    Case "Status Flags"
+
+                    Case "Zeros"
+                    Case "Missing"
+                    Case "Angle Wrapping"
+                    Case "Data Frame"
+                    Case "Channel"
+                    Case "Entire PMU"
+                    Case "Stale Data"
+                    Case "Outliers"
+                    Case "Nominal Frequency"
+                    Case "Nominal Voltage"
+                    Case "Scalar Repetition"
+                    Case "Addition"
+                    Case "Subtraction"
+                    Case "Multiplication"
+                    Case "Division"
+                    Case "Exponential"
+                    Case "Sign Reversal"
+                    Case "Absolute Value"
+                    Case "Real Component"
+                    Case "Imaginary Component"
+                    Case "Angle Calculation"
+                    Case "Complex Conjugate"
+                    Case "Phasor Creation"
+                    Case "Power Calculation"
+                    Case "Signal Type/Unit"
+                    Case "Metric Prefix"
+                    Case "Angle Conversion"
+                End Select
+            Next
+
+
+        End Sub
+
         Private _readerProperty As ReaderProperties
         Public Property ReaderProperty As ReaderProperties
             Get
@@ -129,6 +174,17 @@ Namespace Model
         Public ReadOnly Property DQFilterNameParametersDictionary As Dictionary(Of String, List(Of String))
             Get
                 Return _dqFilterNameParametersDictionary
+            End Get
+        End Property
+
+        Private _model As ReadConfigXml.DataConfig
+        Public Property Model As ReadConfigXml.DataConfig
+            Set
+                _model = Value
+                OnPropertyChanged()
+            End Set
+            Get
+                Return _model
             End Get
         End Property
 
@@ -212,6 +268,10 @@ Namespace Model
             _selectedTimeZone = TimeZoneInfo.Utc
 
             _inputFileInfos = New ObservableCollection(Of InputFileInfo)
+        End Sub
+
+        Public Sub New(readerProperty As ReadConfigXml.ReaderProperties)
+            Me.readerProperty = readerProperty
         End Sub
 
         Private _inputFileInfos As ObservableCollection(Of InputFileInfo)
@@ -536,6 +596,9 @@ Namespace Model
         End Property
 
         Private _selectAlternateTimeZone As Boolean
+        Friend Model As ReadConfigXml.ReaderProperties
+        Private readerProperty As ReadConfigXml.ReaderProperties
+
         Public Property SelectAlternateTimeZone As Boolean
             Get
                 Return _selectAlternateTimeZone

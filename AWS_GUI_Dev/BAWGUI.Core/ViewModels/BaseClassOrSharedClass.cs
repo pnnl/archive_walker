@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.Collections.ObjectModel;
+using BAWGUI.Utilities;
+using BAWGUI.SignalManagement.ViewModels;
 
 namespace BAWGUI.Core
 {
@@ -86,9 +88,9 @@ namespace BAWGUI.Core
         }
     }
 
-    // ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    // '''''''''''''''''''''''''''''''Class SignalProcessStep''''''''''''''''''''''''''''''''''''''''
-    // ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+     //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+     //'''''''''''''''''''''''''''''''Class SignalProcessStep''''''''''''''''''''''''''''''''''''''''
+     //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     public abstract class SignalProcessStep : ViewModelBase
     {
         public abstract string Name { get; set; }
@@ -197,7 +199,6 @@ namespace BAWGUI.Core
     {
         public Filter()
         {
-            // _filterParameters = New ObservableCollection(Of ParameterValuePair)
             _fileterParameters = new ObservableCollection<ParameterValuePair>();
             InputChannels = new ObservableCollection<SignalSignatureViewModel>();
             ThisStepInputsAsSignalHerachyByType = new SignalTypeHierachy(new SignalSignatureViewModel());

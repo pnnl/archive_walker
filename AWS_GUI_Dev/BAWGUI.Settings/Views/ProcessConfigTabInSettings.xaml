@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
-             xmlns:model="clr-namespace:BAWGUI.Settings.Model"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
@@ -23,22 +22,22 @@
             <converters:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="InterpolateTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:InterpolateType"/>
+                    <x:Type TypeName="vm:InterpolateType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="EndpointsTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:EndpointsType"/>
+                    <x:Type TypeName="vm:EndpointsType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="HandleNaNTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:HandleNaNType"/>
+                    <x:Type TypeName="vm:HandleNaNType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="TunableFilterTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:TunableFilterType"/>
+                    <x:Type TypeName="vm:TunableFilterType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <!--<DataTemplate x:Key="MultiRateOptionButtons">
@@ -375,7 +374,7 @@
                     </DockPanel>
                     <ItemsControl Grid.Row="5" ItemsSource="{Binding ProcessConfigure.CollectionOfSteps}">
                         <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type model:TunableFilter}">
+                            <DataTemplate DataType="{x:Type vm:TunableFilter}">
                                 <local:TunableFilterView/>
                                 <!--<Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
                                     <i:Interaction.Triggers>
@@ -483,7 +482,7 @@
                                     </Grid>
                                 </Border>-->
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:Multirate}">
+                            <DataTemplate DataType="{x:Type vm:Multirate}">
                                 <local:MultirateView/>
                                 <!--<Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
                                     <i:Interaction.Triggers>

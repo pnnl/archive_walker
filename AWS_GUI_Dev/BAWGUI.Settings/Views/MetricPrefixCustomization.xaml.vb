@@ -2,7 +2,7 @@
 Imports System.Windows
 Imports System.Windows.Input
 Imports System.Windows.Media
-Imports BAWGUI.Core.Resources
+Imports BAWGUI.Utilities
 
 Public Class MetricPrefixCustomization
     Private Sub ExpTextBoxGotFocus(sender As Object, e As RoutedEventArgs)

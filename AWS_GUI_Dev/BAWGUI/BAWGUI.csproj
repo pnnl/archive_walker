@@ -256,6 +256,14 @@
       <Project>{0edc5fef-a2e3-4d51-8079-fc5499c08ebc}</Project>
       <Name>BAWGUI.Settings</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
+      <Project>{e0aca34c-2c13-4e98-944d-a419bdd2d116}</Project>
+      <Name>BAWGUI.SignalManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
+      <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
+      <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>

@@ -6,10 +6,13 @@ using BAWGUI.Settings.ViewModels;
 using System.Windows.Input;
 using System.IO;
 using BAWGUI.Core;
+using BAWGUI.SignalManagement.ViewModels;
+using BAWGUI.Utilities;
+using System.Windows.Forms;
 
 namespace BAWGUI.ViewModels
 {
-    public class MainViewModel: Core.ViewModelBase
+    public class MainViewModel: ViewModelBase
     {
         public MainViewModel()
         {
@@ -20,6 +23,7 @@ namespace BAWGUI.ViewModels
             _currentView = _resultsVM;
             MainViewSelected = new RelayCommand(_switchView);
             _projectControlVM.RunSelected += _onRunSelected;
+            _signalMgr = SignalManager.Instance;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
         }
 
@@ -99,6 +103,7 @@ namespace BAWGUI.ViewModels
                 OnPropertyChanged();
             }
         }
+        private SignalManager _signalMgr;
         private void _onRunSelected(object sender, AWProjectViewModel e)
         {
             if (e != null)
@@ -111,13 +116,22 @@ namespace BAWGUI.ViewModels
                 SettingsVM.Run = e.SelectedRun;
                 //ResultsVM.Project = e;
                 ResultsVM.Run = e.SelectedRun;
-                var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
-                foreach (var item in config.DataConfigure.ReaderProperty.InputFileInfos)
+                try
                 {
-                    //item.FileDirectory
+                    var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
+                    _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
+                    SettingsVM.DataConfigure = new DataConfig(config.DataConfigure);
+                    SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure);
+                    SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure);
+                    SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
             }
         }
+
         //private void _projectControlVM_RunSelected(object sender, AWRunViewModel e)
         //{
         //    throw new NotImplementedException();

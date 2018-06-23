@@ -1,8 +1,8 @@
 ﻿Imports System.Collections.ObjectModel
-Imports BAWGUI.Core
-Imports BAWGUI.Settings.ViewModels
+Imports BAWGUI.ReadConfigXml
+Imports BAWGUI.Utilities
 
-Namespace Model
+Namespace ViewModels
     Public Class PostProcessCustomizationConfig
         Inherits ViewModelBase
         Public Sub New()
@@ -79,6 +79,11 @@ Namespace Model
             _collectionOfSteps = New ObservableCollection(Of Customization)
             _unitList = New List(Of String)
         End Sub
+
+        Public Sub New(postProcessConfigure As PostProcessConfig)
+            Me.postProcessConfigure = postProcessConfigure
+        End Sub
+
         Private _collectionOfSteps As ObservableCollection(Of Customization)
         Public Property CollectionOfSteps As ObservableCollection(Of Customization)
             Get
@@ -138,6 +143,8 @@ Namespace Model
             End Set
         End Property
         Private _unitList As List(Of String)
+        Private postProcessConfigure As PostProcessConfig
+
         Public Property UnitList As List(Of String)
             Get
                 Return _unitList
@@ -147,6 +154,8 @@ Namespace Model
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Property Model As PostProcessConfig
     End Class
 
 End Namespace

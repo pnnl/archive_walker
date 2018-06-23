@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
-             xmlns:model="clr-namespace:BAWGUI.Settings.Model"
+             xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:views="clr-namespace:BAWGUI.Settings"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
@@ -60,19 +60,19 @@
                     </DockPanel>
                     <ItemsControl ItemsSource="{Binding DetectorConfigure.DetectorList}" Grid.Row="1" Margin="2" AlternationCount="{Binding DetectorConfigure.DetectorList.Count}">
                         <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type model:SpectralCoherenceDetector}">
+                            <DataTemplate DataType="{x:Type vm:SpectralCoherenceDetector}">
                                 <views:SpectralCoherenceDetectorView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:PeriodogramDetector}">
+                            <DataTemplate DataType="{x:Type vm:PeriodogramDetector}">
                                 <views:PeriodogramDetectorView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:RingdownDetector}">
+                            <DataTemplate DataType="{x:Type vm:RingdownDetector}">
                                 <views:RingdownView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:WindRampDetector}">
+                            <DataTemplate DataType="{x:Type vm:WindRampDetector}">
                                 <views:WindRampView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:OutOfRangeFrequencyDetector}">
+                            <DataTemplate DataType="{x:Type vm:OutOfRangeFrequencyDetector}">
                                 <views:OutOfRangeFrequencyView/>
                             </DataTemplate>
                             <!--<DataTemplate DataType="{x:Type model:OutOfRangeGeneralDetector}">
@@ -126,13 +126,13 @@
                     </DockPanel>
                     <ItemsControl ItemsSource="{Binding DetectorConfigure.AlarmingList}" Grid.Row="4" Margin="2" AlternationCount="{Binding DetectorConfigure.AlarmingList.Count}">
                         <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type model:AlarmingSpectralCoherence}">
+                            <DataTemplate DataType="{x:Type vm:AlarmingSpectralCoherence}">
                                 <views:SpectralCoherenceAlarmingView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:AlarmingPeriodogram}">
+                            <DataTemplate DataType="{x:Type vm:AlarmingPeriodogram}">
                                 <views:PeriodogramAlarmingView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:AlarmingRingdown}">
+                            <DataTemplate DataType="{x:Type vm:AlarmingRingdown}">
                                 <views:RingdownAlarmingView/>
                             </DataTemplate>
                         </ItemsControl.Resources>

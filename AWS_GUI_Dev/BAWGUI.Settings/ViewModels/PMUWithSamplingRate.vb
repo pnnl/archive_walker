@@ -1,7 +1,8 @@
 ﻿Imports BAWGUI.Core
 Imports BAWGUI.Settings.ViewModels
+Imports BAWGUI.Utilities
 
-Namespace Model
+Namespace ViewModels
     Public Class PMUWithSamplingRate
         Inherits ViewModelBase
         Public Sub New(pmu As String, rate As Integer)

@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
-             xmlns:model="clr-namespace:BAWGUI.Settings.Model"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
@@ -15,7 +14,7 @@
         <ResourceDictionary>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="PowerTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:PowerType"/>
+                    <x:Type TypeName="vm:PowerType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <converters:EnumToStringConverter3 x:Key="EnumToStringConverter3"/>

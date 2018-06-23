@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using BAWGUI.Views;
 using BAWGUI.ViewModels;
 using BAWGUI.Core;
+using BAWGUI.Utilities;
+
 namespace BAWGUI.RunMATLAB.ViewModels
 {
     public class ProjectsControlViewModel : ViewModelBase

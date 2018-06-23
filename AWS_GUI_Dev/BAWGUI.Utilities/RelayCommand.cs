@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace BAWGUI.Core
+namespace BAWGUI.Utilities
 {
     public class RelayCommand : ICommand
     {

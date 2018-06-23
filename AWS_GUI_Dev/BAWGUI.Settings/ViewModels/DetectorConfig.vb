@@ -1,7 +1,10 @@
 ﻿Imports System.Collections.ObjectModel
 Imports BAWGUI.Core
+Imports BAWGUI.ReadConfigXml
+Imports BAWGUI.SignalManagement.ViewModels
+Imports BAWGUI.Utilities
 
-Namespace Model
+Namespace ViewModels
     Public Class DetectorConfig
         Inherits ViewModelBase
         Public Sub New()
@@ -16,6 +19,11 @@ Namespace Model
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}
         End Sub
+
+        Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfig)
+            Me.detectorConfigure = detectorConfigure
+        End Sub
+
         Private _eventPath As String
         Public Property EventPath As String
             Get
@@ -67,6 +75,8 @@ Namespace Model
             End Set
         End Property
         Private _alarmingDetectorNameList As List(Of String)
+        Private detectorConfigure As ReadConfigXml.DetectorConfig
+
         Public Property AlarmingDetectorNameList As List(Of String)
             Get
                 Return _alarmingDetectorNameList
@@ -76,6 +86,8 @@ Namespace Model
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Property Model As ReadConfigXml.DetectorConfig
     End Class
 
     Public Class PeriodogramDetector

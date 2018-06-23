@@ -152,12 +152,11 @@
     <Compile Include="Converters\TypeUnitDictionaryConverter.vb" />
     <Compile Include="Converters\ValueIfEmptyConverter.vb" />
     <Compile Include="Converters\VisibilityConverters.vb" />
-    <Compile Include="Model\DataConfig.vb" />
-    <Compile Include="Model\DetectorConfig.vb" />
-    <Compile Include="Model\Folder.vb" />
-    <Compile Include="Model\PMUWithSamplingRate.vb" />
-    <Compile Include="Model\PostProcessCustomizationConfig.vb" />
-    <Compile Include="Model\ProcessConfig.vb" />
+    <Compile Include="ViewModels\DataConfig.vb" />
+    <Compile Include="ViewModels\DetectorConfig.vb" />
+    <Compile Include="ViewModels\PMUWithSamplingRate.vb" />
+    <Compile Include="ViewModels\PostProcessCustomizationConfig.vb" />
+    <Compile Include="ViewModels\ProcessConfig.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -176,7 +175,7 @@
     <Compile Include="ViewModels\ComboBoxItemsSourceDecorator.vb" />
     <Compile Include="ViewModels\ConfigFileWriter.vb" />
     <Compile Include="ViewModels\DelegateCommand.vb" />
-    <Compile Include="ViewModels\EnumerationManagerAndConverters.vb" />
+    <Compile Include="ViewModels\EnumerationManager.vb" />
     <Compile Include="ViewModels\SettingsViewModel.ConfigFileRead.vb" />
     <Compile Include="ViewModels\SettingsViewModel.DetectorConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.PostProcessConfig.vb" />
@@ -619,6 +618,14 @@
       <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
       <Name>BAWGUI.RunMATLAB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
+      <Project>{E0ACA34C-2C13-4E98-944D-A419BDD2D116}</Project>
+      <Name>BAWGUI.SignalManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
+      <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
+      <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
@@ -644,6 +651,9 @@
     <Resource Include="..\BAWGUI.Resources\Images\numerator.PNG">
       <Link>MyResources\numerator.PNG</Link>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
