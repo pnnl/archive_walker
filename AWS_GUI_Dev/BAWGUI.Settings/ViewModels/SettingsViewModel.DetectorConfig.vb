@@ -17,16 +17,7 @@ Namespace ViewModels
         '    End Set
         'End Property
 
-        Private _resultUpdateIntervalVisibility As Visibility
-        Public Property ResultUpdateIntervalVisibility As Visibility
-            Get
-                Return _resultUpdateIntervalVisibility
-            End Get
-            Set(ByVal value As Visibility)
-                _resultUpdateIntervalVisibility = value
-                OnPropertyChanged()
-            End Set
-        End Property
+
 #Region "Add, Delete, Select a detector, DeSelect All detector"
         Private _detectorSelectedToAdd As ICommand
         Public Property DetectorSelectedToAdd As ICommand
@@ -51,10 +42,10 @@ Namespace ViewModels
                     newDetector = New WindRampDetector
                 Case "Periodogram Forced Oscillation Detector"
                     newDetector = New PeriodogramDetector
-                    ResultUpdateIntervalVisibility = Visibility.Visible
+                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Spectral Coherence Forced Oscillation Detector"
                     newDetector = New SpectralCoherenceDetector
-                    ResultUpdateIntervalVisibility = Visibility.Visible
+                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
@@ -264,7 +255,7 @@ Namespace ViewModels
                         For index = 1 To _signalMgr.GroupedSignalByDetectorInput.Count
                             _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & DetectorConfigure.DetectorList(index - 1).Name
                         Next
-                        If ResultUpdateIntervalVisibility = Visibility.Visible Then
+                        If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False
                             For Each dtr In DetectorConfigure.DetectorList
                                 If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Then
@@ -273,7 +264,7 @@ Namespace ViewModels
                                 End If
                             Next
                             If Not updateResultInterval Then
-                                ResultUpdateIntervalVisibility = Visibility.Collapsed
+                                DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Collapsed
                             End If
                         End If
                     Else

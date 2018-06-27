@@ -7,6 +7,10 @@ namespace BAWGUI.ReadConfigXml
     {
         private XElement _xElement;
 
+        public DetectorConfigModel()
+        {
+        }
+
         public DetectorConfigModel(XElement xElement)
         {
             this._xElement = xElement;
@@ -24,27 +28,27 @@ namespace BAWGUI.ReadConfigXml
             var item = _xElement.Element("Configuration").Element("Periodogram");
             if (item != null)
             {
-                DetectorList.Add(new PeriodogramDetector(item));
+                DetectorList.Add(new PeriodogramDetectorModel(item));
             }
             item = _xElement.Element("Configuration").Element("SpectralCoherence");
             if (item != null)
             {
-                DetectorList.Add(new SpectralCoherenceDetector(item));
+                DetectorList.Add(new SpectralCoherenceDetectorModel(item));
             }
             item = _xElement.Element("Configuration").Element("OutOfRangeGeneral");
             if (item != null)
             {
-                DetectorList.Add(new OutOfRangeFrequencyDetector(item));
+                DetectorList.Add(new OutOfRangeFrequencyDetectorModel(item));
             }
             item = _xElement.Element("Configuration").Element("WindRamp");
             if (item != null)
             {
-                DetectorList.Add(new WindRampDetector(item));
+                DetectorList.Add(new WindRampDetectorModel(item));
             }
             item = _xElement.Element("Configuration").Element("Ringdown");
             if (item != null)
             {
-                DetectorList.Add(new RingdownDetector(item));
+                DetectorList.Add(new RingdownDetectorModel(item));
             }
             item = _xElement.Element("Configuration").Element("Alarming");
             if (item != null)
@@ -55,13 +59,13 @@ namespace BAWGUI.ReadConfigXml
                     switch (alarm.Name.LocalName)
                     {
                         case "Periodogram":
-                            AlarmingList.Add(new AlarmingPeriodogram(alarm));
+                            AlarmingList.Add(new AlarmingPeriodogramModel(alarm));
                             break;
                         case "SpectralCoherence":
-                            AlarmingList.Add(new AlarmingSpectralCoherence(alarm));
+                            AlarmingList.Add(new AlarmingSpectralCoherenceModel(alarm));
                             break;
                         case "Ringdown":
-                            AlarmingList.Add(new AlarmingRingdown(alarm));
+                            AlarmingList.Add(new AlarmingRingdownModel(alarm));
                             break;
                         default:
                             throw new System.Exception("Unknown alarming detector.");

@@ -110,5 +110,10 @@ namespace BAWGUI.ReadConfigXml
                 }
             }
         }
+
+        public PostProcessConfigModel()
+        {
+            CollectionOfSteps = new List<object>();
+        }
     }
 }

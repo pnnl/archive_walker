@@ -20,9 +20,9 @@ namespace BAWGUI.ReadConfigXml
     using System.Xml.Linq;
     using Microsoft.VisualBasic;
 
-    public class PeriodogramDetector
+    public class PeriodogramDetectorModel
     {
-        public PeriodogramDetector()
+        public PeriodogramDetectorModel()
         {
             _pfa = "0.01";
             _analysisLength = 600;
@@ -36,7 +36,7 @@ namespace BAWGUI.ReadConfigXml
         }
 
         private XElement _item;
-        public PeriodogramDetector(XElement item)
+        public PeriodogramDetectorModel(XElement item)
         {
             this._item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
@@ -265,9 +265,9 @@ namespace BAWGUI.ReadConfigXml
         public List<PMUElementModel> PMUElementList { get; set; }
     }
 
-    public class SpectralCoherenceDetector
+    public class SpectralCoherenceDetectorModel
     {
-        public SpectralCoherenceDetector()
+        public SpectralCoherenceDetectorModel()
         {
             _analysisLength = 60;
             _delay = 10;
@@ -282,7 +282,7 @@ namespace BAWGUI.ReadConfigXml
         }
 
         private XElement _item;
-        public SpectralCoherenceDetector(XElement item)
+        public SpectralCoherenceDetectorModel(XElement item)
         {
             this._item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
@@ -568,9 +568,9 @@ namespace BAWGUI.ReadConfigXml
         public List<PMUElementModel> PMUElementList { get; set; }
     }
 
-    public class RingdownDetector
+    public class RingdownDetectorModel
     {
-        public RingdownDetector()
+        public RingdownDetectorModel()
         {
             RMSlength = "15";
             RMSmedianFilterTime = "120";
@@ -578,7 +578,7 @@ namespace BAWGUI.ReadConfigXml
         }
 
         private XElement _item;
-        public RingdownDetector(XElement item)
+        public RingdownDetectorModel(XElement item)
         {
             this._item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
@@ -658,9 +658,9 @@ namespace BAWGUI.ReadConfigXml
         public List<PMUElementModel> PMUElementList { get; set; }
     }
 
-    public class OutOfRangeGeneralDetector
+    public class OutOfRangeGeneralDetectorModel
     {
-        public OutOfRangeGeneralDetector()
+        public OutOfRangeGeneralDetectorModel()
         {
         }
         public string Name
@@ -720,14 +720,14 @@ namespace BAWGUI.ReadConfigXml
         }
     }
 
-    public class OutOfRangeFrequencyDetector
+    public class OutOfRangeFrequencyDetectorModel
     {
-        public OutOfRangeFrequencyDetector()
+        public OutOfRangeFrequencyDetectorModel()
         {
         }
 
         private XElement _item;
-        public OutOfRangeFrequencyDetector(XElement item)
+        public OutOfRangeFrequencyDetectorModel(XElement item)
         {
             this._item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
@@ -931,9 +931,9 @@ namespace BAWGUI.ReadConfigXml
         public List<PMUElementModel> PMUElementList { get; set; }
     }
 
-    public class WindRampDetector
+    public class WindRampDetectorModel
     {
-        public WindRampDetector()
+        public WindRampDetectorModel()
         {
             _isLongTrend = true;
             _apass = "1";
@@ -947,7 +947,7 @@ namespace BAWGUI.ReadConfigXml
         }
 
         private XElement _item;
-        public WindRampDetector(XElement item)
+        public WindRampDetectorModel(XElement item)
         {
             this._item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
@@ -1170,15 +1170,15 @@ namespace BAWGUI.ReadConfigXml
         AvergeWindow
     }
 
-    public class AlarmingSpectralCoherence
+    public class AlarmingSpectralCoherenceModel
     {
-        public AlarmingSpectralCoherence()
+        public AlarmingSpectralCoherenceModel()
         {
             
         }
 
         private XElement _alarm;
-        public AlarmingSpectralCoherence(XElement alarm)
+        public AlarmingSpectralCoherenceModel(XElement alarm)
         {
             this._alarm = alarm;
             var par = _alarm.Element("CoherenceAlarm");
@@ -1277,14 +1277,14 @@ namespace BAWGUI.ReadConfigXml
         }
     }
 
-    public class AlarmingPeriodogram
+    public class AlarmingPeriodogramModel
     {
-        public AlarmingPeriodogram()
+        public AlarmingPeriodogramModel()
         {
         }
 
         private XElement _alarm;
-        public AlarmingPeriodogram(XElement alarm)
+        public AlarmingPeriodogramModel(XElement alarm)
         {
             this._alarm = alarm;
             var par = _alarm.Element("SNRalarm");
@@ -1383,14 +1383,14 @@ namespace BAWGUI.ReadConfigXml
         }
     }
 
-    public class AlarmingRingdown
+    public class AlarmingRingdownModel
     {
-        public AlarmingRingdown()
+        public AlarmingRingdownModel()
         {
         }
 
         private XElement _alarm;
-        public AlarmingRingdown(XElement alarm)
+        public AlarmingRingdownModel(XElement alarm)
         {
             this._alarm = alarm;
             var par = _alarm.Element("MaxDuration");

@@ -1160,25 +1160,6 @@ Namespace ViewModels
                             Case Else
                                 Throw New Exception("Unknown tunable filter type found in Config.xml.")
                         End Select
-                        'For Each pair In params
-                        '    'Dim aPair As New ParameterValuePair
-                        '    Dim paraName = pair.Name.ToString
-                        '    Dim aPair = (From x In DirectCast(aStep, TunableFilter).FilterParameters Where x.ParameterName = paraName Select x).FirstOrDefault
-                        '    If pair.Value.ToLower = "false" Then
-                        '        aPair.Value = False
-                        '    ElseIf pair.Value.ToLower = "true" Then
-                        '        aPair.Value = True
-                        '    ElseIf paraName = "Endpoints" Then
-                        '        aPair.Value = [Enum].Parse(GetType(EndpointsType), pair.Value)
-                        '    ElseIf paraName = "HandleNaN" Then
-                        '        aPair.Value = [Enum].Parse(GetType(HandleNaNType), pair.Value)
-                        '        'ElseIf aStep.Name = "Nominal Frequency" And paraName = "FlagBit" Then
-                        '        '    aPair.IsRequired = False
-                        '        '    aPair.Value = pair.Value
-                        '    Else
-                        '        aPair.Value = pair.Value
-                        '    End If
-                        'Next
                     ElseIf stp.Name = "Multirate" Then
                         aStep = New Multirate
                         stepCounter += 1
@@ -1448,10 +1429,10 @@ Namespace ViewModels
                         _readWindRamp(detector, newDetectorList)
                     Case "Periodogram"
                         _readPeriodogram(detector, newDetectorList)
-                        ResultUpdateIntervalVisibility = Visibility.Visible
+                        DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                     Case "SpectralCoherence"
                         _readSpectralCoherence(detector, newDetectorList)
-                        ResultUpdateIntervalVisibility = Visibility.Visible
+                        DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                     Case "Alarming"
                         _readAlarming(detector)
                     Case Else

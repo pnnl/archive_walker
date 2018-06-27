@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports BAWGUI.Core
+Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
 
@@ -51,9 +52,31 @@ Namespace ViewModels
         Public Sub New(processConfigure As ReadConfigXml.ProcessConfigModel, signalsMgr As SignalManager)
             Me.New
             Me._model = processConfigure
+            Dim newUnWrapList = New ObservableCollection(Of Unwrap)
             For Each unWrapM In _model.UnWrapList
-
+                newUnWrapList.Add(New Unwrap(unWrapM, signalsMgr))
             Next
+            UnWrapList = newUnWrapList
+            Dim newInterpolateList = New ObservableCollection(Of Interpolate)
+            For Each interpolateM In _model.InterpolateList
+                newInterpolateList.Add(New Interpolate(interpolateM, signalsMgr))
+            Next
+            InterpolateList = newInterpolateList
+            Dim newCollectionOfSteps As New ObservableCollection(Of Object)
+            For Each stp In _model.CollectionOfSteps
+                If stp.Name = "Filter" Then
+                    newCollectionOfSteps.Add(New TunableFilter(stp, signalsMgr))
+                Else
+                    newCollectionOfSteps.Add(New Multirate(stp, signalsMgr))
+                End If
+            Next
+            CollectionOfSteps = newCollectionOfSteps
+            Dim newWrapList = New ObservableCollection(Of Wrap)
+            For Each unWrapM In _model.WrapList
+                newWrapList.Add(New Wrap(unWrapM, signalsMgr))
+            Next
+            WrapList = newWrapList
+            NameTypeUnitElement = New NameTypeUnit(_model.NameTypeUnitList, signalsMgr)
         End Sub
 
         Private _unWrapList As ObservableCollection(Of Unwrap)
@@ -152,43 +175,52 @@ Namespace ViewModels
     ''' </summary>
     Public Class Unwrap
         Inherits SignalProcessStep
-
         Public Sub New()
             InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
-            Name = "Unwrap"
+            _model = New UnwrapModel()
             IsExpanded = False
         End Sub
+        Public Sub New(unWrapM As UnwrapModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = unWrapM
+            StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter.ToString & " - " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(unWrapM.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & Name)
+            End Try
+            For Each signal In InputChannels
+                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
+                OutputChannels.Add(signal)
+            Next
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+        End Sub
         Public ReadOnly Property Name As String
-
+            Get
+                Return _model.Name
+            End Get
+        End Property
+        Private _model As UnwrapModel
+        Public Property Model As UnwrapModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As UnwrapModel)
+                _model = value
+            End Set
+        End Property
         Public Overrides Function CheckStepIsComplete() As Boolean
-            'Throw New NotImplementedException()
             Return True
         End Function
-        'Private _inputChannels As ObservableCollection(Of SignalSignatures)
-        'Public Property InputChannels As ObservableCollection(Of SignalSignatures)
-        '    Get
-        '        Return _inputChannels
-        '    End Get
-        '    Set(ByVal value As ObservableCollection(Of SignalSignatures))
-        '        _inputChannels = value
-        '        OnPropertyChanged()
-        '    End Set
-        'End Property
-
-        'Private _maxNaN As String
-        'Public Property MaxNaN As String
-        '    Get
-        '        Return _maxNaN
-        '    End Get
-        '    Set(value As String)
-        '        _maxNaN = value
-        '        OnPropertyChanged()
-        '    End Set
-        'End Property
-
     End Class
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -201,25 +233,58 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
-            Name = "Interpolation"
+            _model = New InterpolateModel()
             IsExpanded = False
             _flagInterp = False
         End Sub
 
-        Public Overrides Function CheckStepIsComplete() As Boolean
-            'Throw New NotImplementedException()
-            Return True
-        End Function
+        Public Sub New(interpolateM As InterpolateModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = interpolateM
+            StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter.ToString & " - " & Type.ToString() & " " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(interpolateM.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & Name)
+            End Try
+            For Each signal In InputChannels
+                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
+                OutputChannels.Add(signal)
+            Next
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+        End Sub
 
         Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
+        Private _model As InterpolateModel
+        Public Property Model As InterpolateModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As InterpolateModel)
+                _model = value
+            End Set
+        End Property
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
 
         Private _limit As String
         Public Property Limit As String
             Get
-                Return _limit
+                Return _model.Limit
             End Get
             Set(value As String)
-                _limit = value
+                _model.Limit = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -227,10 +292,10 @@ Namespace ViewModels
         Private _type As InterpolateType
         Public Property Type As InterpolateType
             Get
-                Return _type
+                Return _model.Type
             End Get
             Set(value As InterpolateType)
-                _type = value
+                _model.Type = value
                 ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
                 ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
                 OnPropertyChanged()
@@ -240,25 +305,13 @@ Namespace ViewModels
         Private _flagInterp As Boolean
         Public Property FlagInterp As Boolean
             Get
-                Return _flagInterp
+                Return _model.FlagInterp
             End Get
             Set(value As Boolean)
-                _flagInterp = value
+                _model.FlagInterp = value
                 OnPropertyChanged()
             End Set
         End Property
-
-        'Private _inputChannels As ObservableCollection(Of SignalSignatures)
-        'Public Property InputChannels As ObservableCollection(Of SignalSignatures)
-        '    Get
-        '        Return _inputChannels
-        '    End Get
-        '    Set(ByVal value As ObservableCollection(Of SignalSignatures))
-        '        _inputChannels = value
-        '        OnPropertyChanged()
-        '    End Set
-        'End Property
-
     End Class
 
     Public Enum InterpolateType
@@ -286,14 +339,47 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
-            Name = "Wrap"
+            _model = New WrapModel()
             IsExpanded = False
+        End Sub
+        Public Sub New(wrapM As WrapModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = wrapM
+            StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter.ToString & " - " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(wrapM.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & Name)
+            End Try
+            For Each signal In InputChannels
+                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
+                OutputChannels.Add(signal)
+            Next
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
 
         Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
+        Private _model As WrapModel
+        Public Property Model As WrapModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As WrapModel)
+                _model = value
+            End Set
+        End Property
 
         Public Overrides Function CheckStepIsComplete() As Boolean
-            'Throw New NotImplementedException()
             Return True
         End Function
     End Class
@@ -311,7 +397,7 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
-            Name = "Filter"
+            _model = New TunableFilterModel()
             Type = TunableFilterType.Rational
             IsExpanded = False
             _order = 1
@@ -322,31 +408,52 @@ Namespace ViewModels
             _stopCutoff = 2.5
         End Sub
 
+        Public Sub New(stp As TunableFilterModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = stp
+            StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
+            'ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & Type.ToString() & " " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & Type.ToString() & " " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & Name)
+            End Try
+            For Each signal In InputChannels
+                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
+                OutputChannels.Add(signal)
+            Next
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+        End Sub
+        Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
+
+        Private _model As TunableFilterModel
+        Public Property Model As TunableFilterModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As TunableFilterModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+
         Private _type As TunableFilterType
         Public Property Type As TunableFilterType
             Get
-                Return _type
+                Return _model.Type
             End Get
             Set(value As TunableFilterType)
-                _type = value
-                ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
-                ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
-                'Dim newParameterList = New ObservableCollection(Of ParameterValuePair)
-                'For Each p In _filterParameterDictionary(_type)
-                '    Dim newPair = New ParameterValuePair
-                '    newPair.ParameterName = p
-                '    'If p = "ZeroPhase" Then
-                '    '    newPair.Value = False
-                '    If p = "Endpoints" Then
-                '        newPair.Value = EndpointsType.zeropad
-                '    ElseIf p = "HandleNaN" Then
-                '        newPair.Value = HandleNaNType.includenan
-                '    Else
-                '        newPair.Value = ""
-                '    End If
-                '    newParameterList.Add(newPair)
-                'Next
-                'Me.FilterParameters = newParameterList
+                _model.Type = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -361,10 +468,10 @@ Namespace ViewModels
         Private _numberator As String
         Public Property Numerator As String
             Get
-                Return _numberator
+                Return _model.Numerator
             End Get
             Set(ByVal value As String)
-                _numberator = value
+                _model.Numerator = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -372,10 +479,10 @@ Namespace ViewModels
         Private _denominator As String
         Public Property Denominator As String
             Get
-                Return _denominator
+                Return _model.Denominator
             End Get
             Set(ByVal value As String)
-                _denominator = value
+                _model.Denominator = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -383,10 +490,10 @@ Namespace ViewModels
         Private _order As String
         Public Property Order As String
             Get
-                Return _order
+                Return _model.Order
             End Get
             Set(ByVal value As String)
-                _order = value
+                _model.Order = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -394,10 +501,10 @@ Namespace ViewModels
         Private _cutoff As String
         Public Property Cutoff As String
             Get
-                Return _cutoff
+                Return _model.Cutoff
             End Get
             Set(ByVal value As String)
-                _cutoff = value
+                _model.Cutoff = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -405,10 +512,10 @@ Namespace ViewModels
         Private _passRipple As String
         Public Property PassRipple As String
             Get
-                Return _passRipple
+                Return _model.PassRipple
             End Get
             Set(ByVal value As String)
-                _passRipple = value
+                _model.PassRipple = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -416,10 +523,10 @@ Namespace ViewModels
         Private _stopRipple As String
         Public Property StopRipple As String
             Get
-                Return _stopRipple
+                Return _model.StopRipple
             End Get
             Set(ByVal value As String)
-                _stopRipple = value
+                _model.StopRipple = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -427,10 +534,10 @@ Namespace ViewModels
         Private _passCutoff As String
         Public Property PassCutoff As String
             Get
-                Return _passCutoff
+                Return _model.PassCutoff
             End Get
             Set(ByVal value As String)
-                _passCutoff = value
+                _model.PassCutoff = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -438,10 +545,10 @@ Namespace ViewModels
         Private _stopCutoff As String
         Public Property StopCutoff As String
             Get
-                Return _stopCutoff
+                Return _model.StopCutoff
             End Get
             Set(ByVal value As String)
-                _stopCutoff = value
+                _model.StopCutoff = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -454,7 +561,7 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(signature:=New SignalSignatureViewModel)
-            Name = "Multirate"
+            _model = New MultirateModel()
             '_pElement = 1
             '_qElement = 1
             _newRate = 1
@@ -462,16 +569,62 @@ Namespace ViewModels
             _filterChoice = "0"
         End Sub
 
+        Public Sub New(stp As MultirateModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = stp
+            StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & Name)
+            End Try
+            For Each signal In InputChannels
+                Dim output = New SignalSignatureViewModel(signal.SignalName, MultiRatePMU, signal.TypeAbbreviation)
+                output.SamplingRate = NewRate
+                output.Unit = signal.Unit
+                output.IsCustomSignal = True
+                output.OldSignalName = output.SignalName
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldUnit = output.Unit
+                OutputChannels.Add(output)
+            Next
+            Try
+                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+        End Sub
+        Private _model As MultirateModel
+        Public Property Model As MultirateModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As MultirateModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
         Public ReadOnly Property Name As String
-
-
+            Get
+                Return _model.Name
+            End Get
+        End Property
         Private _multiRatePMU As String
         Public Property MultiRatePMU As String
             Get
-                Return _multiRatePMU
+                Return _model.MultiRatePMU
             End Get
             Set(value As String)
-                _multiRatePMU = value
+                _model.MultiRatePMU = value
                 'FilterParameters(0).Value = value
                 For Each out In OutputChannels
                     out.PMUName = value
@@ -488,10 +641,10 @@ Namespace ViewModels
         Private _newRate As String
         Public Property NewRate As String
             Get
-                Return _newRate
+                Return _model.NewRate
             End Get
             Set(value As String)
-                _newRate = value
+                _model.NewRate = value
                 If Not String.IsNullOrEmpty(value) Then
                     For Each signal In OutputChannels
                         signal.SamplingRate = value
@@ -505,10 +658,10 @@ Namespace ViewModels
         Private _pElement As String
         Public Property PElement As String
             Get
-                Return _pElement
+                Return _model.PElement
             End Get
             Set(value As String)
-                _pElement = value
+                _model.PElement = value
                 Dim q = 1
                 Integer.TryParse(_qElement, q)
                 If q = 0 Then
@@ -528,10 +681,10 @@ Namespace ViewModels
         Private _qElement As String
         Public Property QElement As String
             Get
-                Return _qElement
+                Return _model.QElement
             End Get
             Set(value As String)
-                _qElement = value
+                _model.QElement = value
                 Dim p = 1
                 Integer.TryParse(_pElement, p)
                 If p = 0 Then
@@ -549,12 +702,13 @@ Namespace ViewModels
         End Property
 
         Private _filterChoice As String
+
         Public Property FilterChoice As String
             Get
-                Return _filterChoice
+                Return _model.FilterChoice
             End Get
             Set(ByVal value As String)
-                _filterChoice = value
+                _model.FilterChoice = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -580,6 +734,81 @@ Namespace ViewModels
         Public Sub New()
             _nameTypeUnitPMUList = New ObservableCollection(Of NameTypeUnitPMU)()
         End Sub
+
+        Public Sub New(nameTypeUnitList As NameTypeUnitModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = nameTypeUnitList
+            Dim newPMUlist = New ObservableCollection(Of NameTypeUnitPMU)
+            Dim newPMU As NameTypeUnitPMU
+            For Each pmu In _model.NameTypeUnitPMUList
+                Dim pmuFound = False
+
+                If pmu.Input.SignalName = pmu.NewChannel Then
+                    For Each pmuItem In newPMUlist
+                        If pmuItem.NewType = pmu.NewType AndAlso pmuItem.NewUnit = pmu.NewUnit Then
+                            pmuFound = True
+                            newPMU = pmuItem
+                            newPMU.NewChannel = ""
+                            Exit For
+                        End If
+                    Next
+                End If
+                If Not pmuFound Then
+                    newPMU = New NameTypeUnitPMU()
+                    newPMU.NewType = pmu.NewType
+                    newPMU.NewUnit = pmu.NewUnit
+                    newPMU.NewChannel = pmu.NewChannel
+                    newPMUlist.Add(newPMU)
+                End If
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(pmu.Input.PMUName, pmu.Input.SignalName)
+                If input IsNot Nothing Then
+                    If input.IsNameTypeUnitChanged Then
+                        Throw New Exception("Error reading config file! Signal in a NameTypeUnit step : " & pmu.Input.SignalName & " in PMU " & pmu.Input.PMUName & " has already gone through another NameTypeUnit step, a signal is not allow to go through NameTypeUnit step twice.")
+                    Else
+                        If Not String.IsNullOrEmpty(pmu.NewChannel) Then
+                            input.OldSignalName = input.SignalName
+                            input.SignalName = pmu.NewChannel
+                        End If
+                        input.OldTypeAbbreviation = input.TypeAbbreviation
+                        input.TypeAbbreviation = pmu.NewType
+                        input.OldUnit = input.Unit
+                        input.Unit = pmu.NewUnit
+                        input.PassedThroughProcessor = input.PassedThroughProcessor + 1
+                        input.IsNameTypeUnitChanged = True
+                        newPMU.InputChannels.Add(input)
+                        newPMU.OutputChannels.Add(input)
+                    End If
+                Else
+                    Throw New Exception("Error reading config file! Signal in a NameTypeUnit step of processing with channel name: " & pmu.Input.SignalName & " in PMU " & pmu.Input.PMUName & " not found!")
+                End If
+            Next
+            For Each pmuItem In newPMUlist
+                pmuItem.StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
+                pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & pmuItem.StepCounter.ToString & "-" & pmuItem.Name
+                Try
+                    pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(pmuItem.OutputChannels)
+                Catch ex As Exception
+                    Throw New Exception("Error when sort signals by type in step: " & pmuItem.Name)
+                End Try
+                signalsMgr.GroupedSignalByProcessConfigStepsOutput.Add(pmuItem.ThisStepOutputsAsSignalHierachyByPMU)
+            Next
+            NameTypeUnitPMUList = newPMUlist
+        End Sub
+        Private _model As NameTypeUnitModel
+        Public Property Model As NameTypeUnitModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As NameTypeUnitModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
         Private _newUnit As String
         Public Property NewUnit As String
             Get
@@ -627,40 +856,17 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
-            Name = "Signal Type and Unit Specification"
             IsExpanded = False
         End Sub
 
         Public Overrides Function CheckStepIsComplete() As Boolean
-            'Throw New NotImplementedException()
             Return True
         End Function
-
         Public ReadOnly Property Name As String
-
-
-        'Private _pmuName As String
-        'Public Property PmuName As String
-        '    Get
-        '        Return _pmuName
-        '    End Get
-        '    Set(value As String)
-        '        _pmuName = value
-        '        OnPropertyChanged()
-        '    End Set
-        'End Property
-
-        'Private _currentChannel As String
-        'Public Property CurrentChannel As String
-        '    Get
-        '        Return _currentChannel
-        '    End Get
-        '    Set(value As String)
-        '        _currentChannel = value
-        '        OnPropertyChanged()
-        '    End Set
-        'End Property
-
+            Get
+                Return "Signal Type and Unit Specification"
+            End Get
+        End Property
         Private _newChannel As String
         Public Property NewChannel As String
             Get

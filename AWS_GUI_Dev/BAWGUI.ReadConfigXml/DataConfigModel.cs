@@ -120,6 +120,12 @@ namespace BAWGUI.ReadConfigXml
                 }
             }
         }
+
+        public DataConfigModel()
+        {
+            CollectionOfSteps = new List<object>();
+            ReaderProperty = new ReaderPropertiesModel();
+        }
     }
 
     public class ReaderPropertiesModel

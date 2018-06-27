@@ -80,7 +80,7 @@
                             </DataTemplate>-->
                         </ItemsControl.Resources>
                     </ItemsControl>
-                    <StackPanel Grid.Row="2" Visibility="{Binding ResultUpdateIntervalVisibility}" Margin="2" Orientation="Horizontal">
+                    <StackPanel Grid.Row="2" Visibility="{Binding DetectorConfigure.ResultUpdateIntervalVisibility}" Margin="2" Orientation="Horizontal">
                         <Label Content="Forced Oscillation Update Interval (seconds)" FontWeight="Bold" FontSize="18" Grid.Row="4"  Margin="0,20,0,0" Width="400">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">

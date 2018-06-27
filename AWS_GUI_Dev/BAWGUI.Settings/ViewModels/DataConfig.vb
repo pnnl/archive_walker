@@ -26,7 +26,7 @@ Namespace ViewModels
                                                                             {"Angle Wrapping", "WrappingFailureFilt"}}
             _dqFilterReverseNameDictionary = _dqFilterNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
             _dqFilterList = _dqFilterNameDictionary.Keys.ToList
-
+            _model = New DataConfigModel()
             _dqFilterNameParametersDictionary = New Dictionary(Of String, List(Of String)) From {{"Status Flags", {"SetToNaN", "FlagBit"}.ToList},
                                                                             {"Zeros", {"SetToNaN", "FlagBit"}.ToList},
                                                                             {"Missing", {"SetToNaN", "FlagBit"}.ToList},
@@ -926,7 +926,7 @@ Namespace ViewModels
                 'InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
                 InputChannels = signalsMgr.FindSignalsEntirePMU(stp.PMUElementList)
             Catch ex As Exception
-                Throw New Exception("Error finding signal in step: " & stp.Name)
+                Throw New Exception("Error finding signal in step: " & Name)
             End Try
             For Each signal In InputChannels
                 signal.PassedThroughDQFilter = signal.PassedThroughDQFilter + 1
@@ -966,7 +966,7 @@ Namespace ViewModels
             Try
                 InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
             Catch ex As Exception
-                Throw New Exception("Error finding signal in step: " & stp.Name)
+                Throw New Exception("Error finding signal in step: " & Name)
             End Try
             For Each signal In InputChannels
                 signal.PassedThroughDQFilter = signal.PassedThroughDQFilter + 1
@@ -975,7 +975,7 @@ Namespace ViewModels
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
-                Throw New Exception("Error sorting output signals by PMU in step: " & stp.Name)
+                Throw New Exception("Error sorting output signals by PMU in step: " & Name)
             End Try
             signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub

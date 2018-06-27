@@ -57,17 +57,17 @@ namespace BAWGUI.ReadConfigXml
                 }
             }
             var wraps = xElement.Element("Configuration").Element("Processing").Elements("Wrap");
-            WrapList = new List<WrapModelModel>();
+            WrapList = new List<WrapModel>();
             foreach (var wrap in wraps)
             {
-                WrapList.Add(new WrapModelModel(wrap));
+                WrapList.Add(new WrapModel(wrap));
 
             }
             var ntu = xElement.Element("Configuration").Element("NameTypeUnit").Elements("PMU");
             NameTypeUnitList = new NameTypeUnitModel();
             foreach (var pmu in ntu)
             {
-                NameTypeUnitList.NameTypeUnitPMUList.Add(new NameTypeUnitPMU(pmu));
+                NameTypeUnitList.NameTypeUnitPMUList.Add(new NameTypeUnitPMUModel(pmu));
             }
         }
 
@@ -75,13 +75,18 @@ namespace BAWGUI.ReadConfigXml
         public List<UnwrapModel> UnWrapList { get; set; }
         public List<InterpolateModel> InterpolateList { get; set; }
         public List<object> CollectionOfSteps { get; set; }
-        public List<WrapModelModel> WrapList { get; set; }
+        public List<WrapModel> WrapList { get; set; }
         public NameTypeUnitModel NameTypeUnitList { get; set; }
     }
 
     public class UnwrapModel
     {
         private XElement _item;
+
+        public UnwrapModel()
+        {
+        }
+
         public UnwrapModel(XElement item)
         {
             Name = "Unwrap";
@@ -93,6 +98,7 @@ namespace BAWGUI.ReadConfigXml
     }
     public class InterpolateModel : UnwrapModel
     {
+        public InterpolateModel() { }
         public InterpolateModel(XElement intplt) : base(intplt)
         {
             base.Name = "Interpolation";
@@ -133,6 +139,7 @@ namespace BAWGUI.ReadConfigXml
     }
     public class TunableFilterModel : UnwrapModel
     {
+        public TunableFilterModel() { }
         public TunableFilterModel(XElement filter) : base(filter)
         {
             base.Name = "Filter";
@@ -213,6 +220,7 @@ namespace BAWGUI.ReadConfigXml
     }
     public class MultirateModel : UnwrapModel
     {
+        public MultirateModel() { }
         public MultirateModel(XElement mRate) : base(mRate)
         {
             base.Name = "Multirate";
@@ -249,28 +257,31 @@ namespace BAWGUI.ReadConfigXml
         public string QElement { get; set; }
         public int FilterChoice { get; set; }
     }
-    public class WrapModelModel : UnwrapModel
+    public class WrapModel : UnwrapModel
     {
-        public WrapModelModel(XElement wrap) : base(wrap)
+        public WrapModel() { }
+        public WrapModel(XElement wrap) : base(wrap)
         {
             base.Name = "Wrap";
         }
     }
     public class NameTypeUnitModel
     {
+        //public NameTypeUnitModel() { }
         public NameTypeUnitModel()
         {
             Name = "Signal Type and Unit Specification";
-            NameTypeUnitPMUList = new List<NameTypeUnitPMU>();
+            NameTypeUnitPMUList = new List<NameTypeUnitPMUModel>();
         }
         public string Name { get; set; }
-        public List<NameTypeUnitPMU> NameTypeUnitPMUList { get; set; }
+        public List<NameTypeUnitPMUModel> NameTypeUnitPMUList { get; set; }
     }
-    public class NameTypeUnitPMU
+    public class NameTypeUnitPMUModel
     {
+        public NameTypeUnitPMUModel() { }
         private XElement pmu;
 
-        public NameTypeUnitPMU(XElement pmu)
+        public NameTypeUnitPMUModel(XElement pmu)
         {
             this.pmu = pmu;
             var par = pmu.Element("NewChannel");

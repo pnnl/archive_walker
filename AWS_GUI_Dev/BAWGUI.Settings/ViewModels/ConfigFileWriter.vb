@@ -584,12 +584,12 @@ Namespace ViewModels
                                     <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
                                     <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
                                     <minuend>
-                                        <PMU><%= singleStep.MinuendOrDividend.PMUName %></PMU>
-                                        <Channel><%= singleStep.MinuendOrDividend.SignalName %></Channel>
+                                        <PMU><%= singleStep.Minuend.PMUName %></PMU>
+                                        <Channel><%= singleStep.Minuend.SignalName %></Channel>
                                     </minuend>
                                     <subtrahend>
-                                        <PMU><%= singleStep.SubtrahendOrDivisor.PMUName %></PMU>
-                                        <Channel><%= singleStep.SubtrahendOrDivisor.SignalName %></Channel>
+                                        <PMU><%= singleStep.Subtrahend.PMUName %></PMU>
+                                        <Channel><%= singleStep.Subtrahend.SignalName %></Channel>
                                     </subtrahend>
                                 </Parameters>
                             </Customization>
@@ -615,12 +615,12 @@ Namespace ViewModels
                                     <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
                                     <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
                                     <dividend>
-                                        <PMU><%= singleStep.MinuendOrDividend.PMUName %></PMU>
-                                        <Channel><%= singleStep.MinuendOrDividend.SignalName %></Channel>
+                                        <PMU><%= singleStep.Dividend.PMUName %></PMU>
+                                        <Channel><%= singleStep.Dividend.SignalName %></Channel>
                                     </dividend>
                                     <divisor>
-                                        <PMU><%= singleStep.SubtrahendOrDivisor.PMUName %></PMU>
-                                        <Channel><%= singleStep.SubtrahendOrDivisor.SignalName %></Channel>
+                                        <PMU><%= singleStep.Divisor.PMUName %></PMU>
+                                        <Channel><%= singleStep.Divisor.SignalName %></Channel>
                                     </divisor>
                                 </Parameters>
                             </Customization>

@@ -69,11 +69,11 @@ Namespace Converters
                 Dim type = values(1)
                 Select Case type
                     Case TunableFilterType.HighPass
-                        Return "Step" & number.ToString & " - High-Pass Filter"
+                        Return "Step " & number.ToString & " - High-Pass Filter"
                     Case TunableFilterType.LowPass
-                        Return "Step" & number.ToString & " - Low-Pass Filter"
+                        Return "Step " & number.ToString & " - Low-Pass Filter"
                     Case Else
-                        Return "Step" & number.ToString & " - Rational Filter"
+                        Return "Step " & number.ToString & " - Rational Filter"
                 End Select
             Else
                 Return ""

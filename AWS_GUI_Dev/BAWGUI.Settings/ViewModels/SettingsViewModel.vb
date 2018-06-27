@@ -97,7 +97,6 @@ Namespace ViewModels
             '_powerTypeDictionary = New Dictionary(Of String, String) From {{"CP", "Complex"}, {"S", "Apparent"}, {"P", "Active"}, {"Q", "Reactive"}}
             _powerTypeDictionary = New Dictionary(Of String, String) From {{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}}
             _nameTypeUnitStatusFlag = 0
-            _resultUpdateIntervalVisibility = Visibility.Collapsed
 
             _dummySignature = New SignalSignatureViewModel("", "", "")
             _dummySignature.Unit = ""
@@ -4083,12 +4082,17 @@ Namespace ViewModels
         End Property
 
         Private Sub _reGroupRawSignalByType()
-            _signalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
-            For Each info In DataConfigure.ReaderProperty.InputFileInfos
+            SignalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+            For Each info In SignalMgr.FileInfo
                 Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
-                b.SignalList = _signalMgr.SortSignalByType(info.TaggedSignals)
-                _signalMgr.ReGroupedRawSignalsByType.Add(b)
+                b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
+                SignalMgr.ReGroupedRawSignalsByType.Add(b)
             Next
+            'For Each info In DataConfigure.ReaderProperty.InputFileInfos
+            '    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+            '    b.SignalList = _signalMgr.SortSignalByType(info.TaggedSignals)
+            '    _signalMgr.ReGroupedRawSignalsByType.Add(b)
+            'Next
         End Sub
 
         'Private Sub _groupAllDataConfigOutputSignal()
