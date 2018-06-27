@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
-             xmlns:model="clr-namespace:BAWGUI.Settings.Model"
              xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
@@ -17,12 +16,12 @@
             <converters:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="ModeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:ModeType"/>
+                    <x:Type TypeName="vm:ModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DataFileTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:DataFileType"/>
+                    <x:Type TypeName="vm:DataFileType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <DataTemplate x:Key="ArchiveParameter">
@@ -154,7 +153,7 @@
                         </Button>
                         <Label Content="File Sources" Margin="2" FontSize="18" FontWeight="Bold"/>
                     </DockPanel>
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding SignalMgr.FileInfo}" Margin="2">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">

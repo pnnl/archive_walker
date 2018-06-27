@@ -2,32 +2,22 @@
 Imports System.Windows
 Imports System.Windows.Forms
 Imports System.Windows.Input
-Imports BAWGUI.Settings.Model
 Imports BAWGUI.Core
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
-        Private _groupedSignalByDetectorInput As ObservableCollection(Of SignalTypeHierachy)
-        Public Property GroupedSignalByDetectorInput As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _groupedSignalByDetectorInput
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _groupedSignalByDetectorInput = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _groupedSignalByDetectorInput As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property GroupedSignalByDetectorInput As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _groupedSignalByDetectorInput
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+        '        _groupedSignalByDetectorInput = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
 
-        Private _resultUpdateIntervalVisibility As Visibility
-        Public Property ResultUpdateIntervalVisibility As Visibility
-            Get
-                Return _resultUpdateIntervalVisibility
-            End Get
-            Set(ByVal value As Visibility)
-                _resultUpdateIntervalVisibility = value
-                OnPropertyChanged()
-            End Set
-        End Property
+
 #Region "Add, Delete, Select a detector, DeSelect All detector"
         Private _detectorSelectedToAdd As ICommand
         Public Property DetectorSelectedToAdd As ICommand
@@ -52,19 +42,19 @@ Namespace ViewModels
                     newDetector = New WindRampDetector
                 Case "Periodogram Forced Oscillation Detector"
                     newDetector = New PeriodogramDetector
-                    ResultUpdateIntervalVisibility = Visibility.Visible
+                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Spectral Coherence Forced Oscillation Detector"
                     newDetector = New SpectralCoherenceDetector
-                    ResultUpdateIntervalVisibility = Visibility.Visible
+                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Voltage Stability"
                     newDetector = New VoltageStability.ViewModels.VoltageStabilityDetectorViewModel
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(newDetector.InputChannels)
-            GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
             DetectorConfigure.DetectorList.Add(newDetector)
             _selectedADetector(newDetector)
         End Sub
@@ -134,18 +124,18 @@ Namespace ViewModels
                         signal.IsChecked = False
                     Next
                 End If
-                _changeCheckStatusAllParentsOfGroupedSignal(AllProcessConfigOutputGroupedByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllProcessConfigOutputGroupedByPMU, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllDataConfigOutputGroupedByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllDataConfigOutputGroupedByPMU, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllPostProcessOutputGroupedByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllPostProcessOutputGroupedByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllProcessConfigOutputGroupedByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllProcessConfigOutputGroupedByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllPostProcessOutputGroupedByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllPostProcessOutputGroupedByPMU, False)
 
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByDetectorInput, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByDetectorInput, False)
 
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByPMU, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(ReGroupedRawSignalsByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.ReGroupedRawSignalsByType, False)
                 _currentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
                 _determineFileDirCheckableStatus()
@@ -223,16 +213,16 @@ Namespace ViewModels
         End Sub
 
         Private Sub _detectorConfigDetermineAllParentNodeStatus()
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
-            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByPMU)
-            For Each stepInput In GroupedSignalByDetectorInput
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByPMU)
+            For Each stepInput In _signalMgr.GroupedSignalByDetectorInput
                 If stepInput.SignalList.Count > 0 Then
                     _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
                     _determineParentCheckStatus(stepInput)
@@ -263,11 +253,11 @@ Namespace ViewModels
                         newlist.Remove(obj)
                         DetectorConfigure.DetectorList = newlist
                         _addLog("Detector " & obj.Name & " is deleted!")
-                        GroupedSignalByDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
-                        For index = 1 To GroupedSignalByDetectorInput.Count
-                            GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & DetectorConfigure.DetectorList(index - 1).Name
+                        _signalMgr.GroupedSignalByDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
+                        For index = 1 To _signalMgr.GroupedSignalByDetectorInput.Count
+                            _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & DetectorConfigure.DetectorList(index - 1).Name
                         Next
-                        If ResultUpdateIntervalVisibility = Visibility.Visible Then
+                        If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False
                             For Each dtr In DetectorConfigure.DetectorList
                                 If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Then
@@ -276,7 +266,7 @@ Namespace ViewModels
                                 End If
                             Next
                             If Not updateResultInterval Then
-                                ResultUpdateIntervalVisibility = Visibility.Collapsed
+                                DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Collapsed
                             End If
                         End If
                     Else

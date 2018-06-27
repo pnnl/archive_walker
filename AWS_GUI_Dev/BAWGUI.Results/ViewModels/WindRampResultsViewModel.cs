@@ -1,8 +1,7 @@
-﻿using BAWGUI.Core;
-using BAWGUI.Core.Resources;
-using BAWGUI.Results.Models;
+﻿using BAWGUI.Results.Models;
 using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
+using BAWGUI.Utilities;
 using OxyPlot;
 using OxyPlot.Axes;
 using System;

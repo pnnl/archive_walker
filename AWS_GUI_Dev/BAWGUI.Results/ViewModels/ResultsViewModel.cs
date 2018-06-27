@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Threading;
 using BAWGUI.RunMATLAB.Models;
 using BAWGUI.Core;
+using BAWGUI.Utilities;
 
 namespace BAWGUI.Results.ViewModels
 {

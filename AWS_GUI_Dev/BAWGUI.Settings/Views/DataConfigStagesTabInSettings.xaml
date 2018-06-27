@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
-             xmlns:model="clr-namespace:BAWGUI.Settings.Model"
+             xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
@@ -154,7 +154,7 @@
                     </Grid>
                     <ItemsControl ItemsSource="{Binding DataConfigure.CollectionOfSteps}" Grid.Row="1" Margin="2" Name="StepsControl">
                         <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type model:DQFilter}">
+                            <DataTemplate DataType="{x:Type vm:DQFilter}">
                                 <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -291,7 +291,7 @@
                                     </Grid>-->
                                 </Border>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type model:Customization}">
+                            <DataTemplate DataType="{x:Type vm:Customization}">
                                 <Border Name="StepBorder" Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonDown">

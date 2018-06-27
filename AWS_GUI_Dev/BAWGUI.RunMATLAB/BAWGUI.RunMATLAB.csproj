@@ -141,6 +141,10 @@
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
+      <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
+      <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\BAWGUI.Resources\Resources.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

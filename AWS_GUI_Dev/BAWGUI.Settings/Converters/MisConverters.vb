@@ -1,7 +1,7 @@
 ﻿Imports System.Globalization
 Imports System.Windows
 Imports System.Windows.Data
-Imports BAWGUI.Settings.Model
+Imports BAWGUI.Settings.ViewModels
 
 Namespace Converters
     Public Class SignalSignatureListStringConverter

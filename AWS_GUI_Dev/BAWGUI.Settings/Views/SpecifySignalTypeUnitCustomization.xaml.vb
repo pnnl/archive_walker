@@ -2,7 +2,7 @@
 Imports System.Windows
 Imports System.Windows.Input
 Imports System.Windows.Media
-Imports BAWGUI.Core.Resources
+Imports BAWGUI.Utilities
 
 Public Class SpecifySignalTypeUnitCustomization
     Private Sub WatermarkTextBox_GotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)

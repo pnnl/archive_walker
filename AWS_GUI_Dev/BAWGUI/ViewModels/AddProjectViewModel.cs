@@ -1,5 +1,6 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.RunMATLAB.ViewModels;
+using BAWGUI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

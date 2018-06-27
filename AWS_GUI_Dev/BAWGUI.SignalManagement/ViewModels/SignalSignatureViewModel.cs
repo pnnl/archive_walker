@@ -1,9 +1,12 @@
-﻿namespace BAWGUI.Core
+﻿using BAWGUI.SignalManagement.Models;
+using BAWGUI.Utilities;
+
+namespace BAWGUI.SignalManagement.ViewModels
 {
     public class SignalSignatureViewModel : ViewModelBase
     {
         // Implements IDisposable
-        private BAWGUI.Core.SignalSignatures _model;
+        private SignalSignatures _model;
         public SignalSignatureViewModel()
         {
             _model = new SignalSignatures();

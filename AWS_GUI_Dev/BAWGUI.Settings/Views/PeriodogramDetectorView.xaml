@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
-             xmlns:model="clr-namespace:BAWGUI.Settings.Model"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
@@ -20,12 +19,12 @@
             <converters:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DetectorModeTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:DetectorModeType"/>
+                    <x:Type TypeName="vm:DetectorModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DetectorWindowTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="model:DetectorWindowType"/>
+                    <x:Type TypeName="vm:DetectorWindowType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
         </ResourceDictionary>

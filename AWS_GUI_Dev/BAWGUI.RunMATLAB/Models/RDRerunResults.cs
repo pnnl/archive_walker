@@ -1,4 +1,4 @@
-﻿using BAWGUI.Core.Resources;
+﻿using BAWGUI.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 using System;
 using System.Collections.Generic;

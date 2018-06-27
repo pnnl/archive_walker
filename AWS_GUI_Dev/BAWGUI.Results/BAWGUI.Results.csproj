@@ -384,6 +384,10 @@
       <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
       <Name>BAWGUI.RunMATLAB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
+      <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
+      <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>

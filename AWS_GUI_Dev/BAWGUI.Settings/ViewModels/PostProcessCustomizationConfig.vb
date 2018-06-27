@@ -1,8 +1,9 @@
 ﻿Imports System.Collections.ObjectModel
-Imports BAWGUI.Core
-Imports BAWGUI.Settings.ViewModels
+Imports BAWGUI.ReadConfigXml
+Imports BAWGUI.SignalManagement.ViewModels
+Imports BAWGUI.Utilities
 
-Namespace Model
+Namespace ViewModels
     Public Class PostProcessCustomizationConfig
         Inherits ViewModelBase
         Public Sub New()
@@ -75,10 +76,106 @@ Namespace Model
                                                                                    {"D", {"D"}.ToList},
                                                                                    {"SC", {"SC"}.ToList},
                                                                                    {"OTHER", {"O"}.ToList}}
-
+            _model = New PostProcessConfigModel()
             _collectionOfSteps = New ObservableCollection(Of Customization)
             _unitList = New List(Of String)
         End Sub
+
+        Public Sub New(postProcessConfigure As PostProcessConfigModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = postProcessConfigure
+            Dim allSteps = New ObservableCollection(Of Customization)
+            Dim stepCounter As Integer = 0
+            For Each stp In _model.CollectionOfSteps
+                Dim name = stp.Name
+                Select Case name
+                    Case "Scalar Repetition"
+                        stepCounter += 1
+                        Dim a = New ScalarRepCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Addition"
+                        stepCounter += 1
+                        Dim a = New AdditionCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Subtraction"
+                        stepCounter += 1
+                        Dim a = New SubtractionCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Multiplication"
+                        stepCounter += 1
+                        Dim a = New MultiplicationCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Division"
+                        stepCounter += 1
+                        Dim a = New DivisionCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Exponential"
+                        stepCounter += 1
+                        Dim a = New ExponentialCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Sign Reversal"
+                        stepCounter += 1
+                        Dim a = New SignReversalCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Absolute Value"
+                        stepCounter += 1
+                        Dim a = New AbsValCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Real Component"
+                        stepCounter += 1
+                        Dim a = New RealComponentCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Imaginary Component"
+                        stepCounter += 1
+                        Dim a = New ImagComponentCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Angle Calculation"
+                        stepCounter += 1
+                        Dim a = New AngleCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Complex Conjugate"
+                        stepCounter += 1
+                        Dim a = New ComplexConjCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Phasor Creation"
+                        stepCounter += 1
+                        Dim a = New CreatePhasorCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Power Calculation"
+                        stepCounter += 1
+                        Dim a = New PowerCalcCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Signal Type/Unit"
+                        stepCounter += 1
+                        Dim a = New SpecifySignalTypeUnitCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Metric Prefix"
+                        stepCounter += 1
+                        Dim a = New MetricPrefixCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case "Angle Conversion"
+                        stepCounter += 1
+                        Dim a = New AngleConversionCust(stp, stepCounter, signalsMgr)
+                        allSteps.Add(a)
+                    Case Else
+                        Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
+                End Select
+            Next
+            CollectionOfSteps = allSteps
+        End Sub
+
+
+        Private _model As PostProcessConfigModel
+        Public Property Model As PostProcessConfigModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As PostProcessConfigModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+
         Private _collectionOfSteps As ObservableCollection(Of Customization)
         Public Property CollectionOfSteps As ObservableCollection(Of Customization)
             Get

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace BAWGUI.Core.Resources
+namespace BAWGUI.Utilities
 {
     public class Utility
     {
@@ -50,5 +51,29 @@ namespace BAWGUI.Core.Resources
                                                                         "RoyalBlue",
                                                                         "LimeGreen"
         };
+
+        public static string FindFirstInputFile(string filename, string fileType)
+        {
+            var firstFile = "";
+            if (File.Exists(filename))
+            {
+                if (Path.GetExtension(filename).Substring(1).ToLower() == fileType)
+                    firstFile = filename;
+            }
+            else if (Directory.Exists(filename))
+            {
+                foreach (var file in Directory.GetFiles(filename))
+                {
+                    firstFile = FindFirstInputFile(file, fileType);
+                }
+                foreach (var path in Directory.GetDirectories(filename))
+                {
+                    firstFile = FindFirstInputFile(path, fileType);
+                }
+            }
+            else
+                throw new Exception("\nError: data file path \"" + filename + "\" does not exists!");
+            return firstFile;
+        }
     }
 }

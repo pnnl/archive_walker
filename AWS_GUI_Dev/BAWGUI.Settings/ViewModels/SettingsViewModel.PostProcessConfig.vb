@@ -1,32 +1,31 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows.Forms
 Imports System.Windows.Input
-Imports BAWGUI.Settings.Model
-Imports BAWGUI.Core
+Imports BAWGUI.SignalManagement.ViewModels
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
-        Private _groupedSignalByPostProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
-        Public Property GroupedSignalByPostProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _groupedSignalByPostProcessConfigStepsInput
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _groupedSignalByPostProcessConfigStepsInput = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _groupedSignalByPostProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property GroupedSignalByPostProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _groupedSignalByPostProcessConfigStepsInput
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+        '        _groupedSignalByPostProcessConfigStepsInput = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
 
-        Private _groupedSignalByPostProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
-        Public Property GroupedSignalByPostProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _groupedSignalByPostProcessConfigStepsOutput
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _groupedSignalByPostProcessConfigStepsOutput = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _groupedSignalByPostProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property GroupedSignalByPostProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _groupedSignalByPostProcessConfigStepsOutput
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+        '        _groupedSignalByPostProcessConfigStepsOutput = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
         'Private Function _getAllPostProcessOutputGroupedByTypet() As ObservableCollection(Of SignalTypeHierachy)
         '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
         '    For Each stp In PostProcessConfigure.CollectionOfSteps
@@ -38,16 +37,16 @@ Namespace ViewModels
         '    Next
         '    Return SortSignalByType(allOutputSignals)
         'End Function
-        Private _allPostProcessOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
-        Public Property AllPostProcessOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _allPostProcessOutputGroupedByType
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _allPostProcessOutputGroupedByType = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _allPostProcessOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property AllPostProcessOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _allPostProcessOutputGroupedByType
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+        '        _allPostProcessOutputGroupedByType = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
         Private Function _getAllPostProcessOutput() As ObservableCollection(Of SignalSignatureViewModel)
             Dim allOutputSignals = New ObservableCollection(Of SignalSignatureViewModel)
             For Each stp In PostProcessConfigure.CollectionOfSteps
@@ -59,16 +58,16 @@ Namespace ViewModels
             Next
             Return allOutputSignals
         End Function
-        Private _allPostProcessOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
-        Public Property AllPostProcessOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _allPostProcessOutputGroupedByPMU
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _allPostProcessOutputGroupedByPMU = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _allPostProcessOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property AllPostProcessOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _allPostProcessOutputGroupedByPMU
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+        '        _allPostProcessOutputGroupedByPMU = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
 
         Private _postProcessConfigStepSelected As ICommand
         Public Property PostProcessConfigStepSelected As ICommand
@@ -97,9 +96,9 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If stp.StepCounter < lastNumberOfSteps Then
-                            stp.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(stp.InputChannels)
+                            stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                             stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
+                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If stp.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -139,8 +138,8 @@ Namespace ViewModels
                         End If
                     End If
 
-                    GroupedSignalByPostProcessConfigStepsInput = stepsInputAsSignalHierachy
-                    GroupedSignalByPostProcessConfigStepsOutput = stepsOutputAsSignalHierachy
+                    _signalMgr.GroupedSignalByPostProcessConfigStepsInput = stepsInputAsSignalHierachy
+                    _signalMgr.GroupedSignalByPostProcessConfigStepsOutput = stepsOutputAsSignalHierachy
                     _postProcessDetermineAllParentNodeStatus()
                     _determineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
@@ -171,14 +170,14 @@ Namespace ViewModels
         End Sub
 
         Private Sub _postProcessDetermineAllParentNodeStatus()
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
-            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU)
-            For Each stepInput In GroupedSignalByPostProcessConfigStepsInput
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
+            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
+            For Each stepInput In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
                 If stepInput.SignalList.Count > 0 Then
                     _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
                     _determineParentCheckStatus(stepInput)
@@ -186,7 +185,7 @@ Namespace ViewModels
                     stepInput.SignalSignature.IsChecked = False
                 End If
             Next
-            For Each stepOutput In GroupedSignalByPostProcessConfigStepsOutput
+            For Each stepOutput In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
                 If stepOutput.SignalList.Count > 0 Then
                     _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
                     _determineParentCheckStatus(stepOutput)
@@ -216,8 +215,8 @@ Namespace ViewModels
                     stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                     stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                 Next
-                GroupedSignalByPostProcessConfigStepsInput = stepsInputAsSignalHierachy
-                GroupedSignalByPostProcessConfigStepsOutput = stepsOutputAsSignalHierachy
+                _signalMgr.GroupedSignalByPostProcessConfigStepsInput = stepsInputAsSignalHierachy
+                _signalMgr.GroupedSignalByPostProcessConfigStepsOutput = stepsOutputAsSignalHierachy
                 If CurrentSelectedStep.Name = "Phasor Creation" Then
                     _disableEnableAllButMagnitudeSignalsInPostProcessConfig(True)
                 ElseIf CurrentSelectedStep.Name = "Power Calculation" Then
@@ -234,15 +233,15 @@ Namespace ViewModels
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInPostProcessConfig(True)
                 End If
-                _changeCheckStatusAllParentsOfGroupedSignal(AllProcessConfigOutputGroupedByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllProcessConfigOutputGroupedByPMU, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllDataConfigOutputGroupedByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllDataConfigOutputGroupedByPMU, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByPostProcessConfigStepsInput, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByPostProcessConfigStepsOutput, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByPMU, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(ReGroupedRawSignalsByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllProcessConfigOutputGroupedByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllProcessConfigOutputGroupedByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByPostProcessConfigStepsInput, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByPostProcessConfigStepsOutput, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.ReGroupedRawSignalsByType, False)
                 _currentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
                 _determineFileDirCheckableStatus()
@@ -253,7 +252,7 @@ Namespace ViewModels
 
         Private Sub _disableEnableAllButAngleSignalsInPostProcessConfig(isEnabled As Boolean)
             'For Each group In GroupedRawSignalsByType
-            For Each group In ReGroupedRawSignalsByType
+            For Each group In _signalMgr.ReGroupedRawSignalsByType
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
@@ -268,7 +267,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedRawSignalsByPMU
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -279,7 +278,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByType
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -292,7 +291,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
@@ -301,7 +300,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByType
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -314,7 +313,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
@@ -323,7 +322,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsInput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
@@ -338,7 +337,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -352,7 +351,7 @@ Namespace ViewModels
         End Sub
         Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(isEnabled As Boolean)
             'For Each group In GroupedRawSignalsByType
-            For Each group In ReGroupedRawSignalsByType
+            For Each group In _signalMgr.ReGroupedRawSignalsByType
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
@@ -367,7 +366,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedRawSignalsByPMU
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -378,7 +377,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByType
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" AndAlso group.SignalSignature.TypeAbbreviation <> "F" AndAlso group.SignalSignature.TypeAbbreviation <> "R" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -391,7 +390,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
@@ -400,7 +399,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByType
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" AndAlso group.SignalSignature.TypeAbbreviation <> "F" AndAlso group.SignalSignature.TypeAbbreviation <> "R" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -413,7 +412,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
@@ -422,7 +421,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsInput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
@@ -437,7 +436,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -451,17 +450,17 @@ Namespace ViewModels
         End Sub
         Private Sub _disableEnableAllButPhasorSignalsInPostProcessConfig(isEnabled As Boolean)
             'For Each group In GroupedRawSignalsByType
-            For Each group In ReGroupedRawSignalsByType
+            For Each group In _signalMgr.ReGroupedRawSignalsByType
                 For Each subgroupBySamplingRate In group.SignalList
                     group.SignalSignature.IsEnabled = isEnabled
                 Next
             Next
-            For Each group In GroupedRawSignalsByPMU
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     group.SignalSignature.IsEnabled = isEnabled
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByType
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -474,7 +473,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "P" Then
@@ -483,7 +482,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByType
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -496,7 +495,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "P" Then
@@ -505,7 +504,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsInput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
@@ -520,7 +519,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -534,7 +533,7 @@ Namespace ViewModels
         End Sub
         Private Sub _disableEnableAllButMagnitudeSignalsInPostProcessConfig(isEnabled As Boolean)
             'For Each group In GroupedRawSignalsByType
-            For Each group In ReGroupedRawSignalsByType
+            For Each group In _signalMgr.ReGroupedRawSignalsByType
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
@@ -549,7 +548,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedRawSignalsByPMU
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -560,7 +559,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByType
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -573,7 +572,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse (subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A") Then
@@ -582,7 +581,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByType
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -595,7 +594,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllProcessConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse (subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A") Then
@@ -604,7 +603,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsInput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
@@ -619,7 +618,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByPostProcessConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList

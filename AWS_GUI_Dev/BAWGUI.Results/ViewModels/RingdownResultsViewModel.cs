@@ -14,10 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using BAWGUI.Core;
-using BAWGUI.Core.Resources;
+using BAWGUI.Utilities;
 
 namespace BAWGUI.Results.ViewModels
 {
