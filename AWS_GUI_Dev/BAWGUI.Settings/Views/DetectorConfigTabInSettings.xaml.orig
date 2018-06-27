@@ -6,17 +6,20 @@
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:model="clr-namespace:BAWGUI.Settings.Model"
              xmlns:vsmodel="clr-namespace:VoltageStability.Models;assembly=VoltageStability"
-             xmlns:vsviewmodel="clr-namespace:VoltageStability.ViewModels;assembly=VoltageStability"
              xmlns:views="clr-namespace:BAWGUI.Settings"
+<<<<<<< HEAD
              xmlns:vsviews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+=======
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+>>>>>>> master
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -78,7 +81,7 @@
                             <DataTemplate DataType="{x:Type model:OutOfRangeFrequencyDetector}">
                                 <views:OutOfRangeFrequencyView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type vsviewmodel:VoltageStabilityDetectorViewModel}">
+                            <DataTemplate DataType="{x:Type vsmodel:VoltageStabilityDetector}">
                                 <vsviews:VoltageStabilityDetectorView/>
                             </DataTemplate>
                         </ItemsControl.Resources>

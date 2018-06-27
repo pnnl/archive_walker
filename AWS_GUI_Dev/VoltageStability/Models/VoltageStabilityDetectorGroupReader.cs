@@ -15,7 +15,7 @@ namespace VoltageStability.Models
         public VoltageStabilityDetectorGroupReader(XElement dt)
         {
             //this._detector = detector;
-            _detector.DetectorGroupID = dt.Elements().Where(e=>e.Name.LocalName == "DetectorGroupID").Single().Value;
+            //_detector.DetectorGroupID = dt.Elements().Where(e=>e.Name.LocalName == "DetectorGroupID").Single().Value;
             _detector.EventMergeWindow = dt.Elements().Where(e => e.Name.LocalName == "EventMergeWindow").Single().Value;
             var method = dt.Elements().Where(e => e.Name.LocalName == "Method").Single().Value;
             _detector.AddMethod(method);

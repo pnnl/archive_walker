@@ -57,6 +57,26 @@ namespace VoltageStability.Models
         public string MitsubishiAnalysisLength { get; set; }
         public string EventMergeWindow { get; set; }
         public ObservableCollection<Site> Sites { get; set; }
+
+        public void AddSite()
+        {
+
+        }
+
+        internal void AddVoltageBus()
+        {
+           
+        }
+
+        internal void AddBranch()
+        {
+           
+        }
+
+        internal void AddShunt()
+        {
+            
+        }
     }
     public enum DetectorGroupMethods
     {

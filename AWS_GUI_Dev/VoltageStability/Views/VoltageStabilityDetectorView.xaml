@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <converters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
@@ -37,69 +37,72 @@
                             </TextBlock.Text>
                         </TextBlock>
                         <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
-                            <Image Width="16" Height="16" Source="/BAWGUI.Settings;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                            <Image Width="16" Height="16" Source="../../BAWGUI.Resources/Images/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
                         </Button>
                     </DockPanel>
                 </Expander.Header>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Hidden">
                     <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="6*"/>
-                            <ColumnDefinition Width="4*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <GroupBox Margin="2" Grid.Column="0" >
-                            <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                        </GroupBox>
-                        <!--<StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
-                            <Label Content="Parameters:" Margin="2"/>-->
-                        <Grid Margin="2" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Mode:" HorizontalAlignment="Left"/>
-                            <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource DetectorModeTypeValues}}" Text="{Binding Mode, Converter={StaticResource EnumToStringConverter8}}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Analysis Length (seconds):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding AnalysisLength}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Delay (seconds):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding Delay}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Number of Delays:" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding NumberDelays}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Threshold Scale:" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ThresholdScale}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Type:" HorizontalAlignment="Left"/>
-                            <ComboBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource DetectorWindowTypeValues}}" Text="{Binding WindowType, Converter={StaticResource EnumToStringConverter9}}" HorizontalAlignment="Left"/>
-                            <!--<Image Grid.Row="6" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                            <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Interval (Hz):" HorizontalAlignment="Left"/>
-                            <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyInterval}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="7" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Length (seconds):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="7" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowLength}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="8" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Overlap (seconds):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="8" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlap}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="9" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum Frequency (Hz):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="9" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMin}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="10" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum Frequency (Hz):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="10" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMax}" HorizontalAlignment="Left"/>
-                            <!--<Image Grid.Row="11" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                            <Label Grid.Row="11" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Tolerance (Hz):" HorizontalAlignment="Left"/>
-                            <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="11" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyTolerance}" HorizontalAlignment="Left"/>
-                        </Grid>
-                        <!--</StackPanel>-->
+                        <StackPanel Orientation="Vertical" Grid.Column="0" Margin="2">
+                            <GroupBox Header="Methods">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <!--<Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>-->
+                                    <StackPanel Grid.Row="0" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsDeMarcoMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="DeMarco" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Analysis Length (sec):" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding DeMarcoAnalysisLength}" Margin="2,0" Width="100" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsMitsubishiMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Mitsubishi" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Analysis Length (sec):" Margin="2,0" VerticalAlignment="Center" />
+                                        <TextBox Text="{Binding MitsubishiAnalysisLength}" Margin="2,0" Width="100" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsQuantaMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Quanta" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="3" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsChowMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Chow" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="4" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsTellegenMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Tellegen" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                            <StackPanel Orientation="Horizontal" Margin="2,15">
+                                <TextBlock Text="Combine events closer than "/>
+                                <TextBox Text="{Binding EventMergeWindow}" Width="80"/>
+                                <TextBlock Text=" seconds apart."/>
+                            </StackPanel>
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Sites}" Grid.Column="1" Margin="2"/>
+                        <StackPanel Orientation="Vertical" Margin="2" Grid.Column="2">
+                            <Button Content="Add Site" Margin="2"/>
+                            <Button Content="Add Voltage Bus" Margin="2"/>
+                            <Button Content="Add Branch" Margin="2"/>
+                            <Button Content="Add Shunt" Margin="2"/>
+                        </StackPanel>
                     </Grid>
                 </ScrollViewer>
             </Expander>

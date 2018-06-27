@@ -151,6 +151,7 @@ Public Class ConfigFileWriter
             processing.Add(aStep)
         Next
         stage = <Stages></Stages>
+        newStageFlag = True
         For Each stp In _svm.ProcessConfigure.CollectionOfSteps
             If TypeOf stp Is Multirate AndAlso newStageFlag Then
                 newStageFlag = False
