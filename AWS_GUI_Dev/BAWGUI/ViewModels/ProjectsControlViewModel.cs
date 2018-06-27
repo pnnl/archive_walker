@@ -13,6 +13,7 @@ using BAWGUI.Views;
 using BAWGUI.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
+using BAWGUI.Settings.ViewModels;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -283,7 +284,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             if (_saveConfigFileFlag)
             {
-                var configWriter = new Settings.ConfigFileWriter(settingNeedsToBeSaved, _generatedNewRun.Model);
+                var configWriter = new ConfigFileWriter(settingNeedsToBeSaved, _generatedNewRun.Model);
                 try
                 {
                     configWriter.WriteXmlConfigFile(_generatedNewRun.Model.ConfigFilePath);
@@ -650,7 +651,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 System.IO.FileStream fs = System.IO.File.Create(newTask.ConfigFilePath);
                 fs.Close();
-                var wr = new Settings.ConfigFileWriter(new Settings.ViewModels.SettingsViewModel(), newTask);
+                var wr = new ConfigFileWriter(new Settings.ViewModels.SettingsViewModel(), newTask);
                 wr.WriteXmlConfigFile(newTask.ConfigFilePath);
             }
             _model.AWRuns.Add(newTask);

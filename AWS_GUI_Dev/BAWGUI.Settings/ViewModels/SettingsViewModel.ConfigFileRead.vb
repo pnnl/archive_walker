@@ -74,7 +74,7 @@ Namespace ViewModels
 
                         For Each channel In channels
                             Dim signalName = channel.<Name>.Value
-                            Dim signal = _searchForSignalInTaggedSignals(pmuName, signalName)
+                            Dim signal = _signalMgr.SearchForSignalInTaggedSignals(pmuName, signalName)
                             If signal IsNot Nothing Then
                                 inputSignalList.Add(signal)
                             Else
@@ -136,7 +136,7 @@ Namespace ViewModels
                                 aStep.Name = filterName
                                 _readStaleDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                             Case "Data Frame", "Channel", "Entire PMU"
-                                aStep = New DataFramePMUchanPMUallDQFilter
+                                aStep = New DataFrameDQFilter
                                 aStep.Name = filterName
                                 _readDataFramePMUchanPMUallDQFilter(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
                             Case "Angle Wrapping"
@@ -357,7 +357,7 @@ Namespace ViewModels
             End If
             Dim phasors = From phasor In params.Elements Where phasor.Name = "phasor" Select phasor
             For Each phasor In phasors
-                Dim magSignal = _searchForSignalInTaggedSignals(phasor.<mag>.<PMU>.Value, phasor.<mag>.<Channel>.Value)
+                Dim magSignal = _signalMgr.SearchForSignalInTaggedSignals(phasor.<mag>.<PMU>.Value, phasor.<mag>.<Channel>.Value)
                 If magSignal IsNot Nothing Then
                     aStep.InputChannels.Add(magSignal)
                 Else
@@ -365,7 +365,7 @@ Namespace ViewModels
                     magSignal.IsValid = False
                     _addLog("Error reading config file! Signal in step: " & stepCounter & ", channel name: " & phasor.<mag>.<Channel>.Value & " in PMU " & phasor.<mag>.<PMU>.Value & " not found!")
                 End If
-                Dim angSignal = _searchForSignalInTaggedSignals(phasor.<ang>.<PMU>.Value, phasor.<ang>.<Channel>.Value)
+                Dim angSignal = _signalMgr.SearchForSignalInTaggedSignals(phasor.<ang>.<PMU>.Value, phasor.<ang>.<Channel>.Value)
                 If angSignal IsNot Nothing Then
                     aStep.InputChannels.Add(angSignal)
                 Else
@@ -414,7 +414,7 @@ Namespace ViewModels
             End If
             Dim signals = From signal In params.Elements Where signal.Name = "signal" Select signal
             For Each signal In signals
-                Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
+                Dim input = _signalMgr.SearchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
                 If input IsNot Nothing Then
                     If aStep.InputChannels.Contains(input) Then
                         _addLog("Duplicate input signal found in step: " & stepCounter & " ," & aStep.Name & ".")
@@ -467,7 +467,7 @@ Namespace ViewModels
             End If
             Dim signals = From signal In params.Elements Where signal.Name = "signal" Select signal
             For Each signal In signals
-                Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
+                Dim input = _signalMgr.SearchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
                 If input IsNot Nothing Then
                     If aStep.InputChannels.Contains(input) Then
                         _addLog("Duplicate input signal found in step: " & stepCounter & " ," & aStep.Name & ".")
@@ -520,7 +520,7 @@ Namespace ViewModels
             If outputName Is Nothing Then
                 outputName = ""
             End If
-            Dim minuend = _searchForSignalInTaggedSignals(params.<minuend>.<PMU>.Value, params.<minuend>.<Channel>.Value)
+            Dim minuend = _signalMgr.SearchForSignalInTaggedSignals(params.<minuend>.<PMU>.Value, params.<minuend>.<Channel>.Value)
             If minuend Is Nothing Then
                 minuend = New SignalSignatureViewModel("MinuentNotFound")
                 minuend.IsValid = False
@@ -529,7 +529,7 @@ Namespace ViewModels
                 aStep.InputChannels.Add(minuend)
             End If
             aStep.MinuendOrDividend = minuend
-            Dim subtrahend = _searchForSignalInTaggedSignals(params.<subtrahend>.<PMU>.Value, params.<subtrahend>.<Channel>.Value)
+            Dim subtrahend = _signalMgr.SearchForSignalInTaggedSignals(params.<subtrahend>.<PMU>.Value, params.<subtrahend>.<Channel>.Value)
             If subtrahend Is Nothing Then
                 subtrahend = New SignalSignatureViewModel("SubtrahendNotFound")
                 subtrahend.IsValid = False
@@ -573,7 +573,7 @@ Namespace ViewModels
             End If
             Dim signals = From signal In params.Elements Where signal.Name = "signal" Select signal
             For Each signal In signals
-                Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
+                Dim input = _signalMgr.SearchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
                 If input IsNot Nothing Then
                     If aStep.InputChannels.Contains(input) Then
                         _addLog("Duplicate input signal found in step: " & stepCounter & " ," & aStep.Name & ".")
@@ -635,7 +635,7 @@ Namespace ViewModels
             If outputName Is Nothing Then
                 outputName = ""
             End If
-            Dim Dividend = _searchForSignalInTaggedSignals(params.<dividend>.<PMU>.Value, params.<dividend>.<Channel>.Value)
+            Dim Dividend = _signalMgr.SearchForSignalInTaggedSignals(params.<dividend>.<PMU>.Value, params.<dividend>.<Channel>.Value)
             If Dividend Is Nothing Then
                 Dividend = New SignalSignatureViewModel("DividendNotFound")
                 Dividend.IsValid = False
@@ -644,7 +644,7 @@ Namespace ViewModels
                 aStep.InputChannels.Add(Dividend)
             End If
             aStep.MinuendOrDividend = Dividend
-            Dim Divisor = _searchForSignalInTaggedSignals(params.<divisor>.<PMU>.Value, params.<divisor>.<Channel>.Value)
+            Dim Divisor = _signalMgr.SearchForSignalInTaggedSignals(params.<divisor>.<PMU>.Value, params.<divisor>.<Channel>.Value)
             If Divisor Is Nothing Then
                 Divisor = New SignalSignatureViewModel("DivisorNotFound")
                 Divisor.IsValid = False
@@ -704,7 +704,7 @@ Namespace ViewModels
                 unit = "SC"
             End If
             Dim pmu = params.<TimeSourcePMU>.Value
-            aStep.TimeSourcePMU = AllPMUs.Where(Function(x) x.PMU = pmu).FirstOrDefault()
+            aStep.TimeSourcePMU = SignalMgr.AllPMUs.Where(Function(x) x.PMU = pmu).FirstOrDefault()
             aStep.Unit = unit
             aStep.Type = type
             Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname, type)
@@ -737,7 +737,7 @@ Namespace ViewModels
             Dim countNonScalarType = 0
             Dim factors = From factor In params.Elements Where factor.Name = "factor" Select factor
             For Each factor In factors
-                Dim input = _searchForSignalInTaggedSignals(factor.<PMU>.Value, factor.<Channel>.Value)
+                Dim input = _signalMgr.SearchForSignalInTaggedSignals(factor.<PMU>.Value, factor.<Channel>.Value)
                 If input IsNot Nothing Then
                     aStep.InputChannels.Add(input)
                     If input.TypeAbbreviation <> "SC" Then
@@ -806,7 +806,7 @@ Namespace ViewModels
             output.IsCustomSignal = True
             Dim terms = From term In params.Elements Where term.Name = "term" Select term
             For Each term In terms
-                Dim input = _searchForSignalInTaggedSignals(term.<PMU>.Value, term.<Channel>.Value)
+                Dim input = _signalMgr.SearchForSignalInTaggedSignals(term.<PMU>.Value, term.<Channel>.Value)
                 If input IsNot Nothing Then
                     aStep.InputChannels.Add(input)
                     If String.IsNullOrEmpty(type) Then
@@ -871,7 +871,7 @@ Namespace ViewModels
                         _signalMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(aStep.ThisStepOutputsAsSignalHierachyByPMU)
                     End If
                     Dim oldStep = aStep
-                    aStep = New Customization(oldStep)
+                    aStep = New Customization(DirectCast(oldStep, Customization))
                     stepCounter += 1
                     aStep.StepCounter = stepCounter
                     aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & "-" & aStep.Name
@@ -887,7 +887,7 @@ Namespace ViewModels
                 Dim samplingRate = -1
                 Dim signals = From el In powers(index).Elements Where el.Name <> "CustName"
                 For Each signal In signals
-                    Dim input = _searchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
+                    Dim input = _signalMgr.SearchForSignalInTaggedSignals(signal.<PMU>.Value, signal.<Channel>.Value)
                     If input Is Nothing Then
                         input = New SignalSignatureViewModel("SignalNotFound")
                         input.IsValid = False
@@ -935,7 +935,7 @@ Namespace ViewModels
             End If
             Dim toConvert = From convert In params.Elements Where convert.Name = "ToConvert" Select convert
             For Each convert In toConvert
-                Dim input = _searchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
+                Dim input = _signalMgr.SearchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
                 If input IsNot Nothing Then
                     aStep.InputChannels.Add(input)
                 Else
@@ -983,7 +983,7 @@ Namespace ViewModels
             End If
             Dim toConvert = From convert In params.Elements Where convert.Name = "ToConvert" Select convert
             For Each convert In toConvert
-                Dim input = _searchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
+                Dim input = _signalMgr.SearchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
                 If input IsNot Nothing Then
                     aStep.InputChannels.Add(input)
                 Else
@@ -999,7 +999,11 @@ Namespace ViewModels
                 Dim output = New SignalSignatureViewModel(outputName, aStep.CustPMUname, input.TypeAbbreviation)
                 output.SamplingRate = input.SamplingRate
                 output.IsCustomSignal = True
-                output.Unit = convert.<NewUnit>.Value
+                If input.Unit.ToLower = "deg" Then
+                    output.Unit = "RAD"
+                Else
+                    output.Unit = "DEG"
+                End If
                 output.OldSignalName = output.SignalName
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldUnit = output.Unit
@@ -1022,10 +1026,10 @@ Namespace ViewModels
             Else
                 _lastCustPMUname = aStep.CustPMUname
             End If
-            Dim inputSignal = _searchForSignalInTaggedSignals(params.<PMU>.Value, params.<Channel>.Value)
+            Dim inputSignal = _signalMgr.SearchForSignalInTaggedSignals(params.<PMU>.Value, params.<Channel>.Value)
             'Dim toConvert = From convert In params.Elements Where convert.Name = "ToConvert" Select convert
             'For Each convert In toConvert
-            'Dim input = _searchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
+            'Dim input = _signalMgr.SearchForSignalInTaggedSignals(convert.<PMU>.Value, convert.<Channel>.Value)
             Dim samplingRate = -1
             If inputSignal Is Nothing Then
                 inputSignal = New SignalSignatureViewModel("SignalNotFound")
@@ -1065,61 +1069,6 @@ Namespace ViewModels
         ''' <param name="pmu"></param>
         ''' <param name="channel"></param>
         ''' <returns></returns>
-        Private Function _searchForSignalInTaggedSignals(pmu As String, channel As String) As SignalSignatureViewModel
-            For Each group In _signalMgr.GroupedRawSignalsByPMU
-                For Each samplingRateSubgroup In group.SignalList
-                    For Each subgroup In samplingRateSubgroup.SignalList
-                        If subgroup.SignalSignature.PMUName = pmu Then
-                            For Each subsubgroup In subgroup.SignalList
-                                If subsubgroup.SignalSignature.SignalName = channel Then
-                                    Return subsubgroup.SignalSignature
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
-                For Each samplingRateSubgroup In group.SignalList
-                    For Each subgroup In samplingRateSubgroup.SignalList
-                        If subgroup.SignalSignature.PMUName = pmu Then
-                            For Each subsubgroup In subgroup.SignalList
-                                If subsubgroup.SignalSignature.SignalName = channel Then
-                                    Return subsubgroup.SignalSignature
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedSignalByProcessConfigStepsOutput
-                For Each samplingRateSubgroup In group.SignalList
-                    For Each subgroup In samplingRateSubgroup.SignalList
-                        If subgroup.SignalSignature.PMUName = pmu Then
-                            For Each subsubgroup In subgroup.SignalList
-                                If subsubgroup.SignalSignature.SignalName = channel Then
-                                    Return subsubgroup.SignalSignature
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
-                For Each samplingRateSubgroup In group.SignalList
-                    For Each subgroup In samplingRateSubgroup.SignalList
-                        If subgroup.SignalSignature.PMUName = pmu Then
-                            For Each subsubgroup In subgroup.SignalList
-                                If subsubgroup.SignalSignature.SignalName = channel Then
-                                    Return subsubgroup.SignalSignature
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            Return Nothing
-        End Function
 #End Region
 #Region "Read Process Config"
         Private Sub _readProcessConfig(configData As XDocument)
@@ -1351,7 +1300,7 @@ Namespace ViewModels
                             newPMU.NewChannel = NewChannel
                             ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList.Add(newPMU)
                         End If
-                        Dim input = _searchForSignalInTaggedSignals(pmuName, CurrentChannel)
+                        Dim input = _signalMgr.SearchForSignalInTaggedSignals(pmuName, CurrentChannel)
                         If input IsNot Nothing Then
                             If input.IsNameTypeUnitChanged Then
                                 _addLog("Error reading config file! Signal in a NameTypeUnit step : " & CurrentChannel & " in PMU " & pmuName & " has already gone through another NameTypeUnit step, a signal is not allow to go through NameTypeUnit step twice.")

@@ -16,7 +16,7 @@ namespace BAWGUI.SignalManagement.ViewModels
     {
         private SignalManager()
         {
-            FileInfo = new List<InputFileInfoViewModel>();
+            FileInfo = new ObservableCollection<InputFileInfoViewModel>();
             _groupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _reGroupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
@@ -35,6 +35,29 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
+
+        public void cleanUp()
+        {
+            FileInfo = new ObservableCollection<InputFileInfoViewModel>();
+            _groupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
+            _reGroupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
+            _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByDataConfigStepsInput = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByDataConfigStepsOutput = new ObservableCollection<SignalTypeHierachy>();
+            _allDataConfigOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
+            _allDataConfigOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByProcessConfigStepsInput = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByProcessConfigStepsOutput = new ObservableCollection<SignalTypeHierachy>();
+            _allProcessConfigOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
+            _allProcessConfigOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
+
+            _groupedSignalByPostProcessConfigStepsInput = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByPostProcessConfigStepsOutput = new ObservableCollection<SignalTypeHierachy>();
+            _allPostProcessOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
+            _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+        }
+
         private static SignalManager _instance = null;
         public static SignalManager Instance
         {
@@ -47,21 +70,24 @@ namespace BAWGUI.SignalManagement.ViewModels
                 return _instance;
             }
         }
-        public void AddRawSignals(List<InputFileInfo> inputFileInfos)
+        public void AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
             foreach (var item in inputFileInfos)
             {
                 var sampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
-                var aFileInfo = new InputFileInfoViewModel(item);
-                if (item.FileType.ToLower() == "csv")
+                if (File.Exists(sampleFile))
                 {
-                    _readCSVFile(sampleFile, aFileInfo);
+                    var aFileInfo = new InputFileInfoViewModel(item);
+                    if (item.FileType.ToLower() == "csv")
+                    {
+                        _readCSVFile(sampleFile, aFileInfo);
+                    }
+                    else
+                    {
+                        _readPDATFile(sampleFile, aFileInfo);
+                    }
+                    FileInfo.Add(aFileInfo);
                 }
-                else
-                {
-                    _readPDATFile(sampleFile, aFileInfo);
-                }
-                FileInfo.Add(aFileInfo);
             }
         }
         private void _readCSVFile(string filePath, InputFileInfoViewModel aFileInfo)
@@ -176,7 +202,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 throw new Exception("PDAT Reading error! " + ex.Message);
             }
         }
-        public List<InputFileInfoViewModel> FileInfo { get; set; }
+        public ObservableCollection<InputFileInfoViewModel> FileInfo { get; set; }
         public ObservableCollection<SignalTypeHierachy> SortSignalByType(ObservableCollection<SignalSignatureViewModel> signalList)
         {
             ObservableCollection<SignalTypeHierachy> signalTypeTreeGroupedBySamplingRate = new ObservableCollection<SignalTypeHierachy>();
@@ -897,6 +923,195 @@ namespace BAWGUI.SignalManagement.ViewModels
             b.SignalList = SortSignalByType(newSignalList);
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
+        }
+
+        public void AddRawSignalsFromADir(InputFileInfoViewModel model)
+        {
+            var sampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
+            if (File.Exists(sampleFile))
+            {
+                if (model.Model.FileType.ToLower() == "csv")
+                {
+                    _readCSVFile(sampleFile, model);
+                }
+                else
+                {
+                    _readPDATFile(sampleFile, model);
+                }
+            }
+        }
+
+        public ObservableCollection<SignalSignatureViewModel> FindSignalsEntirePMU(List<PMUElementModel> pMUElementList)
+        {
+            var newSignalList = new ObservableCollection<SignalSignatureViewModel>();
+            foreach (var signal in pMUElementList)
+            {
+                foreach (var group in GroupedRawSignalsByPMU)
+                {
+                    foreach (var samplingRateSubgroup in group.SignalList)
+                    {
+                        foreach (var subgroup in samplingRateSubgroup.SignalList)
+                        {
+                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
+                            {
+                                foreach (var subsubgroup in subgroup.SignalList)
+                                {
+                                    newSignalList.Add(subsubgroup.SignalSignature);
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var group in GroupedSignalByDataConfigStepsOutput)
+                {
+                    foreach (var samplingRateSubgroup in group.SignalList)
+                    {
+                        foreach (var subgroup in samplingRateSubgroup.SignalList)
+                        {
+                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
+                            {
+                                foreach (var subsubgroup in subgroup.SignalList)
+                                {
+                                    newSignalList.Add(subsubgroup.SignalSignature);
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var group in GroupedSignalByProcessConfigStepsOutput)
+                {
+                    foreach (var samplingRateSubgroup in group.SignalList)
+                    {
+                        foreach (var subgroup in samplingRateSubgroup.SignalList)
+                        {
+                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
+                            {
+                                foreach (var subsubgroup in subgroup.SignalList)
+                                {
+                                    newSignalList.Add(subsubgroup.SignalSignature);
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var group in GroupedSignalByPostProcessConfigStepsOutput)
+                {
+                    foreach (var samplingRateSubgroup in group.SignalList)
+                    {
+                        foreach (var subgroup in samplingRateSubgroup.SignalList)
+                        {
+                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
+                            {
+                                foreach (var subsubgroup in subgroup.SignalList)
+                                {
+                                    newSignalList.Add(subsubgroup.SignalSignature);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            return newSignalList;
+        }
+
+        public ObservableCollection<SignalSignatureViewModel> FindSignals(List<PMUElementModel> pMUElementList)
+        {
+            var newSignalList = new ObservableCollection<SignalSignatureViewModel>();
+            foreach (var signal in pMUElementList)
+            {
+                var foundSignal = SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName);
+                if (!(foundSignal is null))
+                {
+                    newSignalList.Add(foundSignal);
+                }
+            }
+            return newSignalList;
+        }
+
+        public SignalSignatureViewModel SearchForSignalInTaggedSignals(string pmu, string channel)
+        {
+            foreach (var group in GroupedRawSignalsByPMU)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                if (subsubgroup.SignalSignature.SignalName == channel)
+                                    return subsubgroup.SignalSignature;
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var group in GroupedSignalByDataConfigStepsOutput)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                if (subsubgroup.SignalSignature.SignalName == channel)
+                                    return subsubgroup.SignalSignature;
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var group in GroupedSignalByProcessConfigStepsOutput)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                if (subsubgroup.SignalSignature.SignalName == channel)
+                                    return subsubgroup.SignalSignature;
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var group in GroupedSignalByPostProcessConfigStepsOutput)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                if (subsubgroup.SignalSignature.SignalName == channel)
+                                    return subsubgroup.SignalSignature;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public ObservableCollection<PMUWithSamplingRate> AllPMUs
+        {
+            get
+            {
+                var allPMU = GroupedRawSignalsByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList();
+                allPMU.AddRange(AllDataConfigOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
+                allPMU.AddRange(AllProcessConfigOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
+                allPMU.AddRange(AllPostProcessOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
+                return new ObservableCollection<PMUWithSamplingRate>(allPMU.Distinct());
+            }
         }
 
         #region Raw signals

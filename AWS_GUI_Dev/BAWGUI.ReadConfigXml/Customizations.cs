@@ -4,18 +4,22 @@ using System.Xml.Linq;
 
 namespace BAWGUI.ReadConfigXml
 {
-    public class Customization
+    public class CustomizationModel
     {
         public string Name { get; set; }
+        public string CustPMUname { get; set; }
     }
-    public class ScalarRepCust : Customization
+    public class ScalarRepCustModel : CustomizationModel
     {
+        public ScalarRepCustModel()
+        {
+
+        }
         private XElement item;
 
-        public ScalarRepCust(XElement item)
+        public ScalarRepCustModel(XElement item)
         {
             this.item = item;
-            Name = "Scalar Repetition";
             var par = item.Element("Parameters").Element("CustPMUname");
             if (par != null)
             {
@@ -47,22 +51,21 @@ namespace BAWGUI.ReadConfigXml
                 Unit = par.Value;
             }
         }
-
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Scalar Repetition"; }
         public string Scalar { get; set; }
         public string SignalName { get; set; }
         public string TimeSourcePMU { get; set; }
         public string Type { get; set; }
         public string Unit { get; set; }
     }
-    public class AdditionCust : Customization
+    public class AdditionCustModel : CustomizationModel
     {
+        public AdditionCustModel() { }
         private XElement item;
 
-        public AdditionCust(XElement item)
+        public AdditionCustModel(XElement item)
         {
             this.item = item;
-            Name = "Addition";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -74,26 +77,25 @@ namespace BAWGUI.ReadConfigXml
                 SignalName = par;
             }
             var terms = item.Element("Parameters").Elements("term");
-            PMUElementList = new List<PMUElement>();
+            PMUElementList = new List<PMUElementModel>();
             foreach (var term in terms)
             {
-                var newTerm = new PMUElement(term.Element("PMU").Value, term.Element("Channel").Value);
+                var newTerm = new PMUElementModel(term.Element("PMU").Value, term.Element("Channel").Value);
                 PMUElementList.Add(newTerm);
             }
         }
-
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Addition"; }
         public string SignalName { get; set; }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
-    public class SubtractionCust : Customization
+    public class SubtractionCustModel : CustomizationModel
     {
+        public SubtractionCustModel() { }
         private XElement item;
 
-        public SubtractionCust(XElement item)
+        public SubtractionCustModel(XElement item)
         {
             this.item = item;
-            Name = "Subtraction";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -104,23 +106,22 @@ namespace BAWGUI.ReadConfigXml
             {
                 SignalName = par;
             }
-            Minuend = new PMUElement(item.Element("Parameters").Element("minuend").Element("PMU").Value, item.Element("Parameters").Element("minuend").Element("Channel").Value);
-            Subtrahend = new PMUElement(item.Element("Parameters").Element("subtrahend").Element("PMU").Value, item.Element("Parameters").Element("subtrahend").Element("Channel").Value);
+            Minuend = new PMUElementModel(item.Element("Parameters").Element("minuend").Element("PMU").Value, item.Element("Parameters").Element("minuend").Element("Channel").Value);
+            Subtrahend = new PMUElementModel(item.Element("Parameters").Element("subtrahend").Element("PMU").Value, item.Element("Parameters").Element("subtrahend").Element("Channel").Value);
         }
-
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Subtraction"; }
         public string SignalName { get; set; }
-        public PMUElement Minuend { get; set; }
-        public PMUElement Subtrahend { get; set; }
+        public PMUElementModel Minuend { get; set; }
+        public PMUElementModel Subtrahend { get; set; }
     }
-    public class MultiplicationCust : Customization
+    public class MultiplicationCustModel : CustomizationModel
     {
+        public MultiplicationCustModel() { }
         private XElement item;
 
-        public MultiplicationCust(XElement item)
+        public MultiplicationCustModel(XElement item)
         {
             this.item = item;
-            Name = "Multiplication";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -132,26 +133,25 @@ namespace BAWGUI.ReadConfigXml
                 SignalName = par;
             }
             var factors = item.Element("Parameters").Elements("factor");
-            PMUElementList = new List<PMUElement>();
+            PMUElementList = new List<PMUElementModel>();
             foreach (var factor in factors)
             {
-                var newFactor = new PMUElement(factor.Element("PMU").Value, factor.Element("Channel").Value);
+                var newFactor = new PMUElementModel(factor.Element("PMU").Value, factor.Element("Channel").Value);
                 PMUElementList.Add(newFactor);
             }
         }
-
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Multiplication"; }
         public string SignalName { get; set; }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
-    public class DivisionCust : Customization
+    public class DivisionCustModel : CustomizationModel
     {
+        public DivisionCustModel() { }
         private XElement item;
 
-        public DivisionCust(XElement item)
+        public DivisionCustModel(XElement item)
         {
             this.item = item;
-            Name = "Division";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -162,22 +162,22 @@ namespace BAWGUI.ReadConfigXml
             {
                 SignalName = par;
             }
-            Dividend = new PMUElement(item.Element("Parameters").Element("dividend").Element("PMU").Value, item.Element("Parameters").Element("dividend").Element("Channel").Value);
-            Divisor = new PMUElement(item.Element("Parameters").Element("divisor").Element("PMU").Value, item.Element("Parameters").Element("divisor").Element("Channel").Value);
+            Dividend = new PMUElementModel(item.Element("Parameters").Element("dividend").Element("PMU").Value, item.Element("Parameters").Element("dividend").Element("Channel").Value);
+            Divisor = new PMUElementModel(item.Element("Parameters").Element("divisor").Element("PMU").Value, item.Element("Parameters").Element("divisor").Element("Channel").Value);
         }
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Division"; }
         public string SignalName { get; set; }
-        public PMUElement Dividend { get; set; }
-        public PMUElement Divisor { get; set; }
+        public PMUElementModel Dividend { get; set; }
+        public PMUElementModel Divisor { get; set; }
     }
-    public class ExponentialCust : Customization
+    public class ExponentialCustModel : CustomizationModel
     {
+        public ExponentialCustModel() { }
         private XElement item;
 
-        public ExponentialCust(XElement item)
+        public ExponentialCustModel(XElement item)
         {
             this.item = item;
-            Name = "Exponential";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -189,115 +189,118 @@ namespace BAWGUI.ReadConfigXml
                 Exponent = par;
             }
             var signals = item.Element("Parameters").Elements("signal");
-            PMUElementList = new List<PMUElementForUnaryCust>();
+            PMUElementList = new List<PMUElementForUnaryCustModel>();
             foreach (var signal in signals)
             {
-                var newSignal = new PMUElementForUnaryCust(signal.Element("PMU").Value, signal.Element("Channel").Value, signal.Element("CustName").Value);
+                var newSignal = new PMUElementForUnaryCustModel(signal.Element("PMU").Value, signal.Element("Channel").Value, signal.Element("CustName").Value);
                 PMUElementList.Add(newSignal);
             }
         }
-
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Exponential"; }
         public string Exponent { get; set; }
-        public List<PMUElementForUnaryCust> PMUElementList { get; set; }
+        public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
     }
-    public class SignReversalCust : Customization
+    public class SignReversalCustModel : CustomizationModel
     {
+        public SignReversalCustModel() { }
         private XElement item;
 
-        public SignReversalCust(XElement item)
+        public SignReversalCustModel(XElement item)
         {
             this.item = item;
-            Name = "Sign Reversal";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
                 CustPMUname = par;
             }
             var signals = item.Element("Parameters").Elements("signal");
-            PMUElementList = new List<PMUElementForUnaryCust>();
+            PMUElementList = new List<PMUElementForUnaryCustModel>();
             foreach (var signal in signals)
             {
-                var newSignal = new PMUElementForUnaryCust(signal.Element("PMU").Value, signal.Element("Channel").Value, signal.Element("CustName").Value);
+                var newSignal = new PMUElementForUnaryCustModel(signal.Element("PMU").Value, signal.Element("Channel").Value, signal.Element("CustName").Value);
                 PMUElementList.Add(newSignal);
             }
         }
-
-        public string CustPMUname { get; set; }
-        public List<PMUElementForUnaryCust> PMUElementList { get; set; }
+        public new string Name { get => "Sign Reversal"; }
+        public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
     }
-    public class AbsValCust : SignReversalCust
+    public class AbsValCustModel : SignReversalCustModel
     {
-        public AbsValCust(XElement item) : base(item)
+        public AbsValCustModel() { }
+        public AbsValCustModel(XElement item) : base(item)
         {
-            Name = "Absolute Value";
         }
+        public new string Name { get => "Absolute Value"; }
     }
-    public class RealComponentCust : SignReversalCust
+    public class RealComponentCustModel : SignReversalCustModel
     {
-        public RealComponentCust(XElement item) : base(item)
+        public RealComponentCustModel() { }
+        public RealComponentCustModel(XElement item) : base(item)
         {
-            Name = "Real Component";
         }
+        public new string Name { get => "Real Component"; }
     }
-    public class ImagComponentCust : SignReversalCust
+    public class ImagComponentCustModel : SignReversalCustModel
     {
-        public ImagComponentCust(XElement item) : base(item)
+        public ImagComponentCustModel() { }
+        public ImagComponentCustModel(XElement item) : base(item)
         {
-            Name = "Imaginary Component";
         }
+        public new string Name { get => "Imaginary Component"; }
     }
-    public class AngleCust : SignReversalCust
+    public class AngleCustModel : SignReversalCustModel
     {
-        public AngleCust(XElement item) : base(item)
+        public AngleCustModel() { }
+        public AngleCustModel(XElement item) : base(item)
         {
-            Name = "Angle Calculation";
         }
+        public new string Name { get => "Angle Calculation"; }
     }
-    public class ComplexConjCust : SignReversalCust
+    public class ComplexConjCustModel : SignReversalCustModel
     {
-        public ComplexConjCust(XElement item) : base(item)
+        public ComplexConjCustModel() { }
+        public ComplexConjCustModel(XElement item) : base(item)
         {
-            Name = "Complex Conjugate";
         }
+        public new string Name { get => "Complex Conjugate"; }
     }
-    public class CreatePhasorCust : Customization
+    public class CreatePhasorCustModel : CustomizationModel
     {
+        public CreatePhasorCustModel() { }
         private XElement item;
 
-        public CreatePhasorCust(XElement item)
+        public CreatePhasorCustModel(XElement item)
         {
             this.item = item;
-            Name = "Phasor Creation";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
                 CustPMUname = par;
             }
             var phasors = item.Element("Parameters").Elements("phasor");
-            MagAngPairList = new List<PMUElementPair>();
+            MagAngPairList = new List<PMUElementPairModel>();
             foreach (var phasor in phasors)
             {
-                var newPair = new PMUElementPair();
-                newPair.PMUElement1 = new PMUElement(phasor.Element("mag").Element("PMU").Value, phasor.Element("mag").Element("Channel").Value);
-                newPair.PMUElement2 = new PMUElement(phasor.Element("ang").Element("PMU").Value, phasor.Element("ang").Element("Channel").Value);
+                var newPair = new PMUElementPairModel();
+                newPair.PMUElement1 = new PMUElementModel(phasor.Element("mag").Element("PMU").Value, phasor.Element("mag").Element("Channel").Value);
+                newPair.PMUElement2 = new PMUElementModel(phasor.Element("ang").Element("PMU").Value, phasor.Element("ang").Element("Channel").Value);
                 newPair.CustSignalName = phasor.Element("CustName").Value;
                 MagAngPairList.Add(newPair);
             }
         }
-        public string CustPMUname { get; set; }
-        public List<PMUElementPair> MagAngPairList { get; set; }
+        public new string Name { get => "Phasor Creation"; }
+        public List<PMUElementPairModel> MagAngPairList { get; set; }
     }
 
-    public class PowerCalcCust : Customization
+    public class PowerCalcCustModel : CustomizationModel
     {
+        public PowerCalcCustModel() { }
         private XElement item;
         private Dictionary<string, string> _powerTypeDictionary = new Dictionary<string, string>{{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}};
 
-    public PowerCalcCust(XElement item)
+        public PowerCalcCustModel(XElement item)
         {
             this.item = item;
-            Name = "Power Calculation";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -312,36 +315,35 @@ namespace BAWGUI.ReadConfigXml
             {
                 IsFromPhasor = true;
                 PhasorPair = new PhasorToPower();
-                PhasorPair.PMUElement1 = new PMUElement(item.Element("Parameters").Element("power").Element("Vphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vphasor").Element("Channel").Value);
-                PhasorPair.PMUElement2 = new PMUElement(item.Element("Parameters").Element("power").Element("Iphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iphasor").Element("Channel").Value);
+                PhasorPair.PMUElement1 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Vphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vphasor").Element("Channel").Value);
+                PhasorPair.PMUElement2 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Iphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iphasor").Element("Channel").Value);
                 PhasorPair.CustSignalName = item.Element("Parameters").Element("power").Element("CustName").Value;
             }
             else
             {
                 IsFromPhasor = false;
                 MagAngQuad = new MagAngToPower();
-                MagAngQuad.PMUElement1 = new PMUElement(item.Element("Parameters").Element("power").Element("Vmag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vmag").Element("Channel").Value);
-                MagAngQuad.PMUElement2 = new PMUElement(item.Element("Parameters").Element("power").Element("Vang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vang").Element("Channel").Value);
-                MagAngQuad.PMUElement3 = new PMUElement(item.Element("Parameters").Element("power").Element("Imag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Imag").Element("Channel").Value);
-                MagAngQuad.PMUElement4 = new PMUElement(item.Element("Parameters").Element("power").Element("Iang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iang").Element("Channel").Value);
+                MagAngQuad.PMUElement1 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Vmag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vmag").Element("Channel").Value);
+                MagAngQuad.PMUElement2 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Vang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vang").Element("Channel").Value);
+                MagAngQuad.PMUElement3 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Imag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Imag").Element("Channel").Value);
+                MagAngQuad.PMUElement4 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Iang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iang").Element("Channel").Value);
                 MagAngQuad.CustSignalName = item.Element("Parameters").Element("power").Element("CustName").Value;
             }
         }
-
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Power Calculation"; }
         public PowerType PowType { get; set; }
         public bool IsFromPhasor { get; set; }
         public PhasorToPower PhasorPair { get; set; }
         public MagAngToPower MagAngQuad { get; set; }
     }
-    public class SpecTypeUnitCust : Customization
+    public class SpecTypeUnitCustModel : CustomizationModel
     {
+        public SpecTypeUnitCustModel() { }
         private XElement item;
 
-        public SpecTypeUnitCust(XElement item)
+        public SpecTypeUnitCustModel(XElement item)
         {
             this.item = item;
-            Name = "Signal Type/Unit";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -362,23 +364,22 @@ namespace BAWGUI.ReadConfigXml
             {
                 Unit = par;
             }
-            Input = new PMUElement(item.Element("Parameters").Element("PMU").Value, item.Element("Parameters").Element("Channel").Value);
+            Input = new PMUElementModel(item.Element("Parameters").Element("PMU").Value, item.Element("Parameters").Element("Channel").Value);
         }
-
-        public PMUElement Input { get; set; }
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Signal Type/Unit"; }
+        public PMUElementModel Input { get; set; }
         public string SignalName { get; set; }
         public string Type { get; set; }
         public string Unit { get; set; }
     }
-    public class MetricPrefixCust : Customization
+    public class MetricPrefixCustModel : CustomizationModel
     {
+        public MetricPrefixCustModel() { }
         private XElement item;
 
-        public MetricPrefixCust(XElement item)
+        public MetricPrefixCustModel(XElement item)
         {
             this.item = item;
-            Name = "Metric Prefix";
             var par = item.Element("Parameters").Element("CustPMUname");
             ToConverts = new List<ToConvert>();
             if (par != null)
@@ -410,19 +411,18 @@ namespace BAWGUI.ReadConfigXml
                 }
             }
         }
-
+        public new string Name { get => "Metric Prefix"; }
         public bool UseCustomPMU { get; set; }
-        public string CustPMUname { get; set; }
         public List<ToConvert> ToConverts { get; set; }
     }
-    public class AngleConversionCust : Customization
+    public class AngleConversionCustModel : CustomizationModel
     {
+        public AngleConversionCustModel() { }
         private XElement item;
 
-        public AngleConversionCust(XElement item)
+        public AngleConversionCustModel(XElement item)
         {
             this.item = item;
-            Name = "Angle Conversion";
             var par = item.Element("Parameters").Element("CustPMUname").Value;
             if (par != null)
             {
@@ -439,8 +439,7 @@ namespace BAWGUI.ReadConfigXml
                 ToConverts.Add(newConvert);
             }
         }
-
-        public string CustPMUname { get; set; }
+        public new string Name { get => "Angle Conversion"; }
         public List<ToConvert> ToConverts { get; set; }
     }
 

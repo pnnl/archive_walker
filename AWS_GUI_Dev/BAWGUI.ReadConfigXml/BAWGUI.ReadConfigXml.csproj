@@ -61,12 +61,12 @@
   <ItemGroup>
     <Compile Include="ConfigFileReader.cs" />
     <Compile Include="Customizations.cs" />
-    <Compile Include="DataConfig.cs" />
-    <Compile Include="DetectorConfig.cs" />
+    <Compile Include="DataConfigModel.cs" />
+    <Compile Include="DetectorConfigModel.cs" />
     <Compile Include="Detectors.cs" />
     <Compile Include="DQFilters.cs" />
-    <Compile Include="PostProcessConfig.cs" />
-    <Compile Include="ProcessConfig.cs" />
+    <Compile Include="PostProcessConfigModel.cs" />
+    <Compile Include="ProcessConfigModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

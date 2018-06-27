@@ -154,7 +154,6 @@
     <Compile Include="Converters\VisibilityConverters.vb" />
     <Compile Include="ViewModels\DataConfig.vb" />
     <Compile Include="ViewModels\DetectorConfig.vb" />
-    <Compile Include="ViewModels\PMUWithSamplingRate.vb" />
     <Compile Include="ViewModels\PostProcessCustomizationConfig.vb" />
     <Compile Include="ViewModels\ProcessConfig.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -172,7 +171,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ViewModels\ComboBoxItemsSourceDecorator.vb" />
     <Compile Include="ViewModels\ConfigFileWriter.vb" />
     <Compile Include="ViewModels\DelegateCommand.vb" />
     <Compile Include="ViewModels\EnumerationManager.vb" />
@@ -619,7 +617,7 @@
       <Name>BAWGUI.RunMATLAB</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
-      <Project>{E0ACA34C-2C13-4E98-944D-A419BDD2D116}</Project>
+      <Project>{e0aca34c-2c13-4e98-944d-a419bdd2d116}</Project>
       <Name>BAWGUI.SignalManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">

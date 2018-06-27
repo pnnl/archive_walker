@@ -119,11 +119,13 @@ namespace BAWGUI.ViewModels
                 try
                 {
                     var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
+                    _signalMgr.cleanUp();
                     _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
-                    SettingsVM.DataConfigure = new DataConfig(config.DataConfigure);
-                    SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure);
-                    SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure);
-                    SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure);
+                    SettingsVM.SignalMgr = _signalMgr;
+                    SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
+                    SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
+                    SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
+                    SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
                 }
                 catch (Exception ex)
                 {

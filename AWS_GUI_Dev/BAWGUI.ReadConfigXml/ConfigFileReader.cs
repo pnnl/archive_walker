@@ -13,16 +13,16 @@ namespace BAWGUI.ReadConfigXml
         {
             ConfigFilename = configFile;
             _configData = XDocument.Load(configFile);
-            _dataConfigure = new DataConfig(_configData.Element("Config").Element("DataConfig"));
-            _processConfigure = new ProcessConfig(_configData.Element("Config").Element("ProcessConfig"));
-            _postProcessConfig = new PostProcessConfig(_configData.Element("Config").Element("PostProcessCustomizationConfig"));
-            _detectorConfigure = new DetectorConfig(_configData.Element("Config").Element("DetectorConfig"));
+            _dataConfigure = new DataConfigModel(_configData.Element("Config").Element("DataConfig"));
+            _processConfigure = new ProcessConfigModel(_configData.Element("Config").Element("ProcessConfig"));
+            _postProcessConfig = new PostProcessConfigModel(_configData.Element("Config").Element("PostProcessCustomizationConfig"));
+            _detectorConfigure = new DetectorConfigModel(_configData.Element("Config").Element("DetectorConfig"));
             //_readConfigFile(_configData);
         }
         private XDocument _configData { get; set; }
         public string ConfigFilename { get; set; }
-        private DataConfig _dataConfigure;
-        public DataConfig DataConfigure
+        private DataConfigModel _dataConfigure;
+        public DataConfigModel DataConfigure
         {
             get
             {
@@ -33,8 +33,8 @@ namespace BAWGUI.ReadConfigXml
                 _dataConfigure = value;
             }
         }
-        private ProcessConfig _processConfigure;
-        public ProcessConfig ProcessConfigure
+        private ProcessConfigModel _processConfigure;
+        public ProcessConfigModel ProcessConfigure
         {
             get
             {
@@ -45,8 +45,8 @@ namespace BAWGUI.ReadConfigXml
                 _processConfigure = value;
             }
         }
-        private PostProcessConfig _postProcessConfig;
-        public PostProcessConfig PostProcessConfigure
+        private PostProcessConfigModel _postProcessConfig;
+        public PostProcessConfigModel PostProcessConfigure
         {
             get
             {
@@ -57,8 +57,8 @@ namespace BAWGUI.ReadConfigXml
                 _postProcessConfig = value;
             }
         }
-        private DetectorConfig _detectorConfigure;
-        public DetectorConfig DetectorConfigure
+        private DetectorConfigModel _detectorConfigure;
+        public DetectorConfigModel DetectorConfigure
         {
             get { return _detectorConfigure; }
             set { _detectorConfigure = value; }

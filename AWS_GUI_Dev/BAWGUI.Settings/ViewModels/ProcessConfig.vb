@@ -1,8 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports BAWGUI.Core
-Imports BAWGUI.ReadConfigXml
-Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
 
@@ -50,8 +48,12 @@ Namespace ViewModels
                                                                                    {"OTHER", {"O"}.ToList}}
         End Sub
 
-        Public Sub New(processConfigure As ReadConfigXml.ProcessConfig)
-            Me.processConfigure = processConfigure
+        Public Sub New(processConfigure As ReadConfigXml.ProcessConfigModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = processConfigure
+            For Each unWrapM In _model.UnWrapList
+
+            Next
         End Sub
 
         Private _unWrapList As ObservableCollection(Of Unwrap)
@@ -112,15 +114,14 @@ Namespace ViewModels
         Private _initializationPath As String
         Public Property InitializationPath As String
             Get
-                Return _initializationPath
+                Return _model.InitializationPath
             End Get
             Set(ByVal value As String)
-                _initializationPath = value
+                _model.InitializationPath = value
                 OnPropertyChanged()
             End Set
         End Property
         Private _typeUnitDictionary As Dictionary(Of String, List(Of String))
-        Private processConfigure As ReadConfigXml.ProcessConfig
 
         Public Property TypeUnitDictionary As Dictionary(Of String, List(Of String))
             Get
@@ -131,12 +132,12 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private _model As ReadConfigXml.ProcessConfig
-        Public Property Model As ReadConfigXml.ProcessConfig
+        Private _model As ReadConfigXml.ProcessConfigModel
+        Public Property Model As ReadConfigXml.ProcessConfigModel
             Get
                 Return _model
             End Get
-            Set(value As ReadConfigXml.ProcessConfig)
+            Set(value As ReadConfigXml.ProcessConfigModel)
                 _model = value
                 OnPropertyChanged()
             End Set
@@ -160,7 +161,7 @@ Namespace ViewModels
             Name = "Unwrap"
             IsExpanded = False
         End Sub
-        Public Overrides Property Name As String
+        Public ReadOnly Property Name As String
 
         Public Overrides Function CheckStepIsComplete() As Boolean
             'Throw New NotImplementedException()
@@ -210,7 +211,7 @@ Namespace ViewModels
             Return True
         End Function
 
-        Public Overrides Property Name As String
+        Public ReadOnly Property Name As String
 
         Private _limit As String
         Public Property Limit As String
@@ -289,7 +290,7 @@ Namespace ViewModels
             IsExpanded = False
         End Sub
 
-        Public Overrides Property Name As String
+        Public ReadOnly Property Name As String
 
         Public Overrides Function CheckStepIsComplete() As Boolean
             'Throw New NotImplementedException()
@@ -330,22 +331,22 @@ Namespace ViewModels
                 _type = value
                 ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
                 ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & value.ToString() & " " & Name
-                Dim newParameterList = New ObservableCollection(Of ParameterValuePair)
-                For Each p In _filterParameterDictionary(_type)
-                    Dim newPair = New ParameterValuePair
-                    newPair.ParameterName = p
-                    'If p = "ZeroPhase" Then
-                    '    newPair.Value = False
-                    If p = "Endpoints" Then
-                        newPair.Value = EndpointsType.zeropad
-                    ElseIf p = "HandleNaN" Then
-                        newPair.Value = HandleNaNType.includenan
-                    Else
-                        newPair.Value = ""
-                    End If
-                    newParameterList.Add(newPair)
-                Next
-                Me.FilterParameters = newParameterList
+                'Dim newParameterList = New ObservableCollection(Of ParameterValuePair)
+                'For Each p In _filterParameterDictionary(_type)
+                '    Dim newPair = New ParameterValuePair
+                '    newPair.ParameterName = p
+                '    'If p = "ZeroPhase" Then
+                '    '    newPair.Value = False
+                '    If p = "Endpoints" Then
+                '        newPair.Value = EndpointsType.zeropad
+                '    ElseIf p = "HandleNaN" Then
+                '        newPair.Value = HandleNaNType.includenan
+                '    Else
+                '        newPair.Value = ""
+                '    End If
+                '    newParameterList.Add(newPair)
+                'Next
+                'Me.FilterParameters = newParameterList
                 OnPropertyChanged()
             End Set
         End Property
@@ -453,7 +454,7 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(signature:=New SignalSignatureViewModel)
-            _name = "Multirate"
+            Name = "Multirate"
             '_pElement = 1
             '_qElement = 1
             _newRate = 1
@@ -461,16 +462,8 @@ Namespace ViewModels
             _filterChoice = "0"
         End Sub
 
-        Private _name As String
-        Public Overrides Property Name As String
-            Get
-                Return _name
-            End Get
-            Set(value As String)
-                _name = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        Public ReadOnly Property Name As String
+
 
         Private _multiRatePMU As String
         Public Property MultiRatePMU As String
@@ -634,7 +627,7 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
-            _name = "Signal Type and Unit Specification"
+            Name = "Signal Type and Unit Specification"
             IsExpanded = False
         End Sub
 
@@ -643,16 +636,8 @@ Namespace ViewModels
             Return True
         End Function
 
-        Private _name As String
-        Public Overrides Property Name As String
-            Get
-                Return _name
-            End Get
-            Set(value As String)
-                _name = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        Public ReadOnly Property Name As String
+
 
         'Private _pmuName As String
         'Public Property PmuName As String

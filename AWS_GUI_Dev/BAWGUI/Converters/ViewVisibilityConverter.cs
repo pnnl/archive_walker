@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Settings.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace BAWGUI.Converters
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Settings.ViewModels.SettingsViewModel)
+            if (value is SettingsViewModel)
             {
                 return Visibility.Visible;
             }

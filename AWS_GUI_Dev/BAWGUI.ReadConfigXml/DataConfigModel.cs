@@ -9,18 +9,18 @@ using System.Xml.Serialization;
 
 namespace BAWGUI.ReadConfigXml
 {
-    public class DataConfig
+    public class DataConfigModel
     {
         private XElement _xElement;
         //private ReaderProperties _readerProperties;
-        public ReaderProperties ReaderProperty { get; set; }
+        public ReaderPropertiesModel ReaderProperty { get; set; }
         //private List<Object> _collectionOfSteps;
         public List<object> CollectionOfSteps { get; set; }
 
-        public DataConfig(XElement xElement)
+        public DataConfigModel(XElement xElement)
         {
             this._xElement = xElement;
-            ReaderProperty = new ReaderProperties(_xElement.Element("Configuration").Element("ReaderProperties"));
+            ReaderProperty = new ReaderPropertiesModel(_xElement.Element("Configuration").Element("ReaderProperties"));
             CollectionOfSteps = new List<object>();
             var stages = _xElement.Element("Configuration").Elements("Stages");
             foreach (var stage in stages)
@@ -31,88 +31,88 @@ namespace BAWGUI.ReadConfigXml
                     switch (name)
                     {
                         case "PMUflagFilt":
-                            CollectionOfSteps.Add(new StatusFlagsDQFilter(item));
+                            CollectionOfSteps.Add(new StatusFlagsDQFilterModel(item));
                             break;
                         case "DropOutZeroFilt":
-                            CollectionOfSteps.Add(new ZerosDQFilter(item));
+                            CollectionOfSteps.Add(new ZerosDQFilterModel(item));
                             break;
                         case "DropOutMissingFilt":
-                            CollectionOfSteps.Add(new MissingDQFilter(item));
+                            CollectionOfSteps.Add(new MissingDQFilterModel(item));
                             break;
                         case "VoltPhasorFilt":
-                            CollectionOfSteps.Add(new VoltPhasorDQFilter(item));
+                            CollectionOfSteps.Add(new VoltPhasorDQFilterModel(item));
                             break;
                         case "FreqFilt":
-                            CollectionOfSteps.Add(new FreqDQFilter(item));
+                            CollectionOfSteps.Add(new FreqDQFilterModel(item));
                             break;
                         case "OutlierFilt":
-                            CollectionOfSteps.Add(new OutlierDQFilter(item));
+                            CollectionOfSteps.Add(new OutlierDQFilterModel(item));
                             break;
                         case "StaleFilt":
-                            CollectionOfSteps.Add(new StaleDQFilter(item));
+                            CollectionOfSteps.Add(new StaleDQFilterModel(item));
                             break;
                         case "DataFrameFilt":
-                            CollectionOfSteps.Add(new DataFrameDQFilter(item));
+                            CollectionOfSteps.Add(new DataFrameDQFilterModel(item));
                             break;
                         case "PMUchanFilt":
-                            CollectionOfSteps.Add(new PMUchanDQFilter(item));
+                            CollectionOfSteps.Add(new PMUchanDQFilterModel(item));
                             break;
                         case "PMUallFilt":
-                            CollectionOfSteps.Add(new PMUallDQFilter(item));
+                            CollectionOfSteps.Add(new PMUallDQFilterModel(item));
                             break;
                         case "WrappingFailureFilt":
-                            CollectionOfSteps.Add(new WrappingFailureDQFilter(item));
+                            CollectionOfSteps.Add(new WrappingFailureDQFilterModel(item));
                             break;
                         case "ScalarRep":
-                            CollectionOfSteps.Add(new ScalarRepCust(item));
+                            CollectionOfSteps.Add(new ScalarRepCustModel(item));
                             break;
                         case "Addition":
-                            CollectionOfSteps.Add(new AdditionCust(item));
+                            CollectionOfSteps.Add(new AdditionCustModel(item));
                             break;
                         case "Subtraction":
-                            CollectionOfSteps.Add(new SubtractionCust(item));
+                            CollectionOfSteps.Add(new SubtractionCustModel(item));
                             break;
                         case "Multiplication":
-                            CollectionOfSteps.Add(new MultiplicationCust(item));
+                            CollectionOfSteps.Add(new MultiplicationCustModel(item));
                             break;
                         case "Division":
-                            CollectionOfSteps.Add(new DivisionCust(item));
+                            CollectionOfSteps.Add(new DivisionCustModel(item));
                             break;
                         case "Exponent":
-                            CollectionOfSteps.Add(new ExponentialCust(item));
+                            CollectionOfSteps.Add(new ExponentialCustModel(item));
                             break;
                         case "SignReversal":
-                            CollectionOfSteps.Add(new SignReversalCust(item));
+                            CollectionOfSteps.Add(new SignReversalCustModel(item));
                             break;
                         case "AbsVal":
-                            CollectionOfSteps.Add(new AbsValCust(item));
+                            CollectionOfSteps.Add(new AbsValCustModel(item));
                             break;
                         case "RealComponent":
-                            CollectionOfSteps.Add(new RealComponentCust(item));
+                            CollectionOfSteps.Add(new RealComponentCustModel(item));
                             break;
                         case "ImagComponent":
-                            CollectionOfSteps.Add(new ImagComponentCust(item));
+                            CollectionOfSteps.Add(new ImagComponentCustModel(item));
                             break;
                         case "Angle":
-                            CollectionOfSteps.Add(new AngleCust(item));
+                            CollectionOfSteps.Add(new AngleCustModel(item));
                             break;
                         case "ComplexConj":
-                            CollectionOfSteps.Add(new ComplexConjCust(item));
+                            CollectionOfSteps.Add(new ComplexConjCustModel(item));
                             break;
                         case "CreatePhasor":
-                            CollectionOfSteps.Add(new CreatePhasorCust(item));
+                            CollectionOfSteps.Add(new CreatePhasorCustModel(item));
                             break;
                         case "PowerCalc":
-                            CollectionOfSteps.Add(new PowerCalcCust(item));
+                            CollectionOfSteps.Add(new PowerCalcCustModel(item));
                             break;
                         case "SpecTypeUnit":
-                            CollectionOfSteps.Add(new SpecTypeUnitCust(item));
+                            CollectionOfSteps.Add(new SpecTypeUnitCustModel(item));
                             break;
                         case "MetricPrefix":
-                            CollectionOfSteps.Add(new MetricPrefixCust(item));
+                            CollectionOfSteps.Add(new MetricPrefixCustModel(item));
                             break;
                         case "AngleConversion":
-                            CollectionOfSteps.Add(new AngleConversionCust(item));
+                            CollectionOfSteps.Add(new AngleConversionCustModel(item));
                             break;
                         default:
                             throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
@@ -122,19 +122,19 @@ namespace BAWGUI.ReadConfigXml
         }
     }
 
-    public class ReaderProperties
+    public class ReaderPropertiesModel
     {
         private XElement _xElement;
-
-        public ReaderProperties(XElement xElement)
+        public ReaderPropertiesModel() { }
+        public ReaderPropertiesModel(XElement xElement)
         {
             this._xElement = xElement;
-            InputFileInfos = new List<InputFileInfo>();
-            var serializer = new XmlSerializer(typeof(InputFileInfo), new XmlRootAttribute("FilePath"));
+            InputFileInfos = new List<InputFileInfoModel>();
+            var serializer = new XmlSerializer(typeof(InputFileInfoModel), new XmlRootAttribute("FilePath"));
             foreach (var item in xElement.Elements("FilePath"))
             {
                 var b = item.CreateReader();
-                var a = (InputFileInfo)serializer.Deserialize(b);
+                var a = (InputFileInfoModel)serializer.Deserialize(b);
                 InputFileInfos.Add(a);
             }
             var mode = xElement.Element("Mode");
@@ -165,7 +165,7 @@ namespace BAWGUI.ReadConfigXml
             }
         }
 
-        public List<InputFileInfo> InputFileInfos { get; set; }
+        public List<InputFileInfoModel> InputFileInfos { get; set; }
         public ModeType ModeName { get; set; }
         public string DateTimeStart { get; set; }
         public string DateTimeEnd { get; set; }
@@ -176,8 +176,14 @@ namespace BAWGUI.ReadConfigXml
         public string RealTimeRange { get; set; }
     }
 
-    public class InputFileInfo
+    public class InputFileInfoModel
     {
+        public InputFileInfoModel()
+        {
+            FileDirectory = "";
+            FileType = "pdat";
+            Mnemonic = "";
+        }
         public string FileDirectory { get; set; }
         public string FileType { get; set; }
         public string Mnemonic { get; set; }
@@ -209,12 +215,12 @@ namespace BAWGUI.ReadConfigXml
         [Description("Reactive")]
         Q
     }
-    public class PMUElement
+    public class PMUElementModel
     {
-        public PMUElement()
+        public PMUElementModel()
         {
         }
-        public PMUElement(string pmu, string signal)
+        public PMUElementModel(string pmu, string signal)
         {
             PMUName = pmu;
             SignalName = signal;
@@ -223,13 +229,13 @@ namespace BAWGUI.ReadConfigXml
         public string SignalName { get; set; }
     }
 
-    public class PMUElementForUnaryCust
+    public class PMUElementForUnaryCustModel
     {
-        public PMUElementForUnaryCust()
+        public PMUElementForUnaryCustModel()
         {
         }
 
-        public PMUElementForUnaryCust(string pmu, string signalName, string custSignalName)
+        public PMUElementForUnaryCustModel(string pmu, string signalName, string custSignalName)
         {
             PMUName = pmu;
             SignalName = signalName;
@@ -241,25 +247,21 @@ namespace BAWGUI.ReadConfigXml
         public string CustSignalName { get; set; }
     }
 
-    public class PMUElementPair
+    public class PMUElementPairModel
     {
-        public PMUElement PMUElement1 { get; set; }
-        public PMUElement PMUElement2 { get; set; }
+        public PMUElementModel PMUElement1 { get; set; }
+        public PMUElementModel PMUElement2 { get; set; }
         public string CustSignalName { get; set; }
     }
 
-    public class PhasorToPower : PMUElementPair
+    public class PhasorToPower : PMUElementPairModel
     {
     }
-    public class MagAngToPower : PMUElementPair
+    public class MagAngToPower : PMUElementPairModel
     {
-        public PMUElement PMUElement3 { get; set; }
-        public PMUElement PMUElement4 { get; set; }
+        public PMUElementModel PMUElement3 { get; set; }
+        public PMUElementModel PMUElement4 { get; set; }
     }
-    public class PMUWithSamplingRate
-    {
-    }
-
     //namespace BAWGUI.Readers
     //{
     //    public class DataConfig
@@ -280,7 +282,7 @@ namespace BAWGUI.ReadConfigXml
     //}
     public static class PMUElementReader
     {
-        public static List<PMUElement> ReadPMUElements(XElement item)
+        public static List<PMUElementModel> ReadPMUElements(XElement item)
         {
             if (item == null)
             {
@@ -288,7 +290,7 @@ namespace BAWGUI.ReadConfigXml
             }
             else
             {
-                var newList = new List<PMUElement>();
+                var newList = new List<PMUElementModel>();
                 var inputs = item.Elements("PMU");
                     foreach (var aInput in inputs)
                     {
@@ -299,13 +301,13 @@ namespace BAWGUI.ReadConfigXml
                             foreach (var channel in channels)
                             {
                                 var channelName = channel.Element("Name").Value;
-                                var newElement = new PMUElement(pmuName, channelName);
+                                var newElement = new PMUElementModel(pmuName, channelName);
                             newList.Add(newElement);
                             }
                         }
                         else
                         {
-                            var newElement = new PMUElement();
+                            var newElement = new PMUElementModel();
                             newElement.PMUName = pmuName;
                         newList.Add(newElement);
                         }

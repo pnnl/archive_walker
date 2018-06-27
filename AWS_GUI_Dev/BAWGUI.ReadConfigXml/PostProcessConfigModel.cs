@@ -4,11 +4,11 @@ using System.Xml.Linq;
 
 namespace BAWGUI.ReadConfigXml
 {
-    public class PostProcessConfig
+    public class PostProcessConfigModel
     {
         private XElement _xElement;
         public List<object> CollectionOfSteps { get; set; }
-        public PostProcessConfig(XElement xElement)
+        public PostProcessConfigModel(XElement xElement)
         {
             this._xElement = xElement;
             CollectionOfSteps = new List<object>();
@@ -21,88 +21,88 @@ namespace BAWGUI.ReadConfigXml
                     switch (name)
                     {
                         case "PMUflagFilt":
-                            CollectionOfSteps.Add(new StatusFlagsDQFilter(item));
+                            CollectionOfSteps.Add(new StatusFlagsDQFilterModel(item));
                             break;
                         case "DropOutZeroFilt":
-                            CollectionOfSteps.Add(new ZerosDQFilter(item));
+                            CollectionOfSteps.Add(new ZerosDQFilterModel(item));
                             break;
                         case "DropOutMissingFilt":
-                            CollectionOfSteps.Add(new MissingDQFilter(item));
+                            CollectionOfSteps.Add(new MissingDQFilterModel(item));
                             break;
                         case "VoltPhasorFilt":
-                            CollectionOfSteps.Add(new VoltPhasorDQFilter(item));
+                            CollectionOfSteps.Add(new VoltPhasorDQFilterModel(item));
                             break;
                         case "FreqFilt":
-                            CollectionOfSteps.Add(new FreqDQFilter(item));
+                            CollectionOfSteps.Add(new FreqDQFilterModel(item));
                             break;
                         case "OutlierFilt":
-                            CollectionOfSteps.Add(new OutlierDQFilter(item));
+                            CollectionOfSteps.Add(new OutlierDQFilterModel(item));
                             break;
                         case "StaleFilt":
-                            CollectionOfSteps.Add(new StaleDQFilter(item));
+                            CollectionOfSteps.Add(new StaleDQFilterModel(item));
                             break;
                         case "DataFrameFilt":
-                            CollectionOfSteps.Add(new DataFrameDQFilter(item));
+                            CollectionOfSteps.Add(new DataFrameDQFilterModel(item));
                             break;
                         case "PMUchanFilt":
-                            CollectionOfSteps.Add(new PMUchanDQFilter(item));
+                            CollectionOfSteps.Add(new PMUchanDQFilterModel(item));
                             break;
                         case "PMUallFilt":
-                            CollectionOfSteps.Add(new PMUallDQFilter(item));
+                            CollectionOfSteps.Add(new PMUallDQFilterModel(item));
                             break;
                         case "WrappingFailureFilt":
-                            CollectionOfSteps.Add(new WrappingFailureDQFilter(item));
+                            CollectionOfSteps.Add(new WrappingFailureDQFilterModel(item));
                             break;
                         case "ScalarRep":
-                            CollectionOfSteps.Add(new ScalarRepCust(item));
+                            CollectionOfSteps.Add(new ScalarRepCustModel(item));
                             break;
                         case "Addition":
-                            CollectionOfSteps.Add(new AdditionCust(item));
+                            CollectionOfSteps.Add(new AdditionCustModel(item));
                             break;
                         case "Subtraction":
-                            CollectionOfSteps.Add(new SubtractionCust(item));
+                            CollectionOfSteps.Add(new SubtractionCustModel(item));
                             break;
                         case "Multiplication":
-                            CollectionOfSteps.Add(new MultiplicationCust(item));
+                            CollectionOfSteps.Add(new MultiplicationCustModel(item));
                             break;
                         case "Division":
-                            CollectionOfSteps.Add(new DivisionCust(item));
+                            CollectionOfSteps.Add(new DivisionCustModel(item));
                             break;
                         case "Exponent":
-                            CollectionOfSteps.Add(new ExponentialCust(item));
+                            CollectionOfSteps.Add(new ExponentialCustModel(item));
                             break;
                         case "SignReversal":
-                            CollectionOfSteps.Add(new SignReversalCust(item));
+                            CollectionOfSteps.Add(new SignReversalCustModel(item));
                             break;
                         case "AbsVal":
-                            CollectionOfSteps.Add(new AbsValCust(item));
+                            CollectionOfSteps.Add(new AbsValCustModel(item));
                             break;
                         case "RealComponent":
-                            CollectionOfSteps.Add(new RealComponentCust(item));
+                            CollectionOfSteps.Add(new RealComponentCustModel(item));
                             break;
                         case "ImagComponent":
-                            CollectionOfSteps.Add(new ImagComponentCust(item));
+                            CollectionOfSteps.Add(new ImagComponentCustModel(item));
                             break;
                         case "Angle":
-                            CollectionOfSteps.Add(new AngleCust(item));
+                            CollectionOfSteps.Add(new AngleCustModel(item));
                             break;
                         case "ComplexConj":
-                            CollectionOfSteps.Add(new ComplexConjCust(item));
+                            CollectionOfSteps.Add(new ComplexConjCustModel(item));
                             break;
                         case "CreatePhasor":
-                            CollectionOfSteps.Add(new CreatePhasorCust(item));
+                            CollectionOfSteps.Add(new CreatePhasorCustModel(item));
                             break;
                         case "PowerCalc":
-                            CollectionOfSteps.Add(new PowerCalcCust(item));
+                            CollectionOfSteps.Add(new PowerCalcCustModel(item));
                             break;
                         case "SpecTypeUnit":
-                            CollectionOfSteps.Add(new SpecTypeUnitCust(item));
+                            CollectionOfSteps.Add(new SpecTypeUnitCustModel(item));
                             break;
                         case "MetricPrefix":
-                            CollectionOfSteps.Add(new MetricPrefixCust(item));
+                            CollectionOfSteps.Add(new MetricPrefixCustModel(item));
                             break;
                         case "AngleConversion":
-                            CollectionOfSteps.Add(new AngleConversionCust(item));
+                            CollectionOfSteps.Add(new AngleConversionCustModel(item));
                             break;
                         default:
                             throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);

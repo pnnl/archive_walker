@@ -20,8 +20,9 @@ Namespace ViewModels
                                                                   "Ringdown Detector"}
         End Sub
 
-        Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfig)
-            Me.detectorConfigure = detectorConfigure
+        Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfigModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = detectorConfigure
         End Sub
 
         Private _eventPath As String
@@ -75,7 +76,17 @@ Namespace ViewModels
             End Set
         End Property
         Private _alarmingDetectorNameList As List(Of String)
-        Private detectorConfigure As ReadConfigXml.DetectorConfig
+
+        Private _model As DetectorConfigModel
+        Public Property Model As DetectorConfigModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As DetectorConfigModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
 
         Public Property AlarmingDetectorNameList As List(Of String)
             Get
@@ -86,8 +97,6 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-
-        Public Property Model As ReadConfigXml.DetectorConfig
     End Class
 
     Public Class PeriodogramDetector

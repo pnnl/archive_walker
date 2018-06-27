@@ -153,7 +153,7 @@
                         </Button>
                         <Label Content="File Sources" Margin="2" FontSize="18" FontWeight="Bold"/>
                     </DockPanel>
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}" Margin="2">
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding SignalMgr.FileInfo}" Margin="2">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" Margin="2">

@@ -16,84 +16,83 @@ using BAWGUI.SignalManagement.ViewModels;
 
 namespace BAWGUI.Core
 {
-    public class ParameterValuePair : ViewModelBase
-    {
-        public ParameterValuePair()
-        {
-            _isRequired = true;
-        }
-        public ParameterValuePair(string para, object value, bool required)
-        {
-            _parameterName = para;
-            _value = value;
-            _isRequired = required;
-        }
-        public ParameterValuePair(string para, object value)
-        {
-            _parameterName = para;
-            _value = value;
-            _isRequired = true;
-        }
-        private string _parameterName;
-        public string ParameterName
-        {
-            get
-            {
-                return _parameterName;
-            }
-            set
-            {
-                _parameterName = value;
-                OnPropertyChanged();
-            }
-        }
-        private object _value;
-        public object Value
-        {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-                OnPropertyChanged();
-            }
-        }
-        private bool _isRequired;
-        public bool IsRequired
-        {
-            get
-            {
-                return _isRequired;
-            }
-            set
-            {
-                _isRequired = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _toolTip;
-        public string ToolTip
-        {
-            get
-            {
-                return _toolTip;
-            }
-            set
-            {
-                _toolTip = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+    //public class ParameterValuePair : ViewModelBase
+    //{
+    //    public ParameterValuePair()
+    //    {
+    //        _isRequired = true;
+    //    }
+    //    public ParameterValuePair(string para, object value, bool required)
+    //    {
+    //        _parameterName = para;
+    //        _value = value;
+    //        _isRequired = required;
+    //    }
+    //    public ParameterValuePair(string para, object value)
+    //    {
+    //        _parameterName = para;
+    //        _value = value;
+    //        _isRequired = true;
+    //    }
+    //    private string _parameterName;
+    //    public string ParameterName
+    //    {
+    //        get
+    //        {
+    //            return _parameterName;
+    //        }
+    //        set
+    //        {
+    //            _parameterName = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //    private object _value;
+    //    public object Value
+    //    {
+    //        get
+    //        {
+    //            return _value;
+    //        }
+    //        set
+    //        {
+    //            _value = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //    private bool _isRequired;
+    //    public bool IsRequired
+    //    {
+    //        get
+    //        {
+    //            return _isRequired;
+    //        }
+    //        set
+    //        {
+    //            _isRequired = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //    private string _toolTip;
+    //    public string ToolTip
+    //    {
+    //        get
+    //        {
+    //            return _toolTip;
+    //        }
+    //        set
+    //        {
+    //            _toolTip = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //}
 
      //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
      //'''''''''''''''''''''''''''''''Class SignalProcessStep''''''''''''''''''''''''''''''''''''''''
      //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     public abstract class SignalProcessStep : ViewModelBase
     {
-        public abstract string Name { get; set; }
         private int _stepCounter;
         public int StepCounter
         {
@@ -199,7 +198,7 @@ namespace BAWGUI.Core
     {
         public Filter()
         {
-            _fileterParameters = new ObservableCollection<ParameterValuePair>();
+            //_fileterParameters = new ObservableCollection<ParameterValuePair>();
             InputChannels = new ObservableCollection<SignalSignatureViewModel>();
             ThisStepInputsAsSignalHerachyByType = new SignalTypeHierachy(new SignalSignatureViewModel());
 
@@ -214,7 +213,7 @@ namespace BAWGUI.Core
         }
 
         private string _name;
-        public override string Name
+        public string Name
         {
             get
             {
@@ -238,19 +237,19 @@ namespace BAWGUI.Core
         // End Set
         // End Property
 
-        private ObservableCollection<ParameterValuePair> _fileterParameters;
-        public ObservableCollection<ParameterValuePair> FilterParameters
-        {
-            get
-            {
-                return _fileterParameters;
-            }
-            set
-            {
-                _fileterParameters = value;
-                OnPropertyChanged();
-            }
-        }
+        //private ObservableCollection<ParameterValuePair> _fileterParameters;
+        //public ObservableCollection<ParameterValuePair> FilterParameters
+        //{
+        //    get
+        //    {
+        //        return _fileterParameters;
+        //    }
+        //    set
+        //    {
+        //        _fileterParameters = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
     }
 
     public abstract class DetectorBase : ViewModelBase

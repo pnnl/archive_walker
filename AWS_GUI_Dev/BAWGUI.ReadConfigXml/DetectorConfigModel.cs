@@ -3,11 +3,11 @@ using System.Xml.Linq;
 
 namespace BAWGUI.ReadConfigXml
 {
-    public class DetectorConfig
+    public class DetectorConfigModel
     {
         private XElement _xElement;
 
-        public DetectorConfig(XElement xElement)
+        public DetectorConfigModel(XElement xElement)
         {
             this._xElement = xElement;
             var par = _xElement.Element("Configuration").Element("EventPath");

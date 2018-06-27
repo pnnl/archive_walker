@@ -15,11 +15,11 @@ using System.ComponentModel;
 
 namespace BAWGUI.ReadConfigXml
 {
-    public class ProcessConfig
+    public class ProcessConfigModel
     {
         private XElement _xElement;
 
-        public ProcessConfig(XElement xElement)
+        public ProcessConfigModel(XElement xElement)
         {
             this._xElement = xElement;
             var par = xElement.Element("Configuration").Element("InitializationPath").Value;
@@ -28,16 +28,16 @@ namespace BAWGUI.ReadConfigXml
                 InitializationPath = par;
             }
             var unWraps = xElement.Element("Configuration").Element("Processing").Elements("Unwrap");
-            UnWrapList = new List<Unwrap>();
+            UnWrapList = new List<UnwrapModel>();
             foreach (var unwrap in unWraps)
             {
-                UnWrapList.Add(new Unwrap(unwrap));
+                UnWrapList.Add(new UnwrapModel(unwrap));
             }
             var interpolates = xElement.Element("Configuration").Element("Processing").Elements("Interpolate");
-            InterpolateList = new List<Interpolate>();
+            InterpolateList = new List<InterpolateModel>();
             foreach (var interplt in interpolates)
             {
-                InterpolateList.Add(new Interpolate(interplt));
+                InterpolateList.Add(new InterpolateModel(interplt));
             }
             var stages = xElement.Element("Configuration").Element("Processing").Elements("Stages");
             CollectionOfSteps = new List<object>();
@@ -48,23 +48,23 @@ namespace BAWGUI.ReadConfigXml
                 {
                     if (step.Name == "Filter")
                     {
-                        CollectionOfSteps.Add(new TunableFilter(step));
+                        CollectionOfSteps.Add(new TunableFilterModel(step));
                     }
                     else
                     {
-                        CollectionOfSteps.Add(new Multirate(step));
+                        CollectionOfSteps.Add(new MultirateModel(step));
                     }
                 }
             }
             var wraps = xElement.Element("Configuration").Element("Processing").Elements("Wrap");
-            WrapList = new List<Wrap>();
+            WrapList = new List<WrapModelModel>();
             foreach (var wrap in wraps)
             {
-                WrapList.Add(new Wrap(wrap));
+                WrapList.Add(new WrapModelModel(wrap));
 
             }
             var ntu = xElement.Element("Configuration").Element("NameTypeUnit").Elements("PMU");
-            NameTypeUnitList = new NameTypeUnit();
+            NameTypeUnitList = new NameTypeUnitModel();
             foreach (var pmu in ntu)
             {
                 NameTypeUnitList.NameTypeUnitPMUList.Add(new NameTypeUnitPMU(pmu));
@@ -72,28 +72,28 @@ namespace BAWGUI.ReadConfigXml
         }
 
         public string InitializationPath { get; set; }
-        public List<Unwrap> UnWrapList { get; set; }
-        public List<Interpolate> InterpolateList { get; set; }
+        public List<UnwrapModel> UnWrapList { get; set; }
+        public List<InterpolateModel> InterpolateList { get; set; }
         public List<object> CollectionOfSteps { get; set; }
-        public List<Wrap> WrapList { get; set; }
-        public NameTypeUnit NameTypeUnitList { get; set; }
+        public List<WrapModelModel> WrapList { get; set; }
+        public NameTypeUnitModel NameTypeUnitList { get; set; }
     }
 
-    public class Unwrap
+    public class UnwrapModel
     {
         private XElement _item;
-        public Unwrap(XElement item)
+        public UnwrapModel(XElement item)
         {
             Name = "Unwrap";
             this._item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
         }
         public string Name { get; set; }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
-    public class Interpolate : Unwrap
+    public class InterpolateModel : UnwrapModel
     {
-        public Interpolate(XElement intplt) : base(intplt)
+        public InterpolateModel(XElement intplt) : base(intplt)
         {
             base.Name = "Interpolation";
             var par = intplt.Element("Parameters").Element("Limit");
@@ -131,9 +131,9 @@ namespace BAWGUI.ReadConfigXml
         [Description("Constant")]
         Constant
     }
-    public class TunableFilter : Unwrap
+    public class TunableFilterModel : UnwrapModel
     {
-        public TunableFilter(XElement filter) : base(filter)
+        public TunableFilterModel(XElement filter) : base(filter)
         {
             base.Name = "Filter";
             var par = filter.Element("Type");
@@ -211,9 +211,9 @@ namespace BAWGUI.ReadConfigXml
         [Description("Low-Pass")]
         LowPass
     }
-    public class Multirate : Unwrap
+    public class MultirateModel : UnwrapModel
     {
-        public Multirate(XElement mRate) : base(mRate)
+        public MultirateModel(XElement mRate) : base(mRate)
         {
             base.Name = "Multirate";
             FilterChoice = 0;
@@ -249,16 +249,16 @@ namespace BAWGUI.ReadConfigXml
         public string QElement { get; set; }
         public int FilterChoice { get; set; }
     }
-    public class Wrap : Unwrap
+    public class WrapModelModel : UnwrapModel
     {
-        public Wrap(XElement wrap) : base(wrap)
+        public WrapModelModel(XElement wrap) : base(wrap)
         {
             base.Name = "Wrap";
         }
     }
-    public class NameTypeUnit
+    public class NameTypeUnitModel
     {
-        public NameTypeUnit()
+        public NameTypeUnitModel()
         {
             Name = "Signal Type and Unit Specification";
             NameTypeUnitPMUList = new List<NameTypeUnitPMU>();
@@ -288,10 +288,10 @@ namespace BAWGUI.ReadConfigXml
             {
                 NewType = par.Value;
             }
-            Input = new PMUElement(pmu.Element("Name").Value, pmu.Element("CurrentChannel").Value);
+            Input = new PMUElementModel(pmu.Element("Name").Value, pmu.Element("CurrentChannel").Value);
         }
 
-        public PMUElement Input { get; set; }
+        public PMUElementModel Input { get; set; }
         public string NewChannel { get; set; }
         public string NewUnit { get; set; }
         public string NewType { get; set; }

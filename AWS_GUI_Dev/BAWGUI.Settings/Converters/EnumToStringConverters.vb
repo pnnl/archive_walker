@@ -7,9 +7,9 @@ Namespace Converters
         Implements IValueConverter
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.Convert
             Select Case value
-                Case DataFileType.csv
+                Case BAWGUI.ReadConfigXml.DataFileType.csv
                     Return "JSIS CSV"
-                Case DataFileType.pdat
+                Case BAWGUI.ReadConfigXml.DataFileType.pdat
                     Return "PDAT"
                 Case Else
                     Throw New Exception("Data file type not valid!")
@@ -19,9 +19,9 @@ Namespace Converters
         Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.ConvertBack
             Select Case value
                 Case "JSIS CSV"
-                    Return DataFileType.csv
+                    Return BAWGUI.ReadConfigXml.DataFileType.csv
                 Case "PDAT"
-                    Return DataFileType.pdat
+                    Return BAWGUI.ReadConfigXml.DataFileType.pdat
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

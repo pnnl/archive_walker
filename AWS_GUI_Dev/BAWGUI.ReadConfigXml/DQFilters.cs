@@ -7,88 +7,100 @@ using System.Xml.Linq;
 
 namespace BAWGUI.ReadConfigXml
 {
-    public class DQFilter
+    public class DQFilterModel
     {
         private XElement item;
+        public DQFilterModel()
+        {
 
-        public DQFilter(XElement item)
+        }
+        public DQFilterModel(XElement item)
         {
             this.item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(item);
         }
         public string SetToNaN { get; set; } = "True";
         public string Name { get; set; }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
 
-    public class StatusFlagsDQFilter : DQFilter
+    public class StatusFlagsDQFilterModel : DQFilterModel
     {
-        public StatusFlagsDQFilter(XElement item) : base(item)
+        public StatusFlagsDQFilterModel()
         {
-            Name = "Status Flags";
         }
-    }
-    public class ZerosDQFilter : DQFilter
-    {
-        public ZerosDQFilter(XElement item) : base(item)
+        public StatusFlagsDQFilterModel(XElement item) : base(item)
         {
-            Name = "Zeros";
         }
+        public new string Name { get => "Status Flags"; }
     }
-    public class MissingDQFilter : DQFilter
+    public class ZerosDQFilterModel : DQFilterModel
     {
-        public MissingDQFilter(XElement item) : base(item)
+        public ZerosDQFilterModel() { }
+        public ZerosDQFilterModel(XElement item) : base(item)
         {
-            Name = "Missing";
         }
+        public new string Name { get => "Zeros"; }
     }
-    public class WrappingFailureDQFilter : DQFilter
+    public class MissingDQFilterModel : DQFilterModel
     {
-        public WrappingFailureDQFilter(XElement item) : base(item)
+        public MissingDQFilterModel() { }
+        public MissingDQFilterModel(XElement item) : base(item)
         {
-            Name = "Angle Wrapping";
+        }
+        public new string Name { get => "Missing"; }
+    }
+    public class WrappingFailureDQFilterModel : DQFilterModel
+    {
+        public WrappingFailureDQFilterModel() { }
+        public WrappingFailureDQFilterModel(XElement item) : base(item)
+        {
             var par = item.Element("Parameters").Element("AngleThresh").Value;
             if (par != null)
             {
                 AngleThresh = par;
             }
         }
+        public new string Name { get => "Angle Wrapping"; }
         public string AngleThresh { get; set; }
     }
 
-    public class DataFrameDQFilter : DQFilter
+    public class DataFrameDQFilterModel : DQFilterModel
     {
-        public DataFrameDQFilter(XElement item) : base(item)
+        public DataFrameDQFilterModel() { }
+        public DataFrameDQFilterModel(XElement item) : base(item)
         {
-            Name = "Data Frame";
             var par = item.Element("Parameters").Element("PercentBadThresh").Value;
             if (par != null)
             {
                 PercentBadThresh = par;
             }
         }
+        public new string Name { get => "Data Frame"; }
         public string PercentBadThresh { get; set; }
     }
-    public class PMUchanDQFilter : DataFrameDQFilter
+    public class PMUchanDQFilterModel : DataFrameDQFilterModel
     {
-        public PMUchanDQFilter(XElement item) : base(item)
+        public PMUchanDQFilterModel() { }
+        public PMUchanDQFilterModel(XElement item) : base(item)
         {
-            Name = "Channel";
         }
+        public new string Name { get => "Channel"; }
     }
-    public class PMUallDQFilter : DataFrameDQFilter
+    public class PMUallDQFilterModel : DataFrameDQFilterModel
     {
-        public PMUallDQFilter(XElement item) : base(item)
+        public PMUallDQFilterModel() { }
+        public PMUallDQFilterModel(XElement item) : base(item)
         {
-            Name = "Entire PMU";
         }
+        public new string Name { get => "Entire PMU"; }
     }
 
-    public class StaleDQFilter : DQFilter
+    public class StaleDQFilterModel : DQFilterModel
     {
-        public StaleDQFilter(XElement item) : base(item)
+        public StaleDQFilterModel() { }
+        public StaleDQFilterModel(XElement item) : base(item)
         {
-            Name = "Stale Data";
             var par = item.Element("Parameters").Element("StaleThresh").Value;
             if (par != null)
             {
@@ -107,29 +119,31 @@ namespace BAWGUI.ReadConfigXml
                 }
             }
         }
+        public new string Name { get => "Stale Data"; }
         public string StaleThresh { get; set; }
         public bool FlagAllByFreq { get; set; }
     }
 
-    public class OutlierDQFilter : DQFilter
+    public class OutlierDQFilterModel : DQFilterModel
     {
-        public OutlierDQFilter(XElement item) : base(item)
+        public OutlierDQFilterModel() { }
+        public OutlierDQFilterModel(XElement item) : base(item)
         {
-            Name = "Outliers";
             var par = item.Element("Parameters").Element("StdDevMult").Value;
             if (par != null)
             {
                 StdDevMult = par;
             }
         }
+        public new string Name { get => "Outliers"; }
         public string StdDevMult { get; set; }
     }
 
-    public class FreqDQFilter : DQFilter
+    public class FreqDQFilterModel : DQFilterModel
     {
-        public FreqDQFilter(XElement item) : base(item)
+        public FreqDQFilterModel() { }
+        public FreqDQFilterModel(XElement item) : base(item)
         {
-            Name = "Nominal Frequency";
             var par = item.Element("Parameters").Element("FreqMaxChan").Value;
             if (par != null)
             {
@@ -156,6 +170,7 @@ namespace BAWGUI.ReadConfigXml
                 FreqMaxSamp = par;
             }
         }
+        public new string Name { get => "Nominal Frequency"; }
         public string FreqMaxChan { get; set; }
         public string FreqMinChan { get; set; }
         public string FreqPctChan { get; set; }
@@ -163,11 +178,11 @@ namespace BAWGUI.ReadConfigXml
         public string FreqMaxSamp { get; set; }
     }
 
-    public class VoltPhasorDQFilter : DQFilter
+    public class VoltPhasorDQFilterModel : DQFilterModel
     {
-        public VoltPhasorDQFilter(XElement item) : base(item)
+        public VoltPhasorDQFilterModel() { }
+        public VoltPhasorDQFilterModel(XElement item) : base(item)
         {
-            Name = "Nominal Voltage";
             var par = item.Element("Parameters").Element("NomVoltage").Value;
             if (par != null)
             {
@@ -184,6 +199,7 @@ namespace BAWGUI.ReadConfigXml
                 VoltMax = par;
             }
         }
+        public new string Name { get => "Nominal Voltage"; }
         public string VoltMin { get; set; }
         public string VoltMax { get; set; }
         public string NomVoltage { get; set; }

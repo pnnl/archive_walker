@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports BAWGUI.ReadConfigXml
+Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
 
 Namespace ViewModels
@@ -80,7 +81,8 @@ Namespace ViewModels
             _unitList = New List(Of String)
         End Sub
 
-        Public Sub New(postProcessConfigure As PostProcessConfig)
+        Public Sub New(postProcessConfigure As PostProcessConfigModel, signalsMgr As SignalManager)
+            Me.New
             Me.postProcessConfigure = postProcessConfigure
         End Sub
 
@@ -143,7 +145,7 @@ Namespace ViewModels
             End Set
         End Property
         Private _unitList As List(Of String)
-        Private postProcessConfigure As PostProcessConfig
+        Private postProcessConfigure As PostProcessConfigModel
 
         Public Property UnitList As List(Of String)
             Get
@@ -155,7 +157,7 @@ Namespace ViewModels
             End Set
         End Property
 
-        Public Property Model As PostProcessConfig
+        Public Property Model As PostProcessConfigModel
     End Class
 
 End Namespace

@@ -262,7 +262,7 @@ namespace BAWGUI.ReadConfigXml
                 _frequencyTolerance = value;                
             }
         }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
 
     public class SpectralCoherenceDetector
@@ -565,7 +565,7 @@ namespace BAWGUI.ReadConfigXml
                 _frequencyTolerance = value;                
             }
         }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
 
     public class RingdownDetector
@@ -655,7 +655,7 @@ namespace BAWGUI.ReadConfigXml
                 _maxDuration = value;                
             }
         }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
 
     public class OutOfRangeGeneralDetector
@@ -928,7 +928,7 @@ namespace BAWGUI.ReadConfigXml
                 _eventMergeWindow = value;                
             }
         }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
 
     public class WindRampDetector
@@ -1137,7 +1137,7 @@ namespace BAWGUI.ReadConfigXml
                 _timeMax = value;                
             }
         }
-        public List<PMUElement> PMUElementList { get; set; }
+        public List<PMUElementModel> PMUElementList { get; set; }
     }
 
     public enum DetectorModeType
