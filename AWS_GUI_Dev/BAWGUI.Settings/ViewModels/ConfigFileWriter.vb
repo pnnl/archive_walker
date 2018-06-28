@@ -1,4 +1,5 @@
 ﻿Imports System.Globalization
+Imports BAWGUI.Core
 Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
 

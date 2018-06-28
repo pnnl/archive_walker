@@ -64,17 +64,16 @@
   <ItemGroup>
     <Compile Include="Converters\DetectorExpanderHeaderConverter.cs" />
     <Compile Include="Converters\SelectionStatusBackgroundConverter.cs" />
+    <Compile Include="Models\SignalSignatures.cs" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\SignalSignatureViewModel.cs" />
+    <Compile Include="ViewModels\SignalTypeHierachy.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
-      <Project>{E0ACA34C-2C13-4E98-944D-A419BDD2D116}</Project>
-      <Name>BAWGUI.SignalManagement</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>

@@ -18,6 +18,7 @@ namespace BAWGUI.ReadConfigXml
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Linq;
+    using BAWGUI.Core;
     using Microsoft.VisualBasic;
 
     public class PeriodogramDetectorModel
@@ -262,7 +263,7 @@ namespace BAWGUI.ReadConfigXml
                 _frequencyTolerance = value;                
             }
         }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
 
     public class SpectralCoherenceDetectorModel
@@ -565,7 +566,7 @@ namespace BAWGUI.ReadConfigXml
                 _frequencyTolerance = value;                
             }
         }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
 
     public class RingdownDetectorModel
@@ -655,7 +656,7 @@ namespace BAWGUI.ReadConfigXml
                 _maxDuration = value;                
             }
         }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
 
     public class OutOfRangeGeneralDetectorModel
@@ -928,7 +929,7 @@ namespace BAWGUI.ReadConfigXml
                 _eventMergeWindow = value;                
             }
         }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
 
     public class WindRampDetectorModel
@@ -1137,7 +1138,7 @@ namespace BAWGUI.ReadConfigXml
                 _timeMax = value;                
             }
         }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
 
     public enum DetectorModeType

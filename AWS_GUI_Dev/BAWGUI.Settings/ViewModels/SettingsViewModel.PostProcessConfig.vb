@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows.Forms
 Imports System.Windows.Input
+Imports BAWGUI.Core
 Imports BAWGUI.SignalManagement.ViewModels
 
 Namespace ViewModels

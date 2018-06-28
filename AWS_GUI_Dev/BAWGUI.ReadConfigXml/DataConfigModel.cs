@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -221,19 +222,19 @@ namespace BAWGUI.ReadConfigXml
         [Description("Reactive")]
         Q
     }
-    public class PMUElementModel
-    {
-        public PMUElementModel()
-        {
-        }
-        public PMUElementModel(string pmu, string signal)
-        {
-            PMUName = pmu;
-            SignalName = signal;
-        }
-        public string PMUName { get; set; }
-        public string SignalName { get; set; }
-    }
+    //public class SignalSignatures
+    //{
+    //    public SignalSignatures()
+    //    {
+    //    }
+    //    public SignalSignatures(string pmu, string signal)
+    //    {
+    //        PMUName = pmu;
+    //        SignalName = signal;
+    //    }
+    //    public string PMUName { get; set; }
+    //    public string SignalName { get; set; }
+    //}
 
     public class PMUElementForUnaryCustModel
     {
@@ -255,8 +256,8 @@ namespace BAWGUI.ReadConfigXml
 
     public class PMUElementPairModel
     {
-        public PMUElementModel PMUElement1 { get; set; }
-        public PMUElementModel PMUElement2 { get; set; }
+        public SignalSignatures PMUElement1 { get; set; }
+        public SignalSignatures PMUElement2 { get; set; }
         public string CustSignalName { get; set; }
     }
 
@@ -265,8 +266,8 @@ namespace BAWGUI.ReadConfigXml
     }
     public class MagAngToPower : PMUElementPairModel
     {
-        public PMUElementModel PMUElement3 { get; set; }
-        public PMUElementModel PMUElement4 { get; set; }
+        public SignalSignatures PMUElement3 { get; set; }
+        public SignalSignatures PMUElement4 { get; set; }
     }
     //namespace BAWGUI.Readers
     //{
@@ -288,7 +289,7 @@ namespace BAWGUI.ReadConfigXml
     //}
     public static class PMUElementReader
     {
-        public static List<PMUElementModel> ReadPMUElements(XElement item)
+        public static List<SignalSignatures> ReadPMUElements(XElement item)
         {
             if (item == null)
             {
@@ -296,7 +297,7 @@ namespace BAWGUI.ReadConfigXml
             }
             else
             {
-                var newList = new List<PMUElementModel>();
+                var newList = new List<SignalSignatures>();
                 var inputs = item.Elements("PMU");
                     foreach (var aInput in inputs)
                     {
@@ -307,13 +308,13 @@ namespace BAWGUI.ReadConfigXml
                             foreach (var channel in channels)
                             {
                                 var channelName = channel.Element("Name").Value;
-                                var newElement = new PMUElementModel(pmuName, channelName);
+                                var newElement = new SignalSignatures(pmuName, channelName);
                             newList.Add(newElement);
                             }
                         }
                         else
                         {
-                            var newElement = new PMUElementModel();
+                            var newElement = new SignalSignatures();
                             newElement.PMUName = pmuName;
                         newList.Add(newElement);
                         }
