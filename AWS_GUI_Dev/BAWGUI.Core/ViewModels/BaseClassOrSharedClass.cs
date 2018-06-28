@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.Collections.ObjectModel;
 using BAWGUI.Utilities;
-using BAWGUI.SignalManagement.ViewModels;
 
 namespace BAWGUI.Core
 {

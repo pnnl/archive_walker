@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Core;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -77,16 +78,16 @@ namespace BAWGUI.ReadConfigXml
                 SignalName = par;
             }
             var terms = item.Element("Parameters").Elements("term");
-            PMUElementList = new List<PMUElementModel>();
+            PMUElementList = new List<SignalSignatures>();
             foreach (var term in terms)
             {
-                var newTerm = new PMUElementModel(term.Element("PMU").Value, term.Element("Channel").Value);
+                var newTerm = new SignalSignatures(term.Element("PMU").Value, term.Element("Channel").Value);
                 PMUElementList.Add(newTerm);
             }
         }
         public new string Name { get => "Addition"; }
         public string SignalName { get; set; }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
     public class SubtractionCustModel : CustomizationModel
     {
@@ -106,13 +107,13 @@ namespace BAWGUI.ReadConfigXml
             {
                 SignalName = par;
             }
-            Minuend = new PMUElementModel(item.Element("Parameters").Element("minuend").Element("PMU").Value, item.Element("Parameters").Element("minuend").Element("Channel").Value);
-            Subtrahend = new PMUElementModel(item.Element("Parameters").Element("subtrahend").Element("PMU").Value, item.Element("Parameters").Element("subtrahend").Element("Channel").Value);
+            Minuend = new SignalSignatures(item.Element("Parameters").Element("minuend").Element("PMU").Value, item.Element("Parameters").Element("minuend").Element("Channel").Value);
+            Subtrahend = new SignalSignatures(item.Element("Parameters").Element("subtrahend").Element("PMU").Value, item.Element("Parameters").Element("subtrahend").Element("Channel").Value);
         }
         public new string Name { get => "Subtraction"; }
         public string SignalName { get; set; }
-        public PMUElementModel Minuend { get; set; }
-        public PMUElementModel Subtrahend { get; set; }
+        public SignalSignatures Minuend { get; set; }
+        public SignalSignatures Subtrahend { get; set; }
     }
     public class MultiplicationCustModel : CustomizationModel
     {
@@ -133,16 +134,16 @@ namespace BAWGUI.ReadConfigXml
                 SignalName = par;
             }
             var factors = item.Element("Parameters").Elements("factor");
-            PMUElementList = new List<PMUElementModel>();
+            PMUElementList = new List<SignalSignatures>();
             foreach (var factor in factors)
             {
-                var newFactor = new PMUElementModel(factor.Element("PMU").Value, factor.Element("Channel").Value);
+                var newFactor = new SignalSignatures(factor.Element("PMU").Value, factor.Element("Channel").Value);
                 PMUElementList.Add(newFactor);
             }
         }
         public new string Name { get => "Multiplication"; }
         public string SignalName { get; set; }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
     public class DivisionCustModel : CustomizationModel
     {
@@ -162,13 +163,13 @@ namespace BAWGUI.ReadConfigXml
             {
                 SignalName = par;
             }
-            Dividend = new PMUElementModel(item.Element("Parameters").Element("dividend").Element("PMU").Value, item.Element("Parameters").Element("dividend").Element("Channel").Value);
-            Divisor = new PMUElementModel(item.Element("Parameters").Element("divisor").Element("PMU").Value, item.Element("Parameters").Element("divisor").Element("Channel").Value);
+            Dividend = new SignalSignatures(item.Element("Parameters").Element("dividend").Element("PMU").Value, item.Element("Parameters").Element("dividend").Element("Channel").Value);
+            Divisor = new SignalSignatures(item.Element("Parameters").Element("divisor").Element("PMU").Value, item.Element("Parameters").Element("divisor").Element("Channel").Value);
         }
         public new string Name { get => "Division"; }
         public string SignalName { get; set; }
-        public PMUElementModel Dividend { get; set; }
-        public PMUElementModel Divisor { get; set; }
+        public SignalSignatures Dividend { get; set; }
+        public SignalSignatures Divisor { get; set; }
     }
     public class ExponentialCustModel : CustomizationModel
     {
@@ -282,8 +283,8 @@ namespace BAWGUI.ReadConfigXml
             foreach (var phasor in phasors)
             {
                 var newPair = new PMUElementPairModel();
-                newPair.PMUElement1 = new PMUElementModel(phasor.Element("mag").Element("PMU").Value, phasor.Element("mag").Element("Channel").Value);
-                newPair.PMUElement2 = new PMUElementModel(phasor.Element("ang").Element("PMU").Value, phasor.Element("ang").Element("Channel").Value);
+                newPair.PMUElement1 = new SignalSignatures(phasor.Element("mag").Element("PMU").Value, phasor.Element("mag").Element("Channel").Value);
+                newPair.PMUElement2 = new SignalSignatures(phasor.Element("ang").Element("PMU").Value, phasor.Element("ang").Element("Channel").Value);
                 newPair.CustSignalName = phasor.Element("CustName").Value;
                 MagAngPairList.Add(newPair);
             }
@@ -315,18 +316,18 @@ namespace BAWGUI.ReadConfigXml
             {
                 IsFromPhasor = true;
                 PhasorPair = new PhasorToPower();
-                PhasorPair.PMUElement1 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Vphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vphasor").Element("Channel").Value);
-                PhasorPair.PMUElement2 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Iphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iphasor").Element("Channel").Value);
+                PhasorPair.PMUElement1 = new SignalSignatures(item.Element("Parameters").Element("power").Element("Vphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vphasor").Element("Channel").Value);
+                PhasorPair.PMUElement2 = new SignalSignatures(item.Element("Parameters").Element("power").Element("Iphasor").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iphasor").Element("Channel").Value);
                 PhasorPair.CustSignalName = item.Element("Parameters").Element("power").Element("CustName").Value;
             }
             else
             {
                 IsFromPhasor = false;
                 MagAngQuad = new MagAngToPower();
-                MagAngQuad.PMUElement1 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Vmag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vmag").Element("Channel").Value);
-                MagAngQuad.PMUElement2 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Vang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vang").Element("Channel").Value);
-                MagAngQuad.PMUElement3 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Imag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Imag").Element("Channel").Value);
-                MagAngQuad.PMUElement4 = new PMUElementModel(item.Element("Parameters").Element("power").Element("Iang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iang").Element("Channel").Value);
+                MagAngQuad.PMUElement1 = new SignalSignatures(item.Element("Parameters").Element("power").Element("Vmag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vmag").Element("Channel").Value);
+                MagAngQuad.PMUElement2 = new SignalSignatures(item.Element("Parameters").Element("power").Element("Vang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Vang").Element("Channel").Value);
+                MagAngQuad.PMUElement3 = new SignalSignatures(item.Element("Parameters").Element("power").Element("Imag").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Imag").Element("Channel").Value);
+                MagAngQuad.PMUElement4 = new SignalSignatures(item.Element("Parameters").Element("power").Element("Iang").Element("PMU").Value, item.Element("Parameters").Element("power").Element("Iang").Element("Channel").Value);
                 MagAngQuad.CustSignalName = item.Element("Parameters").Element("power").Element("CustName").Value;
             }
         }
@@ -364,10 +365,10 @@ namespace BAWGUI.ReadConfigXml
             {
                 Unit = par;
             }
-            Input = new PMUElementModel(item.Element("Parameters").Element("PMU").Value, item.Element("Parameters").Element("Channel").Value);
+            Input = new SignalSignatures(item.Element("Parameters").Element("PMU").Value, item.Element("Parameters").Element("Channel").Value);
         }
         public new string Name { get => "Signal Type/Unit"; }
-        public PMUElementModel Input { get; set; }
+        public SignalSignatures Input { get; set; }
         public string SignalName { get; set; }
         public string Type { get; set; }
         public string Unit { get; set; }

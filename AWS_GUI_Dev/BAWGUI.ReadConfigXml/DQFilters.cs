@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,7 @@ namespace BAWGUI.ReadConfigXml
         }
         public string SetToNaN { get; set; } = "True";
         public string Name { get; set; }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
 
     public class StatusFlagsDQFilterModel : DQFilterModel

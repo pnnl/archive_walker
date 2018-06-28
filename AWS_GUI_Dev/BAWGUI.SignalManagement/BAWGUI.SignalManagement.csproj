@@ -63,15 +63,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\SignalSignatures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\InputFileInfoViewModel.cs" />
     <Compile Include="ViewModels\PMUWithSamplingRate.cs" />
     <Compile Include="ViewModels\SignalManager.cs" />
-    <Compile Include="ViewModels\SignalSignatureViewModel.cs" />
-    <Compile Include="ViewModels\SignalTypeHierachy.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
+      <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
+      <Name>BAWGUI.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.CSVDataReader\BAWGUI.CSVDataReader.vbproj">
       <Project>{8f7554f6-9d76-4bd4-be7f-e358d309bb89}</Project>
       <Name>BAWGUI.CSVDataReader</Name>
@@ -84,6 +85,9 @@
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

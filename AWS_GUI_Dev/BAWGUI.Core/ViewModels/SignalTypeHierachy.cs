@@ -1,7 +1,8 @@
-﻿using BAWGUI.Utilities;
+﻿using BAWGUI.Core;
+using BAWGUI.Utilities;
 using System.Collections.ObjectModel;
 
-namespace BAWGUI.SignalManagement.ViewModels
+namespace BAWGUI.Core
 {
     public class SignalTypeHierachy : ViewModelBase
     {

@@ -1,7 +1,6 @@
-﻿using BAWGUI.SignalManagement.Models;
-using BAWGUI.Utilities;
+﻿using BAWGUI.Utilities;
 
-namespace BAWGUI.SignalManagement.ViewModels
+namespace BAWGUI.Core
 {
     public class SignalSignatureViewModel : ViewModelBase
     {

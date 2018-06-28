@@ -1,4 +1,5 @@
-﻿using BAWGUI.CSVDataReader.CSVDataReader;
+﻿using BAWGUI.Core;
+using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.Utilities;
 using PDAT_Reader;
@@ -941,7 +942,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             }
         }
 
-        public ObservableCollection<SignalSignatureViewModel> FindSignalsEntirePMU(List<PMUElementModel> pMUElementList)
+        public ObservableCollection<SignalSignatureViewModel> FindSignalsEntirePMU(List<SignalSignatures> pMUElementList)
         {
             var newSignalList = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in pMUElementList)
@@ -1015,7 +1016,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             return newSignalList;
         }
 
-        public ObservableCollection<SignalSignatureViewModel> FindSignals(List<PMUElementModel> pMUElementList)
+        public ObservableCollection<SignalSignatureViewModel> FindSignals(List<SignalSignatures> pMUElementList)
         {
             var newSignalList = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in pMUElementList)

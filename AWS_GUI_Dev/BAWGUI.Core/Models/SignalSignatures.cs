@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAWGUI.SignalManagement.Models
+namespace BAWGUI.Core
 {
     public class SignalSignatures
     {
@@ -15,6 +15,11 @@ namespace BAWGUI.SignalManagement.Models
             IsEnabled = true;
             IsCustomSignal = false;
             IsNameTypeUnitChanged = false;
+        }
+        public SignalSignatures(string pmu, string signal):this()
+        {
+            PMUName = pmu;
+            SignalName = signal;
         }
         public string PMUName { get; set; }
         public string SignalName { get; set; }

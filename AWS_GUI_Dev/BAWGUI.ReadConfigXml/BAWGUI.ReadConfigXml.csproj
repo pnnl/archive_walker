@@ -69,5 +69,11 @@
     <Compile Include="ProcessConfigModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
+      <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
+      <Name>BAWGUI.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

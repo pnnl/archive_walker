@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.ComponentModel;
+using BAWGUI.Core;
 
 namespace BAWGUI.ReadConfigXml
 {
@@ -94,7 +95,7 @@ namespace BAWGUI.ReadConfigXml
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
         }
         public string Name { get; set; }
-        public List<PMUElementModel> PMUElementList { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
     }
     public class InterpolateModel : UnwrapModel
     {
@@ -299,10 +300,10 @@ namespace BAWGUI.ReadConfigXml
             {
                 NewType = par.Value;
             }
-            Input = new PMUElementModel(pmu.Element("Name").Value, pmu.Element("CurrentChannel").Value);
+            Input = new SignalSignatures(pmu.Element("Name").Value, pmu.Element("CurrentChannel").Value);
         }
 
-        public PMUElementModel Input { get; set; }
+        public SignalSignatures Input { get; set; }
         public string NewChannel { get; set; }
         public string NewUnit { get; set; }
         public string NewType { get; set; }

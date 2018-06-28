@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BAWGUI.Core;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.Utilities;
 
