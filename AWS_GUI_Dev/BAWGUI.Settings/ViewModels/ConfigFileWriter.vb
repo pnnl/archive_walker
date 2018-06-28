@@ -342,7 +342,7 @@ Namespace ViewModels
                         If Not String.IsNullOrEmpty(dt.EventMergeWindow) Then
                             element.Add(<EventMergeWindow><%= dt.EventMergeWindow %></EventMergeWindow>)
                         End If
-                    PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                    'PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 'Case GetType(OutOfRangeGeneralDetector)
                 '    Dim dt = DirectCast(detector, OutOfRangeGeneralDetector)
                 '    element = <OutOfRangeGeneral>

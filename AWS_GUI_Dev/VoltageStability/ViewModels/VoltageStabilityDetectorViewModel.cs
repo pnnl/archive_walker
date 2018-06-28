@@ -1,4 +1,6 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.SignalManagement.ViewModels;
+using BAWGUI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace BAWGUI.ViewModels
+namespace BAWGUI.Utilities
 {
     public class TreeViewHelper
     {

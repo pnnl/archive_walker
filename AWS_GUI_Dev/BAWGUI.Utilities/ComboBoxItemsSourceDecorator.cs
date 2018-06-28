@@ -8,7 +8,8 @@ namespace BAWGUI.Utilities
 {
     public static class ComboBoxItemsSourceDecorator
     {
-        public readonly static DependencyProperty ItemsSourceProperty = DependencyProperty.RegisterAttached("ItemsSource", typeof(IEnumerable), typeof(ComboBoxItemsSourceDecorator), new PropertyMetadata(null, ItemsSourcePropertyChanged));
+        public readonly static DependencyProperty ItemsSourceProperty = DependencyProperty.RegisterAttached(
+            "ItemsSource", typeof(IEnumerable), typeof(ComboBoxItemsSourceDecorator), new PropertyMetadata(null, ItemsSourcePropertyChanged));
 
         public static void SetItemsSource(UIElement element, IEnumerable value)
         {
@@ -25,6 +26,7 @@ namespace BAWGUI.Utilities
             var target = element as Selector;
             if (element == null)
                 return;
+            // Save original binding 
             var originalBinding = BindingOperations.GetBinding(target, Selector.SelectedValueProperty);
             BindingOperations.ClearBinding(target, Selector.SelectedValueProperty);
 

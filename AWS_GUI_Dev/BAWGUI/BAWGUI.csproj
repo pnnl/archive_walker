@@ -160,10 +160,6 @@
     <Compile Include="Converters\ViewVisibilityConverter.cs" />
     <Compile Include="ViewModels\AddProjectViewModel.cs" />
     <Compile Include="ViewModels\AddTaskViewModel.cs" />
-    <Compile Include="ViewModels\ComboBoxItemsSourceDecorator.cs" />
-    <Compile Include="ViewModels\FocusExtension.cs" />
-    <Compile Include="ViewModels\MyTreeView.cs" />
-    <Compile Include="ViewModels\TreeViewHelper.cs" />
     <Compile Include="Views\AddARunPopup.xaml.cs">
       <DependentUpon>AddARunPopup.xaml</DependentUpon>
     </Compile>
@@ -267,6 +263,10 @@
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
+      <Name>VoltageStability</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

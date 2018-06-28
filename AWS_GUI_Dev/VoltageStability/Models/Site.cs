@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.SignalManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,23 +11,35 @@ namespace VoltageStability.Models
 {
     public class Site
     {
+        public Site()
+        {
+            Frequency = new Signal();
+            VoltageBuses = new List<VoltageBus>();
+            BranchesAndShunts = new List<Branch>();
+        }
         public string Name { get; set; }
         public string StabilityThreshold { get; set; }
-        public SignalSignatures Frequency { get; set; }
-        public ObservableCollection<SignalSignatures> VoltageBuses { get; set; }
-        public ObservableCollection<SignalSignatures> BranchesAndShunts { get; set; }
+        public Signal Frequency { get; set; }
+        public List<VoltageBus> VoltageBuses { get; set; }
+        public List<Branch> BranchesAndShunts { get; set; }
     }
     public class VoltageBus
     {
-        public SignalSignatures Magnitude { get; set; }
-        public SignalSignatures Angle { get; set; }
+        public VoltageBus(Signal s1, Signal s2)
+        {
+            Magnitude = s1;
+            Angle = s2;
+        }
+        public Signal Magnitude { get; set; }
+        public Signal Angle { get; set; }
     }
     public class Branch
     {
-        public SignalSignatures ActivePower { get; set; }
-        public SignalSignatures ReactivePower { get; set; }
-        public SignalSignatures CurrentMagnitude { get; set; }
-        public SignalSignatures CurrentAngle { get; set; }
+        public Branch() { }
+        public Signal ActivePower { get; set; }
+        public Signal ReactivePower { get; set; }
+        public Signal CurrentMagnitude { get; set; }
+        public Signal CurrentAngle { get; set; }
     }
     public class Shunt : Branch
     {
