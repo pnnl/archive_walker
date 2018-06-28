@@ -160,10 +160,6 @@
     <Compile Include="Converters\ViewVisibilityConverter.cs" />
     <Compile Include="ViewModels\AddProjectViewModel.cs" />
     <Compile Include="ViewModels\AddTaskViewModel.cs" />
-    <Compile Include="ViewModels\ComboBoxItemsSourceDecorator.cs" />
-    <Compile Include="ViewModels\FocusExtension.cs" />
-    <Compile Include="ViewModels\MyTreeView.cs" />
-    <Compile Include="ViewModels\TreeViewHelper.cs" />
     <Compile Include="Views\AddARunPopup.xaml.cs">
       <DependentUpon>AddARunPopup.xaml</DependentUpon>
     </Compile>
