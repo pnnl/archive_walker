@@ -41,7 +41,7 @@
                         </Button>
                     </DockPanel>
                 </Expander.Header>
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Hidden">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Auto" MaxHeight="300">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"/>
@@ -96,12 +96,18 @@
                                 <TextBlock Text=" seconds apart."/>
                             </StackPanel>
                         </StackPanel>
-                        <ItemsControl ItemsSource="{Binding Sites}" Grid.Column="1" Margin="2"/>
+                        <ItemsControl ItemsSource="{Binding Sites}" Grid.Column="1" Margin="2">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:SiteView Margin="2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                         <StackPanel Orientation="Vertical" Margin="2" Grid.Column="2">
-                            <Button Content="Add Site" Margin="2"/>
-                            <Button Content="Add Voltage Bus" Margin="2"/>
-                            <Button Content="Add Branch" Margin="2"/>
-                            <Button Content="Add Shunt" Margin="2"/>
+                            <Button Content="Add Site" Margin="2" Command="{Binding AddSite}"/>
+                            <Button Content="Add Voltage Bus" Margin="2" Command="{Binding AddVoltageBus}"/>
+                            <Button Content="Add Branch" Margin="2" Command="{Binding AddBranch}"/>
+                            <Button Content="Add Shunt" Margin="2" Command="{Binding AddShunt}"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>

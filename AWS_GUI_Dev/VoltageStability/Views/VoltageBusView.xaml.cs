@@ -17,11 +17,11 @@ using System.Windows.Shapes;
 namespace VoltageStability.Views
 {
     /// <summary>
-    /// Interaction logic for SiteView.xaml
+    /// Interaction logic for VoltageBusView.xaml
     /// </summary>
-    public partial class SiteView : UserControl
+    public partial class VoltageBusView : UserControl
     {
-        public SiteView()
+        public VoltageBusView()
         {
             InitializeComponent();
         }
@@ -31,6 +31,7 @@ namespace VoltageStability.Views
             var item = sender as TextBox;
             item.Background = Utility.HighlightColor;
         }
+
         private void TextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             var item = sender as TextBox;

@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="VoltageStability.Views.VoltageBusView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VoltageStability.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:converters="clr-namespace:VoltageStability.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:VSSignalSelectionLocation x:Key="VSSignalSelectionLocation"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Content="Voltage Bus:" Width="150"/>
+        <Label Grid.Row="1" Grid.Column="0" Margin="30,1,0,1" Content="Magnitude:" Width="120"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Text="{Binding Magnitude.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="GotFocus" >
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
+                        <i:InvokeCommandAction.CommandParameter>
+                            <MultiBinding Converter="{StaticResource VSSignalSelectionLocation}">
+                                <Binding Path="."/>
+                                <Binding Source="Magnitude" />
+                            </MultiBinding>
+                        </i:InvokeCommandAction.CommandParameter>
+                    </i:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
+        <Label Grid.Row="2" Grid.Column="0" Margin="30,1,0,1" Content="Angle:" Width="120"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Text="{Binding Angle.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="GotFocus" >
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
+                        <i:InvokeCommandAction.CommandParameter>
+                            <MultiBinding Converter="{StaticResource VSSignalSelectionLocation}">
+                                <Binding Path="."/>
+                                <Binding Source="Angle" />
+                            </MultiBinding>
+                        </i:InvokeCommandAction.CommandParameter>
+                    </i:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
+    </Grid>
+</UserControl>

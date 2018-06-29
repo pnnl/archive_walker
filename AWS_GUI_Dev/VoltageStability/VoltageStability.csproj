@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\VSSignalSelectionLocation.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\VoltageStabilityDetector.cs" />
     <Compile Include="Models\VoltageStabilityDetectorGroupReader.cs" />
@@ -78,9 +79,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\BranchViewModel.cs" />
+    <Compile Include="ViewModels\SiteViewModel.cs" />
+    <Compile Include="ViewModels\VoltageBusViewModel.cs" />
     <Compile Include="ViewModels\VoltageStabilityDetectorViewModel.cs" />
+    <Compile Include="Views\BranchesAndShutsView.xaml.cs">
+      <DependentUpon>BranchesAndShutsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SiteView.xaml.cs">
       <DependentUpon>SiteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VoltageBusView.xaml.cs">
+      <DependentUpon>VoltageBusView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VoltageStabilityDetectorView.xaml.cs">
       <DependentUpon>VoltageStabilityDetectorView.xaml</DependentUpon>
@@ -104,7 +114,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\BranchesAndShutsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SiteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VoltageBusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

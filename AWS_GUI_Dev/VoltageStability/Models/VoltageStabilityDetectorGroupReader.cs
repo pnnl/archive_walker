@@ -37,6 +37,17 @@ namespace VoltageStability.Models
                 {
                     var newMethod = vs.Element("Method").Value;
                     previousVSdetector.AddMethod(newMethod);
+                    switch (newMethod)
+                    {
+                        case "DeMarco":
+                            previousVSdetector.DeMarcoAnalysisLength = vs.Elements().Where(e => e.Name.LocalName == "AnalysisLength").Single().Value;
+                            break;
+                        case "Mitsubishi":
+                            previousVSdetector.MitsubishiAnalysisLength = vs.Elements().Where(e => e.Name.LocalName == "AnalysisLength").Single().Value;
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 else
                 {
@@ -82,12 +93,24 @@ namespace VoltageStability.Models
                 var branchesAndShunts = sub.Elements().Where((e => e.Name.LocalName == "Branch" || e.Name.LocalName == "Shunt"));
                 foreach (var item in branchesAndShunts)
                 {
-                    var bas = new Branch();
-                    bas.ActivePower = new Signal(item.Element("PMU").Value, item.Element("P").Value);
-                    bas.ReactivePower = new Signal(item.Element("PMU").Value, item.Element("Q").Value);
-                    bas.CurrentMagnitude = new Signal(item.Element("PMU").Value, item.Element("Imag").Value);
-                    bas.CurrentAngle = new Signal(item.Element("PMU").Value, item.Element("Iang").Value);
-                    site.BranchesAndShunts.Add(bas);
+                    if (item.Name == "Branch")
+                    {
+                        var bas = new Branch();
+                        bas.ActivePower = new Signal(item.Element("PMU").Value, item.Element("P").Value);
+                        bas.ReactivePower = new Signal(item.Element("PMU").Value, item.Element("Q").Value);
+                        bas.CurrentMagnitude = new Signal(item.Element("PMU").Value, item.Element("Imag").Value);
+                        bas.CurrentAngle = new Signal(item.Element("PMU").Value, item.Element("Iang").Value);
+                        site.BranchesAndShunts.Add(bas);
+                    }
+                    else
+                    {
+                        var bas = new Shunt();
+                        bas.ActivePower = new Signal(item.Element("PMU").Value, item.Element("P").Value);
+                        bas.ReactivePower = new Signal(item.Element("PMU").Value, item.Element("Q").Value);
+                        bas.CurrentMagnitude = new Signal(item.Element("PMU").Value, item.Element("Imag").Value);
+                        bas.CurrentAngle = new Signal(item.Element("PMU").Value, item.Element("Iang").Value);
+                        site.BranchesAndShunts.Add(bas);
+                    }
                 }
                 sites.Add(site);
             }

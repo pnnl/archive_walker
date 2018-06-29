@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
-             xmlns:model="clr-namespace:BAWGUI.Settings.Model"
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"

@@ -10,6 +10,7 @@ using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using VoltageStability.Models;
+using VoltageStability.ViewModels;
 
 namespace BAWGUI.ViewModels
 {
@@ -128,7 +129,12 @@ namespace BAWGUI.ViewModels
                     SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                     SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
 
-                    var vsReader = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath);
+                    var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
+                    foreach (var detector in vsDetectors)
+                    {
+                        SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
+                    }
+
                 }
                 catch (Exception ex)
                 {
