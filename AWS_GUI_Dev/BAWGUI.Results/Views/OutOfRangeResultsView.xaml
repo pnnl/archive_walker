@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
-             xmlns:con="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:con="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:con2="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="900">

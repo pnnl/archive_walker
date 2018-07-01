@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace BAWGUI.Results.Converters
+namespace BAWGUI.Core.Converters
 {
     public class ResultTableVisibilityConverter : IMultiValueConverter
     {
