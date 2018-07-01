@@ -2,6 +2,7 @@
 Imports BAWGUI.Core
 Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
+Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Public Class ConfigFileWriter
@@ -484,6 +485,8 @@ Namespace ViewModels
                         '    <FrequencyMax><%= dt.FrequencyMax %></FrequencyMax>
                         '    <FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>
                         '</Periodogram>
+                    Case GetType(VoltageStabilityDetectorViewModel)
+                        Continue For
                     Case Else
                         Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
                 End Select

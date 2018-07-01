@@ -3,6 +3,7 @@ Imports System.Windows
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
+Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -47,7 +48,8 @@ Namespace ViewModels
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Voltage Stability"
-                    newDetector = New VoltageStability.ViewModels.VoltageStabilityDetectorViewModel
+                    newDetector = New VoltageStabilityDetectorViewModel
+                    'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
