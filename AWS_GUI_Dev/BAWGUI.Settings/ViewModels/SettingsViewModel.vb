@@ -3937,7 +3937,7 @@ Namespace ViewModels
             Dim newFileSource = New InputFileInfoViewModel()
             newFileSource.IsExpanded = True
             SignalMgr.FileInfo.Add(newFileSource)
-            'DataConfigure.ReaderProperty.InputFileInfos.Add(newFileSource)
+            DataConfigure.ReaderProperty.InputFileInfos.Add(newFileSource)
         End Sub
         Private _deleteThisFileSource As ICommand
         Public Property DeleteThisFileSource As ICommand

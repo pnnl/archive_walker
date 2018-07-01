@@ -14,23 +14,55 @@ namespace VoltageStability.ViewModels
 {
     public class VoltageStabilityDetectorViewModel:DetectorBase
     {
-        public VoltageStabilityDetectorViewModel(SignalManager signalMgr) : this(new VoltageStabilityDetector(), signalMgr)
+        public VoltageStabilityDetectorViewModel(SignalManager signalMgr)
         {
+            var newDetector = new VoltageStabilityDetector();
+            newDetector.Sites = new ObservableCollection<Site>();
+            var newSite = new Site();
+            newSite.BranchesAndShunts = new List<object>();
+            newSite.BranchesAndShunts.Add(new Branch());
+            newSite.VoltageBuses = new List<VoltageBus>();
+            newSite.VoltageBuses.Add(new VoltageBus());
+            newDetector.Sites.Add(newSite);
+            _model = newDetector;
+            _signalMgr = signalMgr;
+            SetUpVSViewModel();
         }
         public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr)
         {
             _model = model;
             _signalMgr = signalMgr;
+            SetUpVSViewModel();
+        }
+
+        private void SetUpVSViewModel()
+        {
             var newSites = new ObservableCollection<SiteViewModel>();
             int siteCount = 0;
             InputChannels = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var sub in _model.Sites)
             {
                 siteCount++;
-                var aSite = new SiteViewModel(sub, signalMgr);
+                var aSite = new SiteViewModel(sub, _signalMgr);
                 aSite.SiteNumber = siteCount;
                 newSites.Add(aSite);
+            }
+            Sites = newSites;
+            _updateInputChannel();
 
+            AddSite = new RelayCommand(_addSite);
+            AddVoltageBus = new RelayCommand(_addVoltageBus);
+            AddBranch = new RelayCommand(_addBranch);
+            AddShunt = new RelayCommand(_addShunt);
+            SiteSelected = new RelayCommand(_siteSelected);
+            SignalSelectedToChange = new RelayCommand(_signalSelectedToChange);
+        }
+
+        private void _updateInputChannel()
+        {
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>();
+            foreach (var aSite in Sites)
+            {
                 if (aSite.Frequency != null && !InputChannels.Contains(aSite.Frequency))
                 {
                     InputChannels.Add(aSite.Frequency);
@@ -89,16 +121,7 @@ namespace VoltageStability.ViewModels
                         }
                     }
                 }
-
             }
-            Sites = newSites;
-
-            AddSite = new RelayCommand(_addSite);
-            AddVoltageBus = new RelayCommand(_addVoltageBus);
-            AddBranch = new RelayCommand(_addBranch);
-            AddShunt = new RelayCommand(_addShunt);
-            SiteSelected = new RelayCommand(_siteSelected);
-            SignalSelectedToChange = new RelayCommand(_signalSelectedToChange);
         }
 
         private SignalManager _signalMgr;
@@ -208,10 +231,13 @@ namespace VoltageStability.ViewModels
         {
             var newSite = new SiteViewModel();
             newSite.SiteNumber = Sites.Count() + 1;
+            newSite.BranchesAndShunts = new ObservableCollection<object>();
+            newSite.BranchesAndShunts.Add(new BranchViewModel());
+            newSite.VoltageBuses = new ObservableCollection<VoltageBusViewModel>();
+            newSite.VoltageBuses.Add(new VoltageBusViewModel());
             _sites.Add(newSite);
         }
         public ICommand AddVoltageBus { get; set; }
-
         private void _addVoltageBus(object obj)
         {
             if (SelectedSite != null)
@@ -220,7 +246,6 @@ namespace VoltageStability.ViewModels
             }
         }
         public ICommand AddBranch { get; set; }
-
         private void _addBranch(object obj)
         {
             if (SelectedSite != null)
@@ -229,7 +254,6 @@ namespace VoltageStability.ViewModels
             }
         }
         public ICommand AddShunt { get; set; }
-
         private void _addShunt(object obj)
         {
             if (SelectedSite != null)
@@ -240,7 +264,12 @@ namespace VoltageStability.ViewModels
         public ICommand SiteSelected { get; set; }
         private void _siteSelected(object obj)
         {
+            if (SelectedSite != null)
+            {
+                SelectedSite.IsSelected = false;
+            }
             SelectedSite = (SiteViewModel)obj;
+            SelectedSite.IsSelected = true;
         }
         public ICommand SignalSelectedToChange { get; set; }
         private void _signalSelectedToChange(object obj)
@@ -307,10 +336,10 @@ namespace VoltageStability.ViewModels
                             keepSignal = parent4.ReactivePower;
                             break;
                         case "CurrentMagnitude":
-                            keepSignal = parent4.ActivePower;
+                            keepSignal = parent4.CurrentMagnitude;
                             break;
                         case "CurrentAngle":
-                            keepSignal = parent4.ActivePower;
+                            keepSignal = parent4.CurrentAngle;
                             break;
                         default:
                             break;
@@ -321,19 +350,19 @@ namespace VoltageStability.ViewModels
                 default:
                     break;
             }
-            if (keepSignal != null)
-            {
                 foreach (var sig in InputChannels)
                 {
                     if (sig != keepSignal)
                     {
                         sig.IsChecked = false;
                     }
-                    keepSignal.IsChecked = true;
-                }
-                //_signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus();
-                _signalMgr.DetermineAllParentNodeStatus();
             }
+            if (keepSignal != null)
+            {
+                keepSignal.IsChecked = true;
+            }
+            //_signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus();
+            _signalMgr.DetermineAllParentNodeStatus();
             SelectedSignalToChange = obj;
             //SelectedSignalToChange = (SignalSignatureViewModel)obj[1];
         }
@@ -363,6 +392,10 @@ namespace VoltageStability.ViewModels
                                 }
                                 parent.Frequency = newSignal;
                             }
+                            else
+                            {
+                                parent.Frequency = null;
+                            }
                             break;
                         default:
                             break;
@@ -381,6 +414,10 @@ namespace VoltageStability.ViewModels
                                 }
                                 parent2.Magnitude = newSignal;
                             }
+                            else
+                            {
+                                parent2.Magnitude = null;
+                            }
                             break;
                         case "Angle":
                             if ((bool)newSignal.IsChecked)
@@ -390,6 +427,10 @@ namespace VoltageStability.ViewModels
                                     parent2.Angle.IsChecked = false;
                                 }
                                 parent2.Angle = newSignal;
+                            }
+                            else
+                            {
+                                parent2.Angle = null;
                             }
                             break;
                         default:
@@ -409,6 +450,10 @@ namespace VoltageStability.ViewModels
                                 }
                                 parent3.ActivePower = newSignal;
                             }
+                            else
+                            {
+                                parent3.ActivePower = null;
+                            }
                             break;
                         case "ReactivePower":
                             if ((bool)newSignal.IsChecked)
@@ -418,6 +463,10 @@ namespace VoltageStability.ViewModels
                                     parent3.ReactivePower.IsChecked = false;
                                 }
                                 parent3.ReactivePower = newSignal;
+                            }
+                            else
+                            {
+                                parent3.ReactivePower = null;
                             }
                             break;
                         case "CurrentMagnitude":
@@ -429,6 +478,10 @@ namespace VoltageStability.ViewModels
                                 }
                                 parent3.CurrentMagnitude = newSignal;
                             }
+                            else
+                            {
+                                parent3.CurrentMagnitude = null;
+                            }
                             break;
                         case "CurrentAngle":
                             if ((bool)newSignal.IsChecked)
@@ -438,6 +491,10 @@ namespace VoltageStability.ViewModels
                                     parent3.CurrentAngle.IsChecked = false;
                                 }
                                 parent3.CurrentAngle = newSignal;
+                            }
+                            else
+                            {
+                                parent3.CurrentAngle = null;
                             }
                             break;
                         default:
@@ -457,6 +514,10 @@ namespace VoltageStability.ViewModels
                                 }
                                 parent4.ActivePower = newSignal;
                             }
+                            else
+                            {
+                                parent4.ActivePower = null;
+                            }
                             break;
                         case "ReactivePower":
                             if ((bool)newSignal.IsChecked)
@@ -466,6 +527,10 @@ namespace VoltageStability.ViewModels
                                     parent4.ReactivePower.IsChecked = false;
                                 }
                                 parent4.ReactivePower = newSignal;
+                            }
+                            else
+                            {
+                                parent4.ReactivePower = null;
                             }
                             break;
                         case "CurrentMagnitude":
@@ -477,6 +542,10 @@ namespace VoltageStability.ViewModels
                                 }
                                 parent4.CurrentMagnitude = newSignal;
                             }
+                            else
+                            {
+                                parent4.CurrentMagnitude = null;
+                            }
                             break;
                         case "CurrentAngle":
                             if ((bool)newSignal.IsChecked)
@@ -486,6 +555,10 @@ namespace VoltageStability.ViewModels
                                     parent4.CurrentAngle.IsChecked = false;
                                 }
                                 parent4.CurrentAngle = newSignal;
+                            }
+                            else
+                            {
+                                parent4.CurrentAngle = null;
                             }
                             break;
                         default:
@@ -497,7 +570,8 @@ namespace VoltageStability.ViewModels
                 default:
                     break;
             }
-
+            _updateInputChannel();
+            _signalMgr.DetermineAllParentNodeStatus();
         }
     }
 }

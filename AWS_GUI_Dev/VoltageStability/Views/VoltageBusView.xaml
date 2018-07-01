@@ -25,7 +25,7 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Content="Voltage Bus:" Width="150"/>
         <Label Grid.Row="1" Grid.Column="0" Margin="30,1,0,1" Content="Magnitude:" Width="120"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Text="{Binding Magnitude.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Text="{Binding Magnitude.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus" >
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
@@ -40,7 +40,7 @@
             </i:Interaction.Triggers>
         </TextBox>
         <Label Grid.Row="2" Grid.Column="0" Margin="30,1,0,1" Content="Angle:" Width="120"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Text="{Binding Angle.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus">
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Text="{Binding Angle.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus" >
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">

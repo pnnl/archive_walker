@@ -19,9 +19,9 @@ namespace VoltageStability.ViewModels
             _model = new Site();
             Frequency = new SignalSignatureViewModel();
             VoltageBuses = new ObservableCollection<VoltageBusViewModel>();
-            VoltageBuses.Add(new VoltageBusViewModel());
+            //VoltageBuses.Add(new VoltageBusViewModel());
             BranchesAndShunts = new ObservableCollection<object>();
-            BranchesAndShunts.Add(new BranchViewModel());
+            //BranchesAndShunts.Add(new BranchViewModel());
         }
 
         public SiteViewModel(Site sub, BAWGUI.SignalManagement.ViewModels.SignalManager signalMgr)
@@ -114,5 +114,15 @@ namespace VoltageStability.ViewModels
             }
         }
         public int SiteNumber { get; set; }
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

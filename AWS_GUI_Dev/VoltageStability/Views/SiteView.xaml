@@ -6,14 +6,16 @@
              xmlns:local="clr-namespace:VoltageStability.Views"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters="clr-namespace:VoltageStability.Converters"
+             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:VSSignalSelectionLocation x:Key="VSSignalSelectionLocation"/>
+            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <GroupBox BorderBrush="LightGray" BorderThickness="0.5">
+    <GroupBox BorderBrush="LightGray" BorderThickness="0.5" Background="{Binding IsSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
         <GroupBox.Header>
             <TextBlock FontSize="14" FontWeight="Black" Text="{Binding SiteNumber, StringFormat=Site {0}}"/>
         </GroupBox.Header>
@@ -49,7 +51,7 @@
             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding StabilityThreshold}" Margin="0,1" Width="250"/>
             <TextBlock Grid.Row="1" Grid.Column="2" Margin="2,1,0,1" Text="&#8712; [0,1)" FontSize="15" VerticalAlignment="Center"/>
             <Label Grid.Row="2" Grid.Column="0" Content="Frequency:" Margin="0,1" Width="150"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Frequency.SignalName}" Margin="0,1" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus">
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Frequency.SignalName}" Margin="0,1" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus" >
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SignalSelectedToChange}">
