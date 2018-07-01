@@ -14,6 +14,8 @@ using BAWGUI.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.Settings.ViewModels;
+using VoltageStability.Models;
+using VoltageStability.ViewModels;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -292,6 +294,12 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 catch (Exception ex)
                 {
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+                }
+                var detectorList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is VoltageStabilityDetectorViewModel).Select(x=>(VoltageStabilityDetectorViewModel)x).ToList();
+                if (detectorList.Count > 0)
+                {
+                    var vsWriter = new VoltageStabilityDetectorGroupWriter();
+                    vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
                 }
                 if (SelectedRun != null)
                 {

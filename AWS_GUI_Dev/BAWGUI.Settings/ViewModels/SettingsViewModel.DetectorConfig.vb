@@ -3,6 +3,7 @@ Imports System.Windows
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
+Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -47,14 +48,19 @@ Namespace ViewModels
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Voltage Stability"
-                    newDetector = New VoltageStability.ViewModels.VoltageStabilityDetectorViewModel
+                    newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
+                    'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
-            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            If TypeOf (newDetector) Is VoltageStabilityDetectorViewModel Then
+            Else
+                newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+                newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+                _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            End If
+
             DetectorConfigure.DetectorList.Add(newDetector)
             _selectedADetector(newDetector)
         End Sub
@@ -188,7 +194,7 @@ Namespace ViewModels
                         Next
                     End If
 
-                    _detectorConfigDetermineAllParentNodeStatus()
+                    _signalMgr.DetectorConfigDetermineAllParentNodeStatus()
 
                     _determineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
@@ -212,25 +218,25 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _detectorConfigDetermineAllParentNodeStatus()
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByPMU)
-            For Each stepInput In _signalMgr.GroupedSignalByDetectorInput
-                If stepInput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
-                    _determineParentCheckStatus(stepInput)
-                Else
-                    stepInput.SignalSignature.IsChecked = False
-                End If
-            Next
-        End Sub
+        'Private Sub _detectorConfigDetermineAllParentNodeStatus()
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByPMU)
+        '    For Each stepInput In _signalMgr.GroupedSignalByDetectorInput
+        '        If stepInput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+        '            _determineParentCheckStatus(stepInput)
+        '        Else
+        '            stepInput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        'End Sub
 
         Private _deleteDetector As ICommand
         Public Property DeleteDetector As ICommand
@@ -255,7 +261,7 @@ Namespace ViewModels
                         _addLog("Detector " & obj.Name & " is deleted!")
                         _signalMgr.GroupedSignalByDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
                         For index = 1 To _signalMgr.GroupedSignalByDetectorInput.Count
-                            _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & DetectorConfigure.DetectorList(index - 1).Name
+                            _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = "Step " & index.ToString & " " & DetectorConfigure.DetectorList(index - 1).Name
                         Next
                         If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False

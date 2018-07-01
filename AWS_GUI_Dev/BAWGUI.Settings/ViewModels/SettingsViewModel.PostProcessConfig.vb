@@ -141,7 +141,7 @@ Namespace ViewModels
 
                     _signalMgr.GroupedSignalByPostProcessConfigStepsInput = stepsInputAsSignalHierachy
                     _signalMgr.GroupedSignalByPostProcessConfigStepsOutput = stepsOutputAsSignalHierachy
-                    _postProcessDetermineAllParentNodeStatus()
+                    _signalMgr.PostProcessDetermineAllParentNodeStatus()
                     _determineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
@@ -170,31 +170,31 @@ Namespace ViewModels
 
         End Sub
 
-        Private Sub _postProcessDetermineAllParentNodeStatus()
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
-            For Each stepInput In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
-                If stepInput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
-                    _determineParentCheckStatus(stepInput)
-                Else
-                    stepInput.SignalSignature.IsChecked = False
-                End If
-            Next
-            For Each stepOutput In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
-                If stepOutput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
-                    _determineParentCheckStatus(stepOutput)
-                Else
-                    stepOutput.SignalSignature.IsChecked = False
-                End If
-            Next
-        End Sub
+        'Private Sub _postProcessDetermineAllParentNodeStatus()
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
+        '    For Each stepInput In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
+        '        If stepInput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+        '            _determineParentCheckStatus(stepInput)
+        '        Else
+        '            stepInput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        '    For Each stepOutput In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
+        '        If stepOutput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+        '            _determineParentCheckStatus(stepOutput)
+        '        Else
+        '            stepOutput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        'End Sub
 
         Private _postProcessConfigStepDeSelected As ICommand
         Public Property PostProcessConfigStepDeSelected As ICommand

@@ -52,6 +52,7 @@ namespace VoltageStability.Models
                 else
                 {
                     newVSdetector = ReaderVoltageStabilityDetector(vs);
+                    newVSdetector.DetectorGroupID = newID;
                     detectors.Add(newVSdetector);
                     previousVSdetector = newVSdetector;
                 }

@@ -14,7 +14,9 @@ namespace VoltageStability.Models
         {
             Frequency = new Signal();
             VoltageBuses = new List<VoltageBus>();
+            VoltageBuses.Add(new VoltageBus());
             BranchesAndShunts = new List<object>();
+            BranchesAndShunts.Add(new Branch());
         }
         public string Name { get; set; }
         public string StabilityThreshold { get; set; }

@@ -13,6 +13,7 @@ namespace VoltageStability.Models
         {
             Methods = new List<string>();
             Sites = new ObservableCollection<Site>();
+            Sites.Add(new Site());
             _vsDetectorCounter++;
             DetectorGroupID = _vsDetectorCounter.ToString();
         }
@@ -30,29 +31,109 @@ namespace VoltageStability.Models
             switch (mthd)
             {
                 case "DeMarco":
-                    IsDeMarcoMethod = true;
+                    _isDeMarcoMethod = true;
                     break;
                 case "Mitsubishi":
-                    IsMitsubishiMethod = true;
+                    _isMitsubishiMethod = true;
                     break;
                 case "Quanta":
-                    IsQuantaMethod = true;
+                    _isQuantaMethod = true;
                     break;
                 case "Chow":
-                    IsChowMethod = true;
+                    _isChowMethod = true;
                     break;
                 case "Tellegen":
-                    IsTellegenMethod = true;
+                    _isTellegenMethod = true;
                     break;
                 default:
                     throw new Exception("Unknown Voltage Stability method found!");
             }
         }
-        public bool IsDeMarcoMethod { get; set; }
-        public bool IsMitsubishiMethod { get; set; }
-        public bool IsQuantaMethod { get; set; }
-        public bool IsChowMethod { get; set; }
-        public bool IsTellegenMethod { get; set; }
+        private bool _isDeMarcoMethod;
+        public bool IsDeMarcoMethod
+        {
+            get { return _isDeMarcoMethod; }
+            set
+            {
+                _isDeMarcoMethod = value;
+                if (value)
+                {
+                    Methods.Add("DeMarco");
+                }
+                else
+                {
+                    Methods.Remove("DeMarco");
+                }
+            }
+        }
+        private bool _isMitsubishiMethod;
+        public bool IsMitsubishiMethod
+        {
+            get { return _isMitsubishiMethod; }
+            set
+            {
+                _isMitsubishiMethod = value;
+                if (value)
+                {
+                    Methods.Add("Mitsubishi");
+                }
+                else
+                {
+                    Methods.Remove("Mitsubishi");
+                }
+            }
+        }
+        private bool _isQuantaMethod;
+        public bool IsQuantaMethod
+        {
+            get { return _isQuantaMethod; }
+            set
+            {
+                _isQuantaMethod = value;
+                if (value)
+                {
+                    Methods.Add("Quanta");
+                }
+                else
+                {
+                    Methods.Remove("Quanta");
+                }
+            }
+        }
+        private bool _isChowMethod;
+        public bool IsChowMethod
+        {
+            get { return _isChowMethod; }
+            set
+            {
+                _isChowMethod = value;
+                if (value)
+                {
+                    Methods.Add("Chow");
+                }
+                else
+                {
+                    Methods.Remove("Chow");
+                }
+            }
+        }
+        private bool _isTellegenMethod;
+        public bool IsTellegenMethod
+        {
+            get { return _isTellegenMethod; }
+            set
+            {
+                _isTellegenMethod = value;
+                if (value)
+                {
+                    Methods.Add("Tellegen");
+                }
+                else
+                {
+                    Methods.Remove("Tellegen");
+                }
+            }
+        }
         public string DeMarcoAnalysisLength { get; set; }
         public string MitsubishiAnalysisLength { get; set; }
         public string EventMergeWindow { get; set; }

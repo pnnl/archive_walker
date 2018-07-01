@@ -797,7 +797,7 @@ Namespace ViewModels
 
                     _signalMgr.GroupedSignalByProcessConfigStepsInput = stepsInputAsSignalHierachy
                     _signalMgr.GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
-                    _processConfigDetermineAllParentNodeStatus()
+                    _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
                     _determineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
@@ -1014,28 +1014,28 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _processConfigDetermineAllParentNodeStatus()
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
-            For Each stepInput In _signalMgr.GroupedSignalByProcessConfigStepsInput
-                If stepInput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
-                    _determineParentCheckStatus(stepInput)
-                Else
-                    stepInput.SignalSignature.IsChecked = False
-                End If
-            Next
-            For Each stepOutput In _signalMgr.GroupedSignalByProcessConfigStepsOutput
-                If stepOutput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
-                    _determineParentCheckStatus(stepOutput)
-                Else
-                    stepOutput.SignalSignature.IsChecked = False
-                End If
-            Next
-        End Sub
+        'Private Sub _processConfigDetermineAllParentNodeStatus()
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
+        '    For Each stepInput In _signalMgr.GroupedSignalByProcessConfigStepsInput
+        '        If stepInput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+        '            _determineParentCheckStatus(stepInput)
+        '        Else
+        '            stepInput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        '    For Each stepOutput In _signalMgr.GroupedSignalByProcessConfigStepsOutput
+        '        If stepOutput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+        '            _determineParentCheckStatus(stepOutput)
+        '        Else
+        '            stepOutput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        'End Sub
 
     End Class
 

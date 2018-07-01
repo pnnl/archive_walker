@@ -1,4 +1,5 @@
-﻿using BAWGUI.Core;
+﻿using System.Collections.Generic;
+using BAWGUI.Core;
 using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using VoltageStability.Models;
@@ -22,6 +23,14 @@ namespace VoltageStability.ViewModels
             Magnitude = signalMgr.SearchForSignalInTaggedSignals(_model.Magnitude.PMU, _model.Magnitude.SignalName);
             Angle = signalMgr.SearchForSignalInTaggedSignals(_model.Angle.PMU, _model.Angle.SignalName);
         }
+
+        public VoltageBusViewModel(VoltageBus bus)
+        {
+            _model = bus;
+            Magnitude = new SignalSignatureViewModel();
+            Angle = new SignalSignatureViewModel();
+        }
+
         private SignalSignatureViewModel _magnitude;
         public SignalSignatureViewModel Magnitude
         {

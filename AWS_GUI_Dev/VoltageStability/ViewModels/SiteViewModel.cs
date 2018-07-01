@@ -48,6 +48,23 @@ namespace VoltageStability.ViewModels
             }
             BranchesAndShunts = newBranchesAndShunts;
         }
+
+        public SiteViewModel(Site sub)
+        {
+            this._model = sub;
+            Frequency = new SignalSignatureViewModel();
+            VoltageBuses = new ObservableCollection<VoltageBusViewModel>();
+            foreach (var bus in _model.VoltageBuses)
+            {
+                VoltageBuses.Add(new VoltageBusViewModel(bus));
+            }
+            BranchesAndShunts = new ObservableCollection<object>();
+            foreach (var bs in _model.BranchesAndShunts)
+            {
+                BranchesAndShunts.Add(new BranchViewModel((Branch)bs));
+            }
+        }
+
         public string Name
         {
             get { return _model.Name; }
