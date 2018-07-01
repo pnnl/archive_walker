@@ -1514,7 +1514,7 @@ Namespace ViewModels
             _model = cStep
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Throw New NotImplementedException()
+            'Throw New NotImplementedException()
         End Function
 
         'Private _customizationName As String
