@@ -17,6 +17,7 @@ using System.Threading;
 using BAWGUI.RunMATLAB.Models;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
+using VoltageStability.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -31,6 +32,7 @@ namespace BAWGUI.Results.ViewModels
         private OutOfRangeResultsViewModel _outOfRangeResultsViewModel;
         private RingdownResultsViewModel _ringdownResultsViewModel;
         private WindRampResultsViewModel _windRampResultsViewModel;
+        private VoltageStabilityResultsViewModel _voltageStabilityResultsViewModel;
         private ResultsModel _resultsModel;
         private RunMATLAB.ViewModels.MatLabEngine _engine;
         public ForcedOscillationResultsViewModel ForcedOscillationResultsViewModel
@@ -57,6 +59,11 @@ namespace BAWGUI.Results.ViewModels
             set { _windRampResultsViewModel = value; OnPropertyChanged(); }
         }
 
+        public VoltageStabilityResultsViewModel VoltageStabilityResultsViewModel
+        {
+            get { return this._voltageStabilityResultsViewModel; }
+            set { _voltageStabilityResultsViewModel = value; OnPropertyChanged(); }
+        }
         public ResultsViewModel()
         {
             _engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
@@ -72,6 +79,7 @@ namespace BAWGUI.Results.ViewModels
             _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
             _ringdownResultsViewModel = new RingdownResultsViewModel();
             _windRampResultsViewModel = new WindRampResultsViewModel();
+            _voltageStabilityResultsViewModel = new VoltageStabilityResultsViewModel();
             _run = new AWRunViewModel();
             _resultsExist = true;
         }
@@ -194,6 +202,24 @@ namespace BAWGUI.Results.ViewModels
                     _windRampResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
+            if (_resultsModel.VoltageStabilityEvents.Count() > 0)
+            {
+                //_voltageStabilityResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
+                //_voltageStabilityResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
+                _voltageStabilityResultsViewModel.Models = _resultsModel.VoltageStabilityEvents;
+                _voltageStabilityResultsViewModel.SelectedEndTime = endTimeStr;
+                _voltageStabilityResultsViewModel.SelectedStartTime = startTimeStr;
+                findStartTimeHasEvents = startTime;
+                if (_voltageStabilityResultsViewModel.Models.Count() != 0)
+                {
+                    while (_voltageStabilityResultsViewModel.FilteredResults.Count() == 0)
+                    {
+                        findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
+                        _voltageStabilityResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                    }
+                }
+            }
+
             //_ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
             //if(_ringdownResultsViewModel.FilteredResults.Count() != 0)
             //{
@@ -442,6 +468,7 @@ namespace BAWGUI.Results.ViewModels
             RingdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
             RingdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             WindRampResultsViewModel = new WindRampResultsViewModel();
+            VoltageStabilityResultsViewModel = new VoltageStabilityResultsViewModel();
         }
 
         private void _openResultFile(string resultsPath)

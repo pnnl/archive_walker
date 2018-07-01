@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class OutOfRangeResultsViewModel:ViewModelBase
+    public class OutOfRangeResultsViewModel : ViewModelBase
     {
         public OutOfRangeResultsViewModel()
         {

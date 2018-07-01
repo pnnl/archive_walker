@@ -121,15 +121,21 @@ namespace BAWGUI.ViewModels
                 try
                 {
                     var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
+                    //clean up the signal manager
                     _signalMgr.cleanUp();
+                    //read input data files and generate all the signal objects from the data files and put them in the signal manager.
                     _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
+                    //pass signal manager into settings.
                     SettingsVM.SignalMgr = _signalMgr;
+                    //read config files
                     SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
                     SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                     SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                     SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
 
+                    //read voltage stability settings from config file.
                     var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
+                    //add voltage stability detectors to te detector list in the settings.
                     foreach (var detector in vsDetectors)
                     {
                         SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
@@ -140,6 +146,8 @@ namespace BAWGUI.ViewModels
                 {
                     MessageBox.Show("error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
+                //need to read signal stability results
+
             }
         }
 

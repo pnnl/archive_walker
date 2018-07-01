@@ -392,6 +392,10 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
+      <Name>VoltageStability</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\open.gif">
