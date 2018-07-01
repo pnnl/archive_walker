@@ -90,11 +90,14 @@ namespace BAWGUI.ReadConfigXml
 
         public UnwrapModel(XElement item)
         {
-            Name = "Unwrap";
+            //Name = "Unwrap";
             this._item = item;
             PMUElementList = PMUElementReader.ReadPMUElements(_item);
         }
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return "Unwrap"; }
+        }
         public List<SignalSignatures> PMUElementList { get; set; }
     }
     public class InterpolateModel : UnwrapModel
@@ -102,7 +105,7 @@ namespace BAWGUI.ReadConfigXml
         public InterpolateModel() { }
         public InterpolateModel(XElement intplt) : base(intplt)
         {
-            base.Name = "Interpolation";
+            //base.Name = "Interpolation";
             var par = intplt.Element("Parameters").Element("Limit");
             if (par != null)
             {
@@ -127,6 +130,10 @@ namespace BAWGUI.ReadConfigXml
             }
         }
 
+        public new string Name
+        {
+            get { return "Interpolation"; }
+        }
         public string Limit { get; set; }
         public InterpolateType Type { get; set; }
         public bool FlagInterp { get; set; }
@@ -143,7 +150,7 @@ namespace BAWGUI.ReadConfigXml
         public TunableFilterModel() { }
         public TunableFilterModel(XElement filter) : base(filter)
         {
-            base.Name = "Filter";
+            //base.Name = "Filter";
             var par = filter.Element("Type");
             if (par != null)
             {
@@ -210,6 +217,10 @@ namespace BAWGUI.ReadConfigXml
         public string StopRipple { get; set; }
         public string PassCutoff { get; set; }
         public string StopCutoff { get; set; }
+        public new string Name
+        {
+            get { return "Filter"; }
+        }
     }
     public enum TunableFilterType
     {
@@ -224,7 +235,7 @@ namespace BAWGUI.ReadConfigXml
         public MultirateModel() { }
         public MultirateModel(XElement mRate) : base(mRate)
         {
-            base.Name = "Multirate";
+            //base.Name = "Multirate";
             FilterChoice = 0;
             var par = mRate.Element("Parameters").Element("MultiRatePMU");
             if (par != null)
@@ -257,13 +268,21 @@ namespace BAWGUI.ReadConfigXml
         public string PElement { get; set; }
         public string QElement { get; set; }
         public int FilterChoice { get; set; }
+        public new string Name
+        {
+            get { return "Multirate"; }
+        }
     }
     public class WrapModel : UnwrapModel
     {
         public WrapModel() { }
         public WrapModel(XElement wrap) : base(wrap)
         {
-            base.Name = "Wrap";
+            //base.Name = "Wrap";
+        }
+        public new string Name
+        {
+            get { return "Wrap"; }
         }
     }
     public class NameTypeUnitModel

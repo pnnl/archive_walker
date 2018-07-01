@@ -186,7 +186,7 @@ Namespace ViewModels
                         Next
                     End If
 
-                    _detectorConfigDetermineAllParentNodeStatus()
+                    _signalMgr.DetectorConfigDetermineAllParentNodeStatus()
 
                     _determineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
@@ -210,25 +210,25 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _detectorConfigDetermineAllParentNodeStatus()
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByPMU)
-            For Each stepInput In _signalMgr.GroupedSignalByDetectorInput
-                If stepInput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
-                    _determineParentCheckStatus(stepInput)
-                Else
-                    stepInput.SignalSignature.IsChecked = False
-                End If
-            Next
-        End Sub
+        'Private Sub _detectorConfigDetermineAllParentNodeStatus()
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.ReGroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllProcessConfigOutputGroupedByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllPostProcessOutputGroupedByPMU)
+        '    For Each stepInput In _signalMgr.GroupedSignalByDetectorInput
+        '        If stepInput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+        '            _determineParentCheckStatus(stepInput)
+        '        Else
+        '            stepInput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        'End Sub
 
         Private _deleteDetector As ICommand
         Public Property DeleteDetector As ICommand

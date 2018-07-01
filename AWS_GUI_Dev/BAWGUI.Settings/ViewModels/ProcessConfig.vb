@@ -714,7 +714,7 @@ Namespace ViewModels
         End Property
 
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Return Not String.IsNullOrEmpty(_multiRatePMU)
+            Return Not String.IsNullOrEmpty(_model.MultiRatePMU)
         End Function
 
     End Class
