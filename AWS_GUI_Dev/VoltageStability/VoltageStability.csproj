@@ -126,6 +126,10 @@
       <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
+      <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
+      <Name>BAWGUI.RunMATLAB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
       <Project>{E0ACA34C-2C13-4E98-944D-A419BDD2D116}</Project>
       <Name>BAWGUI.SignalManagement</Name>
