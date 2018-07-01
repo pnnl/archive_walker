@@ -13,6 +13,7 @@ namespace VoltageStability.Models
         {
             Methods = new List<string>();
             Sites = new ObservableCollection<Site>();
+            Sites.Add(new Site());
             _vsDetectorCounter++;
             DetectorGroupID = _vsDetectorCounter.ToString();
         }

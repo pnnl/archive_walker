@@ -28,7 +28,7 @@ namespace VoltageStability.Models
                 vsElement.Add(new XElement("DetectorGroupID", detecotr.DetectorGroupID));
                 vsElement.Add(new XElement("EventMergeWindow", detecotr.EventMergeWindow));
                 vsElement.Add(new XElement("Method"));
-                vsElement.Add(new XElement("AnalysisLength"));
+                //vsElement.Add(new XElement("AnalysisLength"));
                 foreach (var sub in detecotr.Sites)
                 {
                     XElement subElement = _writeASubElement(sub);
@@ -38,13 +38,16 @@ namespace VoltageStability.Models
                 {
                     var vsE = new XElement(vsElement);
                     vsE.Element("Method").Value = mth;
+                    var methodElement = vsE.Element("Method");
                     switch (mth)
                     {
                         case "DeMarco":
-                            vsE.Element("AnalysisLength").Value = detecotr.DeMarcoAnalysisLength;
+                            methodElement.AddAfterSelf(new XElement("AnalysisLength", detecotr.DeMarcoAnalysisLength));
+                            //vsE.Element("AnalysisLength").Value = detecotr.DeMarcoAnalysisLength;
                             break;
                         case "Mitsubishi":
-                            vsE.Element("AnalysisLength").Value = detecotr.MitsubishiAnalysisLength;
+                            methodElement.AddAfterSelf(new XElement("AnalysisLength", detecotr.MitsubishiAnalysisLength));
+                            //vsE.Element("AnalysisLength").Value = detecotr.MitsubishiAnalysisLength;
                             break;
                         default:
                             break;

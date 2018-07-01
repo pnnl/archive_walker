@@ -48,15 +48,19 @@ Namespace ViewModels
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Voltage Stability"
-                    newDetector = New VoltageStabilityDetectorViewModel
+                    newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
                     'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
-            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            If TypeOf (newDetector) Is VoltageStabilityDetectorViewModel Then
+            Else
+                newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+                newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+                _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            End If
+
             DetectorConfigure.DetectorList.Add(newDetector)
             _selectedADetector(newDetector)
         End Sub
@@ -257,7 +261,7 @@ Namespace ViewModels
                         _addLog("Detector " & obj.Name & " is deleted!")
                         _signalMgr.GroupedSignalByDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
                         For index = 1 To _signalMgr.GroupedSignalByDetectorInput.Count
-                            _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = index.ToString & DetectorConfigure.DetectorList(index - 1).Name
+                            _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = "Step " & index.ToString & " " & DetectorConfigure.DetectorList(index - 1).Name
                         Next
                         If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False

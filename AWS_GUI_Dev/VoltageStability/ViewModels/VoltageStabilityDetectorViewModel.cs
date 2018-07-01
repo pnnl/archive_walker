@@ -14,23 +14,16 @@ namespace VoltageStability.ViewModels
 {
     public class VoltageStabilityDetectorViewModel:DetectorBase
     {
-        public VoltageStabilityDetectorViewModel()
+        public VoltageStabilityDetectorViewModel(SignalManager signalMgr) : this(new VoltageStabilityDetector(), signalMgr)
         {
-            _model = new VoltageStabilityDetector();
-            InputChannels = new ObservableCollection<SignalSignatureViewModel>();
-            ThisStepInputsAsSignalHerachyByType = new SignalTypeHierachy(new SignalSignatureViewModel());
-            AddSite = new RelayCommand(_addSite);
-            AddVoltageBus = new RelayCommand(_addVoltageBus);
-            AddBranch = new RelayCommand(_addBranch);
-            AddShunt = new RelayCommand(_addShunt);
-            SiteSelected = new RelayCommand(_siteSelected);
-            SignalSelectedToChange = new RelayCommand(_signalSelectedToChange);
         }
-        public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr) : this()
+        public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr)
         {
             _model = model;
+            _signalMgr = signalMgr;
             var newSites = new ObservableCollection<SiteViewModel>();
             int siteCount = 0;
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var sub in _model.Sites)
             {
                 siteCount++;
@@ -38,17 +31,17 @@ namespace VoltageStability.ViewModels
                 aSite.SiteNumber = siteCount;
                 newSites.Add(aSite);
 
-                if (!InputChannels.Contains(aSite.Frequency))
+                if (aSite.Frequency != null && !InputChannels.Contains(aSite.Frequency))
                 {
                     InputChannels.Add(aSite.Frequency);
                 }
                 foreach (var item in aSite.VoltageBuses)
                 {
-                    if (!InputChannels.Contains(item.Magnitude))
+                    if (item.Magnitude != null && !InputChannels.Contains(item.Magnitude))
                     {
                         InputChannels.Add(item.Magnitude);
                     }
-                    if (!InputChannels.Contains(item.Angle))
+                    if (item.Angle != null && !InputChannels.Contains(item.Angle))
                     {
                         InputChannels.Add(item.Angle);
                     }
@@ -58,19 +51,19 @@ namespace VoltageStability.ViewModels
                     if (item is ShuntViewModel)
                     {
                         var shunt = item as ShuntViewModel;
-                        if (!InputChannels.Contains(shunt.ActivePower))
+                        if (shunt.ActivePower != null && !InputChannels.Contains(shunt.ActivePower))
                         {
                             InputChannels.Add(shunt.ActivePower);
                         }
-                        if (!InputChannels.Contains(shunt.ReactivePower))
+                        if (shunt.ReactivePower != null && !InputChannels.Contains(shunt.ReactivePower))
                         {
                             InputChannels.Add(shunt.ReactivePower);
                         }
-                        if (!InputChannels.Contains(shunt.CurrentAngle))
+                        if (shunt.CurrentAngle != null && !InputChannels.Contains(shunt.CurrentAngle))
                         {
                             InputChannels.Add(shunt.CurrentAngle);
                         }
-                        if (!InputChannels.Contains(shunt.CurrentMagnitude))
+                        if (shunt.CurrentMagnitude != null && !InputChannels.Contains(shunt.CurrentMagnitude))
                         {
                             InputChannels.Add(shunt.CurrentMagnitude);
                         }
@@ -78,19 +71,19 @@ namespace VoltageStability.ViewModels
                     else
                     {
                         var branch = item as BranchViewModel;
-                        if (!InputChannels.Contains(branch.ActivePower))
+                        if (branch.ActivePower != null && !InputChannels.Contains(branch.ActivePower))
                         {
                             InputChannels.Add(branch.ActivePower);
                         }
-                        if (!InputChannels.Contains(branch.ReactivePower))
+                        if (branch.ReactivePower != null && !InputChannels.Contains(branch.ReactivePower))
                         {
                             InputChannels.Add(branch.ReactivePower);
                         }
-                        if (!InputChannels.Contains(branch.CurrentAngle))
+                        if (branch.CurrentAngle != null && !InputChannels.Contains(branch.CurrentAngle))
                         {
                             InputChannels.Add(branch.CurrentAngle);
                         }
-                        if (!InputChannels.Contains(branch.CurrentMagnitude))
+                        if (branch.CurrentMagnitude != null && !InputChannels.Contains(branch.CurrentMagnitude))
                         {
                             InputChannels.Add(branch.CurrentMagnitude);
                         }
@@ -99,8 +92,16 @@ namespace VoltageStability.ViewModels
 
             }
             Sites = newSites;
+
+            AddSite = new RelayCommand(_addSite);
+            AddVoltageBus = new RelayCommand(_addVoltageBus);
+            AddBranch = new RelayCommand(_addBranch);
+            AddShunt = new RelayCommand(_addShunt);
+            SiteSelected = new RelayCommand(_siteSelected);
+            SignalSelectedToChange = new RelayCommand(_signalSelectedToChange);
         }
 
+        private SignalManager _signalMgr;
         private VoltageStabilityDetector _model;
 
         public override string Name
@@ -320,14 +321,19 @@ namespace VoltageStability.ViewModels
                 default:
                     break;
             }
-            foreach (var sig in InputChannels)
+            if (keepSignal != null)
             {
-                if (sig != keepSignal)
+                foreach (var sig in InputChannels)
                 {
-                    sig.IsChecked = false;
+                    if (sig != keepSignal)
+                    {
+                        sig.IsChecked = false;
+                    }
+                    keepSignal.IsChecked = true;
                 }
+                //_signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus();
+                _signalMgr.DetermineAllParentNodeStatus();
             }
-            //_determineDataConfigPostProcessConfigAllParentNodeStatus();
             SelectedSignalToChange = obj;
             //SelectedSignalToChange = (SignalSignatureViewModel)obj[1];
         }
@@ -351,7 +357,10 @@ namespace VoltageStability.ViewModels
                         case "Frequency":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent.Frequency.IsChecked = false;
+                                if (parent.Frequency != null)
+                                {
+                                    parent.Frequency.IsChecked = false;
+                                }
                                 parent.Frequency = newSignal;
                             }
                             break;
@@ -366,14 +375,20 @@ namespace VoltageStability.ViewModels
                         case "Magnitude":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent2.Magnitude.IsChecked = false;
+                                if (parent2.Magnitude != null)
+                                {
+                                    parent2.Magnitude.IsChecked = false;
+                                }
                                 parent2.Magnitude = newSignal;
                             }
                             break;
                         case "Angle":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent2.Angle.IsChecked = false;
+                                if (parent2.Angle != null)
+                                {
+                                    parent2.Angle.IsChecked = false;
+                                }
                                 parent2.Angle = newSignal;
                             }
                             break;
@@ -388,28 +403,40 @@ namespace VoltageStability.ViewModels
                         case "ActivePower":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent3.ActivePower.IsChecked = false;
+                                if (parent3.ActivePower != null)
+                                {
+                                    parent3.ActivePower.IsChecked = false;
+                                }
                                 parent3.ActivePower = newSignal;
                             }
                             break;
                         case "ReactivePower":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent3.ReactivePower.IsChecked = false;
+                                if (parent3.ReactivePower != null)
+                                {
+                                    parent3.ReactivePower.IsChecked = false;
+                                }
                                 parent3.ReactivePower = newSignal;
                             }
                             break;
                         case "CurrentMagnitude":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent3.CurrentMagnitude.IsChecked = false;
+                                if (parent3.CurrentMagnitude != null)
+                                {
+                                    parent3.CurrentMagnitude.IsChecked = false;
+                                }
                                 parent3.CurrentMagnitude = newSignal;
                             }
                             break;
                         case "CurrentAngle":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent3.CurrentAngle.IsChecked = false;
+                                if (parent3.CurrentAngle != null)
+                                {
+                                    parent3.CurrentAngle.IsChecked = false;
+                                }
                                 parent3.CurrentAngle = newSignal;
                             }
                             break;
@@ -424,28 +451,40 @@ namespace VoltageStability.ViewModels
                         case "ActivePower":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent4.ActivePower.IsChecked = false;
+                                if (parent4.ActivePower != null)
+                                {
+                                    parent4.ActivePower.IsChecked = false;
+                                }
                                 parent4.ActivePower = newSignal;
                             }
                             break;
                         case "ReactivePower":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent4.ReactivePower.IsChecked = false;
+                                if (parent4.ReactivePower != null)
+                                {
+                                    parent4.ReactivePower.IsChecked = false;
+                                }
                                 parent4.ReactivePower = newSignal;
                             }
                             break;
                         case "CurrentMagnitude":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent4.CurrentMagnitude.IsChecked = false;
+                                if (parent4.CurrentMagnitude != null)
+                                {
+                                    parent4.CurrentMagnitude.IsChecked = false;
+                                }
                                 parent4.CurrentMagnitude = newSignal;
                             }
                             break;
                         case "CurrentAngle":
                             if ((bool)newSignal.IsChecked)
                             {
-                                parent4.CurrentAngle.IsChecked = false;
+                                if (parent4.CurrentAngle != null)
+                                {
+                                    parent4.CurrentAngle.IsChecked = false;
+                                }
                                 parent4.CurrentAngle = newSignal;
                             }
                             break;

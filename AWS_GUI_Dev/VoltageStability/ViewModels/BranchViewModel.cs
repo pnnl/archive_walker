@@ -26,6 +26,16 @@ namespace VoltageStability.ViewModels
             CurrentMagnitude = signalMgr.SearchForSignalInTaggedSignals(_model.CurrentMagnitude.PMU, _model.CurrentMagnitude.SignalName);
             CurrentAngle = signalMgr.SearchForSignalInTaggedSignals(_model.CurrentAngle.PMU, _model.CurrentAngle.SignalName);
         }
+
+        public BranchViewModel(Branch bs)
+        {
+            _model = bs;
+            ActivePower = new SignalSignatureViewModel();
+            ReactivePower = new SignalSignatureViewModel();
+            CurrentMagnitude = new SignalSignatureViewModel();
+            CurrentAngle = new SignalSignatureViewModel();
+        }
+
         private SignalSignatureViewModel _activePower;
         public SignalSignatureViewModel ActivePower
         {

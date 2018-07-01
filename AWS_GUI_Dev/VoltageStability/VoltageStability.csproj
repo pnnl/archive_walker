@@ -133,9 +133,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\BAWGUI.Resources\Images\RemoveCommand_16x.png">
+    <Resource Include="..\BAWGUI.Resources\Images\RemoveCommand_16x.png">
       <Link>MyResources\RemoveCommand_16x.png</Link>
-    </Content>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
