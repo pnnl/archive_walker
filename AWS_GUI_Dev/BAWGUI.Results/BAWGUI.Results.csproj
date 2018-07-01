@@ -215,9 +215,6 @@
     <Compile Include="Views\RingdownResultsView.xaml.cs">
       <DependentUpon>RingdownResultsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TimeFilterView.xaml.cs">
-      <DependentUpon>TimeFilterView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\WindRampEventTable.xaml.cs">
       <DependentUpon>WindRampEventTable.xaml</DependentUpon>
     </Compile>
@@ -334,10 +331,6 @@
     <Page Include="Views\RingdownResultsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TimeFilterView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\WindRampEventTable.xaml">
       <SubType>Designer</SubType>

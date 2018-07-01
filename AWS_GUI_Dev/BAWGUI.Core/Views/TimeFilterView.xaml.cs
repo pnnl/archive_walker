@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BAWGUI.Results.Views
+namespace BAWGUI.Core.Views
 {
     /// <summary>
     /// Interaction logic for TimeFilterView.xaml
