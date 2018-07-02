@@ -117,8 +117,14 @@
     <Compile Include="Views\VoltageStabilityDetectorView.xaml.cs">
       <DependentUpon>VoltageStabilityDetectorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\VoltageStabilityEventTable.xaml.cs">
+      <DependentUpon>VoltageStabilityEventTable.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\VoltageStabilityResultsView.xaml.cs">
       <DependentUpon>VoltageStabilityResultsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VoltageStabilitySubTable.xaml.cs">
+      <DependentUpon>VoltageStabilitySubTable.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +169,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\VoltageStabilityEventTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\VoltageStabilityResultsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VoltageStabilitySubTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
