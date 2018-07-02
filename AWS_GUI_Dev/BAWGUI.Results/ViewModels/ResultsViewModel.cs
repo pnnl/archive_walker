@@ -104,6 +104,7 @@ namespace BAWGUI.Results.ViewModels
                 _outOfRangeResultsViewModel.Run = _run;
                 _ringdownResultsViewModel.Run = _run;
                 _windRampResultsViewModel.Run = _run;
+                _voltageStabilityResultsViewModel.Run = _run;
                 OnPropertyChanged();
             }
         }

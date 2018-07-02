@@ -1,10 +1,15 @@
-﻿using BAWGUI.Utilities;
+﻿using BAWGUI.RunMATLAB.Models;
+using BAWGUI.RunMATLAB.ViewModels;
+using BAWGUI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Input;
 using VoltageStability.Models;
 
 namespace VoltageStability.ViewModels
@@ -14,32 +19,32 @@ namespace VoltageStability.ViewModels
         public VoltageStabilityResultsViewModel()
         {
             //_configFilePath = "";
-            //_run = new AWRunViewModel();
+            _run = new AWRunViewModel();
             _results = new ObservableCollection<VoltageStabilityEventViewModel>();
             _filteredResults = new ObservableCollection<VoltageStabilityEventViewModel>();
             _models = new List<VoltageStabilityEvent>();
-            //_engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
-            //RunSparseMode = new RelayCommand(_runSparseMode);
+            _engine = MatLabEngine.Instance;
+            RunSparseMode = new RelayCommand(_runSparseMode);
             //OutOfRangeReRun = new RelayCommand(_outOfRangeRerun);
             //CancelOutOfRangeReRun = new RelayCommand(_cancelOORReRun);
             //_sparsePlotModels = new ObservableCollection<SparsePlot>();
             //_oorReRunPlotModels = new ObservableCollection<OORReRunPlot>();
         }
 
-        //private AWRunViewModel _run;
-        //public AWRunViewModel Run
-        //{
-        //    get { return _run; }
-        //    set
-        //    {
-        //        _run = value;
-        //        if (System.IO.File.Exists(_run.Model.ConfigFilePath))
-        //        {
-        //            ConfigFilePath = _run.Model.ConfigFilePath;
-        //        }
-        //        OnPropertyChanged();
-        //    }
-        //}
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                //if (System.IO.File.Exists(_run.Model.ConfigFilePath))
+                //{
+                //    ConfigFilePath = _run.Model.ConfigFilePath;
+                //}
+                OnPropertyChanged();
+            }
+        }
 
         private List<VoltageStabilityEvent> _models;
         public List<VoltageStabilityEvent> Models
@@ -58,11 +63,11 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
-        //private RunMATLAB.ViewModels.MatLabEngine _engine;
-        //public RunMATLAB.ViewModels.MatLabEngine Engine
-        //{
-        //    get { return _engine; }
-        //}
+        private MatLabEngine _engine;
+        public MatLabEngine Engine
+        {
+            get { return _engine; }
+        }
         private ObservableCollection<VoltageStabilityEventViewModel> _results;
         private ObservableCollection<VoltageStabilityEventViewModel> _filteredResults;
         public ObservableCollection<VoltageStabilityEventViewModel> FilteredResults
@@ -175,6 +180,190 @@ namespace VoltageStability.ViewModels
                 }
                 OnPropertyChanged();
             }
+        }
+        private List<SparseDetector> _sparseResults;
+        public List<SparseDetector> SparseResults
+        {
+            get { return _sparseResults; }
+            set
+            {
+                _sparseResults = value;
+                if (_sparseResults.Count() != 0)
+                {
+                    _drawOORSparsePlots();
+                    if (FilteredResults.Count > 0)
+                    {
+                        SelectedVSEvent = FilteredResults.FirstOrDefault();
+                    }
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand RunSparseMode { get; set; }
+        private void _runSparseMode(object obj)
+        {
+            if (File.Exists(_run.Model.ConfigFilePath))
+            {
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
+                {
+                    try
+                    {
+                        SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "Thevenin");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Selected start time is later than end time.", "Error!", MessageBoxButtons.OK);
+                }
+                //try
+                //{
+                //    SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "OutOfRangeGeneral");
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                //}
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Configuration file not found.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+            }
+        }
+        private void _drawOORSparsePlots()
+        {
+            var rdPlots = new ObservableCollection<SparsePlot>();
+            foreach (var detector in SparseResults)
+            {
+                var aPlot = new SparsePlot();
+                aPlot.Label = detector.Label;
+                var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+                //{ PlotAreaBackground = OxyColors.WhiteSmoke}
+                //a.PlotType = PlotType.Cartesian;
+                var xAxisFormatString = "";
+                var startTime = new DateTime();
+                var endTime = new DateTime();
+                if (detector.SparseSignals.Count > 0)
+                {
+                    var signal1 = detector.SparseSignals.FirstOrDefault();
+                    if (signal1.TimeStamps.Count >= 2)
+                    {
+                        var timeInterval = signal1.TimeStamps[1] - signal1.TimeStamps[0];
+                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault()) - timeInterval;
+                    }
+                    else
+                    {
+                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                    }
+                    endTime = detector.SparseSignals.Max(x => x.TimeStamps.LastOrDefault());
+                }
+                var time = endTime - startTime;
+                if (time < TimeSpan.FromHours(24))
+                {
+                    xAxisFormatString = "HH:mm";
+                }
+                else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+                {
+                    xAxisFormatString = "MM/dd\nHH:mm";
+                }
+                else
+                {
+                    xAxisFormatString = "MM/dd";
+                }
+                OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    //Title = "Time",
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true,
+                    StringFormat = xAxisFormatString,
+                };
+                timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+                a.Axes.Add(timeXAxis);
+                OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left,
+                    Title = detector.Type + "( " + detector.Unit + " )",
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true
+                };
+                //yAxis.AxisChanged += YAxis_AxisChanged;
+
+                double axisMax = detector.SparseSignals.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
+                double axisMin = detector.SparseSignals.Min(x => x.GetMinOfMinimum()) - (double)0.1;
+                if (SparseResults.Count > 0)
+                {
+                    yAxis.Maximum = axisMax;
+                    yAxis.Minimum = axisMin;
+                }
+                a.Axes.Add(yAxis);
+
+                foreach (var rd in detector.SparseSignals)
+                {
+                    var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColor.FromArgb(50, 0, 150, 0), Color2 = OxyColor.FromArgb(50, 0, 150, 0), Fill = OxyColor.FromArgb(50, 0, 50, 0) };
+                    var previousTime = startTime.ToOADate();
+                    for (int i = 0; i < rd.Maximum.Count; i++)
+                    {
+                        newSeries.Points.Add(new DataPoint(previousTime, rd.Maximum[i]));
+                        newSeries.Points.Add(new DataPoint(rd.TimeStampNumber[i], rd.Maximum[i]));
+                        newSeries.Points2.Add(new DataPoint(previousTime, rd.Minimum[i]));
+                        newSeries.Points2.Add(new DataPoint(rd.TimeStampNumber[i], rd.Minimum[i]));
+                        previousTime = rd.TimeStampNumber[i];
+                    }
+                    newSeries.Title = rd.SignalName;
+                    newSeries.TrackerFormatString = "{0}";
+                    //newSeries.MouseMove += RdSparseSeries_MouseMove;
+                    //newSeries.MouseDown += RdSparseSeries_MouseDown;
+                    a.Series.Add(newSeries);
+                }
+                //if (SelectedOOREvent != null)
+                //{
+                //    var lowerRange = DateTime.ParseExact(SelectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var higherRange = DateTime.ParseExact(SelectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                //    {
+                //        Fill = OxyColor.FromArgb(50, 50, 50, 50),
+                //        MinimumX = lowerRange,
+                //        MaximumX = higherRange,
+                //        MinimumY = axisMin,
+                //        MaximumY = axisMax
+                //    };
+                //    a.Annotations.Add(rectAnnotation);
+                //}
+
+
+                a.LegendPlacement = LegendPlacement.Outside;
+                a.LegendPosition = LegendPosition.RightMiddle;
+                a.LegendPadding = 0.0;
+                a.LegendSymbolMargin = 0.0;
+                a.LegendMargin = 0;
+                //a.LegendMaxHeight = 200;
+                a.LegendMaxWidth = 250;
+
+                var currentArea = a.LegendArea;
+                var currentPlotWithAxis = a.PlotAndAxisArea;
+
+                var currentMargins = a.PlotMargins;
+                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                aPlot.SparsePlotModel = a;
+                rdPlots.Add(aPlot);
+            }
+            SparsePlotModels = rdPlots;
         }
 
     }
