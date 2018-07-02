@@ -51,6 +51,12 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
+    <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2.0.0.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.2.0.0-unstable0956\lib\net45\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -112,6 +118,12 @@
     <Compile Include="Views\SiteView.xaml.cs">
       <DependentUpon>SiteView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SparseEventPlot.xaml.cs">
+      <DependentUpon>SparseEventPlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SparsePlotView.xaml.cs">
+      <DependentUpon>SparsePlotView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\VoltageBusView.xaml.cs">
       <DependentUpon>VoltageBusView.xaml</DependentUpon>
     </Compile>
@@ -161,6 +173,14 @@
     <Page Include="Views\SiteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SparseEventPlot.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SparsePlotView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\VoltageBusView.xaml">
       <SubType>Designer</SubType>

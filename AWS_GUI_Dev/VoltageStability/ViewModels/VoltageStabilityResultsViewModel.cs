@@ -1,6 +1,9 @@
-﻿using BAWGUI.RunMATLAB.Models;
+﻿using BAWGUI.Core;
+using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
+using OxyPlot;
+using OxyPlot.Axes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -199,6 +202,16 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
+        private ObservableCollection<SparsePlot> _sparsePlotModels;
+        public ObservableCollection<SparsePlot> SparsePlotModels
+        {
+            get { return _sparsePlotModels; }
+            set
+            {
+                _sparsePlotModels = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand RunSparseMode { get; set; }
         private void _runSparseMode(object obj)
@@ -244,8 +257,6 @@ namespace VoltageStability.ViewModels
                 var aPlot = new SparsePlot();
                 aPlot.Label = detector.Label;
                 var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
-                //{ PlotAreaBackground = OxyColors.WhiteSmoke}
-                //a.PlotType = PlotType.Cartesian;
                 var xAxisFormatString = "";
                 var startTime = new DateTime();
                 var endTime = new DateTime();
@@ -294,7 +305,7 @@ namespace VoltageStability.ViewModels
                 OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
                 {
                     Position = OxyPlot.Axes.AxisPosition.Left,
-                    Title = detector.Type + "( " + detector.Unit + " )",
+                    Title = detector.Type,
                     MajorGridlineStyle = LineStyle.Dot,
                     MinorGridlineStyle = LineStyle.Dot,
                     MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
@@ -331,20 +342,6 @@ namespace VoltageStability.ViewModels
                     //newSeries.MouseDown += RdSparseSeries_MouseDown;
                     a.Series.Add(newSeries);
                 }
-                //if (SelectedOOREvent != null)
-                //{
-                //    var lowerRange = DateTime.ParseExact(SelectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                //    var higherRange = DateTime.ParseExact(SelectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
-                //    {
-                //        Fill = OxyColor.FromArgb(50, 50, 50, 50),
-                //        MinimumX = lowerRange,
-                //        MaximumX = higherRange,
-                //        MinimumY = axisMin,
-                //        MaximumY = axisMax
-                //    };
-                //    a.Annotations.Add(rectAnnotation);
-                //}
 
 
                 a.LegendPlacement = LegendPlacement.Outside;
@@ -364,6 +361,36 @@ namespace VoltageStability.ViewModels
                 rdPlots.Add(aPlot);
             }
             SparsePlotModels = rdPlots;
+        }
+        private void TimeXAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            var xAxis = sender as OxyPlot.Axes.DateTimeAxis;
+            SelectedStartTime = DateTime.FromOADate(xAxis.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss");
+            SelectedEndTime = DateTime.FromOADate(xAxis.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
+            foreach (var plot in SparsePlotModels)
+            {
+                //OxyPlot.Axes.DateTimeAxis oldAxis = null;
+                foreach (var axis in plot.SparsePlotModel.Axes)
+                {
+                    if (axis.IsHorizontal() && axis.ActualMinimum != xAxis.ActualMinimum)
+                    {
+                        //oldAxis = axis as OxyPlot.Axes.DateTimeAxis;
+                        axis.Zoom(xAxis.ActualMinimum, xAxis.ActualMaximum);
+                        //axis.Maximum = xAxis.ActualMaximum;
+                        plot.SparsePlotModel.InvalidatePlot(false);
+                        break;
+                    }
+                }
+                //if (oldAxis!=null)
+                //{
+                //    plot.SparsePlotModel.Axes.Remove(oldAxis);
+                //    var newAxis = xAxis;
+                //    plot.SparsePlotModel.Axes.Add(newAxis);
+                //    plot.SparsePlotModel.InvalidatePlot(false);
+                //}
+
+            }
+            //Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
         }
 
     }
