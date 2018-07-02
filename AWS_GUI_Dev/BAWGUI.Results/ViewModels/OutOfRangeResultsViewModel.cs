@@ -1,4 +1,5 @@
-﻿using BAWGUI.Results.Models;
+﻿using BAWGUI.Core;
+using BAWGUI.Results.Models;
 using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;

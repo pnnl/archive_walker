@@ -1,7 +1,5 @@
 ﻿using BAWGUI.Core;
-using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
-using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace BAWGUI.Results.ViewModels
+namespace BAWGUI.Core
 {
     public class SparsePlot:ViewModelBase
     {
