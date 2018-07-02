@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using BAWGUI.Utilities;
+using BAWGUI.Core;
 
 namespace BAWGUI.Results.ViewModels
 {

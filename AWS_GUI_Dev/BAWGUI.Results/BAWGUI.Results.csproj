@@ -147,8 +147,6 @@
     <Compile Include="ViewModels\RDChannelViewModel.cs" />
     <Compile Include="ViewModels\RDReRunPlotsViewModels.cs" />
     <Compile Include="ViewModels\RingdownEventViewModel.cs" />
-    <Compile Include="ViewModels\SparsePlot.cs" />
-    <Compile Include="ViewModels\ViewResolvingPlotModel.cs" />
     <Compile Include="ViewModels\WindRampEventViewModel.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
       <DependentUpon>AvailableDates.xaml</DependentUpon>

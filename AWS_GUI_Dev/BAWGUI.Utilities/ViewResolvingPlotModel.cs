@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAWGUI.Results.ViewModels
+namespace BAWGUI.Utilities
 {
     /// <summary>
     /// Use this sub implementation of the <see cref="PlotModel"/> if the view will be declared using data template.

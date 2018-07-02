@@ -90,6 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\SignalSignatureViewModel.cs" />
     <Compile Include="ViewModels\SignalTypeHierachy.cs" />
+    <Compile Include="ViewModels\SparsePlot.cs" />
     <Compile Include="Views\TimeFilterView.xaml.cs">
       <DependentUpon>TimeFilterView.xaml</DependentUpon>
     </Compile>
