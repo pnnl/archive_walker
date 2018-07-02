@@ -5,13 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
-        <converters:DateTimeStringConverter x:Key="DateTimeStringConverter"/>
-        <converters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
+        <coreconverters:DateTimeStringConverter x:Key="DateTimeStringConverter"/>
+        <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
         <converters:TableValueNANConverter x:Key="TableValueNANConverter"/>
         <DataTemplate x:Key="FloatCellTemplate">
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
