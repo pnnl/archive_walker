@@ -7,27 +7,19 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace BAWGUI.Results.Converters
+namespace BAWGUI.Core.Converters
 {
-    public class DateTimeStringConverter : IValueConverter
+    public class TableRowIndexConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value == DependencyProperty.UnsetValue || String.IsNullOrEmpty((string)value))
+            if(value is int)
             {
-                return value;
+                return (int)value + 1;
             }
             else
             {
-                switch ((string) parameter)
-                {
-                    case "DateOnly":
-                        return value.ToString().Split(null)[0];
-                    case "TimeOnly":
-                        return value.ToString().Split(null)[1];
-                    default:
-                        return value;
-                }
+                return value;
             }
         }
 
