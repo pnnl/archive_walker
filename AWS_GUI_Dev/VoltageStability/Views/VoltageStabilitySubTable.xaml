@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VoltageStability.Views"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <converters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
+        <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
     </UserControl.Resources>
-    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedOOREvent.Channels}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedVSEvent.Subs}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
         <xcdg:DataGridControl.Resources>
             <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
                 <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
@@ -35,7 +36,6 @@
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
-            <xcdg:Column Title="PMU" FieldName="PMU" ReadOnly="True" Width="150"/>
             <xcdg:Column Title="Name" FieldName="Name" ReadOnly="True" Width="250"/>
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>

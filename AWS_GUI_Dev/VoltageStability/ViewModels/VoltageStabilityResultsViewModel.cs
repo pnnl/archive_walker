@@ -135,6 +135,47 @@ namespace VoltageStability.ViewModels
             }
             FilteredResults = new ObservableCollection<VoltageStabilityEventViewModel>(newResults.OrderBy(x => x.StartTime));
         }
+        private VoltageStabilityEventViewModel _selectedVSEvent;
+        public VoltageStabilityEventViewModel SelectedVSEvent
+        {
+            get { return _selectedVSEvent; }
+            set
+            {
+                _selectedVSEvent = value;
+                if (_selectedVSEvent != null)
+                {
+                    //foreach (var plotM in SparsePlotModels)
+                    //{
+                    //    var lowerRange = DateTime.ParseExact(_selectedVSEvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                    //    var higherRange = DateTime.ParseExact(_selectedVSEvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                    //    double axisMin = 0d, axisMax = 0d;
+                    //    foreach (var axis in plotM.SparsePlotModel.Axes)
+                    //    {
+                    //        if (axis.IsVertical())
+                    //        {
+                    //            axisMin = axis.Minimum;
+                    //            axisMax = axis.Maximum;
+                    //        }
+                    //    }
+                    //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                    //    {
+                    //        Fill = OxyColor.FromArgb(75, 255, 0, 0),
+                    //        //MinimumX = lowerRange,
+                    //        //MaximumX = higherRange,
+                    //        //Fill = OxyColors.Red,
+                    //        MinimumX = lowerRange - (higherRange - lowerRange),
+                    //        MaximumX = higherRange + (higherRange - lowerRange),
+                    //        MinimumY = axisMin,
+                    //        MaximumY = axisMax
+                    //    };
+                    //    plotM.SparsePlotModel.Annotations.Clear();
+                    //    plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+                    //    plotM.SparsePlotModel.InvalidatePlot(true);
+                    //}
+                }
+                OnPropertyChanged();
+            }
+        }
 
     }
 }
