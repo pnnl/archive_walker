@@ -25,36 +25,51 @@ namespace BAWGUI.ReadConfigXml
                 ResultUpdateInterval = par.Value;
             }
             DetectorList = new List<object>();
-            var item = _xElement.Element("Configuration").Element("Periodogram");
-            if (item != null)
+            var items = _xElement.Element("Configuration").Elements("Periodogram");
+            if (items != null)
             {
-                DetectorList.Add(new PeriodogramDetectorModel(item));
+                foreach (var item in items)
+                {
+                    DetectorList.Add(new PeriodogramDetectorModel(item));
+                }
             }
-            item = _xElement.Element("Configuration").Element("SpectralCoherence");
-            if (item != null)
+            items = _xElement.Element("Configuration").Elements("SpectralCoherence");
+            if (items != null)
             {
-                DetectorList.Add(new SpectralCoherenceDetectorModel(item));
+                foreach (var item in items)
+                {
+                    DetectorList.Add(new SpectralCoherenceDetectorModel(item));
+                }
             }
-            item = _xElement.Element("Configuration").Element("OutOfRangeGeneral");
-            if (item != null)
+            items = _xElement.Element("Configuration").Elements("OutOfRangeGeneral");
+            if (items != null)
             {
-                DetectorList.Add(new OutOfRangeFrequencyDetectorModel(item));
+                foreach (var item in items)
+                {
+                    DetectorList.Add(new OutOfRangeFrequencyDetectorModel(item));
+                }
             }
-            item = _xElement.Element("Configuration").Element("WindRamp");
-            if (item != null)
+            items = _xElement.Element("Configuration").Elements("WindRamp");
+            if (items != null)
             {
-                DetectorList.Add(new WindRampDetectorModel(item));
+                foreach (var item in items)
+                {
+                    DetectorList.Add(new WindRampDetectorModel(item));
+                }
             }
-            item = _xElement.Element("Configuration").Element("Ringdown");
-            if (item != null)
+            items = _xElement.Element("Configuration").Elements("Ringdown");
+            if (items != null)
             {
-                DetectorList.Add(new RingdownDetectorModel(item));
+                foreach (var item in items)
+                {
+                    DetectorList.Add(new RingdownDetectorModel(item));
+                }
             }
-            item = _xElement.Element("Configuration").Element("Alarming");
-            if (item != null)
+            var alarms = _xElement.Element("Configuration").Element("Alarming");
+            if (alarms != null)
             {
                 AlarmingList = new List<object>();
-                foreach (var alarm in item.Elements())
+                foreach (var alarm in alarms.Elements())
                 {
                     switch (alarm.Name.LocalName)
                     {

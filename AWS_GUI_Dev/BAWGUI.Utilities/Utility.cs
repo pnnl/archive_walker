@@ -59,15 +59,24 @@ namespace BAWGUI.Utilities
             {
                 if (Path.GetExtension(filename).Substring(1).ToLower() == fileType)
                     firstFile = filename;
+                //return firstFile;
             }
             else if (Directory.Exists(filename))
             {
                 foreach (var file in Directory.GetFiles(filename))
                 {
                     firstFile = FindFirstInputFile(file, fileType);
+                    if (!string.IsNullOrEmpty(firstFile))
+                    {
+                        break;
+                    }
                 }
                 foreach (var path in Directory.GetDirectories(filename))
                 {
+                    if (!string.IsNullOrEmpty(firstFile))
+                    {
+                        break;
+                    }
                     firstFile = FindFirstInputFile(path, fileType);
                 }
             }
