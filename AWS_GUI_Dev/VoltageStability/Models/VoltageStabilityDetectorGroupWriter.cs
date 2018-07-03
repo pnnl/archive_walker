@@ -86,10 +86,16 @@ namespace VoltageStability.Models
             {
                 newBS = new XElement("Shunt");
                 var shunt = bs as ShuntViewModel;
+                newBS.Add(new XElement("PMU", shunt.CurrentMagnitude.PMUName));
+                if (!string.IsNullOrEmpty(shunt.ActivePower.SignalName))
+                {
+                    newBS.Add(new XElement("P", shunt.ActivePower.SignalName));
+                }
+                if (!string.IsNullOrEmpty(shunt.ReactivePower.PMUName))
+                {
+                    newBS.Add(new XElement("Q", shunt.ReactivePower.SignalName));
+                }
                 newBS.Add(
-                new XElement("PMU", shunt.ActivePower.PMUName),
-                new XElement("P", shunt.ActivePower.SignalName),
-                new XElement("Q", shunt.ReactivePower.SignalName),
                 new XElement("Imag", shunt.CurrentMagnitude.SignalName),
                 new XElement("Iang", shunt.CurrentAngle.SignalName));
                 return newBS;
@@ -98,10 +104,17 @@ namespace VoltageStability.Models
             {
                 newBS = new XElement("Branch");
                 var branch = bs as BranchViewModel;
+                newBS.Add(new XElement("PMU", branch.CurrentMagnitude.PMUName));
+                if (!string.IsNullOrEmpty(branch.ActivePower.PMUName))
+                {
+                    newBS.Add(new XElement("P", branch.ActivePower.SignalName));
+                }
+                if (!string.IsNullOrEmpty(branch.ReactivePower.SignalName))
+                {
+                    newBS.Add(new XElement("Q", branch.ReactivePower.SignalName));
+
+                }
                 newBS.Add(
-                new XElement("PMU", branch.ActivePower.PMUName),
-                new XElement("P", branch.ActivePower.SignalName),
-                new XElement("Q", branch.ReactivePower.SignalName),
                 new XElement("Imag", branch.CurrentMagnitude.SignalName),
                 new XElement("Iang", branch.CurrentAngle.SignalName));
                 return newBS;

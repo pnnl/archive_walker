@@ -82,7 +82,7 @@
                                     </StackPanel>
                                     <StackPanel Grid.Row="3" Margin="2,1" Orientation="Horizontal" Height="24">
                                         <CheckBox IsChecked="{Binding IsChowMethod}" Margin="2,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Chow" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                        <TextBlock Text="RPI" Margin="10,0" Width="80" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <StackPanel Grid.Row="4" Margin="2,1" Orientation="Horizontal" Height="24">
                                         <CheckBox IsChecked="{Binding IsTellegenMethod}" Margin="2,0" VerticalAlignment="Center"/>

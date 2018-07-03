@@ -7,6 +7,7 @@
              xmlns:model="clr-namespace:VoltageStability.Models"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converters="clr-namespace:VoltageStability.Converters"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -29,7 +30,7 @@
 
         <Label Grid.Row="0" Grid.Column="0"  Margin="0,1" Content="{Binding Name}" ContentStringFormat="{}{0}:" Width="150"/>
         <Label Grid.Row="1" Grid.Column="0" Margin="30,1,0,1" Content="Active Power:" Width="120"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Text="{Binding ActivePower.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="1" Grid.Column="1" Margin="0,1" Text="{Binding ActivePower.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus" >
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
@@ -42,9 +43,9 @@
                     </i:InvokeCommandAction>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </TextBox>
+        </xtlkt:WatermarkTextBox>
         <Label Grid.Row="2" Grid.Column="0" Margin="30,1,0,1" Content="Reactive Power:" Width="120"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Text="{Binding ReactivePower.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="2" Grid.Column="1" Margin="0,1" Text="{Binding ReactivePower.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus" >
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
@@ -57,7 +58,7 @@
                     </i:InvokeCommandAction>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </TextBox>
+        </xtlkt:WatermarkTextBox>
         <Label Grid.Row="3" Grid.Column="0" Margin="30,1,0,1" Content="Current Magnitude:" Width="120"/>
         <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Text="{Binding CurrentMagnitude.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
             <i:Interaction.Triggers>

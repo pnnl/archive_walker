@@ -64,7 +64,7 @@
                         </MultiBinding>
                     </views:VoltageStabilityEventTable.Visibility>
                 </views:VoltageStabilityEventTable>
-                <TextBlock Grid.Row="1" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Out-Of-Range Event Detected in This Run" TextWrapping="WrapWithOverflow">
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Margin="0,2,2,6" Text="No Voltage Stability Event Detected in This Run" TextWrapping="WrapWithOverflow">
                     <TextBlock.Visibility>
                         <MultiBinding Converter="{StaticResource ResultTableVisibilityConverter}" ConverterParameter="NoEvent">
                             <Binding Path="FilteredResults.Count"/>
