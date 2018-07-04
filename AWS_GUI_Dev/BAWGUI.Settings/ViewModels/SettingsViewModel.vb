@@ -16,6 +16,7 @@ Imports BAWGUI.Core
 Imports BAWGUI.Utilities
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.ReadConfigXml
+Imports VoltageStability.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
