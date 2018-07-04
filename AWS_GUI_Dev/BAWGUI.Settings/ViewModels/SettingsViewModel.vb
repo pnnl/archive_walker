@@ -818,15 +818,19 @@ Namespace ViewModels
                 End If
             Next
             Dim exampleFile = obj.ExampleFile
-            obj.FileType = [Enum].Parse(GetType(DataFileType), exampleFile.Split(".")(1))
-            Dim filename = Path.GetFileNameWithoutExtension(exampleFile)
-            obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-            Dim fullPath = Path.GetDirectoryName(exampleFile)
-            Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-            Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-            obj.FileDirectory = twoLevelUp
-            If obj.FileType IsNot Nothing Then
-                _signalMgr.AddRawSignalsFromADir(obj)
+            If File.Exists(exampleFile) Then
+                obj.FileType = [Enum].Parse(GetType(DataFileType), exampleFile.Split(".")(1))
+                Dim filename = Path.GetFileNameWithoutExtension(exampleFile)
+                obj.Mnemonic = filename.Substring(0, filename.Length - 16)
+                Dim fullPath = Path.GetDirectoryName(exampleFile)
+                Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
+                Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
+                obj.FileDirectory = twoLevelUp
+                If obj.FileType IsNot Nothing Then
+                    _signalMgr.AddRawSignalsFromADir(obj)
+                End If
+            Else
+                Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
             End If
         End Sub
 
