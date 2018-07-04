@@ -150,8 +150,8 @@ namespace BAWGUI.ReadConfigXml
             switch (ModeName)
             {
                 case ModeType.Archive:
-                    DateTimeStart = mode.Element("Params").Element("DateTimeStart").Value;
-                    DateTimeEnd = mode.Element("Params").Element("DateTimeEnd").Value;
+                    DateTimeStart = mode.Element("Params").Element("DateTimeStart").Value.Substring(0,19);
+                    DateTimeEnd = mode.Element("Params").Element("DateTimeEnd").Value.Substring(0, 19);
                     break;
                 case ModeType.RealTime:
                     NoFutureWait = mode.Element("Params").Element("NoFutureWait").Value;
@@ -190,10 +190,12 @@ namespace BAWGUI.ReadConfigXml
             FileDirectory = "";
             FileType = "pdat";
             Mnemonic = "";
+            ExampleFile = "";
         }
         public string FileDirectory { get; set; }
         public string FileType { get; set; }
         public string Mnemonic { get; set; }
+        public string ExampleFile { get; set; }
     }
 
     public enum DataFileType

@@ -63,18 +63,43 @@ namespace VoltageStability.Models
             var newSub = new XElement("Sub");
             newSub.Add(new XElement("Name", sub.Name));
             newSub.Add(new XElement("LTIthresh", sub.StabilityThreshold));
-            newSub.Add(new XElement("Freq", 
-                new XElement("PMU", sub.Frequency.PMUName),
-                new XElement("F", sub.Frequency.SignalName)));
+            if (sub.Frequency != null)
+            {
+                newSub.Add(new XElement("Freq",
+                    new XElement("PMU", sub.Frequency.PMUName),
+                    new XElement("F", sub.Frequency.SignalName)));
+            }
             foreach (var bus in sub.VoltageBuses)
             {
-                XElement aBus = _writeABusElement(bus);
-                newSub.Add(aBus);
+                XElement aBus = null;
+                try
+                {
+                    aBus = _writeABusElement(bus);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error writing Voltage Bus element. Origianl error: " + ex.Message);
+                }
+                if (aBus !=  null)
+                {
+                    newSub.Add(aBus);
+                }
             }
             foreach (var bs in sub.BranchesAndShunts)
             {
-                XElement abs = _writeABranchOrShuntElement(bs);
-                newSub.Add(abs);
+                XElement abs = null;
+                try
+                {
+                    abs = _writeABranchOrShuntElement(bs);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error writing branch or shunt element! Original error: " + ex.Message);
+                }
+                if (abs != null)
+                {
+                    newSub.Add(abs);
+                }
             }
             return newSub;
         }
@@ -86,24 +111,65 @@ namespace VoltageStability.Models
             {
                 newBS = new XElement("Shunt");
                 var shunt = bs as ShuntViewModel;
-                newBS.Add(
-                new XElement("PMU", shunt.ActivePower.PMUName),
-                new XElement("P", shunt.ActivePower.SignalName),
-                new XElement("Q", shunt.ReactivePower.SignalName),
-                new XElement("Imag", shunt.CurrentMagnitude.SignalName),
-                new XElement("Iang", shunt.CurrentAngle.SignalName));
+                if (shunt.CurrentMagnitude != null)
+                {
+                    newBS.Add(new XElement("PMU", shunt.CurrentMagnitude.PMUName));
+                }
+                if (shunt.ActivePower != null && !string.IsNullOrEmpty(shunt.ActivePower.SignalName))
+                {
+                    newBS.Add(new XElement("P", shunt.ActivePower.SignalName));
+                }
+                if (shunt.ReactivePower != null && !string.IsNullOrEmpty(shunt.ReactivePower.PMUName))
+                {
+                    newBS.Add(new XElement("Q", shunt.ReactivePower.SignalName));
+                }
+                if (shunt.CurrentMagnitude != null)
+                {
+                    newBS.Add(new XElement("Imag", shunt.CurrentMagnitude.SignalName));
+                }
+                else
+                {
+                    throw new Exception("Current Magnitude is required!");
+                }
+                if (shunt.CurrentAngle != null)
+                {
+                    newBS.Add(new XElement("Iang", shunt.CurrentAngle.SignalName));
+                }
+                else
+                {
+                    throw new Exception("Current Angle is required!");
+                }
                 return newBS;
             }
             else
             {
                 newBS = new XElement("Branch");
                 var branch = bs as BranchViewModel;
-                newBS.Add(
-                new XElement("PMU", branch.ActivePower.PMUName),
-                new XElement("P", branch.ActivePower.SignalName),
-                new XElement("Q", branch.ReactivePower.SignalName),
-                new XElement("Imag", branch.CurrentMagnitude.SignalName),
-                new XElement("Iang", branch.CurrentAngle.SignalName));
+                newBS.Add(new XElement("PMU", branch.CurrentMagnitude.PMUName));
+                if (branch.ActivePower != null && !string.IsNullOrEmpty(branch.ActivePower.PMUName))
+                {
+                    newBS.Add(new XElement("P", branch.ActivePower.SignalName));
+                }
+                if (branch.ReactivePower != null && !string.IsNullOrEmpty(branch.ReactivePower.SignalName))
+                {
+                    newBS.Add(new XElement("Q", branch.ReactivePower.SignalName));
+                }
+                if (branch.CurrentMagnitude != null)
+                {
+                    newBS.Add(new XElement("Imag", branch.CurrentMagnitude.SignalName));
+                }
+                else
+                {
+                    throw new Exception("Current Magnitude is required!");
+                }
+                if (branch.CurrentAngle != null)
+                {
+                    newBS.Add(new XElement("Iang", branch.CurrentAngle.SignalName));
+                }
+                else
+                {
+                    throw new Exception("Current Angle is required!");
+                }
                 return newBS;
             }
         }

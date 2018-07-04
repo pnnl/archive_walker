@@ -299,7 +299,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 if (detectorList.Count > 0)
                 {
                     var vsWriter = new VoltageStabilityDetectorGroupWriter();
-                    vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
+                    try
+                    {
+                        vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
                 }
                 if (SelectedRun != null)
                 {

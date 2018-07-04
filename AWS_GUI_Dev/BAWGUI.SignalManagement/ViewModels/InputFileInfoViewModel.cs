@@ -59,7 +59,15 @@ namespace BAWGUI.SignalManagement.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        public string ExampleFile
+        {
+            get { return _model.ExampleFile; }
+            set
+            {
+                _model.ExampleFile = value;
+                OnPropertyChanged();
+            }
+        }
         public List<string> SignalList { get; internal set; }
         public ObservableCollection<SignalSignatureViewModel> TaggedSignals { get; internal set; }
         public int SamplingRate { get; internal set; }

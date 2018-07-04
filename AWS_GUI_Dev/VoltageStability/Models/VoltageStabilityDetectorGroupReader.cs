@@ -97,8 +97,16 @@ namespace VoltageStability.Models
                     if (item.Name == "Branch")
                     {
                         var bas = new Branch();
-                        bas.ActivePower = new Signal(item.Element("PMU").Value, item.Element("P").Value);
-                        bas.ReactivePower = new Signal(item.Element("PMU").Value, item.Element("Q").Value);
+                        var p = item.Element("P");
+                        if (p!=null)
+                        {
+                            bas.ActivePower = new Signal(item.Element("PMU").Value, item.Element("P").Value);
+                        }
+                        var q = item.Element("Q");
+                        if (q!=null)
+                        {
+                            bas.ReactivePower = new Signal(item.Element("PMU").Value, item.Element("Q").Value);
+                        }
                         bas.CurrentMagnitude = new Signal(item.Element("PMU").Value, item.Element("Imag").Value);
                         bas.CurrentAngle = new Signal(item.Element("PMU").Value, item.Element("Iang").Value);
                         site.BranchesAndShunts.Add(bas);
@@ -106,8 +114,17 @@ namespace VoltageStability.Models
                     else
                     {
                         var bas = new Shunt();
-                        bas.ActivePower = new Signal(item.Element("PMU").Value, item.Element("P").Value);
-                        bas.ReactivePower = new Signal(item.Element("PMU").Value, item.Element("Q").Value);
+                        var p = item.Element("P");
+                        if (p != null)
+                        {
+                            bas.ActivePower = new Signal(item.Element("PMU").Value, item.Element("P").Value);
+                        }
+                        var q = item.Element("Q");
+                        if (q != null)
+                        {
+
+                            bas.ReactivePower = new Signal(item.Element("PMU").Value, item.Element("Q").Value);
+                        }
                         bas.CurrentMagnitude = new Signal(item.Element("PMU").Value, item.Element("Imag").Value);
                         bas.CurrentAngle = new Signal(item.Element("PMU").Value, item.Element("Iang").Value);
                         site.BranchesAndShunts.Add(bas);

@@ -315,8 +315,8 @@ namespace VoltageStability.ViewModels
                 };
                 //yAxis.AxisChanged += YAxis_AxisChanged;
 
-                double axisMax = detector.SparseSignals.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
-                double axisMin = detector.SparseSignals.Min(x => x.GetMinOfMinimum()) - (double)0.1;
+                double axisMax = detector.SparseSignals.Max(x => x.GetMaxOfMaximum());
+                double axisMin = detector.SparseSignals.Min(x => x.GetMinOfMinimum());
                 if (SparseResults.Count > 0)
                 {
                     yAxis.Maximum = axisMax;

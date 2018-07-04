@@ -39,7 +39,7 @@ namespace VoltageStability.Models
                 case "Quanta":
                     _isQuantaMethod = true;
                     break;
-                case "Chow":
+                case "RPI":
                     _isChowMethod = true;
                     break;
                 case "Tellegen":
@@ -109,11 +109,11 @@ namespace VoltageStability.Models
                 _isChowMethod = value;
                 if (value)
                 {
-                    Methods.Add("Chow");
+                    Methods.Add("RPI");
                 }
                 else
                 {
-                    Methods.Remove("Chow");
+                    Methods.Remove("RPI");
                 }
             }
         }
