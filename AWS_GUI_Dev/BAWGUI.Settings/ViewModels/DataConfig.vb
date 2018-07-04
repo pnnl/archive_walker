@@ -307,12 +307,12 @@ Namespace ViewModels
         '    End Set
         'End Property
     End Class
-    Public Enum DataFileType
-        <Description("PDAT")>
-        pdat
-        <Description("JSIS CSV")>
-        csv
-    End Enum
+    'Public Enum DataFileType
+    '    <Description("PDAT")>
+    '    pdat
+    '    <Description("JSIS CSV")>
+    '    csv
+    'End Enum
 
     Public Enum ModeType
         Archive
@@ -350,7 +350,7 @@ Namespace ViewModels
             _model = New ReadConfigXml.ReaderPropertiesModel
             _dateTimeStart = ""
             _dateTimeEnd = ""
-            _selectedTimeZone = TimeZoneInfo.Utc
+            '_selectedTimeZone = TimeZoneInfo.Utc
 
             _inputFileInfos = New ObservableCollection(Of InputFileInfoViewModel)
         End Sub
@@ -496,34 +496,40 @@ Namespace ViewModels
                 'If SelectUTCTime Then
                 '_convertStartTimeToSelectedTimeZone()
                 'End If
+                Dim StackTrace = New StackTrace()
+                Dim stackFrames = StackTrace.GetFrames()
+
+                For Each sf In stackFrames
+                    Dim a = sf.GetMethod().Name
+                Next
                 OnPropertyChanged("DateTimeStart")
             End Set
         End Property
 
-        Private Sub _convertStartTimeToSelectedTimeZone()
-            'If SelectUTCTime Then
-            'Dim TimeZone As TimeZoneInfo = DirectCast(SelectedTimeZone, TimeZoneInfo)
-            If DateTimeStart IsNot Nothing Then
-                Dim UTCTimeStart = DateTime.Parse(DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
-                Dim newConvertedStartTime = TimeZoneInfo.ConvertTimeFromUtc(UTCTimeStart, SelectedTimeZone)
-                If newConvertedStartTime.ToString <> ConvertedStartTime Then
-                    ConvertedStartTime = newConvertedStartTime
-                End If
-            End If
-            'Else
-            '    Throw New Exception("Error! Bad settings in start time or converted start time.")
-            'End If
-        End Sub
+        'Private Sub _convertStartTimeToSelectedTimeZone()
+        '    'If SelectUTCTime Then
+        '    'Dim TimeZone As TimeZoneInfo = DirectCast(SelectedTimeZone, TimeZoneInfo)
+        '    If DateTimeStart IsNot Nothing Then
+        '        Dim UTCTimeStart = DateTime.Parse(DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+        '        Dim newConvertedStartTime = TimeZoneInfo.ConvertTimeFromUtc(UTCTimeStart, SelectedTimeZone)
+        '        If newConvertedStartTime.ToString <> ConvertedStartTime Then
+        '            ConvertedStartTime = newConvertedStartTime
+        '        End If
+        '    End If
+        '    'Else
+        '    '    Throw New Exception("Error! Bad settings in start time or converted start time.")
+        '    'End If
+        'End Sub
 
-        Private Sub _convertEndTimeToSelectedTimeZone()
-            If DateTimeEnd IsNot Nothing Then
-                Dim UTCTimeEnd = DateTime.Parse(DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
-                Dim newConvertedEndTime = TimeZoneInfo.ConvertTimeFromUtc(UTCTimeEnd, SelectedTimeZone)
-                If newConvertedEndTime.ToString <> ConvertedEndTime Then
-                    ConvertedEndTime = newConvertedEndTime
-                End If
-            End If
-        End Sub
+        'Private Sub _convertEndTimeToSelectedTimeZone()
+        '    If DateTimeEnd IsNot Nothing Then
+        '        Dim UTCTimeEnd = DateTime.Parse(DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+        '        Dim newConvertedEndTime = TimeZoneInfo.ConvertTimeFromUtc(UTCTimeEnd, SelectedTimeZone)
+        '        If newConvertedEndTime.ToString <> ConvertedEndTime Then
+        '            ConvertedEndTime = newConvertedEndTime
+        '        End If
+        '    End If
+        'End Sub
 
         Private _dateTimeEnd As String
         Public Property DateTimeEnd As String
@@ -537,69 +543,69 @@ Namespace ViewModels
             End Set
         End Property
 
-        Private _selectedTimeZone As TimeZoneInfo
-        Public Property SelectedTimeZone As TimeZoneInfo
-            Get
-                Return _selectedTimeZone
-            End Get
-            Set(ByVal value As TimeZoneInfo)
-                _selectedTimeZone = value
-                'If SelectAlternateTimeZone Then
-                _convertStartTimeToUTCTime()
-                _convertEndTimeToUTCTime()
-                'ElseIf SelectUTCTime Then
-                '    _convertTimeToSelectedTimeZone()
-                'End If
-                OnPropertyChanged("SelectedTimeZone")
-            End Set
-        End Property
+        'Private _selectedTimeZone As TimeZoneInfo
+        'Public Property SelectedTimeZone As TimeZoneInfo
+        '    Get
+        '        Return _selectedTimeZone
+        '    End Get
+        '    Set(ByVal value As TimeZoneInfo)
+        '        _selectedTimeZone = value
+        '        'If SelectAlternateTimeZone Then
+        '        _convertStartTimeToUTCTime()
+        '        _convertEndTimeToUTCTime()
+        '        'ElseIf SelectUTCTime Then
+        '        '    _convertTimeToSelectedTimeZone()
+        '        'End If
+        '        OnPropertyChanged("SelectedTimeZone")
+        '    End Set
+        'End Property
 
-        Private _convertedStartTime As String
-        Public Property ConvertedStartTime As String
-            Get
-                Return _convertedStartTime
-            End Get
-            Set(ByVal value As String)
-                _convertedStartTime = value
-                'If SelectAlternateTimeZone Then
-                _convertStartTimeToUTCTime()
-                'End If
-                OnPropertyChanged("ConvertedStartTime")
-            End Set
-        End Property
+        'Private _convertedStartTime As String
+        'Public Property ConvertedStartTime As String
+        '    Get
+        '        Return _convertedStartTime
+        '    End Get
+        '    Set(ByVal value As String)
+        '        _convertedStartTime = value
+        '        'If SelectAlternateTimeZone Then
+        '        _convertStartTimeToUTCTime()
+        '        'End If
+        '        OnPropertyChanged("ConvertedStartTime")
+        '    End Set
+        'End Property
 
-        Private Sub _convertStartTimeToUTCTime()
-            'Dim TimeZone As TimeZoneInfo = DirectCast(SelectedTimeZone, TimeZoneInfo)
-            If ConvertedStartTime IsNot Nothing Then
-                Dim localTimeStart = DateTime.Parse(ConvertedStartTime)
-                Dim newDateTimeStart = TimeZoneInfo.ConvertTimeToUtc(localTimeStart, SelectedTimeZone)
-                If newDateTimeStart.ToString <> DateTimeStart Then
-                    DateTimeStart = newDateTimeStart
-                End If
-            End If
-        End Sub
+        'Private Sub _convertStartTimeToUTCTime()
+        '    'Dim TimeZone As TimeZoneInfo = DirectCast(SelectedTimeZone, TimeZoneInfo)
+        '    If ConvertedStartTime IsNot Nothing Then
+        '        Dim localTimeStart = DateTime.Parse(ConvertedStartTime)
+        '        Dim newDateTimeStart = TimeZoneInfo.ConvertTimeToUtc(localTimeStart, SelectedTimeZone)
+        '        If newDateTimeStart.ToString <> DateTimeStart Then
+        '            DateTimeStart = newDateTimeStart
+        '        End If
+        '    End If
+        'End Sub
 
-        Private Sub _convertEndTimeToUTCTime()
-            If ConvertedEndTime IsNot Nothing Then
-                Dim localTimeEnd = DateTime.Parse(ConvertedEndTime)
-                Dim newDateTimeEnd = TimeZoneInfo.ConvertTimeToUtc(localTimeEnd, SelectedTimeZone)
-                If newDateTimeEnd.ToString <> DateTimeEnd Then
-                    DateTimeEnd = newDateTimeEnd
-                End If
-            End If
-        End Sub
+        'Private Sub _convertEndTimeToUTCTime()
+        '    If ConvertedEndTime IsNot Nothing Then
+        '        Dim localTimeEnd = DateTime.Parse(ConvertedEndTime)
+        '        Dim newDateTimeEnd = TimeZoneInfo.ConvertTimeToUtc(localTimeEnd, SelectedTimeZone)
+        '        If newDateTimeEnd.ToString <> DateTimeEnd Then
+        '            DateTimeEnd = newDateTimeEnd
+        '        End If
+        '    End If
+        'End Sub
 
-        Private _convertedEndTime As String
-        Public Property ConvertedEndTime As String
-            Get
-                Return _convertedEndTime
-            End Get
-            Set(ByVal value As String)
-                _convertedEndTime = value
-                _convertEndTimeToUTCTime()
-                OnPropertyChanged("ConvertedEndTime")
-            End Set
-        End Property
+        'Private _convertedEndTime As String
+        'Public Property ConvertedEndTime As String
+        '    Get
+        '        Return _convertedEndTime
+        '    End Get
+        '    Set(ByVal value As String)
+        '        _convertedEndTime = value
+        '        _convertEndTimeToUTCTime()
+        '        OnPropertyChanged("ConvertedEndTime")
+        '    End Set
+        'End Property
 
         Private _noFutureWait As String
         Public Property NoFutureWait As String
@@ -668,40 +674,40 @@ Namespace ViewModels
         '    End Set
         'End Property
 
-        Private _selectUTCTime As Boolean
-        Public Property SelectUTCTime As Boolean
-            Get
-                Return _selectUTCTime
-            End Get
-            Set(ByVal value As Boolean)
-                _selectUTCTime = value
-                If _selectUTCTime Then
-                    SelectAlternateTimeZone = False
-                Else
-                    SelectAlternateTimeZone = True
-                End If
-                OnPropertyChanged("SelectUTCTime")
-            End Set
-        End Property
+        'Private _selectUTCTime As Boolean
+        'Public Property SelectUTCTime As Boolean
+        '    Get
+        '        Return _selectUTCTime
+        '    End Get
+        '    Set(ByVal value As Boolean)
+        '        _selectUTCTime = value
+        '        If _selectUTCTime Then
+        '            SelectAlternateTimeZone = False
+        '        Else
+        '            SelectAlternateTimeZone = True
+        '        End If
+        '        OnPropertyChanged("SelectUTCTime")
+        '    End Set
+        'End Property
 
-        Private _selectAlternateTimeZone As Boolean
+        'Private _selectAlternateTimeZone As Boolean
+        'Public Property SelectAlternateTimeZone As Boolean
+        '    Get
+        '        Return _selectAlternateTimeZone
+        '    End Get
+        '    Set(ByVal value As Boolean)
+        '        _selectAlternateTimeZone = value
+        '        If _selectAlternateTimeZone Then
+        '            SelectUTCTime = False
+        '        Else
+        '            SelectUTCTime = True
+        '        End If
+        '        OnPropertyChanged("SelectAlternateTimeZone")
+        '    End Set
+        'End Property
+
         Public Model As ReadConfigXml.ReaderPropertiesModel
         Private _model As ReadConfigXml.ReaderPropertiesModel
-
-        Public Property SelectAlternateTimeZone As Boolean
-            Get
-                Return _selectAlternateTimeZone
-            End Get
-            Set(ByVal value As Boolean)
-                _selectAlternateTimeZone = value
-                If _selectAlternateTimeZone Then
-                    SelectUTCTime = False
-                Else
-                    SelectUTCTime = True
-                End If
-                OnPropertyChanged("SelectAlternateTimeZone")
-            End Set
-        End Property
 
     End Class
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

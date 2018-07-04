@@ -15,8 +15,7 @@ Imports BAWGUI.RunMATLAB.ViewModels
 Imports BAWGUI.Core
 Imports BAWGUI.Utilities
 Imports BAWGUI.SignalManagement.ViewModels
-Imports VoltageStability.Models
-Imports VoltageStability.ViewModels
+Imports BAWGUI.ReadConfigXml
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -81,6 +80,7 @@ Namespace ViewModels
             _specifyInitializationPath = New DelegateCommand(AddressOf _openInitializationPathFolder, AddressOf CanExecute)
             _specifyEventPath = New DelegateCommand(AddressOf _openEventPathFolder, AddressOf CanExecute)
             _setCurrentPhasorCreationFocusedTextBox = New DelegateCommand(AddressOf _phasrCreationCurrentFocusedTextBoxChanged, AddressOf CanExecute)
+            _readExampleFile = New DelegateCommand(AddressOf _parseExampleFile, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
@@ -742,54 +742,94 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _browseInputFileFolder(obj As InputFileInfoViewModel)
-            'Dim previousDir = New InputFileInfo(obj)
-            Dim openDirectoryDialog As New FolderBrowserDialog()
-            openDirectoryDialog.Description = "Select the directory that data files (.pdat or .csv) are located "
+            ''Dim previousDir = New InputFileInfo(obj)
+            'Dim openDirectoryDialog As New FolderBrowserDialog()
+            'openDirectoryDialog.Description = "Select the directory that data files (.pdat or .csv) are located "
+            'If _lastInputFolderLocation Is Nothing Then
+            '    openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+            'Else
+            '    openDirectoryDialog.SelectedPath = _lastInputFolderLocation
+            'End If
+            'openDirectoryDialog.ShowNewFolderButton = False
+            'If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+            '    ' When a new directory is selected, we need to clean out everything that display contents of that directory
+            '    'obj = _parseExampleFile(obj, openDirectoryDialog)
+            '    '_buildInputFileFolderTree(obj)
+            '    'If _configData IsNot Nothing Then
+            '    '    _readDataConfigStages(_configData)
+            '    '    _readProcessConfig(_configData)
+            '    '    _readPostProcessConfig(_configData)
+            '    '    _readDetectorConfig(_configData)
+            '    'End If
+            '    _lastInputFolderLocation = openDirectoryDialog.SelectedPath
+            'End If
+            Dim openFileDialog As New Microsoft.Win32.OpenFileDialog()
+            openFileDialog.RestoreDirectory = True
+            openFileDialog.FileName = ""
+            openFileDialog.DefaultExt = ".pdat"
+            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*"
             If _lastInputFolderLocation Is Nothing Then
-                openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+                openFileDialog.InitialDirectory = Environment.CurrentDirectory
             Else
-                openDirectoryDialog.SelectedPath = _lastInputFolderLocation
+                openFileDialog.InitialDirectory = _lastInputFolderLocation
             End If
-            openDirectoryDialog.ShowNewFolderButton = False
-            If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
-                ' When a new directory is selected, we need to clean out everything that display contents of that directory
-                obj.Mnemonic = ""
-                'obj.SamplingRate = ""
-                'obj.GroupedSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
-                'obj.GroupedSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
-                ' clean out signals from that directory from all references since we display those signals in 4 different ways
-                For Each group In _signalMgr.GroupedRawSignalsByType
-                    If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                        _signalMgr.GroupedRawSignalsByType.Remove(group)
-                        Exit For
-                    End If
-                Next
-                For Each group In _signalMgr.GroupedRawSignalsByPMU
-                    If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
-                        _signalMgr.GroupedRawSignalsByPMU.Remove(group)
-                        Exit For
-                    End If
-                Next
-                'obj.TaggedSignals = New ObservableCollection(Of SignalSignatureViewModel)
-                'For Each signal In obj.TaggedSignals
-                '    signal.Dispose()
-                'Next
-                'obj.SignalList = New List(Of String)
-                'obj.GroupedSignalsByPMU
-                _lastInputFolderLocation = openDirectoryDialog.SelectedPath
-                obj.FileDirectory = _lastInputFolderLocation
-                If obj.FileType IsNot Nothing Then
-                    _signalMgr.AddRawSignalsFromADir(obj)
+            Dim DialogResult? As Boolean = openFileDialog.ShowDialog
+            If DialogResult Then
+                obj.ExampleFile = openFileDialog.FileName
+                _lastInputFolderLocation = Path.GetDirectoryName(openFileDialog.FileName)
+                'ConfigFileName = openFileDialog.FileName
+                '_addLog("Open file: " & ConfigFileName & " successfully!")
+                'GroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
+                'GroupedRawSignalsByPMU = New ObservableCollection(Of SignalTypeHierachy)
+                'NameTypeUnitStatusFlag = 0
+                'Try
+                '    _configData = XDocument.Load(_configFileName)
+                '    _addLog("Reading " & ConfigFileName)
+                '    _readConfigFile(_configData)
+                '    _addLog("Done reading " & ConfigFileName & " .")
+                'Catch ex As Exception
+                '    _addLog("Error reading config file!" & vbCrLf & ex.Message)
+                '    Forms.MessageBox.Show("Error reading config file!" & vbCrLf & ex.Message & vbCrLf & "Please see logs below!", "Error!", MessageBoxButtons.OK)
+                'End Try
+            End If
+
+        End Sub
+        Private _readExampleFile As ICommand
+        Public Property ReadExampleFile As ICommand
+            Get
+                Return _readExampleFile
+            End Get
+            Set(ByVal value As ICommand)
+                _readExampleFile = value
+            End Set
+        End Property
+
+        Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
+            For Each group In _signalMgr.GroupedRawSignalsByType
+                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                    _signalMgr.GroupedRawSignalsByType.Remove(group)
+                    Exit For
                 End If
-                '_buildInputFileFolderTree(obj)
-                'If _configData IsNot Nothing Then
-                '    _readDataConfigStages(_configData)
-                '    _readProcessConfig(_configData)
-                '    _readPostProcessConfig(_configData)
-                '    _readDetectorConfig(_configData)
-                'End If
+            Next
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
+                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                    _signalMgr.GroupedRawSignalsByPMU.Remove(group)
+                    Exit For
+                End If
+            Next
+            Dim exampleFile = obj.ExampleFile
+            obj.FileType = [Enum].Parse(GetType(DataFileType), exampleFile.Split(".")(1))
+            Dim filename = Path.GetFileNameWithoutExtension(exampleFile)
+            obj.Mnemonic = filename.Substring(0, filename.Length - 16)
+            Dim fullPath = Path.GetDirectoryName(exampleFile)
+            Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
+            Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
+            obj.FileDirectory = twoLevelUp
+            If obj.FileType IsNot Nothing Then
+                _signalMgr.AddRawSignalsFromADir(obj)
             End If
         End Sub
+
         Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfoViewModel)
             For Each group In _signalMgr.GroupedRawSignalsByType
                 If group.SignalSignature.SignalName.Split(",")(0) = fileInfo.FileDirectory Then

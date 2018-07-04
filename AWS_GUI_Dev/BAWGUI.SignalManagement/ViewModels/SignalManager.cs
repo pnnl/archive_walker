@@ -182,8 +182,8 @@ namespace BAWGUI.SignalManagement.ViewModels
             var a = new SignalTypeHierachy(newSig);
             a.SignalList = SortSignalByPMU(signalSignatureList);
             GroupedRawSignalsByPMU.Add(a);
-            newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
-            newSig.SamplingRate = (int)SamplingRate;
+            //newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+            //newSig.SamplingRate = (int)SamplingRate;
             var b = new SignalTypeHierachy(newSig);
             b.SignalList = SortSignalByType(signalSignatureList);
             GroupedRawSignalsByType.Add(b);
@@ -917,10 +917,12 @@ namespace BAWGUI.SignalManagement.ViewModels
                 newSignalList.Add(signal);
             }
             fileInfo.TaggedSignals = newSignalList;
-            var a = new SignalTypeHierachy(new SignalSignatureViewModel(fileInfo.FileDirectory));
+            var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
+            newSig.SamplingRate = fileInfo.SamplingRate;
+            var a = new SignalTypeHierachy(newSig);
             a.SignalList = SortSignalByPMU(newSignalList);
             GroupedRawSignalsByPMU.Add(a);
-            var b = new SignalTypeHierachy(new SignalSignatureViewModel(fileInfo.FileDirectory));
+            var b = new SignalTypeHierachy(newSig);
             b.SignalList = SortSignalByType(newSignalList);
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;

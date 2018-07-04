@@ -48,6 +48,7 @@ Namespace ViewModels
                                          </DataConfig>
             For Each fileInfo In _svm.DataConfigure.ReaderProperty.InputFileInfos
                 Dim info As XElement = <FilePath>
+                                           <ExampleFile><%= fileInfo.ExampleFile %></ExampleFile>
                                            <FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
                                            <FileType><%= fileInfo.FileType %></FileType>
                                            <Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>

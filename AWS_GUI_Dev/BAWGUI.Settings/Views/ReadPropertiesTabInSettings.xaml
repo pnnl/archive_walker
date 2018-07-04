@@ -31,7 +31,7 @@
                             <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Vertical" Margin="2">
                                 <!--<Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>-->
-                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom" Kind="Utc"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom" Kind="Utc" />
                             </StackPanel>
                             <!--<StackPanel Orientation="Vertical" Margin="20,2">
                                 <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
@@ -43,7 +43,7 @@
                             <Label Content="End Time" Width="150" Margin="2" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Vertical" Margin="2">
                                 <!--<Label Content="Select UTC Time" Width="auto" Margin="2" HorizontalAlignment="Center"/>-->
-                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeEnd, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom" Kind="Utc"/>
+                                <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.DateTimeEnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="2" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom" Kind="Utc"/>
                             </StackPanel>
                             <!--<StackPanel Orientation="Vertical" Margin="20,2">
                                 <Label Content="Select Alternate Time Zone" Width="auto" Margin="2" HorizontalAlignment="Center"/>
@@ -168,27 +168,39 @@
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
-                                                    <Label Content="File Directory:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                    <Label Content="Example File:" Margin="2" Width="100"/>
+                                                    <TextBox Text="{Binding ExampleFile}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
                                                         <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>
+                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ReadExampleFile}" Margin="2" ToolTip="Browse Input Data Directory" Height="25" CommandParameter="{Binding}" Content="Read File">
+                                                        <!--<Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>-->
+                                                    </Button>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
+                                                    <Label Content="File Directory:" Margin="2" Width="100"/>
+                                                    <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
+                                                    <!--<Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
+                                                        <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
+                                                    </Button>-->
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
                                                     <Label Content="File Type:" Margin="2" Width="100"/>
-                                                    <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                    <TextBox Text="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
+                                                    <!--<ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
                                                         <i:Interaction.Triggers>
                                                             <i:EventTrigger EventName="SelectionChanged">
                                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
                                                             </i:EventTrigger>
                                                         </i:Interaction.Triggers>
-                                                    </ComboBox>
+                                                    </ComboBox>-->
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
+                                                <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5,0,0">
                                                     <Label Content="Mnemonic:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                    <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
