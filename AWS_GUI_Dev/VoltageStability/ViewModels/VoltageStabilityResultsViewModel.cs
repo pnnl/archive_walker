@@ -392,6 +392,15 @@ namespace VoltageStability.ViewModels
             }
             //Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
         }
-
+        private bool _isTheveninValidation;
+        public bool IsTheveninValidation
+        {
+            get { return _isTheveninValidation; }
+            set
+            {
+                _isTheveninValidation = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }
