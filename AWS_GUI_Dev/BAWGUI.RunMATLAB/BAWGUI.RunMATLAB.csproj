@@ -91,7 +91,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\EnabledIfRunningOrPausedConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\InverseBooleanVisibilityConverter.cs" />

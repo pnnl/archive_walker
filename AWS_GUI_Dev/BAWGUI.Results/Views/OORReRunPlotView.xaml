@@ -7,12 +7,13 @@
              xmlns:oxy="http://oxyplot.org/wpf"
              xmlns:converters="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
              xmlns:converters2="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-            <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+            <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters2:ThumbnailVisibilityConverter x:Key="ThumbnailVisibilityConverter"/>
             <converters2:VisibleIfNotEqualToOneConverter x:Key="VisibleIfNotEqualToOneConverter"/>
         </ResourceDictionary>

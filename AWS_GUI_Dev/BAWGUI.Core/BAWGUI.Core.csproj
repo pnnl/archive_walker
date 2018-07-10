@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeStringConverter.cs" />
     <Compile Include="Converters\DetectorExpanderHeaderConverter.cs" />
     <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
