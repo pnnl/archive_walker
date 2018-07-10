@@ -750,7 +750,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     Position = OxyPlot.Axes.AxisPosition.Left,
                     Title = "ROC",
-                    Unit = "Hz/second",
+                    Unit = oorSig.Unit + "/second",
                     TitlePosition = 0.5,
                     MajorGridlineStyle = LineStyle.Dot,
                     MinorGridlineStyle = LineStyle.Dot,
