@@ -7,7 +7,7 @@ using System.Windows.Data;
 using System.Windows;
 using System.Globalization;
 
-namespace BAWGUI.RunMATLAB.Converters
+namespace BAWGUI.Core.Converters
 {
     public class BooleanVisibilityConverter : IValueConverter
     {
