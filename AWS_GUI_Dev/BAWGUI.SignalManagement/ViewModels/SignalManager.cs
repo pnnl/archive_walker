@@ -75,25 +75,28 @@ namespace BAWGUI.SignalManagement.ViewModels
         {
             foreach (var item in inputFileInfos)
             {
-                var sampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
-                if (File.Exists(sampleFile))
+                if (!File.Exists(item.ExampleFile))
+                {
+                    item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
+                }
+                if (File.Exists(item.ExampleFile))
                 {
                     var aFileInfo = new InputFileInfoViewModel(item);
                     if (item.FileType.ToLower() == "csv")
                     {
-                        _readCSVFile(sampleFile, aFileInfo);
+                        _readCSVFile(aFileInfo);
                     }
                     else
                     {
-                        _readPDATFile(sampleFile, aFileInfo);
+                        _readPDATFile(aFileInfo);
                     }
                     FileInfo.Add(aFileInfo);
                 }
             }
         }
-        private void _readCSVFile(string filePath, InputFileInfoViewModel aFileInfo)
+        private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         {
-            var csvReader = new CSVReader(filePath);
+            var csvReader = new CSVReader(aFileInfo.ExampleFile);
             var pmuName = csvReader.pmuName;
             var SamplingRate = csvReader.SamplingRate;
             var signalNames = csvReader.signalNames;
@@ -166,7 +169,7 @@ namespace BAWGUI.SignalManagement.ViewModels
 
                     default:
                         {
-                            throw new Exception("Error! Invalid signal type " + signalTypes[index] + " found in file: " + filePath + " !");
+                            throw new Exception("Error! Invalid signal type " + signalTypes[index] + " found in file: " + aFileInfo.ExampleFile + " !");
                         }
                 }
                 newSignal.OldSignalName = newSignal.SignalName;
@@ -189,12 +192,12 @@ namespace BAWGUI.SignalManagement.ViewModels
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
-        private void _readPDATFile(string filePath, InputFileInfoViewModel aFileInfo)
+        private void _readPDATFile(InputFileInfoViewModel aFileInfo)
         {
             PDATReader PDATSampleFile = new PDATReader();
             try
             {
-                aFileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(filePath);
+                aFileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(aFileInfo.ExampleFile);
                 aFileInfo.SamplingRate = PDATSampleFile.GetSamplingRate();
                 TagSignals(aFileInfo, aFileInfo.SignalList);
             }
@@ -930,16 +933,21 @@ namespace BAWGUI.SignalManagement.ViewModels
 
         public void AddRawSignalsFromADir(InputFileInfoViewModel model)
         {
-            var sampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
-            if (File.Exists(sampleFile))
+            //var sampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
+            var sampleFile = "";
+            if (!File.Exists(model.ExampleFile))
+            {
+                model.ExampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
+            }
+            if (File.Exists(model.ExampleFile))
             {
                 if (model.Model.FileType.ToLower() == "csv")
                 {
-                    _readCSVFile(sampleFile, model);
+                    _readCSVFile(model);
                 }
                 else
                 {
-                    _readPDATFile(sampleFile, model);
+                    _readPDATFile(model);
                 }
             }
         }
