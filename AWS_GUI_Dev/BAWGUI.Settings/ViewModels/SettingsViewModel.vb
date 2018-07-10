@@ -37,7 +37,7 @@ Namespace ViewModels
 
             '_openConfigFile = New DelegateCommand(AddressOf openConfigXMLFile, AddressOf CanExecute)
             _browseInputFileDir = New DelegateCommand(AddressOf _browseInputFileFolder, AddressOf CanExecute)
-            _fileTypeChanged = New DelegateCommand(AddressOf _buildInputFileFolderTree, AddressOf CanExecute)
+            '_fileTypeChanged = New DelegateCommand(AddressOf _buildInputFileFolderTree, AddressOf CanExecute)
             _dqfilterSelected = New DelegateCommand(AddressOf _dqfilterSelection, AddressOf CanExecute)
             _customizationSelected = New DelegateCommand(AddressOf _customizationStepSelection, AddressOf CanExecute)
             _selectedSignalChanged = New DelegateCommand(AddressOf _signalSelected, AddressOf CanExecute)
@@ -834,42 +834,42 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfoViewModel)
-            For Each group In _signalMgr.GroupedRawSignalsByType
-                If group.SignalSignature.SignalName.Split(",")(0) = fileInfo.FileDirectory Then
-                    _signalMgr.GroupedRawSignalsByType.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByPMU
-                If group.SignalSignature.SignalName.Split(",")(0) = fileInfo.FileDirectory Then
-                    _signalMgr.GroupedRawSignalsByPMU.Remove(group)
-                    Exit For
-                End If
-            Next
-            If Directory.Exists(fileInfo.FileDirectory) Then
-                _signalMgr.AddRawSignalsFromADir(fileInfo)
-            End If
-            'Dim _sampleFile = ""
-            'Try
-            '    fileInfo.InputFileTree = New ObservableCollection(Of Folder)
-            '    fileInfo.InputFileTree.Add(New Folder(fileInfo.FileDirectory, fileInfo.FileType.ToString, _sampleFile))
-            'Catch ex As Exception
-            '    _addLog("Error reading input data directory! " & ex.Message)
-            'End Try
-            'If String.IsNullOrEmpty(_sampleFile) Then
-            '    _addLog("No file of type: " & fileInfo.FileType.ToString & " is found in: " & fileInfo.FileDirectory)
-            'Else
-            '    Try
-            '        _readFirstDataFile(_sampleFile, fileInfo)
-            '        If fileInfo.FileType.ToString = "pdat" Then
-            '            _signalMgr.TagSignals(fileInfo, fileInfo.SignalList)
-            '        End If
-            '    Catch ex As Exception
-            '        _addLog("Error sampling input data file! " & ex.Message)
-            '    End Try
-            'End If
-        End Sub
+        'Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfoViewModel)
+        '    For Each group In _signalMgr.GroupedRawSignalsByType
+        '        If group.SignalSignature.SignalName.Split(",")(0) = fileInfo.FileDirectory Then
+        '            _signalMgr.GroupedRawSignalsByType.Remove(group)
+        '            Exit For
+        '        End If
+        '    Next
+        '    For Each group In _signalMgr.GroupedRawSignalsByPMU
+        '        If group.SignalSignature.SignalName.Split(",")(0) = fileInfo.FileDirectory Then
+        '            _signalMgr.GroupedRawSignalsByPMU.Remove(group)
+        '            Exit For
+        '        End If
+        '    Next
+        '    If Directory.Exists(fileInfo.FileDirectory) Then
+        '        _signalMgr.AddRawSignalsFromADir(fileInfo)
+        '    End If
+        '    'Dim _sampleFile = ""
+        '    'Try
+        '    '    fileInfo.InputFileTree = New ObservableCollection(Of Folder)
+        '    '    fileInfo.InputFileTree.Add(New Folder(fileInfo.FileDirectory, fileInfo.FileType.ToString, _sampleFile))
+        '    'Catch ex As Exception
+        '    '    _addLog("Error reading input data directory! " & ex.Message)
+        '    'End Try
+        '    'If String.IsNullOrEmpty(_sampleFile) Then
+        '    '    _addLog("No file of type: " & fileInfo.FileType.ToString & " is found in: " & fileInfo.FileDirectory)
+        '    'Else
+        '    '    Try
+        '    '        _readFirstDataFile(_sampleFile, fileInfo)
+        '    '        If fileInfo.FileType.ToString = "pdat" Then
+        '    '            _signalMgr.TagSignals(fileInfo, fileInfo.SignalList)
+        '    '        End If
+        '    '    Catch ex As Exception
+        '    '        _addLog("Error sampling input data file! " & ex.Message)
+        '    '    End Try
+        '    'End If
+        'End Sub
         Private Sub _readFirstDataFile(sampleFile As String, fileInfo As InputFileInfo)
             If System.IO.Path.GetExtension(sampleFile).Substring(1) = "csv" Then
                 'Dim CSVSampleFile As New JSIS_CSV_Reader.JSISCSV_Reader
