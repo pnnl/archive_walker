@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MathWorks.MATLAB.NET.Arrays;
 
-namespace BAWGUI.RunMATLAB.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
     public abstract class RerunResultBase
     {

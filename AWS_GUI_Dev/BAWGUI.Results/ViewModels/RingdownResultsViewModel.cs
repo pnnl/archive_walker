@@ -1,5 +1,4 @@
 ﻿using BAWGUI.Results.Models;
-using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -16,6 +15,7 @@ using System.Windows;
 using System.Windows.Input;
 using BAWGUI.Utilities;
 using BAWGUI.Core;
+using BAWGUI.MATLABRunResults.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
