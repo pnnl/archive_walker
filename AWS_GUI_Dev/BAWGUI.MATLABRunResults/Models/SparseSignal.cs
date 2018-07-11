@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAWGUI.RunMATLAB.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
-    public class RingdownSignal
+    public class SparseSignal
     {
         public string Label;
         public string SignalName;
@@ -15,16 +15,15 @@ namespace BAWGUI.RunMATLAB.Models
         public string Unit;
         public List<System.DateTime> TimeStamps;
         public List<double> TimeStampNumber;
-        public List<double> Data { get; set; }
-        public List<double> TestStatistic { get; set; }
-        public List<double> Threshold { get; set; }
+        public List<double> Maximum;
+        public List<double> Minimum;
         public double GetMaxOfMaximum()
         {
-            return Data.Max();
+            return Maximum.Max();
         }
         public double GetMinOfMinimum()
         {
-            return Data.Min();
+            return Minimum.Min();
         }
     }
 }

@@ -17,17 +17,17 @@ Namespace ViewModels
         '        _dqFilterCounter = value
         '    End Set
         'End Property
-        Private _saveToRun As RunMATLAB.Models.AWRun
-        Public Property SaveToRun As RunMATLAB.Models.AWRun
+        Private _saveToRun As AWRun
+        Public Property SaveToRun As AWRun
             Get
                 Return _saveToRun
             End Get
-            Set(ByVal value As RunMATLAB.Models.AWRun)
+            Set(ByVal value As AWRun)
                 _saveToRun = value
             End Set
         End Property
 
-        Public Sub New(svm As SettingsViewModel, run As RunMATLAB.Models.AWRun)
+        Public Sub New(svm As SettingsViewModel, run As AWRun)
             _svm = svm
             _saveToRun = run
             _powerTypeDictionary = New Dictionary(Of String, String) From {{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}}

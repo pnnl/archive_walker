@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.Utilities", "BAWGUI.
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BAWGUI.CSVDataReader", "BAWGUI.CSVDataReader\BAWGUI.CSVDataReader.vbproj", "{8F7554F6-9D76-4BD4-BE7F-E358D309BB89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.MATLABRunResults", "BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj", "{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		BAWGUI.Resources\Resources.projitems*{bf338bcb-0788-4de9-8d78-5db5142fbf27}*SharedItemsImports = 4
@@ -211,6 +213,18 @@ Global
 		{8F7554F6-9D76-4BD4-BE7F-E358D309BB89}.Release|x64.Build.0 = Release|Any CPU
 		{8F7554F6-9D76-4BD4-BE7F-E358D309BB89}.Release|x86.ActiveCfg = Release|Any CPU
 		{8F7554F6-9D76-4BD4-BE7F-E358D309BB89}.Release|x86.Build.0 = Release|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Debug|x64.ActiveCfg = Debug|x64
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Debug|x64.Build.0 = Debug|x64
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Debug|x86.Build.0 = Debug|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|x64.ActiveCfg = Release|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|x64.Build.0 = Release|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|x86.ActiveCfg = Release|Any CPU
+		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

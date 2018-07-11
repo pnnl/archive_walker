@@ -86,6 +86,8 @@
     <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
     <Compile Include="Converters\SelectionStatusBackgroundConverter.cs" />
     <Compile Include="Converters\TableRowIndexConverter.cs" />
+    <Compile Include="Models\AWProject.cs" />
+    <Compile Include="Models\AWRun.cs" />
     <Compile Include="Models\SignalSignatures.cs" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
