@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace BAWGUI.RunMATLAB.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
     public class OutOfRangeSignal
     {
