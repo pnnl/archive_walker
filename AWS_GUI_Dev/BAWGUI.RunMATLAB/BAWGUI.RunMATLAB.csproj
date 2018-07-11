@@ -144,6 +144,10 @@
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6f2a8bd2-ee3e-465b-9b64-362a35846f4d}</Project>
+      <Name>VoltageStability</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\BAWGUI.Resources\Resources.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -28,6 +28,8 @@ namespace VoltageStability.ViewModels
             _models = new List<VoltageStabilityEvent>();
             _engine = MatLabEngine.Instance;
             RunSparseMode = new RelayCommand(_runSparseMode);
+            _isTheveninValidation = true;
+            VSReRun = new RelayCommand(_vsRerun);
             //OutOfRangeReRun = new RelayCommand(_outOfRangeRerun);
             //CancelOutOfRangeReRun = new RelayCommand(_cancelOORReRun);
             //_sparsePlotModels = new ObservableCollection<SparsePlot>();
@@ -402,5 +404,46 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
+        private int _predictionDelay;
+        public int PredictionDelay
+        {
+            get { return _predictionDelay; }
+            set
+            {
+                _predictionDelay = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand VSReRun { get; set; }
+        private void _vsRerun(object obj)
+        {
+            if (File.Exists(_run.Model.ConfigFilePath))
+            {
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
+                {
+                    try
+                    {
+                        _engine.VSReRunCompletedEvent += _vsReRunCompleted;
+                        _engine.VSRerun(SelectedStartTime, SelectedEndTime, _run, PredictionDelay);
+                        //ReRunResult = _engine.RDReRunResults;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Config file not found. Cannot re-run Out of Range", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+            }
+        }
+
     }
 }
