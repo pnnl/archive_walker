@@ -323,5 +323,10 @@
       <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
+      <Link>MyResources\open.gif</Link>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

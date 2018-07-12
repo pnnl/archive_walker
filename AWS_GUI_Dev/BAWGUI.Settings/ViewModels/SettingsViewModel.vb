@@ -1,16 +1,9 @@
 ﻿Imports System.Collections.ObjectModel
-Imports System.ComponentModel
-Imports System.Globalization
 Imports System.Windows.Forms
-Imports BAWGUI
 Imports PDAT_Reader
-Imports System.Linq
-Imports Microsoft.Expression.Interactivity.Core
 Imports System.IO
 Imports System.Windows.Input
 Imports System.Windows
-Imports System.Drawing
-Imports BAWGUI.RunMATLAB.Models
 Imports BAWGUI.RunMATLAB.ViewModels
 Imports BAWGUI.Core
 Imports BAWGUI.Utilities
@@ -2217,11 +2210,11 @@ Namespace ViewModels
                 Else
                     If TypeOf _currentSelectedStep Is MetricPrefixCust Then
                         Dim newOutput = obj.SignalSignature
-                        If _currentSelectedStep.UseCustomPMU Then
-                            newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
+                        'If _currentSelectedStep.UseCustomPMU Then
+                        newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
                             newOutput.PMUName = _currentSelectedStep.CustPMUname
                             newOutput.SamplingRate = obj.SignalSignature.SamplingRate
-                        End If
+                        'End If
                         newOutput.IsCustomSignal = True
                         Dim units = New List(Of String)(PostProcessConfigure.TypeUnitDictionary(obj.SignalSignature.TypeAbbreviation))
                         units.Remove(obj.SignalSignature.Unit)
@@ -3126,9 +3119,7 @@ Namespace ViewModels
             Try
                 Select Case thisCustmizationName
                     Case "Scalar Repetition"
-                        newCustomization = New ScalarRepCust With {
-                            .TimeSourcePMU = SignalMgr.AllPMUs.FirstOrDefault
-                        }
+                        newCustomization = New ScalarRepCust
                         Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname, "SC")
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)

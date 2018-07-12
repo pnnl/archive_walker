@@ -20,11 +20,12 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="2">
-        <StackPanel Orientation="Horizontal">
+        <!--<StackPanel Orientation="Horizontal">
             <RadioButton GroupName="{Binding StepCounter}" Content="Make Custom PMU" IsChecked="{Binding UseCustomPMU}" Margin="2,0"/>
             <RadioButton GroupName="{Binding StepCounter}" Content="Use Current PMU" IsChecked="{Binding UseCustomPMU, Converter={StaticResource InverseBooleanConverter}}" Margin="10,0"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="20,10,2,2" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}">
+        </StackPanel>-->
+        <!--<StackPanel Orientation="Horizontal" Margin="20,10,2,2" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}">-->
+        <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
             <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
@@ -44,7 +45,8 @@
             <TextBlock Margin="60,2,2,2" Text="Input Signal:"/>
             <TextBlock Margin="185,2,2,2" Text="Current Unit:"/>
             <TextBlock Margin="15,2,2,2" Text="New Unit:"/>
-            <TextBlock Margin="10,2,2,2" Text="Custom Signal:" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
+            <!--<TextBlock Margin="10,2,2,2" Text="Custom Signal:" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>-->
+            <TextBlock Margin="10,2,2,2" Text="Custom Signal:"/>
         </StackPanel>
         <ScrollViewer Margin="2" VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
             <ItemsControl ItemsSource="{Binding OutputInputMappingPair}">
@@ -87,7 +89,8 @@
                                         <Binding Path="Value[0].Unit"/>
                                     </MultiBinding>
                                 </ComboBox.ItemsSource>-->
-                            <xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0" Visibility="{Binding DataContext.UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                            <xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0"/>
+                            <!--<xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0" Visibility="{Binding DataContext.UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>-->
                                 <!--<i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>

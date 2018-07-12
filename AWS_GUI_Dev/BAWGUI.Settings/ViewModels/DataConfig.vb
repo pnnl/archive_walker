@@ -3011,10 +3011,12 @@ Namespace ViewModels
         Public Sub New()
             MyBase.New
             _model = New MetricPrefixCustModel
+            '_useCustomPMU = True
         End Sub
         Public Sub New(stp As MetricPrefixCustModel, stepCounter As Integer, signalsMgr As SignalManager)
             MyBase.New(stp)
             Me._model = stp
+            '_useCustomPMU = True
             Me.StepCounter = stepCounter
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
@@ -3032,17 +3034,17 @@ Namespace ViewModels
                     signal.SignalName = input.SignalName
                 End If
                 Dim output = input
-                If UseCustomPMU Then
-                    output = New SignalSignatureViewModel(signal.SignalName, CustPMUname, input.TypeAbbreviation)
-                    output.SamplingRate = input.SamplingRate
-                    output.Unit = signal.NewUnit
-                    output.OldSignalName = output.SignalName
-                    output.OldTypeAbbreviation = output.TypeAbbreviation
-                    output.OldUnit = output.Unit
-                Else
-                    output.OldUnit = output.Unit
-                    output.Unit = signal.NewUnit
-                End If
+                'If UseCustomPMU Then
+                output = New SignalSignatureViewModel(signal.SignalName, CustPMUname, input.TypeAbbreviation)
+                output.SamplingRate = input.SamplingRate
+                output.Unit = signal.NewUnit
+                output.OldSignalName = output.SignalName
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldUnit = output.Unit
+                'Else
+                '    output.OldUnit = output.Unit
+                '    output.Unit = signal.NewUnit
+                'End If
                 output.IsCustomSignal = True
                 OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
@@ -3081,55 +3083,55 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private _useCustomPMU As Boolean
-        Public Property UseCustomPMU As Boolean
-            Get
-                Return _model.UseCustomPMU
-            End Get
-            Set(ByVal value As Boolean)
-                _model.UseCustomPMU = value
-                If value Then
-                    'use custom PMU, generate new PMU and new signal as the output signal
-                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
-                    OutputChannels.Clear()
-                    For Each pair In OutputInputMappingPair
-                        Dim input = pair.Value.FirstOrDefault
-                        Dim output = New SignalSignatureViewModel(input.SignalName, CustPMUname, input.TypeAbbreviation)
-                        output.Unit = input.Unit
-                        output.IsCustomSignal = True
-                        output.OldUnit = output.Unit
-                        output.SamplingRate = input.SamplingRate
-                        Dim aNewPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
-                        input.Unit = input.OldUnit
-                        aNewPair.Value.Add(input)
-                        newOutputInputMappingPairs.Add(aNewPair)
-                        OutputChannels.Add(output)
-                    Next
-                    OutputInputMappingPair = newOutputInputMappingPairs
-                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(OutputChannels)
-                Else
-                    'use current PMU, so overwrite the current signal
-                    Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
-                    OutputChannels.Clear()
-                    For Each pair In OutputInputMappingPair
-                        Dim output = pair.Key
-                        Dim input = pair.Value.FirstOrDefault
-                        'Dim newUnit = ""
-                        If output IsNot Nothing AndAlso Not String.IsNullOrEmpty(output.Unit) Then
-                            Dim newUnit = output.Unit
-                            input.OldUnit = input.Unit
-                            input.Unit = newUnit
-                        End If
-                        OutputChannels.Add(input)
-                        Dim aNewPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(input, New ObservableCollection(Of SignalSignatureViewModel))
-                        aNewPair.Value.Add(input)
-                        newOutputInputMappingPairs.Add(aNewPair)
-                    Next
-                    OutputInputMappingPair = newOutputInputMappingPairs
-                End If
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _useCustomPMU As Boolean
+        'Public Property UseCustomPMU As Boolean
+        '    Get
+        '        Return _model.UseCustomPMU
+        '    End Get
+        '    Set(ByVal value As Boolean)
+        '        _model.UseCustomPMU = value
+        '        If value Then
+        '            'use custom PMU, generate new PMU and new signal as the output signal
+        '            Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
+        '            OutputChannels.Clear()
+        '            For Each pair In OutputInputMappingPair
+        '                Dim input = pair.Value.FirstOrDefault
+        '                Dim output = New SignalSignatureViewModel(input.SignalName, CustPMUname, input.TypeAbbreviation)
+        '                output.Unit = input.Unit
+        '                output.IsCustomSignal = True
+        '                output.OldUnit = output.Unit
+        '                output.SamplingRate = input.SamplingRate
+        '                Dim aNewPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
+        '                input.Unit = input.OldUnit
+        '                aNewPair.Value.Add(input)
+        '                newOutputInputMappingPairs.Add(aNewPair)
+        '                OutputChannels.Add(output)
+        '            Next
+        '            OutputInputMappingPair = newOutputInputMappingPairs
+        '            'ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(OutputChannels)
+        '        Else
+        '            'use current PMU, so overwrite the current signal
+        '            Dim newOutputInputMappingPairs = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
+        '            OutputChannels.Clear()
+        '            For Each pair In OutputInputMappingPair
+        '                Dim output = pair.Key
+        '                Dim input = pair.Value.FirstOrDefault
+        '                'Dim newUnit = ""
+        '                If output IsNot Nothing AndAlso Not String.IsNullOrEmpty(output.Unit) Then
+        '                    Dim newUnit = output.Unit
+        '                    input.OldUnit = input.Unit
+        '                    input.Unit = newUnit
+        '                End If
+        '                OutputChannels.Add(input)
+        '                Dim aNewPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(input, New ObservableCollection(Of SignalSignatureViewModel))
+        '                aNewPair.Value.Add(input)
+        '                newOutputInputMappingPairs.Add(aNewPair)
+        '            Next
+        '            OutputInputMappingPair = newOutputInputMappingPairs
+        '        End If
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
         'Private _newUnit As String
         'Public Property NewUnit As String
         '    Get
