@@ -16,6 +16,11 @@ namespace BAWGUI.Core
             IsCustomSignal = false;
             IsNameTypeUnitChanged = false;
         }
+        public SignalSignatures(string pmu, string signal):this()
+        {
+            PMUName = pmu;
+            SignalName = signal;
+        }
         public string PMUName { get; set; }
         public string SignalName { get; set; }
         public string TypeAbbreviation { get; set; }

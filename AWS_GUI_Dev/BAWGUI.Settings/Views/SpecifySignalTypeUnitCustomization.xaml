@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -95,7 +96,7 @@
                 </Image.Style>
             </Image>-->
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Signal Type:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding OutputChannels[0].TypeAbbreviation}" vm:ComboBoxItemsSourceDecorator.ItemsSource="{Binding Path=DataContext.DataConfigure.TypeUnitDictionary, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}}" SelectedValuePath="Key" DisplayMemberPath="Key"/>
+            <ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding OutputChannels[0].TypeAbbreviation}" utility:ComboBoxItemsSourceDecorator.ItemsSource="{Binding Path=DataContext.DataConfigure.TypeUnitDictionary, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}}" SelectedValuePath="Key" DisplayMemberPath="Key"/>
             <!--<xtlkt:WatermarkTextBox Watermark="Signal Type" ToolTip="Please specify signal type" Text="{Binding OutputChannels[0].TypeAbbreviation}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>-->
         </StackPanel>
         <StackPanel Orientation="Horizontal">
@@ -113,12 +114,12 @@
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Signal Unit:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
             <!--<ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding OutputChannels[0].Unit}" ItemsSource="{Binding Path=DataContext.DataConfigure.TypeUnitDictionary[OutputChannels[0].TypeAbbreviation], RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}}">-->
             <ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" SelectedValue="{Binding OutputChannels[0].Unit}" >
-                <vm:ComboBoxItemsSourceDecorator.ItemsSource>
+                <utility:ComboBoxItemsSourceDecorator.ItemsSource>
                     <MultiBinding Converter="{StaticResource TypeUnitDictionaryConverter}">
                         <Binding Path="DataContext.DataConfigure.TypeUnitDictionary" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=UserControl}"/>
                         <Binding Path="OutputChannels[0].TypeAbbreviation"/>
                     </MultiBinding>
-                </vm:ComboBoxItemsSourceDecorator.ItemsSource>
+                </utility:ComboBoxItemsSourceDecorator.ItemsSource>
             </ComboBox>
             <!--<xtlkt:WatermarkTextBox Watermark="Signal Unit" ToolTip="Please specify signal unit" Text="{Binding OutputChannels[0].Unit}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>-->
         </StackPanel>

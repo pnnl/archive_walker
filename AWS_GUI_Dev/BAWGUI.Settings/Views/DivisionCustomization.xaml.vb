@@ -2,29 +2,29 @@
 Imports System.Windows
 Imports System.Windows.Input
 Imports System.Windows.Media
-Imports BAWGUI.Core.Resources
+Imports BAWGUI.Utilities
 
 Public Class DivisionCustomization
 
     Private Sub MinuendOrDividentTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
-        sender.datacontext.CurrentCursor = "MinuendOrDividend"
+        sender.datacontext.CurrentCursor = "Dividend"
         For Each item In sender.Parent.Children
             If item.Name = "MDPMU" Then
                 item.Background = Utility.HighlightColor
             End If
-            If item.Name = "MinuendOrDividend" Then
+            If item.Name = "Dividend" Then
                 item.Background = Utility.HighlightColor
             End If
         Next
     End Sub
 
     Private Sub SubtrahendOrDivisorTextBoxGotKeyboardFocus(sender As Object, e As KeyboardFocusChangedEventArgs)
-        sender.datacontext.CurrentCursor = "SubtrahendOrDivisor"
+        sender.datacontext.CurrentCursor = "Divisor"
         For Each item In sender.Parent.Children
             If item.Name = "SDPMU" Then
                 item.Background = Utility.HighlightColor
             End If
-            If item.Name = "SubtrahendOrDivisor" Then
+            If item.Name = "Divisor" Then
                 item.Background = Utility.HighlightColor
             End If
         Next
@@ -35,7 +35,7 @@ Public Class DivisionCustomization
             If item.Name = "MDPMU" Then
                 item.Background = New Media.SolidColorBrush(Colors.White)
             End If
-            If item.Name = "MinuendOrDividend" Then
+            If item.Name = "Dividend" Then
                 item.Background = New Media.SolidColorBrush(Colors.White)
             End If
         Next
@@ -45,7 +45,7 @@ Public Class DivisionCustomization
             If item.Name = "SDPMU" Then
                 item.Background = New Media.SolidColorBrush(Colors.White)
             End If
-            If item.Name = "SubtrahendOrDivisor" Then
+            If item.Name = "Divisor" Then
                 item.Background = New Media.SolidColorBrush(Colors.White)
             End If
         Next

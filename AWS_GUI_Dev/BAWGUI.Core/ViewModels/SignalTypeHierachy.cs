@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using BAWGUI.Core;
+using BAWGUI.Utilities;
+using System.Collections.ObjectModel;
 
 namespace BAWGUI.Core
 {

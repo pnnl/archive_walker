@@ -1,33 +1,32 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows.Forms
 Imports System.Windows.Input
-Imports BAWGUI.Settings.Model
 Imports BAWGUI.Core
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
-        Private _groupedSignalByProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
-        Public Property GroupedSignalByProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _groupedSignalByProcessConfigStepsInput
-            End Get
-            Set(value As ObservableCollection(Of SignalTypeHierachy))
-                _groupedSignalByProcessConfigStepsInput = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _groupedSignalByProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
-        Public Property GroupedSignalByProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _groupedSignalByProcessConfigStepsOutput
-            End Get
-            Set(value As ObservableCollection(Of SignalTypeHierachy))
-                _groupedSignalByProcessConfigStepsOutput = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _groupedSignalByProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property GroupedSignalByProcessConfigStepsInput As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _groupedSignalByProcessConfigStepsInput
+        '    End Get
+        '    Set(value As ObservableCollection(Of SignalTypeHierachy))
+        '        _groupedSignalByProcessConfigStepsInput = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
+        'Private _groupedSignalByProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property GroupedSignalByProcessConfigStepsOutput As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _groupedSignalByProcessConfigStepsOutput
+        '    End Get
+        '    Set(value As ObservableCollection(Of SignalTypeHierachy))
+        '        _groupedSignalByProcessConfigStepsOutput = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
         Private Function _getAllprocessOutputSignals() As ObservableCollection(Of SignalSignatureViewModel)
-            Dim allOutputSignals = New ObservableCollection(Of SignalSignatureViewModel)
+            Dim allOutputSignals = New ObservableCollection(Of Core.SignalSignatureViewModel)
             For Each uwrp In ProcessConfigure.UnWrapList
                 For Each signal In uwrp.OutputChannels
                     If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
@@ -69,69 +68,69 @@ Namespace ViewModels
             End If
             Return allOutputSignals
         End Function
-        Private _allProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
-        Public Property AllProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _allProcessConfigOutputGroupedByType
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _allProcessConfigOutputGroupedByType = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        'Private Function _getAllProcessConfigOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
-        '    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
-        '    For Each uwrp In ProcessConfigure.UnWrapList
-        '        For Each signal In uwrp.OutputChannels
-        '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-        '                allOutputSignals.Add(signal)
-        '            End If
-        '        Next
-        '    Next
-        '    For Each itpl In ProcessConfigure.InterpolateList
-        '        For Each signal In itpl.OutputChannels
-        '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-        '                allOutputSignals.Add(signal)
-        '            End If
-        '        Next
-        '    Next
-        '    For Each stp In ProcessConfigure.CollectionOfSteps
-        '        For Each signal In stp.OutputChannels
-        '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-        '                allOutputSignals.Add(signal)
-        '            End If
-        '        Next
-        '    Next
-        '    For Each wrp In ProcessConfigure.WrapList
-        '        For Each signal In wrp.OutputChannels
-        '            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-        '                allOutputSignals.Add(signal)
-        '            End If
-        '        Next
-        '    Next
-        '    If NameTypeUnitStatusFlag Then
-        '        'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
-        '    Else
-        '        For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
-        '            For Each signal In change.OutputChannels
-        '                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
-        '                    allOutputSignals.Add(signal)
-        '                End If
-        '            Next
-        '        Next
-        '    End If
-        '    Return SortSignalByPMU(allOutputSignals)
-        'End Function
-        Private _allProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
-        Public Property AllProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
-            Get
-                Return _allProcessConfigOutputGroupedByPMU
-            End Get
-            Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
-                _allProcessConfigOutputGroupedByPMU = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _allProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property AllProcessConfigOutputGroupedByType As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _allProcessConfigOutputGroupedByType
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+        '        _allProcessConfigOutputGroupedByType = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
+        ''Private Function _getAllProcessConfigOutputGroupedByPMU() As ObservableCollection(Of SignalTypeHierachy)
+        ''    Dim allOutputSignals = New ObservableCollection(Of SignalSignatures)
+        ''    For Each uwrp In ProcessConfigure.UnWrapList
+        ''        For Each signal In uwrp.OutputChannels
+        ''            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+        ''                allOutputSignals.Add(signal)
+        ''            End If
+        ''        Next
+        ''    Next
+        ''    For Each itpl In ProcessConfigure.InterpolateList
+        ''        For Each signal In itpl.OutputChannels
+        ''            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+        ''                allOutputSignals.Add(signal)
+        ''            End If
+        ''        Next
+        ''    Next
+        ''    For Each stp In ProcessConfigure.CollectionOfSteps
+        ''        For Each signal In stp.OutputChannels
+        ''            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+        ''                allOutputSignals.Add(signal)
+        ''            End If
+        ''        Next
+        ''    Next
+        ''    For Each wrp In ProcessConfigure.WrapList
+        ''        For Each signal In wrp.OutputChannels
+        ''            If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+        ''                allOutputSignals.Add(signal)
+        ''            End If
+        ''        Next
+        ''    Next
+        ''    If NameTypeUnitStatusFlag Then
+        ''        'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
+        ''    Else
+        ''        For Each change In ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList
+        ''            For Each signal In change.OutputChannels
+        ''                If Not allOutputSignals.Contains(signal) AndAlso signal.IsSignalInformationComplete Then
+        ''                    allOutputSignals.Add(signal)
+        ''                End If
+        ''            Next
+        ''        Next
+        ''    End If
+        ''    Return SortSignalByPMU(allOutputSignals)
+        ''End Function
+        'Private _allProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+        'Public Property AllProcessConfigOutputGroupedByPMU As ObservableCollection(Of SignalTypeHierachy)
+        '    Get
+        '        Return _allProcessConfigOutputGroupedByPMU
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of SignalTypeHierachy))
+        '        _allProcessConfigOutputGroupedByPMU = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
         Private _nameTypeUnitStatusFlag As Integer
         ''' <summary>
         ''' This Flag denotes the rare situation(might never happend since obsolete) when there is NameTypeUnit Element exists and use the first approach(1) in the Processor XML Configuration File specifications, otherwise, 2nd approach(0)
@@ -677,9 +676,9 @@ Namespace ViewModels
                 Else
                     'here do all the stuff that is needed such as sort signals to make sure the step is set up.
 
-                    CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                    CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
                     If TypeOf CurrentSelectedStep Is Multirate Then
-                        CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(_currentSelectedStep.InputChannels)
+                        CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                     End If
                 End If
             End If
@@ -699,7 +698,7 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If unwrap.StepCounter < lastNumberOfSteps Then
-                            unwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(unwrap.OutputChannels)
+                            unwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(unwrap.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(unwrap.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If unwrap.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -716,7 +715,7 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If intplt.StepCounter < lastNumberOfSteps Then
-                            intplt.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(intplt.OutputChannels)
+                            intplt.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(intplt.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(intplt.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If intplt.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -733,10 +732,10 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If stp.StepCounter < lastNumberOfSteps Then
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
+                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                             If TypeOf stp Is Multirate Then
-                                stp.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(stp.InputChannels)
+                                stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                                 stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                             End If
                         End If
@@ -754,7 +753,7 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If wrap.StepCounter < lastNumberOfSteps Then
-                            wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(wrap.OutputChannels)
+                            wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(wrap.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(wrap.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If wrap.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -773,7 +772,7 @@ Namespace ViewModels
                                 selectedFound = True
                             End If
                             If newTypeUnit.StepCounter < lastNumberOfSteps Then
-                                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(newTypeUnit.OutputChannels)
+                                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(newTypeUnit.OutputChannels)
                                 stepsOutputAsSignalHierachy.Add(newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU)
                             End If
                             If newTypeUnit.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -796,9 +795,9 @@ Namespace ViewModels
                         End If
                     End If
 
-                    GroupedSignalByProcessConfigStepsInput = stepsInputAsSignalHierachy
-                    GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
-                    _processConfigDetermineAllParentNodeStatus()
+                    _signalMgr.GroupedSignalByProcessConfigStepsInput = stepsInputAsSignalHierachy
+                    _signalMgr.GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
+                    _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
                     _determineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
@@ -857,7 +856,7 @@ Namespace ViewModels
         End Sub
 
         Private Sub _disableEnableAllButAngleSignalsInProcessConfig(isEnabled As Boolean)
-            For Each group In GroupedRawSignalsByType
+            For Each group In _signalMgr.GroupedRawSignalsByType
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
@@ -872,7 +871,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedRawSignalsByPMU
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -883,7 +882,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByProcessConfigStepsInput
+            For Each group In _signalMgr.GroupedSignalByProcessConfigStepsInput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" Then
@@ -898,7 +897,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In GroupedSignalByProcessConfigStepsOutput
+            For Each group In _signalMgr.GroupedSignalByProcessConfigStepsOutput
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         For Each subsubgroup In subgroup.SignalList
@@ -909,7 +908,7 @@ Namespace ViewModels
                     Next
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByType
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByType
                 For Each subgroupBySamplingRate In group.SignalList
                     If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" Then
                         subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
@@ -922,7 +921,7 @@ Namespace ViewModels
                     End If
                 Next
             Next
-            For Each group In AllDataConfigOutputGroupedByPMU
+            For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
                 For Each subgroupBySamplingRate In group.SignalList
                     For Each subgroup In subgroupBySamplingRate.SignalList
                         If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse subgroup.SignalSignature.TypeAbbreviation.Length <> 3 OrElse subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A" Then
@@ -961,10 +960,10 @@ Namespace ViewModels
                     stepsOutputAsSignalHierachy.Add(intplt.ThisStepOutputsAsSignalHierachyByPMU)
                 Next
                 For Each stp In ProcessConfigure.CollectionOfSteps
-                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = SortSignalByPMU(stp.OutputChannels)
+                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                     stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                     If TypeOf stp Is Multirate Then
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalList = SortSignalByType(stp.InputChannels)
+                        stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                         stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                     End If
                 Next
@@ -977,8 +976,8 @@ Namespace ViewModels
                         stepsOutputAsSignalHierachy.Add(newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU)
                     Next
                 End If
-                GroupedSignalByProcessConfigStepsInput = stepsInputAsSignalHierachy
-                GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
+                _signalMgr.GroupedSignalByProcessConfigStepsInput = stepsInputAsSignalHierachy
+                _signalMgr.GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
 
                 If TypeOf CurrentSelectedStep Is Unwrap OrElse TypeOf CurrentSelectedStep Is Wrap Then
                     _disableEnableAllButAngleSignalsInProcessConfig(True)
@@ -1002,12 +1001,12 @@ Namespace ViewModels
                 'ElseIf CurrentSelectedDataConfigStep.Name = "Angle Conversion" Then
                 '    _disableEnableAllButAngleSignals(True)
                 'End If
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByProcessConfigStepsInput, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedSignalByProcessConfigStepsOutput, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByPMU, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(GroupedRawSignalsByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllDataConfigOutputGroupedByType, False)
-                _changeCheckStatusAllParentsOfGroupedSignal(AllDataConfigOutputGroupedByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByProcessConfigStepsInput, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByProcessConfigStepsOutput, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByPMU, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByType, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByPMU, False)
                 CurrentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
                 _determineFileDirCheckableStatus()
@@ -1015,28 +1014,28 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _processConfigDetermineAllParentNodeStatus()
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType)
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU)
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType)
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU)
-            For Each stepInput In GroupedSignalByProcessConfigStepsInput
-                If stepInput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
-                    _determineParentCheckStatus(stepInput)
-                Else
-                    stepInput.SignalSignature.IsChecked = False
-                End If
-            Next
-            For Each stepOutput In GroupedSignalByProcessConfigStepsOutput
-                If stepOutput.SignalList.Count > 0 Then
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
-                    _determineParentCheckStatus(stepOutput)
-                Else
-                    stepOutput.SignalSignature.IsChecked = False
-                End If
-            Next
-        End Sub
+        'Private Sub _processConfigDetermineAllParentNodeStatus()
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByType)
+        '    _determineParentGroupedByTypeNodeStatus(_signalMgr.AllDataConfigOutputGroupedByPMU)
+        '    For Each stepInput In _signalMgr.GroupedSignalByProcessConfigStepsInput
+        '        If stepInput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepInput.SignalList)
+        '            _determineParentCheckStatus(stepInput)
+        '        Else
+        '            stepInput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        '    For Each stepOutput In _signalMgr.GroupedSignalByProcessConfigStepsOutput
+        '        If stepOutput.SignalList.Count > 0 Then
+        '            _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList)
+        '            _determineParentCheckStatus(stepOutput)
+        '        Else
+        '            stepOutput.SignalSignature.IsChecked = False
+        '        End If
+        '    Next
+        'End Sub
 
     End Class
 

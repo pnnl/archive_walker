@@ -126,10 +126,7 @@
   <ItemGroup>
     <Compile Include="Converters\DataContexTypeConverter.cs" />
     <Compile Include="Converters\DateDictionaryKeyConverter.cs" />
-    <Compile Include="Converters\DateTimeStringConverter.cs" />
     <Compile Include="Converters\ThumbnailVisibilityConverter.cs" />
-    <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
-    <Compile Include="Converters\TableRowIndexConverter.cs" />
     <Compile Include="Converters\TableValueNANConverter.cs" />
     <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
@@ -150,8 +147,6 @@
     <Compile Include="ViewModels\RDChannelViewModel.cs" />
     <Compile Include="ViewModels\RDReRunPlotsViewModels.cs" />
     <Compile Include="ViewModels\RingdownEventViewModel.cs" />
-    <Compile Include="ViewModels\SparsePlot.cs" />
-    <Compile Include="ViewModels\ViewResolvingPlotModel.cs" />
     <Compile Include="ViewModels\WindRampEventViewModel.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
       <DependentUpon>AvailableDates.xaml</DependentUpon>
@@ -215,9 +210,6 @@
     </Compile>
     <Compile Include="Views\RingdownResultsView.xaml.cs">
       <DependentUpon>RingdownResultsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TimeFilterView.xaml.cs">
-      <DependentUpon>TimeFilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindRampEventTable.xaml.cs">
       <DependentUpon>WindRampEventTable.xaml</DependentUpon>
@@ -336,10 +328,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\TimeFilterView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\WindRampEventTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -380,9 +368,17 @@
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj">
+      <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
+      <Name>BAWGUI.MATLABRunResults</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
       <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
       <Name>BAWGUI.RunMATLAB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
+      <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
+      <Name>BAWGUI.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>

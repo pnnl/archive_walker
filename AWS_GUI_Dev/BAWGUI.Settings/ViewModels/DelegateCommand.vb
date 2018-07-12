@@ -1,5 +1,6 @@
 ﻿Imports System.Windows.Input
 
+
 Namespace ViewModels
     ''' <summary>
     ''' This class provides a simple ICommand implementation

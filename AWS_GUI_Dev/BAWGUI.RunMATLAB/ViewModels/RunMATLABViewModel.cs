@@ -10,12 +10,12 @@ using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using System.Threading;
 using System.IO;
-using BAWGUI.RunMATLAB.Models;
 using BAWGUI.Core;
+using BAWGUI.Utilities;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
-    public class RunMATLABViewModel : BAWGUI.Core.ViewModelBase
+    public class RunMATLABViewModel : ViewModelBase
     {
         public RunMATLABViewModel()
         {

@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
-             xmlns:con="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:viewscore="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             xmlns:con="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:con2="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
              xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
@@ -15,7 +16,7 @@
     </UserControl.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-            <views:TimeFilterView Height="30" Margin="2"/>
+            <viewscore:TimeFilterView Height="30" Margin="2"/>
             <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
             <!--<Button Content="Retrieve Detail" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>-->
             <!--<Button Content="Cancel" Command="{Binding CancelWindRampReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>-->

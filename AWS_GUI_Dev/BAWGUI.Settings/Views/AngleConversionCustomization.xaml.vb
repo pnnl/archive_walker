@@ -1,8 +1,7 @@
 ﻿Imports System.Drawing
 Imports System.Windows
 Imports System.Windows.Media
-Imports BAWGUI.Core.Resources
-Imports BAWGUI.Settings.ViewModels
+Imports BAWGUI.Utilities
 
 Public Class AngleConversionCustomization
 

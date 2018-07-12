@@ -7,12 +7,14 @@
              xmlns:vm="clr-namespace:BAWGUI.ViewModels"
              xmlns:converters="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
              xmlns:converters2="clr-namespace:BAWGUI.Converters"
+             xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-            <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+            <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
             <converters:EnabledIfRunningOrPausedConverter x:Key="EnabledIfRunningOrPausedConverter"/>
             <converters2:BooleanBackgroundConverter x:Key="BooleanBackgroundConverter"/>
@@ -21,7 +23,7 @@
 
     <Grid>
         <StackPanel Orientation="Vertical">
-            <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" vm:TreeViewHelper.SelectedItem="{Binding SelectedRun}">
+            <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

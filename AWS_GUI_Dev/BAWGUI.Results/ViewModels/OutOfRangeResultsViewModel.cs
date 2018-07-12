@@ -1,8 +1,8 @@
 ﻿using BAWGUI.Core;
-using BAWGUI.Core.Resources;
+using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Results.Models;
-using BAWGUI.RunMATLAB.Models;
 using BAWGUI.RunMATLAB.ViewModels;
+using BAWGUI.Utilities;
 using OxyPlot;
 using OxyPlot.Axes;
 using System;
@@ -750,7 +750,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     Position = OxyPlot.Axes.AxisPosition.Left,
                     Title = "ROC",
-                    Unit = "Hz/second",
+                    Unit = oorSig.Unit + "/second",
                     TitlePosition = 0.5,
                     MajorGridlineStyle = LineStyle.Dot,
                     MinorGridlineStyle = LineStyle.Dot,

@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using BAWSengine;
-using BAWGUI.RunMATLAB.Models;
 using System.ComponentModel;
 using System.Threading;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
 using BAWGUI.Core;
+using BAWGUI.Utilities;
+using BAWGUI.MATLABRunResults.Models;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels

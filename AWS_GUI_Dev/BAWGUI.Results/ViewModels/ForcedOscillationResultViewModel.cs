@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using BAWGUI.Results.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Core;
+using BAWGUI.Utilities;
 
 namespace BAWGUI.Results.ViewModels
 {

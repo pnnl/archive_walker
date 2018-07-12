@@ -5,11 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BAWGUI.Results.Views"
              xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <converters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
+        <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
     </UserControl.Resources>
     <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedRingdownEvent.Channels}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
         <xcdg:DataGridControl.Resources>

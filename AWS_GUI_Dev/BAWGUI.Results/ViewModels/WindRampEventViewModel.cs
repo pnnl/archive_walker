@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using BAWGUI.Results.Models;
+using BAWGUI.Utilities;
 using OxyPlot;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class WindRampEventViewModel: Core.ViewModelBase
+    public class WindRampEventViewModel: ViewModelBase
     {
         private WindRampEvent _model;
         public KnownColor RandColor { get; }

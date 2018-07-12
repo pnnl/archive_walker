@@ -66,104 +66,104 @@
         <TreeView Grid.Row="2" Margin="2" Visibility="{Binding SignalSelectionTreeViewVisibility}">
             <TreeView.Style>
                 <Style TargetType="{x:Type TreeView}">
-                    <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
+                    <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedRawSignalsByType}"/>
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="1"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedRawSignalsByType}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="2"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedRawSignalsByType}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="3"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding ReGroupedRawSignalsByType}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.ReGroupedRawSignalsByType}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="4"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding ReGroupedRawSignalsByType}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.ReGroupedRawSignalsByType}"/>
                         </MultiDataTrigger>
                         <!--<DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type">
                             <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
                         </DataTrigger>-->
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by PMU">
-                            <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByPMU}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedRawSignalsByPMU}"/>
                         </DataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="1"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByDataConfigStepsInput}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDataConfigStepsInput}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="Output Channels by Step"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="1"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByDataConfigStepsOutput}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDataConfigStepsOutput}"/>
                         </MultiDataTrigger>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Data Quality and Customization by Signal Type">
-                            <Setter Property="ItemsSource" Value="{Binding AllDataConfigOutputGroupedByType}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.AllDataConfigOutputGroupedByType}"/>
                         </DataTrigger> 
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Data Quality and Customization by PMU">
-                            <Setter Property="ItemsSource" Value="{Binding AllDataConfigOutputGroupedByPMU}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.AllDataConfigOutputGroupedByPMU}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Input to MultiRate steps">
-                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByProcessConfigStepsInput}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByProcessConfigStepsInput}"/>
                         </DataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="Output Channels by Step"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="2"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByProcessConfigStepsOutput}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByProcessConfigStepsOutput}"/>
                         </MultiDataTrigger>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Signal Processing by Signal Type">
-                            <Setter Property="ItemsSource" Value="{Binding AllProcessConfigOutputGroupedByType}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.AllProcessConfigOutputGroupedByType}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Signal Processing by PMU">
-                            <Setter Property="ItemsSource" Value="{Binding AllProcessConfigOutputGroupedByPMU}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.AllProcessConfigOutputGroupedByPMU}"/>
                         </DataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="3"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByPostProcessConfigStepsInput}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByPostProcessConfigStepsInput}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="Output Channels by Step"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="3"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByPostProcessConfigStepsOutput}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByPostProcessConfigStepsOutput}"/>
                         </MultiDataTrigger>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post-Processing Customization by Signal Type">
-                            <Setter Property="ItemsSource" Value="{Binding AllPostProcessOutputGroupedByType}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.AllPostProcessOutputGroupedByType}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Post-Processing Customization by PMU">
-                            <Setter Property="ItemsSource" Value="{Binding AllPostProcessOutputGroupedByPMU}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.AllPostProcessOutputGroupedByPMU}"/>
                         </DataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="4"/>
                             </MultiDataTrigger.Conditions>
-                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalByDetectorInput}"/>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDetectorInput}"/>
                         </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>
