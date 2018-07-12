@@ -45,6 +45,9 @@ namespace VoltageStability.Models
                         case "Mitsubishi":
                             previousVSdetector.MitsubishiAnalysisLength = vs.Elements().Where(e => e.Name.LocalName == "AnalysisLength").Single().Value;
                             break;
+                        case "RPI":
+                            previousVSdetector.RPIAnalysisLength = vs.Elements().Where(e => e.Name.LocalName == "AnalysisLength").Single().Value;
+                            break;
                         default:
                             break;
                     }
@@ -72,6 +75,9 @@ namespace VoltageStability.Models
                     break;
                 case "Mitsubishi":
                     detector.MitsubishiAnalysisLength = dt.Elements().Where(e => e.Name.LocalName == "AnalysisLength").Single().Value;
+                    break;
+                case "RPI":
+                    detector.RPIAnalysisLength = dt.Elements().Where(e => e.Name.LocalName == "AnalysisLength").Single().Value;
                     break;
                 default:
                     break;

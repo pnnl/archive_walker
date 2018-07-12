@@ -14,6 +14,7 @@ using System.Windows.Input;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
+using VoltageStability.MATLABRunResults.Models;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
@@ -626,14 +627,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = false;
             IsReRunRunning = false;
             Run.IsTaskRunning = false;
-            OnVSReRunCompletedEvent(e.Result as List<VoltageStabilityDetector>);
+            OnVSReRunCompletedEvent(e.Result as List<TheveninDetector>);
         }
 
-        private void OnVSReRunCompletedEvent(List<VoltageStabilityDetector> e)
+        private void OnVSReRunCompletedEvent(List<TheveninDetector> e)
         {
             VSReRunCompletedEvent?.Invoke(this, e);
         }
-        public Action<object, List<VoltageStabilityDetector>> VSReRunCompletedEvent { get; set; }
+        public Action<object, List<TheveninDetector>> VSReRunCompletedEvent { get; set; }
 
         private void _runVSReRunMode(object sender, DoWorkEventArgs e)
         {
@@ -656,11 +657,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 System.IO.FileStream fs = System.IO.File.Create(runFlag);
                 fs.Close();
             }
-            var vsRerunResults = new VSRerunResults();
+            var vsRerunResults = new TheveninReRunResults();
             IsMatlabEngineRunning = true;
             try
             {
-                vsRerunResults = new VSRerunResults((MWStructArray)_matlabEngine.RerunThevenin(start, end, configFilename, controlPath, predictionDelay));
+                vsRerunResults = new TheveninReRunResults((MWStructArray)_matlabEngine.RerunThevenin(start, end, configFilename, controlPath, predictionDelay));
             }
             catch (Exception ex)
             {
