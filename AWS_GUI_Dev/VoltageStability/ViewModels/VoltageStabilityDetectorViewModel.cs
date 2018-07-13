@@ -194,6 +194,15 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
+        public string RPIAnalysisLength
+        {
+            get { return _model.RPIAnalysisLength; }
+            set
+            {
+                _model.RPIAnalysisLength = value;
+                OnPropertyChanged();
+            }
+        }
         public string EventMergeWindow
         {
             get { return _model.EventMergeWindow; }

@@ -49,6 +49,9 @@ namespace VoltageStability.Models
                             methodElement.AddAfterSelf(new XElement("AnalysisLength", detecotr.MitsubishiAnalysisLength));
                             //vsE.Element("AnalysisLength").Value = detecotr.MitsubishiAnalysisLength;
                             break;
+                        case "RPI":
+                            methodElement.AddAfterSelf(new XElement("AnalysisLength", detecotr.RPIAnalysisLength));
+                            break;
                         default:
                             break;
                     }

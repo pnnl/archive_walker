@@ -91,24 +91,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\EnabledIfRunningOrPausedConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\InverseBooleanVisibilityConverter.cs" />
-    <Compile Include="Models\AWProject.cs" />
-    <Compile Include="Models\AWRun.cs" />
-    <Compile Include="Models\OORRerunResults.cs" />
-    <Compile Include="Models\OutOfRangeDetector.cs" />
-    <Compile Include="Models\OutOfRangeSignal.cs" />
-    <Compile Include="Models\RDRerunResults.cs" />
-    <Compile Include="Models\RingdownDetector.cs" />
-    <Compile Include="Models\RingdownSignal.cs" />
     <Compile Include="ViewModels\AWRunViewModel.cs" />
     <Compile Include="ViewModels\MatLabEngine.cs" />
-    <Compile Include="Models\RerunResultBase.cs" />
-    <Compile Include="Models\SparseDetector.cs" />
-    <Compile Include="Models\SparseResults.cs" />
-    <Compile Include="Models\SparseSignal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -134,6 +121,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\" />
     <Folder Include="MyResources\" />
   </ItemGroup>
   <ItemGroup>
@@ -141,9 +129,17 @@
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj">
+      <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
+      <Name>BAWGUI.MATLABRunResults</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability.MATLABRunResults\VoltageStability.MATLABRunResults.csproj">
+      <Project>{ECC13D01-5571-4325-8772-70E51982DAAE}</Project>
+      <Name>VoltageStability.MATLABRunResults</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\BAWGUI.Resources\Resources.projitems" Label="Shared" />

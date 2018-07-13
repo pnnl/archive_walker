@@ -928,10 +928,12 @@ Namespace ViewModels
         Private Sub _readMetricPrefixCustomization(aStep As Object, params As IEnumerable(Of XElement), CollectionOfSteps As Object, ByRef stepCounter As Integer)
             Dim CustPMUname = params.<CustPMUname>.Value
             If CustPMUname Is Nothing Then
-                aStep.UseCustomPMU = False
+                aStep.CustPMUname = _lastCustPMUname
+                'aStep.UseCustomPMU = False
             Else
-                aStep.UseCustomPMU = True
+                'aStep.UseCustomPMU = True
                 aStep.CustPMUname = CustPMUname
+                _lastCustPMUname = CustPMUname
             End If
             Dim toConvert = From convert In params.Elements Where convert.Name = "ToConvert" Select convert
             For Each convert In toConvert
@@ -950,18 +952,18 @@ Namespace ViewModels
                 End If
                 Dim newUnit = convert.<NewUnit>.Value
                 Dim output = input
-                If aStep.UseCustomPMU Then
-                    output = New SignalSignatureViewModel(outputName, CustPMUname, input.TypeAbbreviation)
+                'If aStep.UseCustomPMU Then
+                output = New SignalSignatureViewModel(outputName, CustPMUname, input.TypeAbbreviation)
                     output.SamplingRate = input.SamplingRate
                     output.Unit = newUnit
                     output.OldSignalName = output.SignalName
                     output.OldTypeAbbreviation = output.TypeAbbreviation
                     output.OldUnit = output.Unit
-                Else
-                    output.OldUnit = output.Unit
-                    output.Unit = newUnit
-                End If
-                output.IsCustomSignal = True
+                    'Else
+                    '    output.OldUnit = output.Unit
+                    '    output.Unit = newUnit
+                    'End If
+                    output.IsCustomSignal = True
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(input)

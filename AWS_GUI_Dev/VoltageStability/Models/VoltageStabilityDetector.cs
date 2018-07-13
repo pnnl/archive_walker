@@ -136,6 +136,7 @@ namespace VoltageStability.Models
         }
         public string DeMarcoAnalysisLength { get; set; }
         public string MitsubishiAnalysisLength { get; set; }
+        public string RPIAnalysisLength { get; set; }
         public string EventMergeWindow { get; set; }
         public ObservableCollection<Site> Sites { get; set; }
 

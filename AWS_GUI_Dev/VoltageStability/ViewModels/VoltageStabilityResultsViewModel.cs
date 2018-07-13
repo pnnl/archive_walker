@@ -1,5 +1,5 @@
 ﻿using BAWGUI.Core;
-using BAWGUI.RunMATLAB.Models;
+using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using OxyPlot;
@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using VoltageStability.MATLABRunResults.Models;
 using VoltageStability.Models;
 
 namespace VoltageStability.ViewModels
@@ -28,6 +29,9 @@ namespace VoltageStability.ViewModels
             _models = new List<VoltageStabilityEvent>();
             _engine = MatLabEngine.Instance;
             RunSparseMode = new RelayCommand(_runSparseMode);
+            _isTheveninValidation = true;
+            VSReRun = new RelayCommand(_vsRerun);
+            CancelVSReRun = new RelayCommand(_cancelVSReRun);
             //OutOfRangeReRun = new RelayCommand(_outOfRangeRerun);
             //CancelOutOfRangeReRun = new RelayCommand(_cancelOORReRun);
             //_sparsePlotModels = new ObservableCollection<SparsePlot>();
@@ -193,7 +197,7 @@ namespace VoltageStability.ViewModels
                 _sparseResults = value;
                 if (_sparseResults.Count() != 0)
                 {
-                    _drawOORSparsePlots();
+                    _drawVSSparsePlots();
                     if (FilteredResults.Count > 0)
                     {
                         SelectedVSEvent = FilteredResults.FirstOrDefault();
@@ -249,7 +253,7 @@ namespace VoltageStability.ViewModels
                 System.Windows.Forms.MessageBox.Show("Configuration file not found.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
             }
         }
-        private void _drawOORSparsePlots()
+        private void _drawVSSparsePlots()
         {
             var rdPlots = new ObservableCollection<SparsePlot>();
             foreach (var detector in SparseResults)
@@ -391,6 +395,175 @@ namespace VoltageStability.ViewModels
 
             }
             //Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
+        }
+        private bool _isTheveninValidation;
+        public bool IsTheveninValidation
+        {
+            get { return _isTheveninValidation; }
+            set
+            {
+                _isTheveninValidation = value;
+                OnPropertyChanged();
+            }
+        }
+        private int _predictionDelay;
+        public int PredictionDelay
+        {
+            get { return _predictionDelay; }
+            set
+            {
+                _predictionDelay = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand VSReRun { get; set; }
+
+        private void _vsRerun(object obj)
+        {
+            if (File.Exists(_run.Model.ConfigFilePath))
+            {
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
+                {
+                    try
+                    {
+                        _engine.VSReRunCompletedEvent += _vsReRunCompleted;
+                        _engine.VSRerun(SelectedStartTime, SelectedEndTime, _run, PredictionDelay);
+                        //ReRunResult = _engine.RDReRunResults;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Config file not found. Cannot re-run Out of Range", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+            }
+        }
+
+        private void _vsReRunCompleted(object sender, List<TheveninDetector> e)
+        {
+            ReRunResult = e;
+        }
+        private List<TheveninDetector> _reRunResult;
+        public List<TheveninDetector> ReRunResult
+        {
+            get { return _reRunResult; }
+            set
+            {
+                _reRunResult = value;
+                _drawOORReRunPlots();
+                OnPropertyChanged();
+            }
+        }
+        private void _drawOORReRunPlots()
+        {
+            //var rdPlots = new ObservableCollection<OORReRunPlot>();
+            //foreach (var detector in ReRunResult)
+            //{
+            //    var aDetector = new OORReRunPlot();
+            //    aDetector.Label = detector.Label;
+            //    if (detector.OORSignals.Count > 0)
+            //    {
+            //        aDetector.IsByDuration = detector.OORSignals.Any(x => x.IsByDuration);
+            //        aDetector.IsByROC = detector.OORSignals.Any(x => x.IsByROC);
+            //    }
+            //    var allSignalsPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+
+            //    OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+            //    {
+            //        Position = OxyPlot.Axes.AxisPosition.Bottom,
+            //        MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+            //        MajorGridlineStyle = LineStyle.Dot,
+            //        MinorGridlineStyle = LineStyle.Dot,
+            //        MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+            //        TicklineColor = OxyColor.FromRgb(82, 82, 82),
+            //        IsZoomEnabled = true,
+            //        IsPanEnabled = true,
+            //    };
+            //    allSignalsPlot.Axes.Add(timeXAxis);
+            //    OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+            //    {
+            //        Position = OxyPlot.Axes.AxisPosition.Left,
+            //        Title = detector.Type,
+            //        Unit = detector.Unit,
+            //        TitlePosition = 0.5,
+            //        ClipTitle = false,
+            //        MajorGridlineStyle = LineStyle.Dot,
+            //        MinorGridlineStyle = LineStyle.Dot,
+            //        MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+            //        TicklineColor = OxyColor.FromRgb(82, 82, 82),
+            //        IsZoomEnabled = true,
+            //        IsPanEnabled = true
+            //    };
+            //    allSignalsPlot.Axes.Add(yAxis);
+            //    foreach (var oor in detector.OORSignals)
+            //    {
+            //        var signalSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+            //        for (int i = 0; i < oor.Data.Count; i++)
+            //        {
+            //            signalSeries.Points.Add(new DataPoint(oor.TimeStampNumber[i], oor.Data[i]));
+            //        }
+            //        signalSeries.Title = oor.SignalName;
+            //        signalSeries.TrackerKey = oor.Label;
+            //        //signalSeries.MouseDown += OORReRunSeries_MouseDown;
+            //        allSignalsPlot.Series.Add(signalSeries);
+            //        if (oor.IsByDuration || oor.IsByROC)
+            //        {
+            //            var aSignalPlotModel = _drawAOORSignal(oor);
+            //            var aNewTriple = new PlotModelThumbnailOORTriple();
+            //            aNewTriple.IsByDuration = oor.IsByDuration;
+            //            aNewTriple.IsByROC = oor.IsByROC;
+            //            var pngExporter = new OxyPlot.Wpf.PngExporter { Width = 600, Height = 400, Background = OxyColors.WhiteSmoke };
+            //            if (oor.IsByDuration)
+            //            {
+            //                aSignalPlotModel.OORDurationPlotModel.IsLegendVisible = false;
+            //                var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.OORDurationPlotModel); //bitmapsource object
+            //                aNewTriple.Label = oor.SignalName;
+            //                aNewTriple.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
+            //                aSignalPlotModel.OORDurationPlotModel.IsLegendVisible = true;
+            //            }
+            //            else
+            //            {
+            //                aSignalPlotModel.OORROCPlotModel.IsLegendVisible = false;
+            //                var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.OORROCPlotModel); //bitmapsource object
+            //                aNewTriple.Label = oor.SignalName;
+            //                aNewTriple.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
+            //                aSignalPlotModel.OORROCPlotModel.IsLegendVisible = true;
+            //            }
+            //            aNewTriple.SignalPlotModelTriple = aSignalPlotModel;
+            //            aDetector.ThumbnailPlots.Add(aNewTriple);
+            //        }
+            //    }
+
+            //    allSignalsPlot.LegendPlacement = LegendPlacement.Outside;
+            //    allSignalsPlot.LegendPosition = LegendPosition.RightMiddle;
+            //    allSignalsPlot.LegendPadding = 0.0;
+            //    allSignalsPlot.LegendSymbolMargin = 0.0;
+            //    allSignalsPlot.LegendMargin = 0;
+
+            //    var currentArea = allSignalsPlot.LegendArea;
+            //    var currentPlotWithAxis = allSignalsPlot.PlotAndAxisArea;
+
+            //    var currentMargins = allSignalsPlot.PlotMargins;
+            //    allSignalsPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+            //    aDetector.OORReRunAllSignalsPlotModel = allSignalsPlot;
+            //    aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
+            //    rdPlots.Add(aDetector);
+            //}
+            //OORReRunPlotModels = rdPlots;
+        }
+        public ICommand CancelVSReRun { get; set; }
+        private void _cancelVSReRun(object obj)
+        {
+            _engine.CancelVSReRun(_run);
         }
 
     }

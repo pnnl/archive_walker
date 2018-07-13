@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAWGUI.RunMATLAB.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
     public class RDRerunResults
     {

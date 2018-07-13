@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MathWorks.MATLAB.NET.Arrays;
 using MathWorks.MATLAB.NET.Utility;
 using BAWSengine;
-using BAWGUI.RunMATLAB.Models;
 using System.ComponentModel;
 using System.Threading;
 using System.IO;
@@ -14,6 +13,8 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
+using BAWGUI.MATLABRunResults.Models;
+using VoltageStability.MATLABRunResults.Models;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
@@ -467,7 +468,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 Mouse.OverrideCursor = null;
             }
         }
-
         public void OutOfRangeRerun(string start, string end, AWRunViewModel run)
         {
             if (IsMatlabEngineRunning)
@@ -585,5 +585,121 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 Mouse.OverrideCursor = null;
             }
         }
+        public void VSRerun(string start, string end, AWRunViewModel run, int predictionDelay)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                //Here the running engine could be running a rerun instead of the normal run,
+                //need to talk to Jim as how to distinguish normal or rerun,
+                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+            Run = run;
+            _controlPath = run.Model.ControlRerunPath;
+            _configFilePath = run.Model.ConfigFilePath;
+
+            try
+            {
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runVSReRunMode);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerVSReRun_RunWorkerCompleted;
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, predictionDelay };
+                worker.RunWorkerAsync(parameters);
+                IsReRunRunning = true;
+                Run.IsTaskRunning = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        private void _workerVSReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsMatlabEngineRunning = false;
+            IsReRunRunning = false;
+            Run.IsTaskRunning = false;
+            OnVSReRunCompletedEvent(e.Result as List<TheveninDetector>);
+        }
+
+        private void OnVSReRunCompletedEvent(List<TheveninDetector> e)
+        {
+            VSReRunCompletedEvent?.Invoke(this, e);
+        }
+        public Action<object, List<TheveninDetector>> VSReRunCompletedEvent { get; set; }
+
+        private void _runVSReRunMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "VSReRunThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var start = parameters[0] as string;
+            var end = parameters[1] as string;
+            var configFilename = parameters[2] as string;
+            var controlPath = parameters[3] as string;
+            var predictionDelay = parameters[4] as int?;
+
+            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            var runFlag = controlPath + "RunFlag.txt";
+            if (!System.IO.File.Exists(runFlag))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                fs.Close();
+            }
+            var vsRerunResults = new TheveninReRunResults();
+            IsMatlabEngineRunning = true;
+            try
+            {
+                vsRerunResults = new TheveninReRunResults((MWStructArray)_matlabEngine.RerunThevenin(start, end, configFilename, controlPath, predictionDelay));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab voltage stability re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+
+            e.Result = vsRerunResults.VSDetectorList;
+        }
+        public void CancelVSReRun(AWRunViewModel run)
+        {
+            var result = MessageBox.Show("Cancel Voltage Stability re-run?", "Warning!", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                System.IO.DirectoryInfo di = new DirectoryInfo(run.Model.ControlRerunPath);
+                foreach (var file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (var dir in di.GetDirectories())
+                {
+                    dir.Delete();
+                }
+                //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
+                //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
+                //System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
+                //fs.Close();
+                //File.Delete(runFlag);
+                while (worker.IsBusy)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(500);
+                }
+                run.IsTaskRunning = false;
+                Mouse.OverrideCursor = null;
+            }
+        }
+
     }
 }

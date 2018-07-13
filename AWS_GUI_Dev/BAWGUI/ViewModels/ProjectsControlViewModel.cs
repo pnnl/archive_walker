@@ -1,5 +1,4 @@
-﻿using BAWGUI.RunMATLAB.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -117,6 +116,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
             set
             {
                 _resultsStoragePath = value;
+                try
+                {
+                    _generateProjectTree(_resultsStoragePath);
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
+                }
                 OnPropertyChanged();
             }
         }
@@ -133,7 +140,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     ResultsStoragePath = fbd.SelectedPath;
                     BAWGUI.Properties.Settings.Default.ResultStoragePath = ResultsStoragePath;
                     BAWGUI.Properties.Settings.Default.Save();
-                    _generateProjectTree(ResultsStoragePath);
+                    try
+                    {
+                        _generateProjectTree(ResultsStoragePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
+                    }
                     //string[] files = Directory.GetFiles(ResultsStoragePath);
                 }
             }
@@ -158,6 +172,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 }
                 AWProjects = awProjects;
                 //ProjectControl.ProjectSelected += OnProjectSelected;
+            }
+            else
+            {
+                throw new Exception("Directory does not exists.");
             }
         }
 

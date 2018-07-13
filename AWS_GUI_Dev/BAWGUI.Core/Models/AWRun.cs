@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAWGUI.RunMATLAB.Models
+namespace BAWGUI.Core
 {
     public class AWRun
     {

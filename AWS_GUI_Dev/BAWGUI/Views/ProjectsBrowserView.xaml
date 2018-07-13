@@ -9,17 +9,17 @@
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxWidth="240" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="60"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" Text="{Binding ResultsStoragePath}" MinWidth="100" Margin="2,5,2,2" Height="50" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" MaxWidth="236" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Row="0" Text="Please Select Results Storage Directory" VerticalAlignment="Center" Margin="2,0" FontWeight="Black" TextWrapping="WrapWithOverflow" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="1" Text="{Binding ResultsStoragePath}" MinWidth="100" Margin="2,5,2,2" Height="50" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" MaxWidth="236" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
             <!--<StackPanel Orientation="Vertical" Grid.Row="1">-->
-            <Button Grid.Row="1" Command="{Binding BrowseResultsStorage}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Open results file folder" Margin="2,5,2,0" VerticalAlignment="Top">
-                <Image Source="/BAWGUI.RunMATLAB;component/MyResources/open.gif"/>
+            <Button Grid.Row="2" Command="{Binding BrowseResultsStorage}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Open results file folder" Margin="2,5,2,0" VerticalAlignment="Top">
+                <Image Source="/BAWGUI;component/MyResources/open.gif"/>
             </Button>
-            <TextBlock Grid.Row="2" Text="Please Select Results Storage Directory" VerticalAlignment="Center" Margin="2,0" FontWeight="Black" TextWrapping="WrapWithOverflow" HorizontalAlignment="Left"/>
             <!--</StackPanel>-->
             <StackPanel Orientation="Vertical" Grid.Row="3" Margin="2,0">
                 <Separator Margin="0,10,0,5"/>

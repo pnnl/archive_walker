@@ -386,34 +386,34 @@ namespace BAWGUI.ReadConfigXml
             if (par != null)
             {
                 CustPMUname = par.Value;
-                UseCustomPMU = true;
-                var toConverts = item.Element("Parameters").Elements("ToConvert");
-                foreach (var convert in toConverts)
-                {
-                    var newConvert = new ToConvert();
-                    newConvert.PMU = convert.Element("PMU").Value;
-                    newConvert.Channel = convert.Element("Channel").Value;
-                    newConvert.NewUnit = convert.Element("NewUnit").Value;
-                    newConvert.SignalName = convert.Element("CustName").Value;
-                    ToConverts.Add(newConvert);
-                }
+                //UseCustomPMU = true;
             }
-            else
+            var toConverts = item.Element("Parameters").Elements("ToConvert");
+            foreach (var convert in toConverts)
             {
-                UseCustomPMU = false;
-                var toConverts = item.Element("Parameters").Elements("ToConvert");
-                foreach (var convert in toConverts)
-                {
-                    var newConvert = new ToConvert();
-                    newConvert.PMU = convert.Element("PMU").Value;
-                    newConvert.Channel = convert.Element("Channel").Value;
-                    newConvert.NewUnit = convert.Element("NewUnit").Value;
-                    ToConverts.Add(newConvert);
-                }
+                var newConvert = new ToConvert();
+                newConvert.PMU = convert.Element("PMU").Value;
+                newConvert.Channel = convert.Element("Channel").Value;
+                newConvert.NewUnit = convert.Element("NewUnit").Value;
+                newConvert.SignalName = convert.Element("CustName").Value;
+                ToConverts.Add(newConvert);
             }
+            //else
+            //{
+            //    //UseCustomPMU = false;
+            //    var toConverts = item.Element("Parameters").Elements("ToConvert");
+            //    foreach (var convert in toConverts)
+            //    {
+            //        var newConvert = new ToConvert();
+            //        newConvert.PMU = convert.Element("PMU").Value;
+            //        newConvert.Channel = convert.Element("Channel").Value;
+            //        newConvert.NewUnit = convert.Element("NewUnit").Value;
+            //        ToConverts.Add(newConvert);
+            //    }
+            //}
         }
         public new string Name { get => "Metric Prefix"; }
-        public bool UseCustomPMU { get; set; }
+        //public bool UseCustomPMU { get; set; }
         public List<ToConvert> ToConverts { get; set; }
     }
     public class AngleConversionCustModel : CustomizationModel

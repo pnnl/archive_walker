@@ -12,13 +12,18 @@
     <UserControl.Resources>
         <con:ResultTableVisibilityConverter x:Key="ResultTableVisibilityConverter" />
         <con2:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <con:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
     </UserControl.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <viewscore:TimeFilterView Height="30" Margin="2"/>
             <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Retrieve Detail" Command="{Binding OutOfRangeReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
-            <Button Content="Cancel" Command="{Binding CancelOutOfRangeReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Content="Thevenin Validation" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding IsTheveninValidation}" VerticalAlignment="Center"/>
+            <Label Content="Prediction Delay (sec)" Margin="10,0,0,0" VerticalAlignment="Center" Visibility="{Binding IsTheveninValidation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+            <TextBox Text="{Binding PredictionDelay}" VerticalAlignment="Center" Width="50" Visibility="{Binding IsTheveninValidation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+            <Button Content="Retrieve Detail" Command="{Binding VSReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+            <Button Content="Cancel" Command="{Binding CancelVSReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>

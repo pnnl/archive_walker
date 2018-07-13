@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BAWGUI.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
-namespace BAWGUI.RunMATLAB.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
     public class OORRerunResults
     {

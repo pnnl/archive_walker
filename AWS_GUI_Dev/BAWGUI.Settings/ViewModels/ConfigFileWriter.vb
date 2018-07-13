@@ -18,17 +18,17 @@ Namespace ViewModels
         '        _dqFilterCounter = value
         '    End Set
         'End Property
-        Private _saveToRun As RunMATLAB.Models.AWRun
-        Public Property SaveToRun As RunMATLAB.Models.AWRun
+        Private _saveToRun As AWRun
+        Public Property SaveToRun As AWRun
             Get
                 Return _saveToRun
             End Get
-            Set(ByVal value As RunMATLAB.Models.AWRun)
+            Set(ByVal value As AWRun)
                 _saveToRun = value
             End Set
         End Property
 
-        Public Sub New(svm As SettingsViewModel, run As RunMATLAB.Models.AWRun)
+        Public Sub New(svm As SettingsViewModel, run As AWRun)
             _svm = svm
             _saveToRun = run
             _powerTypeDictionary = New Dictionary(Of String, String) From {{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}}
@@ -745,11 +745,11 @@ Namespace ViewModels
                                 <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
                                 <Parameters></Parameters>
                             </Customization>
-                    If singleStep.UseCustomPMU Then
-                        aStep.<Parameters>.FirstOrDefault.Add(<CustPMUname><%= singleStep.CustPMUname %></CustPMUname>)
-                    End If
-                    If singleStep.UseCustomPMU Then
-                        For Each pair In singleStep.OutputInputMappingPair
+                    'If singleStep.UseCustomPMU Then
+                    aStep.<Parameters>.FirstOrDefault.Add(<CustPMUname><%= singleStep.CustPMUname %></CustPMUname>)
+                    'End If
+                    'If singleStep.UseCustomPMU Then
+                    For Each pair In singleStep.OutputInputMappingPair
                             Dim toConvert As XElement = <ToConvert></ToConvert>
                             If Not String.IsNullOrEmpty(pair.Value(0).PMUName) Then
                                 toConvert.Add(<PMU><%= pair.Value(0).PMUName %></PMU>)
@@ -765,22 +765,22 @@ Namespace ViewModels
                             End If
                             aStep.<Parameters>.LastOrDefault.Add(toConvert)
                         Next
-                    Else
-                        For Each pair In singleStep.OutputInputMappingPair
-                            Dim toConvert As XElement = <ToConvert></ToConvert>
-                            If Not String.IsNullOrEmpty(pair.Value(0).PMUName) Then
-                                toConvert.Add(<PMU><%= pair.Value(0).PMUName %></PMU>)
-                            End If
-                            If Not String.IsNullOrEmpty(pair.Value(0).SignalName) Then
-                                toConvert.Add(<Channel><%= pair.Value(0).SignalName %></Channel>)
-                            End If
-                            If Not String.IsNullOrEmpty(pair.Key.Unit) Then
-                                toConvert.Add(<NewUnit><%= pair.Key.Unit %></NewUnit>)
-                            End If
-                            aStep.<Parameters>.LastOrDefault.Add(toConvert)
-                        Next
-                    End If
-                Case "Angle Conversion"
+                    'Else
+                    '    For Each pair In singleStep.OutputInputMappingPair
+                    '        Dim toConvert As XElement = <ToConvert></ToConvert>
+                    '        If Not String.IsNullOrEmpty(pair.Value(0).PMUName) Then
+                    '            toConvert.Add(<PMU><%= pair.Value(0).PMUName %></PMU>)
+                    '        End If
+                    '        If Not String.IsNullOrEmpty(pair.Value(0).SignalName) Then
+                    '            toConvert.Add(<Channel><%= pair.Value(0).SignalName %></Channel>)
+                    '        End If
+                    '        If Not String.IsNullOrEmpty(pair.Key.Unit) Then
+                    '            toConvert.Add(<NewUnit><%= pair.Key.Unit %></NewUnit>)
+                    '        End If
+                    '        aStep.<Parameters>.LastOrDefault.Add(toConvert)
+                    '    Next
+                    'End If
+                        Case "Angle Conversion"
                     aStep = <Customization>
                                 <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
                                 <Parameters>
