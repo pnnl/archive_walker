@@ -621,10 +621,10 @@ Namespace ViewModels
         Private _maxNoFutureCount As String
         Public Property MaxNoFutureCount As String
             Get
-                Return _model.MaxFutureCount
+                Return _model.MaxNoFutureCount
             End Get
             Set(ByVal value As String)
-                _model.MaxFutureCount = value
+                _model.MaxNoFutureCount = value
                 OnPropertyChanged("MaxNoFutureCount")
             End Set
         End Property
