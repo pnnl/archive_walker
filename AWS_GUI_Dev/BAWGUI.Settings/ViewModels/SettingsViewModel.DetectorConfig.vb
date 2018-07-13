@@ -48,10 +48,13 @@ Namespace ViewModels
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Voltage Stability"
-                    'If DetectorConfigure.DetectorList.Contains(VoltageStabilityDetectorViewModel) Then
-                    'End If
-                    newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
-                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
+                    If _isVoltageStabilityDetectorExist(DetectorConfigure.DetectorList) Then
+                        Forms.MessageBox.Show("Only one Voltage Stability detector can be added!", "Error!", MessageBoxButtons.OK)
+                        Exit Sub
+                    Else
+                        newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
+                        DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
+                    End If
                     'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
@@ -67,6 +70,16 @@ Namespace ViewModels
             DetectorConfigure.DetectorList.Add(newDetector)
             _selectedADetector(newDetector)
         End Sub
+
+        Private Function _isVoltageStabilityDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
+            For Each dt In detectorList
+                If TypeOf dt Is VoltageStabilityDetectorViewModel Then
+                    Return True
+                End If
+            Next
+            Return False
+        End Function
+
         Private _alarmingDetectorSelectedToAdd As ICommand
         Public Property AlarmingDetectorSelectedToAdd As ICommand
             Get
