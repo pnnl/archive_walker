@@ -392,10 +392,29 @@ namespace BAWGUI.ReadConfigXml
             foreach (var convert in toConverts)
             {
                 var newConvert = new ToConvert();
-                newConvert.PMU = convert.Element("PMU").Value;
-                newConvert.Channel = convert.Element("Channel").Value;
-                newConvert.NewUnit = convert.Element("NewUnit").Value;
-                newConvert.SignalName = convert.Element("CustName").Value;
+                var va = convert.Element("PMU");
+                if (va != null)
+                {
+                    newConvert.PMU = va.Value;
+                }
+                va = convert.Element("Channel");
+                if (va != null)
+                {
+                    newConvert.Channel = va.Value;
+                }
+                va = convert.Element("NewUnit");
+                if (va != null)
+                {
+                    newConvert.NewUnit = va.Value;
+                }
+                va = convert.Element("CustName");
+                if (va != null)
+                {
+                    newConvert.SignalName = va.Value;
+                }
+                //newConvert.Channel = convert.Element("Channel").Value;
+                //newConvert.NewUnit = convert.Element("NewUnit").Value;
+                //newConvert.SignalName = convert.Element("CustName").Value;
                 ToConverts.Add(newConvert);
             }
             //else

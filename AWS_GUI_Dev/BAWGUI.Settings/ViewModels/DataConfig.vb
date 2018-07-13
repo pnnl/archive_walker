@@ -1669,7 +1669,7 @@ Namespace ViewModels
             _model = New ScalarRepCustModel
         End Sub
 
-        Public Sub New(cStep As ReadConfigXml.ScalarRepCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(cStep As ReadConfigXml.ScalarRepCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(cStep)
             _model = cStep
             Me.StepCounter = stepCounter
@@ -1686,18 +1686,27 @@ Namespace ViewModels
             output.OldTypeAbbreviation = output.TypeAbbreviation
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -1774,7 +1783,7 @@ Namespace ViewModels
             MyBase.New
             _model = New AdditionCustModel
         End Sub
-        Public Sub New(stp As AdditionCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As AdditionCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -1821,18 +1830,42 @@ Namespace ViewModels
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
 
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -1859,7 +1892,7 @@ Namespace ViewModels
             MyBase.New
             _model = New SubtractionCustModel
         End Sub
-        Public Sub New(stp As SubtractionCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As SubtractionCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -1892,18 +1925,42 @@ Namespace ViewModels
             output.OldTypeAbbreviation = output.TypeAbbreviation
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
+
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -1951,7 +2008,7 @@ Namespace ViewModels
             MyBase.New
             _model = New MultiplicationCustModel
         End Sub
-        Public Sub New(stp As MultiplicationCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As MultiplicationCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2003,18 +2060,41 @@ Namespace ViewModels
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
 
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2041,7 +2121,7 @@ Namespace ViewModels
             MyBase.New
             _model = New DivisionCustModel
         End Sub
-        Public Sub New(stp As DivisionCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As DivisionCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2074,18 +2154,42 @@ Namespace ViewModels
             output.OldTypeAbbreviation = output.TypeAbbreviation
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
+
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2133,7 +2237,7 @@ Namespace ViewModels
             MyBase.New
             _model = New ExponentialCustModel
         End Sub
-        Public Sub New(stp As ExponentialCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As ExponentialCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2172,19 +2276,40 @@ Namespace ViewModels
                 newPair.Value.Add(input)
                 OutputInputMappingPair.Add(newPair)
             Next
-
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2221,7 +2346,7 @@ Namespace ViewModels
             MyBase.New
             _model = New SignReversalCustModel
         End Sub
-        Public Sub New(stp As SignReversalCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As SignReversalCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2256,18 +2381,41 @@ Namespace ViewModels
                 OutputInputMappingPair.Add(newPair)
             Next
 
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2294,7 +2442,7 @@ Namespace ViewModels
             MyBase.New
             _model = New AbsValCustModel
         End Sub
-        Public Sub New(stp As AbsValCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As AbsValCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2318,8 +2466,8 @@ Namespace ViewModels
                 If input.IsValid Then
                     output.TypeAbbreviation = input.TypeAbbreviation
                     output.Unit = input.Unit
-                        output.SamplingRate = input.SamplingRate
-                    End If
+                    output.SamplingRate = input.SamplingRate
+                End If
                 output.OldUnit = output.Unit
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldSignalName = output.SignalName
@@ -2328,19 +2476,40 @@ Namespace ViewModels
                 newPair.Value.Add(input)
                 OutputInputMappingPair.Add(newPair)
             Next
-
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2367,7 +2536,7 @@ Namespace ViewModels
             MyBase.New
             _model = New RealComponentCustModel
         End Sub
-        Public Sub New(stp As RealComponentCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As RealComponentCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2407,13 +2576,34 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2440,7 +2630,7 @@ Namespace ViewModels
             MyBase.New
             _model = New ImagComponentCustModel
         End Sub
-        Public Sub New(stp As ImagComponentCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As ImagComponentCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2480,13 +2670,35 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2513,7 +2725,7 @@ Namespace ViewModels
             MyBase.New
             _model = New AngleCustModel
         End Sub
-        Public Sub New(stp As AngleCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As AngleCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2553,13 +2765,34 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2586,7 +2819,7 @@ Namespace ViewModels
             MyBase.New
             _model = New ComplexConjCustModel
         End Sub
-        Public Sub New(stp As ComplexConjCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As ComplexConjCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2621,18 +2854,40 @@ Namespace ViewModels
                 OutputInputMappingPair.Add(newPair)
             Next
 
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2659,7 +2914,7 @@ Namespace ViewModels
             MyBase.New
             _model = New CreatePhasorCustModel
         End Sub
-        Public Sub New(stp As CreatePhasorCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As CreatePhasorCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2706,23 +2961,42 @@ Namespace ViewModels
                 newPair.Value.Add(magSignal)
                 newPair.Value.Add(angSignal)
                 OutputInputMappingPair.Add(newPair)
-
-
             Next
-
 
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2749,7 +3023,7 @@ Namespace ViewModels
             MyBase.New
             _model = New PowerCalcCustModel
         End Sub
-        Public Sub New(stp As PowerCalcCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As PowerCalcCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -2867,13 +3141,34 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -2915,7 +3210,7 @@ Namespace ViewModels
             _model = New SpecTypeUnitCustModel
         End Sub
 
-        Public Sub New(cStep As ReadConfigXml.SpecTypeUnitCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(cStep As ReadConfigXml.SpecTypeUnitCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(cStep)
             _model = cStep
             Me.StepCounter = stepCounter
@@ -2948,18 +3243,41 @@ Namespace ViewModels
             Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
             newPair.Value.Add(inputSignal)
             OutputInputMappingPair.Add(newPair)
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -3013,7 +3331,7 @@ Namespace ViewModels
             _model = New MetricPrefixCustModel
             '_useCustomPMU = True
         End Sub
-        Public Sub New(stp As MetricPrefixCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As MetricPrefixCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             '_useCustomPMU = True
@@ -3033,9 +3351,9 @@ Namespace ViewModels
                 If signal.SignalName Is Nothing Then
                     signal.SignalName = input.SignalName
                 End If
-                Dim output = input
+                'Dim output = input
                 'If UseCustomPMU Then
-                output = New SignalSignatureViewModel(signal.SignalName, CustPMUname, input.TypeAbbreviation)
+                Dim output = New SignalSignatureViewModel(signal.SignalName, CustPMUname, input.TypeAbbreviation)
                 output.SamplingRate = input.SamplingRate
                 output.Unit = signal.NewUnit
                 output.OldSignalName = output.SignalName
@@ -3057,13 +3375,34 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name & ". Original messages: " & ex.Message)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name & ". Original messages: " & ex.Message)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
@@ -3149,7 +3488,7 @@ Namespace ViewModels
             MyBase.New
             _model = New AngleConversionCustModel
         End Sub
-        Public Sub New(stp As AngleConversionCustModel, stepCounter As Integer, signalsMgr As SignalManager)
+        Public Sub New(stp As AngleConversionCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
             MyBase.New(stp)
             Me._model = stp
             Me.StepCounter = stepCounter
@@ -3185,18 +3524,40 @@ Namespace ViewModels
                 OutputInputMappingPair.Add(newPair)
             Next
 
+
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
                 Throw New Exception("Error when sort signals by PMU in step: " & Name)
             End Try
-            signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Try
+            '    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            'End Try
+            'signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return True
