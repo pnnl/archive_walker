@@ -784,7 +784,7 @@ Namespace ViewModels
             Next
             For Each pmuItem In newPMUlist
                 pmuItem.StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
-                pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & pmuItem.StepCounter.ToString & "-" & pmuItem.Name
+                pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & pmuItem.StepCounter.ToString & " - " & pmuItem.Name
                 Try
                     pmuItem.ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(pmuItem.OutputChannels)
                 Catch ex As Exception

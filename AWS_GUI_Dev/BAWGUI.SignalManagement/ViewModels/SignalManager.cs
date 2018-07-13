@@ -771,7 +771,16 @@ namespace BAWGUI.SignalManagement.ViewModels
             {
                 var rate = group.Key;
                 var subSignalList = group.ToList();
-                var PMUSignalDictionary = subSignalList.GroupBy(x => x.PMUName).ToDictionary(x => x.Key, x => x.ToList());
+                var PMUSignalDictionary = new Dictionary<string, List<SignalSignatureViewModel>>();
+                try
+                {
+                    var pairs = subSignalList.GroupBy(x => x.PMUName);
+                    PMUSignalDictionary = pairs.ToDictionary(x => x.Key, x => x.ToList());
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Missing PMU name. " + ex.Message);
+                }
                 var pmuSignalTree = new ObservableCollection<SignalTypeHierachy>();
                 foreach (var subgroup in PMUSignalDictionary)
                 {
