@@ -48,7 +48,10 @@ Namespace ViewModels
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case "Voltage Stability"
+                    'If DetectorConfigure.DetectorList.Contains(VoltageStabilityDetectorViewModel) Then
+                    'End If
                     newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
+                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                     'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
@@ -266,7 +269,7 @@ Namespace ViewModels
                         If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False
                             For Each dtr In DetectorConfigure.DetectorList
-                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Then
+                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Or TypeOf dtr Is VoltageStabilityDetectorViewModel Then
                                     updateResultInterval = True
                                     Exit For
                                 End If
