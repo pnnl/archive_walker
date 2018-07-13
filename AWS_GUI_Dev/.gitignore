@@ -281,4 +281,8 @@ __pycache__/
 ### VisualStudio Patch ###
 build/
 
+# Heng added files
+*.orig
+*.sln
+
 # End of https://www.gitignore.io/api/visualstudio
