@@ -93,6 +93,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     FileInfo.Add(aFileInfo);
                 }
             }
+            AllPMUs = _getAllPMU();
         }
         private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         {
@@ -950,6 +951,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     _readPDATFile(model);
                 }
             }
+            AllPMUs = _getAllPMU();
         }
 
         public ObservableCollection<SignalSignatureViewModel> FindSignalsEntirePMU(List<SignalSignatures> pMUElementList)
@@ -1113,16 +1115,23 @@ namespace BAWGUI.SignalManagement.ViewModels
             return null;
         }
 
+        private ObservableCollection<PMUWithSamplingRate> _allPMU;
         public ObservableCollection<PMUWithSamplingRate> AllPMUs
         {
+            set { _allPMU = value; OnPropertyChanged(); }
             get
             {
-                var allPMU = GroupedRawSignalsByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList();
-                allPMU.AddRange(AllDataConfigOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
-                allPMU.AddRange(AllProcessConfigOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
-                allPMU.AddRange(AllPostProcessOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
-                return new ObservableCollection<PMUWithSamplingRate>(allPMU.Distinct());
+                return _getAllPMU();
             }
+        }
+
+        private ObservableCollection<PMUWithSamplingRate> _getAllPMU()
+        {
+            var allPMU = GroupedRawSignalsByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList();
+            allPMU.AddRange(AllDataConfigOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
+            allPMU.AddRange(AllProcessConfigOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
+            allPMU.AddRange(AllPostProcessOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
+            return new ObservableCollection<PMUWithSamplingRate>(allPMU.Distinct());
         }
 
         #region Signal Manipulations, checking, unchecking, etc.
