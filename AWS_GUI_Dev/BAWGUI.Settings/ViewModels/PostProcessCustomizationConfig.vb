@@ -91,71 +91,71 @@ Namespace ViewModels
                 Select Case name
                     Case "Scalar Repetition"
                         stepCounter += 1
-                        Dim a = New ScalarRepCust(stp, stepCounter, signalsMgr)
+                        Dim a = New ScalarRepCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Addition"
                         stepCounter += 1
-                        Dim a = New AdditionCust(stp, stepCounter, signalsMgr)
+                        Dim a = New AdditionCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Subtraction"
                         stepCounter += 1
-                        Dim a = New SubtractionCust(stp, stepCounter, signalsMgr)
+                        Dim a = New SubtractionCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Multiplication"
                         stepCounter += 1
-                        Dim a = New MultiplicationCust(stp, stepCounter, signalsMgr)
+                        Dim a = New MultiplicationCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Division"
                         stepCounter += 1
-                        Dim a = New DivisionCust(stp, stepCounter, signalsMgr)
+                        Dim a = New DivisionCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Exponential"
                         stepCounter += 1
-                        Dim a = New ExponentialCust(stp, stepCounter, signalsMgr)
+                        Dim a = New ExponentialCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Sign Reversal"
                         stepCounter += 1
-                        Dim a = New SignReversalCust(stp, stepCounter, signalsMgr)
+                        Dim a = New SignReversalCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Absolute Value"
                         stepCounter += 1
-                        Dim a = New AbsValCust(stp, stepCounter, signalsMgr)
+                        Dim a = New AbsValCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Real Component"
                         stepCounter += 1
-                        Dim a = New RealComponentCust(stp, stepCounter, signalsMgr)
+                        Dim a = New RealComponentCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Imaginary Component"
                         stepCounter += 1
-                        Dim a = New ImagComponentCust(stp, stepCounter, signalsMgr)
+                        Dim a = New ImagComponentCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Angle Calculation"
                         stepCounter += 1
-                        Dim a = New AngleCust(stp, stepCounter, signalsMgr)
+                        Dim a = New AngleCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Complex Conjugate"
                         stepCounter += 1
-                        Dim a = New ComplexConjCust(stp, stepCounter, signalsMgr)
+                        Dim a = New ComplexConjCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Phasor Creation"
                         stepCounter += 1
-                        Dim a = New CreatePhasorCust(stp, stepCounter, signalsMgr)
+                        Dim a = New CreatePhasorCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Power Calculation"
                         stepCounter += 1
-                        Dim a = New PowerCalcCust(stp, stepCounter, signalsMgr)
+                        Dim a = New PowerCalcCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Signal Type/Unit"
                         stepCounter += 1
-                        Dim a = New SpecifySignalTypeUnitCust(stp, stepCounter, signalsMgr)
+                        Dim a = New SpecifySignalTypeUnitCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Metric Prefix"
                         stepCounter += 1
-                        Dim a = New MetricPrefixCust(stp, stepCounter, signalsMgr)
+                        Dim a = New MetricPrefixCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case "Angle Conversion"
                         stepCounter += 1
-                        Dim a = New AngleConversionCust(stp, stepCounter, signalsMgr)
+                        Dim a = New AngleConversionCust(stp, stepCounter, signalsMgr, True)
                         allSteps.Add(a)
                     Case Else
                         Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
