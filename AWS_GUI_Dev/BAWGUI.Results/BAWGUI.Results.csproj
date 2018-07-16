@@ -130,17 +130,12 @@
     <Compile Include="Converters\TableValueNANConverter.cs" />
     <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
-    <Compile Include="Models\WindRampEvent.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Models\DatedForcedOscillationEvent.cs" />
-    <Compile Include="Models\DatedOccurrence.cs" />
     <Compile Include="Models\ResultsModel.cs" />
-    <Compile Include="Models\RingDownEvent.cs" />
     <Compile Include="ViewModels\FOOccurrenceChannelViewModel.cs" />
     <Compile Include="ViewModels\DateStruct.cs" />
     <Compile Include="ViewModels\ForcedOscillationResultViewModel.cs" />
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
-    <Compile Include="Models\OutOfRangeEvent.cs" />
     <Compile Include="ViewModels\OORChannelViewModel.cs" />
     <Compile Include="ViewModels\OORReRunPlotViewModel.cs" />
     <Compile Include="ViewModels\OutOfRangeEventViewModel.cs" />

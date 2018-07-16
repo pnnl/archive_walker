@@ -262,7 +262,7 @@ namespace BAWGUI.Results.ViewModels
         }
         private void _drawOORSparsePlots()
         {
-            var rdPlots = new ObservableCollection<SparsePlot>();
+            var oorPlots = new ObservableCollection<SparsePlot>();
             foreach (var detector in SparseResults)
             {
                 var aPlot = new SparsePlot();
@@ -337,19 +337,19 @@ namespace BAWGUI.Results.ViewModels
                 }
                 a.Axes.Add(yAxis);
 
-                foreach (var rd in detector.SparseSignals)
+                foreach (var oor in detector.SparseSignals)
                 {
                     var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColor.FromArgb(50, 0, 150, 0), Color2 = OxyColor.FromArgb(50, 0, 150, 0), Fill = OxyColor.FromArgb(50, 0, 50, 0) };
                     var previousTime = startTime.ToOADate();
-                    for (int i = 0; i < rd.Maximum.Count; i++)
+                    for (int i = 0; i < oor.Maximum.Count; i++)
                     {
-                        newSeries.Points.Add(new DataPoint(previousTime, rd.Maximum[i]));
-                        newSeries.Points.Add(new DataPoint(rd.TimeStampNumber[i], rd.Maximum[i]));
-                        newSeries.Points2.Add(new DataPoint(previousTime, rd.Minimum[i]));
-                        newSeries.Points2.Add(new DataPoint(rd.TimeStampNumber[i], rd.Minimum[i]));
-                        previousTime = rd.TimeStampNumber[i];
+                        newSeries.Points.Add(new DataPoint(previousTime, oor.Maximum[i]));
+                        newSeries.Points.Add(new DataPoint(oor.TimeStampNumber[i], oor.Maximum[i]));
+                        newSeries.Points2.Add(new DataPoint(previousTime, oor.Minimum[i]));
+                        newSeries.Points2.Add(new DataPoint(oor.TimeStampNumber[i], oor.Minimum[i]));
+                        previousTime = oor.TimeStampNumber[i];
                     }
-                    newSeries.Title = rd.SignalName;
+                    newSeries.Title = oor.SignalName;
                     newSeries.TrackerFormatString = "{0}";
                     //newSeries.MouseMove += RdSparseSeries_MouseMove;
                     //newSeries.MouseDown += RdSparseSeries_MouseDown;
@@ -385,9 +385,9 @@ namespace BAWGUI.Results.ViewModels
                 var currentMargins = a.PlotMargins;
                 a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
                 aPlot.SparsePlotModel = a;
-                rdPlots.Add(aPlot);
+                oorPlots.Add(aPlot);
             }
-            SparsePlotModels = rdPlots;
+            SparsePlotModels = oorPlots;
         }
         private void YAxis_AxisChanged(object sender, AxisChangedEventArgs e)
         {
@@ -485,7 +485,7 @@ namespace BAWGUI.Results.ViewModels
         
         private void _drawOORReRunPlots()
         {
-            var rdPlots = new ObservableCollection<OORReRunPlot>();
+            var oorPlots = new ObservableCollection<OORReRunPlot>();
             foreach (var detector in ReRunResult)
             {
                 var aDetector = new OORReRunPlot();
@@ -576,9 +576,9 @@ namespace BAWGUI.Results.ViewModels
                 allSignalsPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
                 aDetector.OORReRunAllSignalsPlotModel = allSignalsPlot;
                 aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
-                rdPlots.Add(aDetector);
+                oorPlots.Add(aDetector);
             }
-            OORReRunPlotModels = rdPlots;
+            OORReRunPlotModels = oorPlots;
         }
 
         private OORSignalDurationROCPlotModelTriple _drawAOORSignal(OutOfRangeSignal oorSig)

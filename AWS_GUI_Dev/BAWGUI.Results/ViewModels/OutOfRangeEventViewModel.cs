@@ -1,4 +1,5 @@
-﻿using BAWGUI.Results.Models;
+﻿using BAWGUI.MATLABRunResults.Models;
+using BAWGUI.Results.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
