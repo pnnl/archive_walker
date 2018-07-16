@@ -31,7 +31,7 @@ namespace VoltageStability.MATLABRunResults.Models
             _vsDetectorList = new List<TheveninDetector>();
             int numberOfElements = 0;
             numberOfElements = _results.NumberOfElements;
-            for (int index = 0; index < numberOfElements; index++)
+            for (int index = 1; index <= numberOfElements; index++)
             {
                 MWNumericArray arr = (MWNumericArray)_results["t", index];
                 double[] t = (double[])(arr.ToVector(MWArrayComponent.Real));
@@ -43,6 +43,38 @@ namespace VoltageStability.MATLABRunResults.Models
                     timeStamps.Add(tt);
                     timeStampNumbers.Add(tt.ToOADate());
                 }
+
+                arr = (MWNumericArray)_results["LTI", index];
+                int[] dimEach = arr.Dimensions;
+                if (dimEach.Length != 2)
+                {
+                    throw new Exception(String.Format("Data of element {0} matrix dimension out of range in Out-Of-Range rerun.", index));
+                }
+                var lti = ((double[])arr.ToVector(MWArrayComponent.Real)).ToList();
+
+                arr = (MWNumericArray)_results["LTIthresh", index];
+                dimEach = arr.Dimensions;
+                if (dimEach.Length != 2)
+                {
+                    throw new Exception(String.Format("DurationMaxMat of elements {0} matrix dimension out of range in Out-Of-Range rerun.", index));
+                }
+                var LTIthresh = ((double[])arr.ToVector(MWArrayComponent.Real)).ToList();
+
+                arr = (MWNumericArray)_results["E", index];
+                dimEach = arr.Dimensions;
+                if (dimEach.Length != 2)
+                {
+                    throw new Exception(String.Format("DurationMaxMat of elements {0} matrix dimension out of range in Out-Of-Range rerun.", index));
+                }
+                var E = ((double[])arr.ToVector(MWArrayComponent.Real)).ToList();
+
+                arr = (MWNumericArray)_results["E", index];
+                dimEach = arr.Dimensions;
+                if (dimEach.Length != 2)
+                {
+                    throw new Exception(String.Format("DurationMaxMat of elements {0} matrix dimension out of range in Out-Of-Range rerun.", index));
+                }
+                var E = ((double[])arr.ToVector(MWArrayComponent.Real)).ToList();
             }
         }
         private List<TheveninDetector> _vsDetectorList;
