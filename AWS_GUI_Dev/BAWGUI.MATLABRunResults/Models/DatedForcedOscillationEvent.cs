@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BAWGUI.Results.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
     public class DatedForcedOscillationEvent
     {

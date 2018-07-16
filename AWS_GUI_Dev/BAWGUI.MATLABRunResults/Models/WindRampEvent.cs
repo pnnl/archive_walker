@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BAWGUI.Xml;
-namespace BAWGUI.Results.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
     public class WindRampEvent
     {

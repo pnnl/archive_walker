@@ -1,11 +1,11 @@
-﻿using System;
+﻿using BAWGUI.Xml;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BAWGUI.Xml;
 
-namespace BAWGUI.Results.Models
+namespace BAWGUI.MATLABRunResults.Models
 {
     public class OutOfRangeEvent
     {
