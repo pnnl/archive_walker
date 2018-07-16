@@ -205,7 +205,7 @@ namespace BAWGUI.Results.ViewModels
             if (_resultsModel.VoltageStabilityEvents.Count() > 0)
             {
                 _voltageStabilityResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
-                //_voltageStabilityResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
+                _voltageStabilityResultsViewModel.VSReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<VSReRunPlot>();
                 _voltageStabilityResultsViewModel.Models = _resultsModel.VoltageStabilityEvents;
                 _voltageStabilityResultsViewModel.SelectedEndTime = endTimeStr;
                 _voltageStabilityResultsViewModel.SelectedStartTime = startTimeStr;

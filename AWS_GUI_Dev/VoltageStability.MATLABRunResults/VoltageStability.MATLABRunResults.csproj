@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Models\TheveninDetector.cs" />
     <Compile Include="Models\TheveninReRunResults.cs" />
+    <Compile Include="Models\TheveninSignal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,7 @@
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
@@ -46,11 +47,20 @@
                     </ScrollViewer>
                 </Expander>
                 <Grid Grid.Row="1">
+                    <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                    <TextBlock Text="Out-Of-Range Data Trends" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Top" Margin="0,0,0,5"/>
+                </Grid>
+                <Expander Grid.Row="1" VerticalAlignment="Top" Margin="0" IsExpanded="True">
+                    <ScrollViewer Grid.Row="1" MaxHeight="600">
+                        <views:OORSparseEventPlot/>
+                    </ScrollViewer>
+                </Expander>
+                <Grid Grid.Row="2">
                     <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>
                     <TextBlock Text="Detection Details" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
                 </Grid>
-                <ScrollViewer Grid.Row="2" >
-                    <!--<views:OORReRunPlots/>-->
+                <ScrollViewer Grid.Row="3" >
+                    <views:VSReRunPlots/>
                 </ScrollViewer>
             </Grid>
             <Grid Grid.Column="1">

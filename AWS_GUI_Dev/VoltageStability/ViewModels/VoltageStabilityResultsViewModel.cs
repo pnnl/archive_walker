@@ -4,11 +4,13 @@ using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,6 +28,7 @@ namespace VoltageStability.ViewModels
             _run = new AWRunViewModel();
             _results = new ObservableCollection<VoltageStabilityEventViewModel>();
             _filteredResults = new ObservableCollection<VoltageStabilityEventViewModel>();
+            //_oorSparseResults = new ObservableCollection<Out>
             _models = new List<VoltageStabilityEvent>();
             _engine = MatLabEngine.Instance;
             RunSparseMode = new RelayCommand(_runSparseMode);
@@ -206,6 +209,192 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private List<SparseDetector> _oorSparseResults;
+        public List<SparseDetector> OORSparseResults
+        {
+            get { return _oorSparseResults; }
+            set
+            {
+                _oorSparseResults = value;
+                if (_sparseResults.Count() != 0)
+                {
+                    _drawOORSparsePlots();
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        private void _drawOORSparsePlots()
+        {
+            var oorPlots = new ObservableCollection<SparsePlot>();
+            foreach (var detector in SparseResults)
+            {
+                var aPlot = new SparsePlot();
+                aPlot.Label = detector.Label;
+                var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+                //{ PlotAreaBackground = OxyColors.WhiteSmoke}
+                //a.PlotType = PlotType.Cartesian;
+                var xAxisFormatString = "";
+                var startTime = new DateTime();
+                var endTime = new DateTime();
+                if (detector.SparseSignals.Count > 0)
+                {
+                    var signal1 = detector.SparseSignals.FirstOrDefault();
+                    if (signal1.TimeStamps.Count >= 2)
+                    {
+                        var timeInterval = signal1.TimeStamps[1] - signal1.TimeStamps[0];
+                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault()) - timeInterval;
+                    }
+                    else
+                    {
+                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                    }
+                    endTime = detector.SparseSignals.Max(x => x.TimeStamps.LastOrDefault());
+                }
+                var time = endTime - startTime;
+                if (time < TimeSpan.FromHours(24))
+                {
+                    xAxisFormatString = "HH:mm";
+                }
+                else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+                {
+                    xAxisFormatString = "MM/dd\nHH:mm";
+                }
+                else
+                {
+                    xAxisFormatString = "MM/dd";
+                }
+                OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    //Title = "Time",
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true,
+                    StringFormat = xAxisFormatString,
+                };
+                timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+                a.Axes.Add(timeXAxis);
+                OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left,
+                    Title = detector.Type + "( " + detector.Unit + " )",
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true
+                };
+                //yAxis.AxisChanged += YAxis_AxisChanged;
+
+                double axisMax = detector.SparseSignals.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
+                double axisMin = detector.SparseSignals.Min(x => x.GetMinOfMinimum()) - (double)0.1;
+                if (SparseResults.Count > 0)
+                {
+                    yAxis.Maximum = axisMax;
+                    yAxis.Minimum = axisMin;
+                }
+                a.Axes.Add(yAxis);
+
+                foreach (var oor in detector.SparseSignals)
+                {
+                    var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColor.FromArgb(50, 0, 150, 0), Color2 = OxyColor.FromArgb(50, 0, 150, 0), Fill = OxyColor.FromArgb(50, 0, 50, 0) };
+                    var previousTime = startTime.ToOADate();
+                    for (int i = 0; i < oor.Maximum.Count; i++)
+                    {
+                        newSeries.Points.Add(new DataPoint(previousTime, oor.Maximum[i]));
+                        newSeries.Points.Add(new DataPoint(oor.TimeStampNumber[i], oor.Maximum[i]));
+                        newSeries.Points2.Add(new DataPoint(previousTime, oor.Minimum[i]));
+                        newSeries.Points2.Add(new DataPoint(oor.TimeStampNumber[i], oor.Minimum[i]));
+                        previousTime = oor.TimeStampNumber[i];
+                    }
+                    newSeries.Title = oor.SignalName;
+                    newSeries.TrackerFormatString = "{0}";
+                    //newSeries.MouseMove += RdSparseSeries_MouseMove;
+                    //newSeries.MouseDown += RdSparseSeries_MouseDown;
+                    a.Series.Add(newSeries);
+                }
+                //if (SelectedOOREvent != null)
+                //{
+                //    var lowerRange = DateTime.ParseExact(SelectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var higherRange = DateTime.ParseExact(SelectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                //    {
+                //        Fill = OxyColor.FromArgb(50, 50, 50, 50),
+                //        MinimumX = lowerRange,
+                //        MaximumX = higherRange,
+                //        MinimumY = axisMin,
+                //        MaximumY = axisMax
+                //    };
+                //    a.Annotations.Add(rectAnnotation);
+                //}
+
+
+                a.LegendPlacement = LegendPlacement.Outside;
+                a.LegendPosition = LegendPosition.RightMiddle;
+                a.LegendPadding = 0.0;
+                a.LegendSymbolMargin = 0.0;
+                a.LegendMargin = 0;
+                //a.LegendMaxHeight = 200;
+                a.LegendMaxWidth = 250;
+
+                var currentArea = a.LegendArea;
+                var currentPlotWithAxis = a.PlotAndAxisArea;
+
+                var currentMargins = a.PlotMargins;
+                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                aPlot.SparsePlotModel = a;
+                oorPlots.Add(aPlot);
+            }
+            foreach (var plotM in oorPlots)
+            {
+                //var lowerRange = DateTime.ParseExact(_selectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //var higherRange = DateTime.ParseExact(_selectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //double axisMin = 0d, axisMax = 0d;
+                //foreach (var axis in plotM.SparsePlotModel.Axes)
+                //{
+                //    if (axis.IsVertical())
+                //    {
+                //        axisMin = axis.Minimum;
+                //        axisMax = axis.Maximum;
+                //    }
+                //}
+                //var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                //{
+                //    Fill = OxyColor.FromArgb(75, 255, 0, 0),
+                //    //MinimumX = lowerRange,
+                //    //MaximumX = higherRange,
+                //    //Fill = OxyColors.Red,
+                //    MinimumX = lowerRange - (higherRange - lowerRange),
+                //    MaximumX = higherRange + (higherRange - lowerRange),
+                //    MinimumY = axisMin,
+                //    MaximumY = axisMax
+                //};
+                //plotM.SparsePlotModel.Annotations.Clear();
+                //plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+                //plotM.SparsePlotModel.InvalidatePlot(true);
+            }
+
+            OORSparsePlotModels = oorPlots;
+
+        }
+        private ObservableCollection<SparsePlot> _oorSparsePlotModels;
+        public ObservableCollection<SparsePlot> OORSparsePlotModels
+        {
+            get { return _oorSparsePlotModels; }
+            set
+            {
+                _oorSparsePlotModels = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<SparsePlot> _sparsePlotModels;
         public ObservableCollection<SparsePlot> SparsePlotModels
         {
@@ -229,6 +418,7 @@ namespace VoltageStability.ViewModels
                     try
                     {
                         SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "Thevenin");
+                        OORSparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, Run, "OutOfRangeGeneral");
                     }
                     catch (Exception ex)
                     {
@@ -459,111 +649,136 @@ namespace VoltageStability.ViewModels
             set
             {
                 _reRunResult = value;
-                _drawOORReRunPlots();
+                _drawVSReRunPlots();
                 OnPropertyChanged();
             }
         }
-        private void _drawOORReRunPlots()
+        private void _drawVSReRunPlots()
         {
-            //var rdPlots = new ObservableCollection<OORReRunPlot>();
-            //foreach (var detector in ReRunResult)
-            //{
-            //    var aDetector = new OORReRunPlot();
-            //    aDetector.Label = detector.Label;
-            //    if (detector.OORSignals.Count > 0)
-            //    {
-            //        aDetector.IsByDuration = detector.OORSignals.Any(x => x.IsByDuration);
-            //        aDetector.IsByROC = detector.OORSignals.Any(x => x.IsByROC);
-            //    }
-            //    var allSignalsPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
-
-            //    OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
-            //    {
-            //        Position = OxyPlot.Axes.AxisPosition.Bottom,
-            //        MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
-            //        MajorGridlineStyle = LineStyle.Dot,
-            //        MinorGridlineStyle = LineStyle.Dot,
-            //        MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
-            //        TicklineColor = OxyColor.FromRgb(82, 82, 82),
-            //        IsZoomEnabled = true,
-            //        IsPanEnabled = true,
-            //    };
-            //    allSignalsPlot.Axes.Add(timeXAxis);
-            //    OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
-            //    {
-            //        Position = OxyPlot.Axes.AxisPosition.Left,
-            //        Title = detector.Type,
-            //        Unit = detector.Unit,
-            //        TitlePosition = 0.5,
-            //        ClipTitle = false,
-            //        MajorGridlineStyle = LineStyle.Dot,
-            //        MinorGridlineStyle = LineStyle.Dot,
-            //        MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
-            //        TicklineColor = OxyColor.FromRgb(82, 82, 82),
-            //        IsZoomEnabled = true,
-            //        IsPanEnabled = true
-            //    };
-            //    allSignalsPlot.Axes.Add(yAxis);
-            //    foreach (var oor in detector.OORSignals)
-            //    {
-            //        var signalSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
-            //        for (int i = 0; i < oor.Data.Count; i++)
-            //        {
-            //            signalSeries.Points.Add(new DataPoint(oor.TimeStampNumber[i], oor.Data[i]));
-            //        }
-            //        signalSeries.Title = oor.SignalName;
-            //        signalSeries.TrackerKey = oor.Label;
-            //        //signalSeries.MouseDown += OORReRunSeries_MouseDown;
-            //        allSignalsPlot.Series.Add(signalSeries);
-            //        if (oor.IsByDuration || oor.IsByROC)
-            //        {
-            //            var aSignalPlotModel = _drawAOORSignal(oor);
-            //            var aNewTriple = new PlotModelThumbnailOORTriple();
-            //            aNewTriple.IsByDuration = oor.IsByDuration;
-            //            aNewTriple.IsByROC = oor.IsByROC;
-            //            var pngExporter = new OxyPlot.Wpf.PngExporter { Width = 600, Height = 400, Background = OxyColors.WhiteSmoke };
-            //            if (oor.IsByDuration)
-            //            {
-            //                aSignalPlotModel.OORDurationPlotModel.IsLegendVisible = false;
-            //                var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.OORDurationPlotModel); //bitmapsource object
-            //                aNewTriple.Label = oor.SignalName;
-            //                aNewTriple.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
-            //                aSignalPlotModel.OORDurationPlotModel.IsLegendVisible = true;
-            //            }
-            //            else
-            //            {
-            //                aSignalPlotModel.OORROCPlotModel.IsLegendVisible = false;
-            //                var bitmapSource = pngExporter.ExportToBitmap(aSignalPlotModel.OORROCPlotModel); //bitmapsource object
-            //                aNewTriple.Label = oor.SignalName;
-            //                aNewTriple.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
-            //                aSignalPlotModel.OORROCPlotModel.IsLegendVisible = true;
-            //            }
-            //            aNewTriple.SignalPlotModelTriple = aSignalPlotModel;
-            //            aDetector.ThumbnailPlots.Add(aNewTriple);
-            //        }
-            //    }
-
-            //    allSignalsPlot.LegendPlacement = LegendPlacement.Outside;
-            //    allSignalsPlot.LegendPosition = LegendPosition.RightMiddle;
-            //    allSignalsPlot.LegendPadding = 0.0;
-            //    allSignalsPlot.LegendSymbolMargin = 0.0;
-            //    allSignalsPlot.LegendMargin = 0;
-
-            //    var currentArea = allSignalsPlot.LegendArea;
-            //    var currentPlotWithAxis = allSignalsPlot.PlotAndAxisArea;
-
-            //    var currentMargins = allSignalsPlot.PlotMargins;
-            //    allSignalsPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
-            //    aDetector.OORReRunAllSignalsPlotModel = allSignalsPlot;
-            //    aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
-            //    rdPlots.Add(aDetector);
-            //}
-            //OORReRunPlotModels = rdPlots;
+            var vsPlots = new ObservableCollection<VSReRunPlot>();
+            foreach (var detector in ReRunResult)
+            {
+                var aDetector = new VSReRunPlot();
+                aDetector.Label = detector.SiteName;
+                foreach (var signal in detector.TheveninSignals)
+                {
+                    var aSignalThumbnailPair = _drawAVSSignal(signal);
+                    aDetector.ThumbnailPlots.Add(aSignalThumbnailPair);
+                }
+                aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
+                vsPlots.Add(aDetector);
+            }
+            VSReRunPlotModels = vsPlots;
         }
+
+        private PlotModelThumbnailVSPair _drawAVSSignal(TheveninSignal signal)
+        {
+            var aNewPair = new PlotModelThumbnailVSPair();
+            aNewPair.Label = signal.PMUname;
+            var aSignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+            OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Bottom,
+                MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true,
+            };
+            timeXAxis.AxisChanged += ReRunPlotsTimeXAxis_AxisChanged1;
+            aSignalPlot.Axes.Add(timeXAxis);
+            OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Left,
+                Title = signal.Method,
+                Unit = signal.Method,
+                TitlePosition = 0.5,
+                ClipTitle = false,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true
+            };
+            aSignalPlot.Axes.Add(yAxis);
+            var VBusMagSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+            for (int i = 0; i < signal.VbusMAG.Count; i++)
+            {
+                VBusMagSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.VbusMAG[i]));
+            }
+            VBusMagSeries.Title = "Actual";
+            aSignalPlot.Series.Add(VBusMagSeries);
+            var VhatSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+            for (int i = 0; i < signal.Vhat.Count; i++)
+            {
+                VhatSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], Complex.Abs(signal.Vhat[i])));
+            }
+            VhatSeries.Title = "Estimate";
+            aSignalPlot.Series.Add(VhatSeries);
+
+
+            aSignalPlot.LegendPlacement = LegendPlacement.Outside;
+            aSignalPlot.LegendPosition = LegendPosition.RightMiddle;
+            aSignalPlot.LegendPadding = 0.0;
+            aSignalPlot.LegendSymbolMargin = 0.0;
+            aSignalPlot.LegendMargin = 0;
+
+            var currentArea = aSignalPlot.LegendArea;
+            var currentMargins = aSignalPlot.PlotMargins;
+            aSignalPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+
+
+            aNewPair.VSSignalPlotModel = aSignalPlot;
+            var pngExporter = new OxyPlot.Wpf.PngExporter { Width = 600, Height = 400, Background = OxyColors.WhiteSmoke };
+            aSignalPlot.IsLegendVisible = false;
+            var bitmapSource = pngExporter.ExportToBitmap(aSignalPlot); //bitmapsource object
+            aNewPair.Thumbnail = Utility.ResizeBitmapSource(bitmapSource, 80d);
+            aSignalPlot.IsLegendVisible = true;
+
+            return aNewPair;
+        }
+
+        private void ReRunPlotsTimeXAxis_AxisChanged1(object sender, AxisChangedEventArgs e)
+        {
+            var xAxis = sender as OxyPlot.Axes.DateTimeAxis;
+            var parent = xAxis.Parent;
+            foreach (var dtr in VSReRunPlotModels)
+            {
+                foreach (var pair in dtr.ThumbnailPlots)
+                {
+                    if (pair.VSSignalPlotModel == parent)
+                    {
+                        foreach (var ax in pair.VSSignalPlotModel.Axes)
+                        {
+                            if (ax.IsHorizontal() && ax.ActualMinimum != xAxis.ActualMinimum)
+                            {
+                                ax.Zoom(xAxis.ActualMinimum, xAxis.ActualMaximum);
+                                break;
+                            }
+                        }
+                        pair.VSSignalPlotModel.InvalidatePlot(false);
+                    }
+                }
+            }
+        }
+
         public ICommand CancelVSReRun { get; set; }
         private void _cancelVSReRun(object obj)
         {
             _engine.CancelVSReRun(_run);
+        }
+        private ObservableCollection<VSReRunPlot> _vsReRunPlotModels;
+        public ObservableCollection<VSReRunPlot> VSReRunPlotModels
+        {
+            get { return _vsReRunPlotModels; }
+            set
+            {
+                _vsReRunPlotModels = value;
+                OnPropertyChanged();
+            }
         }
 
     }

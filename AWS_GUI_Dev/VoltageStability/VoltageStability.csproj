@@ -62,6 +62,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
@@ -113,8 +114,12 @@
     <Compile Include="ViewModels\VoltageStabilityDetectorViewModel.cs" />
     <Compile Include="ViewModels\VoltageStabilityEventViewModel.cs" />
     <Compile Include="ViewModels\VoltageStabilityResultsViewModel.cs" />
+    <Compile Include="ViewModels\VSReRunPlot.cs" />
     <Compile Include="Views\BranchesAndShutsView.xaml.cs">
       <DependentUpon>BranchesAndShutsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OORSparseEventPlot.xaml.cs">
+      <DependentUpon>OORSparseEventPlot.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SiteView.xaml.cs">
       <DependentUpon>SiteView.xaml</DependentUpon>
@@ -139,6 +144,12 @@
     </Compile>
     <Compile Include="Views\VoltageStabilitySubTable.xaml.cs">
       <DependentUpon>VoltageStabilitySubTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VSReRunPlots.xaml.cs">
+      <DependentUpon>VSReRunPlots.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VSReRunPlotView.xaml.cs">
+      <DependentUpon>VSReRunPlotView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +190,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\OORSparseEventPlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SiteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -208,6 +223,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\VoltageStabilitySubTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VSReRunPlots.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VSReRunPlotView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
