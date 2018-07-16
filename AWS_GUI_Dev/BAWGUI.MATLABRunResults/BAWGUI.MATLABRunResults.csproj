@@ -59,22 +59,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DatedForcedOscillationEvent.cs" />
+    <Compile Include="Models\DatedOccurrence.cs" />
     <Compile Include="Models\OORRerunResults.cs" />
     <Compile Include="Models\OutOfRangeDetector.cs" />
+    <Compile Include="Models\OutOfRangeEvent.cs" />
     <Compile Include="Models\OutOfRangeSignal.cs" />
     <Compile Include="Models\RDRerunResults.cs" />
     <Compile Include="Models\RerunResultBase.cs" />
     <Compile Include="Models\RingdownDetector.cs" />
+    <Compile Include="Models\RingDownEvent.cs" />
     <Compile Include="Models\RingdownSignal.cs" />
     <Compile Include="Models\SparseDetector.cs" />
     <Compile Include="Models\SparseResults.cs" />
     <Compile Include="Models\SparseSignal.cs" />
+    <Compile Include="Models\WindRampEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
       <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
+      <Project>{B948A304-8616-4D5F-9563-9805F8A506C2}</Project>
+      <Name>BAWGUI.Xml</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

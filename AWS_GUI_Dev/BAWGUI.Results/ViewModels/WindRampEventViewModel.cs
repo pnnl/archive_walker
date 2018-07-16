@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Results.Models;
 using BAWGUI.Utilities;
 using OxyPlot;

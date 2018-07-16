@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Xml;
 
 namespace BAWGUI.Results.Models

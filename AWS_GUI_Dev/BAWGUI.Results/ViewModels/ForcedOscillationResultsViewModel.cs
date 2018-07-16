@@ -17,6 +17,7 @@ using BAWGUI.RunMATLAB.ViewModels;
 using System.Windows.Forms;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
+using BAWGUI.MATLABRunResults.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
