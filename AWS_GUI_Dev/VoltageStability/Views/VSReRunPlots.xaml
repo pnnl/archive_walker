@@ -12,7 +12,7 @@
                 <DataTemplate>
                     <Expander  IsExpanded="True">
                         <Expander.Header>
-                            <TextBlock Text="{Binding Label, StringFormat=Detector {0}}"/>
+                            <TextBlock Text="{Binding Label, StringFormat=Site: {0}}"/>
                         </Expander.Header>
                         <local:VSReRunPlotView/>
                     </Expander>

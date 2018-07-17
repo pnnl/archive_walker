@@ -209,6 +209,7 @@ namespace BAWGUI.Results.ViewModels
                 _voltageStabilityResultsViewModel.Models = _resultsModel.VoltageStabilityEvents;
                 _voltageStabilityResultsViewModel.SelectedEndTime = endTimeStr;
                 _voltageStabilityResultsViewModel.SelectedStartTime = startTimeStr;
+                _voltageStabilityResultsViewModel.OOrResults = _resultsModel.OutOfRangeEvents;
                 findStartTimeHasEvents = startTime;
                 if (_voltageStabilityResultsViewModel.Models.Count() != 0)
                 {

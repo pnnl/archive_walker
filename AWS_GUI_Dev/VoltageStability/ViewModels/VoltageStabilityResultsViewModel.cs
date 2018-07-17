@@ -28,20 +28,29 @@ namespace VoltageStability.ViewModels
             _run = new AWRunViewModel();
             _results = new ObservableCollection<VoltageStabilityEventViewModel>();
             _filteredResults = new ObservableCollection<VoltageStabilityEventViewModel>();
-            _oorResults = new ObservableCollection<OutOfRangeEvent>();
+            _oorResults = new List<OutOfRangeEvent>();
             _models = new List<VoltageStabilityEvent>();
             _engine = MatLabEngine.Instance;
             RunSparseMode = new RelayCommand(_runSparseMode);
             _isTheveninValidation = true;
             VSReRun = new RelayCommand(_vsRerun);
             CancelVSReRun = new RelayCommand(_cancelVSReRun);
+            _predictionDelay = "0";
             //OutOfRangeReRun = new RelayCommand(_outOfRangeRerun);
             //CancelOutOfRangeReRun = new RelayCommand(_cancelOORReRun);
             //_sparsePlotModels = new ObservableCollection<SparsePlot>();
             //_oorReRunPlotModels = new ObservableCollection<OORReRunPlot>();
         }
-        private ObservableCollection<OutOfRangeEvent> _oorResults;
-        public ObservableCollection<OutOfRangeEvent> OOrResults { get; set; }
+        private List<OutOfRangeEvent> _oorResults;
+        public List<OutOfRangeEvent> OOrResults
+        {
+            get { return _oorResults; }
+            set
+            {
+                _oorResults = value;
+                OnPropertyChanged();
+            }
+        }
 
         private AWRunViewModel _run;
         public AWRunViewModel Run
@@ -230,7 +239,7 @@ namespace VoltageStability.ViewModels
         private void _drawOORSparsePlots()
         {
             var oorPlots = new ObservableCollection<SparsePlot>();
-            foreach (var detector in SparseResults)
+            foreach (var detector in OORSparseResults)
             {
                 var aPlot = new SparsePlot();
                 aPlot.Label = detector.Label;
@@ -356,31 +365,37 @@ namespace VoltageStability.ViewModels
             }
             foreach (var plotM in oorPlots)
             {
-                //var lowerRange = DateTime.ParseExact(_selectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                //var higherRange = DateTime.ParseExact(_selectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                //double axisMin = 0d, axisMax = 0d;
-                //foreach (var axis in plotM.SparsePlotModel.Axes)
-                //{
-                //    if (axis.IsVertical())
-                //    {
-                //        axisMin = axis.Minimum;
-                //        axisMax = axis.Maximum;
-                //    }
-                //}
-                //var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
-                //{
-                //    Fill = OxyColor.FromArgb(75, 255, 0, 0),
-                //    //MinimumX = lowerRange,
-                //    //MaximumX = higherRange,
-                //    //Fill = OxyColors.Red,
-                //    MinimumX = lowerRange - (higherRange - lowerRange),
-                //    MaximumX = higherRange + (higherRange - lowerRange),
-                //    MinimumY = axisMin,
-                //    MaximumY = axisMax
-                //};
-                //plotM.SparsePlotModel.Annotations.Clear();
-                //plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
-                //plotM.SparsePlotModel.InvalidatePlot(true);
+                plotM.SparsePlotModel.Annotations.Clear();
+                double axisMin = 0d, axisMax = 0d;
+                foreach (var axis in plotM.SparsePlotModel.Axes)
+                {
+                    if (axis.IsVertical())
+                    {
+                        axisMin = axis.Minimum;
+                        axisMax = axis.Maximum;
+                    }
+                }
+                foreach (var evnt in OOrResults)
+                {
+
+                    var lowerRange = DateTime.ParseExact(evnt.Start, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                    var higherRange = DateTime.ParseExact(evnt.End, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+
+                    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                    {
+                        Fill = OxyColor.FromArgb(75, 255, 0, 0),
+                        //MinimumX = lowerRange,
+                        //MaximumX = higherRange,
+                        //Fill = OxyColors.Red,
+                        MinimumX = lowerRange - (higherRange - lowerRange),
+                        MaximumX = higherRange + (higherRange - lowerRange),
+                        MinimumY = axisMin,
+                        MaximumY = axisMax
+                    };
+                    plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+
+                }
+                plotM.SparsePlotModel.InvalidatePlot(true);
             }
 
             OORSparsePlotModels = oorPlots;
@@ -451,7 +466,7 @@ namespace VoltageStability.ViewModels
             foreach (var detector in SparseResults)
             {
                 var aPlot = new SparsePlot();
-                aPlot.Label = detector.Label;
+                aPlot.Label = detector.Unit;
                 var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
                 var xAxisFormatString = "";
                 var startTime = new DateTime();
@@ -501,7 +516,7 @@ namespace VoltageStability.ViewModels
                 OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
                 {
                     Position = OxyPlot.Axes.AxisPosition.Left,
-                    Title = detector.Unit,
+                    Title = detector.Type,
                     MajorGridlineStyle = LineStyle.Dot,
                     MinorGridlineStyle = LineStyle.Dot,
                     MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
@@ -540,8 +555,8 @@ namespace VoltageStability.ViewModels
                 }
 
 
-                a.LegendPlacement = LegendPlacement.Inside;
-                a.LegendPosition = LegendPosition.RightBottom;
+                a.LegendPlacement = LegendPlacement.Outside;
+                a.LegendPosition = LegendPosition.RightMiddle;
                 a.LegendPadding = 0.0;
                 a.LegendSymbolMargin = 0.0;
                 a.LegendMargin = 0;
@@ -598,8 +613,8 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
-        private int _predictionDelay;
-        public int PredictionDelay
+        private string _predictionDelay;
+        public string PredictionDelay
         {
             get { return _predictionDelay; }
             set
@@ -612,6 +627,16 @@ namespace VoltageStability.ViewModels
 
         private void _vsRerun(object obj)
         {
+            var predictionDelay = 0;
+            try
+            {
+                predictionDelay = Int32.Parse(PredictionDelay);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Prediction Delay has to be an positive integer. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                return;
+            }
             if (File.Exists(_run.Model.ConfigFilePath))
             {
                 var startTime = Convert.ToDateTime(SelectedStartTime);
@@ -621,7 +646,7 @@ namespace VoltageStability.ViewModels
                     try
                     {
                         _engine.VSReRunCompletedEvent += _vsReRunCompleted;
-                        _engine.VSRerun(SelectedStartTime, SelectedEndTime, _run, PredictionDelay);
+                        _engine.VSRerun(SelectedStartTime, SelectedEndTime, _run, predictionDelay);
                         //ReRunResult = _engine.RDReRunResults;
                     }
                     catch (Exception ex)
@@ -676,7 +701,7 @@ namespace VoltageStability.ViewModels
         private PlotModelThumbnailVSPair _drawAVSSignal(TheveninSignal signal)
         {
             var aNewPair = new PlotModelThumbnailVSPair();
-            aNewPair.Label = signal.PMUname;
+            aNewPair.Label = signal.Method;
             var aSignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
             OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
             {
@@ -695,7 +720,7 @@ namespace VoltageStability.ViewModels
             {
                 Position = OxyPlot.Axes.AxisPosition.Left,
                 Title = signal.Method,
-                Unit = signal.Method,
+                Unit = "Voltage",
                 TitlePosition = 0.5,
                 ClipTitle = false,
                 MajorGridlineStyle = LineStyle.Dot,
@@ -711,7 +736,7 @@ namespace VoltageStability.ViewModels
             {
                 VBusMagSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.VbusMAG[i]));
             }
-            VBusMagSeries.Title = "Actual";
+            VBusMagSeries.Title = "Measured";
             aSignalPlot.Series.Add(VBusMagSeries);
             var VhatSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
             for (int i = 0; i < signal.Vhat.Count; i++)
@@ -722,8 +747,8 @@ namespace VoltageStability.ViewModels
             aSignalPlot.Series.Add(VhatSeries);
 
 
-            aSignalPlot.LegendPlacement = LegendPlacement.Outside;
-            aSignalPlot.LegendPosition = LegendPosition.RightMiddle;
+            aSignalPlot.LegendPlacement = LegendPlacement.Inside;
+            aSignalPlot.LegendPosition = LegendPosition.RightBottom;
             aSignalPlot.LegendPadding = 0.0;
             aSignalPlot.LegendSymbolMargin = 0.0;
             aSignalPlot.LegendMargin = 0;

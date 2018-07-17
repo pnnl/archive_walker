@@ -13,7 +13,7 @@
                 <DataTemplate>
                     <Expander IsExpanded="True">
                         <Expander.Header>
-                            <TextBlock Text="{Binding Label, StringFormat=Detector {0}}"/>
+                            <TextBlock Text="{Binding Label}"/>
                         </Expander.Header>
                         <local:SparsePlotView/>
                     </Expander>
