@@ -28,7 +28,7 @@ namespace VoltageStability.ViewModels
             _run = new AWRunViewModel();
             _results = new ObservableCollection<VoltageStabilityEventViewModel>();
             _filteredResults = new ObservableCollection<VoltageStabilityEventViewModel>();
-            //_oorSparseResults = new ObservableCollection<Out>
+            _oorResults = new ObservableCollection<OutOfRangeEvent>();
             _models = new List<VoltageStabilityEvent>();
             _engine = MatLabEngine.Instance;
             RunSparseMode = new RelayCommand(_runSparseMode);
@@ -40,6 +40,8 @@ namespace VoltageStability.ViewModels
             //_sparsePlotModels = new ObservableCollection<SparsePlot>();
             //_oorReRunPlotModels = new ObservableCollection<OORReRunPlot>();
         }
+        private ObservableCollection<OutOfRangeEvent> _oorResults;
+        public ObservableCollection<OutOfRangeEvent> OOrResults { get; set; }
 
         private AWRunViewModel _run;
         public AWRunViewModel Run
@@ -499,7 +501,7 @@ namespace VoltageStability.ViewModels
                 OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
                 {
                     Position = OxyPlot.Axes.AxisPosition.Left,
-                    Title = detector.Type,
+                    Title = detector.Unit,
                     MajorGridlineStyle = LineStyle.Dot,
                     MinorGridlineStyle = LineStyle.Dot,
                     MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
@@ -538,8 +540,8 @@ namespace VoltageStability.ViewModels
                 }
 
 
-                a.LegendPlacement = LegendPlacement.Outside;
-                a.LegendPosition = LegendPosition.RightMiddle;
+                a.LegendPlacement = LegendPlacement.Inside;
+                a.LegendPosition = LegendPosition.RightBottom;
                 a.LegendPadding = 0.0;
                 a.LegendSymbolMargin = 0.0;
                 a.LegendMargin = 0;

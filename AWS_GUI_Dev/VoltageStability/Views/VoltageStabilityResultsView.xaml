@@ -39,7 +39,7 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
-                    <TextBlock Text="Data Trends" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Top" Margin="0,0,0,5"/>
+                    <TextBlock Text="Stability Indices" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Top" Margin="0,0,0,5"/>
                 </Grid>
                 <Expander Grid.Row="0" VerticalAlignment="Top" Margin="0" IsExpanded="True">
                     <ScrollViewer Grid.Row="1" MaxHeight="600">
@@ -57,7 +57,7 @@
                 </Expander>
                 <Grid Grid.Row="2">
                     <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>
-                    <TextBlock Text="Detection Details" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                    <TextBlock Text="Validation" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
                 </Grid>
                 <ScrollViewer Grid.Row="3" >
                     <views:VSReRunPlots/>
