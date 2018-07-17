@@ -719,7 +719,7 @@ namespace VoltageStability.ViewModels
             OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
             {
                 Position = OxyPlot.Axes.AxisPosition.Left,
-                Title = signal.Method,
+                Title = "Bus",
                 Unit = "Voltage",
                 TitlePosition = 0.5,
                 ClipTitle = false,
