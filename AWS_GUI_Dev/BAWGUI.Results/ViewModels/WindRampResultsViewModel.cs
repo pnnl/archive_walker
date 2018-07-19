@@ -369,7 +369,7 @@ namespace BAWGUI.Results.ViewModels
             var currentPlotWithAxis = a.PlotAndAxisArea;
 
             var currentMargins = a.PlotMargins;
-            a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+            a.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
             WREventPlotModel = a;
             _highlightSelectedEvent();
         }
@@ -585,7 +585,7 @@ namespace BAWGUI.Results.ViewModels
                 var currentPlotWithAxis = a.PlotAndAxisArea;
 
                 var currentMargins = a.PlotMargins;
-                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                a.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aPlot.SparsePlotModel = a;
                 wrPlots.Add(aPlot);
             }
