@@ -12,16 +12,23 @@
     <UserControl.Resources>
         <converters:DataContexTypeConverter x:Key="DataContexTypeConverter"/>
     </UserControl.Resources>
-    <oxy:PlotView Model="{Binding SparsePlotModel}" x:Name="SparsePlot">
-        <oxy:PlotView.Style>
-            <Style TargetType="oxy:PlotView">
-                <Setter Property="Height" Value="160"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=2}, Path=DataContext, Converter={StaticResource DataContexTypeConverter}}" Value="{x:Type mv:WindRampResultsViewModel}">
-                        <Setter Property="Height" Value="220"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </oxy:PlotView.Style>
-    </oxy:PlotView>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <oxy:PlotView Model="{Binding SparsePlotModel}" x:Name="SparsePlot" Grid.Column="0">
+            <oxy:PlotView.Style>
+                <Style TargetType="oxy:PlotView">
+                    <Setter Property="Height" Value="160"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=2}, Path=DataContext, Converter={StaticResource DataContexTypeConverter}}" Value="{x:Type mv:WindRampResultsViewModel}">
+                            <Setter Property="Height" Value="220"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </oxy:PlotView.Style>
+        </oxy:PlotView>
+        <ListBox Grid.Column="1" Width="100" ItemsSource="{Binding SparsePlotLegend}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="White" BorderThickness="0"/>
+    </Grid>
 </UserControl>

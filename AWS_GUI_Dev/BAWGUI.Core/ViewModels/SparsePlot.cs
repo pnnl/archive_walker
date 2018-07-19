@@ -12,6 +12,11 @@ namespace BAWGUI.Core
 {
     public class SparsePlot:ViewModelBase
     {
+        public SparsePlot()
+        {
+            _sparsePlotLegend = new List<string>();
+            _sparsePlotModel = new ViewResolvingPlotModel();
+        }
         private ViewResolvingPlotModel _sparsePlotModel;
         public ViewResolvingPlotModel SparsePlotModel
         {
@@ -29,6 +34,16 @@ namespace BAWGUI.Core
             set
             {
                 _label = value;
+                OnPropertyChanged();
+            }
+        }
+        private List<string> _sparsePlotLegend;
+        public List<string> SparsePlotLegend
+        {
+            get { return _sparsePlotLegend; }
+            set
+            {
+                _sparsePlotLegend = value;
                 OnPropertyChanged();
             }
         }
