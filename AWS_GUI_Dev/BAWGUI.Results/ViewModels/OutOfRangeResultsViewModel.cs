@@ -151,7 +151,16 @@ namespace BAWGUI.Results.ViewModels
                     newResults.Add(evnt);
                 }
             }
+            _previousSelectedOOREvent = SelectedOOREvent;
             FilteredResults = new ObservableCollection<OutOfRangeEventViewModel>(newResults.OrderBy(x => x.StartTime));
+            if (FilteredResults.Contains(_previousSelectedOOREvent))
+            {
+                SelectedOOREvent = _previousSelectedOOREvent;
+            }
+            else
+            {
+                SelectedOOREvent = FilteredResults.FirstOrDefault();
+            }
         }
         private ObservableCollection<SparsePlot> _sparsePlotModels;
         public ObservableCollection<SparsePlot> SparsePlotModels
@@ -164,6 +173,7 @@ namespace BAWGUI.Results.ViewModels
             }
         }
 
+        private OutOfRangeEventViewModel _previousSelectedOOREvent;
         private OutOfRangeEventViewModel _selectedOOREvent;
         public OutOfRangeEventViewModel SelectedOOREvent
         {
@@ -192,8 +202,8 @@ namespace BAWGUI.Results.ViewModels
                             //MinimumX = lowerRange,
                             //MaximumX = higherRange,
                             //Fill = OxyColors.Red,
-                            MinimumX = lowerRange - (higherRange - lowerRange),
-                            MaximumX = higherRange + (higherRange - lowerRange),
+                            MinimumX = lowerRange,
+                            MaximumX = higherRange,
                             MinimumY = axisMin,
                             MaximumY = axisMax
                         };
@@ -425,16 +435,7 @@ namespace BAWGUI.Results.ViewModels
                         break;
                     }
                 }
-                //if (oldAxis!=null)
-                //{
-                //    plot.SparsePlotModel.Axes.Remove(oldAxis);
-                //    var newAxis = xAxis;
-                //    plot.SparsePlotModel.Axes.Add(newAxis);
-                //    plot.SparsePlotModel.InvalidatePlot(false);
-                //}
-
             }
-            //Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
         }
 
         public ICommand OutOfRangeReRun { get; set; }
