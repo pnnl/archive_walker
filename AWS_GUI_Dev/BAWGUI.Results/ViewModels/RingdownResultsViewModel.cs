@@ -16,6 +16,7 @@ using System.Windows.Input;
 using BAWGUI.Utilities;
 using BAWGUI.Core;
 using BAWGUI.MATLABRunResults.Models;
+using OxyPlot.Annotations;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -131,12 +132,19 @@ namespace BAWGUI.Results.ViewModels
                     newResults.Add(evnt);
                 }
             }
+
+            _previousSelectedRDEvent = SelectedRingdownEvent;
             FilteredResults = new ObservableCollection<RingdownEventViewModel>(newResults.OrderBy(x => x.StartTime));
-            //if (SparseResults.Count() != 0)
-            //{
-            //}
-            //SparseResults = _engine.GetSparseData(SelectedStartTime, SelectedEndTime, _configFilePath, "Ringdown");
+            if (FilteredResults.Contains(_previousSelectedRDEvent))
+            {
+                SelectedRingdownEvent = _previousSelectedRDEvent;
+            }
+            else
+            {
+                SelectedRingdownEvent = FilteredResults.FirstOrDefault();
+            }
         }
+        private RingdownEventViewModel _previousSelectedRDEvent;
         private RingdownEventViewModel _selectedRingdownEvent;
         public RingdownEventViewModel SelectedRingdownEvent
         {
@@ -150,39 +158,47 @@ namespace BAWGUI.Results.ViewModels
                     {
                         var lowerRange = DateTime.ParseExact(_selectedRingdownEvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
                         var higherRange = DateTime.ParseExact(_selectedRingdownEvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                        double axisMin = 0d, axisMax = 0d;
+                        double yaxisMin = 0d, yaxisMax = 0d, xaxisMin = 0d, xaxisMax = 0d;
                         foreach (var axis in plotM.SparsePlotModel.Axes)
                         {
                             if (axis.IsVertical())
                             {
-                                axisMin = axis.Minimum;
-                                axisMax = axis.Maximum;
+                                yaxisMin = axis.Minimum;
+                                yaxisMax = axis.Maximum;
+                            }
+                            if (axis.IsHorizontal())
+                            {
+                                xaxisMin = axis.ActualMinimum;
+                                xaxisMax = axis.ActualMaximum;
                             }
                         }
+                        var lineAnnotation = new OxyPlot.Annotations.LineAnnotation()
+                        {
+                            Color = OxyColors.Red,
+                            Type = LineAnnotationType.Vertical,
+                            X = lowerRange,
+                            MaximumY = yaxisMax
+                        };
+                        var highlightWidth = (xaxisMax - xaxisMin) * 0.0005;
+                        var actualHighlightWidth = higherRange - lowerRange;
+                        if (actualHighlightWidth < highlightWidth)
+                        {
+                            lowerRange = lowerRange - highlightWidth / 2;
+                            higherRange = higherRange + highlightWidth / 2;
+                        }
+                        var finalRange = higherRange - lowerRange;
                         var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
                         {
                             Fill = OxyColor.FromArgb(75, 255, 0, 0),
                             //Fill = OxyColors.Red,
-                            MinimumX = lowerRange - (higherRange - lowerRange),
-                            MaximumX = higherRange + (higherRange - lowerRange),
-                            MinimumY = axisMin,
-                            MaximumY = axisMax
+                            MinimumX = lowerRange,
+                            MaximumX = higherRange,
+                            MinimumY = yaxisMin,
+                            MaximumY = yaxisMax
                         };
-                        //var rectAnnotation = new OxyPlot.Annotations.PolygonAnnotation()
-                        //{
-                        //    Layer = OxyPlot.Annotations.AnnotationLayer.BelowAxes,
-                        //    StrokeThickness = 5,
-                        //    Stroke = OxyColors.LightGray,
-                        //    Fill = OxyColors.LightGray,
-                        //    LineStyle = LineStyle.Solid
-                        //};
-                        //rectAnnotation.Points.Add(new DataPoint(lowerRange, axisMin));
-                        //rectAnnotation.Points.Add(new DataPoint(lowerRange, axisMax));
-                        //rectAnnotation.Points.Add(new DataPoint(higherRange, axisMax));
-                        //rectAnnotation.Points.Add(new DataPoint(higherRange, axisMin));
-                        //rectAnnotation.Text = "selected event";
                         plotM.SparsePlotModel.Annotations.Clear();
                         plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+                        plotM.SparsePlotModel.Annotations.Add(lineAnnotation);
                         plotM.SparsePlotModel.InvalidatePlot(true);
                     }
                 }
@@ -225,12 +241,12 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
             }
         }
-
         private void _drawRDSparsePlots()
         {
             var rdPlots = new ObservableCollection<SparsePlot>();
             foreach (var detector in SparseResults)
             {
+                var sparsePlotLegend = new List<string>();
                 var aPlot = new SparsePlot();
                 aPlot.Label = detector.Label;
                 var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
@@ -347,6 +363,7 @@ namespace BAWGUI.Results.ViewModels
                         previousTime = rd.TimeStampNumber[i];
                     }
                     newSeries.Title = rd.SignalName;
+                    sparsePlotLegend.Add(rd.SignalName);
                     newSeries.MouseMove += RdSparseSeries_MouseMove;
                     newSeries.MouseDown += RdSparseSeries_MouseDown;
                     newSeries.TrackerFormatString = "{0}";
@@ -400,13 +417,15 @@ namespace BAWGUI.Results.ViewModels
                 a.LegendMargin = 0;
                 //a.LegendMaxHeight = 200;
                 a.LegendMaxWidth = 250;
+                a.IsLegendVisible = false;
 
                 var currentArea = a.LegendArea;
                 var currentPlotWithAxis = a.PlotAndAxisArea;
 
                 var currentMargins = a.PlotMargins;
-                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                a.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aPlot.SparsePlotModel = a;
+                aPlot.SparsePlotLegend = sparsePlotLegend;
                 rdPlots.Add(aPlot);
             }
             SparsePlotModels = rdPlots;
@@ -732,7 +751,7 @@ namespace BAWGUI.Results.ViewModels
                 var thisPlotWidth = currentPlotWithAxis.Width;
 
                 var currentMargins = allSignalsPlot.PlotMargins;
-                allSignalsPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                allSignalsPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aDetector.RDreRunPlotModel = allSignalsPlot;
                 aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
                 rdPlots.Add(aDetector);
@@ -842,7 +861,7 @@ namespace BAWGUI.Results.ViewModels
             var currentPlotWithAxis = aSignalPlot.PlotAndAxisArea;
 
             var currentMargins = aSignalPlot.PlotMargins;
-            aSignalPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+            aSignalPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
 
             aNewPair.RDSignalPlotModel = aSignalPlot;
 
@@ -921,7 +940,7 @@ namespace BAWGUI.Results.ViewModels
             currentPlotWithAxis = aThresholdRMSPlot.PlotAndAxisArea;
 
             currentMargins = aThresholdRMSPlot.PlotMargins;
-            aThresholdRMSPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+            aThresholdRMSPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
 
 
             aNewPair.RdThresholdRMSPlotModel = aThresholdRMSPlot;

@@ -3383,7 +3383,7 @@ Namespace ViewModels
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
-                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+                Throw New Exception("Error when sort signals by PMU in step: " & Name & " , " & ex.Message)
             End Try
             If postProcess Then
                 signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)

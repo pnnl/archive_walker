@@ -4,6 +4,7 @@ using BAWGUI.Results.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using OxyPlot;
+using OxyPlot.Annotations;
 using OxyPlot.Axes;
 using System;
 using System.Collections.Generic;
@@ -187,15 +188,38 @@ namespace BAWGUI.Results.ViewModels
                     {
                         var lowerRange = DateTime.ParseExact(_selectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
                         var higherRange = DateTime.ParseExact(_selectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                        double axisMin = 0d, axisMax = 0d;
+                        double yaxisMin = 0d, yaxisMax = 0d, xaxisMin = 0d, xaxisMax = 0d;
                         foreach (var axis in plotM.SparsePlotModel.Axes)
                         {
                             if (axis.IsVertical())
                             {
-                                axisMin = axis.Minimum;
-                                axisMax = axis.Maximum;
+                                if (axis.IsVertical())
+                                {
+                                    yaxisMin = axis.Minimum;
+                                    yaxisMax = axis.Maximum;
+                                }
+                                if (axis.IsHorizontal())
+                                {
+                                    xaxisMin = axis.ActualMinimum;
+                                    xaxisMax = axis.ActualMaximum;
+                                }
                             }
                         }
+                        var lineAnnotation = new OxyPlot.Annotations.LineAnnotation()
+                        {
+                            Color = OxyColors.Red,
+                            Type = LineAnnotationType.Vertical,
+                            X = lowerRange,
+                            MaximumY = yaxisMax
+                        };
+                        var highlightWidth = (xaxisMax - xaxisMin) * 0.0005;
+                        var actualHighlightWidth = higherRange - lowerRange;
+                        if (actualHighlightWidth < highlightWidth)
+                        {
+                            lowerRange = lowerRange - highlightWidth / 2;
+                            higherRange = higherRange + highlightWidth / 2;
+                        }
+                        var finalRange = higherRange - lowerRange;
                         var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
                         {
                             Fill = OxyColor.FromArgb(75, 255, 0, 0),
@@ -204,11 +228,12 @@ namespace BAWGUI.Results.ViewModels
                             //Fill = OxyColors.Red,
                             MinimumX = lowerRange,
                             MaximumX = higherRange,
-                            MinimumY = axisMin,
-                            MaximumY = axisMax
+                            MinimumY = yaxisMin,
+                            MaximumY = yaxisMax
                         };
                         plotM.SparsePlotModel.Annotations.Clear();
                         plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+                        plotM.SparsePlotModel.Annotations.Add(lineAnnotation);
                         plotM.SparsePlotModel.InvalidatePlot(true);
                     }
                 }
@@ -225,7 +250,14 @@ namespace BAWGUI.Results.ViewModels
                 _sparseResults = value;
                 if (_sparseResults.Count() != 0)
                 {
-                    _drawOORSparsePlots();
+                    try
+                    {
+                        _drawOORSparsePlots();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error plotting data trend of Out of range detector. Original Message:\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
                     if (FilteredResults.Count > 0)
                     {
                         SelectedOOREvent = FilteredResults.FirstOrDefault();
@@ -275,6 +307,7 @@ namespace BAWGUI.Results.ViewModels
             var oorPlots = new ObservableCollection<SparsePlot>();
             foreach (var detector in SparseResults)
             {
+                var sparsePlotLegend = new List<string>();
                 var aPlot = new SparsePlot();
                 aPlot.Label = detector.Label;
                 var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
@@ -361,6 +394,7 @@ namespace BAWGUI.Results.ViewModels
                     }
                     newSeries.Title = oor.SignalName;
                     newSeries.TrackerFormatString = "{0}";
+                    sparsePlotLegend.Add(oor.SignalName);
                     //newSeries.MouseMove += RdSparseSeries_MouseMove;
                     //newSeries.MouseDown += RdSparseSeries_MouseDown;
                     a.Series.Add(newSeries);
@@ -388,13 +422,15 @@ namespace BAWGUI.Results.ViewModels
                 a.LegendMargin = 0;
                 //a.LegendMaxHeight = 200;
                 a.LegendMaxWidth = 250;
+                a.IsLegendVisible = false;
 
                 var currentArea = a.LegendArea;
                 var currentPlotWithAxis = a.PlotAndAxisArea;
 
                 var currentMargins = a.PlotMargins;
-                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                a.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aPlot.SparsePlotModel = a;
+                aPlot.SparsePlotLegend = sparsePlotLegend;
                 oorPlots.Add(aPlot);
             }
             SparsePlotModels = oorPlots;
@@ -574,7 +610,7 @@ namespace BAWGUI.Results.ViewModels
                 var currentPlotWithAxis = allSignalsPlot.PlotAndAxisArea;
 
                 var currentMargins = allSignalsPlot.PlotMargins;
-                allSignalsPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                allSignalsPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aDetector.OORReRunAllSignalsPlotModel = allSignalsPlot;
                 aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
                 oorPlots.Add(aDetector);
@@ -667,7 +703,7 @@ namespace BAWGUI.Results.ViewModels
             var currentPlotWithAxis = aSignalPlot.PlotAndAxisArea;
             var topPlotSize = aSignalPlot.PlotAndAxisArea;
             var currentMargins = aSignalPlot.PlotMargins;
-            aSignalPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+            aSignalPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
 
             aNewTriple.OORSignalPlotModel = aSignalPlot;
             if (oorSig.IsByDuration)
