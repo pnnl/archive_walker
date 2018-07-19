@@ -32,7 +32,7 @@ namespace VoltageStability.ViewModels
             _models = new List<VoltageStabilityEvent>();
             _engine = MatLabEngine.Instance;
             RunSparseMode = new RelayCommand(_runSparseMode);
-            _isTheveninValidation = true;
+            //_isTheveninValidation = true;
             VSReRun = new RelayCommand(_vsRerun);
             CancelVSReRun = new RelayCommand(_cancelVSReRun);
             _predictionDelay = "0";
@@ -220,7 +220,16 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        private ObservableCollection<SparsePlot> _sparsePlotModels;
+        public ObservableCollection<SparsePlot> SparsePlotModels
+        {
+            get { return _sparsePlotModels; }
+            set
+            {
+                _sparsePlotModels = value;
+                OnPropertyChanged();
+            }
+        }
         private List<SparseDetector> _oorSparseResults;
         public List<SparseDetector> OORSparseResults
         {
@@ -235,172 +244,6 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        private void _drawOORSparsePlots()
-        {
-            var oorPlots = new ObservableCollection<SparsePlot>();
-            foreach (var detector in OORSparseResults)
-            {
-                var aPlot = new SparsePlot();
-                aPlot.Label = detector.Label;
-                var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
-                //{ PlotAreaBackground = OxyColors.WhiteSmoke}
-                //a.PlotType = PlotType.Cartesian;
-                var xAxisFormatString = "";
-                var startTime = new DateTime();
-                var endTime = new DateTime();
-                if (detector.SparseSignals.Count > 0)
-                {
-                    var signal1 = detector.SparseSignals.FirstOrDefault();
-                    if (signal1.TimeStamps.Count >= 2)
-                    {
-                        var timeInterval = signal1.TimeStamps[1] - signal1.TimeStamps[0];
-                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault()) - timeInterval;
-                    }
-                    else
-                    {
-                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
-                    }
-                    endTime = detector.SparseSignals.Max(x => x.TimeStamps.LastOrDefault());
-                }
-                var time = endTime - startTime;
-                if (time < TimeSpan.FromHours(24))
-                {
-                    xAxisFormatString = "HH:mm";
-                }
-                else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
-                {
-                    xAxisFormatString = "MM/dd\nHH:mm";
-                }
-                else
-                {
-                    xAxisFormatString = "MM/dd";
-                }
-                OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
-                {
-                    Position = OxyPlot.Axes.AxisPosition.Bottom,
-                    MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
-                    MajorGridlineStyle = LineStyle.Dot,
-                    MinorGridlineStyle = LineStyle.Dot,
-                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
-                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
-                    //Title = "Time",
-                    IsZoomEnabled = true,
-                    IsPanEnabled = true,
-                    StringFormat = xAxisFormatString,
-                };
-                timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
-                a.Axes.Add(timeXAxis);
-                OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
-                {
-                    Position = OxyPlot.Axes.AxisPosition.Left,
-                    Title = detector.Type + "( " + detector.Unit + " )",
-                    MajorGridlineStyle = LineStyle.Dot,
-                    MinorGridlineStyle = LineStyle.Dot,
-                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
-                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
-                    IsZoomEnabled = true,
-                    IsPanEnabled = true
-                };
-                //yAxis.AxisChanged += YAxis_AxisChanged;
-
-                double axisMax = detector.SparseSignals.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
-                double axisMin = detector.SparseSignals.Min(x => x.GetMinOfMinimum()) - (double)0.1;
-                if (SparseResults.Count > 0)
-                {
-                    yAxis.Maximum = axisMax;
-                    yAxis.Minimum = axisMin;
-                }
-                a.Axes.Add(yAxis);
-
-                foreach (var oor in detector.SparseSignals)
-                {
-                    var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColor.FromArgb(50, 0, 150, 0), Color2 = OxyColor.FromArgb(50, 0, 150, 0), Fill = OxyColor.FromArgb(50, 0, 50, 0) };
-                    var previousTime = startTime.ToOADate();
-                    for (int i = 0; i < oor.Maximum.Count; i++)
-                    {
-                        newSeries.Points.Add(new DataPoint(previousTime, oor.Maximum[i]));
-                        newSeries.Points.Add(new DataPoint(oor.TimeStampNumber[i], oor.Maximum[i]));
-                        newSeries.Points2.Add(new DataPoint(previousTime, oor.Minimum[i]));
-                        newSeries.Points2.Add(new DataPoint(oor.TimeStampNumber[i], oor.Minimum[i]));
-                        previousTime = oor.TimeStampNumber[i];
-                    }
-                    newSeries.Title = oor.SignalName;
-                    newSeries.TrackerFormatString = "{0}";
-                    //newSeries.MouseMove += RdSparseSeries_MouseMove;
-                    //newSeries.MouseDown += RdSparseSeries_MouseDown;
-                    a.Series.Add(newSeries);
-                }
-                //if (SelectedOOREvent != null)
-                //{
-                //    var lowerRange = DateTime.ParseExact(SelectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                //    var higherRange = DateTime.ParseExact(SelectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
-                //    {
-                //        Fill = OxyColor.FromArgb(50, 50, 50, 50),
-                //        MinimumX = lowerRange,
-                //        MaximumX = higherRange,
-                //        MinimumY = axisMin,
-                //        MaximumY = axisMax
-                //    };
-                //    a.Annotations.Add(rectAnnotation);
-                //}
-
-
-                a.LegendPlacement = LegendPlacement.Outside;
-                a.LegendPosition = LegendPosition.RightMiddle;
-                a.LegendPadding = 0.0;
-                a.LegendSymbolMargin = 0.0;
-                a.LegendMargin = 0;
-                //a.LegendMaxHeight = 200;
-                a.LegendMaxWidth = 250;
-
-                var currentArea = a.LegendArea;
-                var currentPlotWithAxis = a.PlotAndAxisArea;
-
-                var currentMargins = a.PlotMargins;
-                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
-                aPlot.SparsePlotModel = a;
-                oorPlots.Add(aPlot);
-            }
-            foreach (var plotM in oorPlots)
-            {
-                plotM.SparsePlotModel.Annotations.Clear();
-                double axisMin = 0d, axisMax = 0d;
-                foreach (var axis in plotM.SparsePlotModel.Axes)
-                {
-                    if (axis.IsVertical())
-                    {
-                        axisMin = axis.Minimum;
-                        axisMax = axis.Maximum;
-                    }
-                }
-                foreach (var evnt in OOrResults)
-                {
-
-                    var lowerRange = DateTime.ParseExact(evnt.Start, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                    var higherRange = DateTime.ParseExact(evnt.End, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-
-                    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
-                    {
-                        Fill = OxyColor.FromArgb(75, 255, 0, 0),
-                        //MinimumX = lowerRange,
-                        //MaximumX = higherRange,
-                        //Fill = OxyColors.Red,
-                        MinimumX = lowerRange - (higherRange - lowerRange),
-                        MaximumX = higherRange + (higherRange - lowerRange),
-                        MinimumY = axisMin,
-                        MaximumY = axisMax
-                    };
-                    plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
-
-                }
-                plotM.SparsePlotModel.InvalidatePlot(true);
-            }
-
-            OORSparsePlotModels = oorPlots;
-
-        }
         private ObservableCollection<SparsePlot> _oorSparsePlotModels;
         public ObservableCollection<SparsePlot> OORSparsePlotModels
         {
@@ -408,17 +251,6 @@ namespace VoltageStability.ViewModels
             set
             {
                 _oorSparsePlotModels = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<SparsePlot> _sparsePlotModels;
-        public ObservableCollection<SparsePlot> SparsePlotModels
-        {
-            get { return _sparsePlotModels; }
-            set
-            {
-                _sparsePlotModels = value;
                 OnPropertyChanged();
             }
         }
@@ -573,6 +405,168 @@ namespace VoltageStability.ViewModels
             }
             SparsePlotModels = rdPlots;
         }
+        private void _drawOORSparsePlots()
+        {
+            var oorPlots = new ObservableCollection<SparsePlot>();
+            foreach (var detector in OORSparseResults)
+            {
+                var aPlot = new SparsePlot();
+                aPlot.Label = detector.Label;
+                var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+                //{ PlotAreaBackground = OxyColors.WhiteSmoke}
+                //a.PlotType = PlotType.Cartesian;
+                var xAxisFormatString = "";
+                var startTime = new DateTime();
+                var endTime = new DateTime();
+                if (detector.SparseSignals.Count > 0)
+                {
+                    var signal1 = detector.SparseSignals.FirstOrDefault();
+                    if (signal1.TimeStamps.Count >= 2)
+                    {
+                        var timeInterval = signal1.TimeStamps[1] - signal1.TimeStamps[0];
+                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault()) - timeInterval;
+                    }
+                    else
+                    {
+                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                    }
+                    endTime = detector.SparseSignals.Max(x => x.TimeStamps.LastOrDefault());
+                }
+                var time = endTime - startTime;
+                if (time < TimeSpan.FromHours(24))
+                {
+                    xAxisFormatString = "HH:mm";
+                }
+                else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+                {
+                    xAxisFormatString = "MM/dd\nHH:mm";
+                }
+                else
+                {
+                    xAxisFormatString = "MM/dd";
+                }
+                OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    //Title = "Time",
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true,
+                    StringFormat = xAxisFormatString,
+                };
+                timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+                a.Axes.Add(timeXAxis);
+                OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left,
+                    Title = detector.Type + "( " + detector.Unit + " )",
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true
+                };
+                //yAxis.AxisChanged += YAxis_AxisChanged;
+
+                double axisMax = detector.SparseSignals.Max(x => x.GetMaxOfMaximum()) + (double)0.1;
+                double axisMin = detector.SparseSignals.Min(x => x.GetMinOfMinimum()) - (double)0.1;
+                if (SparseResults.Count > 0)
+                {
+                    yAxis.Maximum = axisMax;
+                    yAxis.Minimum = axisMin;
+                }
+                a.Axes.Add(yAxis);
+
+                foreach (var oor in detector.SparseSignals)
+                {
+                    var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColor.FromArgb(50, 0, 150, 0), Color2 = OxyColor.FromArgb(50, 0, 150, 0), Fill = OxyColor.FromArgb(50, 0, 50, 0) };
+                    var previousTime = startTime.ToOADate();
+                    for (int i = 0; i < oor.Maximum.Count; i++)
+                    {
+                        newSeries.Points.Add(new DataPoint(previousTime, oor.Maximum[i]));
+                        newSeries.Points.Add(new DataPoint(oor.TimeStampNumber[i], oor.Maximum[i]));
+                        newSeries.Points2.Add(new DataPoint(previousTime, oor.Minimum[i]));
+                        newSeries.Points2.Add(new DataPoint(oor.TimeStampNumber[i], oor.Minimum[i]));
+                        previousTime = oor.TimeStampNumber[i];
+                    }
+                    newSeries.Title = oor.SignalName;
+                    newSeries.TrackerFormatString = "{0}";
+                    //newSeries.MouseMove += RdSparseSeries_MouseMove;
+                    //newSeries.MouseDown += RdSparseSeries_MouseDown;
+                    a.Series.Add(newSeries);
+                }
+                //if (SelectedOOREvent != null)
+                //{
+                //    var lowerRange = DateTime.ParseExact(SelectedOOREvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var higherRange = DateTime.ParseExact(SelectedOOREvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                //    {
+                //        Fill = OxyColor.FromArgb(50, 50, 50, 50),
+                //        MinimumX = lowerRange,
+                //        MaximumX = higherRange,
+                //        MinimumY = axisMin,
+                //        MaximumY = axisMax
+                //    };
+                //    a.Annotations.Add(rectAnnotation);
+                //}
+
+
+                a.LegendPlacement = LegendPlacement.Outside;
+                a.LegendPosition = LegendPosition.RightMiddle;
+                a.LegendPadding = 0.0;
+                a.LegendSymbolMargin = 0.0;
+                a.LegendMargin = 0;
+                //a.LegendMaxHeight = 200;
+                a.LegendMaxWidth = 250;
+
+                var currentArea = a.LegendArea;
+                var currentPlotWithAxis = a.PlotAndAxisArea;
+
+                var currentMargins = a.PlotMargins;
+                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                aPlot.SparsePlotModel = a;
+                oorPlots.Add(aPlot);
+            }
+            foreach (var plotM in oorPlots)
+            {
+                plotM.SparsePlotModel.Annotations.Clear();
+                double axisMin = 0d, axisMax = 0d;
+                foreach (var axis in plotM.SparsePlotModel.Axes)
+                {
+                    if (axis.IsVertical())
+                    {
+                        axisMin = axis.Minimum;
+                        axisMax = axis.Maximum;
+                    }
+                }
+                foreach (var evnt in OOrResults)
+                {
+
+                    var lowerRange = DateTime.ParseExact(evnt.Start, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                    var higherRange = DateTime.ParseExact(evnt.End, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+
+                    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                    {
+                        Fill = OxyColor.FromArgb(75, 255, 0, 0),
+                        //MinimumX = lowerRange,
+                        //MaximumX = higherRange,
+                        //Fill = OxyColors.Red,
+                        MinimumX = lowerRange,
+                        MaximumX = higherRange,
+                        MinimumY = axisMin,
+                        MaximumY = axisMax
+                    };
+                    plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+                }
+                plotM.SparsePlotModel.InvalidatePlot(true);
+            }
+            OORSparsePlotModels = oorPlots;
+        }
         private void TimeXAxis_AxisChanged(object sender, AxisChangedEventArgs e)
         {
             var xAxis = sender as OxyPlot.Axes.DateTimeAxis;
@@ -580,39 +574,41 @@ namespace VoltageStability.ViewModels
             SelectedEndTime = DateTime.FromOADate(xAxis.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
             foreach (var plot in SparsePlotModels)
             {
-                //OxyPlot.Axes.DateTimeAxis oldAxis = null;
                 foreach (var axis in plot.SparsePlotModel.Axes)
                 {
                     if (axis.IsHorizontal() && axis.ActualMinimum != xAxis.ActualMinimum)
                     {
-                        //oldAxis = axis as OxyPlot.Axes.DateTimeAxis;
                         axis.Zoom(xAxis.ActualMinimum, xAxis.ActualMaximum);
-                        //axis.Maximum = xAxis.ActualMaximum;
                         plot.SparsePlotModel.InvalidatePlot(false);
                         break;
                     }
                 }
-                //if (oldAxis!=null)
-                //{
-                //    plot.SparsePlotModel.Axes.Remove(oldAxis);
-                //    var newAxis = xAxis;
-                //    plot.SparsePlotModel.Axes.Add(newAxis);
-                //    plot.SparsePlotModel.InvalidatePlot(false);
-                //}
-
             }
-            //Console.WriteLine("x axis changed! do stuff!" + xAxis.ActualMaximum.ToString() + ", " + xAxis.ActualMinimum.ToString());
-        }
-        private bool _isTheveninValidation;
-        public bool IsTheveninValidation
-        {
-            get { return _isTheveninValidation; }
-            set
+            foreach (var plot in OORSparsePlotModels)
             {
-                _isTheveninValidation = value;
-                OnPropertyChanged();
+                foreach (var axis in plot.SparsePlotModel.Axes)
+                {
+                    if (axis.IsHorizontal() && axis.ActualMinimum != xAxis.ActualMinimum)
+                    {
+                        axis.Zoom(xAxis.ActualMinimum, xAxis.ActualMaximum);
+                        plot.SparsePlotModel.InvalidatePlot(false);
+                        break;
+                    }
+                }
             }
         }
+
+
+        //private bool _isTheveninValidation;
+        //public bool IsTheveninValidation
+        //{
+        //    get { return _isTheveninValidation; }
+        //    set
+        //    {
+        //        _isTheveninValidation = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
         private string _predictionDelay;
         public string PredictionDelay
         {
@@ -776,7 +772,7 @@ namespace VoltageStability.ViewModels
             {
                 foreach (var pair in dtr.ThumbnailPlots)
                 {
-                    if (pair.VSSignalPlotModel == parent)
+                    if (pair.VSSignalPlotModel != parent)
                     {
                         foreach (var ax in pair.VSSignalPlotModel.Axes)
                         {
