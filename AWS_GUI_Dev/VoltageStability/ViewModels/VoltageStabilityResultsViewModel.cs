@@ -3,6 +3,7 @@ using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using OxyPlot;
+using OxyPlot.Annotations;
 using OxyPlot.Axes;
 using OxyPlot.Wpf;
 using System;
@@ -159,8 +160,18 @@ namespace VoltageStability.ViewModels
                     newResults.Add(evnt);
                 }
             }
+            _previousSelectedVSEvent = SelectedVSEvent;
             FilteredResults = new ObservableCollection<VoltageStabilityEventViewModel>(newResults.OrderBy(x => x.StartTime));
+            if (FilteredResults.Contains(_previousSelectedVSEvent))
+            {
+                SelectedVSEvent = _previousSelectedVSEvent;
+            }
+            else
+            {
+                SelectedVSEvent = FilteredResults.FirstOrDefault();
+            }
         }
+        private VoltageStabilityEventViewModel _previousSelectedVSEvent;
         private VoltageStabilityEventViewModel _selectedVSEvent;
         public VoltageStabilityEventViewModel SelectedVSEvent
         {
@@ -297,6 +308,7 @@ namespace VoltageStability.ViewModels
             var rdPlots = new ObservableCollection<SparsePlot>();
             foreach (var detector in SparseResults)
             {
+                var sparsePlotLegend = new List<string>();
                 var aPlot = new SparsePlot();
                 aPlot.Label = detector.Unit;
                 var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
@@ -381,6 +393,7 @@ namespace VoltageStability.ViewModels
                     }
                     newSeries.Title = rd.SignalName;
                     newSeries.TrackerFormatString = "{0}";
+                    sparsePlotLegend.Add(rd.SignalName);
                     //newSeries.MouseMove += RdSparseSeries_MouseMove;
                     //newSeries.MouseDown += RdSparseSeries_MouseDown;
                     a.Series.Add(newSeries);
@@ -394,13 +407,16 @@ namespace VoltageStability.ViewModels
                 a.LegendMargin = 0;
                 //a.LegendMaxHeight = 200;
                 a.LegendMaxWidth = 250;
+                a.IsLegendVisible = false;
+                //a.PlotMargins = new OxyThickness(70, double.NaN, double.NaN, double.NaN);
 
                 var currentArea = a.LegendArea;
                 var currentPlotWithAxis = a.PlotAndAxisArea;
 
                 var currentMargins = a.PlotMargins;
-                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                a.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aPlot.SparsePlotModel = a;
+                aPlot.SparsePlotLegend = sparsePlotLegend;
                 rdPlots.Add(aPlot);
             }
             SparsePlotModels = rdPlots;
@@ -410,6 +426,7 @@ namespace VoltageStability.ViewModels
             var oorPlots = new ObservableCollection<SparsePlot>();
             foreach (var detector in OORSparseResults)
             {
+                var sparsePlotLegend = new List<string>();
                 var aPlot = new SparsePlot();
                 aPlot.Label = detector.Label;
                 var a = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
@@ -496,6 +513,7 @@ namespace VoltageStability.ViewModels
                     }
                     newSeries.Title = oor.SignalName;
                     newSeries.TrackerFormatString = "{0}";
+                    sparsePlotLegend.Add(oor.SignalName);
                     //newSeries.MouseMove += RdSparseSeries_MouseMove;
                     //newSeries.MouseDown += RdSparseSeries_MouseDown;
                     a.Series.Add(newSeries);
@@ -523,25 +541,32 @@ namespace VoltageStability.ViewModels
                 a.LegendMargin = 0;
                 //a.LegendMaxHeight = 200;
                 a.LegendMaxWidth = 250;
-
+                a.IsLegendVisible = false;
+                //a.PlotMargins = new OxyThickness(70, double.NaN, double.NaN, double.NaN);
                 var currentArea = a.LegendArea;
                 var currentPlotWithAxis = a.PlotAndAxisArea;
 
                 var currentMargins = a.PlotMargins;
-                a.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+                a.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aPlot.SparsePlotModel = a;
+                aPlot.SparsePlotLegend = sparsePlotLegend;
                 oorPlots.Add(aPlot);
             }
             foreach (var plotM in oorPlots)
             {
                 plotM.SparsePlotModel.Annotations.Clear();
-                double axisMin = 0d, axisMax = 0d;
+                double yaxisMin = 0d, yaxisMax = 0d, xaxisMin = 0d, xaxisMax = 0d;
                 foreach (var axis in plotM.SparsePlotModel.Axes)
                 {
                     if (axis.IsVertical())
                     {
-                        axisMin = axis.Minimum;
-                        axisMax = axis.Maximum;
+                        yaxisMin = axis.Minimum;
+                        yaxisMax = axis.Maximum;
+                    }
+                    if (axis.IsHorizontal())
+                    {
+                        xaxisMin = axis.ActualMinimum;
+                        xaxisMax = axis.ActualMaximum;
                     }
                 }
                 foreach (var evnt in OOrResults)
@@ -550,6 +575,21 @@ namespace VoltageStability.ViewModels
                     var lowerRange = DateTime.ParseExact(evnt.Start, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
                     var higherRange = DateTime.ParseExact(evnt.End, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
 
+                    var lineAnnotation = new OxyPlot.Annotations.LineAnnotation()
+                    {
+                        Color = OxyColors.Red,
+                        Type = LineAnnotationType.Vertical,
+                        X = lowerRange,
+                        MaximumY = yaxisMax
+                    };
+                    var highlightWidth = (xaxisMax - xaxisMin) * 0.0005;
+                    var actualHighlightWidth = higherRange - lowerRange;
+                    if (actualHighlightWidth < highlightWidth)
+                    {
+                        lowerRange = lowerRange - highlightWidth / 2;
+                        higherRange = higherRange + highlightWidth / 2;
+                    }
+                    var finalRange = higherRange - lowerRange;
                     var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
                     {
                         Fill = OxyColor.FromArgb(75, 255, 0, 0),
@@ -558,10 +598,11 @@ namespace VoltageStability.ViewModels
                         //Fill = OxyColors.Red,
                         MinimumX = lowerRange,
                         MaximumX = higherRange,
-                        MinimumY = axisMin,
-                        MaximumY = axisMax
+                        MinimumY = yaxisMin,
+                        MaximumY = yaxisMax
                     };
                     plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+                    plotM.SparsePlotModel.Annotations.Add(lineAnnotation);
                 }
                 plotM.SparsePlotModel.InvalidatePlot(true);
             }
@@ -748,10 +789,11 @@ namespace VoltageStability.ViewModels
             aSignalPlot.LegendPadding = 0.0;
             aSignalPlot.LegendSymbolMargin = 0.0;
             aSignalPlot.LegendMargin = 0;
+            //aSignalPlot.PlotMargins = new OxyThickness(70, double.NaN, double.NaN, double.NaN);
 
             var currentArea = aSignalPlot.LegendArea;
             var currentMargins = aSignalPlot.PlotMargins;
-            aSignalPlot.PlotMargins = new OxyThickness(currentMargins.Left, currentMargins.Top, 5, currentMargins.Bottom);
+            aSignalPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
 
 
             aNewPair.VSSignalPlotModel = aSignalPlot;

@@ -27,7 +27,7 @@ namespace VoltageStability.Views
             SparsePlot.Controller = new OxyPlot.PlotController();
             SparsePlot.Controller.BindMouseDown(OxyPlot.OxyMouseButton.Left, OxyPlot.PlotCommands.ZoomRectangle);
             SparsePlot.Controller.BindMouseDown(OxyMouseButton.Right, PlotCommands.PanAt);
-            //RDPlot.Controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
+            SparsePlot.Controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
             SparsePlot.Controller.BindMouseDown(OxyMouseButton.Middle, PlotCommands.PointsOnlyTrack);
         }
     }
