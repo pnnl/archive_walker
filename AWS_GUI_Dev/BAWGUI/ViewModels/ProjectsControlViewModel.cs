@@ -590,6 +590,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
 
         public ICommand AddRun { get; set; }
+        public bool IsProjectEnabled
+        {
+            get { return _model.IsProjectEnabled; }
+            set
+            {
+                _model.IsProjectEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void _addARun(object obj)
         {
             var _addTaskVM = new AddTaskViewModel();

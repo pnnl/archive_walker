@@ -25,6 +25,47 @@ namespace BAWGUI.ViewModels
             _projectControlVM.RunSelected += _onRunSelected;
             _signalMgr = SignalManager.Instance;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
+            _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+        }
+
+        private void _matlabEngineStatusChanged(object sender, bool e)
+        {
+            var sd = sender as RunMATLABViewModel;
+            if (e)
+            {
+                foreach (var pjt in ProjectControlVM.AWProjects)
+                {
+                    if (pjt.ProjectName != sd.Project.ProjectName)
+                    {
+                        pjt.IsProjectEnabled = false;
+                        foreach (var run in pjt.AWRuns)
+                        {
+                            run.IsRunEnabled = false;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var run in pjt.AWRuns)
+                        {
+                            if (run.AWRunName != sd.Run.AWRunName)
+                            {
+                                run.IsRunEnabled = false;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var pjt in ProjectControlVM.AWProjects)
+                {
+                    pjt.IsProjectEnabled = true;
+                    foreach (var run in pjt.AWRuns)
+                    {
+                        run.IsRunEnabled = true;
+                    }
+                }
+            }
         }
 
         //private void _projectControlVM_WriteSettingsConfigFile(object sender, string e)
@@ -116,6 +157,8 @@ namespace BAWGUI.ViewModels
                 SettingsVM.Run = e.SelectedRun;
                 //ResultsVM.Project = e;
                 ResultsVM.Run = e.SelectedRun;
+                RunMatlabVM.Run = e.SelectedRun;
+                RunMatlabVM.Project = e.Model;
                 try
                 {
                     var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
