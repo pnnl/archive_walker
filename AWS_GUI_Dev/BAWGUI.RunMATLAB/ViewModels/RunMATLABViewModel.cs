@@ -28,6 +28,17 @@ namespace BAWGUI.RunMATLAB.ViewModels
             StopArchiveWalkerNormal = new RelayCommand(_stopArchiveWalkerNormal);
             //BrowseResultsStorage = new RelayCommand(_browseResultsStorage);
             _engine = MatLabEngine.Instance;
+            _engine.MatlabRunning += _onMatlabEngineStatusChange;
+        }
+
+        private void _onMatlabEngineStatusChange(object sender, bool e)
+        {
+            OnMatlabEngineStatusChange(e);
+        }
+        public event EventHandler<bool> MatlabRunning;
+        protected virtual void OnMatlabEngineStatusChange(bool e)
+        {
+            MatlabRunning?.Invoke(this, e);
         }
 
         private string _configFileName;
@@ -113,6 +124,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand PauseArchiveWalkerNormal { get; set; }
         public ICommand ResumeArchiveWalkerNormal { get; set; }
         public ICommand StopArchiveWalkerNormal { get; set; }
+        public AWProject Project { get; set; }
+
         private void _stopArchiveWalkerNormal(object obj)
         {
             try

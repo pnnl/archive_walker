@@ -213,6 +213,36 @@ namespace BAWGUI.SignalManagement.ViewModels
         private void _readPDATFile(InputFileInfoViewModel aFileInfo)
         {
             var signalInformation = _engine.ReadPDATSampleFile(aFileInfo.ExampleFile);
+            aFileInfo.SamplingRate = signalInformation.SamplingRate;
+            ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
+            for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
+            {
+                var thisPMU = signalInformation.PMUSignalsList[idx];
+                var thisPMUName = signalInformation.PMUSignalsList[idx].PMUname;
+                for (int idx2 = 0; idx2 < thisPMU.SignalNames.Count; idx2++)
+                {
+                    var aSignal = new SignalSignatureViewModel();
+                    aSignal.SamplingRate = aFileInfo.SamplingRate;
+                    aSignal.PMUName = thisPMUName;
+                    aSignal.SignalName = thisPMU.SignalNames[idx2];
+                    aSignal.Unit = thisPMU.SignalUnits[idx2];
+                    aSignal.TypeAbbreviation = thisPMU.SignalTypes[idx2];
+                    aSignal.OldSignalName = aSignal.SignalName;
+                    aSignal.OldTypeAbbreviation = aSignal.TypeAbbreviation;
+                    aSignal.OldUnit = aSignal.Unit;
+                    newSignalList.Add(aSignal);
+                }
+            }
+            aFileInfo.TaggedSignals = newSignalList;
+            var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+            newSig.SamplingRate = aFileInfo.SamplingRate;
+            var a = new SignalTypeHierachy(newSig);
+            a.SignalList = SortSignalByPMU(newSignalList);
+            GroupedRawSignalsByPMU.Add(a);
+            var b = new SignalTypeHierachy(newSig);
+            b.SignalList = SortSignalByType(newSignalList);
+            GroupedRawSignalsByType.Add(b);
+            ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
         public ObservableCollection<InputFileInfoViewModel> FileInfo { get; set; }
         public ObservableCollection<SignalTypeHierachy> SortSignalByType(ObservableCollection<SignalSignatureViewModel> signalList)
@@ -224,7 +254,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 var rate = rateGroup.Key;
                 var subSignalGroup = rateGroup.ToList();
                 ObservableCollection<SignalTypeHierachy> signalTypeTree = new ObservableCollection<SignalTypeHierachy>();
-                var signalTypeDictionary = subSignalGroup.GroupBy(x => x.TypeAbbreviation.ToArray()[0].ToString()).ToDictionary(x => x.Key, x => new ObservableCollection<SignalSignatureViewModel>(x.ToList()));
+                var signalTypeDictionary = subSignalGroup.GroupBy(x => x.TypeAbbreviation.ToArray()[0].ToString())/*.OrderBy(x=>x.Key)*/.ToDictionary(x => x.Key, x => new ObservableCollection<SignalSignatureViewModel>(x.ToList()));
                 foreach (var signalType in signalTypeDictionary)
                 {
                     switch (signalType.Key)
