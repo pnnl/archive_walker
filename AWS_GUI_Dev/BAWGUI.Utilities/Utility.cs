@@ -84,5 +84,13 @@ namespace BAWGUI.Utilities
                 throw new Exception("\nError: data file path \"" + filename + "\" does not exists!");
             return firstFile;
         }
+
+        public static IEnumerable<T> GetRow<T>(T[,] array, int index)
+        {
+            for (int i = 0; i < array.GetLength(1); i++)
+            {
+                yield return array[index, i];
+            }
+        }
     }
 }

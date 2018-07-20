@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.ReadConfigXml;
+using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using PDAT_Reader;
 using System;
@@ -35,6 +36,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+            _engine = MatLabEngine.Instance;
         }
 
         public void cleanUp()
@@ -58,6 +60,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
+        private MatLabEngine _engine;
 
         private static SignalManager _instance = null;
         public static SignalManager Instance
@@ -193,19 +196,23 @@ namespace BAWGUI.SignalManagement.ViewModels
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
+        //private void _readPDATFile(InputFileInfoViewModel aFileInfo)
+        //{
+        //    PDATReader PDATSampleFile = new PDATReader();
+        //    try
+        //    {
+        //        aFileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(aFileInfo.ExampleFile);
+        //        aFileInfo.SamplingRate = PDATSampleFile.GetSamplingRate();
+        //        TagSignals(aFileInfo, aFileInfo.SignalList);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("PDAT Reading error! " + ex.Message);
+        //    }
+        //}
         private void _readPDATFile(InputFileInfoViewModel aFileInfo)
         {
-            PDATReader PDATSampleFile = new PDATReader();
-            try
-            {
-                aFileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(aFileInfo.ExampleFile);
-                aFileInfo.SamplingRate = PDATSampleFile.GetSamplingRate();
-                TagSignals(aFileInfo, aFileInfo.SignalList);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("PDAT Reading error! " + ex.Message);
-            }
+            var signalInformation = _engine.ReadPDATSampleFile(aFileInfo.ExampleFile);
         }
         public ObservableCollection<InputFileInfoViewModel> FileInfo { get; set; }
         public ObservableCollection<SignalTypeHierachy> SortSignalByType(ObservableCollection<SignalSignatureViewModel> signalList)

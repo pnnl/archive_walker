@@ -262,6 +262,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    _runNormalModeByBackgroundWalker();
         //}
         public BackgroundWorker worker = new BackgroundWorker();
+
         //private void _runNormalMode(object sender, DoWorkEventArgs e)
         //{
         //    if (Thread.CurrentThread.Name == null)
@@ -584,6 +585,28 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 run.IsTaskRunning = false;
                 Mouse.OverrideCursor = null;
             }
+        }
+
+        public PDATExampleResults ReadPDATSampleFile(string filename)
+        {
+            var PDATReadingResults = new PDATExampleResults();
+
+            if (IsMatlabEngineRunning)
+            {
+                PauseMatlabNormalRun();
+            }
+            IsMatlabEngineRunning = true;
+            try
+            {
+                PDATReadingResults = new PDATExampleResults((MWStructArray)_matlabEngine.GetPDATexample(filename));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+            IsMatlabEngineRunning = false;
+            return PDATReadingResults;
         }
     }
 }
