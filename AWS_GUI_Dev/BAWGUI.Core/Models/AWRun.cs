@@ -103,5 +103,6 @@ namespace BAWGUI.Core
             get { return _isRunEnabled; }
             set { _isRunEnabled = value; }
         }
+        public bool IsTaskRunning { get; set; }
     }
 }

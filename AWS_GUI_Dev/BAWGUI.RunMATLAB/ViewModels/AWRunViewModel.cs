@@ -33,13 +33,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _model = run;
             _runCommands = new RunMATLABViewModel();
         }
-        private bool _isTaskrunning;
+        //private bool _isTaskrunning;
         public bool IsTaskRunning
         {
-            get { return _isTaskrunning; }
+            get { return _model.IsTaskRunning; }
             set
             {
-                _isTaskrunning = value;
+                _model.IsTaskRunning = value;
                 OnPropertyChanged();
             }
         }

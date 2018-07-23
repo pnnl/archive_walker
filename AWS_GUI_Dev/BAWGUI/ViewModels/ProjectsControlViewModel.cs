@@ -48,7 +48,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _addRundialogbox = new AddARunPopup();
             _saveConfigFileFlag = true;
             _generatedNewRun = new AWRunViewModel();
-            IsMatlabEngineRunning = false;
+            _isMatlabEngineRunning = false;
         }
 
         //public ProjectsControlViewModel(string resultsStoragePath)
@@ -312,7 +312,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
                 //if matlab engine is running, only save the new config file, but not switch selected run so it won't trigger possible matlab engine to read pdat file in the newly selected run
-                if (!IsMatlabEngineRunning)
+                if (IsMatlabEngineRunning)
+                {
+                    _generatedNewRun.IsRunEnabled = false;
+                }
+                else
                 {
                     if (SelectedRun != null)
                     {
@@ -441,6 +445,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                         break;
                     }
                 }
+                if (IsMatlabEngineRunning)
+                {
+                    _generatedNewRun.IsRunEnabled = false;
+                }
                 //var newRunVm = new AWRunViewModel(taskDir);
                 //AWRuns.Add(new AWRunViewModel(taskDir));
             }
@@ -475,7 +483,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _addRundialogbox.Close();
             _saveConfigFileFlag = false;
         }
-        public bool IsMatlabEngineRunning { get; set; }
+        private bool _isMatlabEngineRunning;
+        public bool IsMatlabEngineRunning
+        {
+            get { return _isMatlabEngineRunning; }
+            set
+            {
+                _isMatlabEngineRunning = value;
+                OnPropertyChanged();
+            }
+        }
     }
     public class AWProjectViewModel : ViewModelBase
     {
