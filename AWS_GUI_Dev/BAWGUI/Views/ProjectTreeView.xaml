@@ -22,14 +22,15 @@
     </UserControl.Resources>
 
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}">
+        <!--<StackPanel Orientation="Vertical">-->
+        <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}" IsEnabled="{Binding IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <EventSetter Event="TreeViewItem.PreviewMouseRightButtonDown" Handler="myProjectTreeView_PreviewMouseRightButtonDown"/>
-                        <Setter Property="IsEnabled" Value="{Binding IsRunEnabled, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Setter Property="Focusable" Value="{Binding IsRunEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!--<EventSetter Event="TreeViewItem.PreviewMouseRightButtonDown" Handler="myProjectTreeView_PreviewMouseRightButtonDown"/>-->
+                        <Setter Property="IsEnabled" Value="{Binding IsRunEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Setter Property="IsEnabled" Value="{Binding IsProjectEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <!--<Setter Property="Focusable" Value="{Binding IsRunEnabled, UpdateSourceTrigger=PropertyChanged}"/>-->
                         <!--<Setter Property="vm:FocusExtension.IsFocused" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
                         <!--<Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />-->
                         <!--<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BooleanBackgroundConverter}}"/>-->
@@ -148,7 +149,7 @@
             <TextBlock Margin="10">SelectedValue:</TextBlock>
             <TextBlock Margin="10,0,0,0" Text="{Binding ElementName=_projectTreeView, Path=SelectedValue}"  Foreground="Blue"/>-->
 
-        </StackPanel>
+        <!--</StackPanel>-->
         <!--<TreeView ItemsSource="{Binding ProjectControl.AWProjects}">
             <TreeView.ItemTemplate>
                 <DataTemplate>

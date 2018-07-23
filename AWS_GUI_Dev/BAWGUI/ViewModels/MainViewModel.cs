@@ -33,30 +33,35 @@ namespace BAWGUI.ViewModels
             var sd = sender as RunMATLABViewModel;
             if (e)
             {
+                ProjectControlVM.IsMatlabEngineRunning = true;
+                SettingsVM.IsMatlabEngineRunning = true;
                 foreach (var pjt in ProjectControlVM.AWProjects)
                 {
-                    if (pjt.ProjectName != sd.Project.ProjectName)
-                    {
-                        pjt.IsProjectEnabled = false;
-                        foreach (var run in pjt.AWRuns)
+                    pjt.IsProjectEnabled = false;
+                    //if (pjt.ProjectName != sd.Project.ProjectName)
+                    //{
+                    //    pjt.IsProjectEnabled = false;
+                    //    foreach (var run in pjt.AWRuns)
+                    //    {
+                    //        run.IsRunEnabled = false;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    foreach (var run in pjt.AWRuns)
                         {
-                            run.IsRunEnabled = false;
-                        }
-                    }
-                    else
-                    {
-                        foreach (var run in pjt.AWRuns)
-                        {
-                            if (run.AWRunName != sd.Run.AWRunName)
-                            {
+                            //if (run.AWRunName != sd.Run.AWRunName)
+                            //{
                                 run.IsRunEnabled = false;
-                            }
+                            //}
                         }
-                    }
+                    //}
                 }
             }
             else
             {
+                ProjectControlVM.IsMatlabEngineRunning = false;
+                SettingsVM.IsMatlabEngineRunning = false;
                 foreach (var pjt in ProjectControlVM.AWProjects)
                 {
                     pjt.IsProjectEnabled = true;

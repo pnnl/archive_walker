@@ -48,7 +48,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _addRundialogbox = new AddARunPopup();
             _saveConfigFileFlag = true;
             _generatedNewRun = new AWRunViewModel();
-
+            IsMatlabEngineRunning = false;
         }
 
         //public ProjectsControlViewModel(string resultsStoragePath)
@@ -311,12 +311,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
-                if (SelectedRun != null)
+                //if matlab engine is running, only save the new config file, but not switch selected run so it won't trigger possible matlab engine to read pdat file in the newly selected run
+                if (!IsMatlabEngineRunning)
                 {
-                    SelectedRun.IsSelected = false;
+                    if (SelectedRun != null)
+                    {
+                        SelectedRun.IsSelected = false;
+                    }
+                    SelectedRun = _generatedNewRun;
+                    SelectedRun.IsSelected = true;
                 }
-                SelectedRun = _generatedNewRun;
-                SelectedRun.IsSelected = true;
             }
             _saveConfigFileFlag = true;
             //OnWriteSettingsConfigFile(SelectedRun.Model.ConfigFilePath);
@@ -471,7 +475,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _addRundialogbox.Close();
             _saveConfigFileFlag = false;
         }
-
+        public bool IsMatlabEngineRunning { get; set; }
     }
     public class AWProjectViewModel : ViewModelBase
     {
@@ -487,6 +491,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             AddRun = new RelayCommand(_addARun);
             //_addTaskVM = new AddTaskViewModel();
             _dialogbox = new AddARunPopup();
+            IsProjectEnabled = true;
         }
 
         public AWProjectViewModel()
@@ -590,16 +595,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
 
         public ICommand AddRun { get; set; }
-        public bool IsProjectEnabled
-        {
-            get { return _model.IsProjectEnabled; }
-            set
-            {
-                _model.IsProjectEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
         private void _addARun(object obj)
         {
             var _addTaskVM = new AddTaskViewModel();
@@ -703,6 +698,15 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Directory.Delete(runPath);
         }
 
+        public bool IsProjectEnabled
+        {
+            get { return _model.IsProjectEnabled; }
+            set
+            {
+                _model.IsProjectEnabled = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
 }

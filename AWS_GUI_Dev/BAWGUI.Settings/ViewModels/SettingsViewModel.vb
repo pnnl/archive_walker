@@ -27,6 +27,7 @@ Namespace ViewModels
             _logs = New ObservableCollection(Of String)
             _run = New AWRunViewModel()
             _project = New AWProject()
+            _isMatlabEngineRunning = False
 
             '_openConfigFile = New DelegateCommand(AddressOf openConfigXMLFile, AddressOf CanExecute)
             _browseInputFileDir = New DelegateCommand(AddressOf _browseInputFileFolder, AddressOf CanExecute)
@@ -796,6 +797,17 @@ Namespace ViewModels
                 _readExampleFile = value
             End Set
         End Property
+        Private _isMatlabEngineRunning As Boolean
+        Public Property IsMatlabEngineRunning As Boolean
+            Get
+                Return _isMatlabEngineRunning
+            End Get
+            Set(ByVal value As Boolean)
+                _isMatlabEngineRunning = value
+                OnPropertyChanged()
+            End Set
+        End Property
+
 
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
             For Each group In _signalMgr.GroupedRawSignalsByType

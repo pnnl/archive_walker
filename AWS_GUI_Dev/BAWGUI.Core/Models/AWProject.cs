@@ -32,7 +32,7 @@ namespace BAWGUI.Core
             _projectpath = "";
             _awRun = new List<AWRun>();
             _isSelected = false;
-            _isProjectEnabled = true;
+            IsProjectEnabled = true;
         }
 
         public AWProject(string dir)
@@ -59,11 +59,6 @@ namespace BAWGUI.Core
                 _isSelected = value;
             }
         }
-        private bool _isProjectEnabled;
-        public bool IsProjectEnabled
-        {
-            get { return _isProjectEnabled; }
-            set { _isProjectEnabled = value; }
-        }
+        public bool IsProjectEnabled { get; set; }
     }
 }

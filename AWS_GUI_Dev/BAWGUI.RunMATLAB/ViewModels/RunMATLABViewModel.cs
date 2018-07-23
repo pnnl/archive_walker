@@ -29,6 +29,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             //BrowseResultsStorage = new RelayCommand(_browseResultsStorage);
             _engine = MatLabEngine.Instance;
             _engine.MatlabRunning += _onMatlabEngineStatusChange;
+            Project = new AWProject();
         }
 
         private void _onMatlabEngineStatusChange(object sender, bool e)
@@ -124,8 +125,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand PauseArchiveWalkerNormal { get; set; }
         public ICommand ResumeArchiveWalkerNormal { get; set; }
         public ICommand StopArchiveWalkerNormal { get; set; }
-        public AWProject Project { get; set; }
-
         private void _stopArchiveWalkerNormal(object obj)
         {
             try
@@ -149,6 +148,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _runAWNormal(obj);
             //_engine.IsNormalRunPaused = false;
         }
+
+        public AWProject Project { get; set; }
 
 
     }
