@@ -981,7 +981,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         public void AddRawSignalsFromADir(InputFileInfoViewModel model)
         {
             //var sampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
-            var sampleFile = "";
+            //var sampleFile = "";
             if (!File.Exists(model.ExampleFile))
             {
                 model.ExampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
@@ -990,11 +990,25 @@ namespace BAWGUI.SignalManagement.ViewModels
             {
                 if (model.Model.FileType.ToLower() == "csv")
                 {
-                    _readCSVFile(model);
+                    try
+                    {
+                        _readCSVFile(model);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading .csv file. " + ex.Message);
+                    }
                 }
                 else
                 {
-                    _readPDATFile(model);
+                    try
+                    {
+                        _readPDATFile(model);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading .pdat file. " + ex.Message);
+                    }
                 }
             }
             AllPMUs = _getAllPMU();

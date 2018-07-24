@@ -48,13 +48,13 @@ namespace BAWGUI.ViewModels
                     //}
                     //else
                     //{
-                    //foreach (var run in pjt.AWRuns)
+                    //    foreach (var run in pjt.AWRuns)
                     //    {
-                            //if (run.AWRunName != sd.Run.AWRunName)
-                            //{
-                                //run.IsRunEnabled = false;
-                            //}
-                        //}
+                    //        if (run.AWRunName != sd.Run.AWRunName)
+                    //        {
+                    //            run.IsRunEnabled = false;
+                    //        }
+                    //    }
                     //}
                 }
             }
@@ -65,10 +65,10 @@ namespace BAWGUI.ViewModels
                 foreach (var pjt in ProjectControlVM.AWProjects)
                 {
                     pjt.IsProjectEnabled = true;
-                    //foreach (var run in pjt.AWRuns)
-                    //{
-                    //    run.IsRunEnabled = true;
-                    //}
+                    foreach (var run in pjt.AWRuns)
+                    {
+                        run.IsRunEnabled = true;
+                    }
                 }
             }
         }

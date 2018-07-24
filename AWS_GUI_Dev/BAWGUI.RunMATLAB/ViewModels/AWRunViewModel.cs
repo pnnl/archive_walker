@@ -18,20 +18,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public AWRunViewModel(string dir)
         {
             _model = new AWRun(dir);
-            _runCommands = new RunMATLABViewModel();
+            //_runCommands = new RunMATLABViewModel();
             //_isNormalRunPaused = false;
             //_isSelected = false;
             //DeleteRun = new RelayCommand(_deleteARun);
         }
         public AWRunViewModel()
         {
-            _runCommands = new RunMATLABViewModel();
+            //_runCommands = new RunMATLABViewModel();
             //_isNormalRunPaused = false;
         }
         public AWRunViewModel(AWRun run)
         {
             _model = run;
-            _runCommands = new RunMATLABViewModel();
+            //_runCommands = new RunMATLABViewModel();
         }
         //private bool _isTaskrunning;
         public bool IsTaskRunning
@@ -65,11 +65,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             RunSelected?.Invoke(this, e);
         }
-        private RunMATLABViewModel _runCommands;
-        public RunMATLABViewModel RunCommands
-        {
-            get { return _runCommands; }
-        }
+        //private RunMATLABViewModel _runCommands;
+        //public RunMATLABViewModel RunCommands
+        //{
+        //    get { return _runCommands; }
+        //}
         //public ICommand DeleteRun { get; set; }
         //private void _deleteARun(object obj)
         //{

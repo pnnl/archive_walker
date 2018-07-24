@@ -49,6 +49,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _saveConfigFileFlag = true;
             _generatedNewRun = new AWRunViewModel();
             _isMatlabEngineRunning = false;
+            _runCommands = new RunMATLABViewModel();
+            DeleteRun = new RelayCommand(_deleteARun);
         }
 
         //public ProjectsControlViewModel(string resultsStoragePath)
@@ -493,6 +495,17 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 OnPropertyChanged();
             }
         }
+        private RunMATLABViewModel _runCommands;
+        public RunMATLABViewModel RunCommands
+        {
+            get { return _runCommands; }
+        }
+        public ICommand DeleteRun { get; set; }
+        private void _deleteARun(object obj)
+        {
+            var runToDelete = (AWRunViewModel)obj;
+            SelectedProject.DeleteARun(runToDelete);
+        }
     }
     public class AWProjectViewModel : ViewModelBase
     {
@@ -504,7 +517,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public AWProjectViewModel(string dir)
         {
             _model = new AWProject(dir);
-            DeleteRun = new RelayCommand(_deleteARun);
+            DeleteRun = new RelayCommand(DeleteARun);
             AddRun = new RelayCommand(_addARun);
             //_addTaskVM = new AddTaskViewModel();
             _dialogbox = new AddARunPopup();
@@ -571,7 +584,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
         public ICommand DeleteRun { get; set; }
-        private void _deleteARun(object obj)
+        public void DeleteARun(object obj)
         {
             var runToDelete = (AWRunViewModel)obj;
             var dialogResult = System.Windows.Forms.MessageBox.Show("Are you sure you want to delete this task: " + runToDelete.AWRunName + " ?", "Warning!", MessageBoxButtons.YesNo);
@@ -724,6 +737,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 OnPropertyChanged();
             }
         }
+        //public bool IsRunEnabled { get; set; }
     }
 
 }

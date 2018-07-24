@@ -788,15 +788,6 @@ Namespace ViewModels
             End If
 
         End Sub
-        Private _readExampleFile As ICommand
-        Public Property ReadExampleFile As ICommand
-            Get
-                Return _readExampleFile
-            End Get
-            Set(ByVal value As ICommand)
-                _readExampleFile = value
-            End Set
-        End Property
         Private _isMatlabEngineRunning As Boolean
         Public Property IsMatlabEngineRunning As Boolean
             Get
@@ -807,8 +798,15 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-
-
+        Private _readExampleFile As ICommand
+        Public Property ReadExampleFile As ICommand
+            Get
+                Return _readExampleFile
+            End Get
+            Set(ByVal value As ICommand)
+                _readExampleFile = value
+            End Set
+        End Property
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
             For Each group In _signalMgr.GroupedRawSignalsByType
                 If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
@@ -824,15 +822,41 @@ Namespace ViewModels
             Next
             Dim exampleFile = obj.ExampleFile
             If File.Exists(exampleFile) Then
-                obj.FileType = [Enum].Parse(GetType(DataFileType), exampleFile.Split(".")(1))
-                Dim filename = Path.GetFileNameWithoutExtension(exampleFile)
-                obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-                Dim fullPath = Path.GetDirectoryName(exampleFile)
-                Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-                Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-                obj.FileDirectory = twoLevelUp
+                Try
+                    obj.FileType = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
+                Catch ex As Exception
+                    Forms.MessageBox.Show("Data file type not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End Try
+                Dim filename = ""
+                Try
+                    filename = Path.GetFileNameWithoutExtension(exampleFile)
+                Catch ex As ArgumentException
+                    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End Try
+                Try
+                    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
+                Catch ex As Exception
+                    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End Try
+                Try
+                    Dim fullPath = Path.GetDirectoryName(exampleFile)
+                    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
+                    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
+                    obj.FileDirectory = twoLevelUp
+                Catch ex As Exception
+                    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End Try
                 If obj.FileType IsNot Nothing Then
-                    _signalMgr.AddRawSignalsFromADir(obj)
+                    Try
+                        _signalMgr.AddRawSignalsFromADir(obj)
+                    Catch ex As Exception
+                        Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        Exit Sub
+                    End Try
                 End If
             Else
                 Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
@@ -875,107 +899,107 @@ Namespace ViewModels
         '    '    End Try
         '    'End If
         'End Sub
-        Private Sub _readFirstDataFile(sampleFile As String, fileInfo As InputFileInfo)
-            If System.IO.Path.GetExtension(sampleFile).Substring(1) = "csv" Then
-                'Dim CSVSampleFile As New JSIS_CSV_Reader.JSISCSV_Reader
-                'Dim signals = CSVSampleFile.OpenCSV4row(_sampleFile)
-                Dim fr As FileIO.TextFieldParser = New FileIO.TextFieldParser(sampleFile)
-                fr.TextFieldType = FileIO.FieldType.Delimited
-                fr.Delimiters = New String() {","}
-                fr.HasFieldsEnclosedInQuotes = True
-                'fileInfo.SamplingRate = System.IO.File.ReadAllLines(sampleFile).Length
-                Dim pmuName = sampleFile.Split("\").Last.Split("_")(0)
-                'Dim pmuName = sampleFile.Split("\").Last.Split(".")(0)
-                'If Not _allPMUs.Contains(pmuName) Then
-                '    _allPMUs.Add(pmuName)
-                'End If
-                Dim signalNames = fr.ReadFields.Skip(1).ToList
-                Dim signalTypes = fr.ReadFields.Skip(1).ToList
-                Dim signalUnits = fr.ReadFields.Skip(1).ToList
-                fr.ReadLine()
-                fr.ReadLine()
-                Dim time1 = fr.ReadFields(0)
-                Dim time2 = fr.ReadFields(0)
-                Try
-                    Dim t1 = Convert.ToDouble(time1)
-                    Dim t2 = Convert.ToDouble(time2)
-                    fileInfo.SamplingRate = Math.Round((1 / (t2 - t1)) / 10) * 10.ToString
-                Catch ex As Exception
-                    Dim t1 = DateTime.Parse(time1)
-                    Dim t2 = DateTime.Parse(time2)
-                    Dim dif = t2.Subtract(t1).TotalSeconds
-                    fileInfo.SamplingRate = Math.Round((1 / dif) / 10) * 10.ToString
-                End Try
-                Dim type = ""
-                Dim signalName = ""
-                Dim signalList = New List(Of String)
-                Dim signalSignatureList = New ObservableCollection(Of SignalSignatureViewModel)
-                For index = 0 To signalNames.Count - 1
-                    Dim newSignal = New SignalSignatureViewModel
-                    newSignal.PMUName = pmuName
-                    newSignal.Unit = signalUnits(index)
-                    newSignal.SignalName = signalNames(index)
-                    newSignal.SamplingRate = fileInfo.SamplingRate
-                    signalList.Add(signalNames(index))
-                    Select Case signalTypes(index)
-                        Case "VPM"
-                            'signalName = signalNames(index).Split(".")(0) & ".VMP"
-                            'signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "VMP"
-                        Case "VPA"
-                            'signalName = signalNames(index).Split(".")(0) & ".VAP"
-                            'signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "VAP"
-                        Case "IPM"
-                            'signalName = signalNames(index).Split(".")(0) & ".IMP"
-                            'signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "IMP"
-                        Case "IPA"
-                            'signalName = signalNames(index).Split(".")(0) & ".IAP"
-                            'signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "IAP"
-                        Case "F"
-                            'signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "F"
-                        Case "P"
-                            'signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "P"
-                        Case "Q"
-                            'signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "Q"
-                        Case Else
-                            Throw New Exception("Error! Invalid signal type " & signalTypes(index) & " found in file: " & sampleFile & " !")
-                    End Select
-                    newSignal.OldSignalName = newSignal.SignalName
-                    newSignal.OldTypeAbbreviation = newSignal.TypeAbbreviation
-                    newSignal.OldUnit = newSignal.Unit
-                    signalSignatureList.Add(newSignal)
-                Next
-                fileInfo.SignalList = signalList
-                fileInfo.TaggedSignals = signalSignatureList
-                fileInfo.GroupedSignalsByPMU = _signalMgr.SortSignalByPMU(signalSignatureList)
-                Dim newSig = New SignalSignatureViewModel(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
-                newSig.SamplingRate = fileInfo.SamplingRate
-                Dim a = New SignalTypeHierachy(newSig)
-                a.SignalList = fileInfo.GroupedSignalsByPMU
-                _signalMgr.GroupedRawSignalsByPMU.Add(a)
-                fileInfo.GroupedSignalsByType = _signalMgr.SortSignalByType(signalSignatureList)
-                newSig = New SignalSignatureViewModel(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
-                newSig.SamplingRate = fileInfo.SamplingRate
-                Dim b = New SignalTypeHierachy(newSig)
-                b.SignalList = fileInfo.GroupedSignalsByType
-                _signalMgr.GroupedRawSignalsByType.Add(b)
-                _signalMgr.ReGroupedRawSignalsByType = _signalMgr.GroupedRawSignalsByType
-            Else
-                Dim PDATSampleFile As New PDATReader
-                Try
-                    fileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(sampleFile)
-                    fileInfo.SamplingRate = PDATSampleFile.GetSamplingRate()
-                Catch ex As Exception
-                    Forms.MessageBox.Show("PDAT Reading error! " & ex.Message)
-                End Try
-            End If
-        End Sub
+        'Private Sub _readFirstDataFile(sampleFile As String, fileInfo As InputFileInfo)
+        '    If System.IO.Path.GetExtension(sampleFile).Substring(1) = "csv" Then
+        '        'Dim CSVSampleFile As New JSIS_CSV_Reader.JSISCSV_Reader
+        '        'Dim signals = CSVSampleFile.OpenCSV4row(_sampleFile)
+        '        Dim fr As FileIO.TextFieldParser = New FileIO.TextFieldParser(sampleFile)
+        '        fr.TextFieldType = FileIO.FieldType.Delimited
+        '        fr.Delimiters = New String() {","}
+        '        fr.HasFieldsEnclosedInQuotes = True
+        '        'fileInfo.SamplingRate = System.IO.File.ReadAllLines(sampleFile).Length
+        '        Dim pmuName = sampleFile.Split("\").Last.Split("_")(0)
+        '        'Dim pmuName = sampleFile.Split("\").Last.Split(".")(0)
+        '        'If Not _allPMUs.Contains(pmuName) Then
+        '        '    _allPMUs.Add(pmuName)
+        '        'End If
+        '        Dim signalNames = fr.ReadFields.Skip(1).ToList
+        '        Dim signalTypes = fr.ReadFields.Skip(1).ToList
+        '        Dim signalUnits = fr.ReadFields.Skip(1).ToList
+        '        fr.ReadLine()
+        '        fr.ReadLine()
+        '        Dim time1 = fr.ReadFields(0)
+        '        Dim time2 = fr.ReadFields(0)
+        '        Try
+        '            Dim t1 = Convert.ToDouble(time1)
+        '            Dim t2 = Convert.ToDouble(time2)
+        '            fileInfo.SamplingRate = Math.Round((1 / (t2 - t1)) / 10) * 10.ToString
+        '        Catch ex As Exception
+        '            Dim t1 = DateTime.Parse(time1)
+        '            Dim t2 = DateTime.Parse(time2)
+        '            Dim dif = t2.Subtract(t1).TotalSeconds
+        '            fileInfo.SamplingRate = Math.Round((1 / dif) / 10) * 10.ToString
+        '        End Try
+        '        Dim type = ""
+        '        Dim signalName = ""
+        '        Dim signalList = New List(Of String)
+        '        Dim signalSignatureList = New ObservableCollection(Of SignalSignatureViewModel)
+        '        For index = 0 To signalNames.Count - 1
+        '            Dim newSignal = New SignalSignatureViewModel
+        '            newSignal.PMUName = pmuName
+        '            newSignal.Unit = signalUnits(index)
+        '            newSignal.SignalName = signalNames(index)
+        '            newSignal.SamplingRate = fileInfo.SamplingRate
+        '            signalList.Add(signalNames(index))
+        '            Select Case signalTypes(index)
+        '                Case "VPM"
+        '                    'signalName = signalNames(index).Split(".")(0) & ".VMP"
+        '                    'signalName = signalNames(index)
+        '                    newSignal.TypeAbbreviation = "VMP"
+        '                Case "VPA"
+        '                    'signalName = signalNames(index).Split(".")(0) & ".VAP"
+        '                    'signalName = signalNames(index)
+        '                    newSignal.TypeAbbreviation = "VAP"
+        '                Case "IPM"
+        '                    'signalName = signalNames(index).Split(".")(0) & ".IMP"
+        '                    'signalName = signalNames(index)
+        '                    newSignal.TypeAbbreviation = "IMP"
+        '                Case "IPA"
+        '                    'signalName = signalNames(index).Split(".")(0) & ".IAP"
+        '                    'signalName = signalNames(index)
+        '                    newSignal.TypeAbbreviation = "IAP"
+        '                Case "F"
+        '                    'signalName = signalNames(index)
+        '                    newSignal.TypeAbbreviation = "F"
+        '                Case "P"
+        '                    'signalName = signalNames(index)
+        '                    newSignal.TypeAbbreviation = "P"
+        '                Case "Q"
+        '                    'signalName = signalNames(index)
+        '                    newSignal.TypeAbbreviation = "Q"
+        '                Case Else
+        '                    Throw New Exception("Error! Invalid signal type " & signalTypes(index) & " found in file: " & sampleFile & " !")
+        '            End Select
+        '            newSignal.OldSignalName = newSignal.SignalName
+        '            newSignal.OldTypeAbbreviation = newSignal.TypeAbbreviation
+        '            newSignal.OldUnit = newSignal.Unit
+        '            signalSignatureList.Add(newSignal)
+        '        Next
+        '        fileInfo.SignalList = signalList
+        '        fileInfo.TaggedSignals = signalSignatureList
+        '        fileInfo.GroupedSignalsByPMU = _signalMgr.SortSignalByPMU(signalSignatureList)
+        '        Dim newSig = New SignalSignatureViewModel(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
+        '        newSig.SamplingRate = fileInfo.SamplingRate
+        '        Dim a = New SignalTypeHierachy(newSig)
+        '        a.SignalList = fileInfo.GroupedSignalsByPMU
+        '        _signalMgr.GroupedRawSignalsByPMU.Add(a)
+        '        fileInfo.GroupedSignalsByType = _signalMgr.SortSignalByType(signalSignatureList)
+        '        newSig = New SignalSignatureViewModel(fileInfo.FileDirectory & ", Sampling Rate: " & fileInfo.SamplingRate & "/Second")
+        '        newSig.SamplingRate = fileInfo.SamplingRate
+        '        Dim b = New SignalTypeHierachy(newSig)
+        '        b.SignalList = fileInfo.GroupedSignalsByType
+        '        _signalMgr.GroupedRawSignalsByType.Add(b)
+        '        _signalMgr.ReGroupedRawSignalsByType = _signalMgr.GroupedRawSignalsByType
+        '    Else
+        '        Dim PDATSampleFile As New PDATReader
+        '        Try
+        '            fileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(sampleFile)
+        '            fileInfo.SamplingRate = PDATSampleFile.GetSamplingRate()
+        '        Catch ex As Exception
+        '            Forms.MessageBox.Show("PDAT Reading error! " & ex.Message)
+        '        End Try
+        '    End If
+        'End Sub
 
         Private _fileTypeChanged As ICommand
         Public Property FileTypeChanged As ICommand
