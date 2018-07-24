@@ -48,7 +48,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _addRundialogbox = new AddARunPopup();
             _saveConfigFileFlag = true;
             _generatedNewRun = new AWRunViewModel();
-
+            _isMatlabEngineRunning = false;
+            _runCommands = new RunMATLABViewModel();
+            DeleteRun = new RelayCommand(_deleteARun);
         }
 
         //public ProjectsControlViewModel(string resultsStoragePath)
@@ -311,12 +313,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
-                if (SelectedRun != null)
+                //if matlab engine is running, only save the new config file, but not switch selected run so it won't trigger possible matlab engine to read pdat file in the newly selected run
+                if (IsMatlabEngineRunning)
                 {
-                    SelectedRun.IsSelected = false;
+                    _generatedNewRun.IsRunEnabled = false;
                 }
-                SelectedRun = _generatedNewRun;
-                SelectedRun.IsSelected = true;
+                else
+                {
+                    if (SelectedRun != null)
+                    {
+                        SelectedRun.IsSelected = false;
+                    }
+                    SelectedRun = _generatedNewRun;
+                    SelectedRun.IsSelected = true;
+                }
             }
             _saveConfigFileFlag = true;
             //OnWriteSettingsConfigFile(SelectedRun.Model.ConfigFilePath);
@@ -437,6 +447,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                         break;
                     }
                 }
+                if (IsMatlabEngineRunning)
+                {
+                    _generatedNewRun.IsRunEnabled = false;
+                }
                 //var newRunVm = new AWRunViewModel(taskDir);
                 //AWRuns.Add(new AWRunViewModel(taskDir));
             }
@@ -471,7 +485,27 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _addRundialogbox.Close();
             _saveConfigFileFlag = false;
         }
-
+        private bool _isMatlabEngineRunning;
+        public bool IsMatlabEngineRunning
+        {
+            get { return _isMatlabEngineRunning; }
+            set
+            {
+                _isMatlabEngineRunning = value;
+                OnPropertyChanged();
+            }
+        }
+        private RunMATLABViewModel _runCommands;
+        public RunMATLABViewModel RunCommands
+        {
+            get { return _runCommands; }
+        }
+        public ICommand DeleteRun { get; set; }
+        private void _deleteARun(object obj)
+        {
+            var runToDelete = (AWRunViewModel)obj;
+            SelectedProject.DeleteARun(runToDelete);
+        }
     }
     public class AWProjectViewModel : ViewModelBase
     {
@@ -483,10 +517,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public AWProjectViewModel(string dir)
         {
             _model = new AWProject(dir);
-            DeleteRun = new RelayCommand(_deleteARun);
+            DeleteRun = new RelayCommand(DeleteARun);
             AddRun = new RelayCommand(_addARun);
             //_addTaskVM = new AddTaskViewModel();
             _dialogbox = new AddARunPopup();
+            IsProjectEnabled = true;
         }
 
         public AWProjectViewModel()
@@ -549,7 +584,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
         public ICommand DeleteRun { get; set; }
-        private void _deleteARun(object obj)
+        public void DeleteARun(object obj)
         {
             var runToDelete = (AWRunViewModel)obj;
             var dialogResult = System.Windows.Forms.MessageBox.Show("Are you sure you want to delete this task: " + runToDelete.AWRunName + " ?", "Warning!", MessageBoxButtons.YesNo);
@@ -693,6 +728,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Directory.Delete(runPath);
         }
 
+        public bool IsProjectEnabled
+        {
+            get { return _model.IsProjectEnabled; }
+            set
+            {
+                _model.IsProjectEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+        //public bool IsRunEnabled { get; set; }
     }
 
 }

@@ -22,25 +22,19 @@
     </UserControl.Resources>
 
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}">
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}">
-                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <EventSetter Event="TreeViewItem.PreviewMouseRightButtonDown" Handler="myProjectTreeView_PreviewMouseRightButtonDown"/>
-                        <!--<Setter Property="vm:FocusExtension.IsFocused" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
-                        <!--<Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />-->
-                        <!--<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BooleanBackgroundConverter}}"/>-->
-                        
-                        <!--<Setter Property="IsExpanded" Value="True"/>-->
-                    </Style>
-                </TreeView.ItemContainerStyle>
-                <!--<TreeView.ItemContainerStyle>
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>-->
+        <!--<StackPanel Orientation="Vertical">-->
+        <!--<TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}" IsEnabled="{Binding IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">-->
+        <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}">
+            <!--<TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
                     </Style>
                 </TreeView.ItemContainerStyle>-->
-                <TreeView.ItemTemplate>
+            <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding AWRuns}" x:Name="myProject2">
                         <!--<HierarchicalDataTemplate.ItemContainerStyle>
                             <Style TargetType="{x:Type TreeViewItem}">
@@ -89,10 +83,10 @@
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/BAWGUI;component/MyResources/Run_16x.png" Visibility="{Binding IsTaskRunning, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                                    <Image Source="/BAWGUI;component/MyResources/Run_16x.png" Visibility="{Binding IsTaskRunning, Converter={StaticResource BooleanVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                     <!--<TextBlock Text="{Binding AWRunName}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}, AncestorLevel=2}}" Name="myRun" Background="{Binding IsSelected, Converter={StaticResource BooleanBackgroundConverter}}">-->
                                     <TextBlock Text="{Binding AWRunName}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}, AncestorLevel=2}}" Name="myRun">
-                                        <TextBlock.ContextMenu>
+                                        <!--<TextBlock.ContextMenu>
                                             <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                                 <MenuItem Command="{Binding RunCommands.RunArchiveWalkerNormal}" Header="Normal Run" CommandParameter="{Binding}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}" ToolTip="Start Archive Walker normal run">
                                                     <MenuItem.Icon>
@@ -121,32 +115,48 @@
                                                     </MenuItem.IsEnabled>
                                                 </MenuItem>
                                                 <MenuItem Command="{Binding Path=PlacementTarget.Tag.DataContext.DeleteRun, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" CommandParameter="{Binding}" Header="Delete Task" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">
-                                                    <!--<MenuItem Command="{Binding Path=DataContext.DeleteRun, Source={x:Reference myRun}}" CommandParameter="{Binding}" Header="Delete Task" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">-->
+                                                    --><!--<MenuItem Command="{Binding Path=DataContext.DeleteRun, Source={x:Reference myRun}}" CommandParameter="{Binding}" Header="Delete Task" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">--><!--
                                                     <MenuItem.Icon>
                                                         <Image Source="/BAWGUI;component/MyResources/delete.bmp"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                             </ContextMenu>
-                                        </TextBlock.ContextMenu>
+                                        </TextBlock.ContextMenu>-->
                                     </TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </HierarchicalDataTemplate.ItemTemplate>
                         <!--<HierarchicalDataTemplate.ItemContainerStyle>
-                            <Style TargetType="{x:Type TreeViewItem}">
-                                <Setter Property="IsExpanded" Value="True"/>
-                            </Style>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Setter Property="IsEnabled" Value="{Binding IsRunEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Setter Property="Focusable" Value="{Binding IsRunEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Style>
                         </HierarchicalDataTemplate.ItemContainerStyle>-->
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
-            </TreeView>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <!--<EventSetter Event="TreeViewItem.PreviewMouseRightButtonDown" Handler="myProjectTreeView_PreviewMouseRightButtonDown"/>-->
+                    <Setter Property="IsEnabled" Value="{Binding IsProjectEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <!--<Setter Property="IsEnabled" Value="{Binding IsRunEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                    <!--<Setter Property="Focusable" Value="{Binding IsRunEnabled, UpdateSourceTrigger=PropertyChanged}"/>-->
+                    <!--<Setter Property="vm:FocusExtension.IsFocused" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                    <!--<Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />-->
+                    <!--<Setter Property="Background" Value="{Binding IsSelected, Converter={StaticResource BooleanBackgroundConverter}}"/>-->
+
+                    <!--<Setter Property="IsExpanded" Value="True"/>-->
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
             <!--<TextBlock Margin="10">SelectedValuePath:</TextBlock>
             <TextBlock Margin="10,0,0,0" Text="{Binding ElementName=_projectTreeView, Path=SelectedValuePath}" Foreground="Blue"/>
 
             <TextBlock Margin="10">SelectedValue:</TextBlock>
             <TextBlock Margin="10,0,0,0" Text="{Binding ElementName=_projectTreeView, Path=SelectedValue}"  Foreground="Blue"/>-->
 
-        </StackPanel>
+        <!--</StackPanel>-->
         <!--<TreeView ItemsSource="{Binding ProjectControl.AWProjects}">
             <TreeView.ItemTemplate>
                 <DataTemplate>
