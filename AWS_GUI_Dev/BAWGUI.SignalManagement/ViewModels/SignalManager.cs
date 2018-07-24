@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.ReadConfigXml;
+using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using PDAT_Reader;
 using System;
@@ -35,6 +36,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+            _engine = MatLabEngine.Instance;
         }
 
         public void cleanUp()
@@ -58,6 +60,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
+        private MatLabEngine _engine;
 
         private static SignalManager _instance = null;
         public static SignalManager Instance
@@ -193,19 +196,53 @@ namespace BAWGUI.SignalManagement.ViewModels
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
+        //private void _readPDATFile(InputFileInfoViewModel aFileInfo)
+        //{
+        //    PDATReader PDATSampleFile = new PDATReader();
+        //    try
+        //    {
+        //        aFileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(aFileInfo.ExampleFile);
+        //        aFileInfo.SamplingRate = PDATSampleFile.GetSamplingRate();
+        //        TagSignals(aFileInfo, aFileInfo.SignalList);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("PDAT Reading error! " + ex.Message);
+        //    }
+        //}
         private void _readPDATFile(InputFileInfoViewModel aFileInfo)
         {
-            PDATReader PDATSampleFile = new PDATReader();
-            try
+            var signalInformation = _engine.ReadPDATSampleFile(aFileInfo.ExampleFile);
+            aFileInfo.SamplingRate = signalInformation.SamplingRate;
+            ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
+            for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
             {
-                aFileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(aFileInfo.ExampleFile);
-                aFileInfo.SamplingRate = PDATSampleFile.GetSamplingRate();
-                TagSignals(aFileInfo, aFileInfo.SignalList);
+                var thisPMU = signalInformation.PMUSignalsList[idx];
+                var thisPMUName = signalInformation.PMUSignalsList[idx].PMUname;
+                for (int idx2 = 0; idx2 < thisPMU.SignalNames.Count; idx2++)
+                {
+                    var aSignal = new SignalSignatureViewModel();
+                    aSignal.SamplingRate = aFileInfo.SamplingRate;
+                    aSignal.PMUName = thisPMUName;
+                    aSignal.SignalName = thisPMU.SignalNames[idx2];
+                    aSignal.Unit = thisPMU.SignalUnits[idx2];
+                    aSignal.TypeAbbreviation = thisPMU.SignalTypes[idx2];
+                    aSignal.OldSignalName = aSignal.SignalName;
+                    aSignal.OldTypeAbbreviation = aSignal.TypeAbbreviation;
+                    aSignal.OldUnit = aSignal.Unit;
+                    newSignalList.Add(aSignal);
+                }
             }
-            catch (Exception ex)
-            {
-                throw new Exception("PDAT Reading error! " + ex.Message);
-            }
+            aFileInfo.TaggedSignals = newSignalList;
+            var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+            newSig.SamplingRate = aFileInfo.SamplingRate;
+            var a = new SignalTypeHierachy(newSig);
+            a.SignalList = SortSignalByPMU(newSignalList);
+            GroupedRawSignalsByPMU.Add(a);
+            var b = new SignalTypeHierachy(newSig);
+            b.SignalList = SortSignalByType(newSignalList);
+            GroupedRawSignalsByType.Add(b);
+            ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
         public ObservableCollection<InputFileInfoViewModel> FileInfo { get; set; }
         public ObservableCollection<SignalTypeHierachy> SortSignalByType(ObservableCollection<SignalSignatureViewModel> signalList)
@@ -217,7 +254,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 var rate = rateGroup.Key;
                 var subSignalGroup = rateGroup.ToList();
                 ObservableCollection<SignalTypeHierachy> signalTypeTree = new ObservableCollection<SignalTypeHierachy>();
-                var signalTypeDictionary = subSignalGroup.GroupBy(x => x.TypeAbbreviation.ToArray()[0].ToString()).ToDictionary(x => x.Key, x => new ObservableCollection<SignalSignatureViewModel>(x.ToList()));
+                var signalTypeDictionary = subSignalGroup.GroupBy(x => x.TypeAbbreviation.ToArray()[0].ToString())/*.OrderBy(x=>x.Key)*/.ToDictionary(x => x.Key, x => new ObservableCollection<SignalSignatureViewModel>(x.ToList()));
                 foreach (var signalType in signalTypeDictionary)
                 {
                     switch (signalType.Key)
@@ -944,7 +981,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         public void AddRawSignalsFromADir(InputFileInfoViewModel model)
         {
             //var sampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
-            var sampleFile = "";
+            //var sampleFile = "";
             if (!File.Exists(model.ExampleFile))
             {
                 model.ExampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
@@ -953,11 +990,25 @@ namespace BAWGUI.SignalManagement.ViewModels
             {
                 if (model.Model.FileType.ToLower() == "csv")
                 {
-                    _readCSVFile(model);
+                    try
+                    {
+                        _readCSVFile(model);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading .csv file. " + ex.Message);
+                    }
                 }
                 else
                 {
-                    _readPDATFile(model);
+                    try
+                    {
+                        _readPDATFile(model);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading .pdat file. " + ex.Message);
+                    }
                 }
             }
             AllPMUs = _getAllPMU();

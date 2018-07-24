@@ -28,10 +28,17 @@ namespace BAWGUI.RunMATLAB.ViewModels
             set
             {
                 _isMatlabEngineRunning = value;
+                OnMatlabEngineStatusChange(value);
                 OnPropertyChanged();
 
             }
         }
+        public event EventHandler<bool> MatlabRunning;
+        protected virtual void OnMatlabEngineStatusChange(bool v)
+        {
+            MatlabRunning?.Invoke(this, v);
+        }
+
         private bool _isNormalRunPaused;
         public bool IsNormalRunPaused
         {
@@ -68,7 +75,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _isMatlabEngineRunning = false;
             _isNormalRunPaused = false;
             _isReRunRunning = false;
-            _run = new AWRunViewModel();
+            //_run = new AWRunViewModel();
             try
             {
                 //_matlabEngine = new BAWSengine.GUI2MAT();
@@ -79,11 +86,15 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 System.Windows.Forms.MessageBox.Show("Error getting MATLAB engine! Error message: " + ex.Message, "ERROR!", MessageBoxButtons.OK);
             }
         }
-        private static readonly MatLabEngine _instance = new MatLabEngine();
+        private static MatLabEngine _instance = null;
         public static MatLabEngine Instance
         {
             get
             {
+                if (_instance == null)
+                {
+                    _instance = new MatLabEngine();
+                }
                 return _instance;
             }
         }
@@ -263,6 +274,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    _runNormalModeByBackgroundWalker();
         //}
         public BackgroundWorker worker = new BackgroundWorker();
+
         //private void _runNormalMode(object sender, DoWorkEventArgs e)
         //{
         //    if (Thread.CurrentThread.Name == null)
@@ -701,5 +713,27 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
 
+
+        public PDATExampleResults ReadPDATSampleFile(string filename)
+        {
+            var PDATReadingResults = new PDATExampleResults();
+
+            if (IsMatlabEngineRunning)
+            {
+                PauseMatlabNormalRun();
+            }
+            IsMatlabEngineRunning = true;
+            try
+            {
+                PDATReadingResults.GetSignals((MWStructArray)_matlabEngine.GetPDATexample(filename));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+            IsMatlabEngineRunning = false;
+            return PDATReadingResults;
+        }
     }
 }

@@ -6,6 +6,7 @@
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:reader="clr-namespace:BAWGUI.ReadConfigXml;assembly=BAWGUI.ReadConfigXml"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -14,6 +15,7 @@
             <converters:EmptyHeaderConverter x:Key="EmptyHeaderConverter"/>
             <converters:EnumToStringConverter1 x:Key="EnumToStringConverter1"/>
             <converters:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="ModeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="vm:ModeType"/>
@@ -21,7 +23,7 @@
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DataFileTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:DataFileType"/>
+                    <x:Type TypeName="reader:DataFileType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <DataTemplate x:Key="ArchiveParameter">
@@ -172,11 +174,11 @@
                                                 </Grid.RowDefinitions>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
                                                     <Label Content="Example File:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding ExampleFile}" Margin="2" VerticalAlignment="Center" MinWidth="200"/>
+                                                    <TextBox Text="{Binding ExampleFile}" Margin="2" VerticalAlignment="Center" MinWidth="100" MaxWidth="600" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
                                                         <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>
-                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ReadExampleFile}" Margin="2" ToolTip="Browse Input Data Directory" Height="25" CommandParameter="{Binding}" Content="Read File">
+                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ReadExampleFile}" Margin="2" ToolTip="Read selected example file" Height="25" CommandParameter="{Binding}" Content="Read File" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">
                                                         <!--<Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>-->
                                                     </Button>
                                                 </StackPanel>
