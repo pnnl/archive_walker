@@ -2,6 +2,7 @@
 Imports System.ComponentModel
 Imports System.Globalization
 Imports BAWGUI.Core
+Imports BAWGUI.Core.Models
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
@@ -314,23 +315,23 @@ Namespace ViewModels
     '    csv
     'End Enum
 
-    Public Enum ModeType
-        Archive
-        <Description("Real Time")>
-        RealTime
-        Hybrid
-    End Enum
+    'Public Enum ModeType
+    '    Archive
+    '    <Description("Real Time")>
+    '    RealTime
+    '    Hybrid
+    'End Enum
 
-    Public Enum PowerType
-        <Description("Complex")>
-        CP
-        <Description("Apparent")>
-        S
-        <Description("Active")>
-        P
-        <Description("Reactive")>
-        Q
-    End Enum
+    'Public Enum PowerType
+    '    <Description("Complex")>
+    '    CP
+    '    <Description("Apparent")>
+    '    S
+    '    <Description("Active")>
+    '    P
+    '    <Description("Reactive")>
+    '    Q
+    'End Enum
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     '''''''''''''''''''''''''''''''Class ReaderProperties'''''''''''''''''''''''''''''''''''''''''
@@ -2038,7 +2039,7 @@ Namespace ViewModels
                 If samplingRate = -1 Then
                     samplingRate = signal.SamplingRate
                 ElseIf samplingRate <> signal.SamplingRate Then
-                    Throw New Exception("All factors of multiplication customization have to have the same sampling rate! Different sampling rate found in addition customization step: " & stepCounter & ", with sampling rate: " & samplingRate & " and " & signal.SamplingRate & ".")
+                    Throw New Exception("All factors of multiplication customization have to have the same sampling rate! Different sampling rate found in multiplication customization step: " & stepCounter & ", with sampling rate: " & samplingRate & " and " & signal.SamplingRate & ".")
                 End If
             Next
             If countNonScalarType = 0 Then

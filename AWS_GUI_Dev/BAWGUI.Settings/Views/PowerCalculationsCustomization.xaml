@@ -2,8 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
@@ -14,7 +14,7 @@
         <ResourceDictionary>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="PowerTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:PowerType"/>
+                    <x:Type TypeName="coremodels:PowerType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <converters:EnumToStringConverter3 x:Key="EnumToStringConverter3"/>

@@ -9,6 +9,7 @@ Imports BAWGUI.Core
 Imports BAWGUI.Utilities
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.ReadConfigXml
+Imports BAWGUI.Core.Models
 Imports VoltageStability.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
@@ -2258,8 +2259,8 @@ Namespace ViewModels
                         Dim newOutput = obj.SignalSignature
                         'If _currentSelectedStep.UseCustomPMU Then
                         newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
-                            newOutput.PMUName = _currentSelectedStep.CustPMUname
-                            newOutput.SamplingRate = obj.SignalSignature.SamplingRate
+                        newOutput.PMUName = _currentSelectedStep.CustPMUname
+                        newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         'End If
                         newOutput.IsCustomSignal = True
                         Dim units = New List(Of String)(PostProcessConfigure.TypeUnitDictionary(obj.SignalSignature.TypeAbbreviation))

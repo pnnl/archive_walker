@@ -1,5 +1,6 @@
 ﻿Imports System.Globalization
 Imports BAWGUI.Core
+Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
 Imports VoltageStability.ViewModels
@@ -750,21 +751,21 @@ Namespace ViewModels
                     'End If
                     'If singleStep.UseCustomPMU Then
                     For Each pair In singleStep.OutputInputMappingPair
-                            Dim toConvert As XElement = <ToConvert></ToConvert>
-                            If Not String.IsNullOrEmpty(pair.Value(0).PMUName) Then
-                                toConvert.Add(<PMU><%= pair.Value(0).PMUName %></PMU>)
-                            End If
-                            If Not String.IsNullOrEmpty(pair.Value(0).SignalName) Then
-                                toConvert.Add(<Channel><%= pair.Value(0).SignalName %></Channel>)
-                            End If
-                            If Not String.IsNullOrEmpty(pair.Key.Unit) Then
-                                toConvert.Add(<NewUnit><%= pair.Key.Unit %></NewUnit>)
-                            End If
-                            If Not String.IsNullOrEmpty(pair.Key.SignalName) Then
-                                toConvert.Add(<CustName><%= pair.Key.SignalName %></CustName>)
-                            End If
-                            aStep.<Parameters>.LastOrDefault.Add(toConvert)
-                        Next
+                        Dim toConvert As XElement = <ToConvert></ToConvert>
+                        If Not String.IsNullOrEmpty(pair.Value(0).PMUName) Then
+                            toConvert.Add(<PMU><%= pair.Value(0).PMUName %></PMU>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Value(0).SignalName) Then
+                            toConvert.Add(<Channel><%= pair.Value(0).SignalName %></Channel>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Key.Unit) Then
+                            toConvert.Add(<NewUnit><%= pair.Key.Unit %></NewUnit>)
+                        End If
+                        If Not String.IsNullOrEmpty(pair.Key.SignalName) Then
+                            toConvert.Add(<CustName><%= pair.Key.SignalName %></CustName>)
+                        End If
+                        aStep.<Parameters>.LastOrDefault.Add(toConvert)
+                    Next
                     'Else
                     '    For Each pair In singleStep.OutputInputMappingPair
                     '        Dim toConvert As XElement = <ToConvert></ToConvert>
@@ -780,7 +781,7 @@ Namespace ViewModels
                     '        aStep.<Parameters>.LastOrDefault.Add(toConvert)
                     '    Next
                     'End If
-                        Case "Angle Conversion"
+                Case "Angle Conversion"
                     aStep = <Customization>
                                 <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
                                 <Parameters>
