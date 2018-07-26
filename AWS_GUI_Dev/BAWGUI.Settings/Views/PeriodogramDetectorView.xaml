@@ -8,6 +8,7 @@
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
@@ -19,12 +20,12 @@
             <converters:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DetectorModeTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:DetectorModeType"/>
+                    <x:Type TypeName="coremodels:DetectorModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DetectorWindowTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:DetectorWindowType"/>
+                    <x:Type TypeName="coremodels:DetectorWindowType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
         </ResourceDictionary>

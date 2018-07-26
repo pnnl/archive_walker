@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
+             xmlns:coremodel="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:reader="clr-namespace:BAWGUI.ReadConfigXml;assembly=BAWGUI.ReadConfigXml"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
@@ -18,12 +19,12 @@
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="ModeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:ModeType"/>
+                    <x:Type TypeName="coremodel:ModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DataFileTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="reader:DataFileType"/>
+                    <x:Type TypeName="coremodel:DataFileType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <DataTemplate x:Key="ArchiveParameter">

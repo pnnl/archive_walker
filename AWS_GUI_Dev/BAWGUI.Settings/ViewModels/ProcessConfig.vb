@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports BAWGUI.Core
+Imports BAWGUI.Core.Models
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
@@ -314,21 +315,21 @@ Namespace ViewModels
         End Property
     End Class
 
-    Public Enum InterpolateType
-        <Description("Linear")>
-        Linear
-        <Description("Constant")>
-        Constant
-    End Enum
+    'Public Enum InterpolateType
+    '    <Description("Linear")>
+    '    Linear
+    '    <Description("Constant")>
+    '    Constant
+    'End Enum
 
-    Public Enum TunableFilterType
-        Rational
-        <Description("High-Pass")>
-        HighPass
-        <Description("Low-Pass")>
-        LowPass
-        'Median
-    End Enum
+    'Public Enum TunableFilterType
+    '    Rational
+    '    <Description("High-Pass")>
+    '    HighPass
+    '    <Description("Low-Pass")>
+    '    LowPass
+    '    'Median
+    'End Enum
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     '''''''''''''''''''''''''''''''Class Wrap''''''''''''''''''''''''''''''''''''''''''''''
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
