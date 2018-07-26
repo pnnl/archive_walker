@@ -2,6 +2,7 @@
 
 Imports System.Windows
 Imports BAWGUI.Core
+Imports BAWGUI.Core.Models
 Imports BAWGUI.SignalManagement.ViewModels
 
 Namespace ViewModels
@@ -954,16 +955,16 @@ Namespace ViewModels
                 Dim output = input
                 'If aStep.UseCustomPMU Then
                 output = New SignalSignatureViewModel(outputName, CustPMUname, input.TypeAbbreviation)
-                    output.SamplingRate = input.SamplingRate
-                    output.Unit = newUnit
-                    output.OldSignalName = output.SignalName
-                    output.OldTypeAbbreviation = output.TypeAbbreviation
-                    output.OldUnit = output.Unit
-                    'Else
-                    '    output.OldUnit = output.Unit
-                    '    output.Unit = newUnit
-                    'End If
-                    output.IsCustomSignal = True
+                output.SamplingRate = input.SamplingRate
+                output.Unit = newUnit
+                output.OldSignalName = output.SignalName
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldUnit = output.Unit
+                'Else
+                '    output.OldUnit = output.Unit
+                '    output.Unit = newUnit
+                'End If
+                output.IsCustomSignal = True
                 aStep.OutputChannels.Add(output)
                 Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
                 newPair.Value.Add(input)

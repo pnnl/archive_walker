@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -198,32 +199,32 @@ namespace BAWGUI.ReadConfigXml
         public string ExampleFile { get; set; }
     }
 
-    public enum DataFileType
-    {
-        [Description("PDAT")]
-        pdat,
-        [Description("JSIS CSV")]
-        csv
-    }
+    //public enum DataFileType
+    //{
+    //    [Description("PDAT")]
+    //    pdat,
+    //    [Description("JSIS CSV")]
+    //    csv
+    //}
 
-    public enum ModeType
-    {
-        Archive,
-        [Description("Real Time")]
-        RealTime,
-        Hybrid
-    }
-    public enum PowerType
-    {
-        [Description("Complex")]
-        CP,
-        [Description("Apparent")]
-        S,
-        [Description("Active")]
-        P,
-        [Description("Reactive")]
-        Q
-    }
+    //public enum ModeType
+    //{
+    //    Archive,
+    //    [Description("Real Time")]
+    //    RealTime,
+    //    Hybrid
+    //}
+    //public enum PowerType
+    //{
+    //    [Description("Complex")]
+    //    CP,
+    //    [Description("Apparent")]
+    //    S,
+    //    [Description("Active")]
+    //    P,
+    //    [Description("Reactive")]
+    //    Q
+    //}
     //public class SignalSignatures
     //{
     //    public SignalSignatures()
