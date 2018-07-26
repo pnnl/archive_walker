@@ -26,10 +26,12 @@ namespace BAWGUI.RunMATLAB.ViewModels
             get { return _isMatlabEngineRunning; }
             set
             {
-                _isMatlabEngineRunning = value;
-                OnMatlabEngineStatusChange(value);
-                OnPropertyChanged();
-
+                if (_isMatlabEngineRunning != value)
+                {
+                    _isMatlabEngineRunning = value;
+                    OnMatlabEngineStatusChange(value);
+                    OnPropertyChanged();
+                }
             }
         }
         public event EventHandler<bool> MatlabRunning;
@@ -398,6 +400,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     }
                     //var runFlag = ControlPath + "RunFlag.txt";
                     //File.Delete(runFlag);
+                    //if (Run.IsTaskRunning)
+                    //{
+                    //    Run.IsTaskRunning = false;
+                    //}
                     while (worker.IsBusy)
                     {
                         Application.DoEvents();
@@ -441,6 +447,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
             System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
             fs.Close();
             File.Delete(runFlag);
+            //if (Run.IsTaskRunning)
+            //{
+            //    Run.IsTaskRunning = false;
+            //}
             while (worker.IsBusy)
             {
                 Application.DoEvents();

@@ -41,7 +41,7 @@
                     <Button Margin="2" Command="{Binding RunCommands.PauseArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning}" ToolTip="Pause Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource InverseBooleanVisibilityConverter}}">
                         <Image Source="/BAWGUI;component/MyResources/pause.PNG"/>
                     </Button>
-                    <Button Margin="2" Command="{Binding RunCommands.ResumeArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding SelectedRun.IsNormalRunPaused}" ToolTip="Continue Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource BooleanVisibilityConverter}}">
+                    <Button Margin="2" Command="{Binding RunCommands.ResumeArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding SelectedRun.IsNormalRunPaused}" ToolTip="Continue Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource BooleanVisibilityConverter}, ConverterParameter=ResumeArchiveWalkerNormal}">
                         <Image Source="/BAWGUI;component/MyResources/resume.PNG"/>
                     </Button>
                     <Button Margin="2"  Command="{Binding RunCommands.StopArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" ToolTip="Stop Archive Walker normal run">
