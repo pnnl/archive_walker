@@ -83,7 +83,7 @@
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/BAWGUI;component/MyResources/Run_16x.png" Visibility="{Binding IsTaskRunning, Converter={StaticResource BooleanVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                    <Image Source="/BAWGUI;component/MyResources/Run_16x.png" Visibility="{Binding IsTaskRunning, Converter={StaticResource BooleanVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ConverterParameter=IsTaskRunning}"/>
                                     <!--<TextBlock Text="{Binding AWRunName}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}, AncestorLevel=2}}" Name="myRun" Background="{Binding IsSelected, Converter={StaticResource BooleanBackgroundConverter}}">-->
                                     <TextBlock Text="{Binding AWRunName}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}, AncestorLevel=2}}" Name="myRun">
                                         <!--<TextBlock.ContextMenu>

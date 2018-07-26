@@ -472,29 +472,30 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
 
-        private static void AddANewTask(AWProjectViewModel e, string newtaskName)
-        {
-            var taskDir = e.Model.Projectpath + "Run_" + newtaskName;
-            //DirectoryInfo dir = Directory.CreateDirectory(taskDir);
-            var controlRunPath = taskDir + "\\ControlRun";
-            Directory.CreateDirectory(controlRunPath);
-            var controlReRunPath = taskDir + "\\ControlRerun";
-            Directory.CreateDirectory(controlReRunPath);
-            var eventPath = taskDir + "\\Event";
-            Directory.CreateDirectory(eventPath);
-            var initPath = taskDir + "\\Init";
-            Directory.CreateDirectory(initPath);
+        //private static void AddANewTask(AWProjectViewModel e, string newtaskName)
+        //{
+        //    var taskDir = e.Model.Projectpath + "Run_" + newtaskName;
+        //    //DirectoryInfo dir = Directory.CreateDirectory(taskDir);
+        //    var controlRunPath = taskDir + "\\ControlRun";
+        //    Directory.CreateDirectory(controlRunPath);
+        //    var controlReRunPath = taskDir + "\\ControlRerun";
+        //    Directory.CreateDirectory(controlReRunPath);
+        //    var eventPath = taskDir + "\\Event";
+        //    Directory.CreateDirectory(eventPath);
+        //    var initPath = taskDir + "\\Init";
+        //    Directory.CreateDirectory(initPath);
 
-            var newTask = new AWRun();
-            newTask.ConfigFilePath = taskDir + "\\Config.xml";
-            newTask.ControlRerunPath = controlReRunPath;
-            newTask.ControlRunPath = controlRunPath;
-            newTask.EventPath = eventPath;
-            newTask.InitializationPath = initPath;
-            newTask.RunName = newtaskName;
-            newTask.RunPath = taskDir;
-            e.Model.AWRuns.Add(newTask);
-        }
+        //    var newTask = new AWRun();
+        //    newTask.ConfigFilePath = taskDir + "\\Config.xml";
+        //    newTask.ControlRerunPath = controlReRunPath;
+        //    newTask.ControlRunPath = controlRunPath;
+        //    newTask.EventPath = eventPath;
+        //    newTask.InitializationPath = initPath;
+        //    newTask.RunName = newtaskName;
+        //    newTask.RunPath = taskDir;
+        //    e.Model.AWRuns.Add(newTask);
+        //    e.AWRuns = e.GetAWRunViewModelCollection(e.Model.AWRuns);
+        //}
 
         private void _newTaskCancelled(object sender, AWProjectViewModel e)
         {
@@ -538,6 +539,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             //_addTaskVM = new AddTaskViewModel();
             _dialogbox = new AddARunPopup();
             IsProjectEnabled = true;
+            AWRuns = GetAWRunViewModelCollection(_model.AWRuns);
         }
 
         public AWProjectViewModel()
@@ -555,16 +557,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             get
             {
-                var runs = new ObservableCollection<AWRunViewModel>();
-                foreach (var run in _model.AWRuns)
-                {
-                    var newRunViewModel = new AWRunViewModel(run);
-                    newRunViewModel.RunSelected += _onOneOfTheRunSelected;
-                    runs.Add(newRunViewModel);
-                }
-                _awRuns = new ObservableCollection<AWRunViewModel>(runs.OrderBy(x=>x.AWRunName).ToList());
                 return _awRuns;
             }
+        }
+
+        public ObservableCollection<AWRunViewModel> GetAWRunViewModelCollection(List<AWRun> aWRuns)
+        {
+            var runs = new ObservableCollection<AWRunViewModel>();
+            foreach (var run in _model.AWRuns)
+            {
+                var newRunViewModel = new AWRunViewModel(run);
+                newRunViewModel.RunSelected += _onOneOfTheRunSelected;
+                runs.Add(newRunViewModel);
+            }
+           return new ObservableCollection<AWRunViewModel>(runs.OrderBy(x => x.AWRunName).ToList());
         }
 
         private void _onOneOfTheRunSelected(object sender, AWRunViewModel e)
@@ -614,7 +620,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
                         break;
                     }
                 }
-                OnPropertyChanged("AWRuns");
+                //OnPropertyChanged("AWRuns");
+                AWRuns.Remove(runToDelete);
+                //AWRuns = GetAWRunViewModelCollection(_model.AWRuns);
                 _deleteDirectoryRecursively(runToDelete.Model.RunPath);
                 //_deleteARunFolder(runToDelete.Model.RunPath);
             }
@@ -666,7 +674,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _dialogbox.Close();
             var newtaskName = ((AddTaskViewModel)sender).NewRunName;
             var nameExistsFlag = false;
-            foreach (var task in _awRuns)
+            foreach (var task in AWRuns)
             {
                 if (task.Model.RunName == newtaskName)
                 {
@@ -724,8 +732,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 wr.WriteXmlConfigFile(newTask.ConfigFilePath);
             }
             _model.AWRuns.Add(newTask);
+            var newTaskVieModel = new AWRunViewModel(newTask);
+            newTaskVieModel.RunSelected += _onOneOfTheRunSelected;
+            AWRuns.Add(newTaskVieModel);
+            AWRuns = new ObservableCollection<AWRunViewModel>(AWRuns.OrderBy(x => x.AWRunName).ToList());
+            //AWRuns = GetAWRunViewModelCollection(_model.AWRuns);
             //_model.AWRuns.OrderBy(x => x.RunName);
-            OnPropertyChanged("AWRuns");
+            //OnPropertyChanged("AWRuns");
         }
         private void _newTaskCancelled(object sender, EventArgs e)
         {
