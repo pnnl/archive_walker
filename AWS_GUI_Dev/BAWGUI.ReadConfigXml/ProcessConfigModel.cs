@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.ComponentModel;
 using BAWGUI.Core;
+using BAWGUI.Core.Models;
 
 namespace BAWGUI.ReadConfigXml
 {
@@ -138,13 +139,13 @@ namespace BAWGUI.ReadConfigXml
         public InterpolateType Type { get; set; }
         public bool FlagInterp { get; set; }
     }
-    public enum InterpolateType
-    {
-        [System.ComponentModel.Description("Linear")]
-        Linear,
-        [Description("Constant")]
-        Constant
-    }
+    //public enum InterpolateType
+    //{
+    //    [System.ComponentModel.Description("Linear")]
+    //    Linear,
+    //    [Description("Constant")]
+    //    Constant
+    //}
     public class TunableFilterModel : UnwrapModel
     {
         public TunableFilterModel() { }
@@ -222,14 +223,14 @@ namespace BAWGUI.ReadConfigXml
             get { return "Filter"; }
         }
     }
-    public enum TunableFilterType
-    {
-        Rational,
-        [Description("High-Pass")]
-        HighPass,
-        [Description("Low-Pass")]
-        LowPass
-    }
+    //public enum TunableFilterType
+    //{
+    //    Rational,
+    //    [Description("High-Pass")]
+    //    HighPass,
+    //    [Description("Low-Pass")]
+    //    LowPass
+    //}
     public class MultirateModel : UnwrapModel
     {
         public MultirateModel() { }

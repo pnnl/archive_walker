@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows
 Imports BAWGUI.Core
+Imports BAWGUI.Core.Models
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
@@ -957,32 +958,32 @@ Namespace ViewModels
         End Property
     End Class
 
-    Public Enum DetectorModeType
-        <ComponentModel.Description("Single Channel")>
-        SingleChannel
-        <ComponentModel.Description("Multichannel")>
-        MultiChannel
-    End Enum
+    'Public Enum DetectorModeType
+    '    <ComponentModel.Description("Single Channel")>
+    '    SingleChannel
+    '    <ComponentModel.Description("Multichannel")>
+    '    MultiChannel
+    'End Enum
 
-    Public Enum DetectorWindowType
-        <ComponentModel.Description("Hann")>
-        hann
-        <ComponentModel.Description("Rectangular")>
-        rectwin
-        <ComponentModel.Description("Bartlett")>
-        bartlett
-        <ComponentModel.Description("Hamming")>
-        hamming
-        <ComponentModel.Description("Blackman")>
-        blackman
-    End Enum
+    'Public Enum DetectorWindowType
+    '    <ComponentModel.Description("Hann")>
+    '    hann
+    '    <ComponentModel.Description("Rectangular")>
+    '    rectwin
+    '    <ComponentModel.Description("Bartlett")>
+    '    bartlett
+    '    <ComponentModel.Description("Hamming")>
+    '    hamming
+    '    <ComponentModel.Description("Blackman")>
+    '    blackman
+    'End Enum
 
-    Public Enum OutOfRangeFrequencyDetectorType
-        <ComponentModel.Description("Nominal Value")>
-        Nominal
-        <ComponentModel.Description("History for Baseline (seconds)")>
-        AvergeWindow
-    End Enum
+    'Public Enum OutOfRangeFrequencyDetectorType
+    '    <ComponentModel.Description("Nominal Value")>
+    '    Nominal
+    '    <ComponentModel.Description("History for Baseline (seconds)")>
+    '    AvergeWindow
+    'End Enum
 
     Public Class AlarmingSpectralCoherence
         Inherits AlarmingDetectorBase

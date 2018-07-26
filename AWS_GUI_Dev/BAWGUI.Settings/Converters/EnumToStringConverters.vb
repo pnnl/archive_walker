@@ -1,5 +1,6 @@
 ﻿Imports System.Globalization
 Imports System.Windows.Data
+Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Converters
@@ -7,9 +8,9 @@ Namespace Converters
         Implements IValueConverter
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.Convert
             Select Case value
-                Case BAWGUI.ReadConfigXml.DataFileType.csv
+                Case DataFileType.csv
                     Return "JSIS CSV"
-                Case BAWGUI.ReadConfigXml.DataFileType.pdat
+                Case DataFileType.pdat
                     Return "PDAT"
                 Case Else
                     Throw New Exception("Data file type not valid!")
@@ -19,9 +20,9 @@ Namespace Converters
         Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.ConvertBack
             Select Case value
                 Case "JSIS CSV"
-                    Return BAWGUI.ReadConfigXml.DataFileType.csv
+                    Return DataFileType.csv
                 Case "PDAT"
-                    Return BAWGUI.ReadConfigXml.DataFileType.pdat
+                    Return DataFileType.pdat
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

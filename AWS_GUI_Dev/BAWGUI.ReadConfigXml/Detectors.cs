@@ -19,6 +19,7 @@ namespace BAWGUI.ReadConfigXml
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using BAWGUI.Core;
+    using BAWGUI.Core.Models;
     using Microsoft.VisualBasic;
 
     public class PeriodogramDetectorModel
@@ -1141,35 +1142,35 @@ namespace BAWGUI.ReadConfigXml
         public List<SignalSignatures> PMUElementList { get; set; }
     }
 
-    public enum DetectorModeType
-    {
-        [System.ComponentModel.Description("Single Channel")]
-        SingleChannel,
-        [System.ComponentModel.Description("Multichannel")]
-        MultiChannel
-    }
+    //public enum DetectorModeType
+    //{
+    //    [System.ComponentModel.Description("Single Channel")]
+    //    SingleChannel,
+    //    [System.ComponentModel.Description("Multichannel")]
+    //    MultiChannel
+    //}
 
-    public enum DetectorWindowType
-    {
-        [System.ComponentModel.Description("Hann")]
-        hann,
-        [System.ComponentModel.Description("Rectangular")]
-        rectwin,
-        [System.ComponentModel.Description("Bartlett")]
-        bartlett,
-        [System.ComponentModel.Description("Hamming")]
-        hamming,
-        [System.ComponentModel.Description("Blackman")]
-        blackman
-    }
+    //public enum DetectorWindowType
+    //{
+    //    [System.ComponentModel.Description("Hann")]
+    //    hann,
+    //    [System.ComponentModel.Description("Rectangular")]
+    //    rectwin,
+    //    [System.ComponentModel.Description("Bartlett")]
+    //    bartlett,
+    //    [System.ComponentModel.Description("Hamming")]
+    //    hamming,
+    //    [System.ComponentModel.Description("Blackman")]
+    //    blackman
+    //}
 
-    public enum OutOfRangeFrequencyDetectorType
-    {
-        [System.ComponentModel.Description("Nominal Value")]
-        Nominal,
-        [System.ComponentModel.Description("History for Baseline (seconds)")]
-        AvergeWindow
-    }
+    //public enum OutOfRangeFrequencyDetectorType
+    //{
+    //    [System.ComponentModel.Description("Nominal Value")]
+    //    Nominal,
+    //    [System.ComponentModel.Description("History for Baseline (seconds)")]
+    //    AvergeWindow
+    //}
 
     public class AlarmingSpectralCoherenceModel
     {

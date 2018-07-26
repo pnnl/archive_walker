@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
@@ -23,22 +24,22 @@
             <converters:TunableFilterExpanderHeaderConverter x:Key="TunableFilterExpanderHeaderConverter"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="InterpolateTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:InterpolateType"/>
+                    <x:Type TypeName="coremodels:InterpolateType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="EndpointsTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:EndpointsType"/>
+                    <x:Type TypeName="coremodels:EndpointsType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="HandleNaNTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:HandleNaNType"/>
+                    <x:Type TypeName="coremodels:HandleNaNType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="TunableFilterTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:TunableFilterType"/>
+                    <x:Type TypeName="coremodels:TunableFilterType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <DataTemplate x:Key="MultiRateOptionButtons">
