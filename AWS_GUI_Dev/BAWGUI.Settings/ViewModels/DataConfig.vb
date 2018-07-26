@@ -1709,7 +1709,7 @@ Namespace ViewModels
             End If
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Return True
+            Return TimeSourcePMU IsNot Nothing
         End Function
         Public ReadOnly Property Name As String
             Get
