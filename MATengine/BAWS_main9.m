@@ -1,4 +1,4 @@
-%             XML file
+% XML file
 % ConfigAll = fun_xmlread_comments('BPAinstallProto2_TestErrorAndNewPreparePMUList.XML');
 % ConfigAll = fun_xmlread_comments('UpdatedMultiFile.XML');
 % ConfigAll = fun_xmlread_comments('Config_NewFreqDet.XML');
