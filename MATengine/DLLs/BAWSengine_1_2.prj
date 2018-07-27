@@ -1,0 +1,283 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="2576811921" file="C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DLLs\BAWSengine_1_2.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DLLs" name="BAWSengine_1_2" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DLLs\BAWSengine_1_2\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+    <param.appname>BAWSengine</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>2.7</param.version>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>\BAWSengine\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes>You must have Python 2.7, 3.4, or 3.5 on your machine to install this package. Go to the directory to which setup.py and your package have been written. Then execute:
+
+        python setup.py install [options]
+
+For details, see the readme.txt distributed with this package.</param.target.install.notes>
+    <param.intermediate>${PROJECT_ROOT}\BAWSengine_1_2\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\BAWSengine_1_2\for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\BAWSengine_1_2\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\BAWSengine_1_2</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.net.component</param.target.type>
+    <param.support.packages />
+    <param.namespace />
+    <param.classorg />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.user.only.registration>false</param.user.only.registration>
+    <param.assembly.type>false</param.assembly.type>
+    <param.encryption.key.file />
+    <param.net.enable.remoting>false</param.net.enable.remoting>
+    <param.net.tsa.enable>false</param.net.tsa.enable>
+    <param.net.tsa.assembly />
+    <param.net.tsa.interface />
+    <param.net.tsa.namespace />
+    <param.net.tsa.superclass>GUI2MAT</param.net.tsa.superclass>
+    <param.net.tsa.metadata />
+    <param.net.tsa.metadata.assembly>C:\Users\foll154\Documents\MATLAB</param.net.tsa.metadata.assembly>
+    <param.net.saved.interface />
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.logdir />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.support.packages />
+      <param.namespace />
+      <param.classorg />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.user.only.registration />
+      <param.assembly.type />
+      <param.encryption.key.file />
+      <param.net.enable.remoting />
+      <param.net.tsa.enable />
+      <param.net.tsa.assembly />
+      <param.net.tsa.interface />
+      <param.net.tsa.namespace />
+      <param.net.tsa.superclass />
+      <param.net.tsa.metadata />
+      <param.net.tsa.metadata.assembly />
+      <param.net.saved.interface />
+    </unset>
+    <fileset.exports>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\GetPDATexample.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\GetSparseData.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunForcedOscillation.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunOutOfRange.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunRingdown.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunThevenin.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RunNormalMode.m</file>
+    </fileset.exports>
+    <fileset.classes>
+      <entity.package name="">
+        <entity.class name="GUI2MAT">
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\GetPDATexample.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\GetSparseData.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunForcedOscillation.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunOutOfRange.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunRingdown.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RerunThevenin.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\GUIfunctions\RunNormalMode.m</file>
+        </entity.class>
+      </entity.package>
+    </fileset.classes>
+    <fileset.resources>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Rerun\AddMissingToSparsePMU.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Rerun\AddToSparsePMU.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Rerun\CleanAdditionalOutput.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Rerun\DisableDetectors.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Rerun\RetrieveInitializationFile.m</file>
+    </fileset.resources>
+    <fileset.depfun>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\BAWS_main9.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\ChangeNameTypeUnit.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\DataProcessor.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\DPfilterStep.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\DPinterpolation.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\DPMultiRate.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\DPUnwrap.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\DPWrap.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\Filter\HighPassFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\Filter\LowPassFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\Filter\MedianFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\Filter\RationalFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\interpo.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\MultiRate.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\UnwrapAngle.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DataProcessor\WrapAngle.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\ConcatenatePMU.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\CreatePMUsegment.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\ExtractData.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\OutOfRangeGeneralDetector.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\PeriodogramDetector\calcGMSC.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\PeriodogramDetector\CalcPSD_OmegaB.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\PeriodogramDetector\CalcThreshold.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\PeriodogramDetector\DetectFO.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\PeriodogramDetector\ExtractFOdetectionParamsPer.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\PeriodogramDetector\PeriodogramDetector.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\RingdownDetector.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\RunDetection.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\SpectralCoherenceDetector\calcSelfGMSC.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\SpectralCoherenceDetector\DetectFO_SC.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\SpectralCoherenceDetector\ExtractFOdetectionParamsSC.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\SpectralCoherenceDetector\SpectralCoherenceDetector.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\Thevenin\DeMarco2_3c_LNout.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\Thevenin\GSPF_puLLout.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\Thevenin\Mitsubishi3_LNout.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\Thevenin\Quanta_LNout3.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\Thevenin\RPI.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\Thevenin\Tellegen_LNout2.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\Thevenin\TheveninDetector.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\UpdatePMUconcat.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\Detector\WindRampDetector.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\CustomizationStep.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQandCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\ChanFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\DataFrameFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\DropOutMissingFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\DropOutZeroFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\EntirePMUfilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\FreqFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\OutlierFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\PMUflagFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\StaleFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\VoltPhasorFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilters\WrappingFailureFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\DQfilterStep.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\InitCustomPMU.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\AddCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\AngleCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\AngleUnitCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\CheckSignalNameError.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\CheckTypeAndUnits.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\CommonCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\CreatePhasorCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\DivisionCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\ExpCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\MultCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\PowCalcCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\PowCalcMagAng.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\PowCalcPhasor.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\PrefixCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\ScalarRep.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\SpecTypeUnitCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DQandCustomization\SignalCustomization\SubtractionCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\AssignEventID.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\EventListXML2MAT.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\ExtractAlarmingParamsPer.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\ExtractAlarmingParamsRingdown.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\ExtractAlarmingParamsSC.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\StoreEventList.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateEventXML.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateForcedOscillationEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateForcedOscillationOverEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateOutOfRangeEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateOutOfRangeOverEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateOverallStartAndEndTimes.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateRingEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateRingOverEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateTheveninEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateTheveninOverEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateWindAppOverEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateWindRampEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\UpdateWindRampOverEvents.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\EventList\WriteEventListXML.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\fun_xmlread_comments.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\InitializeBAWS.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\near.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\createPdatStruct.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\getCSVFileFolder.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\getFocusFiles.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\getNextFutureDayFolder.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\GetOutputSignals.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\getPdatFileFolder.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\getPdatFileTime.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\JSIS_CSV_2_Mat.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\LoadFocusFiles.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\pdatRead.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\readConfigFrame.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\SetNameAndUnit_PDAT.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ReadingData\sortSOC.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\WindApplication\GenerateWindAppReport.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\WindApplication\WindAppCatAndRank.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\WindApplication\WindApplication.m</file>
+    </fileset.depfun>
+    <fileset.package />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\BAWSengine_1_2\for_testing" name="BAWSengine.dll" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DLLs\BAWSengine_1_2\for_testing\BAWSengine.dll</file>
+      <file location="${PROJECT_ROOT}\BAWSengine_1_2\for_testing" name="BAWSengineNative.dll" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DLLs\BAWSengine_1_2\for_testing\BAWSengineNative.dll</file>
+      <file location="${PROJECT_ROOT}\BAWSengine_1_2\for_testing" name="readme.txt" optional="true">C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DLLs\BAWSengine_1_2\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\BAWSengine_1_2\for_testing" name="BAWSengine_overview.html" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\DLLs\BAWSengine_1_2\for_testing\BAWSengine_overview.html</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2017A</root>
+      <toolboxes>
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabcoder" />
+      </toolboxes>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.1</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
