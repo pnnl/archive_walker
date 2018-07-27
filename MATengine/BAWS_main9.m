@@ -27,18 +27,17 @@ InitializationPath = varargin{3};
 if exist(InitializationPath,'dir') ~= 7; mkdir(InitializationPath); end
 %
 % File directory - this is where the files to be analyzed are stored
-% FileDirectory = varargin{4};
-
-
-%%%%%%%%%%%%
-
-% NEED TO CHECK TO MAKE SURE FILE DIRECTORIES EXIST AS BELOW, BUT NEED TO
-% DO THIS FOR EACH DIRECTORY. TO DO THAT, I NEED TO KNOW HOW HENG WILL PASS
-% MULTIPLE STRINGS IN. CELL ARRAY???
-
-% if exist(FileDirectory,'dir') ~= 7
-%     error('The specified directory for input data does not exist.')
-% end
+% For now, assume that this is a cell array, even if only one directory is
+% used. Need to verify this with Heng.
+FileDirectory = varargin{4};
+if isempty(FileDirectory)
+    error('At least one file directory must be specified.');
+end
+for idx = 1:length(FileDirectory)
+    if exist(FileDirectory{idx},'dir') ~= 7
+        error(['The following directory for input data does not exist: ' FileDirectory{idx}])
+    end
+end
 
 % Check if PauseData.mat exists. If it does, this call is being used to
 % un-pause a run of the tool.
@@ -52,10 +51,10 @@ else
     Unpause = true;
 end
 
-if (nargin == 4) && (~Unpause)
+if (nargin == 5) && (~Unpause)
     RunMode = 'Normal';
     
-    ConfigFile = varargin{4};
+    ConfigFile = varargin{5};
     if exist(ConfigFile,'file')
         ConfigAll = fun_xmlread_comments(ConfigFile);
     else
@@ -86,9 +85,9 @@ elseif ~Unpause
     RunMode = 'Rerun';
     
     % Configuration file tied to results
-    ConfigFile = varargin{4};
+    ConfigFile = varargin{5};
     % Start and end times specified by the user
-    RerunStartTime = varargin{5};
+    RerunStartTime = varargin{6};
     % Check formatting of start time. Also stores the start time as a
     % datetime variable.
     try
@@ -97,7 +96,7 @@ elseif ~Unpause
         error(['The rerun start time ' RerunStartTime ' is not in the following format: MM/dd/yyyy HH:mm:ss']);
     end
     %
-    RerunEndTime = varargin{6};
+    RerunEndTime = varargin{7};
     % Check formatting of end time
     try
         datetime(RerunEndTime,'InputFormat','MM/dd/yyyy HH:mm:ss');
@@ -105,7 +104,7 @@ elseif ~Unpause
         error(['The rerun end time ' RerunEndTime ' is not in the following format: MM/dd/yyyy HH:mm:ss']);
     end
     % Detector of interest for the rerun
-    RerunDetector = varargin{7};
+    RerunDetector = varargin{8};
     
     if exist(ConfigFile,'file')
         ConfigAll = fun_xmlread_comments(ConfigFile);
@@ -331,7 +330,7 @@ while(~min(done))
             % Clear filepaths so that results and data can be moved before
             % the task is unpaused
             ControlPathHold = ControlPath;
-            clear ControlPath EventPath InitializationPath
+            clear ControlPath EventPath InitializationPath FileDirectory
             
             save([ControlPathHold '\PauseData.mat']);
         end
@@ -348,7 +347,7 @@ while(~min(done))
         SkippedFiles = zeros(1,length(FileInfo));
         FocusFileTime = zeros(1,length(FileInfo));
         for FileIdx = 1:length(FileInfo)
-            [focusFile{FileIdx},done(FileIdx),SkippedFiles(FileIdx),FocusFileTime(FileIdx),DataInfo] = getFocusFiles(FileInfo(FileIdx),DataInfo,FileLength);
+            [focusFile{FileIdx},done(FileIdx),SkippedFiles(FileIdx),FocusFileTime(FileIdx),DataInfo] = getFocusFiles(FileInfo(FileIdx),FileDirectory{FileIdx},DataInfo,FileLength);
             FileInfo(FileIdx).lastFocusFile = focusFile{FileIdx};
         end
         %
@@ -402,7 +401,7 @@ while(~min(done))
                 if exist(WindReportPath,'dir') ~= 7; mkdir(WindReportPath); end
                 
                 WindReportPathFull = [WindReportPath '\WindEventReport_' datestr(DataInfo.LastFocusFileTime,'yymmdd')];
-                GenerateWindAppReport(ConfigFile,StartTime,EndTime,'NewestLast',WindReportPathFull,DataXML,NumDQandCustomStages,InitializationPath,ProcessXML,NumProcessingStages,FlagBitInterpo,FlagBitInput,NumFlagsProcessor,PostProcessCustXML,NumPostProcessCustomStages,PMUbyFile,FileLength,Num_Flags,DetectorXML);
+                GenerateWindAppReport(ConfigFile,StartTime,EndTime,'NewestLast',WindReportPathFull,DataXML,FileDirectory,NumDQandCustomStages,InitializationPath,ProcessXML,NumProcessingStages,FlagBitInterpo,FlagBitInput,NumFlagsProcessor,PostProcessCustXML,NumPostProcessCustomStages,PMUbyFile,FileLength,Num_Flags,EventPath);
             end
 
             % Update the event list and store events that are over

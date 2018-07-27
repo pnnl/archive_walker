@@ -1,4 +1,4 @@
-function GenerateWindAppReport(ConfigFile,StartTime,EndTime,SortType,ReportPath,DataXML,NumDQandCustomStages,InitializationPath,ProcessXML,NumProcessingStages,FlagBitInterpo,FlagBitInput,NumFlagsProcessor,PostProcessCustXML,NumPostProcessCustomStages,PMUbyFile,FileLength,Num_Flags,DetectorXML)
+function GenerateWindAppReport(ConfigFile,StartTime,EndTime,SortType,ReportPath,DataXML,FileDirectory,NumDQandCustomStages,InitializationPath,ProcessXML,NumProcessingStages,FlagBitInterpo,FlagBitInput,NumFlagsProcessor,PostProcessCustXML,NumPostProcessCustomStages,PMUbyFile,FileLength,Num_Flags,EventPath)
 
 if exist(ReportPath,'file') ~= 0
     warning('Cannot overwrite existing file.');
@@ -6,7 +6,6 @@ if exist(ReportPath,'file') ~= 0
 end
 
 PMUfileDir = DataXML.ReaderProperties.FilePath;
-PathEventXML = DetectorXML.EventPath;
 
 % Midnight of each day specified by user
 t = floor(datenum(StartTime)):datenum(EndTime);
@@ -14,7 +13,7 @@ t = floor(datenum(StartTime)):datenum(EndTime);
 % Iterate through the days, load the event XML, and store WindApp events.
 WindApp = [];
 for tidx = 1:length(t)
-    EventXMLfile = [PathEventXML '\EventList_' datestr(t(tidx),'yymmdd') '.XML'];
+    EventXMLfile = [EventPath '\EventList_' datestr(t(tidx),'yymmdd') '.XML'];
     if exist(EventXMLfile,'file')
         % Read the XML
         EventXML = fun_xmlread_comments(EventXMLfile);
@@ -28,7 +27,7 @@ for tidx = 1:length(t)
 end
 
 % Load the current event XML and store WindApp events.
-EventXMLfile = [PathEventXML '\EventList_Current.XML'];
+EventXMLfile = [EventPath '\EventList_Current.XML'];
 % Read the XML
 EventXML = fun_xmlread_comments(EventXMLfile);
 % Convert to the EventList format used in Archive Walker
@@ -79,7 +78,7 @@ end
 
 
 Hist = 31;
-[exMean, eSep, pSep, Cat] = WindAppCatAndRank(PathEventXML,Hist);
+[exMean, eSep, pSep, Cat] = WindAppCatAndRank(EventPath,Hist);
 % Iterate through the events and assign category and rank
 EventRank = zeros(1,length(WindApp));
 EventCat = cell(1,length(WindApp));
@@ -203,7 +202,7 @@ for RankIdx = unique(EventRank)
             startPMUfilesKeepTimesAll = [];
             endPMUfilesKeepTimesAll = [];
             for DirectoryIdx = 1:length(PMUfileDir)
-                startPMUdayFilePath = [PMUfileDir{DirectoryIdx}.FileDirectory '\' datestr(WindApp(Eidx).Start,'yyyy') '\' datestr(WindApp(Eidx).Start,'yymmdd')];
+                startPMUdayFilePath = [FileDirectory{DirectoryIdx} '\' datestr(WindApp(Eidx).Start,'yyyy') '\' datestr(WindApp(Eidx).Start,'yymmdd')];
                 PMUfiles = dir(startPMUdayFilePath);
                 startPMUfilesKeep = {PMUfiles.name};
                 startPMUfilesKeep = startPMUfilesKeep(~[PMUfiles.isdir]);
@@ -213,7 +212,7 @@ for RankIdx = unique(EventRank)
                 startPMUfilesKeepTimesAll = [startPMUfilesKeepTimesAll startPMUfilesKeepTimes(StartFile)];
 
 
-                endPMUdayFilePath = [PMUfileDir{DirectoryIdx}.FileDirectory '\' datestr(WindApp(Eidx).End,'yyyy') '\' datestr(WindApp(Eidx).End,'yymmdd')];
+                endPMUdayFilePath = [FileDirectory{DirectoryIdx} '\' datestr(WindApp(Eidx).End,'yyyy') '\' datestr(WindApp(Eidx).End,'yymmdd')];
                 PMUfiles = dir(endPMUdayFilePath);
                 endPMUfilesKeep = {PMUfiles.name};
                 endPMUfilesKeep = endPMUfilesKeep(~[PMUfiles.isdir]);
@@ -243,7 +242,7 @@ for RankIdx = unique(EventRank)
                     yyyymmdd = datestr(PMUfileTimes(FileIdx),'yyyymmdd');
                     hhmmss = datestr(PMUfileTimes(FileIdx),'HHMMSS');
 
-                    PMUfilePath = [PMUfileDir{DirectoryIdx}.FileDirectory '\' yyyymmdd(1:4) '\' yyyymmdd(3:8) '\' PMUfileDir{DirectoryIdx}.Mnemonic '_' yyyymmdd '_' hhmmss '.' PMUfileDir{DirectoryIdx}.FileType];
+                    PMUfilePath = [FileDirectory{DirectoryIdx} '\' yyyymmdd(1:4) '\' yyyymmdd(3:8) '\' PMUfileDir{DirectoryIdx}.Mnemonic '_' yyyymmdd '_' hhmmss '.' PMUfileDir{DirectoryIdx}.FileType];
                     try
                         if(strcmpi(PMUfileDir{DirectoryIdx}.FileType, 'pdat'))
                             % pdat format

@@ -14,12 +14,12 @@
 % RerunEndTime = '08/22/2016 00:03:52';
 % ConfigFile = 'C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ConfigXML\RerunTest.xml'
 
-function RerunOut = RerunThevenin(RerunStartTime,RerunEndTime,ConfigFile,ControlPath,EventPath,InitializationPath,PredictionDelay)
+function RerunOut = RerunThevenin(RerunStartTime,RerunEndTime,ConfigFile,ControlPath,EventPath,InitializationPath,FileDirectory,PredictionDelay)
 
 RerunDetector = 'Thevenin';
 
 % Rerun the general out-of-range detector for the specified time period
-[~, AdditionalOutputRerun] = BAWS_main9(ControlPath,EventPath,InitializationPath,ConfigFile, RerunStartTime, RerunEndTime, RerunDetector);
+[~, AdditionalOutputRerun] = BAWS_main9(ControlPath,EventPath,InitializationPath,FileDirectory,ConfigFile, RerunStartTime, RerunEndTime, RerunDetector);
 
 % If the rerun did not return any results return an empty structure.
 if isempty(AdditionalOutputRerun)

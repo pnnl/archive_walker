@@ -21,7 +21,7 @@
 %   3. modifed the code after DataInfo doesn't have a list of files that should be processed in the archive mode
 %
 %%
-function [focusFile,done,SkippedFiles,FocusFileTime,DataInfo] = getFocusFiles(FileInfo,DataInfo,FileLength)
+function [focusFile,done,SkippedFiles,FocusFileTime,DataInfo] = getFocusFiles(FileInfo,FileDirectory,DataInfo,FileLength)
 done = 0; % used as a flag to identify the prcessing should be ended
 
 % file type
@@ -65,10 +65,10 @@ end
 % find the name and folder of the focus file
 if(fileType == 1)
     % pdat files
-    [focusFileFolder,focusFile] = getPdatFileFolder(FileInfo.FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
+    [focusFileFolder,focusFile] = getPdatFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
 elseif(fileType == 2)
     % csv files
-    [focusFileFolder,focusFile] = getCSVFileFolder(FileInfo.FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
+    [focusFileFolder,focusFile] = getCSVFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
 end
 
 checking = 1;

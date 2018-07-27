@@ -196,9 +196,8 @@ clear NumFilters
 DataInfo.mode = DataXML.ReaderProperties.Mode.Name;
 
 EmptyCell = cell(1,length(DataXML.ReaderProperties.FilePath));
-FileInfo = struct('FileDirectory',EmptyCell,'FileMnemonic',EmptyCell,'FileType',EmptyCell,'lastFocusFile',EmptyCell,'tPMU',EmptyCell);
+FileInfo = struct('FileMnemonic',EmptyCell,'FileType',EmptyCell,'lastFocusFile',EmptyCell,'tPMU',EmptyCell);
 for idx = 1:length(FileInfo)
-    FileInfo(idx).FileDirectory = DataXML.ReaderProperties.FilePath{idx}.FileDirectory;
     FileInfo(idx).FileMnemonic = DataXML.ReaderProperties.FilePath{idx}.Mnemonic;
     FileInfo(idx).FileType = DataXML.ReaderProperties.FilePath{idx}.FileType;
 end
