@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.ReadConfigXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,12 @@ namespace ModeMeter.Models
     {
         public string Name { get; set; }
         public List<SignalSignatures> PMUs { get; set; }
-        public int AnalysisLength { get; set; }
+        //public int AnalysisLength { get; set; }
         public string DampRatioThreashold { get; set; }
         public RetroactiveContinuity RetConTracking { get; set; }
         public DesiredModeAttributes DesiredModes { get; set; }
         public List<ModeMethodBase> AlgNames { get; set; }
+        public PeriodogramDetectorModel FODetectorParameters { get; set; }
     }
     public class RetroactiveContinuity
     {
@@ -56,8 +58,8 @@ namespace ModeMeter.Models
         public string ExaggeratedARModelOrder { get; set; }
         public new string Name { get => "LS-ARMA+S"; }
     }
-    public class FODetectorParameters
-    {
+    //public class FODetectorParameters
+    //{
 
-    }
+    //}
 }
