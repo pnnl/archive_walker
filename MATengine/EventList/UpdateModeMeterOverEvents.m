@@ -3,7 +3,7 @@ function EventList = UpdateModeMeterOverEvents(EventList,PathEventXML,EventType,
 % TimeStamp, the entire event is over. Otherwise, remove and store all of the
 % older occurrences. The list of events for a given period
 % contains only the occurrences overlapping with that period.
-EventList = {];
+EventList = {};
 return;
 
 

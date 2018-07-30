@@ -87,7 +87,6 @@
 
 function EventList = UpdateModeMeterEvents(DetectionResults, AdditionalOutput, EventList, ~, ~)
 % 
-EventList = {};
 return;
 
 
