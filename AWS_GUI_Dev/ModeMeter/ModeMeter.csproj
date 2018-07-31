@@ -60,7 +60,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ModeViewModel.cs" />
     <Compile Include="ViewModels\SmallSignalStabilityToolViewModel.cs" />
+    <Compile Include="Views\ModeView.xaml.cs">
+      <DependentUpon>ModeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SmallSignalStabilityToolView.xaml.cs">
       <DependentUpon>SmallSignalStabilityToolView.xaml</DependentUpon>
     </Compile>
@@ -87,6 +91,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ModeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SmallSignalStabilityToolView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +110,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\AddCommand.png">
+      <Link>MyResources\AddCommand.png</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

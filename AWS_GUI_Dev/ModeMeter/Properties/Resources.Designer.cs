@@ -63,6 +63,16 @@ namespace ModeMeter.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AddCommand {
+            get {
+                object obj = ResourceManager.GetObject("AddCommand", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RemoveCommand_16x {
             get {
                 object obj = ResourceManager.GetObject("RemoveCommand_16x", resourceCulture);
