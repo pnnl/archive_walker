@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
@@ -11,7 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
-            <converters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
+            <coreconverters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="2">
