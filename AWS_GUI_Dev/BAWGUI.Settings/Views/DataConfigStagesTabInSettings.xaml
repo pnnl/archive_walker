@@ -9,6 +9,7 @@
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -80,7 +81,7 @@
                 <local:WrappingFailureDQFilterView/>
             </DataTemplate>
             <DataTemplate x:Key="FilterListBox">
-                <local:FilterListBox/>
+                <coreview:FilterListBox/>
             </DataTemplate>
             <DataTemplate x:Key="PMUOnlyFilterListBox">
                 <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding ThisStepOutputsAsSignalHierachyByPMU.SignalList}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
