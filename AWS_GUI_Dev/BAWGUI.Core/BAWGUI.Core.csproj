@@ -86,6 +86,7 @@
     <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
     <Compile Include="Converters\SelectionStatusBackgroundConverter.cs" />
     <Compile Include="Converters\TableRowIndexConverter.cs" />
+    <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
     <Compile Include="Models\AWProject.cs" />
     <Compile Include="Models\AWRun.cs" />
     <Compile Include="Models\EnumDefinitions.cs" />
@@ -95,6 +96,9 @@
     <Compile Include="ViewModels\SignalSignatureViewModel.cs" />
     <Compile Include="ViewModels\SignalTypeHierachy.cs" />
     <Compile Include="ViewModels\SparsePlot.cs" />
+    <Compile Include="Views\FilterListBox.xaml.cs">
+      <DependentUpon>FilterListBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TimeFilterView.xaml.cs">
       <DependentUpon>TimeFilterView.xaml</DependentUpon>
     </Compile>
@@ -109,6 +113,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\FilterListBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TimeFilterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

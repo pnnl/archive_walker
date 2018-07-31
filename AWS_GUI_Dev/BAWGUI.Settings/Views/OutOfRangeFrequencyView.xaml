@@ -8,13 +8,14 @@
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreconverter:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
             <converters:EnumToStringConverter10 x:Key="EnumToStringConverter10"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="OutOfRangeFrequencyDetectorTypeValues">
                 <ObjectDataProvider.MethodParameters>
@@ -85,7 +86,7 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                             <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                            <local:FilterListBox/>
+                            <coreview:FilterListBox/>
                         </StackPanel>
                         <!--<StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">-->
                         <!--<Label Content="Parameters:" Margin="2"/>-->

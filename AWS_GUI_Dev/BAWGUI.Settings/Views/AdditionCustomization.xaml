@@ -3,13 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:sv="clr-namespace:BAWGUI.Settings"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <converters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter" />
+        <coreconverters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter" />
     </UserControl.Resources>
     <Grid Margin="-10,10,0,10">
         <Grid.ColumnDefinitions>
