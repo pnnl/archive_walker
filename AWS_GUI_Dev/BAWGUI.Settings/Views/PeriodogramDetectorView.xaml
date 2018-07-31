@@ -7,15 +7,16 @@
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreconverter:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
             <converters:EnumToStringConverter8 x:Key="EnumToStringConverter8"/>
             <converters:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DetectorModeTypeValues">
@@ -64,17 +65,17 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                             <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                            <local:FilterListBox>
-                                <local:FilterListBox.Style>
-                                    <Style TargetType="{x:Type local:FilterListBox}">
+                            <coreview:FilterListBox>
+                                <coreview:FilterListBox.Style>
+                                    <Style TargetType="{x:Type coreview:FilterListBox}">
                                         <Style.Resources>
                                             <Style TargetType="ListView">
                                                 <Setter Property="MaxHeight" Value="300"/>
                                             </Style>
                                         </Style.Resources>
                                     </Style>
-                                </local:FilterListBox.Style>
-                            </local:FilterListBox>
+                                </coreview:FilterListBox.Style>
+                            </coreview:FilterListBox>
                         </StackPanel>
                         <Grid Margin="2" Grid.Column="1">
                             <Grid.ColumnDefinitions>

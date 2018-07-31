@@ -7,15 +7,16 @@
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
+             xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:ValueTypeConverter x:Key="ValueTypeConverter"/>
             <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
-            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <converters:NewChannelVisibilityConverter x:Key="NewChannelVisibilityConverter"/>
             <converters:EnumToStringConverter4 x:Key="EnumToStringConverter4"/>
             <converters:EnumToStringConverter5 x:Key="EnumToStringConverter5"/>
@@ -221,7 +222,7 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>
-                                                <local:FilterListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
+                                                <coreview:FilterListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
                                                 <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
                                                     <ListView.ItemTemplate>
                                                         <DataTemplate>
@@ -340,7 +341,7 @@
                             <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right"/>
                         </StackPanel>
                         <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                        <local:FilterListBox/>
+                        <coreview:FilterListBox/>
                     </StackPanel>
                     <ContentControl Content="{Binding}" Margin="2" Grid.Column="1">
                         <ContentControl.Style>

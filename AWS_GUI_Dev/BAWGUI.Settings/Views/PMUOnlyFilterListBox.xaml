@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <converters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
+        <coreconverter:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
     </UserControl.Resources>
     <Grid>
         <ListView Margin="20,2,2,2" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding ThisStepOutputsAsSignalHierachyByPMU.SignalList}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Auto">
