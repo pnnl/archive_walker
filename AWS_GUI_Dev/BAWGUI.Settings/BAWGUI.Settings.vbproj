@@ -206,9 +206,6 @@
     <Compile Include="Views\ExponentCustomizationItem.xaml.vb">
       <DependentUpon>ExponentCustomizationItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FilterListBox.xaml.vb">
-      <DependentUpon>FilterListBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\filterViews\DataFramePMUchanDQFilterView.xaml.vb">
       <DependentUpon>DataFramePMUchanDQFilterView.xaml</DependentUpon>
     </Compile>
@@ -412,10 +409,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ExponentCustomizationItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\FilterListBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
