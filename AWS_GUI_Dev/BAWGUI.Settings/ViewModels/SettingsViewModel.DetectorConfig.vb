@@ -1,8 +1,10 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.IO
 Imports System.Windows
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
+Imports ModeMeter.ViewModels
 Imports VoltageStability.ViewModels
 
 Namespace ViewModels
@@ -56,11 +58,16 @@ Namespace ViewModels
                         DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                     End If
                     'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
+                Case "Small Signal Stability Tool"
+                    If Not _isModeMeterResultFolderExists() Then
+                        _generateModeMeterResultFolder()
+                    End If
+                    newDetector = New SmallSignalStabilityToolViewModel(_signalMgr)
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            If TypeOf (newDetector) Is VoltageStabilityDetectorViewModel Then
+            If TypeOf (newDetector) Is VoltageStabilityDetectorViewModel OrElse TypeOf (newDetector) Is SmallSignalStabilityToolViewModel Then
             Else
                 newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
                 newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
@@ -70,6 +77,13 @@ Namespace ViewModels
             DetectorConfigure.DetectorList.Add(newDetector)
             _selectedADetector(newDetector)
         End Sub
+
+        Private Sub _generateModeMeterResultFolder()
+        End Sub
+
+        Private Function _isModeMeterResultFolderExists() As Boolean
+            Return Directory.Exists(Run.Model.RunPath & "\MM")
+        End Function
 
         Private Function _isVoltageStabilityDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
             For Each dt In detectorList

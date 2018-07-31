@@ -302,6 +302,8 @@ namespace BAWGUI.ReadConfigXml
             {
                 var newList = new List<SignalSignatures>();
                 var inputs = item.Elements("PMU");
+                if (inputs != null)
+                {
                     foreach (var aInput in inputs)
                     {
                         var pmuName = aInput.Element("Name").Value;
@@ -312,16 +314,21 @@ namespace BAWGUI.ReadConfigXml
                             {
                                 var channelName = channel.Element("Name").Value;
                                 var newElement = new SignalSignatures(pmuName, channelName);
-                            newList.Add(newElement);
+                                newList.Add(newElement);
                             }
                         }
                         else
                         {
                             var newElement = new SignalSignatures();
                             newElement.PMUName = pmuName;
-                        newList.Add(newElement);
+                            newList.Add(newElement);
                         }
                     }
+                }
+                else
+                {
+                    throw new Exception("No PMU element found!");
+                }
                 return newList;
             }
         }

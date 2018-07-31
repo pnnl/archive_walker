@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using VoltageStability.Models;
 using VoltageStability.ViewModels;
 using ModeMeter.Models;
+using ModeMeter.ViewModels;
 
 namespace BAWGUI.ViewModels
 {
@@ -193,7 +194,14 @@ namespace BAWGUI.ViewModels
                             SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
                         }
                     }
-                    var modeMeters = new ModeMeterReader(e.SelectedRun.Model.ConfigFilePath);
+                    var modeMeters = new ModeMeterReader(e.SelectedRun.Model.ConfigFilePath).GetDetectors();
+                    if (modeMeters.Count > 0)
+                    {
+                        foreach (var mm in modeMeters)
+                        {
+                            SettingsVM.DetectorConfigure.DetectorList.Add(new SmallSignalStabilityToolViewModel(mm, _signalMgr));
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

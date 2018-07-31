@@ -73,10 +73,16 @@ namespace BAWGUI.Core.Models
     }
     public enum InterpolateType
     {
-        [System.ComponentModel.Description("Linear")]
+        [Description("Linear")]
         Linear,
         [Description("Constant")]
         Constant
     }
-
+    public enum RetroactiveContinuityStatusType
+    {
+        [Description("ON")]
+        ON,
+        [Description("OFF")]
+        OFF
+    }
 }

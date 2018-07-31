@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using BAWGUI.ReadConfigXml;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,17 @@ namespace ModeMeter.Models
 {
     public class Mode
     {
+        public Mode()
+        {
+            PMUs = new List<SignalSignatures>();
+            RetConTracking = new RetroactiveContinuity();
+            DesiredModes = new DesiredModeAttributes();
+            AlgNames = new List<ModeMethodBase>();
+            FODetectorParameters = new PeriodogramDetectorModel();
+        }
         public string Name { get; set; }
         public List<SignalSignatures> PMUs { get; set; }
-        //public int AnalysisLength { get; set; }
+        public int AnalysisLength { get; set; }
         public string DampRatioThreashold { get; set; }
         public RetroactiveContinuity RetConTracking { get; set; }
         public DesiredModeAttributes DesiredModes { get; set; }
@@ -21,7 +30,7 @@ namespace ModeMeter.Models
     }
     public class RetroactiveContinuity
     {
-        public bool Status { get; set; }
+        public RetroactiveContinuityStatusType Status { get; set; }
         public string MaxLength { get; set; }
     }
     public class DesiredModeAttributes

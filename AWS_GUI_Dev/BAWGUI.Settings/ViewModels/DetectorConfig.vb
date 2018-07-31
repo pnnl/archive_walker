@@ -19,7 +19,8 @@ Namespace ViewModels
                                                           "Ringdown Detector",
                                                           "Out-of-Range Detector",
                                                           "Wind Ramp Detector",
-                                                          "Voltage Stability"}
+                                                          "Voltage Stability",
+                                                          "Small Signal Stability Tool"}
             _alarmingDetectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}
