@@ -26,16 +26,16 @@ namespace VoltageStability.ViewModels
             newDetector.Sites.Add(newSite);
             _model = newDetector;
             _signalMgr = signalMgr;
-            SetUpVSViewModel();
+            _setUpVSViewModel();
         }
         public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr)
         {
             _model = model;
             _signalMgr = signalMgr;
-            SetUpVSViewModel();
+            _setUpVSViewModel();
         }
 
-        private void SetUpVSViewModel()
+        private void _setUpVSViewModel()
         {
             var newSites = new ObservableCollection<SiteViewModel>();
             int siteCount = 0;
