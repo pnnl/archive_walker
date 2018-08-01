@@ -37,7 +37,7 @@
             <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Hidden">
                 <StackPanel Orientation="Vertical" Margin="2">
                     <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                    <coreview:FilterListBox/>
+                    <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
                 </StackPanel>
             </ScrollViewer>
         </Expander>

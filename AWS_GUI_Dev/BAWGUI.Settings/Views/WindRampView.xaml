@@ -59,7 +59,7 @@
                                 <RadioButton GroupName="{Binding StepCounter}" Content="Short trend" IsChecked="{Binding IsLongTrend, Converter={StaticResource InverseBooleanConverter}}" Margin="10,0"/>
                             </StackPanel>
                             <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                            <coreview:FilterListBox/>
+                            <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
                         </StackPanel>
                         <!--<StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
                         <Label Content="Parameters:" Margin="2"/>-->
