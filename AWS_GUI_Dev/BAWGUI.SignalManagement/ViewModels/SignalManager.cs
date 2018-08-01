@@ -1019,73 +1019,78 @@ namespace BAWGUI.SignalManagement.ViewModels
             var newSignalList = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in pMUElementList)
             {
-                foreach (var group in GroupedRawSignalsByPMU)
-                {
-                    foreach (var samplingRateSubgroup in group.SignalList)
-                    {
-                        foreach (var subgroup in samplingRateSubgroup.SignalList)
-                        {
-                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
-                            {
-                                foreach (var subsubgroup in subgroup.SignalList)
-                                {
-                                    newSignalList.Add(subsubgroup.SignalSignature);
-                                }
-                            }
-                        }
-                    }
-                }
-                foreach (var group in GroupedSignalByDataConfigStepsOutput)
-                {
-                    foreach (var samplingRateSubgroup in group.SignalList)
-                    {
-                        foreach (var subgroup in samplingRateSubgroup.SignalList)
-                        {
-                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
-                            {
-                                foreach (var subsubgroup in subgroup.SignalList)
-                                {
-                                    newSignalList.Add(subsubgroup.SignalSignature);
-                                }
-                            }
-                        }
-                    }
-                }
-                foreach (var group in GroupedSignalByProcessConfigStepsOutput)
-                {
-                    foreach (var samplingRateSubgroup in group.SignalList)
-                    {
-                        foreach (var subgroup in samplingRateSubgroup.SignalList)
-                        {
-                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
-                            {
-                                foreach (var subsubgroup in subgroup.SignalList)
-                                {
-                                    newSignalList.Add(subsubgroup.SignalSignature);
-                                }
-                            }
-                        }
-                    }
-                }
-                foreach (var group in GroupedSignalByPostProcessConfigStepsOutput)
-                {
-                    foreach (var samplingRateSubgroup in group.SignalList)
-                    {
-                        foreach (var subgroup in samplingRateSubgroup.SignalList)
-                        {
-                            if (subgroup.SignalSignature.PMUName == signal.PMUName)
-                            {
-                                foreach (var subsubgroup in subgroup.SignalList)
-                                {
-                                    newSignalList.Add(subsubgroup.SignalSignature);
-                                }
-                            }
-                        }
-                    }
-                }
+                FindSignalsOfAPMU(newSignalList, signal.PMUName);
 
             }
             return newSignalList;
+        }
+
+        public void FindSignalsOfAPMU(ObservableCollection<SignalSignatureViewModel> newSignalList, string pmu)
+        {
+            foreach (var group in GroupedRawSignalsByPMU)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                newSignalList.Add(subsubgroup.SignalSignature);
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var group in GroupedSignalByDataConfigStepsOutput)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                newSignalList.Add(subsubgroup.SignalSignature);
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var group in GroupedSignalByProcessConfigStepsOutput)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                newSignalList.Add(subsubgroup.SignalSignature);
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var group in GroupedSignalByPostProcessConfigStepsOutput)
+            {
+                foreach (var samplingRateSubgroup in group.SignalList)
+                {
+                    foreach (var subgroup in samplingRateSubgroup.SignalList)
+                    {
+                        if (subgroup.SignalSignature.PMUName == pmu)
+                        {
+                            foreach (var subsubgroup in subgroup.SignalList)
+                            {
+                                newSignalList.Add(subsubgroup.SignalSignature);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public ObservableCollection<SignalSignatureViewModel> FindSignals(List<SignalSignatures> pMUElementList)
