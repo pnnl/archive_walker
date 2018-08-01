@@ -28,14 +28,14 @@
 % rhat = column one is estimated autocorrelation of y. Column two is 
 %        reconstructed autocorrelation of y based on identified model
 
-function [ModeEst, Mtrack, sPoles] = YW_ARMApS(y,Parameters,DesiredModes,fs,Mtrack,~,FOfreq)
+function [ModeEst, Mtrack, sPoles] = YW_ARMApS(y,Parameters,DesiredModes,fs,Mtrack,FOfreq)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
 na = Parameters{1}.na;
 nb = Parameters{1}.nb;
 
-FOfreq(find(isnan(FOfreq))) = [];
+FOfreq(isnan(FOfreq)) = [];
 if isempty(FOfreq)
     L = Parameters{1}.L;
 else
