@@ -42,7 +42,7 @@
 %
 
 
-function [Frequency_est,Freq_FO_Refined] = FOdetectionForModeMeter(y,Parameters,fs,AnalysisLength)
+function Freq_FO_Refined = FOdetectionForModeMeter(y,Parameters,fs,AnalysisLength)
 
 %Extract parameters from the structure
 WindowType = Parameters.WindowType;
