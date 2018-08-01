@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
             <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-            <coreview:FilterListBox/>
+            <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
         </StackPanel>
         <Grid Margin="2" Grid.Column="1">
             <Grid.ColumnDefinitions>

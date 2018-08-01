@@ -222,7 +222,7 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>
-                                                <coreview:FilterListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
+                                                <coreview:FilterListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding InputChannels}"/>
                                                 <!--<ListView Margin="20,2,2,2" ItemsSource="{Binding InputChannels}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
                                                     <ListView.ItemTemplate>
                                                         <DataTemplate>
@@ -341,7 +341,7 @@
                             <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right"/>
                         </StackPanel>
                         <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                        <coreview:FilterListBox/>
+                        <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
                     </StackPanel>
                     <ContentControl Content="{Binding}" Margin="2" Grid.Column="1">
                         <ContentControl.Style>

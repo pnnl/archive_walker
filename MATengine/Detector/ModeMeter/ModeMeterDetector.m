@@ -23,7 +23,7 @@ try
     [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString] = ExtractDataModemeter(PMUstruct,Parameters);
 catch
     warning('Input data for the mode-meter could not be used.');
-    DetectionResults = struct('FOfreq',cell(1,length(Parameters.Mode)),'ModeName',cell(1,length(Parameters.Mode)), 'ChannelName',cell(1,length(Parameters.Mode)), 'DampingRatio',cell(1,length(Parameters.Mode)));%'MpathRemainder',[],'Name',Parameters.Name
+    DetectionResults = struct('FOfreq',cell(1,length(Parameters.Mode)));%'MpathRemainder',[],'Name',Parameters.Name
     AdditionalOutput = struct('MpathRemainder',[],'ModeOriginal',[],...
         'ModeTrack',[],'OperatingValues',[], 'OperatingNames',[], 'OperatingUnits',[],...
         'Data',[],'DataPMU',[],'DataChannel',[],'DataType',[],'DataUnit',[],'TimeString',[]);
@@ -35,7 +35,7 @@ ExtractedParametersAll = ExtractModeMeterParams(Parameters,fs);
 AdditionalOutput(1).OperatingValues = [];
 
 for ModeIdx = 1:length(Parameters.Mode)
-    EventOccurenceIdx = 1;
+    ModeEstimateCalcIdx = 1;
     ExtractedParameters = ExtractedParametersAll{ModeIdx};
     TimeStringDN = datenum(TimeString{ModeIdx});
     NumMethods = length(ExtractedParameters.AlgorithmSpecificParameters);
@@ -74,39 +74,38 @@ for ModeIdx = 1:length(Parameters.Mode)
                 Mode=NaN;
                 DampingRatio=NaN;
                 Frequency=NaN;
-                AdditionalOutput(ModeIdx).ModeHistory{EventOccurenceIdx} = [AdditionalOutput(ModeIdx).ModeHistory{EventOccurenceIdx};Mode;];
-                AdditionalOutput(ModeIdx).ModeDRHistory{EventOccurenceIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{EventOccurenceIdx};DampingRatio;];
-                AdditionalOutput(ModeIdx).ModeFreqHistory{EventOccurenceIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{EventOccurenceIdx};Frequency;];
-                AdditionalOutput(ModeIdx).ChannelsName{EventOccurenceIdx} = DataChannel{ModeIdx}(ChanIdx);
-                AdditionalOutput(ModeIdx).ModeOfInterest{EventOccurenceIdx}= ExtractedParameters.ModeName;                              
-                AdditionalOutput(ModeIdx).MethodName{EventOccurenceIdx}= ExtractedParameters.MethodName{MethodIdx};
-                EventOccurenceIdx = EventOccurenceIdx + 1;
+                AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
+                AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
+                AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
+                AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
+                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;                              
+                AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
+                ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
             end
         else
             if ~isempty(ExtractedParameters.FOdetectorPara)
                 % Run FO detection parameter: %the first output contains all detected FO frequencies and the second one contains refined FO frequencies
-                [DetectionResults(ModeIdx).FOfreqAll{ChanIdx}, DetectionResults(ModeIdx).FOfreqRefined{ChanIdx}]...
+                [DetectionResults(ModeIdx).FOfreq{ChanIdx}]...
                     = FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx},ExtractedParameters.AnalysisLength);
             else
-                DetectionResults(ModeIdx).FOfreqAll{ChanIdx} = [];
-                DetectionResults(ModeIdx).FOfreqRefined{ChanIdx} = [];
+                DetectionResults(ModeIdx).FOfreq{ChanIdx} = [];
             end
             for MethodIdx = 1:NumMethods
                 [Mode, AdditionalOutput(ModeIdx).Modetrack{MethodIdx,ChanIdx}]...
                     = eval([ExtractedParameters.MethodName{MethodIdx}...
-                    '(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{MethodIdx,ChanIdx},DetectionResults(ModeIdx).FOfreqAll{ChanIdx},DetectionResults(ModeIdx).FOfreqRefined{ChanIdx})']);
+                    '(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{MethodIdx,ChanIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
                 DampingRatio = -real(Mode)/abs(Mode);
                 Frequency = abs(imag(Mode))/2/pi;
                 if Frequency==0 && isnan(DampingRatio)
                     Frequency = NaN;
                 end
-                AdditionalOutput(ModeIdx).ModeHistory{EventOccurenceIdx} = [AdditionalOutput(ModeIdx).ModeHistory{EventOccurenceIdx};Mode;];
-                AdditionalOutput(ModeIdx).ModeDRHistory{EventOccurenceIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{EventOccurenceIdx};DampingRatio;];
-                AdditionalOutput(ModeIdx).ModeFreqHistory{EventOccurenceIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{EventOccurenceIdx};Frequency;];
-                AdditionalOutput(ModeIdx).ChannelsName{EventOccurenceIdx} = DataChannel{ModeIdx}(ChanIdx);
-                AdditionalOutput(ModeIdx).ModeOfInterest{EventOccurenceIdx}= ExtractedParameters.ModeName;                              
-                AdditionalOutput(ModeIdx).MethodName{EventOccurenceIdx}= ExtractedParameters.MethodName{MethodIdx};
-                EventOccurenceIdx = EventOccurenceIdx + 1;
+                AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
+                AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
+                AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
+                AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
+                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;                              
+                AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
+                ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
             end
         end        
     end
