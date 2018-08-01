@@ -118,7 +118,8 @@ namespace VoltageStability.MATLABRunResults.Models
                 {
                     throw new Exception(String.Format("Vhat of elements {0} matrix dimension out of range in Voltage Stability rerun.", index));
                 }
-                var Vhat = ((double[])arr.ToVector(MWArrayComponent.Real)).ToList();
+                var VhatReal = ((double[])arr.ToVector(MWArrayComponent.Real)).ToList();
+                var VhatImage = ((double[])arr.ToVector(MWArrayComponent.Imaginary)).ToList();
 
                 List<string> dataPMU = new List<string>();
                 foreach (char[,] item in ((MWCellArray)_results["DataPMU", index]).ToArray())
@@ -154,7 +155,8 @@ namespace VoltageStability.MATLABRunResults.Models
                     newSignal.VbusANG = VbusANG.Skip(signalNumber * signalLength).Take(signalLength).ToList();
                     newSignal.SourceP = SourceP.Skip(signalNumber * signalLength).Take(signalLength).ToList();
                     newSignal.SourceQ = SourceQ.Skip(signalNumber * signalLength).Take(signalLength).ToList();
-                    newSignal.Vhat = Vhat.Skip(signalNumber * signalLength).Take(signalLength).ToList();
+                    newSignal.VhatReal = VhatReal.Skip(signalNumber * signalLength).Take(signalLength).ToList();
+                    newSignal.VhatImage = VhatImage.Skip(signalNumber * signalLength).Take(signalLength).ToList();
                     newSignal.PMUname = dataPMU[signalNumber];
                     newSignal.Method = Method;
                     allTheveninSignals.Add(newSignal);
