@@ -20,6 +20,9 @@ namespace VoltageStability.MATLABRunResults.Models
         public List<double> SourceP { get; set; }
         public List<double> SourceQ { get; set; }
         public List<double> Vhat { get; set; }
+        public List<double> VhatImage { get; set; }
+        public List<double> VhatReal { get; set; }
+
         public string PMUname;
         public string Method;
     }

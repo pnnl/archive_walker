@@ -776,9 +776,9 @@ namespace VoltageStability.ViewModels
             VBusMagSeries.Title = "Measured";
             aSignalPlot.Series.Add(VBusMagSeries);
             var VhatSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
-            for (int i = 0; i < signal.Vhat.Count; i++)
+            for (int i = 0; i < signal.VhatReal.Count; i++)
             {
-                VhatSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], Complex.Abs(signal.Vhat[i])));
+                VhatSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], Math.Sqrt(Math.Pow(signal.VhatReal[i], 2) + Math.Pow(signal.VhatImage[i], 2))));
             }
             VhatSeries.Title = "Estimate";
             aSignalPlot.Series.Add(VhatSeries);
