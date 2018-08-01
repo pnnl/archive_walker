@@ -62,6 +62,15 @@
     </Compile>
     <Compile Include="ViewModels\ModeViewModel.cs" />
     <Compile Include="ViewModels\SmallSignalStabilityToolViewModel.cs" />
+    <Compile Include="Views\DesiredModeAttributesView.xaml.cs">
+      <DependentUpon>DesiredModeAttributesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModeAnalysisParametersView.xaml.cs">
+      <DependentUpon>ModeAnalysisParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModeSignalSelectionView.xaml.cs">
+      <DependentUpon>ModeSignalSelectionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ModeView.xaml.cs">
       <DependentUpon>ModeView.xaml</DependentUpon>
     </Compile>
@@ -91,6 +100,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\DesiredModeAttributesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModeAnalysisParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModeSignalSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ModeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

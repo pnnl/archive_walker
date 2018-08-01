@@ -38,7 +38,7 @@ namespace ModeMeter.ViewModels
             Modes = new ObservableCollection<ModeViewModel>();
             foreach (var mode in _model.Modes)
             {
-                Modes.Add(new ModeViewModel(mode));
+                Modes.Add(new ModeViewModel(mode, _signalMgr));
             }
             BaseliningSignals = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in _model.BaseliningSignals)

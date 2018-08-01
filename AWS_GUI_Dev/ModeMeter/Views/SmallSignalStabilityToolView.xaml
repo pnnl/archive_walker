@@ -55,13 +55,18 @@
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="2">
                             <Label Content="Oscillation Baselining Signal Selection:"/>
-                            <coreview:FilterListBox Margin="2"/>
+                            <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}"/>
                         </StackPanel>
                         <Button Margin="2" Command="{Binding AddAMode}" Content="Add mode of interest" Grid.Row="2"/>
                         <ItemsControl ItemsSource="{Binding Modes}" Margin="2" Grid.Row="3">
-                            <DataTemplate>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:ModeView/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <!--<DataTemplate>
                                 <local:ModeView/>
-                            </DataTemplate>
+                            </DataTemplate>-->
                         </ItemsControl>
                     </Grid>
                 </ScrollViewer>
