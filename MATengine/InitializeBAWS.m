@@ -290,8 +290,9 @@ if isfield(temp,'Thevenin')
         end
     end
     for idx = 1:length(temp.Thevenin)
-        ExtractedParameters = ExtractModeMeterParams(temp.ModeMeter{idx},1);
-        SecondsToConcat = max([SecondsToConcat ExtractedParameters.AnalysisLength]);
+        if isfield(temp.Thevenin{idx}, 'AnalysisLength')
+            SecondsToConcat = max([SecondsToConcat str2double(temp.Thevenin{idx}.AnalysisLength)]);
+        end
     end
 end
 
