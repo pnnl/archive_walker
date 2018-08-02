@@ -10,6 +10,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
@@ -17,7 +18,7 @@
             <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <coreconverter:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
             <converters:EnumToStringConverter10 x:Key="EnumToStringConverter10"/>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="OutOfRangeFrequencyDetectorTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="OutOfRangeFrequencyDetectorTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:OutOfRangeFrequencyDetectorType"/>
                 </ObjectDataProvider.MethodParameters>
