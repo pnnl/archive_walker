@@ -43,6 +43,8 @@ namespace BAWGUI.Results.ViewModels
             _selectedOccurrence = new OccurrenceViewModel();
             _configFilePath = "";
             _run = new AWRunViewModel();
+            _selectedStartTime = "01/01/0001 00:00:00";
+            _selectedEndTime = "01/01/0001 00:00:00";
         }
         private AWRunViewModel _run;
         public AWRunViewModel Run

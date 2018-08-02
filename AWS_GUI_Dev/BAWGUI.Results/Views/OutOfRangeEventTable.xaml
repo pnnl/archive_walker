@@ -15,11 +15,11 @@
         <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
     </UserControl.Resources>
     <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOOREvent}" NavigationBehavior="RowOnly">
-        <i:Interaction.Triggers>
+        <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
             </i:EventTrigger>
-        </i:Interaction.Triggers>
+        </i:Interaction.Triggers>-->
         <xcdg:DataGridControl.Resources>
             <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
                 <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />

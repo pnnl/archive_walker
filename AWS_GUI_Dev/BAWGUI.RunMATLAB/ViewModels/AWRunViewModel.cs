@@ -95,12 +95,12 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //        OnPropertyChanged();
         //    }
         //}
-        public bool IsRunEnabled
+        public bool IsEnabled
         {
-            get { return _model.IsRunEnabled; }
+            get { return _model.IsEnabled; }
             set
             {
-                _model.IsRunEnabled = value;
+                _model.IsEnabled = value;
                 OnPropertyChanged();
             }
         }
