@@ -139,7 +139,7 @@
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <!--<EventSetter Event="TreeViewItem.PreviewMouseRightButtonDown" Handler="myProjectTreeView_PreviewMouseRightButtonDown"/>-->
-                    <Setter Property="IsEnabled" Value="{Binding IsProjectEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Setter Property="IsEnabled" Value="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <!--<Setter Property="IsEnabled" Value="{Binding IsRunEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
                     <!--<Setter Property="Focusable" Value="{Binding IsRunEnabled, UpdateSourceTrigger=PropertyChanged}"/>-->
                     <!--<Setter Property="vm:FocusExtension.IsFocused" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->

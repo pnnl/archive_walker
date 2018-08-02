@@ -218,43 +218,43 @@ Namespace Converters
         End Function
     End Class
 
-    Public Class EnumToStringConverter9
-        Implements IValueConverter
+    'Public Class EnumToStringConverter9
+    '    Implements IValueConverter
 
-        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            Select Case value
-                Case DetectorWindowType.hann
-                    Return "Hann"
-                Case DetectorWindowType.bartlett
-                    Return "Bartlett"
-                Case DetectorWindowType.blackman
-                    Return "Blackman"
-                Case DetectorWindowType.hamming
-                    Return "Hamming"
-                Case DetectorWindowType.rectwin
-                    Return "Rectangular"
-                Case Else
-                    Throw New Exception("Detector window type not valid!")
-            End Select
-        End Function
+    '    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+    '        Select Case value
+    '            Case DetectorWindowType.hann
+    '                Return "Hann"
+    '            Case DetectorWindowType.bartlett
+    '                Return "Bartlett"
+    '            Case DetectorWindowType.blackman
+    '                Return "Blackman"
+    '            Case DetectorWindowType.hamming
+    '                Return "Hamming"
+    '            Case DetectorWindowType.rectwin
+    '                Return "Rectangular"
+    '            Case Else
+    '                Throw New Exception("Detector window type not valid!")
+    '        End Select
+    '    End Function
 
-        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
-            Select Case value
-                Case "Hann"
-                    Return DetectorWindowType.hann
-                Case "Bartlett"
-                    Return DetectorWindowType.bartlett
-                Case "Blackman"
-                    Return DetectorWindowType.blackman
-                Case "Hamming"
-                    Return DetectorWindowType.hamming
-                Case "Rectangular"
-                    Return DetectorWindowType.rectwin
-                Case Else
-                    Throw New Exception("Enum type not valid!")
-            End Select
-        End Function
-    End Class
+    '    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+    '        Select Case value
+    '            Case "Hann"
+    '                Return DetectorWindowType.hann
+    '            Case "Bartlett"
+    '                Return DetectorWindowType.bartlett
+    '            Case "Blackman"
+    '                Return DetectorWindowType.blackman
+    '            Case "Hamming"
+    '                Return DetectorWindowType.hamming
+    '            Case "Rectangular"
+    '                Return DetectorWindowType.rectwin
+    '            Case Else
+    '                Throw New Exception("Enum type not valid!")
+    '        End Select
+    '    End Function
+    'End Class
 
     Public Class EnumToStringConverter10
         Implements IValueConverter
