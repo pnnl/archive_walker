@@ -10,6 +10,7 @@
              xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
@@ -23,12 +24,12 @@
             <converters:EnumToStringConverter6 x:Key="EnumToStringConverter6"/>
             <converters:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
             <converters:TunableFilterExpanderHeaderConverter x:Key="TunableFilterExpanderHeaderConverter"/>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="InterpolateTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="InterpolateTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:InterpolateType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="EndpointsTypeValues">
+            <!--<ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="EndpointsTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:EndpointsType"/>
                 </ObjectDataProvider.MethodParameters>
@@ -37,8 +38,8 @@
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:HandleNaNType"/>
                 </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="TunableFilterTypeValues">
+            </ObjectDataProvider>-->
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="TunableFilterTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:TunableFilterType"/>
                 </ObjectDataProvider.MethodParameters>
@@ -116,12 +117,12 @@
             <DataTemplate x:Key="ParameterCheckBox">
                 <CheckBox IsChecked="{Binding Path=Content, RelativeSource={RelativeSource AncestorType=ContentControl}}" VerticalAlignment="Center" Margin="8" HorizontalAlignment="Center"/>
             </DataTemplate>
-            <DataTemplate x:Key="EndpointsCombobox">
+            <!--<DataTemplate x:Key="EndpointsCombobox">
                 <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" HorizontalAlignment="Center" ItemsSource="{Binding Source={StaticResource EndpointsTypeValues}}" Text="{Binding Path=Content, RelativeSource={RelativeSource AncestorType=ContentControl}, Converter={StaticResource EnumToStringConverter5}}"/>
             </DataTemplate>
             <DataTemplate x:Key="HandleNaNCombobox">
                 <ComboBox Margin="8" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right" HorizontalAlignment="Center" ItemsSource="{Binding Source={StaticResource HandleNaNTypeValues}}" Text="{Binding Path=Content, RelativeSource={RelativeSource AncestorType=ContentControl}, Converter={StaticResource EnumToStringConverter6}}"/>
-            </DataTemplate>
+            </DataTemplate>-->
             <DataTemplate x:Key="NameTypeUnitApproach1">
                 <StackPanel Orientation="Vertical">
                     <Label Content="Name, Type, and Unit Selection" Margin="2" FontSize="18" FontWeight="Bold">

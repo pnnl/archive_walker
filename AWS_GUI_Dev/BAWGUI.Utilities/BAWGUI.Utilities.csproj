@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComboBoxItemsSourceDecorator.cs" />
+    <Compile Include="EnumberationManager.cs" />
     <Compile Include="FocusExtension.cs" />
     <Compile Include="Folder.cs" />
     <Compile Include="MyTreeView.cs" />

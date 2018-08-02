@@ -173,7 +173,6 @@
     </Compile>
     <Compile Include="ViewModels\ConfigFileWriter.vb" />
     <Compile Include="ViewModels\DelegateCommand.vb" />
-    <Compile Include="ViewModels\EnumerationManager.vb" />
     <Compile Include="ViewModels\SettingsViewModel.ConfigFileRead.vb" />
     <Compile Include="ViewModels\SettingsViewModel.DetectorConfig.vb" />
     <Compile Include="ViewModels\SettingsViewModel.PostProcessConfig.vb" />

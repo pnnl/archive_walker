@@ -8,7 +8,8 @@
              xmlns:coremodel="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:reader="clr-namespace:BAWGUI.ReadConfigXml;assembly=BAWGUI.ReadConfigXml"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -17,12 +18,12 @@
             <converters:EnumToStringConverter1 x:Key="EnumToStringConverter1"/>
             <converters:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="ModeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="ModeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodel:ModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DataFileTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="DataFileTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodel:DataFileType"/>
                 </ObjectDataProvider.MethodParameters>
