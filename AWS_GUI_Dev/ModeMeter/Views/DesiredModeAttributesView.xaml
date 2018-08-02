@@ -18,7 +18,7 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
                 <Label Content="Mode of interest: " Width="230"/>
-                <TextBox Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=2}, Path=DataContext.Name}" Margin="2" Width="100"/>
+                <TextBox Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=2}, Path=DataContext.ModeName}" Margin="2" Width="100"/>
             </StackPanel>
             <Label Grid.Row="1" Content="Mode Parameters: " Margin="2"/>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="2">

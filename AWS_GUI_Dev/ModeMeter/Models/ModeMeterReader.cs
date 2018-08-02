@@ -164,16 +164,16 @@ namespace ModeMeter.Models
             {
                 parameters.Pfa = par.Value;
             }
-            //par = foDetectorParams.Element("FrequencyMin");
-            //if (par != null)
-            //{
-            //    parameters.FrequencyMin = par.Value;
-            //}
-            //par = foDetectorParams.Element("FrequencyMax");
-            //if (par != null)
-            //{
-            //    parameters.FrequencyMax = par.Value;
-            //}
+            par = foDetectorParams.Element("FrequencyMin");
+            if (par != null)
+            {
+                parameters.FrequencyMin = par.Value;
+            }
+            par = foDetectorParams.Element("FrequencyMax");
+            if (par != null)
+            {
+                parameters.FrequencyMax = par.Value;
+            }
             par = foDetectorParams.Element("FrequencyTolerance");
             if (par != null)
             {

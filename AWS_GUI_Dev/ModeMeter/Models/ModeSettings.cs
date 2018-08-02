@@ -18,6 +18,7 @@ namespace ModeMeter.Models
             DesiredModes = new DesiredModeAttributes();
             AlgNames = new List<ModeMethodBase>();
             FODetectorParameters = new PeriodogramDetectorModel();
+            AnalysisLength = 600;
         }
         public string ModeName { get; set; }
         public List<SignalSignatures> PMUs { get; set; }
