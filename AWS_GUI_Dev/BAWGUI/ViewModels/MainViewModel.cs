@@ -39,7 +39,7 @@ namespace BAWGUI.ViewModels
                 SettingsVM.IsMatlabEngineRunning = true;
                 foreach (var pjt in ProjectControlVM.AWProjects)
                 {
-                    pjt.IsProjectEnabled = false;
+                    pjt.IsEnabled = false;
                     //if (pjt.ProjectName != sd.Project.ProjectName)
                     //{
                     //    pjt.IsProjectEnabled = false;
@@ -66,10 +66,10 @@ namespace BAWGUI.ViewModels
                 SettingsVM.IsMatlabEngineRunning = false;
                 foreach (var pjt in ProjectControlVM.AWProjects)
                 {
-                    pjt.IsProjectEnabled = true;
+                    pjt.IsEnabled = true;
                     foreach (var run in pjt.AWRuns)
                     {
-                        run.IsRunEnabled = true;
+                        run.IsEnabled = true;
                     }
                 }
             }
