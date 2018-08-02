@@ -35,6 +35,7 @@ namespace ModeMeter.ViewModels
         {
             InputChannels = new ObservableCollection<SignalSignatureViewModel>();
             AddAMode = new RelayCommand(_addAMode);
+            DeleteAMode = new RelayCommand(_deleteAMode);
             Modes = new ObservableCollection<ModeViewModel>();
             foreach (var mode in _model.Modes)
             {
@@ -77,5 +78,11 @@ namespace ModeMeter.ViewModels
             get; set;
         }
         public ObservableCollection<SignalSignatureViewModel> BaseliningSignals { get; set; }
+        public ICommand DeleteAMode { get; set; }
+
+        private void _deleteAMode(object obj)
+        {
+        }
+
     }
 }

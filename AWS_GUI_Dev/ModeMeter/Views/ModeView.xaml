@@ -9,23 +9,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Margin="2" Orientation="Horizontal">
-            <Label Content="Mode: "/>
-            <TextBlock Text="{Binding Name}" Margin="2"/>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <local:DesiredModeAttributesView Grid.Column="0" Margin="2"/>
-                <local:ModeSignalSelectionView Grid.Column="1" Margin="2"/>
-            </Grid>
-            <Label Content="Analysis Parameters:" Margin="2" Grid.Row="2"/>
-            <local:ModeAnalysisParametersView Grid.Row="3" Margin="2"/>
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <local:DesiredModeAttributesView Grid.Row="0" Grid.Column="0" Margin="2" DataContext="{Binding DesiredModes}"/>
+        <local:ModeSignalSelectionView Grid.Row="0" Grid.Column="1" Margin="2" DataContext="{Binding PMUs}"/>
+        <local:ModeAnalysisParametersView Grid.Row="1" Grid.ColumnSpan="2" Margin="2"/>
     </Grid>
 </UserControl>

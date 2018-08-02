@@ -41,7 +41,7 @@
                         </Button>
                     </DockPanel>
                 </Expander.Header>
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Auto" MaxHeight="300">
+                <ScrollViewer HorizontalScrollBarVisibility="Visible" CanContentScroll="True" VerticalScrollBarVisibility="Visible"  MaxHeight="300">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -57,11 +57,21 @@
                             <Label Content="Oscillation Baselining Signal Selection:"/>
                             <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}"/>
                         </StackPanel>
-                        <Button Margin="2" Command="{Binding AddAMode}" Content="Add mode of interest" Grid.Row="2"/>
+                        <Button Margin="2" Command="{Binding AddAMode}" Content="Add mode of interest" Grid.Row="2" Width="200" HorizontalAlignment="Left"/>
                         <ItemsControl ItemsSource="{Binding Modes}" Margin="2" Grid.Row="3">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <local:ModeView/>
+                                    <Expander>
+                                        <Expander.Header>
+                                            <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding ModeName, StringFormat=Mode: {0}}"/>
+                                                <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.DeleteAMode}" CommandParameter="{Binding}">
+                                                    <Image Width="16" Height="16" Source="/ModeMeter;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                </Button>
+                                            </DockPanel>
+                                        </Expander.Header>
+                                        <local:ModeView/>
+                                    </Expander>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                             <!--<DataTemplate>

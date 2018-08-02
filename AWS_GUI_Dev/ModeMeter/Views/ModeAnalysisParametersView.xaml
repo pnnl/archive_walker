@@ -6,7 +6,29 @@
              xmlns:local="clr-namespace:ModeMeter.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <GroupBox Header="Analysis parameters">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <Label Content="Analysis Length:" Margin="2"/>
+                <TextBox Text="{Binding AnalysisLength}" VerticalAlignment="Center" Margin="2" Width="100"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <Label Content="Retroactive Continuity:" Margin="2"/>
+                <Label Content="Status" Margin="20,2,0,2"/>
+                <ComboBox ItemsSource="{Binding}" Margin="5,2,2,2" Width="100"/>
+                <Label Content="Maximum Length" Margin="2"/>
+                <TextBox Text="{Binding MaxLength}" VerticalAlignment="Center" Margin="2" Width="100"/>
+            </StackPanel>
+        </Grid>
+    </GroupBox>
 </UserControl>

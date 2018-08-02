@@ -61,7 +61,7 @@ namespace ModeMeter.Models
             var name = mode.Element("Name");
             if (name != null)
             {
-                newMode.Name = name.Value;
+                newMode.ModeName = name.Value;
             }
             try
             {
@@ -75,7 +75,7 @@ namespace ModeMeter.Models
             var dampRatioThreshold = mode.Element("DampRatioThreshold");
             if (dampRatioThreshold != null)
             {
-                newMode.DampRatioThreashold = dampRatioThreshold.Value;
+                newMode.DampRatioThreshold = dampRatioThreshold.Value;
             }
             var al = mode.Element("AnalysisLength");
             if (al != null)

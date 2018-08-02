@@ -19,10 +19,10 @@ namespace ModeMeter.Models
             AlgNames = new List<ModeMethodBase>();
             FODetectorParameters = new PeriodogramDetectorModel();
         }
-        public string Name { get; set; }
+        public string ModeName { get; set; }
         public List<SignalSignatures> PMUs { get; set; }
         public int AnalysisLength { get; set; }
-        public string DampRatioThreashold { get; set; }
+        public string DampRatioThreshold { get; set; }
         public RetroactiveContinuity RetConTracking { get; set; }
         public DesiredModeAttributes DesiredModes { get; set; }
         public List<ModeMethodBase> AlgNames { get; set; }
