@@ -7,37 +7,39 @@
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
+             xmlns:coremodel="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:ValueTypeConverter x:Key="ValueTypeConverter"/>
             <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
-            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <converters:NewChannelVisibilityConverter x:Key="NewChannelVisibilityConverter"/>
             <converters:EnumToStringConverter4 x:Key="EnumToStringConverter4"/>
             <converters:EnumToStringConverter5 x:Key="EnumToStringConverter5"/>
             <converters:EnumToStringConverter6 x:Key="EnumToStringConverter6"/>
             <converters:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="InterpolateTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="InterpolateTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:InterpolateType"/>
+                    <x:Type TypeName="coremodel:InterpolateType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="EndpointsTypeValues">
+            <!--<ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="EndpointsTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="vm:EndpointsType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="HandleNaNTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="HandleNaNTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="vm:HandleNaNType"/>
                 </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="TunableFilterTypeValues">
+            </ObjectDataProvider>-->
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="TunableFilterTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="vm:TunableFilterType"/>
+                    <x:Type TypeName="coremodel:TunableFilterType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <!--<DataTemplate x:Key="MultiRateOptionButtons">

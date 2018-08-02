@@ -11,6 +11,7 @@
              xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              xmlns:coremodel="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
     <!--<i:Interaction.Triggers>
@@ -24,12 +25,12 @@
             <coreconverter:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
             <converters:EnumToStringConverter8 x:Key="EnumToStringConverter8"/>
             <converters:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DetectorModeTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="DetectorModeTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodel:DetectorModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="DetectorWindowTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="DetectorWindowTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodel:DetectorWindowType"/>
                 </ObjectDataProvider.MethodParameters>

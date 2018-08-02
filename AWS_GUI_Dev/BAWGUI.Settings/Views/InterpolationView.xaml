@@ -10,6 +10,7 @@
              xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
@@ -17,7 +18,7 @@
             <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
             <converters:EnumToStringConverter4 x:Key="EnumToStringConverter4"/>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type vm:EnumerationManager}" x:Key="InterpolateTypeValues">
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="InterpolateTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:InterpolateType"/>
                 </ObjectDataProvider.MethodParameters>
