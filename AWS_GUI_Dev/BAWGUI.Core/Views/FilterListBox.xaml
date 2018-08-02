@@ -11,7 +11,7 @@
         <coreconverters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
     </UserControl.Resources>
     <Grid>
-        <ListView Margin="20,2,2,0" Visibility="{Binding Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding .}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListView Margin="20,2,2,0" Visibility="{Binding Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Margin="2,0">
