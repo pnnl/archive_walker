@@ -316,7 +316,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 //if matlab engine is running, only save the new config file, but not switch selected run so it won't trigger possible matlab engine to read pdat file in the newly selected run
                 if (IsMatlabEngineRunning)
                 {
-                    _generatedNewRun.IsRunEnabled = false;
+                    _generatedNewRun.IsEnabled = false;
                 }
                 else
                 {
@@ -449,7 +449,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 }
                 if (IsMatlabEngineRunning)
                 {
-                    _generatedNewRun.IsRunEnabled = false;
+                    _generatedNewRun.IsEnabled = false;
                 }
                 //var newRunVm = new AWRunViewModel(taskDir);
                 //AWRuns.Add(new AWRunViewModel(taskDir));
@@ -522,7 +522,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             AddRun = new RelayCommand(_addARun);
             //_addTaskVM = new AddTaskViewModel();
             _dialogbox = new AddARunPopup();
-            IsProjectEnabled = true;
+            IsEnabled = true;
             AWRuns = GetAWRunViewModelCollection(_model.AWRuns);
         }
 
@@ -741,12 +741,12 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Directory.Delete(runPath);
         }
 
-        public bool IsProjectEnabled
+        public bool IsEnabled
         {
-            get { return _model.IsProjectEnabled; }
+            get { return _model.IsEnabled; }
             set
             {
-                _model.IsProjectEnabled = value;
+                _model.IsEnabled = value;
                 OnPropertyChanged();
             }
         }

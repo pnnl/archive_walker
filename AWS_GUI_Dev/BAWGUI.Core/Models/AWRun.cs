@@ -20,7 +20,7 @@ namespace BAWGUI.Core
             _controlRerunPath = "";
             _isSelected = false;
             _isRunPaused = false;
-            _isRunEnabled = true;
+            _isEnabled = true;
             _isTaskRunning = false;
         }
         public AWRun(string run)
@@ -64,7 +64,7 @@ namespace BAWGUI.Core
                 }
             }
             _isSelected = false;
-            _isRunEnabled = true;
+            _isEnabled = true;
             _isTaskRunning = false;
         }
         private string _runPath;
@@ -99,11 +99,11 @@ namespace BAWGUI.Core
                 _isRunPaused = value;
             }
         }
-        private bool _isRunEnabled;
-        public bool IsRunEnabled
+        private bool _isEnabled;
+        public bool IsEnabled
         {
-            get { return _isRunEnabled; }
-            set { _isRunEnabled = value; }
+            get { return _isEnabled; }
+            set { _isEnabled = value; }
         }
         private bool _isTaskRunning;
         public bool IsTaskRunning
