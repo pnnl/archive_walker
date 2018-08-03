@@ -646,7 +646,7 @@ Namespace ViewModels
             If result = DialogResult.OK Then
                 Try
                     PostProcessConfigure.CollectionOfSteps.Remove(obj)
-                    Dim steps = New ObservableCollection(Of Customization)(PostProcessConfigure.CollectionOfSteps)
+                    Dim steps = New ObservableCollection(Of Object)(PostProcessConfigure.CollectionOfSteps)
                     For Each stp In steps
                         If stp.StepCounter > obj.StepCounter Then
                             stp.StepCounter -= 1
