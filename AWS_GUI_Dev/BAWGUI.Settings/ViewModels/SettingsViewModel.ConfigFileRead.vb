@@ -1319,7 +1319,7 @@ Namespace ViewModels
         Private Sub _readPostProcessConfig(configData As XDocument)
             _signalMgr.GroupedSignalByPostProcessConfigStepsInput = New ObservableCollection(Of SignalTypeHierachy)()
             _signalMgr.GroupedSignalByPostProcessConfigStepsOutput = New ObservableCollection(Of SignalTypeHierachy)()
-            Dim CollectionOfSteps As New ObservableCollection(Of Customization)
+            Dim CollectionOfSteps As New ObservableCollection(Of Object)
             Dim stepCounter As Integer = 0
             Dim stages = From el In configData.<Config>.<PostProcessCustomizationConfig>.<Configuration>.Elements Where el.Name = "Stages" Select el
             For Each stage In stages

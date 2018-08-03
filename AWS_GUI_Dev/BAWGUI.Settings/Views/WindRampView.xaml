@@ -55,8 +55,24 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
                             <StackPanel Orientation="Horizontal">
-                                <RadioButton GroupName="{Binding StepCounter}" Content="Long trend" IsChecked="{Binding IsLongTrend}" Margin="2,0"/>
-                                <RadioButton GroupName="{Binding StepCounter}" Content="Short trend" IsChecked="{Binding IsLongTrend, Converter={StaticResource InverseBooleanConverter}}" Margin="10,0"/>
+                                <!--the groupname of radiobutton of each windramp detector need to be different so each windramp detector's choice of radiobutton can be different-->
+                                <!--thus binding groupname the same way as the expander header, or bind to the expander header directly, but it causes stack overflow-->
+                                <RadioButton Content="Long trend" IsChecked="{Binding IsLongTrend}" Margin="2,0">
+                                    <RadioButton.GroupName>
+                                        <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                                            <Binding/>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                                        </MultiBinding>
+                                    </RadioButton.GroupName>
+                                </RadioButton>
+                                <RadioButton Content="Short trend" IsChecked="{Binding IsLongTrend, Converter={StaticResource InverseBooleanConverter}}" Margin="10,0">
+                                    <RadioButton.GroupName>
+                                        <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                                            <Binding/>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                                        </MultiBinding>
+                                    </RadioButton.GroupName>
+                                </RadioButton>
                             </StackPanel>
                             <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
                             <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
