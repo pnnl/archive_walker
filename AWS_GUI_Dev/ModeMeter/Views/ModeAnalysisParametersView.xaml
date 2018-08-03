@@ -6,26 +6,19 @@
              xmlns:local="clr-namespace:ModeMeter.Views"
              xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
-             xmlns:coremodel="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
+             xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:converters="clr-namespace:ModeMeter.Converters"
-             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="RetroactiveContinuityStatusTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="coremodel:RetroactiveContinuityStatusType"/>
+                    <x:Type TypeName="coremodels:RetroactiveContinuityStatusType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <coreconverters:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
             <converters:RetroactiveContinuityStatusVisibilityConverter x:Key="RetroactiveContinuityStatusVisibilityConverter"/>
-            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="DetectorWindowTypeValues">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="coremodels:DetectorWindowType"/>
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <coreconverters:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <GroupBox Header="Analysis parameters">
@@ -51,55 +44,15 @@
                 <Label Content="Maximum Length" Margin="20,2,2,2" Visibility="{Binding Status, Converter={StaticResource RetroactiveContinuityStatusVisibilityConverter}}"/>
                 <TextBox Text="{Binding MaxLength}" VerticalAlignment="Center" Margin="2" Width="100" Visibility="{Binding Status, Converter={StaticResource RetroactiveContinuityStatusVisibilityConverter}}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="2">
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Margin="2">
                 <Label Content="Damping-ratio detection threshold (%): " Margin="2"/>
                 <TextBox Text="{Binding DampRatioThreshold}" VerticalAlignment="Center" Margin="2" Width="100"/>
             </StackPanel>
-            <GroupBox Header="FO detection parameters" Grid.Row="3" Margin="0">
-                <Grid Margin="2" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Type:" HorizontalAlignment="Left"/>
-                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource DetectorWindowTypeValues}}" Text="{Binding FODetectorParameters.WindowType, Converter={StaticResource EnumToStringConverter9}}" HorizontalAlignment="Left"/>
-                    <!--<Image Grid.Row="3" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                    <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Interval (Hz):" HorizontalAlignment="Left"/>
-                    <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.FrequencyInterval}" HorizontalAlignment="Left"/>
-                    <!--<TextBlock Text="(Optional)" Grid.Row="3" Grid.Column="2" Margin="2,1" VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
-                    <!--<Image Grid.Row="4" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                    <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Length (seconds):" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.WindowLength}" HorizontalAlignment="Left"/>
-                    <!--<Image Grid.Row="5" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                    <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Overlap (seconds):" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.WindowOverlap}" HorizontalAlignment="Left"/>
-                    <!--<Image Grid.Row="6" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                    <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Median Filter Width (Hz):" HorizontalAlignment="Left"/>
-                    <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.MedianFilterFrequencyWidth}" HorizontalAlignment="Left"/>
-                    <!--<TextBlock Text="(Optional)" Grid.Row="6" Grid.Column="2" Margin="2,1" VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
-                    <!--<Image Grid.Row="7" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                    <Label Grid.Row="7" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Probability of False Detection:" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="7" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.Pfa}" HorizontalAlignment="Left"/>
-                    <Label Grid.Row="8" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum Frequency (Hz):" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="8" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.FrequencyMin}" HorizontalAlignment="Left"/>
-                    <Label Grid.Row="9" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum Frequency (Hz):" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Row="9" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.FrequencyMax}" HorizontalAlignment="Left"/>
-                    <!--<Image Grid.Row="10" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                    <Label Grid.Row="10" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Tolerance (Hz):" HorizontalAlignment="Left"/>
-                    <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="10" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FODetectorParameters.FrequencyTolerance}" HorizontalAlignment="Left"/>
-                    <!--<TextBlock Text="(Optional)" Grid.Row="10" Grid.Column="2" Margin="2,1" VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
-                </Grid>
+            <GroupBox Header="FO detection parameters" Grid.Row="3" Grid.Column="0" Margin="0">
+                <local:FOParametersView DataContext="{Binding FODetectorParameters}"/>
+            </GroupBox>
+            <GroupBox Header="Methods" Grid.Row="3" Grid.Column="1" Margin="2,0,0,0">
+                <local:MethodsView DataContext="{Binding Methods}"/>
             </GroupBox>
         </Grid>
     </GroupBox>

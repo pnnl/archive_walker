@@ -84,6 +84,12 @@
     <Compile Include="Views\DesiredModeAttributesView.xaml.cs">
       <DependentUpon>DesiredModeAttributesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FOParametersView.xaml.cs">
+      <DependentUpon>FOParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MethodsView.xaml.cs">
+      <DependentUpon>MethodsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ModeAnalysisParametersView.xaml.cs">
       <DependentUpon>ModeAnalysisParametersView.xaml</DependentUpon>
     </Compile>
@@ -120,6 +126,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\DesiredModeAttributesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FOParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MethodsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
