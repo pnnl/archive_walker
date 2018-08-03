@@ -37,6 +37,8 @@ namespace VoltageStability.ViewModels
             VSReRun = new RelayCommand(_vsRerun);
             CancelVSReRun = new RelayCommand(_cancelVSReRun);
             _predictionDelay = "0";
+            _selectedStartTime = "01/01/0001 00:00:00";
+            _selectedEndTime = "01/01/0001 00:00:00";
             //OutOfRangeReRun = new RelayCommand(_outOfRangeRerun);
             //CancelOutOfRangeReRun = new RelayCommand(_cancelOORReRun);
             //_sparsePlotModels = new ObservableCollection<SparsePlot>();

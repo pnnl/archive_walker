@@ -133,7 +133,11 @@ namespace BAWGUI.ReadConfigXml
     public class ReaderPropertiesModel
     {
         private XElement _xElement;
-        public ReaderPropertiesModel() { }
+        public ReaderPropertiesModel()
+        {
+            DateTimeStart = "01/01/0001 00:00:00";
+            DateTimeEnd = "01/01/0001 00:00:00";
+        }
         public ReaderPropertiesModel(XElement xElement)
         {
             this._xElement = xElement;

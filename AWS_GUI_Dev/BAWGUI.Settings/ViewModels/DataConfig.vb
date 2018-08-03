@@ -13,7 +13,7 @@ Namespace ViewModels
         Public Sub New()
             MyBase.New
             _readerProperty = New ReaderProperties
-            _collectionOfSteps = New ObservableCollection(Of Object)
+            '_collectionOfSteps = New ObservableCollection(Of Object)
             _dqFilterNameDictionary = New Dictionary(Of String, String) From {{"Status Flags", "PMUflagFilt"},
                                                                             {"Zeros", "DropOutZeroFilt"},
                                                                             {"Missing", "DropOutMissingFilt"},
@@ -219,16 +219,16 @@ Namespace ViewModels
             End Set
         End Property
 
-        Private _collectionOfSteps As ObservableCollection(Of Object)
-        Public Overloads Property CollectionOfSteps As ObservableCollection(Of Object)
-            Get
-                Return _collectionOfSteps
-            End Get
-            Set(ByVal value As ObservableCollection(Of Object))
-                _collectionOfSteps = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _collectionOfSteps As ObservableCollection(Of Object)
+        'Public Overloads Property CollectionOfSteps As ObservableCollection(Of Object)
+        '    Get
+        '        Return _collectionOfSteps
+        '    End Get
+        '    Set(ByVal value As ObservableCollection(Of Object))
+        '        _collectionOfSteps = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
 
         Private ReadOnly _dqFilterList As List(Of String)
         Public ReadOnly Property DQFilterList As List(Of String)
@@ -349,8 +349,10 @@ Namespace ViewModels
             'RealTimeModeVisibility = Visibility.Collapsed
             'HybridModeVisibility = Visibility.Collapsed
             _model = New ReadConfigXml.ReaderPropertiesModel
-            _dateTimeStart = ""
-            _dateTimeEnd = ""
+            '_dateTimeStart = "01/01/0001 00:00:00"
+            '_dateTimeEnd = "01/01/0001 00:00:00"
+            '_selectedStartTime = "01/01/0001 00:00:00"
+            '_selectedEndTime = "01/01/0001 00:00:00"
             '_selectedTimeZone = TimeZoneInfo.Utc
 
             _inputFileInfos = New ObservableCollection(Of InputFileInfoViewModel)

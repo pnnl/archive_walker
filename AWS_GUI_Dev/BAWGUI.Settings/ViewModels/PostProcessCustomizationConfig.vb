@@ -77,14 +77,14 @@ Namespace ViewModels
                                                                                    {"SC", {"SC"}.ToList},
                                                                                    {"OTHER", {"O"}.ToList}}
             _model = New PostProcessConfigModel()
-            _collectionOfSteps = New ObservableCollection(Of Customization)
+            _collectionOfSteps = New ObservableCollection(Of Object)
             _unitList = New List(Of String)
         End Sub
 
         Public Sub New(postProcessConfigure As PostProcessConfigModel, signalsMgr As SignalManager)
             Me.New
             Me._model = postProcessConfigure
-            Dim allSteps = New ObservableCollection(Of Customization)
+            Dim allSteps = New ObservableCollection(Of Object)
             Dim stepCounter As Integer = 0
             For Each stp In _model.CollectionOfSteps
                 Dim name = stp.Name
@@ -176,12 +176,12 @@ Namespace ViewModels
             End Set
         End Property
 
-        Private _collectionOfSteps As ObservableCollection(Of Customization)
-        Public Property CollectionOfSteps As ObservableCollection(Of Customization)
+        Private _collectionOfSteps As ObservableCollection(Of Object)
+        Public Property CollectionOfSteps As ObservableCollection(Of Object)
             Get
                 Return _collectionOfSteps
             End Get
-            Set(ByVal value As ObservableCollection(Of Customization))
+            Set(ByVal value As ObservableCollection(Of Object))
                 _collectionOfSteps = value
                 OnPropertyChanged()
             End Set
