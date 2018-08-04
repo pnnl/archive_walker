@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ModeMeter.Views"
+             xmlns:models="clr-namespace:ModeMeter.Models"
              xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
@@ -14,11 +15,12 @@
         <ResourceDictionary>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="RetroactiveContinuityStatusTypeValues">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="coremodels:RetroactiveContinuityStatusType"/>
+                    <x:Type TypeName="models:RetroactiveContinuityStatusType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <coreconverters:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
+            <converters:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
             <converters:RetroactiveContinuityStatusVisibilityConverter x:Key="RetroactiveContinuityStatusVisibilityConverter"/>
+            <coreconverters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <GroupBox Header="Analysis parameters">
@@ -30,8 +32,8 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
                 <Label Content="Analysis Length:" Margin="2"/>
@@ -48,11 +50,14 @@
                 <Label Content="Damping-ratio detection threshold (%): " Margin="2"/>
                 <TextBox Text="{Binding DampRatioThreshold}" VerticalAlignment="Center" Margin="2" Width="100"/>
             </StackPanel>
-            <GroupBox Header="FO detection parameters" Grid.Row="3" Grid.Column="0" Margin="0">
+            <GroupBox Header="FO detection parameters" Grid.Row="3" Grid.Column="1" Margin="0"  Visibility="{Binding Path=IsFODetecotrParametersVisible, Converter={StaticResource BooleanVisibilityConverter}}">
                 <local:FOParametersView DataContext="{Binding FODetectorParameters}"/>
             </GroupBox>
-            <GroupBox Header="Methods" Grid.Row="3" Grid.Column="1" Margin="2,0,0,0">
-                <local:MethodsView DataContext="{Binding Methods}"/>
+            <GroupBox Header="Methods" Grid.Row="3" Grid.Column="0" Margin="2,0,0,0">
+                <StackPanel Orientation="Vertical" Margin="2">
+                    <Button Content="Add A Method" Margin="50,0" Command="{Binding AddAMethod}"/>
+                    <local:MethodsView DataContext="{Binding Methods}"/>
+                </StackPanel>
             </GroupBox>
         </Grid>
     </GroupBox>

@@ -3,6 +3,7 @@ using BAWGUI.Core.Models;
 using BAWGUI.ReadConfigXml;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace ModeMeter.Models
             PMUs = new List<SignalSignatures>();
             RetConTracking = new RetroactiveContinuity();
             DesiredModes = new DesiredModeAttributes();
-            AlgNames = new List<ModeMethodBase>();
+            AlgNames = new List<ModeMethod>();
             FODetectorParameters = new PeriodogramDetectorModel();
             AnalysisLength = 600;
         }
@@ -26,7 +27,7 @@ namespace ModeMeter.Models
         public string DampRatioThreshold { get; set; }
         public RetroactiveContinuity RetConTracking { get; set; }
         public DesiredModeAttributes DesiredModes { get; set; }
-        public List<ModeMethodBase> AlgNames { get; set; }
+        public List<ModeMethod> AlgNames { get; set; }
         public PeriodogramDetectorModel FODetectorParameters { get; set; }
     }
     public class RetroactiveContinuity
@@ -41,35 +42,52 @@ namespace ModeMeter.Models
         public string GuessF { get; set; }
         public string DampMax { get; set; }
     }
-    public class ModeMethodBase
+    public class ModeMethod
     {
-        public string Name { get; set; }
+        public ModeMethods Name { get; set; }
         public string ARModelOrder { get; set; }
         public string MAModelOrder { get; set; }
-    }
-    public class YWARMA : ModeMethodBase
-    {
         public string NumberOfEquations { get; set; }
-        public new string Name { get => "YW-ARMA"; }
-    }
-    public class LSARMA : ModeMethodBase
-    {
         public string ExaggeratedARModelOrder { get; set; }
-        public new string Name { get => "LS-ARMA"; }
-    }
-    public class YWARMAS : ModeMethodBase
-    {
-        public string NumberOfEquations { get; set; }
         public string NumberOfEquationsWithFOpresent { get; set; }
-        public new string Name { get => "YW-ARMA+S"; }
     }
-    public class LSARMAS : ModeMethodBase
-    {
-        public string ExaggeratedARModelOrder { get; set; }
-        public new string Name { get => "LS-ARMA+S"; }
-    }
-    //public class FODetectorParameters
+    //public class YWARMA : ModeMethodBase
     //{
-
+    //    public string NumberOfEquations { get; set; }
+    //    public new string Name { get => "YW-ARMA"; }
     //}
+    //public class LSARMA : ModeMethodBase
+    //{
+    //    public string ExaggeratedARModelOrder { get; set; }
+    //    public new string Name { get => "LS-ARMA"; }
+    //}
+    //public class YWARMAS : ModeMethodBase
+    //{
+    //    public string NumberOfEquations { get; set; }
+    //    public string NumberOfEquationsWithFOpresent { get; set; }
+    //    public new string Name { get => "YW-ARMA+S"; }
+    //}
+    //public class LSARMAS : ModeMethodBase
+    //{
+    //    public string ExaggeratedARModelOrder { get; set; }
+    //    public new string Name { get => "LS-ARMA+S"; }
+    //}
+    public enum ModeMethods
+    {
+        [Description("YW-ARMA")]
+        YWARMA,
+        [Description("LS-ARMA")]
+        LSARMA,
+        [Description("YW-ARMA+S")]
+        YWARMAS,
+        [Description("LS-ARMA+S")]
+        LSARMAS
+    }
+    public enum RetroactiveContinuityStatusType
+    {
+        [Description("ON")]
+        ON,
+        [Description("OFF")]
+        OFF
+    }
 }

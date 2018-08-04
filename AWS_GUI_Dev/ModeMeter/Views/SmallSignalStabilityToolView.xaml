@@ -55,7 +55,16 @@
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="2">
                             <Label Content="Oscillation Baselining Signal Selection:"/>
-                            <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}"/>
+                            <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}" GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.BaseliningSignalBoxSelected}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.BaseliningSignalBoxSelected}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </coreview:FilterListBox>
                         </StackPanel>
                         <Button Margin="2" Command="{Binding AddAMode}" Content="Add mode of interest" Grid.Row="2" Width="200" HorizontalAlignment="Left"/>
                         <ItemsControl ItemsSource="{Binding Modes}" Margin="2" Grid.Row="3">
@@ -74,9 +83,6 @@
                                     </Expander>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-                            <!--<DataTemplate>
-                                <local:ModeView/>
-                            </DataTemplate>-->
                         </ItemsControl>
                     </Grid>
                 </ScrollViewer>

@@ -69,6 +69,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\EnumToStringConverters.cs" />
+    <Compile Include="Converters\MethodExpanderHeaderConverter.cs" />
     <Compile Include="Converters\RetroactiveContinuityStatusVisibilityConverter.cs" />
     <Compile Include="Models\ModeSettings.cs" />
     <Compile Include="Models\ModeMeterReader.cs" />
@@ -87,6 +89,9 @@
     <Compile Include="Views\FOParametersView.xaml.cs">
       <DependentUpon>FOParametersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\LSARMAView.xaml.cs">
+      <DependentUpon>LSARMAView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MethodsView.xaml.cs">
       <DependentUpon>MethodsView.xaml</DependentUpon>
     </Compile>
@@ -101,6 +106,12 @@
     </Compile>
     <Compile Include="Views\SmallSignalStabilityToolView.xaml.cs">
       <DependentUpon>SmallSignalStabilityToolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\YWARMASView.xaml.cs">
+      <DependentUpon>YWARMASView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\YWARMAView.xaml.cs">
+      <DependentUpon>YWARMAView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +144,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\LSARMAView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MethodsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -150,6 +165,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SmallSignalStabilityToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\YWARMASView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\YWARMAView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

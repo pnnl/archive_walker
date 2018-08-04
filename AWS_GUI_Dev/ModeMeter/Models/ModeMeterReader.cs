@@ -182,84 +182,96 @@ namespace ModeMeter.Models
             return parameters;
         }
 
-        public List<ModeMethodBase> ReadMethods(IEnumerable<XElement> algs)
+        public List<ModeMethod> ReadMethods(IEnumerable<XElement> algs)
         {
-            var methods = new List<ModeMethodBase>();
+            var methods = new List<ModeMethod>();
             foreach (var alg in algs)
             {
-                string arModelOrder = null, maModelOrder = null, numberOfEquations = null, exaggeratedARmodelOrder = null, numberOfEquationsWithFOpresent = null;
+                ModeMethod aNewMethod = new ModeMethod();
+                //string arModelOrder = null, maModelOrder = null, numberOfEquations = null, exaggeratedARmodelOrder = null, numberOfEquationsWithFOpresent = null;
                 var na = alg.Element("na");
                 if (na != null)
                 {
-                    arModelOrder = na.Value;
+                    //arModelOrder = na.Value;
+                    aNewMethod.ARModelOrder = na.Value;
                 }
                 var nb = alg.Element("nb");
                 if (nb != null)
                 {
-                    maModelOrder = nb.Value;
+                    //maModelOrder = nb.Value;
+                    aNewMethod.MAModelOrder = nb.Value;
                 }
                 var l = alg.Element("L");
                 if (l != null)
                 {
-                    numberOfEquations = l.Value;
+                    //numberOfEquations = l.Value;
+                    aNewMethod.NumberOfEquations = l.Value;
                 }
                 var nalpha = alg.Element("n_alpha");
                 if (nalpha != null)
                 {
-                    exaggeratedARmodelOrder = nalpha.Value;
+                    //exaggeratedARmodelOrder = nalpha.Value;
+                    aNewMethod.ExaggeratedARModelOrder = nalpha.Value;
                 }
                 var lfo = alg.Element("LFO");
                 if (lfo != null)
                 {
-                    numberOfEquationsWithFOpresent = lfo.Value;
+                    //numberOfEquationsWithFOpresent = lfo.Value;
+                    aNewMethod.NumberOfEquationsWithFOpresent = lfo.Value;
                 }
                 var mName = alg.Element("Name");
                 if (mName != null)
                 {
-                    ModeMethodBase aNewMethod = null;
+                    //aNewMethod.Name = (ModeMethods)Enum.Parse(typeof(ModeMethods), mName.Value);
+                    //ModeMethod aNewMethod = null;
                     var methodName = mName.Value;
                     switch (methodName)
                     {
                         case "YW_ARMA":
-                            aNewMethod = new YWARMA
-                            {
-                                ARModelOrder = arModelOrder,
-                                MAModelOrder = maModelOrder,
-                                NumberOfEquations = numberOfEquations
-                            };
-                            methods.Add(aNewMethod);
+                            aNewMethod.Name = ModeMethods.YWARMA;
+                            //aNewMethod = new YWARMA
+                            //{
+                            //    ARModelOrder = arModelOrder,
+                            //    MAModelOrder = maModelOrder,
+                            //    NumberOfEquations = numberOfEquations
+                            //};
+                            //methods.Add(aNewMethod);
                             break;
                         case "LS_ARMA":
-                            aNewMethod = new LSARMA
-                            {
-                                ARModelOrder = arModelOrder,
-                                MAModelOrder = maModelOrder,
-                                ExaggeratedARModelOrder = exaggeratedARmodelOrder
-                            };
-                            methods.Add(aNewMethod);
+                            aNewMethod.Name = ModeMethods.LSARMA;
+                            //aNewMethod = new LSARMA
+                            //{
+                            //    ARModelOrder = arModelOrder,
+                            //    MAModelOrder = maModelOrder,
+                            //    ExaggeratedARModelOrder = exaggeratedARmodelOrder
+                            //};
+                            //methods.Add(aNewMethod);
                             break;
                         case "YW_ARMApS":
-                            aNewMethod = new YWARMAS()
-                            {
-                                ARModelOrder = arModelOrder,
-                                MAModelOrder = maModelOrder,
-                                NumberOfEquations = numberOfEquations,
-                                NumberOfEquationsWithFOpresent = numberOfEquationsWithFOpresent
-                            };
-                            methods.Add(aNewMethod);
+                            aNewMethod.Name = ModeMethods.YWARMAS;
+                            //aNewMethod = new YWARMAS()
+                            //{
+                            //    ARModelOrder = arModelOrder,
+                            //    MAModelOrder = maModelOrder,
+                            //    NumberOfEquations = numberOfEquations,
+                            //    NumberOfEquationsWithFOpresent = numberOfEquationsWithFOpresent
+                            //};
+                            //methods.Add(aNewMethod);
                             break;
                         case "LS_ARMApS":
-                            aNewMethod = new LSARMAS()
-                            {
-                                ARModelOrder = arModelOrder,
-                                MAModelOrder = maModelOrder,
-                                ExaggeratedARModelOrder = exaggeratedARmodelOrder
-                            };
-                            methods.Add(aNewMethod);
+                            aNewMethod.Name = ModeMethods.LSARMAS;
+                            //aNewMethod = new LSARMAS()
+                            //{
+                            //    ARModelOrder = arModelOrder,
+                            //    MAModelOrder = maModelOrder,
+                            //    ExaggeratedARModelOrder = exaggeratedARmodelOrder
+                            //};
+                            //methods.Add(aNewMethod);
                             break;
                         default:
                             throw new Exception("Method name not recognized!");
                     }
+                    methods.Add(aNewMethod);
                 }
             }
             return methods;

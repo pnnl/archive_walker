@@ -36,10 +36,10 @@ namespace ModeMeter.ViewModels
             InputChannels = new ObservableCollection<SignalSignatureViewModel>();
             AddAMode = new RelayCommand(_addAMode);
             DeleteAMode = new RelayCommand(_deleteAMode);
-            Modes = new ObservableCollection<ModeViewModel>();
+            _modes = new ObservableCollection<ModeViewModel>();
             foreach (var mode in _model.Modes)
             {
-                Modes.Add(new ModeViewModel(mode, _signalMgr));
+                _modes.Add(new ModeViewModel(mode, _signalMgr));
             }
             BaseliningSignals = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in _model.BaseliningSignals)
@@ -54,6 +54,8 @@ namespace ModeMeter.ViewModels
                     _signalMgr.FindSignalsOfAPMU(BaseliningSignals, signal.PMUName);
                 }
             }
+            BaseliningSignalBoxSelected = new RelayCommand(_baseliningSignalBoxSelected);
+            ModePMUSignalBoxSelected = new RelayCommand(_modePMUSignalBoxSelected);
         }
         public override string Name
         {
@@ -71,18 +73,72 @@ namespace ModeMeter.ViewModels
         public ICommand AddAMode { get; set; }
         private void _addAMode(object obj)
         {
-            _model.Modes.Add(new Mode());
+            var newMode = new Mode();
+            _model.Modes.Add(newMode);
+            Modes.Add(new ModeViewModel(newMode, _signalMgr));
         }
+        private ObservableCollection<ModeViewModel> _modes = new ObservableCollection<ModeViewModel>();
         public ObservableCollection<ModeViewModel> Modes
         {
-            get; set;
+            get { return _modes; }
+            set
+            {
+                _modes = value;
+                OnPropertyChanged();
+            }
         }
         public ObservableCollection<SignalSignatureViewModel> BaseliningSignals { get; set; }
         public ICommand DeleteAMode { get; set; }
-
         private void _deleteAMode(object obj)
         {
+            var oldModes = new ObservableCollection<ModeViewModel>(Modes);
+            var toBeDeleted = obj as ModeViewModel;
+            foreach (var mode in oldModes)
+            {
+                if (mode == toBeDeleted)
+                {
+                    oldModes.Remove(toBeDeleted);
+                    break;
+                }
+            }
+            foreach (var md in _model.Modes)
+            {
+                if (md == toBeDeleted.Model)
+                {
+                    _model.Modes.Remove(md);
+                    break;
+                }
+            }
+            Modes = oldModes;
         }
+        public ICommand BaseliningSignalBoxSelected { get; set; }
+        private void _baseliningSignalBoxSelected(object obj)
+        {
+            foreach (var signal in InputChannels)
+            {
+                signal.IsChecked = false;
+            }
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>(BaseliningSignals);
+            foreach (var signal in BaseliningSignals)
+            {
+                signal.IsChecked = true;
+            }
+        }
+        public ICommand ModePMUSignalBoxSelected { get; set; }
+        private void _modePMUSignalBoxSelected(object obj)
+        {
+            foreach (var signal in InputChannels)
+            {
+                signal.IsChecked = false;
+            }
+            var signals = obj as ObservableCollection<SignalSignatureViewModel>;
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>(signals);
+            foreach (var signal in signals)
+            {
+                signal.IsChecked = true;
+            }
+        }
+
 
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BAWGUI.Core.Views;
+using BAWGUI.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,19 @@ namespace ModeMeter.Views
         public SmallSignalStabilityToolView()
         {
             InitializeComponent();
+        }
+
+        private void FilterListBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var b = sender as FilterListBox;
+            b.Background = Utility.HighlightColor;
+            var c = VisualTreeHelper.GetChild(b,0);
+        }
+        private void FilterListBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var b = sender as FilterListBox;
+            b.Background = new SolidColorBrush(Colors.White);
+
         }
     }
 }

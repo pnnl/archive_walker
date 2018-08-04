@@ -78,11 +78,4 @@ namespace BAWGUI.Core.Models
         [Description("Constant")]
         Constant
     }
-    public enum RetroactiveContinuityStatusType
-    {
-        [Description("ON")]
-        ON,
-        [Description("OFF")]
-        OFF
-    }
 }

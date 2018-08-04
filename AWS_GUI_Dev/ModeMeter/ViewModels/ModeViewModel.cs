@@ -6,12 +6,17 @@ using BAWGUI.Utilities;
 using ModeMeter.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace ModeMeter.ViewModels
 {
     public class ModeViewModel : ViewModelBase
     {
         private Mode _model;
+        public Mode Model
+        {
+            get { return _model; }
+        }
         public ModeViewModel(Mode mode, SignalManager _signalMgr)
         {
             this._model = mode;
@@ -29,13 +34,57 @@ namespace ModeMeter.ViewModels
                 }
             }
             DesiredModes = new DesiredModeAttributesViewModel(_model.DesiredModes);
-            Methods = new ObservableCollection<ModeMethodViewModel>();
+            _methods = new ObservableCollection<ModeMethodViewModel>();
             foreach (var alg in _model.AlgNames)
             {
-                Methods.Add(new ModeMethodViewModel(alg));
+                var newMethodVM = new ModeMethodViewModel(alg);
+                newMethodVM.MethodChanged += OnModeMethodChanged;
+                _methods.Add(newMethodVM);
+                //switch (alg.Name)
+                //{
+                //    case "YW-ARMA":
+                //        Methods.Add(new YWARMAViewModel((YWARMA)alg));
+                //        break;
+                //    case "LS-ARMA":
+                //        Methods.Add(new LSARMAViewModel((LSARMA)alg));
+                //        break;
+                //    case "YW-ARMA+S":
+                //        Methods.Add(new YWARMASViewModel((YWARMAS)alg));
+                //        break;
+                //    case "LS-ARMA+S":
+                //        Methods.Add(new LSARMASViewModel((LSARMAS)alg));
+                //        break;
+                //    default:
+                //        break;
+                //}
             }
             FODetectorParameters = new PeriodogramDetectorParametersViewModel(_model.FODetectorParameters);
+            DeleteAMethod = new RelayCommand(_deleteAMethod);
+            IsFODetecotrParametersVisible = _checkFOParameterVisibility();
+            AddAMethod = new RelayCommand(_addAMethod);
         }
+
+        private void OnModeMethodChanged(object sender, ModeMethodViewModel e)
+        {
+            IsFODetecotrParametersVisible = _checkFOParameterVisibility();
+        }
+
+        private bool _checkFOParameterVisibility()
+        {
+            foreach (var method in Methods)
+            {
+                if (method.Name == ModeMethods.LSARMAS)
+                {
+                    return true;
+                }
+                if (method.Name == ModeMethods.YWARMAS)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public string ModeName
         {
             get { return _model.ModeName; }
@@ -84,9 +133,215 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<ModeMethodViewModel> Methods { get; set; }
+        private ObservableCollection<ModeMethodViewModel> _methods = new ObservableCollection<ModeMethodViewModel>();
+        public ObservableCollection<ModeMethodViewModel> Methods
+        {
+            get { return _methods; }
+            set
+            {
+                _methods = value;
+                OnPropertyChanged();
+            }
+        }
         public PeriodogramDetectorParametersViewModel FODetectorParameters { get; set; }
+        public ICommand DeleteAMethod { get; set; }
+        private void _deleteAMethod(object obj)
+        {
+            var toBeDeleted = obj as ModeMethodViewModel;
+            var oldMethods = new ObservableCollection<ModeMethodViewModel>(Methods);
+            foreach (var method in oldMethods)
+            {
+                if (method == toBeDeleted)
+                {
+                    oldMethods.Remove(toBeDeleted);
+                    break;
+                }
+            }
+            foreach (var mthd in _model.AlgNames)
+            {
+                if (mthd == toBeDeleted.Model)
+                {
+                    _model.AlgNames.Remove(mthd);
+                    break;
+                }
+            }
+            Methods = oldMethods;
+            IsFODetecotrParametersVisible = _checkFOParameterVisibility();
+        }
+        private bool _isFODetecotrParametersVisible = false;
+        public bool IsFODetecotrParametersVisible
+        {
+            get { return _isFODetecotrParametersVisible; }
+            set
+            {
+                _isFODetecotrParametersVisible = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand AddAMethod { get; set; }
+        private void _addAMethod(object obj)
+        {
+            var newMethod = new ModeMethod();
+            _model.AlgNames.Add(newMethod);
+            var newMethodVM = new ModeMethodViewModel(newMethod);
+            newMethodVM.MethodChanged += OnModeMethodChanged;
+            _methods.Add(newMethodVM);
+            //IsFODetecotrParametersVisible = _checkFOParameterVisibility();
+        }
     }
+    public class ModeMethodViewModel : ViewModelBase
+    {
+        private ModeMethod _model;
+        public ModeMethod Model
+        {
+            get { return _model; }
+        }
+        //public ModeMethodBase Model { get { return _model; } }
+        public ModeMethodViewModel() { }
+        public ModeMethodViewModel(ModeMethod alg)
+        {
+            this._model = alg;
+        }
+        public ModeMethods Name
+        {
+            get { return _model.Name; }
+            set
+            {
+                _model.Name = value;
+                OnModeMethodChanged(this);
+                OnPropertyChanged();
+            }
+        }
+
+        public event EventHandler<ModeMethodViewModel> MethodChanged;
+        protected virtual void OnModeMethodChanged(ModeMethodViewModel e)
+        {
+            MethodChanged?.Invoke(this, e);
+        }
+
+        public string ARModelOrder
+        {
+            get { return _model.ARModelOrder; }
+            set
+            {
+                _model.ARModelOrder = value;
+                OnPropertyChanged();
+            }
+        }
+        public string MAModelOrder
+        {
+            get { return _model.MAModelOrder; }
+            set
+            {
+                _model.MAModelOrder = value;
+                OnPropertyChanged();
+            }
+        }
+        public string ExaggeratedARModelOrder
+        {
+            get { return _model.ExaggeratedARModelOrder; }
+            set
+            {
+                _model.ExaggeratedARModelOrder = value;
+                OnPropertyChanged();
+            }
+        }
+        public string NumberOfEquations
+        {
+            get { return _model.NumberOfEquations; }
+            set
+            {
+                _model.NumberOfEquations = value;
+                OnPropertyChanged();
+            }
+        }
+        public string NumberOfEquationsWithFOpresent
+        {
+            get { return _model.NumberOfEquationsWithFOpresent; }
+            set
+            {
+                _model.NumberOfEquationsWithFOpresent = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    //public class LSARMASViewModel : ModeMethodViewModel
+    //{
+    //    private LSARMAS _model;
+    //    public LSARMASViewModel(LSARMAS alg) : base(alg)
+    //    {
+    //        _model = alg;
+    //    }
+    //    public string ExaggeratedARModelOrder
+    //    {
+    //        get { return _model.ExaggeratedARModelOrder; }
+    //        set
+    //        {
+    //            _model.ExaggeratedARModelOrder = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //}
+    //public class YWARMASViewModel : ModeMethodViewModel
+    //{
+    //    private YWARMAS _model;
+    //    public YWARMASViewModel(YWARMAS alg) : base(alg)
+    //    {
+    //        _model = alg;
+    //    }
+    //    public string NumberOfEquations
+    //    {
+    //        get { return _model.NumberOfEquations; }
+    //        set
+    //        {
+    //            _model.NumberOfEquations = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //    public string NumberOfEquationsWithFOpresent
+    //    {
+    //        get { return _model.NumberOfEquationsWithFOpresent; }
+    //        set
+    //        {
+    //            _model.NumberOfEquationsWithFOpresent = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //}
+    //public class LSARMAViewModel : ModeMethodViewModel
+    //{
+    //    private LSARMA _model;
+    //    public LSARMAViewModel(LSARMA alg) : base(alg)
+    //    {
+    //        _model = alg;
+    //    }
+    //    public string ExaggeratedARModelOrder
+    //    {
+    //        get { return _model.ExaggeratedARModelOrder; }
+    //        set
+    //        {
+    //            _model.ExaggeratedARModelOrder = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //}
+    //public class YWARMAViewModel : ModeMethodViewModel
+    //{
+    //    private YWARMA _model;
+    //    public YWARMAViewModel(YWARMA alg) : base(alg)
+    //    {
+    //        _model = alg;
+    //    }
+    //    public string NumberOfEquations
+    //    {
+    //        get { return _model.NumberOfEquations; }
+    //        set
+    //        {
+    //            _model.NumberOfEquations = value;
+    //            OnPropertyChanged();
+    //        }
+    //    }
+    //}
 
     public class DesiredModeAttributesViewModel : ViewModelBase
     {
@@ -133,15 +388,7 @@ namespace ModeMeter.ViewModels
             }
         }
     }
-    public class ModeMethodViewModel : ViewModelBase
-    {
-        private ModeMethodBase _model;
 
-        public ModeMethodViewModel(ModeMethodBase alg)
-        {
-            this._model = alg;
-        }
-    }
     public class PeriodogramDetectorParametersViewModel : ViewModelBase
     {
         private PeriodogramDetectorModel _model;
