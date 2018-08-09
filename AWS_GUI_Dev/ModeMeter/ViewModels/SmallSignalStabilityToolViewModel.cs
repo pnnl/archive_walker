@@ -123,6 +123,7 @@ namespace ModeMeter.ViewModels
             {
                 signal.IsChecked = true;
             }
+            _signalMgr.DetermineAllParentNodeStatus();
         }
         public ICommand ModePMUSignalBoxSelected { get; set; }
         private void _modePMUSignalBoxSelected(object obj)
@@ -137,6 +138,7 @@ namespace ModeMeter.ViewModels
             {
                 signal.IsChecked = true;
             }
+            _signalMgr.DetermineAllParentNodeStatus();
         }
 
 
