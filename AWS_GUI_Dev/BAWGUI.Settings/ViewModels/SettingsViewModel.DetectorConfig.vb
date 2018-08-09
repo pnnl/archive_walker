@@ -174,7 +174,7 @@ Namespace ViewModels
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.ReGroupedRawSignalsByType, False)
                 _currentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
-                _determineFileDirCheckableStatus()
+                _signalMgr.DetermineFileDirCheckableStatus()
                 _determineSamplingRateCheckableStatus()
             End If
             SignalSelectionTreeViewVisibility = "Visible"
@@ -215,7 +215,7 @@ Namespace ViewModels
                             End If
                         Next
                     End If
-                    _determineFileDirCheckableStatus()
+                    _signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
                     detector.IsStepSelected = True
                     If TypeOf detector Is DetectorBase Then
@@ -226,7 +226,7 @@ Namespace ViewModels
 
                     _signalMgr.DetectorConfigDetermineAllParentNodeStatus()
 
-                    _determineFileDirCheckableStatus()
+                    _signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
                     If TypeOf detector Is AlarmingDetectorBase Then
@@ -291,7 +291,7 @@ Namespace ViewModels
                         _addLog("Detector " & obj.Name & " is deleted!")
                         _signalMgr.GroupedSignalByDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
                         For index = 1 To _signalMgr.GroupedSignalByDetectorInput.Count
-                            _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = "Step " & index.ToString & " " & DetectorConfigure.DetectorList(index - 1).Name
+                            _signalMgr.GroupedSignalByDetectorInput(index - 1).SignalSignature.SignalName = "Detector " & index.ToString & " " & DetectorConfigure.DetectorList(index - 1).Name
                         Next
                         If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False
