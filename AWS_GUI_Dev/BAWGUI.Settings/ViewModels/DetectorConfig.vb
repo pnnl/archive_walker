@@ -167,7 +167,7 @@ Namespace ViewModels
         Public Sub New(detector As PeriodogramDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
-            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
             Catch ex As Exception
@@ -333,7 +333,7 @@ Namespace ViewModels
         Public Sub New(detector As SpectralCoherenceDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
-            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
             Catch ex As Exception
@@ -509,7 +509,7 @@ Namespace ViewModels
         Public Sub New(detector As RingdownDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
-            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
             Catch ex As Exception
@@ -645,7 +645,7 @@ Namespace ViewModels
         Public Sub New(detector As OutOfRangeFrequencyDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
-            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
             Catch ex As Exception
@@ -820,7 +820,7 @@ Namespace ViewModels
         Public Sub New(detector As WindRampDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
-            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
             Catch ex As Exception

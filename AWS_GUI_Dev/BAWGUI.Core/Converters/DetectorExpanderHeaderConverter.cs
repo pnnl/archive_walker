@@ -37,7 +37,7 @@ namespace BAWGUI.Core.Converters
                     firstString = (detectorList.IndexOf(thisDetector) + 1).ToString();
                     secondString = thisDetector.Name;
                 }
-                return firstString + " - " + secondString;
+                return "Detector " + firstString + " - " + secondString;
             }
             else
                 return "No detector Selected Yet!";
