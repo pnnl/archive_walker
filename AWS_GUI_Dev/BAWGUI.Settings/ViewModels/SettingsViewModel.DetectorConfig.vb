@@ -160,7 +160,7 @@ Namespace ViewModels
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.ReGroupedRawSignalsByType, False)
                 _currentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
-                _determineFileDirCheckableStatus()
+                _signalMgr.DetermineFileDirCheckableStatus()
                 _determineSamplingRateCheckableStatus()
             End If
             SignalSelectionTreeViewVisibility = "Visible"
@@ -201,7 +201,7 @@ Namespace ViewModels
                             End If
                         Next
                     End If
-                    _determineFileDirCheckableStatus()
+                    _signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
                     detector.IsStepSelected = True
                     If TypeOf detector Is DetectorBase Then
@@ -212,7 +212,7 @@ Namespace ViewModels
 
                     _signalMgr.DetectorConfigDetermineAllParentNodeStatus()
 
-                    _determineFileDirCheckableStatus()
+                    _signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
                     If TypeOf detector Is AlarmingDetectorBase Then
