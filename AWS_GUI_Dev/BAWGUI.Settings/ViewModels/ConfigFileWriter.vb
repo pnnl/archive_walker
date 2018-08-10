@@ -3,6 +3,7 @@ Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
+Imports ModeMeter.ViewModels
 Imports VoltageStability.ViewModels
 
 Namespace ViewModels
@@ -488,6 +489,8 @@ Namespace ViewModels
                         '    <FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>
                         '</Periodogram>
                     Case GetType(VoltageStabilityDetectorViewModel)
+                        Continue For
+                    Case GetType(SmallSignalStabilityToolViewModel)
                         Continue For
                     Case Else
                         Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")

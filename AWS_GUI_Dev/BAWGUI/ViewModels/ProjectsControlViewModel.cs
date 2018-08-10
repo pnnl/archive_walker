@@ -336,7 +336,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     var mmWriter = new ModeMeterXmlWriter();
                     try
                     {
-                        mmWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, modeMeterList);
+                        mmWriter.WriteXmlCofigFile(_generatedNewRun.Model, modeMeterList);
                     }
                     catch (Exception ex)
                     {
