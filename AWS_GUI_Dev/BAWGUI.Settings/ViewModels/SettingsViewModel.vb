@@ -11,6 +11,7 @@ Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.Core.Models
 Imports VoltageStability.ViewModels
+Imports ModeMeter.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -1234,6 +1235,12 @@ Namespace ViewModels
                             _currentSelectedStep.ChangeASignal(obj)
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error changing voltage stability detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
+                    ElseIf TypeOf _currentSelectedStep Is SmallSignalStabilityToolViewModel Then
+                        Try
+                            _currentSelectedStep.ChangeSignalSelection(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing mode meter signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                         End Try
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try

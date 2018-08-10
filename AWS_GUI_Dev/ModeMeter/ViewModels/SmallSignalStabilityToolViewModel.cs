@@ -54,6 +54,7 @@ namespace ModeMeter.ViewModels
                     _signalMgr.FindSignalsOfAPMU(BaseliningSignals, signal.PMUName);
                 }
             }
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>(BaseliningSignals);
             BaseliningSignalBoxSelected = new RelayCommand(_baseliningSignalBoxSelected);
             ModePMUSignalBoxSelected = new RelayCommand(_modePMUSignalBoxSelected);
         }
@@ -118,12 +119,18 @@ namespace ModeMeter.ViewModels
             {
                 signal.IsChecked = false;
             }
+            //_signalMgr.DetermineFileDirCheckableStatus();
             InputChannels = new ObservableCollection<SignalSignatureViewModel>(BaseliningSignals);
             foreach (var signal in BaseliningSignals)
             {
                 signal.IsChecked = true;
             }
             _signalMgr.DetermineAllParentNodeStatus();
+            _signalMgr.DetermineFileDirCheckableStatus();
+            if (InputChannels.Count() > 0)
+            {
+                _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, InputChannels.FirstOrDefault().SamplingRate);
+            }
         }
         public ICommand ModePMUSignalBoxSelected { get; set; }
         private void _modePMUSignalBoxSelected(object obj)
@@ -132,6 +139,7 @@ namespace ModeMeter.ViewModels
             {
                 signal.IsChecked = false;
             }
+            //_signalMgr.DetermineFileDirCheckableStatus();
             var signals = obj as ObservableCollection<SignalSignatureViewModel>;
             InputChannels = new ObservableCollection<SignalSignatureViewModel>(signals);
             foreach (var signal in signals)
@@ -139,8 +147,16 @@ namespace ModeMeter.ViewModels
                 signal.IsChecked = true;
             }
             _signalMgr.DetermineAllParentNodeStatus();
+            _signalMgr.DetermineFileDirCheckableStatus();
+            if (InputChannels.Count() > 0)
+            {
+                _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, InputChannels.FirstOrDefault().SamplingRate);
+            }
         }
+        public void ChangeSignalSelection(SignalTypeHierachy obj)
+        {
 
+        }
 
     }
 }
