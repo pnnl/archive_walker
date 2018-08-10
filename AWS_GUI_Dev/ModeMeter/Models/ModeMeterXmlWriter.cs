@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,114 +20,135 @@ namespace ModeMeter.Models
             foreach (var detector in modeMeterList)
             {
                 var mmElement = new XElement("ModeMeter");
-                mmElement.Add(new XElement("ResultPath", run.RunPath + "\\MM\\" + detector.ModeMeterName));
+                var modeMeterDir = run.RunPath + "\\MM\\" + detector.ModeMeterName;
+                if (!Directory.Exists(modeMeterDir))
+                {
+                    Directory.CreateDirectory(modeMeterDir);
+                }
+                mmElement.Add(new XElement("ResultPath", modeMeterDir));
                 XElement baseliningSignals = _addBaseliningSignals(detector);
                 mmElement.Add(baseliningSignals);
                 foreach (var mode in detector.Modes)
                 {
-                    var modeElement = new XElement("Mode");
-                    modeElement.Add(new XElement("Name", mode.ModeName));
-                    _addModePMUSignals(modeElement, mode);
-                    modeElement.Add(new XElement("AnalysisLength", mode.AnalysisLength));
-                    var retConTracking = new XElement("RetConTracking");
-                    switch (mode.Status)
-                    {
-                        case RetroactiveContinuityStatusType.ON:
-                            var statusOn = new XElement("Status", "ON");
-                            retConTracking.Add(statusOn);
-                            var maxLength = new XElement("MaxLength", mode.MaxLength);
-                            retConTracking.Add(maxLength);
-                            break;
-                        case RetroactiveContinuityStatusType.OFF:
-                            var statusOff = new XElement("Status", "OFF");
-                            retConTracking.Add(statusOff);
-                            break;
-                        default:
-                            break;
-                    }
-                    modeElement.Add(retConTracking);
-                    modeElement.Add(new XElement("DampRatioThreshold", mode.DampRatioThreshold));
-                    modeElement.Add(new XElement("DesiredModes", new XElement("LowF", mode.DesiredModes.LowF),
-                                                                 new XElement("HighF", mode.DesiredModes.HighF),
-                                                                 new XElement("GuessF", mode.DesiredModes.GuessF),
-                                                                 new XElement("DampMax", mode.DesiredModes.DampMax)));
-                    foreach (var method in mode.Methods)
-                    {
-                        XElement mth = null;
-                        switch (method.Name)
-                        {
-                            case ModeMethods.YWARMA:
-                                mth = new XElement("AlgNames", new XElement("Name", "YW_ARMA"),
-                                                                    new XElement("na", method.ARModelOrder),
-                                                                    new XElement("nb", method.MAModelOrder),
-                                                                    new XElement("L", method.NumberOfEquations));
-                                modeElement.Add(mth);
-                                break;
-                            case ModeMethods.LSARMA:
-                                mth = new XElement("AlgNames", new XElement("Name", "LS_ARMA"),
-                                                                    new XElement("na", method.ARModelOrder),
-                                                                    new XElement("nb", method.MAModelOrder),
-                                                                    new XElement("n_alpha", method.ExaggeratedARModelOrder));
-                                modeElement.Add(mth);
-                                break;
-                            case ModeMethods.YWARMAS:
-                                mth = new XElement("AlgNames", new XElement("Name", "YW_ARMApS"),
-                                                                    new XElement("na", method.ARModelOrder),
-                                                                    new XElement("nb", method.MAModelOrder),
-                                                                    new XElement("L", method.NumberOfEquations),
-                                                                    new XElement("LFO", method.NumberOfEquationsWithFOpresent));
-                                modeElement.Add(mth);
-                                break;
-                            case ModeMethods.LSARMAS:
-                                mth = new XElement("AlgNames", new XElement("Name", "LS_ARMApS"),
-                                                                    new XElement("na", method.ARModelOrder),
-                                                                    new XElement("nb", method.MAModelOrder),
-                                                                    new XElement("n_alpha", method.ExaggeratedARModelOrder));
-                                modeElement.Add(mth);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (mode.IsFODetecotrParametersVisible)
-                    {
-                        var foParameters = new XElement("FOdetectorParam", new XElement("FrequencyInterval", mode.FODetectorParameters.FrequencyInterval),
-                                                                            new XElement("FrequencyMax", mode.FODetectorParameters.FrequencyMax),
-                                                                            new XElement("FrequencyMin", mode.FODetectorParameters.FrequencyMin),
-                                                                            new XElement("FrequencyTolerance", mode.FODetectorParameters.FrequencyTolerance),
-                                                                            new XElement("MedianFilterFrequencyWidth", mode.FODetectorParameters.MedianFilterFrequencyWidth),
-                                                                            new XElement("Pfa", mode.FODetectorParameters.Pfa),
-                                                                            new XElement("WindowLength", mode.FODetectorParameters.WindowLength),
-                                                                            new XElement("WindowOverlap", mode.FODetectorParameters.WindowOverlap));
-                        XElement type = null;
-                        switch (mode.FODetectorParameters.WindowType)
-                        {
-                            case BAWGUI.Core.Models.DetectorWindowType.hann:
-                                type = new XElement("WindowType", "hann");
-                                break;
-                            case BAWGUI.Core.Models.DetectorWindowType.rectwin:
-                                type = new XElement("WindowType", "rectwin");
-                                break;
-                            case BAWGUI.Core.Models.DetectorWindowType.bartlett:
-                                type = new XElement("WindowType", "bartlett");
-                                break;
-                            case BAWGUI.Core.Models.DetectorWindowType.hamming:
-                                type = new XElement("WindowType", "hamming");
-                                break;
-                            case BAWGUI.Core.Models.DetectorWindowType.blackman:
-                                type = new XElement("WindowType", "blackman");
-                                break;
-                            default:
-                                break;
-                        }
-                        foParameters.AddFirst(type);
-                        modeElement.Add(foParameters);
-                    }
-                    mmElement.Add(modeElement);
+                    _writeAMode(mmElement, mode);
                 }
                 mmDetectors.AddBeforeSelf(mmElement);
             }
             configFile.Save(_configFilePath);
+        }
+
+        private void _writeAMode(XElement mmElement, ModeViewModel mode)
+        {
+            var modeElement = new XElement("Mode");
+            modeElement.Add(new XElement("Name", mode.ModeName));
+            _addModePMUSignals(modeElement, mode);
+            modeElement.Add(new XElement("AnalysisLength", mode.AnalysisLength));
+            var retConTracking = new XElement("RetConTracking");
+            switch (mode.Status)
+            {
+                case RetroactiveContinuityStatusType.ON:
+                    var statusOn = new XElement("Status", "ON");
+                    retConTracking.Add(statusOn);
+                    var maxLength = new XElement("MaxLength", mode.MaxLength);
+                    retConTracking.Add(maxLength);
+                    break;
+                case RetroactiveContinuityStatusType.OFF:
+                    var statusOff = new XElement("Status", "OFF");
+                    retConTracking.Add(statusOff);
+                    break;
+                default:
+                    break;
+            }
+            modeElement.Add(retConTracking);
+            modeElement.Add(new XElement("DampRatioThreshold", mode.DampRatioThreshold));
+            modeElement.Add(new XElement("DesiredModes", new XElement("LowF", mode.DesiredModes.LowF),
+                                                         new XElement("HighF", mode.DesiredModes.HighF),
+                                                         new XElement("GuessF", mode.DesiredModes.GuessF),
+                                                         new XElement("DampMax", mode.DesiredModes.DampMax)));
+            foreach (var method in mode.Methods)
+            {
+                _writeAMethod(modeElement, method);
+            }
+            if (mode.IsFODetecotrParametersVisible)
+            {
+                XElement foParameters = _writeFOParameterElement(mode.FODetectorParameters);
+                modeElement.Add(foParameters);
+            }
+            mmElement.Add(modeElement);
+        }
+
+        private static void _writeAMethod(XElement modeElement, ModeMethodViewModel method)
+        {
+            XElement mth = null;
+            switch (method.Name)
+            {
+                case ModeMethods.YWARMA:
+                    mth = new XElement("AlgNames", new XElement("Name", "YW_ARMA"),
+                                                        new XElement("na", method.ARModelOrder),
+                                                        new XElement("nb", method.MAModelOrder),
+                                                        new XElement("L", method.NumberOfEquations));
+                    modeElement.Add(mth);
+                    break;
+                case ModeMethods.LSARMA:
+                    mth = new XElement("AlgNames", new XElement("Name", "LS_ARMA"),
+                                                        new XElement("na", method.ARModelOrder),
+                                                        new XElement("nb", method.MAModelOrder),
+                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder));
+                    modeElement.Add(mth);
+                    break;
+                case ModeMethods.YWARMAS:
+                    mth = new XElement("AlgNames", new XElement("Name", "YW_ARMApS"),
+                                                        new XElement("na", method.ARModelOrder),
+                                                        new XElement("nb", method.MAModelOrder),
+                                                        new XElement("L", method.NumberOfEquations),
+                                                        new XElement("LFO", method.NumberOfEquationsWithFOpresent));
+                    modeElement.Add(mth);
+                    break;
+                case ModeMethods.LSARMAS:
+                    mth = new XElement("AlgNames", new XElement("Name", "LS_ARMApS"),
+                                                        new XElement("na", method.ARModelOrder),
+                                                        new XElement("nb", method.MAModelOrder),
+                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder));
+                    modeElement.Add(mth);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static XElement _writeFOParameterElement(PeriodogramDetectorParametersViewModel parameters)
+        {
+            var foParameters = new XElement("FOdetectorParam", new XElement("FrequencyInterval", parameters.FrequencyInterval),
+                                                                new XElement("FrequencyMax", parameters.FrequencyMax),
+                                                                new XElement("FrequencyMin", parameters.FrequencyMin),
+                                                                new XElement("FrequencyTolerance", parameters.FrequencyTolerance),
+                                                                new XElement("MedianFilterFrequencyWidth", parameters.MedianFilterFrequencyWidth),
+                                                                new XElement("Pfa", parameters.Pfa),
+                                                                new XElement("WindowLength", parameters.WindowLength),
+                                                                new XElement("WindowOverlap", parameters.WindowOverlap));
+            XElement type = null;
+            switch (parameters.WindowType)
+            {
+                case BAWGUI.Core.Models.DetectorWindowType.hann:
+                    type = new XElement("WindowType", "hann");
+                    break;
+                case BAWGUI.Core.Models.DetectorWindowType.rectwin:
+                    type = new XElement("WindowType", "rectwin");
+                    break;
+                case BAWGUI.Core.Models.DetectorWindowType.bartlett:
+                    type = new XElement("WindowType", "bartlett");
+                    break;
+                case BAWGUI.Core.Models.DetectorWindowType.hamming:
+                    type = new XElement("WindowType", "hamming");
+                    break;
+                case BAWGUI.Core.Models.DetectorWindowType.blackman:
+                    type = new XElement("WindowType", "blackman");
+                    break;
+                default:
+                    break;
+            }
+            foParameters.AddFirst(type);
+            return foParameters;
         }
 
         private void _addModePMUSignals(XElement modeElement, ModeViewModel mode)
