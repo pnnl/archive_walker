@@ -1458,9 +1458,9 @@ Namespace ViewModels
                 End If
             Else
                 If obj.SignalSignature.IsChecked Then
-                    _checkAllChildren(obj, False)
+                    _signalMgr.CheckAllChildren(obj, False)
                 Else
-                    _checkAllChildren(obj, True)
+                    _signalMgr.CheckAllChildren(obj, True)
                 End If
                 '_dataConfigDetermineAllParentNodeStatus()
                 '_processConfigDetermineAllParentNodeStatus()
@@ -1685,7 +1685,7 @@ Namespace ViewModels
         End Sub
 
         Private Sub _changeSignalSelection(obj As SignalTypeHierachy)
-            _checkAllChildren(obj, obj.SignalSignature.IsChecked)
+            _signalMgr.CheckAllChildren(obj, obj.SignalSignature.IsChecked)
             _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
             If TypeOf _currentSelectedStep Is DQFilter Then
                 _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
@@ -2528,17 +2528,17 @@ Namespace ViewModels
         ''' </summary>
         ''' <param name="node"></param>
         ''' <param name="isChecked"></param>
-        Private Sub _checkAllChildren(ByRef node As SignalTypeHierachy, ByVal isChecked As Boolean)
-            If node.SignalList.Count > 0 Then
-                ' if not a leaf node, call itself recursively to check/uncheck all children
-                For Each child In node.SignalList
-                    If child.SignalSignature.IsEnabled Then
-                        child.SignalSignature.IsChecked = isChecked
-                        _checkAllChildren(child, isChecked)
-                    End If
-                Next
-            End If
-        End Sub
+        'Private Sub _checkAllChildren(ByRef node As SignalTypeHierachy, ByVal isChecked As Boolean)
+        '    If node.SignalList.Count > 0 Then
+        '        ' if not a leaf node, call itself recursively to check/uncheck all children
+        '        For Each child In node.SignalList
+        '            If child.SignalSignature.IsEnabled Then
+        '                child.SignalSignature.IsChecked = isChecked
+        '                _checkAllChildren(child, isChecked)
+        '            End If
+        '        Next
+        '    End If
+        'End Sub
 
 
         Private _setCurrentFocusedTextbox As ICommand
