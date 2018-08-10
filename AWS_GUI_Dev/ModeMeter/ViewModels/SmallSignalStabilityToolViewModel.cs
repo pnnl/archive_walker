@@ -119,8 +119,8 @@ namespace ModeMeter.ViewModels
             {
                 signal.IsChecked = false;
             }
-            //_signalMgr.DetermineFileDirCheckableStatus();
-            InputChannels = new ObservableCollection<SignalSignatureViewModel>(BaseliningSignals);
+            //InputChannels = new ObservableCollection<SignalSignatureViewModel>(BaseliningSignals);
+            InputChannels = BaseliningSignals;
             foreach (var signal in BaseliningSignals)
             {
                 signal.IsChecked = true;
@@ -131,6 +131,10 @@ namespace ModeMeter.ViewModels
             {
                 _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, InputChannels.FirstOrDefault().SamplingRate);
             }
+            else
+            {
+                _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, -1);
+            }
         }
         public ICommand ModePMUSignalBoxSelected { get; set; }
         private void _modePMUSignalBoxSelected(object obj)
@@ -139,10 +143,10 @@ namespace ModeMeter.ViewModels
             {
                 signal.IsChecked = false;
             }
-            //_signalMgr.DetermineFileDirCheckableStatus();
-            var signals = obj as ObservableCollection<SignalSignatureViewModel>;
-            InputChannels = new ObservableCollection<SignalSignatureViewModel>(signals);
-            foreach (var signal in signals)
+            //var signals = obj as ObservableCollection<SignalSignatureViewModel>;
+            //InputChannels = new ObservableCollection<SignalSignatureViewModel>(signals);
+            InputChannels = obj as ObservableCollection<SignalSignatureViewModel>;
+            foreach (var signal in InputChannels)
             {
                 signal.IsChecked = true;
             }
@@ -152,11 +156,95 @@ namespace ModeMeter.ViewModels
             {
                 _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, InputChannels.FirstOrDefault().SamplingRate);
             }
+            else
+            {
+                _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, -1);
+            }
         }
         public void ChangeSignalSelection(SignalTypeHierachy obj)
         {
-
+            bool checkStatus = (bool)obj.SignalSignature.IsChecked;
+            //_signalMgr.CheckAllChildren(obj, checkStatus);
+            //if (checkStatus)
+            //{
+            //    _addInputSignal(obj);
+            //}
+            //else
+            //{
+            //    _deleteInputSignal(obj);
+            //}
+            _changeSignalSelection(obj, checkStatus);
+            _signalMgr.DetermineAllParentNodeStatus();
+            _signalMgr.DetermineFileDirCheckableStatus();
+            if (InputChannels.Count() > 0)
+            {
+                _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, InputChannels.FirstOrDefault().SamplingRate);
+            }
+            else
+            {
+                _signalMgr.DetermineSamplingRateCheckableStatus(this, 4, -1);
+            }
         }
 
+        private void _changeSignalSelection(SignalTypeHierachy obj, bool checkStatus)
+        {
+            if (obj.SignalList.Count > 0)
+            {
+                foreach (var signal in obj.SignalList)
+                {
+                    _changeSignalSelection(signal, checkStatus);
+                }
+            }
+            else
+            {
+                if (!checkStatus && InputChannels.Contains(obj.SignalSignature))
+                {
+                    InputChannels.Remove(obj.SignalSignature);
+                }
+                if (checkStatus && !InputChannels.Contains(obj.SignalSignature))
+                {
+                    InputChannels.Add(obj.SignalSignature);
+                }
+                obj.SignalSignature.IsChecked = checkStatus;
+            }
+        }
+
+        private void _deleteInputSignal(SignalTypeHierachy obj)
+        {
+            if (obj.SignalList.Count > 0)
+            {
+                foreach (var signal in obj.SignalList)
+                {
+                    _deleteInputSignal(signal);
+                }
+            }
+            else
+            {
+                if (InputChannels.Contains(obj.SignalSignature))
+                {
+                    InputChannels.Remove(obj.SignalSignature);
+                    obj.SignalSignature.IsChecked = false;
+                }
+            }
+        }
+
+        private void _addInputSignal(SignalTypeHierachy obj)
+        {
+            if (obj.SignalList.Count > 0)
+            {
+                foreach (var signal in obj.SignalList)
+                {
+                    _addInputSignal(signal);
+                }
+            }
+            else
+            {
+                if (!InputChannels.Contains(obj.SignalSignature))
+                {
+                    InputChannels.Add(obj.SignalSignature);
+                    obj.SignalSignature.IsChecked = true;
+                }
+            }
+        }
     }
 }

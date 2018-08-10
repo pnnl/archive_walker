@@ -15,6 +15,8 @@ using BAWGUI.Utilities;
 using BAWGUI.Settings.ViewModels;
 using VoltageStability.Models;
 using VoltageStability.ViewModels;
+using ModeMeter.ViewModels;
+using ModeMeter.Models;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -322,6 +324,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     try
                     {
                         vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
+                }
+                var modeMeterList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is SmallSignalStabilityToolViewModel).Select(x => (SmallSignalStabilityToolViewModel)x).ToList();
+                if (modeMeterList.Count > 0)
+                {
+                    var mmWriter = new ModeMeterXmlWriter();
+                    try
+                    {
+                        mmWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, modeMeterList);
                     }
                     catch (Exception ex)
                     {

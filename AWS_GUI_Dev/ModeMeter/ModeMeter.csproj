@@ -72,6 +72,7 @@
     <Compile Include="Converters\EnumToStringConverters.cs" />
     <Compile Include="Converters\MethodExpanderHeaderConverter.cs" />
     <Compile Include="Converters\RetroactiveContinuityStatusVisibilityConverter.cs" />
+    <Compile Include="Models\ModeMeterXmlWriter.cs" />
     <Compile Include="Models\ModeSettings.cs" />
     <Compile Include="Models\ModeMeterReader.cs" />
     <Compile Include="Models\SmallSignalStabilityTool.cs" />
