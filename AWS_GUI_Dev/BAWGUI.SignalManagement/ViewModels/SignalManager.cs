@@ -1198,6 +1198,325 @@ namespace BAWGUI.SignalManagement.ViewModels
             allPMU.AddRange(AllPostProcessOutputGroupedByPMU.SelectMany(x => x.SignalList).Distinct().SelectMany(r => r.SignalList).Distinct().Select(y => new PMUWithSamplingRate(y.SignalSignature.PMUName, y.SignalSignature.SamplingRate)).ToList());
             return new ObservableCollection<PMUWithSamplingRate>(allPMU.Distinct());
         }
+
+        #region Signal Manipulations, checking, unchecking, etc.
+
+        public void DataConfigDetermineAllParentNodeStatus()
+        {
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
+            foreach (var stepInput in GroupedSignalByDataConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByDataConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+        }
+        /// <summary>
+        /// Go down a tree to determine nodes checking status
+        /// </summary>
+        /// <param name="groups"></param>
+        private void _determineParentGroupedByTypeNodeStatus(ObservableCollection<SignalTypeHierachy> groups)
+        {
+            if (groups.Count > 0)
+            {
+                foreach (var group in groups)
+                {
+                    // if has children, then its status depends on children status
+                    if (group.SignalList.Count > 0)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalList.Count > 0)
+                            {
+                                foreach (var subsubgroup in subgroup.SignalList)
+                                {
+                                    if (subsubgroup.SignalList.Count > 0)
+                                    {
+                                        foreach (var subsubsubgroup in subsubgroup.SignalList)
+                                        {
+                                            if (subsubsubgroup.SignalList.Count > 0)
+                                            {
+                                                foreach (var subsubsubsubgroup in subsubsubgroup.SignalList)
+                                                {
+                                                    if (subsubsubsubgroup.SignalList.Count > 0)
+                                                        _determineParentCheckStatus(subsubsubsubgroup);
+                                                }
+                                                _determineParentCheckStatus(subsubsubgroup);
+                                            }
+                                        }
+                                        _determineParentCheckStatus(subsubgroup);
+                                    }
+                                }
+                                _determineParentCheckStatus(subgroup);
+                            }
+                        }
+                        _determineParentCheckStatus(group);
+                    }
+                    else
+                        // else, no children, status must be false, this only applies top level nodes, since leaf node won't have children at all
+                        group.SignalSignature.IsChecked = false;
+                }
+            }
+        }
+        /// <summary>
+        /// This sub loop through all children of a hierachy node to determine the node's status of checked/unchecked/indeterminate
+        /// </summary>
+        /// <param name="group"></param>
+        private void _determineParentCheckStatus(SignalTypeHierachy group)
+        {
+            if (group.SignalList.Count > 0)
+            {
+                var hasCheckedItem = false;
+                var hasUnCheckedItem = false;
+                foreach (var subgroup in group.SignalList)
+                {
+                    if (subgroup.SignalSignature.IsChecked == null)
+                    {
+                        hasCheckedItem = true;
+                        hasUnCheckedItem = true;
+                        break;
+                    }
+                    if ((bool)subgroup.SignalSignature.IsChecked && !hasCheckedItem)
+                    {
+                        hasCheckedItem = true;
+                        continue;
+                    }
+                    if (subgroup.SignalSignature.IsChecked == false && !hasUnCheckedItem)
+                        hasUnCheckedItem = true;
+                    if (hasCheckedItem & hasUnCheckedItem)
+                        break;
+                }
+                if (hasCheckedItem & hasUnCheckedItem)
+                    group.SignalSignature.IsChecked = null;
+                else
+                    group.SignalSignature.IsChecked = hasCheckedItem;
+            }
+        }
+        public void DetermineAllParentNodeStatus()
+        {
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
+            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByPMU);
+            foreach (var stepInput in GroupedSignalByDataConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByDataConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepInput in GroupedSignalByProcessConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByProcessConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepInput in GroupedSignalByPostProcessConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByPostProcessConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepInput in GroupedSignalByDetectorInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+        }
+        public void DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+        {
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
+            foreach (var stepInput in GroupedSignalByDataConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByDataConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepInput in GroupedSignalByPostProcessConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByPostProcessConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+        }
+        public void DetectorConfigDetermineAllParentNodeStatus()
+        {
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
+            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByPMU);
+            foreach (var stepInput in GroupedSignalByDetectorInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+        }
+        public void PostProcessDetermineAllParentNodeStatus()
+        {
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
+            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
+            foreach (var stepInput in GroupedSignalByPostProcessConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByPostProcessConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+        }
+        public void ProcessConfigDetermineAllParentNodeStatus()
+        {
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
+            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
+            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
+            foreach (var stepInput in GroupedSignalByProcessConfigStepsInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
+            foreach (var stepOutput in GroupedSignalByProcessConfigStepsOutput)
+            {
+                if (stepOutput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
+                    _determineParentCheckStatus(stepOutput);
+                }
+                else
+                    stepOutput.SignalSignature.IsChecked = false;
+            }
+        }
         /// <summary>
         /// Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
         /// </summary>
@@ -1605,325 +1924,26 @@ namespace BAWGUI.SignalManagement.ViewModels
                     group.SignalSignature.IsEnabled = true;
             }
         }
-        #region Signal Manipulations, checking, unchecking, etc.
-
-        public void DataConfigDetermineAllParentNodeStatus()
-        {
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
-            foreach (var stepInput in GroupedSignalByDataConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByDataConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-        }
         /// <summary>
-        /// Go down a tree to determine nodes checking status
+        /// This sub checks/unchecks of all children of a node in the signal grouped by type parent tree
         /// </summary>
-        /// <param name="groups"></param>
-        private void _determineParentGroupedByTypeNodeStatus(ObservableCollection<SignalTypeHierachy> groups)
+        /// <param name="node"></param>
+        /// <param name="isChecked"></param>
+        public void CheckAllChildren(SignalTypeHierachy node, bool isChecked)
         {
-            if (groups.Count > 0)
+            if (node.SignalList.Count > 0)
             {
-                foreach (var group in groups)
+                // if not a leaf node, call itself recursively to check/uncheck all children
+                foreach (var child in node.SignalList)
                 {
-                    // if has children, then its status depends on children status
-                    if (group.SignalList.Count > 0)
+                    if ((bool)child.SignalSignature.IsEnabled)
                     {
-                        foreach (var subgroup in group.SignalList)
-                        {
-                            if (subgroup.SignalList.Count > 0)
-                            {
-                                foreach (var subsubgroup in subgroup.SignalList)
-                                {
-                                    if (subsubgroup.SignalList.Count > 0)
-                                    {
-                                        foreach (var subsubsubgroup in subsubgroup.SignalList)
-                                        {
-                                            if (subsubsubgroup.SignalList.Count > 0)
-                                            {
-                                                foreach (var subsubsubsubgroup in subsubsubgroup.SignalList)
-                                                {
-                                                    if (subsubsubsubgroup.SignalList.Count > 0)
-                                                        _determineParentCheckStatus(subsubsubsubgroup);
-                                                }
-                                                _determineParentCheckStatus(subsubsubgroup);
-                                            }
-                                        }
-                                        _determineParentCheckStatus(subsubgroup);
-                                    }
-                                }
-                                _determineParentCheckStatus(subgroup);
-                            }
-                        }
-                        _determineParentCheckStatus(group);
+                        child.SignalSignature.IsChecked = isChecked;
+                        CheckAllChildren(child, isChecked);
                     }
-                    else
-                        // else, no children, status must be false, this only applies top level nodes, since leaf node won't have children at all
-                        group.SignalSignature.IsChecked = false;
                 }
             }
         }
-        /// <summary>
-        /// This sub loop through all children of a hierachy node to determine the node's status of checked/unchecked/indeterminate
-        /// </summary>
-        /// <param name="group"></param>
-        private void _determineParentCheckStatus(SignalTypeHierachy group)
-        {
-            if (group.SignalList.Count > 0)
-            {
-                var hasCheckedItem = false;
-                var hasUnCheckedItem = false;
-                foreach (var subgroup in group.SignalList)
-                {
-                    if (subgroup.SignalSignature.IsChecked == null)
-                    {
-                        hasCheckedItem = true;
-                        hasUnCheckedItem = true;
-                        break;
-                    }
-                    if ((bool)subgroup.SignalSignature.IsChecked && !hasCheckedItem)
-                    {
-                        hasCheckedItem = true;
-                        continue;
-                    }
-                    if (subgroup.SignalSignature.IsChecked == false && !hasUnCheckedItem)
-                        hasUnCheckedItem = true;
-                    if (hasCheckedItem & hasUnCheckedItem)
-                        break;
-                }
-                if (hasCheckedItem & hasUnCheckedItem)
-                    group.SignalSignature.IsChecked = null;
-                else
-                    group.SignalSignature.IsChecked = hasCheckedItem;
-            }
-        }
-        public void DetermineAllParentNodeStatus()
-        {
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
-            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByPMU);
-            foreach (var stepInput in GroupedSignalByDataConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByDataConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepInput in GroupedSignalByProcessConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByProcessConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepInput in GroupedSignalByPostProcessConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByPostProcessConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepInput in GroupedSignalByDetectorInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-        }
-        public void DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-        {
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
-            foreach (var stepInput in GroupedSignalByDataConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByDataConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepInput in GroupedSignalByPostProcessConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByPostProcessConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-        }
-        public void DetectorConfigDetermineAllParentNodeStatus()
-        {
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
-            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllPostProcessOutputGroupedByPMU);
-            foreach (var stepInput in GroupedSignalByDetectorInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-        }
-        public void PostProcessDetermineAllParentNodeStatus()
-        {
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
-            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByPMU);
-            foreach (var stepInput in GroupedSignalByPostProcessConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByPostProcessConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-        }
-        public void ProcessConfigDetermineAllParentNodeStatus()
-        {
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
-            _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
-            _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
-            foreach (var stepInput in GroupedSignalByProcessConfigStepsInput)
-            {
-                if (stepInput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
-                    _determineParentCheckStatus(stepInput);
-                }
-                else
-                    stepInput.SignalSignature.IsChecked = false;
-            }
-            foreach (var stepOutput in GroupedSignalByProcessConfigStepsOutput)
-            {
-                if (stepOutput.SignalList.Count > 0)
-                {
-                    _determineParentGroupedByTypeNodeStatus(stepOutput.SignalList);
-                    _determineParentCheckStatus(stepOutput);
-                }
-                else
-                    stepOutput.SignalSignature.IsChecked = false;
-            }
-        }
-
         #endregion
 
         #region Raw signals
