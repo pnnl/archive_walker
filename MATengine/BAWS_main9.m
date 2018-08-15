@@ -120,7 +120,7 @@ if (nargin == 5) && (~Unpause)
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
         BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
-        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll);
+        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
     
     InitialCondosFilter = [];
     InitialCondosMultiRate = [];
@@ -168,7 +168,7 @@ elseif ~Unpause
         error(['Configuration file ' ConfigFile ' does not exist.']);
     end
     
-    [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll);
+    [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);
     
     % Error check on RerunDetector entry
     if sum(strcmp(RerunDetector,[{'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
@@ -285,7 +285,7 @@ elseif ~Unpause
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
         BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
-        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll);
+        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
     
     % Disable all but the desired detector
     DetectorXML = DisableDetectors(DetectorXML,RerunDetector);
@@ -762,11 +762,7 @@ while(~min(done))
                     PMUsegment = CreatePMUsegment(PMUconcat,SecondsToConcat,PMUconcatLength,ResultUpdateInterval,SlideIdx);
 
                     % Apply detection algorithms.
-%                     try
-                        [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,BlockDetectors,AdditionalOutput);
-%                     catch
-%                         1;
-%                     end
+                    [DetectionResults, AdditionalOutput] = RunDetection(PMUsegment,DetectorXML,BlockDetectors,AdditionalOutput);
                     % If running in normal mode:
                     if strcmp(RunMode,'Normal')
                         EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,BlockDetectors,EventList);

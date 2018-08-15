@@ -1,5 +1,5 @@
 %   function [DetectionResults, AdditionalOutput] = ModeMeterDetector(PMUstruct,Parameters,PastAdditionalOutput)
-%   This function implemements the Thevenin application
+%
 %   Inputs:
 %           PMUstruct: PMU structure in a common format for all PMUs
 %           Parameters:
@@ -20,13 +20,14 @@ function [DetectionResults, AdditionalOutput] = ModeMeterDetector(PMUstruct,Para
 % and the sampling rate fs. The sampling rate is needed for some default
 % parameter values.
 try
-    [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString] = ExtractDataModemeter(PMUstruct,Parameters);
+    [Data, DataPMU, DataChannel, DataType, DataUnit, ~, fs, TimeString] = ExtractDataModemeter(PMUstruct,Parameters);
 catch
     warning('Input data for the mode-meter could not be used.');
-    DetectionResults = struct('FOfreq',cell(1,length(Parameters.Mode)));%'MpathRemainder',[],'Name',Parameters.Name
-    AdditionalOutput = struct('MpathRemainder',[],'ModeOriginal',[],...
+    DetectionResults = struct('FOfreq',cell(1,length(Parameters.Mode)),'LowDampedMode',[],'ChannelName',[],'MethodName',[]);%'MpathRemainder',[],'Name',Parameters.Name
+    AdditionalOutput = struct('ModeOriginal',[],...
         'ModeTrack',[],'OperatingValues',[], 'OperatingNames',[], 'OperatingUnits',[],...
-        'Data',[],'DataPMU',[],'DataChannel',[],'DataType',[],'DataUnit',[],'TimeString',[]);
+        'Data',[],'DataPMU',[],'DataChannel',[],'DataType',[],'DataUnit',[],'TimeString',[],...
+        'ModeOriginal',[],'ModeHistory',[],'ModeFreqHistory',[],'ModeDRHistory',[],'MethodName',[],'ChannelName',[]);
     return
 end
 DetectionResults = struct([]);
@@ -39,9 +40,6 @@ for ModeIdx = 1:length(Parameters.Mode)
     ExtractedParameters = ExtractedParametersAll{ModeIdx};
     TimeStringDN = datenum(TimeString{ModeIdx});
     NumMethods = length(ExtractedParameters.AlgorithmSpecificParameters);
-    % Initialize Result structure
-    % Set up result matrices
-    %     Mode = NaN(size(Data{ModeIdx},2),NumMethods);    
     AdditionalOutput(ModeIdx).Data = Data{ModeIdx}(end-size(Data{ModeIdx},1)+1:end,:);
     AdditionalOutput(ModeIdx).DataPMU = DataPMU{ModeIdx};
     AdditionalOutput(ModeIdx).DataChannel = DataChannel{ModeIdx};
@@ -49,19 +47,36 @@ for ModeIdx = 1:length(Parameters.Mode)
     AdditionalOutput(ModeIdx).DataUnit = DataUnit{ModeIdx};
     AdditionalOutput(ModeIdx).TimeString = TimeString{ModeIdx}(end-size(Data{ModeIdx},1)+1:end);
     if isempty(PastAdditionalOutput)
-        AdditionalOutput(ModeIdx).Modetrack = cell(NumMethods,size(Data{ModeIdx},2));
+        AdditionalOutput(ModeIdx).Modetrack = cell(1,NumMethods*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).Modetrack(:) = {{}};
         AdditionalOutput(ModeIdx).t = TimeStringDN(end);
+        AdditionalOutput(ModeIdx).ModeOriginal = cell(1,NumMethods*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
+        TimeString1 = '0';
+        TimeString2 = '0';
     else
         AdditionalOutput(ModeIdx).Modetrack = PastAdditionalOutput(ModeIdx).Modetrack;
-        AdditionalOutput(ModeIdx).ModeHistory = PastAdditionalOutput(ModeIdx).ModeHistory;
-        AdditionalOutput(ModeIdx).ModeDRHistory = PastAdditionalOutput(ModeIdx).ModeDRHistory;
-        AdditionalOutput(ModeIdx).ModeFreqHistory = PastAdditionalOutput(ModeIdx).ModeFreqHistory;
-        AdditionalOutput(ModeIdx).t = [PastAdditionalOutput(ModeIdx).t ;TimeStringDN(end); ];
+        AdditionalOutput(ModeIdx).ModeOriginal = PastAdditionalOutput(ModeIdx).ModeOriginal;
+        TimeString1 = datestr(AdditionalOutput(ModeIdx).TimeString{end},'yymmdd');
+        TimeString2 = datestr(PastAdditionalOutput(ModeIdx).TimeString{end},'yymmdd');
+        %Check if there is a transition to the next day, if true then clear
+        %additionalouput for mode history, original and other parameters
+        if strcmp(TimeString1,TimeString2)
+            AdditionalOutput(ModeIdx).ModeHistory = PastAdditionalOutput(ModeIdx).ModeHistory;
+            AdditionalOutput(ModeIdx).ModeDRHistory = PastAdditionalOutput(ModeIdx).ModeDRHistory;
+            AdditionalOutput(ModeIdx).ModeFreqHistory = PastAdditionalOutput(ModeIdx).ModeFreqHistory;
+            AdditionalOutput(ModeIdx).t = [PastAdditionalOutput(ModeIdx).t; TimeStringDN(end);];
+        else
+            AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
+            AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
+            AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
+            AdditionalOutput(ModeIdx).t = TimeStringDN(end);
+            PastAdditionalOutput(1).OperatingValues = [];
+        end
     end
+    
     AdditionalOutput(ModeIdx).fs = fs{ModeIdx};
     % Only analyze channels with no NaN values
     KeepIdx = sum(isnan(Data{ModeIdx}))==0;
@@ -78,87 +93,79 @@ for ModeIdx = 1:length(Parameters.Mode)
                 AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
                 AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
                 AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
-                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;                              
+                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;
                 AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
                 ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
             end
         else
             if ~isempty(ExtractedParameters.FOdetectorPara)
-                % Run FO detection parameter: %the first output contains all detected FO frequencies and the second one contains refined FO frequencies
-                [DetectionResults(ModeIdx).FOfreq{ChanIdx}]...
+                % Run FO detection algorithm
+                DetectionResults(ModeIdx).FOfreq{ChanIdx}...
                     = FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx},ExtractedParameters.AnalysisLength);
             else
                 DetectionResults(ModeIdx).FOfreq{ChanIdx} = [];
             end
             for MethodIdx = 1:NumMethods
-                [Mode, AdditionalOutput(ModeIdx).Modetrack{MethodIdx,ChanIdx}]...
+                [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
                     = eval([ExtractedParameters.MethodName{MethodIdx}...
-                    '(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{MethodIdx,ChanIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
+                    '(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
                 DampingRatio = -real(Mode)/abs(Mode);
                 Frequency = abs(imag(Mode))/2/pi;
-                if Frequency==0 && isnan(DampingRatio)
-                    Frequency = NaN;
+                Frequency(isnan(DampingRatio))= NaN;
+                if strcmp(ExtractedParameters.RetConTrackingStatus, 'ON')
+                    [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx},...
+                        AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},ModeRem]...
+                            = RunRetCon(Mode, AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},...
+                            AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},...
+                            ExtractedParameters.MaxRetConLength, Parameters.ResultUpdateInterval);
+                        %         If ModeRem is not empty, need to assess .csv for previous days and update
+                        %         the mode estimates
+                        if ~isempty(ModeRem) && ~isempty(PastAdditionalOutput)
+                            N = length(ModeRem);
+                            ModeRem = repmat([-100+200*1i],5,1);
+                            UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList,TimeStringDN(end),ModeEstimateCalcIdx);
+                        end
+                else
+                    % Reset the tracking cell
+                    AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx} = {};
                 end
                 AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
                 AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
                 AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
                 AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
-                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;                              
+                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;
                 AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
+                AdditionalOutput(ModeIdx).ModeOriginal{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeOriginal{ModeEstimateCalcIdx};Mode;];
                 ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
             end
-        end        
+        end
     end
 end
 
 % Get power system operating condition values
-% OperatingValues = [];
-% OperatingNames = {};
-% OperatingUnits = {};
-% OperatingType = {};
 if isfield(Parameters,'BaseliningSignals')
-%     if length(Parameters.BaseliningSignals) == 1
-%         Parameters.BaseliningSignals = {Parameters.BaseliningSignals};
-%     end
-%     
-%     for idx = 1:length(Parameters.BaseliningSignals)
-        [Data, ~, OperatingNames, OperatingType, OperatingUnits, ~, ~, ~] = ExtractData(PMUstruct,Parameters.BaseliningSignals);
-        OperatingValues = Data(end,:);%[OperatingValues Data(end,:)];
-%         OperatingNames = [OperatingNames DataChannelOp];
-%         OperatingUnits = [OperatingUnits DataUnit];
-%         OperatingType = [OperatingType DataType];
-%     end
-end
-% if isfield(Parameters,'AngleSignals')
-%     if length(Parameters.AngleSignals) == 1
-%         Parameters.AngleSignals = {Parameters.AngleSignals};
-%     end
-%     
-%     for idx = 1:length(Parameters.AngleSignals)
-%         [Data, ~, DataChannelOp, DataType, DataUnit, ~, ~, ~] = ExtractData(PMUstruct,Parameters.AngleSignals{idx});
-%         OperatingValues = [OperatingValues Data(end,:)];
-%         OperatingNames = [OperatingNames DataChannelOp];
-%         OperatingUnits = [OperatingUnits DataUnit];
-%         OperatingType = [OperatingType DataType];
-%     end
-% end
-
-if isempty(PastAdditionalOutput)
-    AdditionalOutput(1).OperatingValues = OperatingValues;
+    [Data, ~, OperatingNames, OperatingType, OperatingUnits, ~, ~, ~] = ExtractData(PMUstruct,Parameters.BaseliningSignals);
+    OperatingValues = Data(end,:);
+    
+    if isempty(PastAdditionalOutput)
+        AdditionalOutput(1).OperatingValues = OperatingValues;
+    else
+        AdditionalOutput(1).OperatingValues = [PastAdditionalOutput(1).OperatingValues; OperatingValues;];
+    end
+    AdditionalOutput(1).OperatingNames = OperatingNames;
+    AdditionalOutput(1).OperatingUnits = OperatingUnits;
+    AdditionalOutput(1).OperatingType = OperatingType;
 else
-    AdditionalOutput(1).OperatingValues = [PastAdditionalOutput(1).OperatingValues; OperatingValues;];
+    AdditionalOutput(1).OperatingNames = [];
+    AdditionalOutput(1).OperatingUnits = [];
+    AdditionalOutput(1).OperatingType = [];
 end
-
-AdditionalOutput(1).OperatingNames = OperatingNames;
-AdditionalOutput(1).OperatingUnits = OperatingUnits;
-AdditionalOutput(1).OperatingType = OperatingType;
+%Write modeestimates and system operating points to a .csv file
 if ~isempty(PastAdditionalOutput)
-    AdditionalOutput(1).Mode_n_SysCondList = WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPath,PastAdditionalOutput(1).Mode_n_SysCondList);
+    AdditionalOutput(1).Mode_n_SysCondList = WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList);
 else
-    AdditionalOutput(1).Mode_n_SysCondList = WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPath,[]);
+    AdditionalOutput(1).Mode_n_SysCondList = WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPathFinal,[]);
     
 end
-% [AdditionalOutput, DetectionResult] = CheckModeHistoryLength(AdditionalOutput, DetectionResults, ResultPath]
-
 
 

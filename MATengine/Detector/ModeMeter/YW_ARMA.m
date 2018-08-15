@@ -73,7 +73,7 @@ zPoles = roots(a);  % Find z-domain poles (see eq. (2.8))
 sPoles = log(zPoles)*fs;    % Transform to s-domain (see eq. (2.7))
 
 
-sPolesDamp = -cos(angle(sPoles))*100;
+sPolesDamp = -real(sPoles)./abs(sPoles)*100;
 sPolesFreq = imag(sPoles)/(2*pi);
 
 
@@ -81,7 +81,7 @@ sPolesFreq = imag(sPoles)/(2*pi);
 sPolesTemp = sPoles;
 sPolesFreqTemp = sPolesFreq;
 sPolesDampTemp = sPolesDamp;
-KillIdx = [find(sPolesFreqTemp < DesiredModes(1)); find(sPolesFreqTemp > DesiredModes(2))];
+KillIdx = unique([find(sPolesFreqTemp < DesiredModes(1)); find(sPolesFreqTemp > DesiredModes(2));find(sPolesDampTemp > DesiredModes(4));]);
 sPolesTemp(KillIdx) = [];
 sPolesFreqTemp(KillIdx) = [];
 sPolesDampTemp(KillIdx) = [];
