@@ -17,8 +17,8 @@ using BAWGUI.MATLABRunResults.Models;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
-{ 
-    public class MatLabEngine:ViewModelBase
+{
+    public class MatLabEngine : ViewModelBase
     {
         private bool _isMatlabEngineRunning;
         public bool IsMatlabEngineRunning
@@ -213,7 +213,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 IsMatlabEngineRunning = false;
                 MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
-            
+
             e.Result = RingdownRerunResults.RingdownDetectorList;
         }
 
@@ -307,7 +307,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             try
             {
                 //_worker.DoWork += _runNormalMode;
-                worker.DoWork += (obj, e) => _runNormalMode(run.Model.ControlRunPath, run.Model.ConfigFilePath);
+                worker.DoWork += (obj, e) => _runNormalMode(run.Model.ControlRunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories, run.Model.ConfigFilePath);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
                 worker.WorkerReportsProgress = true;
@@ -327,8 +327,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
 
-        private void _runNormalMode(string controlPath, string configFilename)
+        private void _runNormalMode(string controlPath, string eventPath, string initPath, List<string> dataFileDir, string configFilename)
         {
+            MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
+            try
+            {
+                for (int index = 0; index < dataFileDir.Count; index++)
+                {
+                    dataFileDirs[index + 1] = new MWCharArray(dataFileDir[index]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             if (Thread.CurrentThread.Name == null)
             {
                 Thread.CurrentThread.Name = "normalRunThread";
@@ -345,7 +357,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Run.IsNormalRunPaused = false;
             try
             {
-                _matlabEngine.RunNormalMode(controlPath, configFilename);
+                _matlabEngine.RunNormalMode(controlPath, eventPath, initPath, dataFileDirs, configFilename);
             }
             catch (Exception ex)
             {
@@ -377,7 +389,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         public void StopMatlabNormalRun()
         {
-            if (IsMatlabEngineRunning||IsNormalRunPaused)
+            if (IsMatlabEngineRunning || IsNormalRunPaused)
             {
                 DialogResult dialogResult = MessageBox.Show("Are you sure to stop the matlab engine?", "Warning!", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)

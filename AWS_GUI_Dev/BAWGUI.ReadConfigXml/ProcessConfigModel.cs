@@ -24,11 +24,11 @@ namespace BAWGUI.ReadConfigXml
         public ProcessConfigModel(XElement xElement)
         {
             this._xElement = xElement;
-            var par = xElement.Element("Configuration").Element("InitializationPath").Value;
-            if (par != null)
-            {
-                InitializationPath = par;
-            }
+            //var par = xElement.Element("Configuration").Element("InitializationPath").Value;
+            //if (par != null)
+            //{
+            //    InitializationPath = par;
+            //}
             var unWraps = xElement.Element("Configuration").Element("Processing").Elements("Unwrap");
             UnWrapList = new List<UnwrapModel>();
             foreach (var unwrap in unWraps)

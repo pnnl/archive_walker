@@ -76,6 +76,7 @@ Namespace ViewModels
             _specifyEventPath = New DelegateCommand(AddressOf _openEventPathFolder, AddressOf CanExecute)
             _setCurrentPhasorCreationFocusedTextBox = New DelegateCommand(AddressOf _phasrCreationCurrentFocusedTextBoxChanged, AddressOf CanExecute)
             _readExampleFile = New DelegateCommand(AddressOf _parseExampleFile, AddressOf CanExecute)
+            _updateExampleFile = New DelegateCommand(AddressOf _writeExampleFileAddressToConfig, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
@@ -809,48 +810,58 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
+            'Run.Model.DataFileDirectories = New List(Of String)
+            'For Each info In SignalMgr.FileInfo
+            '    Run.Model.DataFileDirectories.Add(info.FileDirectory)
+            'Next
             For Each group In _signalMgr.GroupedRawSignalsByType
-                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                If Not Run.Model.DataFileDirectories.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
                     _signalMgr.GroupedRawSignalsByType.Remove(group)
                     Exit For
                 End If
             Next
+            For Each group In _signalMgr.ReGroupedRawSignalsByType
+                If Not Run.Model.DataFileDirectories.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    _signalMgr.ReGroupedRawSignalsByType.Remove(group)
+                    Exit For
+                End If
+            Next
             For Each group In _signalMgr.GroupedRawSignalsByPMU
-                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                If Not Run.Model.DataFileDirectories.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
                     _signalMgr.GroupedRawSignalsByPMU.Remove(group)
                     Exit For
                 End If
             Next
             Dim exampleFile = obj.ExampleFile
             If File.Exists(exampleFile) Then
-                Try
-                    obj.FileType = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
-                Catch ex As Exception
-                    Forms.MessageBox.Show("Data file type not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
-                Dim filename = ""
-                Try
-                    filename = Path.GetFileNameWithoutExtension(exampleFile)
-                Catch ex As ArgumentException
-                    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
-                Try
-                    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-                Catch ex As Exception
-                    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
-                Try
-                    Dim fullPath = Path.GetDirectoryName(exampleFile)
-                    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-                    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-                    obj.FileDirectory = twoLevelUp
-                Catch ex As Exception
-                    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
+                'Try
+                '    obj.FileType = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
+                'Catch ex As Exception
+                '    Forms.MessageBox.Show("Data file type not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
+                'Dim filename = ""
+                'Try
+                '    filename = Path.GetFileNameWithoutExtension(exampleFile)
+                'Catch ex As ArgumentException
+                '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
+                'Try
+                '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
+                'Catch ex As Exception
+                '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
+                'Try
+                '    Dim fullPath = Path.GetDirectoryName(exampleFile)
+                '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
+                '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
+                '    obj.FileDirectory = twoLevelUp
+                'Catch ex As Exception
+                '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
                 If obj.FileType IsNot Nothing Then
                     Try
                         _signalMgr.AddRawSignalsFromADir(obj)
@@ -859,9 +870,37 @@ Namespace ViewModels
                         Exit Sub
                     End Try
                 End If
+                Try
+                    _writeExampleFileAddressToConfig(exampleFile)
+                    Dim config = New ConfigFileReader(Run.Model.ConfigFilePath)
+                    DataConfigure = New DataConfig(config.DataConfigure, _signalMgr)
+                    ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
+                    PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
+                    DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
+                Catch ex As Exception
+                    Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+                End Try
             Else
                 Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
             End If
+            Run.Model.DataFileDirectories = New List(Of String)
+            For Each info In SignalMgr.FileInfo
+                Run.Model.DataFileDirectories.Add(info.FileDirectory)
+            Next
+        End Sub
+        Private _updateExampleFile As ICommand
+        Public Property UpdateExampleFile As ICommand
+            Get
+                Return _updateExampleFile
+            End Get
+            Set(ByVal value As ICommand)
+                _updateExampleFile = value
+            End Set
+        End Property
+
+        Private Sub _writeExampleFileAddressToConfig(exampleFilePath As String)
+            Dim writer = New ConfigFileWriter(Me, Run.Model)
+            writer.UpdateExampleFileAddress(exampleFilePath)
         End Sub
 
         'Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfoViewModel)
@@ -4016,12 +4055,21 @@ Namespace ViewModels
         Private Sub _deleteAFileSource(obj As InputFileInfoViewModel)
             Dim result = Forms.MessageBox.Show("Delete this file source: " & obj.Mnemonic & " ?", "Warning!", MessageBoxButtons.OKCancel)
             If result = DialogResult.OK Then
+                'if the file info to be deleted exist in the signal manager, it is a good file info
+                'if it does not exist, it is a bad file info that only exist in the reader property, then look through reader property to deleted it.
+                Dim fileDeleted = False
                 For Each source In SignalMgr.FileInfo
                     If obj Is source Then
-
+                        fileDeleted = True
                         For Each group In _signalMgr.GroupedRawSignalsByType
                             If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
                                 _signalMgr.GroupedRawSignalsByType.Remove(group)
+                                Exit For
+                            End If
+                        Next
+                        For Each group In _signalMgr.ReGroupedRawSignalsByType
+                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                                _signalMgr.ReGroupedRawSignalsByType.Remove(group)
                                 Exit For
                             End If
                         Next
@@ -4032,9 +4080,18 @@ Namespace ViewModels
                             End If
                         Next
                         SignalMgr.FileInfo.Remove(obj)
+                        DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
                         Exit For
                     End If
                 Next
+                If Not fileDeleted Then
+                    For Each source In DataConfigure.ReaderProperty.InputFileInfos
+                        If obj Is source Then
+                            DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
+                            Exit For
+                        End If
+                    Next
+                End If
                 'If _configData IsNot Nothing Then
                 '    _readDataConfigStages(_configData)
                 '    _readProcessConfig(_configData)

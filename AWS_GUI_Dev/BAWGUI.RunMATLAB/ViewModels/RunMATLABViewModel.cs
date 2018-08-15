@@ -78,7 +78,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 //var controlPath = RunPath + "ControlRun\\";
                 //var controlPath = _run.ControlRunPath;
-                System.IO.Directory.CreateDirectory(_run.Model.ControlRunPath);
+                if (_run.Model.ControlRunPath != null && !Directory.Exists(_run.Model.ControlRunPath))
+                {
+                    System.IO.Directory.CreateDirectory(_run.Model.ControlRunPath);
+                }
+                else
+                {
+                    System.IO.Directory.CreateDirectory(_run.Model.RunPath + "\\ControlRun\\");
+                }
                 try
                 {
                     //Engine.RunSelected += Engine_RunSelected;

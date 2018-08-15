@@ -14,12 +14,12 @@ namespace BAWGUI.ReadConfigXml
         public DetectorConfigModel(XElement xElement)
         {
             this._xElement = xElement;
-            var par = _xElement.Element("Configuration").Element("EventPath");
-            if (par != null)
-            {
-                EventPath = par.Value;
-            }
-            par = _xElement.Element("Configuration").Element("ResultUpdateInterval");
+            //var par = _xElement.Element("Configuration").Element("EventPath");
+            //if (par != null)
+            //{
+            //    EventPath = par.Value;
+            //}
+            var par = _xElement.Element("Configuration").Element("ResultUpdateInterval");
             if (par != null)
             {
                 ResultUpdateInterval = par.Value;

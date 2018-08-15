@@ -22,6 +22,7 @@ namespace BAWGUI.Core
             _isRunPaused = false;
             _isEnabled = true;
             _isTaskRunning = false;
+            DataFileDirectories = new List<string>();
         }
         public AWRun(string run)
         {
@@ -111,5 +112,7 @@ namespace BAWGUI.Core
             get { return _isTaskRunning; }
             set { _isTaskRunning = value; }
         }
+
+        public List<string> DataFileDirectories { get; set; }
     }
 }
