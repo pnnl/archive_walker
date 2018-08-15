@@ -46,6 +46,12 @@ namespace BAWGUI.SignalManagement.ViewModels
             _groupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _reGroupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
+
+            CleanUpSettingsSignals();
+        }
+
+        public void CleanUpSettingsSignals()
+        {
             _groupedSignalByDataConfigStepsInput = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDataConfigStepsOutput = new ObservableCollection<SignalTypeHierachy>();
             _allDataConfigOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
@@ -61,6 +67,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
+
         private MatLabEngine _engine;
 
         private static SignalManager _instance = null;
@@ -89,11 +96,25 @@ namespace BAWGUI.SignalManagement.ViewModels
                     var aFileInfo = new InputFileInfoViewModel(item);
                     if (item.FileType.ToLower() == "csv")
                     {
-                        _readCSVFile(aFileInfo);
+                        try
+                        {
+                            _readCSVFile(aFileInfo);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Error reading .csv file. " + ex.Message);
+                        }
                     }
                     else
                     {
-                        _readPDATFile(aFileInfo);
+                        try
+                        {
+                            _readPDATFile(aFileInfo);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Error reading .pdat file. " + ex.Message);
+                        }
                     }
                     FileInfo.Add(aFileInfo);
                 }

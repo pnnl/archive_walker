@@ -67,6 +67,7 @@ namespace BAWGUI.Core
             _isSelected = false;
             _isEnabled = true;
             _isTaskRunning = false;
+            DataFileDirectories = new List<string>();
         }
         private string _runPath;
         public string RunPath { get { return _runPath; } set { _runPath = value; } }

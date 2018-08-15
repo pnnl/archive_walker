@@ -59,7 +59,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
             get { return _engine; }
         }
 
-        //string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\RerunTestRD\";
         private AWRunViewModel _run;
         public AWRunViewModel Run
         {
