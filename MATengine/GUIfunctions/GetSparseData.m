@@ -1,19 +1,30 @@
-% function SparseOut = GetSparseData(SparseStartTime,SparseEndTime,SparseDetector,InitializationPath)
+% SparseOut = GetSparseData(SparseStartTime,SparseEndTime,InitializationPath,SparseDetector)
 %
-% This function returns the sparse data for a specified time frame so that
-% it can be displayed in the GUI.
+% This is one of the top-level functions intended to be called by the GUI.
+% It returns the sparse data (max and min of analyzed signals) for a 
+% specified time frame.
+%
+% Called by: 
+%   The AW GUI
+%
+% Calls: none
 %
 % Inputs:
-% SparseStartTime = start time for the data in the format MM/DD/YYYY HH:MM:SS
-% SparseEndTime = end time for the data in the format MM/DD/YYYY HH:MM:SS
-% InitializationPath = path to the folder containing initialization files
-% SparseDetector = detector of interest. Acceptable values: 'Periodogram', 'SpectralCoherence', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
+%   SparseStartTime - String specifying the start time for the data in the
+%       format MM/DD/YYYY HH:MM:SS 
+%   SparseEndTime - String specifying the end time for the data in the
+%       format MM/DD/YYYY HH:MM:SS 
+%   InitializationPath - Path to the folder where initialization files
+%       (used in rerun mode to recreate detailed results) and sparse data
+%       (max and min of analyzed signals) are stored. A string.
+%   SparseDetector - Specifies which detector the returned data corresponds
+%       to. String. Acceptable values: 'Periodogram', 'SpectralCoherence',
+%       'Thevenin','ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
 %
-% Example inputs:
-% SparseStartTime = '08/21/2016 23:57:12';
-% SparseEndTime = '08/22/2016 00:01:56';
-% ConfigFile = 'C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ConfigXML\RerunTest.xml'
-% SparseDetector = 'SpectralCoherence';
+% Outputs:
+%   SparseOut - a structure array with an element for each implemented
+%       detector containing order statistics for signals used in detection
+
 
 function SparseOut = GetSparseData(SparseStartTime,SparseEndTime,InitializationPath,SparseDetector)
 

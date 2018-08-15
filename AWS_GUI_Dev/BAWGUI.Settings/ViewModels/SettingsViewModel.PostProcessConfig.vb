@@ -106,7 +106,7 @@ Namespace ViewModels
                             Exit For
                         End If
                     Next
-                    _signalMgr.DetermineFileDirCheckableStatus()
+                    '_signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
                     processStep.IsStepSelected = True
 
@@ -142,7 +142,7 @@ Namespace ViewModels
                     _signalMgr.GroupedSignalByPostProcessConfigStepsInput = stepsInputAsSignalHierachy
                     _signalMgr.GroupedSignalByPostProcessConfigStepsOutput = stepsOutputAsSignalHierachy
                     _signalMgr.PostProcessDetermineAllParentNodeStatus()
-                    _signalMgr.DetermineFileDirCheckableStatus()
+                    '_signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
                     If processStep.Name = "Phasor Creation" Then
@@ -245,7 +245,7 @@ Namespace ViewModels
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.ReGroupedRawSignalsByType, False)
                 _currentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
-                _signalMgr.DetermineFileDirCheckableStatus()
+                '_signalMgr.DetermineFileDirCheckableStatus()
                 _determineSamplingRateCheckableStatus()
             End If
             SignalSelectionTreeViewVisibility = "Visible"

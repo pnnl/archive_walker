@@ -3,9 +3,11 @@ using BAWGUI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -30,94 +32,101 @@ namespace BAWGUI.ReadConfigXml
                 foreach (var item in stage.Elements())
                 {
                     var name = item.Element("Name").Value;
-                    switch (name)
+                    try
                     {
-                        case "PMUflagFilt":
-                            CollectionOfSteps.Add(new StatusFlagsDQFilterModel(item));
-                            break;
-                        case "DropOutZeroFilt":
-                            CollectionOfSteps.Add(new ZerosDQFilterModel(item));
-                            break;
-                        case "DropOutMissingFilt":
-                            CollectionOfSteps.Add(new MissingDQFilterModel(item));
-                            break;
-                        case "VoltPhasorFilt":
-                            CollectionOfSteps.Add(new VoltPhasorDQFilterModel(item));
-                            break;
-                        case "FreqFilt":
-                            CollectionOfSteps.Add(new FreqDQFilterModel(item));
-                            break;
-                        case "OutlierFilt":
-                            CollectionOfSteps.Add(new OutlierDQFilterModel(item));
-                            break;
-                        case "StaleFilt":
-                            CollectionOfSteps.Add(new StaleDQFilterModel(item));
-                            break;
-                        case "DataFrameFilt":
-                            CollectionOfSteps.Add(new DataFrameDQFilterModel(item));
-                            break;
-                        case "PMUchanFilt":
-                            CollectionOfSteps.Add(new PMUchanDQFilterModel(item));
-                            break;
-                        case "PMUallFilt":
-                            CollectionOfSteps.Add(new PMUallDQFilterModel(item));
-                            break;
-                        case "WrappingFailureFilt":
-                            CollectionOfSteps.Add(new WrappingFailureDQFilterModel(item));
-                            break;
-                        case "ScalarRep":
-                            CollectionOfSteps.Add(new ScalarRepCustModel(item));
-                            break;
-                        case "Addition":
-                            CollectionOfSteps.Add(new AdditionCustModel(item));
-                            break;
-                        case "Subtraction":
-                            CollectionOfSteps.Add(new SubtractionCustModel(item));
-                            break;
-                        case "Multiplication":
-                            CollectionOfSteps.Add(new MultiplicationCustModel(item));
-                            break;
-                        case "Division":
-                            CollectionOfSteps.Add(new DivisionCustModel(item));
-                            break;
-                        case "Exponent":
-                            CollectionOfSteps.Add(new ExponentialCustModel(item));
-                            break;
-                        case "SignReversal":
-                            CollectionOfSteps.Add(new SignReversalCustModel(item));
-                            break;
-                        case "AbsVal":
-                            CollectionOfSteps.Add(new AbsValCustModel(item));
-                            break;
-                        case "RealComponent":
-                            CollectionOfSteps.Add(new RealComponentCustModel(item));
-                            break;
-                        case "ImagComponent":
-                            CollectionOfSteps.Add(new ImagComponentCustModel(item));
-                            break;
-                        case "Angle":
-                            CollectionOfSteps.Add(new AngleCustModel(item));
-                            break;
-                        case "ComplexConj":
-                            CollectionOfSteps.Add(new ComplexConjCustModel(item));
-                            break;
-                        case "CreatePhasor":
-                            CollectionOfSteps.Add(new CreatePhasorCustModel(item));
-                            break;
-                        case "PowerCalc":
-                            CollectionOfSteps.Add(new PowerCalcCustModel(item));
-                            break;
-                        case "SpecTypeUnit":
-                            CollectionOfSteps.Add(new SpecTypeUnitCustModel(item));
-                            break;
-                        case "MetricPrefix":
-                            CollectionOfSteps.Add(new MetricPrefixCustModel(item));
-                            break;
-                        case "AngleConversion":
-                            CollectionOfSteps.Add(new AngleConversionCustModel(item));
-                            break;
-                        default:
-                            throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
+                        switch (name)
+                        {
+                            case "PMUflagFilt":
+                                CollectionOfSteps.Add(new StatusFlagsDQFilterModel(item));
+                                break;
+                            case "DropOutZeroFilt":
+                                CollectionOfSteps.Add(new ZerosDQFilterModel(item));
+                                break;
+                            case "DropOutMissingFilt":
+                                CollectionOfSteps.Add(new MissingDQFilterModel(item));
+                                break;
+                            case "VoltPhasorFilt":
+                                CollectionOfSteps.Add(new VoltPhasorDQFilterModel(item));
+                                break;
+                            case "FreqFilt":
+                                CollectionOfSteps.Add(new FreqDQFilterModel(item));
+                                break;
+                            case "OutlierFilt":
+                                CollectionOfSteps.Add(new OutlierDQFilterModel(item));
+                                break;
+                            case "StaleFilt":
+                                CollectionOfSteps.Add(new StaleDQFilterModel(item));
+                                break;
+                            case "DataFrameFilt":
+                                CollectionOfSteps.Add(new DataFrameDQFilterModel(item));
+                                break;
+                            case "PMUchanFilt":
+                                CollectionOfSteps.Add(new PMUchanDQFilterModel(item));
+                                break;
+                            case "PMUallFilt":
+                                CollectionOfSteps.Add(new PMUallDQFilterModel(item));
+                                break;
+                            case "WrappingFailureFilt":
+                                CollectionOfSteps.Add(new WrappingFailureDQFilterModel(item));
+                                break;
+                            case "ScalarRep":
+                                CollectionOfSteps.Add(new ScalarRepCustModel(item));
+                                break;
+                            case "Addition":
+                                CollectionOfSteps.Add(new AdditionCustModel(item));
+                                break;
+                            case "Subtraction":
+                                CollectionOfSteps.Add(new SubtractionCustModel(item));
+                                break;
+                            case "Multiplication":
+                                CollectionOfSteps.Add(new MultiplicationCustModel(item));
+                                break;
+                            case "Division":
+                                CollectionOfSteps.Add(new DivisionCustModel(item));
+                                break;
+                            case "Exponent":
+                                CollectionOfSteps.Add(new ExponentialCustModel(item));
+                                break;
+                            case "SignReversal":
+                                CollectionOfSteps.Add(new SignReversalCustModel(item));
+                                break;
+                            case "AbsVal":
+                                CollectionOfSteps.Add(new AbsValCustModel(item));
+                                break;
+                            case "RealComponent":
+                                CollectionOfSteps.Add(new RealComponentCustModel(item));
+                                break;
+                            case "ImagComponent":
+                                CollectionOfSteps.Add(new ImagComponentCustModel(item));
+                                break;
+                            case "Angle":
+                                CollectionOfSteps.Add(new AngleCustModel(item));
+                                break;
+                            case "ComplexConj":
+                                CollectionOfSteps.Add(new ComplexConjCustModel(item));
+                                break;
+                            case "CreatePhasor":
+                                CollectionOfSteps.Add(new CreatePhasorCustModel(item));
+                                break;
+                            case "PowerCalc":
+                                CollectionOfSteps.Add(new PowerCalcCustModel(item));
+                                break;
+                            case "SpecTypeUnit":
+                                CollectionOfSteps.Add(new SpecTypeUnitCustModel(item));
+                                break;
+                            case "MetricPrefix":
+                                CollectionOfSteps.Add(new MetricPrefixCustModel(item));
+                                break;
+                            case "AngleConversion":
+                                CollectionOfSteps.Add(new AngleConversionCustModel(item));
+                                break;
+                            default:
+                                throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
                     }
                 }
             }
@@ -142,12 +151,34 @@ namespace BAWGUI.ReadConfigXml
         {
             this._xElement = xElement;
             InputFileInfos = new List<InputFileInfoModel>();
-            var serializer = new XmlSerializer(typeof(InputFileInfoModel), new XmlRootAttribute("FilePath"));
-            foreach (var item in xElement.Elements("FilePath"))
+            XmlSerializer serializer = null;
+            try
             {
-                var b = item.CreateReader();
-                var a = (InputFileInfoModel)serializer.Deserialize(b);
-                InputFileInfos.Add(a);
+                serializer = new XmlSerializer(typeof(InputFileInfoModel), new XmlRootAttribute("FilePath"));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            if (serializer != null)
+            {
+                foreach (var item in xElement.Elements("FilePath"))
+                {
+                    var b = item.CreateReader();
+                    InputFileInfoModel a = null;
+                    try
+                    {
+                        a = (InputFileInfoModel)serializer.Deserialize(b);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                    if (a != null)
+                    {
+                        InputFileInfos.Add(a);
+                    }
+                }
             }
             var mode = xElement.Element("Mode");
             //var modeName = mode.Element("Name").Value;
@@ -195,12 +226,64 @@ namespace BAWGUI.ReadConfigXml
             FileDirectory = "";
             FileType = "pdat";
             Mnemonic = "";
-            ExampleFile = "";
+            _exampleFile = "";
         }
         public string FileDirectory { get; set; }
         public string FileType { get; set; }
         public string Mnemonic { get; set; }
-        public string ExampleFile { get; set; }
+        private string _exampleFile;
+        public string ExampleFile
+        {
+            get { return _exampleFile; }
+            set
+            {
+                _exampleFile = value;
+                if (File.Exists(value))
+                {
+                    //try
+                    //{
+                    //    FileType = Path.GetExtension(value).Substring(1);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    //}
+                    //var filename = "";
+                    //try
+                    //{
+                    //    filename = Path.GetFileNameWithoutExtension(value);
+                    //}
+                    //catch (ArgumentException ex)
+                    //{
+                    //    MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    //}
+                    //try
+                    //{
+                    //    Mnemonic = filename.Substring(0, filename.Length - 16);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    //}
+                    try
+                    {
+                        var fullPath = Path.GetDirectoryName(value);
+                        var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
+                        var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
+                        FileDirectory = twoLevelUp;
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
+                }
+                //else
+                //{
+                //    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                //}
+            }
+        }
     }
 
     //public enum DataFileType

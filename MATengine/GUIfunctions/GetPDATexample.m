@@ -1,3 +1,23 @@
+% function PMU = GetPDATexample(pdatFile)
+%
+% This is one of the top-level functions intended to be called by the GUI.
+% It returns a structure containing the names of PMUs and their signals
+% contained in the example pdat file that is passed as an input. This
+% allows the GUI to display the PMUs and signals when setting up a task.
+%
+% Called by: 
+%   The AW GUI
+%
+% Calls: 
+%   createPdatStruct
+%
+% Inputs:
+%   pdatFile - Path to the pdat file that is to be read. String.
+%
+% Outputs:
+%   PMU - Stripped down structure that is the output of the
+%       createPdatStruct function. 
+
 function PMU = GetPDATexample(pdatFile)
 
 [PMU,~,fs] = createPdatStruct(pdatFile,1,[]);

@@ -72,8 +72,8 @@ namespace BAWGUI.Results.ViewModels
             _yearList = new List<string>();
             _monthList = new List<string>();
             _dayList = new List<string>();
-            OpenConfigFile = new RelayCommand(_openConfigFile);
-            _configFilePath = "";
+            //OpenConfigFile = new RelayCommand(_openConfigFile);
+            //_configFilePath = "";
             _forcedOscillationResultsViewModel = new ForcedOscillationResultsViewModel();
             _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
             _ringdownResultsViewModel = new RingdownResultsViewModel();
@@ -97,7 +97,15 @@ namespace BAWGUI.Results.ViewModels
                 _run = value;
                 if (File.Exists(_run.Model.ConfigFilePath))
                 {
-                    ConfigFilePath = _run.Model.ConfigFilePath;
+                    //ConfigFilePath = _run.Model.ConfigFilePath;
+                    try
+                    {
+                        _readConfigFile();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: Could not read config file for results. Original error: " + ex.Message);
+                    }
                 }
                 _forcedOscillationResultsViewModel.Run = _run;
                 _outOfRangeResultsViewModel.Run = _run;
@@ -404,42 +412,43 @@ namespace BAWGUI.Results.ViewModels
             }
         }
 
-        public ICommand OpenConfigFile { get; set; }
-        private void _openConfigFile(object obj)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.RestoreDirectory = true;
-            openFileDialog.FileName = "";
-            openFileDialog.DefaultExt = ".xml";
-            openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
-            if (!string.IsNullOrEmpty(_configFilePath))
-            {
-                openFileDialog.InitialDirectory = Path.GetFullPath(_configFilePath);
-            }
-            if (!Directory.Exists(openFileDialog.InitialDirectory))
-            {
-                openFileDialog.InitialDirectory = Environment.CurrentDirectory + "\\ConfigFiles";
-            }
-            openFileDialog.RestoreDirectory = true;
-            openFileDialog.Title = "Please select a configuration file";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                ConfigFilePath = openFileDialog.FileName;
-                try
-                {
-                    _readConfigFile(ConfigFilePath);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-                }
-            }
-        }
+        //public ICommand OpenConfigFile { get; set; }
+        //private void _openConfigFile(object obj)
+        //{
+        //    OpenFileDialog openFileDialog = new OpenFileDialog();
+        //    openFileDialog.RestoreDirectory = true;
+        //    openFileDialog.FileName = "";
+        //    openFileDialog.DefaultExt = ".xml";
+        //    openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
+        //    if (!string.IsNullOrEmpty(_configFilePath))
+        //    {
+        //        openFileDialog.InitialDirectory = Path.GetFullPath(_configFilePath);
+        //    }
+        //    if (!Directory.Exists(openFileDialog.InitialDirectory))
+        //    {
+        //        openFileDialog.InitialDirectory = Environment.CurrentDirectory + "\\ConfigFiles";
+        //    }
+        //    openFileDialog.RestoreDirectory = true;
+        //    openFileDialog.Title = "Please select a configuration file";
+        //    if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        ConfigFilePath = openFileDialog.FileName;
+        //        try
+        //        {
+        //            _readConfigFile(ConfigFilePath);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+        //        }
+        //    }
+        //}
 
-        private void _readConfigFile(string configFilePath)
+        private void _readConfigFile()
         {
-            var _configData = XDocument.Load(ConfigFilePath);
-            var _resultPath = (from el in _configData.Descendants("EventPath") select (string)el).FirstOrDefault();
+            var _configData = XDocument.Load(Run.Model.ConfigFilePath);
+            var _resultPath = Run.Model.EventPath;
+            //var _resultPath = (from el in _configData.Descendants("EventPath") select (string)el).FirstOrDefault();
             var dateTimeNode = from el in _configData.Descendants("DateTimeEnd") select(string)el;
             if (dateTimeNode.Any())
             {
@@ -540,24 +549,24 @@ namespace BAWGUI.Results.ViewModels
                 _cleanResults();
             }            
         }
-        private string _configFilePath;
-        public string ConfigFilePath
-        {
-            get { return _configFilePath; }
-            set
-            {
-                _configFilePath = value;
-                try
-                {
-                    _readConfigFile(_configFilePath);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: Could not read config file for results. Original error: " + ex.Message);
-                }
-                OnPropertyChanged();
-            }
-        }
+        //private string _configFilePath;
+        //public string ConfigFilePath
+        //{
+        //    get { return _configFilePath; }
+        //    set
+        //    {
+        //        _configFilePath = value;
+        //        try
+        //        {
+        //            _readConfigFile(_configFilePath);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show("Error: Could not read config file for results. Original error: " + ex.Message);
+        //        }
+        //        OnPropertyChanged();
+        //    }
+        //}
         private string _resultPath;
         public string ResultPath
         {
