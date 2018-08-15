@@ -320,7 +320,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 var detectorList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is VoltageStabilityDetectorViewModel).Select(x=>(VoltageStabilityDetectorViewModel)x).ToList();
                 if (detectorList.Count > 0)
                 {
-                    var MMDir = _generatedNewRun.Model.RunPath + "\\MM\\";
+                    var MMDir = _generatedNewRun.Model.EventPath + "\\MM\\";
                     if (!Directory.Exists(MMDir))
                     {
                         Directory.CreateDirectory(MMDir);

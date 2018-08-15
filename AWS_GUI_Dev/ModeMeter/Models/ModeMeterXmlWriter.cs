@@ -20,12 +20,12 @@ namespace ModeMeter.Models
             foreach (var detector in modeMeterList)
             {
                 var mmElement = new XElement("ModeMeter");
-                var modeMeterDir = run.RunPath + "\\MM\\" + detector.ModeMeterName;
+                var modeMeterDir = run.EventPath + "\\MM\\" + detector.ModeMeterName;
                 if (!Directory.Exists(modeMeterDir))
                 {
                     Directory.CreateDirectory(modeMeterDir);
                 }
-                mmElement.Add(new XElement("ResultPath", modeMeterDir));
+                mmElement.Add(new XElement("ResultPath", "\\MM\\" + detector.ModeMeterName));
                 XElement baseliningSignals = _addBaseliningSignals(detector);
                 mmElement.Add(baseliningSignals);
                 foreach (var mode in detector.Modes)
@@ -118,14 +118,41 @@ namespace ModeMeter.Models
 
         private static XElement _writeFOParameterElement(PeriodogramDetectorParametersViewModel parameters)
         {
-            var foParameters = new XElement("FOdetectorParam", new XElement("FrequencyInterval", parameters.FrequencyInterval),
-                                                                new XElement("FrequencyMax", parameters.FrequencyMax),
-                                                                new XElement("FrequencyMin", parameters.FrequencyMin),
-                                                                new XElement("FrequencyTolerance", parameters.FrequencyTolerance),
-                                                                new XElement("MedianFilterFrequencyWidth", parameters.MedianFilterFrequencyWidth),
-                                                                new XElement("Pfa", parameters.Pfa),
-                                                                new XElement("WindowLength", parameters.WindowLength),
-                                                                new XElement("WindowOverlap", parameters.WindowOverlap));
+            var foParameters = new XElement("FOdetectorParam");//, new XElement("FrequencyInterval", parameters.FrequencyInterval),
+                                                                //new XElement("FrequencyMax", parameters.FrequencyMax),
+                                                                //new XElement("FrequencyMin", parameters.FrequencyMin),
+                                                                //new XElement("FrequencyTolerance", parameters.FrequencyTolerance),
+                                                                //new XElement("MedianFilterFrequencyWidth", parameters.MedianFilterFrequencyWidth),
+                                                                //new XElement("Pfa", parameters.Pfa),
+                                                                //new XElement("WindowLength", parameters.WindowLength),
+                                                                //new XElement("WindowOverlap", parameters.WindowOverlap)
+                                                                //);
+            if (!string.IsNullOrEmpty(parameters.FrequencyInterval))
+            {
+                foParameters.Add(new XElement("FrequencyInterval", parameters.FrequencyInterval));
+            }
+            if (!string.IsNullOrEmpty(parameters.FrequencyMax))
+            {
+                foParameters.Add(new XElement("FrequencyMax", parameters.FrequencyMax));
+            }
+            if (!string.IsNullOrEmpty(parameters.FrequencyMin))
+            {
+                foParameters.Add(new XElement("FrequencyMin", parameters.FrequencyMin));
+            }
+            if (!string.IsNullOrEmpty(parameters.FrequencyTolerance))
+            {
+                foParameters.Add(new XElement("FrequencyTolerance", parameters.FrequencyTolerance));
+            }
+            if (!string.IsNullOrEmpty(parameters.MedianFilterFrequencyWidth))
+            {
+                foParameters.Add(new XElement("MedianFilterFrequencyWidth", parameters.MedianFilterFrequencyWidth));
+            }
+            if (!string.IsNullOrEmpty(parameters.Pfa))
+            {
+                foParameters.Add(new XElement("Pfa", parameters.Pfa));
+            }
+            foParameters.Add(new XElement("WindowLength", parameters.WindowLength));
+            foParameters.Add(new XElement("WindowOverlap", parameters.WindowOverlap));
             XElement type = null;
             switch (parameters.WindowType)
             {

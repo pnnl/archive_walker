@@ -82,7 +82,7 @@ Namespace ViewModels
         End Sub
 
         Private Function _isModeMeterResultFolderExists() As Boolean
-            Return Directory.Exists(Run.Model.RunPath & "\MM")
+            Return Directory.Exists(Run.Model.EventPath & "\MM")
         End Function
 
         Private Function _isVoltageStabilityDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
