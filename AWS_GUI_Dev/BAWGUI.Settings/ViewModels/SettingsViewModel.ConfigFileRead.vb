@@ -1336,65 +1336,67 @@ Namespace ViewModels
                     'aStep.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name
 
                     'Dim signalForUnitTypeSpecificationCustomization As SignalSignatures = Nothing
-                    Select Case thisStepName
-                        Case "Scalar Repetition"
-                            aStep = New ScalarRepCust
-                            aStep.Name = thisStepName
-                            _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Addition"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readAdditionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Subtraction"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readSubtractionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Division"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readDivisionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Multiplication"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readMultiplicationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Exponential"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readRaiseExpCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readUnaryCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Angle Calculation"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readAngleCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Phasor Creation"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readPhasorCreationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Signal Type/Unit"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readSpecTypeUnitCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Power Calculation"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readPowerCalculationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter, 3)
-                        Case "Metric Prefix"
-                            aStep = New MetricPrefixCust
-                            aStep.Name = thisStepName
-                            _readMetricPrefixCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case "Angle Conversion"
-                            aStep = New Customization
-                            aStep.Name = thisStepName
-                            _readAngleConversionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
-                        Case Else
-                            _addLog("Cutomization not recognized in Post process configuration.")
-                            Throw New Exception("Cutomization not recognized in Post process configuration.")
-                    End Select
-
-
+                    Try
+                        Select Case thisStepName
+                            Case "Scalar Repetition"
+                                aStep = New ScalarRepCust
+                                aStep.Name = thisStepName
+                                _readScalarRepetitionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Addition"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readAdditionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Subtraction"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readSubtractionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Division"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readDivisionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Multiplication"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readMultiplicationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Exponential"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readRaiseExpCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readUnaryCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Angle Calculation"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readAngleCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Phasor Creation"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readPhasorCreationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Signal Type/Unit"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readSpecTypeUnitCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Power Calculation"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readPowerCalculationCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter, 3)
+                            Case "Metric Prefix"
+                                aStep = New MetricPrefixCust
+                                aStep.Name = thisStepName
+                                _readMetricPrefixCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case "Angle Conversion"
+                                aStep = New Customization
+                                aStep.Name = thisStepName
+                                _readAngleConversionCustomization(aStep, stp.<Parameters>, CollectionOfSteps, stepCounter)
+                            Case Else
+                                _addLog("Cutomization not recognized in Post process configuration.")
+                                Throw New Exception("Cutomization not recognized in Post process configuration.")
+                        End Select
+                    Catch ex As Exception
+                        MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK)
+                    End Try
                     stepCounter += 1
                     aStep.StepCounter = stepCounter
                     aStep.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & aStep.StepCounter.ToString & " - " & aStep.Name

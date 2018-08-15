@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BAWGUI.SignalManagement.ViewModels
 {
@@ -45,6 +46,12 @@ namespace BAWGUI.SignalManagement.ViewModels
             _groupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _reGroupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
+
+            CleanUpSettingsSignals();
+        }
+
+        public void CleanUpSettingsSignals()
+        {
             _groupedSignalByDataConfigStepsInput = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDataConfigStepsOutput = new ObservableCollection<SignalTypeHierachy>();
             _allDataConfigOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
@@ -60,6 +67,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
+
         private MatLabEngine _engine;
 
         private static SignalManager _instance = null;
@@ -80,18 +88,33 @@ namespace BAWGUI.SignalManagement.ViewModels
             {
                 if (!File.Exists(item.ExampleFile))
                 {
-                    item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
+                    //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
+                    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
                 }
-                if (File.Exists(item.ExampleFile))
+                else
                 {
                     var aFileInfo = new InputFileInfoViewModel(item);
                     if (item.FileType.ToLower() == "csv")
                     {
-                        _readCSVFile(aFileInfo);
+                        try
+                        {
+                            _readCSVFile(aFileInfo);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Error reading .csv file. " + ex.Message);
+                        }
                     }
                     else
                     {
-                        _readPDATFile(aFileInfo);
+                        try
+                        {
+                            _readPDATFile(aFileInfo);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Error reading .pdat file. " + ex.Message);
+                        }
                     }
                     FileInfo.Add(aFileInfo);
                 }
@@ -982,10 +1005,10 @@ namespace BAWGUI.SignalManagement.ViewModels
         {
             //var sampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
             //var sampleFile = "";
-            if (!File.Exists(model.ExampleFile))
-            {
-                model.ExampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
-            }
+            //if (!File.Exists(model.ExampleFile))
+            //{
+            //    model.ExampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
+            //}
             if (File.Exists(model.ExampleFile))
             {
                 if (model.Model.FileType.ToLower() == "csv")
@@ -1010,6 +1033,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         throw new Exception("Error reading .pdat file. " + ex.Message);
                     }
                 }
+                FileInfo.Add(model);
             }
             AllPMUs = _getAllPMU();
         }

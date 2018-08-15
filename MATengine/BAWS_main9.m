@@ -1,14 +1,70 @@
-% XML file
-% ConfigAll = fun_xmlread_comments('BPAinstallProto2_TestErrorAndNewPreparePMUList.XML');
-% ConfigAll = fun_xmlread_comments('UpdatedMultiFile.XML');
-% ConfigAll = fun_xmlread_comments('Config_NewFreqDet.XML');
-% ConfigAll = fun_xmlread_comments('BPAdemo.XML');
-% ConfigFile = 'WindApp4.XML';
-% ConfigFile = 'C:\Users\foll154\Documents\BPAoscillationApp\CodeForProject2\DataReaderCode\ConfigXML\WindApp\WindApp4_4BPA_PNNLtest.XML';
-
-% The difference between BAWS_main9 and its predecessor BAWS_main8 is that
-% this version included the ability to "skip" over missing files, rather
-% than treating them as missing data. This approach is faster.
+% [DetectionResultsRerun, AdditionalOutputRerun] = BAWS_main9(varargin)
+%
+% This is the main function used to generate results (normal mode when
+% called by RunNormalMode) or to rerun analyses to retrieve detailed
+% operation information (rerun mode when called by RerunThevenin,
+% RerunForcedOscillation, RerunOutOfRange, or RerunRingdown). In Rerun
+% mode, additional inputs are required.
+%
+% Called by: 
+%   RunNormalMode
+%   RerunThevenin
+%   RerunForcedOscillation
+%   RerunOutOfRange
+%   RerunRingdown
+%
+% Calls: 
+%   AddMissingToSparsePMU
+%   AddToSparsePMU
+%   CleanAdditionalOutput
+%   ConcatenatePMU
+%   CreatePMUsegment
+%   DataProcessor
+%   DisableDetectors
+%   DQandCustomization
+%   fun_xmlread_comments
+%   GenerateWindAppReport
+%   getFocusFiles
+%   GetOutputSignals
+%   GetSparseData
+%   InitializeBAWS
+%   LoadFocusFiles
+%   RetrieveInitializationFile
+%   RunDetection
+%   StoreEventList
+%   UpdateEvents
+%   UpdatePMUconcat
+%   WindApplication
+%   WriteEventListXML
+%
+% Inputs:
+%   ControlPath - Path to folders containing Run.txt and Pause.txt files
+%       written by the GUI to control the AW engine. A string.
+%   EventPath - Path to the folder where results from detectors are to be
+%       stored. A string.
+%   InitializationPath - Path to the folder where initialization files
+%       (used in rerun mode to recreate detailed results) and sparse data
+%       (max and min of analyzed signals) are stored. A string.
+%   FileDirectory - Paths to where PMU data that is to be analyzed is
+%       stored. Cell array of strings.
+%   ConfigFile - Path to the configuration XML used to configure the AW
+%       engine for a run.
+%   Additional inputs required for Rerun mode:
+%       RerunStartTime - String specifying the start time for the run in the
+%           format MM/DD/YYYY HH:MM:SS 
+%      RerunEndTime - String specifying the end time for the run in the format
+%           MM/DD/YYYY HH:MM:SS
+%       RerunDetector - Specifies which detector to be rerun. String.
+%           Acceptable values: 'Periodogram', 'SpectralCoherence', 
+%           'Thevenin','ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
+%
+% Outputs:
+%   DetectionResultsRerun - Cell array containing the DetectionResults
+%       output of the RunDetection function for each time the function was
+%       called. Only used in rerun mode; set to {} in normal mode.
+%   AdditionalOutputRerun - Cell array containing the AdditionalOutput
+%       output of the RunDetection function for each time the function was
+%       called. Only used in rerun mode; set to {} in normal mode.
 
 function [DetectionResultsRerun, AdditionalOutputRerun] = BAWS_main9(varargin)
 

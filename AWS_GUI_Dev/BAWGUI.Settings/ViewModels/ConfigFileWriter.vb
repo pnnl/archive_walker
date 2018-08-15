@@ -50,11 +50,12 @@ Namespace ViewModels
             For Each fileInfo In _svm.DataConfigure.ReaderProperty.InputFileInfos
                 Dim info As XElement = <FilePath>
                                            <ExampleFile><%= fileInfo.ExampleFile %></ExampleFile>
-                                           <FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
                                            <FileType><%= fileInfo.FileType %></FileType>
                                            <Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>
                                        </FilePath>
+                '<FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
                 dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(info)
+
             Next
             Dim mode As XElement = <Mode>
                                        <Name><%= _svm.DataConfigure.ReaderProperty.ModeName %></Name>
@@ -129,11 +130,11 @@ Namespace ViewModels
             '''''''''''Write process config''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             Dim processConfig As XElement = <ProcessConfig><Configuration></Configuration></ProcessConfig>
-            If Not String.IsNullOrEmpty(_saveToRun.InitializationPath) Then
-                processConfig.<Configuration>.FirstOrDefault.Add(<InitializationPath><%= _saveToRun.InitializationPath %></InitializationPath>)
-            Else
-                processConfig.<Configuration>.FirstOrDefault.Add(<InitializationPath></InitializationPath>)
-            End If
+            'If Not String.IsNullOrEmpty(_saveToRun.InitializationPath) Then
+            '    processConfig.<Configuration>.FirstOrDefault.Add(<InitializationPath><%= _saveToRun.InitializationPath %></InitializationPath>)
+            'Else
+            '    processConfig.<Configuration>.FirstOrDefault.Add(<InitializationPath></InitializationPath>)
+            'End If
             Dim processing As XElement = <Processing></Processing>
             For Each unWrap In _svm.ProcessConfigure.UnWrapList
                 aStep = <Unwrap></Unwrap>
@@ -300,11 +301,11 @@ Namespace ViewModels
             '''''''''''Write detector config''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             Dim detectorConfig As XElement = <DetectorConfig><Configuration></Configuration></DetectorConfig>
-            If Not String.IsNullOrEmpty(_saveToRun.EventPath) Then
-                detectorConfig.<Configuration>.FirstOrDefault.Add(<EventPath><%= _saveToRun.EventPath %></EventPath>)
-            Else
-                detectorConfig.<Configuration>.FirstOrDefault.Add(<EventPath></EventPath>)
-            End If
+            'If Not String.IsNullOrEmpty(_saveToRun.EventPath) Then
+            '    detectorConfig.<Configuration>.FirstOrDefault.Add(<EventPath><%= _saveToRun.EventPath %></EventPath>)
+            'Else
+            '    detectorConfig.<Configuration>.FirstOrDefault.Add(<EventPath></EventPath>)
+            'End If
             If Not String.IsNullOrEmpty(_svm.DetectorConfigure.ResultUpdateInterval) Then
                 detectorConfig.<Configuration>.FirstOrDefault.Add(<ResultUpdateInterval><%= _svm.DetectorConfigure.ResultUpdateInterval %></ResultUpdateInterval>)
             Else
@@ -987,6 +988,25 @@ Namespace ViewModels
                     '    _writePMUElements(aStep, PMUSignalDictionary)
                     'End If
             End Select
+        End Sub
+
+        Friend Sub UpdateExampleFileAddress(exampleFilePath As String)
+            Dim config = XDocument.Load(_saveToRun.ConfigFilePath)
+            Dim inputInformation = From el In config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements Where el.Name = "FilePath" Select el
+            inputInformation.Remove
+            For Each fileInfo In _svm.DataConfigure.ReaderProperty.InputFileInfos
+                Dim info As XElement = <FilePath>
+                                           <ExampleFile><%= fileInfo.ExampleFile %></ExampleFile>
+                                           <FileType><%= fileInfo.FileType %></FileType>
+                                           <Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>
+                                       </FilePath>
+                '<FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
+                Dim rp = config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.<Mode>.FirstOrDefault
+                If rp IsNot Nothing Then
+                    rp.AddBeforeSelf(info)
+                End If
+            Next
+            config.Save(_saveToRun.ConfigFilePath)
         End Sub
 
         Private Sub _writePMUElements(aStep As XElement, pMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatureViewModel)))
