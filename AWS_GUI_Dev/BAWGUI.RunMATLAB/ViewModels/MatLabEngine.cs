@@ -674,7 +674,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     Thread.Sleep(500);
                 }
-                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, predictionDelay };
+                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories, predictionDelay };
                 worker.RunWorkerAsync(parameters);
                 IsReRunRunning = true;
                 Run.IsTaskRunning = true;
@@ -711,7 +711,24 @@ namespace BAWGUI.RunMATLAB.ViewModels
             var end = parameters[1] as string;
             var configFilename = parameters[2] as string;
             var controlPath = parameters[3] as string;
-            var predictionDelay = parameters[4] as int?;
+            var eventPath = parameters[4] as string;
+            var initPath = parameters[5] as string;
+            var dataFileDir = parameters[6] as List<string>;
+            var predictionDelay = parameters[7] as int?;
+
+            MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
+            try
+            {
+                for (int index = 0; index < dataFileDir.Count; index++)
+                {
+                    dataFileDirs[index + 1] = new MWCharArray(dataFileDir[index]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
 
             start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
             end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
@@ -725,7 +742,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                vsRerunResults = new TheveninReRunResults((MWStructArray)_matlabEngine.RerunThevenin(start, end, configFilename, controlPath, predictionDelay));
+                vsRerunResults = new TheveninReRunResults((MWStructArray)_matlabEngine.RerunThevenin(start, end, configFilename, controlPath, eventPath, initPath, dataFileDirs, predictionDelay));
             }
             catch (Exception ex)
             {
