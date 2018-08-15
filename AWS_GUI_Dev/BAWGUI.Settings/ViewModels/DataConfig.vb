@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.Globalization
+Imports System.Windows.Forms
 Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.ReadConfigXml
@@ -83,127 +84,131 @@ Namespace ViewModels
         Public Sub New(dataConfigure As ReadConfigXml.DataConfigModel, signalsMgr As SignalManager)
             Me.New
             _model = dataConfigure
-            ReaderProperty = New ReaderProperties(_model.ReaderProperty)
+            ReaderProperty = New ReaderProperties(_model.ReaderProperty, signalsMgr)
             Dim allSteps = New ObservableCollection(Of Object)
             Dim stepCounter As Integer = 0
             For Each stp In _model.CollectionOfSteps
                 Dim name = stp.Name
-                Select Case name
-                    Case "Status Flags"
-                        stepCounter += 1
-                        Dim a = New StatusFlagsDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Zeros"
-                        stepCounter += 1
-                        Dim a = New ZerosDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Missing"
-                        stepCounter += 1
-                        Dim a = New MissingDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Angle Wrapping"
-                        stepCounter += 1
-                        Dim a = New WrappingFailureDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Data Frame"
-                        stepCounter += 1
-                        Dim a = New DataFrameDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Channel"
-                        stepCounter += 1
-                        Dim a = New PMUchanDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Entire PMU"
-                        stepCounter += 1
-                        Dim a = New PMUallDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Stale Data"
-                        stepCounter += 1
-                        Dim a = New StaleDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Outliers"
-                        stepCounter += 1
-                        Dim a = New OutlierDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Nominal Frequency"
-                        stepCounter += 1
-                        Dim a = New FreqDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Nominal Voltage"
-                        stepCounter += 1
-                        Dim a = New VoltPhasorDQFilter(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Scalar Repetition"
-                        stepCounter += 1
-                        Dim a = New ScalarRepCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Addition"
-                        stepCounter += 1
-                        Dim a = New AdditionCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Subtraction"
-                        stepCounter += 1
-                        Dim a = New SubtractionCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Multiplication"
-                        stepCounter += 1
-                        Dim a = New MultiplicationCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Division"
-                        stepCounter += 1
-                        Dim a = New DivisionCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Exponential"
-                        stepCounter += 1
-                        Dim a = New ExponentialCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Sign Reversal"
-                        stepCounter += 1
-                        Dim a = New SignReversalCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Absolute Value"
-                        stepCounter += 1
-                        Dim a = New AbsValCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Real Component"
-                        stepCounter += 1
-                        Dim a = New RealComponentCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Imaginary Component"
-                        stepCounter += 1
-                        Dim a = New ImagComponentCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Angle Calculation"
-                        stepCounter += 1
-                        Dim a = New AngleCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Complex Conjugate"
-                        stepCounter += 1
-                        Dim a = New ComplexConjCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Phasor Creation"
-                        stepCounter += 1
-                        Dim a = New CreatePhasorCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Power Calculation"
-                        stepCounter += 1
-                        Dim a = New PowerCalcCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Signal Type/Unit"
-                        stepCounter += 1
-                        Dim a = New SpecifySignalTypeUnitCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Metric Prefix"
-                        stepCounter += 1
-                        Dim a = New MetricPrefixCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case "Angle Conversion"
-                        stepCounter += 1
-                        Dim a = New AngleConversionCust(stp, stepCounter, signalsMgr)
-                        allSteps.Add(a)
-                    Case Else
-                        Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
-                End Select
+                Try
+                    Select Case name
+                        Case "Status Flags"
+                            stepCounter += 1
+                            Dim a = New StatusFlagsDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Zeros"
+                            stepCounter += 1
+                            Dim a = New ZerosDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Missing"
+                            stepCounter += 1
+                            Dim a = New MissingDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Angle Wrapping"
+                            stepCounter += 1
+                            Dim a = New WrappingFailureDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Data Frame"
+                            stepCounter += 1
+                            Dim a = New DataFrameDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Channel"
+                            stepCounter += 1
+                            Dim a = New PMUchanDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Entire PMU"
+                            stepCounter += 1
+                            Dim a = New PMUallDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Stale Data"
+                            stepCounter += 1
+                            Dim a = New StaleDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Outliers"
+                            stepCounter += 1
+                            Dim a = New OutlierDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Nominal Frequency"
+                            stepCounter += 1
+                            Dim a = New FreqDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Nominal Voltage"
+                            stepCounter += 1
+                            Dim a = New VoltPhasorDQFilter(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Scalar Repetition"
+                            stepCounter += 1
+                            Dim a = New ScalarRepCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Addition"
+                            stepCounter += 1
+                            Dim a = New AdditionCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Subtraction"
+                            stepCounter += 1
+                            Dim a = New SubtractionCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Multiplication"
+                            stepCounter += 1
+                            Dim a = New MultiplicationCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Division"
+                            stepCounter += 1
+                            Dim a = New DivisionCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Exponential"
+                            stepCounter += 1
+                            Dim a = New ExponentialCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Sign Reversal"
+                            stepCounter += 1
+                            Dim a = New SignReversalCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Absolute Value"
+                            stepCounter += 1
+                            Dim a = New AbsValCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Real Component"
+                            stepCounter += 1
+                            Dim a = New RealComponentCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Imaginary Component"
+                            stepCounter += 1
+                            Dim a = New ImagComponentCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Angle Calculation"
+                            stepCounter += 1
+                            Dim a = New AngleCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Complex Conjugate"
+                            stepCounter += 1
+                            Dim a = New ComplexConjCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Phasor Creation"
+                            stepCounter += 1
+                            Dim a = New CreatePhasorCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Power Calculation"
+                            stepCounter += 1
+                            Dim a = New PowerCalcCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Signal Type/Unit"
+                            stepCounter += 1
+                            Dim a = New SpecifySignalTypeUnitCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Metric Prefix"
+                            stepCounter += 1
+                            Dim a = New MetricPrefixCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "Angle Conversion"
+                            stepCounter += 1
+                            Dim a = New AngleConversionCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case Else
+                            Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
+                    End Select
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+                End Try
             Next
             CollectionOfSteps = allSteps
         End Sub
@@ -358,11 +363,24 @@ Namespace ViewModels
             _inputFileInfos = New ObservableCollection(Of InputFileInfoViewModel)
         End Sub
 
-        Public Sub New(readerProperty As ReadConfigXml.ReaderPropertiesModel)
+        Public Sub New(readerProperty As ReadConfigXml.ReaderPropertiesModel, signalsMgr As SignalManager)
             Me.New
             Me._model = readerProperty
+            'look for input file info in signal manager first, 
+            'If exist Then, the file info Is sound And can be added To the reader Property To be displayed
+            'if cannot be found, then, the file info is bad, add the file info only to the reader property to be displayed
             For Each info In _model.InputFileInfos
-                _inputFileInfos.Add(New InputFileInfoViewModel(info))
+                Dim infoFound = False
+                For Each existingInfo In signalsMgr.FileInfo
+                    If info.ExampleFile = existingInfo.ExampleFile Then
+                        _inputFileInfos.Add(existingInfo)
+                        infoFound = True
+                        Exit For
+                    End If
+                Next
+                If Not infoFound Then
+                    _inputFileInfos.Add(New InputFileInfoViewModel(info))
+                End If
             Next
         End Sub
 
@@ -1684,6 +1702,8 @@ Namespace ViewModels
             output.Unit = Unit
             If _timeSourcePMU IsNot Nothing Then
                 output.SamplingRate = _timeSourcePMU.SamplingRate
+            Else
+                Throw New Exception("PMU for time source is required for Scalar Repetition Customization.")
             End If
             output.OldUnit = output.Unit
             output.OldTypeAbbreviation = output.TypeAbbreviation

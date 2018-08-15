@@ -17,8 +17,8 @@ using BAWGUI.MATLABRunResults.Models;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
-{ 
-    public class MatLabEngine:ViewModelBase
+{
+    public class MatLabEngine : ViewModelBase
     {
         private bool _isMatlabEngineRunning;
         public bool IsMatlabEngineRunning
@@ -135,8 +135,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Run = run;
             _controlPath = run.Model.ControlRerunPath;
             _configFilePath = run.Model.ConfigFilePath;
-
-
             try
             {
                 //_worker.DoWork += _runNormalMode;
@@ -149,7 +147,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     Thread.Sleep(500);
                 }
-                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath };
+                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories };
                 worker.RunWorkerAsync(parameters);
                 IsReRunRunning = true;
                 Run.IsTaskRunning = true;
@@ -193,6 +191,22 @@ namespace BAWGUI.RunMATLAB.ViewModels
             var end = parameters[1] as string;
             var configFilename = parameters[2] as string;
             var controlPath = parameters[3] as string;
+            var eventPath = parameters[4] as string;
+            var initPath = parameters[5] as string;
+            var dataFileDir = parameters[6] as List<string>;
+
+            MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
+            try
+            {
+                for (int index = 0; index < dataFileDir.Count; index++)
+                {
+                    dataFileDirs[index + 1] = new MWCharArray(dataFileDir[index]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
             end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
@@ -206,14 +220,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                RingdownRerunResults = new RDRerunResults((MWStructArray)_matlabEngine.RerunRingdown(start, end, configFilename, controlPath));
+                RingdownRerunResults = new RDRerunResults((MWStructArray)_matlabEngine.RerunRingdown(start, end, configFilename, controlPath, eventPath, initPath, dataFileDirs));
             }
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
                 MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
-            
+
             e.Result = RingdownRerunResults.RingdownDetectorList;
         }
 
@@ -255,7 +269,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             run.IsTaskRunning = true;
-            var sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, run.Model.ConfigFilePath, detector));
+            var sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, run.Model.InitializationPath, detector));
             run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;
@@ -307,7 +321,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             try
             {
                 //_worker.DoWork += _runNormalMode;
-                worker.DoWork += (obj, e) => _runNormalMode(run.Model.ControlRunPath, run.Model.ConfigFilePath);
+                worker.DoWork += (obj, e) => _runNormalMode(run.Model.ControlRunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories, run.Model.ConfigFilePath);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
                 worker.WorkerReportsProgress = true;
@@ -327,8 +341,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
 
-        private void _runNormalMode(string controlPath, string configFilename)
+        private void _runNormalMode(string controlPath, string eventPath, string initPath, List<string> dataFileDir, string configFilename)
         {
+            MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
+            try
+            {
+                for (int index = 0; index < dataFileDir.Count; index++)
+                {
+                    dataFileDirs[index + 1] = new MWCharArray(dataFileDir[index]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             if (Thread.CurrentThread.Name == null)
             {
                 Thread.CurrentThread.Name = "normalRunThread";
@@ -345,7 +371,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Run.IsNormalRunPaused = false;
             try
             {
-                _matlabEngine.RunNormalMode(controlPath, configFilename);
+                _matlabEngine.RunNormalMode(controlPath, eventPath, initPath, dataFileDirs, configFilename);
             }
             catch (Exception ex)
             {
@@ -377,7 +403,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         public void StopMatlabNormalRun()
         {
-            if (IsMatlabEngineRunning||IsNormalRunPaused)
+            if (IsMatlabEngineRunning || IsNormalRunPaused)
             {
                 DialogResult dialogResult = MessageBox.Show("Are you sure to stop the matlab engine?", "Warning!", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
@@ -515,7 +541,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     Thread.Sleep(500);
                 }
-                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath };
+                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories };
                 worker.RunWorkerAsync(parameters);
                 IsReRunRunning = true;
                 Run.IsTaskRunning = true;
@@ -552,6 +578,22 @@ namespace BAWGUI.RunMATLAB.ViewModels
             var end = parameters[1] as string;
             var configFilename = parameters[2] as string;
             var controlPath = parameters[3] as string;
+            var eventPath = parameters[4] as string;
+            var initPath = parameters[5] as string;
+            var dataFileDir = parameters[6] as List<string>;
+
+            MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
+            try
+            {
+                for (int index = 0; index < dataFileDir.Count; index++)
+                {
+                    dataFileDirs[index + 1] = new MWCharArray(dataFileDir[index]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
             end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
@@ -565,7 +607,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                OORRerunResults = new OORRerunResults((MWStructArray)_matlabEngine.RerunOutOfRange(start, end, configFilename, "OutOfRangeGeneral", controlPath));
+                OORRerunResults = new OORRerunResults((MWStructArray)_matlabEngine.RerunOutOfRange(start, end, configFilename, controlPath, eventPath, initPath, dataFileDirs));
             }
             catch (Exception ex)
             {

@@ -9,6 +9,7 @@ using BAWGUI.Core;
 using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace BAWGUI.ViewModels
 {
@@ -174,6 +175,11 @@ namespace BAWGUI.ViewModels
                     SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                     SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                     SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                    e.SelectedRun.Model.DataFileDirectories = new List<string>();
+                    foreach (var info in _signalMgr.FileInfo)
+                    {
+                        e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                    }
                 }
                 catch (Exception ex)
                 {
