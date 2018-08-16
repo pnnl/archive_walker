@@ -13,6 +13,12 @@
 
 function [DetectionResults, AdditionalOutput] = ModeMeterDetector(PMUstruct,Parameters,PastAdditionalOutput)
 
+%#function LS_ARMA
+%#function LS_ARMApS
+%#function YW_ARMA
+%#function YW_ARMApS
+
+%%
 % ResultUpdateInterval = Parameters.ResultUpdateInterval;
 
 %% Store the channels for analysis in a matrix. PMU and channel names are
