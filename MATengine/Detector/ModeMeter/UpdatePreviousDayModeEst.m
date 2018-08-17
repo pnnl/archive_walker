@@ -35,7 +35,7 @@ while ~isempty(FreqMpath)
             DRMpath = DRMpath(1:end-ModeEstLength,1);
             FreqMpath= FreqMpath(1:end-ModeEstLength,1);
         end
-        H = {H1, ModeEstTable{2,:},ModeEstTable{3,:},ModeEstTable{4,:}};
+        H = {H1, ModeEstTable{1,:},ModeEstTable{2,:},ModeEstTable{3,:}};
         fid = fopen(FileName,'w');
         for idx = 1:4
             commaHeader = [H{idx};repmat({','},1,numel(H{idx}))]; %insert commaas

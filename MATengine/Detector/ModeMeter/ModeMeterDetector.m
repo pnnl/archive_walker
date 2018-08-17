@@ -45,7 +45,7 @@ for ModeIdx = 1:length(Parameters.Mode)
     ModeEstimateCalcIdx = 1;
     ExtractedParameters = ExtractedParametersAll{ModeIdx};
     TimeStringDN = datenum(TimeString{ModeIdx});
-    NumMethods = length(ExtractedParameters.AlgorithmSpecificParameters);
+    NumMethods(ModeIdx) = length(ExtractedParameters.AlgorithmSpecificParameters);
     AdditionalOutput(ModeIdx).Data = Data{ModeIdx}(end-size(Data{ModeIdx},1)+1:end,:);
     AdditionalOutput(ModeIdx).DataPMU = DataPMU{ModeIdx};
     AdditionalOutput(ModeIdx).DataChannel = DataChannel{ModeIdx};
@@ -53,15 +53,13 @@ for ModeIdx = 1:length(Parameters.Mode)
     AdditionalOutput(ModeIdx).DataUnit = DataUnit{ModeIdx};
     AdditionalOutput(ModeIdx).TimeString = TimeString{ModeIdx}(end-size(Data{ModeIdx},1)+1:end);
     if isempty(PastAdditionalOutput)
-        AdditionalOutput(ModeIdx).Modetrack = cell(1,NumMethods*size(Data{ModeIdx},2));
+        AdditionalOutput(ModeIdx).Modetrack = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).Modetrack(:) = {{}};
         AdditionalOutput(ModeIdx).t = TimeStringDN(end);
-        AdditionalOutput(ModeIdx).ModeOriginal = cell(1,NumMethods*size(Data{ModeIdx},2));
-        AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
-        AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
-        AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
-        TimeString1 = '0';
-        TimeString2 = '0';
+        AdditionalOutput(ModeIdx).ModeOriginal = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+        AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+        AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+        AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
     else
         AdditionalOutput(ModeIdx).Modetrack = PastAdditionalOutput(ModeIdx).Modetrack;
         AdditionalOutput(ModeIdx).ModeOriginal = PastAdditionalOutput(ModeIdx).ModeOriginal;
@@ -75,9 +73,9 @@ for ModeIdx = 1:length(Parameters.Mode)
             AdditionalOutput(ModeIdx).ModeFreqHistory = PastAdditionalOutput(ModeIdx).ModeFreqHistory;
             AdditionalOutput(ModeIdx).t = [PastAdditionalOutput(ModeIdx).t; TimeStringDN(end);];
         else
-            AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
-            AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
-            AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods*size(Data{ModeIdx},2));
+            AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+            AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+            AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
             AdditionalOutput(ModeIdx).t = TimeStringDN(end);
             PastAdditionalOutput(1).OperatingValues = [];
         end
@@ -91,7 +89,7 @@ for ModeIdx = 1:length(Parameters.Mode)
     
     for ChanIdx = 1:size(Data{ModeIdx},2)
         if ~KeepIdx(ChanIdx)
-            for MethodIdx = 1:NumMethods
+            for MethodIdx = 1:NumMethods(ModeIdx)
                 Mode=NaN;
                 DampingRatio=NaN;
                 Frequency=NaN;
@@ -111,7 +109,7 @@ for ModeIdx = 1:length(Parameters.Mode)
             else
                 DetectionResults(ModeIdx).FOfreq{ChanIdx} = [];
             end
-            for MethodIdx = 1:NumMethods
+            for MethodIdx = 1:NumMethods(ModeIdx)
                 [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
                     = eval([ExtractedParameters.MethodName{MethodIdx}...
                     '(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
@@ -127,9 +125,14 @@ for ModeIdx = 1:length(Parameters.Mode)
                         %         If ModeRem is not empty, need to assess .csv for previous days and update
                         %         the mode estimates
                         if ~isempty(ModeRem) && ~isempty(PastAdditionalOutput)
-                            N = length(ModeRem);
-                            ModeRem = repmat([-100+200*1i],5,1);
-                            UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList,TimeStringDN(end),ModeEstimateCalcIdx);
+                            if ModeIdx ==2
+                                1;
+                            end
+                            ChanIdxUpdated = 0;
+                            for ModeIdxToUndateChanIdx = 1:(ModeIdx-1)
+                                ChanIdxUpdated = ChanIdxUpdated + NumMethods(ModeIdxToUndateChanIdx)*size(Data{ModeIdxToUndateChanIdx},2);
+                            end
+                            UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList,TimeStringDN(end),ChanIdxUpdated + ModeEstimateCalcIdx);
                         end
                 else
                     % Reset the tracking cell

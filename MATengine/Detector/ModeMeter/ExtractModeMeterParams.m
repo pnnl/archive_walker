@@ -39,6 +39,10 @@ if isfield(Parameters,'Mode')
         if isfield(TempXML,'DampRatioThreshold')
             % Use specified limit
             DampRatioThreshold = str2num(TempXML.DampRatioThreshold);
+            if DampRatioThreshold>100
+                DampRatioThreshold = 100;
+                warning('Damping ratio detection threshold input cannot exceed 100%, so setting the threshold to 100%.');
+            end
         else
             % Use default (disable)
             DampRatioThreshold = .05;
@@ -227,6 +231,7 @@ if isfield(Parameters,'Mode')
                     FOdetector.FrequencyMax = str2num(FOParamExtrXML.FrequencyMax);
                     if FOdetector.FrequencyMax>fs{ModeIdx}/2
                         FOdetector.FrequencyMax = fs{ModeIdx}/2;
+                        warning('Maximum frequency for forced oscillation detection exceeds folding frequency of the signal, so changing maximum frequency to the folding frequency');
                     end
                 else
                     % Use default minimum frequency

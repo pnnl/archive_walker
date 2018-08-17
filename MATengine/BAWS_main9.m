@@ -353,14 +353,14 @@ done = 0;
 while(~min(done))
     if Unpause
         % The tool is being unpaused - load PauseData.mat so that
-        % processing can continue
+        % processing can continue        
         try
-            load([ControlPath '\PauseData.mat'])
+            load([ControlPath '\PauseData.mat']) 
         catch
             warning(['Attempt to unpause failed because ' ControlPath '\PauseData.mat could not be loaded.']);
             return
         end
-        
+        [~,~,~,DetectorXML,~,~,~,~,~,~,~,~,~,~,~] = InitializeBAWS(ConfigAll,EventPath);
         try
             delete([ControlPath '\PauseData.mat'])
         catch

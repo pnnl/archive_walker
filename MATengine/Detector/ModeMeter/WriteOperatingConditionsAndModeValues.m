@@ -5,7 +5,11 @@ TimeString = datestr(AdditionalOutput(1).TimeString{end},'yymmdd');
 tt = [];
 for tIdx = 1:length(AdditionalOutput(1).t)
     t = (datestr(AdditionalOutput(1).t(tIdx),'HH:MM:SS.FFF'));
-    tt  = [tt;(str2double(t(1:2))*60*60+ str2double(t(4:5))*60 + ceil(str2double(t(7:end))))/3600];
+    if ~isempty(t)
+        tt  = [tt;(str2double(t(1:2))*60*60+ str2double(t(4:5))*60 + ceil(str2double(t(7:end))))/3600];
+    else
+        tt = 24;
+    end
 end
 tt = round(tt,3);
 if isempty(Mode_n_SysCondListID)
