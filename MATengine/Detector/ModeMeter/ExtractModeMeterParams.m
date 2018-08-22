@@ -21,10 +21,7 @@ if isfield(Parameters,'Mode')
     %AlgSpecificParameters = cell(1,length(Parameters.Mode));
     %     FOdetector = cell(1,length(Parameters.Mode));
     %     MethodName = cell(1,length(Parameters.Mode));
-    ExtractedParameters = cell(1,length(Parameters.Mode));
-    if length(Parameters.Mode)==1
-        Parameters.Mode = {Parameters.Mode};
-    end
+    ExtractedParameters = cell(1,length(Parameters.Mode)); 
     for ModeIdx = 1:length(Parameters.Mode)
         ModeName = Parameters.Mode{ModeIdx}.Name;
         TempXML = Parameters.Mode{ModeIdx};
@@ -231,7 +228,7 @@ if isfield(Parameters,'Mode')
                     FOdetector.FrequencyMax = str2num(FOParamExtrXML.FrequencyMax);
                     if FOdetector.FrequencyMax>fs{ModeIdx}/2
                         FOdetector.FrequencyMax = fs{ModeIdx}/2;
-                        warning('Maximum frequency for forced oscillation detection exceeds folding frequency of the signal, so changing maximum frequency to the folding frequency');
+                        warning('Maximum frequency for forced oscillation detection exceeds folding frequency of the signal, so changing maximum frequency to the folding frequency of the signal.');
                     end
                 else
                     % Use default minimum frequency

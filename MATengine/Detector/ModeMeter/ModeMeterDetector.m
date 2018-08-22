@@ -18,20 +18,27 @@ function [DetectionResults, AdditionalOutput] = ModeMeterDetector(PMUstruct,Para
 %#function YW_ARMA
 %#function YW_ARMApS
 
-%%
-% ResultUpdateInterval = Parameters.ResultUpdateInterval;
+NumMode = length(Parameters.Mode); % gives number of modes of interest
+Data = cell(1,NumMode);
+DataPMU = cell(1,NumMode);
+DataChannel = cell(1,NumMode);
+DataType = cell(1,NumMode);
+DataUnit = cell(1,NumMode);
+TimeString = cell(1,NumMode);
+fs = cell(1,NumMode);
+NumMethods = NaN(NumMode,1);
+if NumMode==1
+    Parameters.Mode = {Parameters.Mode};
+end
 
-%% Store the channels for analysis in a matrix. PMU and channel names are
-% stored in cell arrays. Also returns a time vector t with units of seconds
-% and the sampling rate fs. The sampling rate is needed for some default
-% parameter values.
 try
-    [Data, DataPMU, DataChannel, DataType, DataUnit, ~, fs, TimeString] = ExtractDataModemeter(PMUstruct,Parameters);
+    for ModeIdx = 1:NumMode
+        [Data{ModeIdx}, DataPMU{ModeIdx}, DataChannel{ModeIdx}, DataType{ModeIdx}, DataUnit{ModeIdx}, ~, fs{ModeIdx}, TimeString{ModeIdx}] = ExtractData(PMUstruct,Parameters.Mode{ModeIdx});
+    end
 catch
     warning('Input data for the mode-meter could not be used.');
     DetectionResults = struct('FOfreq',cell(1,length(Parameters.Mode)),'LowDampedMode',[],'ChannelName',[],'MethodName',[]);%'MpathRemainder',[],'Name',Parameters.Name
-    AdditionalOutput = struct('ModeOriginal',[],...
-        'ModeTrack',[],'OperatingValues',[], 'OperatingNames',[], 'OperatingUnits',[],...
+    AdditionalOutput = struct('ModeTrack',[],'OperatingValues',[], 'OperatingNames',[], 'OperatingUnits',[],...
         'Data',[],'DataPMU',[],'DataChannel',[],'DataType',[],'DataUnit',[],'TimeString',[],...
         'ModeOriginal',[],'ModeHistory',[],'ModeFreqHistory',[],'ModeDRHistory',[],'MethodName',[],'ChannelName',[]);
     return
@@ -41,7 +48,7 @@ AdditionalOutput = struct([]);
 ExtractedParametersAll = ExtractModeMeterParams(Parameters,fs);
 AdditionalOutput(1).OperatingValues = [];
 
-for ModeIdx = 1:length(Parameters.Mode)
+for ModeIdx = 1:NumMode
     ModeEstimateCalcIdx = 1;
     ExtractedParameters = ExtractedParametersAll{ModeIdx};
     TimeStringDN = datenum(TimeString{ModeIdx});
@@ -119,21 +126,18 @@ for ModeIdx = 1:length(Parameters.Mode)
                 if strcmp(ExtractedParameters.RetConTrackingStatus, 'ON')
                     [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx},...
                         AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},ModeRem]...
-                            = RunRetCon(Mode, AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},...
-                            AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},...
-                            ExtractedParameters.MaxRetConLength, Parameters.ResultUpdateInterval);
-                        %         If ModeRem is not empty, need to assess .csv for previous days and update
-                        %         the mode estimates
-                        if ~isempty(ModeRem) && ~isempty(PastAdditionalOutput)
-                            if ModeIdx ==2
-                                1;
-                            end
-                            ChanIdxUpdated = 0;
-                            for ModeIdxToUndateChanIdx = 1:(ModeIdx-1)
-                                ChanIdxUpdated = ChanIdxUpdated + NumMethods(ModeIdxToUndateChanIdx)*size(Data{ModeIdxToUndateChanIdx},2);
-                            end
-                            UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList,TimeStringDN(end),ChanIdxUpdated + ModeEstimateCalcIdx);
+                        = RunRetCon(Mode, AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},...
+                        AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},...
+                        ExtractedParameters.MaxRetConLength, Parameters.ResultUpdateInterval);
+                    %         If ModeRem is not empty, need to assess .csv for previous days and update
+                    %         the mode estimates
+                    if ~isempty(ModeRem) && ~isempty(PastAdditionalOutput)
+                        ChanIdxUpdated = 0;
+                        for ModeIdxToUndateChanIdx = 1:(ModeIdx-1)
+                            ChanIdxUpdated = ChanIdxUpdated + NumMethods(ModeIdxToUndateChanIdx)*size(Data{ModeIdxToUndateChanIdx},2);
                         end
+                        UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList,TimeStringDN(end),ChanIdxUpdated + ModeEstimateCalcIdx);
+                    end
                 else
                     % Reset the tracking cell
                     AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx} = {};
@@ -150,7 +154,6 @@ for ModeIdx = 1:length(Parameters.Mode)
         end
     end
 end
-
 % Get power system operating condition values
 if isfield(Parameters,'BaseliningSignals')
     [Data, ~, OperatingNames, OperatingType, OperatingUnits, ~, ~, ~] = ExtractData(PMUstruct,Parameters.BaseliningSignals);
