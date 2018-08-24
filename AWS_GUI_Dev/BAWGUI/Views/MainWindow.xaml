@@ -70,21 +70,21 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Column="0">
-                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings">
-                        <RadioButton.Style>
-                            <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>                            
-                        </RadioButton.Style>
-                    </RadioButton>
                     <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="True" Command="{Binding MainViewSelected}" CommandParameter="Results">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
+                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings">
+                        <RadioButton.Style>
+                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                        </RadioButton.Style>
+                    </RadioButton>
                     <!--<RadioButton Content="Run Control" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Run"/>-->
+                    <Button ToolTip="Save Config File" Width="22" Height="22" Margin="2" Command="{Binding ProjectControlVM.SaveConfigFile}" CommandParameter="{Binding}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter}}">
+                        <Image Source="/BAWGUI;component/MyResources/Save24.png"/>
+                    </Button>
                 </StackPanel>
-                <Button ToolTip="Save Config File" Width="22" Height="22" Margin="2,2,400,2" Command="{Binding ProjectControlVM.SaveConfigFile}" CommandParameter="{Binding}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter}}">
-                    <Image Source="/BAWGUI;component/MyResources/Save24.png"/>
-                </Button>
             </Grid>
             <ContentControl Content="{Binding CurrentView}" Grid.Row="1"/>
         </Grid>
