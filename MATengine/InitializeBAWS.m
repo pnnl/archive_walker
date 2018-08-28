@@ -6,7 +6,7 @@
 function [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
     BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
     NumProcessingStages,DataInfo,FileInfo,...
-    ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll)
+    ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath)
 
 DataXML = ConfigAll.Config.DataConfig.Configuration;
 ProcessXML = ConfigAll.Config.ProcessConfig.Configuration;
@@ -304,16 +304,25 @@ if isfield(temp,'ModeMeter')
         %add it to the Thevenin portion of the configuration structure.
         temp.ModeMeter = {temp.ModeMeter};
         DetectorXML.ModeMeter.ResultUpdateInterval = ResultUpdateInterval;
+        DetectorXML.ModeMeter.ResultPathFinal = [EventPath DetectorXML.ModeMeter.ResultPath];
     else
         for idx = 1:length(temp.ModeMeter)
             % The modal analysis algorithm needs ResultUpdateInterval, so
             %add it to the Thevenin portion of the configuration structure.
             DetectorXML.ModeMeter{idx}.ResultUpdateInterval = ResultUpdateInterval;
+            DetectorXML.ModeMeter{idx}.ResultPathFinal = [EventPath DetectorXML.ModeMeter{idx}.ResultPath];
         end
     end
     for idx = 1:length(temp.ModeMeter)
-        if isfield(temp.ModeMeter{idx}, 'AnalysisLength')
-            SecondsToConcat = max([SecondsToConcat str2double(temp.ModeMeter{idx}.AnalysisLength)]);
+        if isfield(temp.ModeMeter{idx},'Mode')
+            if length(temp.ModeMeter{idx}.Mode) == 1
+                temp.ModeMeter{idx}.Mode = {temp.ModeMeter{idx}.Mode};
+            end
+            for ModeIdx = 1:length(temp.ModeMeter{idx}.Mode)
+                if isfield(temp.ModeMeter{idx}.Mode{ModeIdx}, 'AnalysisLength')
+                    SecondsToConcat = max([SecondsToConcat str2double(temp.ModeMeter{idx}.Mode{ModeIdx}.AnalysisLength)]);
+                end
+            end
         end
     end
 end

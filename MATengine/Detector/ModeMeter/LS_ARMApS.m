@@ -53,14 +53,8 @@ Y = -toeplitz(y(L:W-1),y(L:-1:1));   % Data matrix (see eq. (2.50))
 % estimates!
 S = zeros(W-L,2*P);
 for p = 1:P
-    % The psi term is used to incorporate the starting and ending samples
-    % of each sinusoid. Each psi is the corresponding column of Psi in
-    % eq. (3.20)
-    psi = zeros(1,W);
-    psi(eps(p):eta(p)) = 1;
-    psi = psi(L+1:W);
-    S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
-    S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
+    S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W));
+    S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W));
 end
 
 Z = [Y S];
@@ -106,15 +100,15 @@ zPoles = roots(a);  % Find z-domain poles (see eq. (2.8))
 sPoles = log(zPoles)*fs;    % Transform to s-domain (see eq. (2.7))
 
 
-sPolesDamp = -cos(angle(sPoles))*100;
-sPolesFreq = imag(sPoles)/(2*pi);
+sPolesDamp = -real(sPoles)./abs(sPoles)*100;
+sPolesFreq = (imag(sPoles))/(2*pi);
 
 
 % 0: Remove all modes outside specified frequency range.
 sPolesTemp = sPoles;
 sPolesFreqTemp = sPolesFreq;
 sPolesDampTemp = sPolesDamp;
-KillIdx = [find(sPolesFreqTemp < DesiredModes(1)); find(sPolesFreqTemp > DesiredModes(2))];
+KillIdx = unique([find(sPolesFreqTemp < DesiredModes(1)); find(sPolesFreqTemp > DesiredModes(2));find(sPolesDampTemp > DesiredModes(4));]);
 sPolesTemp(KillIdx) = [];
 sPolesFreqTemp(KillIdx) = [];
 sPolesDampTemp(KillIdx) = [];

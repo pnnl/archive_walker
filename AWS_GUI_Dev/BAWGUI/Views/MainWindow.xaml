@@ -56,7 +56,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <runv:RunNormalRunView DataContext="{Binding RunMatlabVM}" Grid.Row="0"/>-->
-                <localv:ProjectsBrowserView DataContext="{Binding ProjectControlVM}"/>
+            <localv:ProjectsBrowserView DataContext="{Binding ProjectControlVM}"/>
             <!--</Grid>-->
         </Expander>
         <Grid Grid.Column="1">
@@ -90,35 +90,35 @@
         </Grid>
         <!--<DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1">
             <ToolBar DockPanel.Dock="Top">-->
-                <!--<Button>
+        <!--<Button>
             <Image Source="..\Resources\NewFile_16x.png"></Image>
         </Button>
         <Separator></Separator>-->
-                <!--<Button Command="{Binding OpenFile}">
+        <!--<Button Command="{Binding OpenFile}">
             <Image Source="..\Resources\open.gif"></Image>
         </Button>-->
-                <!--<Button>
+        <!--<Button>
             <Image Source="..\Resources\Save24.png"></Image>
         </Button>-->
-                <!--<Separator></Separator>-->
-                <!--<Button>
+        <!--<Separator></Separator>-->
+        <!--<Button>
             <Image Source="..\Resources\Run_16x.png"></Image>
         </Button>-->
-                <!--<Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}">
+        <!--<Button ToolTip="Settings" Command="{Binding ShowSettingsWindow}">
             <Image Source="..\Resources\Settings_16x.png"/>
         </Button>-->
-                <!--<Button ToolTip="settings" Command="{Binding ToggleResultsSettings}" Content="{Binding CurrentViewName}"/>-->
+        <!--<Button ToolTip="settings" Command="{Binding ToggleResultsSettings}" Content="{Binding CurrentViewName}"/>-->
 
 
-                <!--<Button ToolTip="Configuration of matlab run" Command="{Binding ShowSettingsView}" Content="Settings" IsEnabled="{Binding IsSettingsEnabled}" Style="{StaticResource {x:Type Button}}" Margin="2"/>
+        <!--<Button ToolTip="Configuration of matlab run" Command="{Binding ShowSettingsView}" Content="Settings" IsEnabled="{Binding IsSettingsEnabled}" Style="{StaticResource {x:Type Button}}" Margin="2"/>
         <Button ToolTip="Results of matlab run" Command="{Binding ShowResultsView}" Content="Results" IsEnabled="{Binding IsSettingsEnabled, Converter={StaticResource InverseBooleanConverter}}" Style="{StaticResource {x:Type Button}}" Margin="2"/>
         <Button ToolTip="Control of MATLAB background run" Command="{Binding ShowMATLABrunView}" Content="Run Control" IsEnabled="{Binding IsSettingsEnabled, Converter={StaticResource InverseBooleanConverter}}" Style="{StaticResource {x:Type Button}}" Margin="2"/>-->
 
 
-                <!--<Separator></Separator>-->
-                <!--<Label Content="Available Event Dates: " Width="300" HorizontalContentAlignment="Right"/>
+        <!--<Separator></Separator>-->
+        <!--<Label Content="Available Event Dates: " Width="300" HorizontalContentAlignment="Right"/>
         <ComboBox ItemsSource="{Binding }"/>-->
-            <!--</ToolBar>-->
+        <!--</ToolBar>-->
         <!--</DockPanel>-->
         <!--</StackPanel>-->
     </Grid>
