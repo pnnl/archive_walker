@@ -1,45 +1,4 @@
-%   function [DetectionResults, AdditionalOutput] = PeriodogramDetector(PMUstruct,Parameters)
-%   This function implemements periodogram detection
-%   Inputs:
-%           PMUstruct: PMU structure in a common format for all PMUs
-%           Parameters: User specified values for carrying out detection.
-%           If any field is empty, uses provided default values
-%                       Mode = Mode of detection, either singlechannel or
-%                       multi-channel
-%                       AnalysisLength = Number of samples for signal
-%                       analysis
-%                       WindowType = ype of window used for the test
-%                       statistic periodogram, Daniell-Welch periodogram,
-%                       and GMSC calculation
-%                       ZeroPadding = Zero padded length of the test
-%                       statistic periodogram,Daniell-Welch periodogram, and GMSC
-%                       WindowLength = Length of the sections for the
-%                       Daniell-Welch periodogram and GMSC
-%                       WindowOverlap = Amount of overlap between sections
-%                       for the Daniell-Welch periodogram and GMSC
-%                       MedianFilterOrder = Order for the median filter
-%                       used in the Daniell-Welch periodogram
-%                       Pfa = Probability of false alarm
-%                       FrequencyMin = Minimum frequency to be considered
-%                       FrequencyMax = Maximum frequency to be considered
-%                       FrequencyTolerance = Tolerance used to refine the
-%                       frequency estimate
-%           PastAdditionalOutput: past AdditionalOutput outputs from this
-%                                 function that can be used for various
-%                                 purposes.
-%
-%   Outputs:
-%           DetectionResults: Struct Array containing information on PMU and Channel of
-%           signal used for analysis along with estimates of frequency and
-%           amplitude of FO
-%                   (MultiChannel Case: Dimension 1 by 1)
-%                   (SingleChannel Case: Dimension 1 by number of channels)
-%           AdditionalOutput: Contains estimates of power spectrum of
-%           signal, ambient noise spectrum estimates, test statistics, and
-%           threshold
-%                   (MultiChannel Case: Dimension 1 by 1)
-%                   (SingleChannel Case: Dimension 1 by number of channels)
-%
+% Created by Urmila Agrawal
 
 
 function Freq_FO_Refined = FOdetectionForModeMeter(y,Parameters,fs,AnalysisLength)

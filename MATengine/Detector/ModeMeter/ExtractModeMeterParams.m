@@ -5,9 +5,9 @@
 function ExtractedParameters = ExtractModeMeterParams(Parameters,fs)
 
 % Number of samples to use in the analysis
-if isfield(Parameters,'ResultPath')
+if isfield(Parameters,'ResultPathFinal')
     % Use specified value
-    ResultPath =Parameters.ResultPath;
+    ResultPathFinal =Parameters.ResultPathFinal;
 end
 
 if isfield(Parameters,'Mode')
@@ -21,10 +21,7 @@ if isfield(Parameters,'Mode')
     %AlgSpecificParameters = cell(1,length(Parameters.Mode));
     %     FOdetector = cell(1,length(Parameters.Mode));
     %     MethodName = cell(1,length(Parameters.Mode));
-    ExtractedParameters = cell(1,length(Parameters.Mode));
-    if length(Parameters.Mode)==1
-        Parameters.Mode = {Parameters.Mode};
-    end
+    ExtractedParameters = cell(1,length(Parameters.Mode)); 
     for ModeIdx = 1:length(Parameters.Mode)
         ModeName = Parameters.Mode{ModeIdx}.Name;
         TempXML = Parameters.Mode{ModeIdx};
@@ -34,11 +31,15 @@ if isfield(Parameters,'Mode')
             AnalysisLength = str2double(TempXML.AnalysisLength)*fs{ModeIdx};
         else
             % Use default value of 10 minutes
-            AnalysisLength = 10*60*fs{ModeIdx};
+            AnalysisLength = 20*60*fs{ModeIdx};
         end
         if isfield(TempXML,'DampRatioThreshold')
             % Use specified limit
             DampRatioThreshold = str2num(TempXML.DampRatioThreshold);
+            if DampRatioThreshold>100
+                DampRatioThreshold = 100;
+                warning('Damping ratio detection threshold input cannot exceed 100%, so setting the threshold to 100%.');
+            end
         else
             % Use default (disable)
             DampRatioThreshold = .05;
@@ -220,7 +221,18 @@ if isfield(Parameters,'Mode')
                     FOdetector.FrequencyMin = str2num(FOParamExtrXML.FrequencyMin);
                 else
                     % Use default minimum frequency
-                    
+                    FOdetector.FrequencyMin = 0;
+                end
+                 if isfield(FOParamExtrXML,'FrequencyMax')
+                    % Use specified minimum frequency
+                    FOdetector.FrequencyMax = str2num(FOParamExtrXML.FrequencyMax);
+                    if FOdetector.FrequencyMax>fs{ModeIdx}/2
+                        FOdetector.FrequencyMax = fs{ModeIdx}/2;
+                        warning('Maximum frequency for forced oscillation detection exceeds folding frequency of the signal, so changing maximum frequency to the folding frequency of the signal.');
+                    end
+                else
+                    % Use default minimum frequency
+                    FOdetector.FrequencyMax = fs{ModeIdx}/2;
                 end
                 
                 % Tolerance used to refine the frequency estimate. If omitted, the default
@@ -257,6 +269,6 @@ if isfield(Parameters,'Mode')
         end
         ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,'DampRatioThreshold',DampRatioThreshold,...
             'AnalysisLength',AnalysisLength,'RetConTrackingStatus',RetConTrackingStatus,'MaxRetConLength',MaxRetConLength,...
-            'DesiredModes',DesiredModes,'ResultPath',ResultPath,'FOdetectorPara',FOdetector,'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters);%
+            'DesiredModes',DesiredModes,'ResultPathFinal',ResultPathFinal,'FOdetectorPara',FOdetector,'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters);%
     end
 end
