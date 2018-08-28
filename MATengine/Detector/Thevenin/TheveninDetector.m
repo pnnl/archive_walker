@@ -272,7 +272,7 @@ for SubIdx = 1:length(Parameters.Sub)
     % Switching to using the souce lines to match the Tellegen's paper.
     % This shouldn't make any difference because power into the substation
     % should match power coming out of the substation.
-    Zload = (Vbus.MAG.^2)./((SourceP - 1i*SourceQ)/3)*10^6;
+    Zload = (Vbus.MAG.^2)./(((SourceP - 1i*SourceQ)/3)*10^6);
     
     % Convert voltage magnitude from L-N in V to L-L in kV
     Vbus.MAG = Vbus.MAG*sqrt(3)/1000;

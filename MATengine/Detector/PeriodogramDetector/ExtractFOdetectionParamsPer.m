@@ -131,6 +131,10 @@ end
 if isfield(Parameters,'FrequencyMax')
     % Use specified maximum frequency
     FrequencyMax = str2num(Parameters.FrequencyMax);
+    if FrequencyMax>fs/2
+        FrequencyMax = fs/2;
+%         warning('Maximum frequency for forced oscillation detection exceeds folding frequency of the signal, so changing maximum frequency to the folding frequency of the signal.');
+    end
 else
     % Use default maximum frequency
     FrequencyMax = fs/2;
