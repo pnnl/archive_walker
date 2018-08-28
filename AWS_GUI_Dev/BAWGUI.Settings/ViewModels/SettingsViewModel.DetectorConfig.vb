@@ -63,6 +63,7 @@ Namespace ViewModels
                         _generateModeMeterResultFolder()
                     End If
                     newDetector = New SmallSignalStabilityToolViewModel(_signalMgr)
+                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select

@@ -1703,27 +1703,27 @@ Namespace ViewModels
             If _timeSourcePMU IsNot Nothing Then
                 output.SamplingRate = _timeSourcePMU.SamplingRate
             Else
-                Throw New Exception("PMU for time source is required for Scalar Repetition Customization.")
+                MessageBox.Show(_model.TimeSourcePMU + " is not found, valid PMU for time source is required for Scalar Repetition Customization.", "Warning!", MessageBoxButtons.OK)
             End If
             output.OldUnit = output.Unit
             output.OldTypeAbbreviation = output.TypeAbbreviation
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
 
-            Try
-                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
-            Catch ex As Exception
-                Throw New Exception("Error when sort signals by type in step: " & Name)
-            End Try
-            If postProcess Then
-                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
-            Else
-                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
-            End If
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'If postProcess Then
+            '    signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Else
+            '    signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
-                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+                MessageBox.Show("Error when sort signals by PMU in step: " & Name, "Warning!", MessageBoxButtons.OK)
             End Try
             If postProcess Then
                 signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)

@@ -82,7 +82,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 return _instance;
             }
         }
-        public void AddRawSignals(List<InputFileInfoModel> inputFileInfos)
+        public bool AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
             foreach (var item in inputFileInfos)
             {
@@ -90,6 +90,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
                     MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                    return false;
                 }
                 else
                 {
@@ -102,7 +103,8 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("Error reading .csv file. " + ex.Message);
+                            MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            return false;
                         }
                     }
                     else
@@ -113,13 +115,15 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("Error reading .pdat file. " + ex.Message);
+                            MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            return false;
                         }
                     }
                     FileInfo.Add(aFileInfo);
                 }
             }
             AllPMUs = _getAllPMU();
+            return true;
         }
         private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         {
