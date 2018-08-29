@@ -76,10 +76,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventClasses\EventList_Common.cs" />
+    <Compile Include="EventClasses\LocationCoordinates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EventXsd\EventList_Common.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="EventXsd\LocationCoordinates.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

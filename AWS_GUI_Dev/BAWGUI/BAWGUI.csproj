@@ -158,10 +158,18 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanBackgroundConverter.cs" />
     <Compile Include="Converters\ViewVisibilityConverter.cs" />
+    <Compile Include="Models\PMUCoordinates.cs" />
+    <Compile Include="Models\SiteCoordinatesReader.cs" />
+    <Compile Include="Models\SiteCoordinatesWriter.cs" />
     <Compile Include="ViewModels\AddProjectViewModel.cs" />
     <Compile Include="ViewModels\AddTaskViewModel.cs" />
+    <Compile Include="ViewModels\CoordinatesTableViewModel.cs" />
+    <Compile Include="ViewModels\SiteCoordinatesViewModel.cs" />
     <Compile Include="Views\AddARunPopup.xaml.cs">
       <DependentUpon>AddARunPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoordsTableView.xaml.cs">
+      <DependentUpon>CoordsTableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectsBrowserView.xaml.cs">
       <DependentUpon>ProjectsBrowserView.xaml</DependentUpon>
@@ -173,6 +181,10 @@
       <DependentUpon>AddAProjectPopup.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\AddARunPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CoordsTableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -281,9 +293,7 @@
       <Link>MyResources\Run_16x.png</Link>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\delete.bmp">
       <Link>MyResources\delete.bmp</Link>

@@ -21,6 +21,7 @@ namespace BAWGUI.ViewModels
             _runMatlabVM = new RunMATLABViewModel();
             _resultsVM = new ResultsViewModel();
             _projectControlVM = new ProjectsControlViewModel();
+            CoordsTableVM = new CoordinatesTableViewModel();
             _currentView = _resultsVM;
             MainViewSelected = new RelayCommand(_switchView);
             _projectControlVM.RunSelected += _onRunSelected;
@@ -98,8 +99,8 @@ namespace BAWGUI.ViewModels
                 OnPropertyChanged();
             }
         }
-        private Object _currentView;
-        public Object CurrentView
+        private ViewModelBase _currentView;
+        public ViewModelBase CurrentView
         {
             get { return _currentView; }
             set
@@ -134,6 +135,10 @@ namespace BAWGUI.ViewModels
             if ((string)obj == "Settings")
             {
                 CurrentView = SettingsVM;
+            }
+            else if((string)obj == "Coordinates")
+            {
+                CurrentView = CoordsTableVM;
             }
             else
             {
@@ -187,7 +192,7 @@ namespace BAWGUI.ViewModels
                 }
             }
         }
-
+        public CoordinatesTableViewModel CoordsTableVM { get; set; }
         //private void _projectControlVM_RunSelected(object sender, AWRunViewModel e)
         //{
         //    throw new NotImplementedException();

@@ -10,7 +10,6 @@
         xmlns:sv="clr-namespace:BAWGUI.Settings;assembly=BAWGUI.Settings"
         xmlns:rv="clr-namespace:BAWGUI.Results.Views;assembly=BAWGUI.Results"
         xmlns:localvm="clr-namespace:BAWGUI.ViewModels"
-        xmlns:runv="clr-namespace:BAWGUI.RunMATLAB.Views;assembly=BAWGUI.RunMATLAB"
         xmlns:localv="clr-namespace:BAWGUI.Views"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized"
@@ -20,13 +19,17 @@
             <Setter Property="Width" Value="16"></Setter>
             <Setter Property="Height" Value="16"></Setter>
         </Style>
-        <DataTemplate DataType="{x:Type svm:SettingsViewModel}">
-            <sv:SettingsView/>
+        <DataTemplate DataType="{x:Type localvm:CoordinatesTableViewModel}">
+            <localv:CoordsTableView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type rvm:ResultsViewModel}">
             <rv:ResultsMainView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type svm:SettingsViewModel}">
+            <sv:SettingsView/>
+        </DataTemplate>
         <converters2:ViewVisibilityConverter x:Key="ViewVisibilityConverter"/>
+        <converters2:ViewVisibilityConverter2 x:Key="ViewVisibilityConverter2"/>
         <!--<DataTemplate DataType="{x:Type runm:RunMATLABViewModel}">
             <runv:RunMatlabMainView/>
         </DataTemplate>-->
@@ -64,15 +67,20 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
+            <!--<Grid Grid.Row="0">-->
+                <!--<Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Column="0">
-                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="True" Command="{Binding MainViewSelected}" CommandParameter="Results">
+                </Grid.ColumnDefinitions>-->
+                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                    <RadioButton Content="Coordinates" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Coordinates">
                         <RadioButton.Style>
-                            <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Results">
+                        <RadioButton.Style>
+                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
                     <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings">
@@ -83,10 +91,13 @@
                     <!--<RadioButton Content="Run Control" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Run"/>-->
                     <Button ToolTip="Save Config File" Width="22" Height="22" Margin="2" Command="{Binding ProjectControlVM.SaveConfigFile}" CommandParameter="{Binding}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter}}">
                         <Image Source="/BAWGUI;component/MyResources/Save24.png"/>
-                    </Button>
-                </StackPanel>
-            </Grid>
-            <ContentControl Content="{Binding CurrentView}" Grid.Row="1"/>
+                </Button>
+                <Button ToolTip="Save Coordinates File" Width="22" Height="22" Margin="2" Command="{Binding CoordsTableVM.SaveCoordinatesFiile}" CommandParameter="{Binding ProjectControlVM.ResultsStoragePath}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter2}}">
+                    <Image Source="/BAWGUI;component/MyResources/Save24.png"/>
+                </Button>
+            </StackPanel>
+            <!--</Grid>-->
+            <ContentPresenter Content="{Binding CurrentView}" Grid.Row="1"/>
         </Grid>
         <!--<DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1">
             <ToolBar DockPanel.Dock="Top">-->

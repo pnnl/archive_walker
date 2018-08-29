@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Settings.ViewModels;
+using BAWGUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,6 +16,25 @@ namespace BAWGUI.Converters
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is SettingsViewModel)
+            {
+                return Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Collapsed;
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return DependencyProperty.UnsetValue;
+        }
+    }
+    public class ViewVisibilityConverter2 : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is CoordinatesTableViewModel)
             {
                 return Visibility.Visible;
             }
