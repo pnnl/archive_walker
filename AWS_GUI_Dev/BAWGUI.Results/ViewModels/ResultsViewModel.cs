@@ -522,14 +522,19 @@ namespace BAWGUI.Results.ViewModels
                 //if (files.Count()!=dates.Count())
                 //{
                 //_lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
-                if (!dates.Contains(_lastDateOfTheRun))
+                if (_lastDateOfTheRun != null && !dates.Contains(_lastDateOfTheRun))
                 {
                     dates.Add(_lastDateOfTheRun);
                 }
+                //when there's more file than date, that means we have a current file and we don't know the end date of the data
+                //for the current file, we don't know what the date of the events in the file would be
+                //so we just add one more date in the dates assuming there could be an event happen in that last date, even if not, it is ok since we later check and make sure we have event to display for the last day.
+                if (files.Count() != dates.Count())
+                {
+                    string lastDate = dates.LastOrDefault();
+                    dates.Add((Convert.ToInt32(lastDate) + 1).ToString());
+                }
                 dates.Sort();
-                //string lastDate = dates.LastOrDefault();
-                //dates.Add((Convert.ToInt32(lastDate) + 1).ToString());
-                //}
                 try
                 {
                     LoadResults(files, dates);
