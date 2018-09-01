@@ -108,6 +108,11 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GMap.NET.Core, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\GMap.NET.Windows.1.8.5\lib\net40\GMap.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsPresentation, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef" />
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -276,6 +281,10 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MapService\MapService.csproj">
+      <Project>{908167fb-4c0e-4285-a6ee-0ef81a164929}</Project>
+      <Name>MapService</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\pause.PNG">
@@ -293,7 +302,14 @@
       <Link>MyResources\Run_16x.png</Link>
     </Resource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\zoom+.png">
+      <Link>MyResources\zoom+.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\zoom-.png">
+      <Link>MyResources\zoom-.png</Link>
+    </Resource>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\delete.bmp">
       <Link>MyResources\delete.bmp</Link>
@@ -336,6 +352,14 @@
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\open.gif">
       <Link>MyResources\open.gif</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\select_all.bmp">
+      <Link>MyResources\select_all.bmp</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\unselect_all.bmp">
+      <Link>MyResources\unselect_all.bmp</Link>
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

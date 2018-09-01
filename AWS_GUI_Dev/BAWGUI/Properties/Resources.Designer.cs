@@ -133,9 +133,49 @@ namespace BAWGUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap select_all {
+            get {
+                object obj = ResourceManager.GetObject("select_all", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap unselect_all {
+            get {
+                object obj = ResourceManager.GetObject("unselect_all", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap zoom_ {
+            get {
+                object obj = ResourceManager.GetObject("zoom_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap zoom_1 {
+            get {
+                object obj = ResourceManager.GetObject("zoom_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

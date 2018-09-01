@@ -1,5 +1,6 @@
 ﻿using BAWGUI.Models;
 using BAWGUI.Utilities;
+using MapService.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,8 +56,14 @@ namespace BAWGUI.ViewModels
             set
             {
                 _isChecked = value;
+                OnCheckStatusChanged();
                 OnPropertyChanged();
             }
+        }
+        public event EventHandler CheckStatusChanged;
+        protected virtual void OnCheckStatusChanged()
+        {
+            CheckStatusChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

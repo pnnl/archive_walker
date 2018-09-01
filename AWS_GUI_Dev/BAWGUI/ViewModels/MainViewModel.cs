@@ -139,6 +139,7 @@ namespace BAWGUI.ViewModels
             else if((string)obj == "Coordinates")
             {
                 CurrentView = CoordsTableVM;
+                //CoordsTableVM.MapVM.GMap.InvalidateVisual();
             }
             else
             {

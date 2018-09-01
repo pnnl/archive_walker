@@ -38,7 +38,12 @@
     <None Include="$(MSBuildThisFileDirectory)Images\resume.PNG" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Images\bigMarkerGreen.png" />
     <Content Include="$(MSBuildThisFileDirectory)Images\denominator.PNG" />
     <Content Include="$(MSBuildThisFileDirectory)Images\numerator.PNG" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\select_all.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\unselect_all.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\zoom+.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\zoom-.png" />
   </ItemGroup>
 </Project>

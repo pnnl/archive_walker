@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Models;
 using BAWGUI.Settings.ViewModels;
 using BAWGUI.Utilities;
+using MapService.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using GMap.NET.WindowsPresentation;
+using GMap.NET;
 
 namespace BAWGUI.ViewModels
 {
-    public class CoordinatesTableViewModel:ViewModelBase
+    public class CoordinatesTableViewModel : ViewModelBase
     {
         public CoordinatesTableViewModel()
         {
@@ -25,6 +28,7 @@ namespace BAWGUI.ViewModels
             DeSelectAllRow = new RelayCommand(_deselectAllRows);
             DeleteSelectedRows = new RelayCommand(_deleteSelectedRows);
             LoadCoordinates = new RelayCommand(_openCoordsFile);
+            MapVM = new MapViewModel();
         }
         private ObservableCollection<SiteCoordinatesViewModel> _siteCoords;
         public ObservableCollection<SiteCoordinatesViewModel> SiteCoords
@@ -39,7 +43,9 @@ namespace BAWGUI.ViewModels
         private void _addALocation(object obj)
         {
             var newLocation = new PMUCoordinates();
-            SiteCoords.Add(new SiteCoordinatesViewModel(newLocation));
+            var newLocationVM = new SiteCoordinatesViewModel(newLocation);
+            newLocationVM.CheckStatusChanged += _modifyMapAnnotation;
+            SiteCoords.Add(newLocationVM);
         }
         public ICommand DeleteARow { get; set; }
         private void _deleteARow(object obj)
@@ -50,6 +56,10 @@ namespace BAWGUI.ViewModels
                 if (toBeDeleted == item)
                 {
                     SiteCoords.Remove(toBeDeleted);
+                    if (toBeDeleted.IsChecked)
+                    {
+                        toBeDeleted.IsChecked = false;
+                    }
                     break;
                 }
             }
@@ -93,6 +103,7 @@ namespace BAWGUI.ViewModels
             {
                 if (SiteCoords[index].IsChecked)
                 {
+                    SiteCoords[index].IsChecked = false;
                     SiteCoords.RemoveAt(index);
                 }
             }
@@ -123,6 +134,10 @@ namespace BAWGUI.ViewModels
                 {
                     var reader = new SiteCoordinatesReader();
                     SiteCoords = reader.ReadCoordsFile(_locationCoordinatesFilePath);
+                    foreach (var item in SiteCoords)
+                    {
+                        item.CheckStatusChanged += _modifyMapAnnotation;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -130,5 +145,24 @@ namespace BAWGUI.ViewModels
                 }
             }
         }
+        private MapViewModel _mapVM;
+        public MapViewModel MapVM
+        {
+            get { return _mapVM; }
+            set
+            {
+                _mapVM = value;
+                OnPropertyChanged();
+            }
+        }
+        private void _modifyMapAnnotation (object sender, EventArgs e)
+        {
+            var coords = sender as SiteCoordinatesViewModel;
+            var lat = Convert.ToDouble(coords.Latitude);
+            var lng = Convert.ToDouble(coords.Longitude);
+            var location = new PointLatLng(lat, lng);
+            MapVM.ModifyMapAnnotation(location, coords.SiteName, coords.IsChecked);
+        }
+
     }
 }

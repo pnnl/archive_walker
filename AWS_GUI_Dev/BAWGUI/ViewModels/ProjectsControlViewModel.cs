@@ -146,7 +146,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
+                        System.Windows.Forms.MessageBox.Show("Error reading project folder. " + ex.Message, "Error!", MessageBoxButtons.OK);
                     }
                     //string[] files = Directory.GetFiles(ResultsStoragePath);
                 }
