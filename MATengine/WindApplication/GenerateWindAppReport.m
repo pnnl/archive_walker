@@ -246,7 +246,7 @@ for RankIdx = unique(EventRank)
                     try
                         if(strcmpi(PMUfileDir{DirectoryIdx}.FileType, 'pdat'))
                             % pdat format
-                            PMUtemp = createPdatStruct(PMUfilePath,Num_Flags,FileLength);
+                            PMUtemp = pdatReadnCreateStruct(PMUfilePath,Num_Flags,FileLength);
                         elseif(strcmpi(PMUfileDir{DirectoryIdx}.FileType, 'csv'))
                             % JSIS_CSV format
                             PMUtemp = JSIS_CSV_2_Mat(PMUfilePath,Num_Flags);
