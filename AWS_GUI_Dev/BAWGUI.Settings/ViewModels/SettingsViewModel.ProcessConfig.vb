@@ -780,7 +780,7 @@ Namespace ViewModels
                             End If
                         Next
                     End If
-                    _determineFileDirCheckableStatus()
+                    '_signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
                     For Each signal In processStep.InputChannels
                         signal.IsChecked = True
@@ -798,7 +798,7 @@ Namespace ViewModels
                     _signalMgr.GroupedSignalByProcessConfigStepsInput = stepsInputAsSignalHierachy
                     _signalMgr.GroupedSignalByProcessConfigStepsOutput = stepsOutputAsSignalHierachy
                     _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
-                    _determineFileDirCheckableStatus()
+                    '_signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
                     If TypeOf processStep Is Unwrap OrElse TypeOf processStep Is Wrap Then
@@ -1009,7 +1009,7 @@ Namespace ViewModels
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByPMU, False)
                 CurrentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
-                _determineFileDirCheckableStatus()
+                '_signalMgr.DetermineFileDirCheckableStatus()
                 _determineSamplingRateCheckableStatus()
             End If
         End Sub

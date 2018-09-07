@@ -76,6 +76,7 @@ Namespace ViewModels
             _specifyEventPath = New DelegateCommand(AddressOf _openEventPathFolder, AddressOf CanExecute)
             _setCurrentPhasorCreationFocusedTextBox = New DelegateCommand(AddressOf _phasrCreationCurrentFocusedTextBoxChanged, AddressOf CanExecute)
             _readExampleFile = New DelegateCommand(AddressOf _parseExampleFile, AddressOf CanExecute)
+            _updateExampleFile = New DelegateCommand(AddressOf _writeExampleFileAddressToConfig, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
@@ -809,48 +810,64 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
+            Dim dirs = New List(Of String)
+            For Each info In DataConfigure.ReaderProperty.InputFileInfos
+                dirs.Add(info.FileDirectory)
+            Next
             For Each group In _signalMgr.GroupedRawSignalsByType
-                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
                     _signalMgr.GroupedRawSignalsByType.Remove(group)
                     Exit For
                 End If
             Next
+            For Each group In _signalMgr.ReGroupedRawSignalsByType
+                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    _signalMgr.ReGroupedRawSignalsByType.Remove(group)
+                    Exit For
+                End If
+            Next
             For Each group In _signalMgr.GroupedRawSignalsByPMU
-                If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
                     _signalMgr.GroupedRawSignalsByPMU.Remove(group)
                     Exit For
                 End If
             Next
+            For Each group In _signalMgr.GroupedRawSignalsByType
+                If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
+                    Exit Sub
+                End If
+            Next
             Dim exampleFile = obj.ExampleFile
             If File.Exists(exampleFile) Then
+                Dim filetype As DataFileType
                 Try
-                    obj.FileType = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
+                    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
                 Catch ex As Exception
-                    Forms.MessageBox.Show("Data file type not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                     Exit Sub
                 End Try
-                Dim filename = ""
-                Try
-                    filename = Path.GetFileNameWithoutExtension(exampleFile)
-                Catch ex As ArgumentException
-                    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
-                Try
-                    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-                Catch ex As Exception
-                    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
-                Try
-                    Dim fullPath = Path.GetDirectoryName(exampleFile)
-                    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-                    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-                    obj.FileDirectory = twoLevelUp
-                Catch ex As Exception
-                    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
+                'Dim filename = ""
+                'Try
+                '    filename = Path.GetFileNameWithoutExtension(exampleFile)
+                'Catch ex As ArgumentException
+                '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
+                'Try
+                '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
+                'Catch ex As Exception
+                '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
+                'Try
+                '    Dim fullPath = Path.GetDirectoryName(exampleFile)
+                '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
+                '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
+                '    obj.FileDirectory = twoLevelUp
+                'Catch ex As Exception
+                '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
                 If obj.FileType IsNot Nothing Then
                     Try
                         _signalMgr.AddRawSignalsFromADir(obj)
@@ -859,9 +876,38 @@ Namespace ViewModels
                         Exit Sub
                     End Try
                 End If
+                Try
+                    _writeExampleFileAddressToConfig(exampleFile)
+                    Dim config = New ConfigFileReader(Run.Model.ConfigFilePath)
+                    _signalMgr.CleanUpSettingsSignals()
+                    DataConfigure = New DataConfig(config.DataConfigure, _signalMgr)
+                    ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
+                    PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
+                    DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
+                Catch ex As Exception
+                    Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+                End Try
+                Run.Model.DataFileDirectories = New List(Of String)
+                For Each info In SignalMgr.FileInfo
+                    Run.Model.DataFileDirectories.Add(info.FileDirectory)
+                Next
             Else
                 Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
             End If
+        End Sub
+        Private _updateExampleFile As ICommand
+        Public Property UpdateExampleFile As ICommand
+            Get
+                Return _updateExampleFile
+            End Get
+            Set(ByVal value As ICommand)
+                _updateExampleFile = value
+            End Set
+        End Property
+
+        Private Sub _writeExampleFileAddressToConfig(exampleFilePath As String)
+            Dim writer = New ConfigFileWriter(Me, Run.Model)
+            writer.UpdateExampleFileAddress(exampleFilePath)
         End Sub
 
         'Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfoViewModel)
@@ -1202,7 +1248,7 @@ Namespace ViewModels
                     If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
                         Try
                             _changeSignalSelection(obj)
-                            _determineFileDirCheckableStatus()
+                            '_signalMgr.DetermineFileDirCheckableStatus()
                             _determineSamplingRateCheckableStatus()
                         Catch ex As Exception
                             _keepOriginalSelection(obj)
@@ -1213,7 +1259,7 @@ Namespace ViewModels
                         If CurrentSelectedStep.FilterChoice <> 0 Then
                             Try
                                 _changeSignalSelection(obj)
-                                _determineFileDirCheckableStatus()
+                                '_signalMgr.DetermineFileDirCheckableStatus()
                                 _determineSamplingRateCheckableStatus()
                             Catch ex As Exception
                                 _keepOriginalSelection(obj)
@@ -1228,7 +1274,7 @@ Namespace ViewModels
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try
                             _changeSignalSelection(obj)
-                            _determineFileDirCheckableStatus()
+                            '_signalMgr.DetermineFileDirCheckableStatus()
                             _determineSamplingRateCheckableStatus()
                         Catch ex As Exception
                             _keepOriginalSelection(obj)
@@ -1285,7 +1331,7 @@ Namespace ViewModels
                                     Throw New Exception("Customization step not supported!")
                             End Select
                             _recoverCheckStatusOfCurrentStep(_currentSelectedStep)
-                            _determineFileDirCheckableStatus()
+                            '_signalMgr.DetermineFileDirCheckableStatus()
                             _determineSamplingRateCheckableStatus()
                         Catch ex As Exception
                             _keepOriginalSelection(obj)
@@ -1368,12 +1414,16 @@ Namespace ViewModels
         Private Sub _checkDivisionCustomizationOutputTypeAndSamplingRate()
             CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
             If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
-                If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
-                    _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                    Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+                If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
+                    If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
+                        If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
+                            _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+                            Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+                        End If
+                    End If
                 End If
             End If
-            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
+                If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
@@ -1448,9 +1498,9 @@ Namespace ViewModels
                 End If
             Else
                 If obj.SignalSignature.IsChecked Then
-                    _checkAllChildren(obj, False)
+                    _signalMgr.CheckAllChildren(obj, False)
                 Else
-                    _checkAllChildren(obj, True)
+                    _signalMgr.CheckAllChildren(obj, True)
                 End If
                 '_dataConfigDetermineAllParentNodeStatus()
                 '_processConfigDetermineAllParentNodeStatus()
@@ -1550,75 +1600,135 @@ Namespace ViewModels
                 End If
             End If
         End Sub
+        'Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
+        '    If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
+        '        Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
+        '    Else
+        '        If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
+        '            Throw New Exception("Error! Please select a valid text box (Dividend or Divisor) for this input signal!")
+        '        ElseIf _currentSelectedStep.CurrentCursor = "Dividend" Then
+        '            If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
+        '                Throw New Exception("Dividend cannot be the same as the divisor!")
+        '            End If
+        '            If obj.SignalSignature.IsChecked Then       ' check box checked
+        '                If _currentSelectedStep.Dividend IsNot Nothing And _currentSelectedStep.Dividend IsNot _currentSelectedStep.Divisor Then  ' if the current text box has content and not equal to the divisor
+        '                    _currentSelectedStep.Dividend.IsChecked = False
+        '                    _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
+        '                End If
+        '                _currentSelectedStep.Dividend = obj.SignalSignature
+        '                If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+        '                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+        '                End If
+        '            Else                                        ' check box unchecked
+        '                If _currentSelectedStep.Dividend Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
+        '                    If _currentSelectedStep.Divisor Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
+        '                        obj.SignalSignature.IsChecked = True
+        '                    Else
+        '                        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+        '                    End If
+        '                    Dim dummy = New SignalSignatureViewModel("", "")
+        '                    dummy.IsValid = False
+        '                    _currentSelectedStep.Dividend = dummy
+        '                End If
+        '            End If
+        '            _currentSelectedStep.CurrentCursor = ""
+        '            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+        '            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+        '        ElseIf _currentSelectedStep.CurrentCursor = "Divisor" Then
+        '            If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
+        '                Throw New Exception("Divisor cannot be the same as thedivident!")
+        '            End If
+        '            If obj.SignalSignature.IsChecked Then
+        '                If _currentSelectedStep.Divisor IsNot Nothing And _currentSelectedStep.Divisor IsNot _currentSelectedStep.Dividend Then
+        '                    _currentSelectedStep.Divisor.IsChecked = False
+        '                    _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
+        '                End If
+        '                _currentSelectedStep.Divisor = obj.SignalSignature
+        '                If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+        '                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+        '                End If
+        '            Else
+        '                If _currentSelectedStep.Divisor Is obj.SignalSignature Then
+        '                    If _currentSelectedStep.Dividend Is obj.SignalSignature Then
+        '                        obj.SignalSignature.IsChecked = True
+        '                    Else
+        '                        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+        '                    End If
+        '                    Dim dummy = New SignalSignatureViewModel("", "")
+        '                    dummy.IsValid = False
+        '                    _currentSelectedStep.Divisor = dummy
+        '                End If
+        '            End If
+        '            _currentSelectedStep.CurrentCursor = ""
+        '            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+        '            '_dataConfigDetermineAllParentNodeStatus()
+        '            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+        '        End If
+
+
+
+        '    End If
+        '    '_signalMgr.DetermineFileDirCheckableStatus()
+        'End Sub
         Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
             If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
-                Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
+                Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
             Else
-                If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
-                    Throw New Exception("Error! Please select a valid text box for this input signal!")
+                If _currentSelectedStep.CurrentCursor = "" Then 'If no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
+                    Throw New Exception("Error! Please select a valid text box (Dividend or Divisor) for this input signal!")
+
                 ElseIf _currentSelectedStep.CurrentCursor = "Dividend" Then
-                    If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
-                        Throw New Exception("Divident cannot be the same as thedivisor!")
-                    End If
-                    If obj.SignalSignature.IsChecked Then       ' check box checked
-                        If _currentSelectedStep.Dividend IsNot Nothing And _currentSelectedStep.Dividend IsNot _currentSelectedStep.Divisor Then  ' if the current text box has content and not equal to the divisor
-                            _currentSelectedStep.Dividend.IsChecked = False
+                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                        If _currentSelectedStep.Dividend IsNot Nothing Then ' If the current Dividend box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
                         End If
-                        _currentSelectedStep.Dividend = obj.SignalSignature
-                        If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
+                            ' If Dividend and Divisor are the same
+                            Throw New Exception("Error! Dividend cannot be the same as the Divisor!")
                         End If
-                    Else                                        ' check box unchecked
-                        If _currentSelectedStep.Dividend Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
-                            If _currentSelectedStep.Divisor Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
-                                obj.SignalSignature.IsChecked = True
-                            Else
-                                _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                            End If
+                        _currentSelectedStep.Dividend = obj.SignalSignature ' Assign the selected signal to Dividend
+                        If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Dividend) Then
+                            _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Dividend)
+                        End If
+                    Else ' If a Signal box is unselected
+                        If _currentSelectedStep.Dividend Is obj.SignalSignature Then ' If the current Dividend box has PMU and signal names
+                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
-                            _currentSelectedStep.Dividend = dummy
+                            _currentSelectedStep.Dividend = dummy ' Delete the PMU and signal names in current Dividend box
                         End If
                     End If
                     _currentSelectedStep.CurrentCursor = ""
                     _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                     _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+
                 ElseIf _currentSelectedStep.CurrentCursor = "Divisor" Then
-                    If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
-                        Throw New Exception("Divisor cannot be the same as thedivident!")
-                    End If
-                    If obj.SignalSignature.IsChecked Then
-                        If _currentSelectedStep.Divisor IsNot Nothing And _currentSelectedStep.Divisor IsNot _currentSelectedStep.Dividend Then
-                            _currentSelectedStep.Divisor.IsChecked = False
+                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                        If _currentSelectedStep.Divisor IsNot Nothing Then ' If the current Divisor box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
                         End If
-                        _currentSelectedStep.Divisor = obj.SignalSignature
-                        If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
+                            ' If Dividend and Divisor are the same
+                            Throw New Exception("Error! Divisor cannot be the same as the Dividend!")
                         End If
-                    Else
-                        If _currentSelectedStep.Divisor Is obj.SignalSignature Then
-                            If _currentSelectedStep.Dividend Is obj.SignalSignature Then
-                                obj.SignalSignature.IsChecked = True
-                            Else
-                                _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                            End If
+                        _currentSelectedStep.Divisor = obj.SignalSignature ' Assign the selected signal to Divisor
+                        If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Divisor) Then
+                            _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Divisor)
+                        End If
+                    Else ' If a Signal box is unselected
+                        If _currentSelectedStep.Divisor Is obj.SignalSignature Then ' If the current Divisor box has PMU and signal names
+                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
-                            _currentSelectedStep.Divisor = dummy
+                            _currentSelectedStep.Divisor = dummy ' Delete the PMU and signal names in current Divisor box
                         End If
                     End If
                     _currentSelectedStep.CurrentCursor = ""
                     _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-                    '_dataConfigDetermineAllParentNodeStatus()
                     _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+
                 End If
-
-
-
             End If
-            '_determineFileDirCheckableStatus()
         End Sub
 
         Private Sub _changeSignalSelectionUnarySteps(obj As SignalTypeHierachy)
@@ -1671,11 +1781,11 @@ Namespace ViewModels
             End If
             '_dataConfigDetermineAllParentNodeStatus()
             _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-            '_determineFileDirCheckableStatus()
+            '_signalMgr.DetermineFileDirCheckableStatus()
         End Sub
 
         Private Sub _changeSignalSelection(obj As SignalTypeHierachy)
-            _checkAllChildren(obj, obj.SignalSignature.IsChecked)
+            _signalMgr.CheckAllChildren(obj, obj.SignalSignature.IsChecked)
             _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
             If TypeOf _currentSelectedStep Is DQFilter Then
                 _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
@@ -1692,7 +1802,7 @@ Namespace ViewModels
             '_postProcessDetermineAllParentNodeStatus()
             '_detectorConfigDetermineAllParentNodeStatus()
             _signalMgr.DetermineAllParentNodeStatus()
-            '_determineFileDirCheckableStatus()
+            '_signalMgr.DetermineFileDirCheckableStatus()
         End Sub
         Private Sub _changeSignalSelectionPhasorCreation(obj As SignalTypeHierachy)
             If Not _currentInputOutputPair.HasValue Then
@@ -1842,7 +1952,7 @@ Namespace ViewModels
             End If
             '_dataConfigDetermineAllParentNodeStatus()
             _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-            '_determineFileDirCheckableStatus()
+            '_signalMgr.DetermineFileDirCheckableStatus()
         End Sub
         ''' <summary>
         ''' find matching Ang signal given a Mag signal
@@ -1993,7 +2103,7 @@ Namespace ViewModels
             _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
             '_dataConfigDetermineAllParentNodeStatus()
             _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-            '_determineFileDirCheckableStatus()
+            '_signalMgr.DetermineFileDirCheckableStatus()
         End Sub
         Private Sub _changeMagAngSignalForPowerCalculationCustomization(obj As SignalTypeHierachy)
             If obj.SignalList.Count > 0 Then
@@ -2161,7 +2271,7 @@ Namespace ViewModels
                 _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
                 '_dataConfigDetermineAllParentNodeStatus()
                 _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-                '_determineFileDirCheckableStatus()
+                '_signalMgr.DetermineFileDirCheckableStatus()
             End If
         End Sub
         Private Sub _specifySignalTypeUnitSignalSelectionChanged(obj As SignalTypeHierachy)
@@ -2183,7 +2293,7 @@ Namespace ViewModels
                 _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                 '_dataConfigDetermineAllParentNodeStatus()
                 _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-                '_determineFileDirCheckableStatus()
+                '_signalMgr.DetermineFileDirCheckableStatus()
             End If
         End Sub
 
@@ -2518,17 +2628,17 @@ Namespace ViewModels
         ''' </summary>
         ''' <param name="node"></param>
         ''' <param name="isChecked"></param>
-        Private Sub _checkAllChildren(ByRef node As SignalTypeHierachy, ByVal isChecked As Boolean)
-            If node.SignalList.Count > 0 Then
-                ' if not a leaf node, call itself recursively to check/uncheck all children
-                For Each child In node.SignalList
-                    If child.SignalSignature.IsEnabled Then
-                        child.SignalSignature.IsChecked = isChecked
-                        _checkAllChildren(child, isChecked)
-                    End If
-                Next
-            End If
-        End Sub
+        'Private Sub _checkAllChildren(ByRef node As SignalTypeHierachy, ByVal isChecked As Boolean)
+        '    If node.SignalList.Count > 0 Then
+        '        ' if not a leaf node, call itself recursively to check/uncheck all children
+        '        For Each child In node.SignalList
+        '            If child.SignalSignature.IsEnabled Then
+        '                child.SignalSignature.IsChecked = isChecked
+        '                _checkAllChildren(child, isChecked)
+        '            End If
+        '        Next
+        '    End If
+        'End Sub
 
 
         Private _setCurrentFocusedTextbox As ICommand
@@ -2815,272 +2925,273 @@ Namespace ViewModels
         ''' <summary>
         ''' Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
         ''' </summary>
-        Private Sub _determineFileDirCheckableStatus()
-            Dim disableOthers = False
-            For Each group In _signalMgr.GroupedRawSignalsByType
-                If group.SignalSignature.IsChecked Or group.SignalSignature.IsChecked Is Nothing Then
-                    disableOthers = True
-                    Exit For
-                End If
-            Next
-            If disableOthers Then
-                For Each group In _signalMgr.GroupedRawSignalsByType
-                    If Not group.SignalSignature.IsChecked Then
-                        group.SignalSignature.IsEnabled = False
-                    Else
-                        group.SignalSignature.IsEnabled = True
-                    End If
-                Next
-                For Each group In _signalMgr.GroupedRawSignalsByPMU
-                    If Not group.SignalSignature.IsChecked Then
-                        group.SignalSignature.IsEnabled = False
-                    Else
-                        group.SignalSignature.IsEnabled = True
-                    End If
-                Next
-            Else
-                For Each group In _signalMgr.GroupedRawSignalsByType
-                    group.SignalSignature.IsEnabled = True
-                Next
-                For Each group In _signalMgr.GroupedRawSignalsByPMU
-                    group.SignalSignature.IsEnabled = True
-                Next
-            End If
-        End Sub
+        'Private Sub _determineFileDirCheckableStatus()
+        '    Dim disableOthers = False
+        '    For Each group In _signalMgr.GroupedRawSignalsByType
+        '        If group.SignalSignature.IsChecked Or group.SignalSignature.IsChecked Is Nothing Then
+        '            disableOthers = True
+        '            Exit For
+        '        End If
+        '    Next
+        '    If disableOthers Then
+        '        For Each group In _signalMgr.GroupedRawSignalsByType
+        '            If Not group.SignalSignature.IsChecked Then
+        '                group.SignalSignature.IsEnabled = False
+        '            Else
+        '                group.SignalSignature.IsEnabled = True
+        '            End If
+        '        Next
+        '        For Each group In _signalMgr.GroupedRawSignalsByPMU
+        '            If Not group.SignalSignature.IsChecked Then
+        '                group.SignalSignature.IsEnabled = False
+        '            Else
+        '                group.SignalSignature.IsEnabled = True
+        '            End If
+        '        Next
+        '    Else
+        '        For Each group In _signalMgr.GroupedRawSignalsByType
+        '            group.SignalSignature.IsEnabled = True
+        '        Next
+        '        For Each group In _signalMgr.GroupedRawSignalsByPMU
+        '            group.SignalSignature.IsEnabled = True
+        '        Next
+        '    End If
+        'End Sub
         Private Sub _determineSamplingRateCheckableStatus()
             Dim freq = -1
             If _currentSelectedStep IsNot Nothing AndAlso _currentSelectedStep.InputChannels.Count > 0 AndAlso _currentSelectedStep.InputChannels(0).SamplingRate <> -1 Then
                 freq = _currentSelectedStep.InputChannels(0).SamplingRate
-                If _currentTabIndex = 1 Then
-                    For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.SamplingRate <> freq Then
-                                subgroup.SignalSignature.IsEnabled = False
-                            Else
-                                subgroup.SignalSignature.IsEnabled = True
-                            End If
-                        Next
-                    Next
-                    For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.SamplingRate <> freq Then
-                                subgroup.SignalSignature.IsEnabled = False
-                            Else
-                                subgroup.SignalSignature.IsEnabled = True
-                            End If
-                        Next
-                    Next
-                ElseIf _currentTabIndex = 2 Then
-                    For Each group In _signalMgr.GroupedSignalByProcessConfigStepsInput
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.SamplingRate <> freq Then
-                                subgroup.SignalSignature.IsEnabled = False
-                            Else
-                                subgroup.SignalSignature.IsEnabled = True
-                            End If
-                        Next
-                    Next
-                    For Each group In _signalMgr.GroupedSignalByProcessConfigStepsOutput
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.SamplingRate <> freq Then
-                                subgroup.SignalSignature.IsEnabled = False
-                            Else
-                                subgroup.SignalSignature.IsEnabled = True
-                            End If
-                        Next
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByType
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                ElseIf _currentTabIndex = 3 Then
-                    For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.SamplingRate <> freq Then
-                                subgroup.SignalSignature.IsEnabled = False
-                            Else
-                                subgroup.SignalSignature.IsEnabled = True
-                            End If
-                        Next
-                    Next
-                    For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.SamplingRate <> freq Then
-                                subgroup.SignalSignature.IsEnabled = False
-                            Else
-                                subgroup.SignalSignature.IsEnabled = True
-                            End If
-                        Next
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByType
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                ElseIf _currentTabIndex = 4 Then
-                    For Each group In _signalMgr.GroupedSignalByDetectorInput
-                        For Each subgroup In group.SignalList
-                            If subgroup.SignalSignature.SamplingRate <> freq Then
-                                subgroup.SignalSignature.IsEnabled = False
-                            Else
-                                subgroup.SignalSignature.IsEnabled = True
-                            End If
-                        Next
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByType
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllPostProcessOutputGroupedByPMU
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                    For Each group In _signalMgr.AllPostProcessOutputGroupedByType
-                        If group.SignalSignature.SamplingRate <> freq Then
-                            group.SignalSignature.IsEnabled = False
-                        Else
-                            group.SignalSignature.IsEnabled = True
-                        End If
-                    Next
-                End If
-            Else        'enable all to be checkable regardless sampling rate
-                If _currentTabIndex = 1 Then
-                    For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
-                        For Each subgroup In group.SignalList
-                            subgroup.SignalSignature.IsEnabled = True
-                        Next
-                    Next
-                    For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
-                        For Each subgroup In group.SignalList
-                            subgroup.SignalSignature.IsEnabled = True
-                        Next
-                    Next
-                ElseIf _currentTabIndex = 2 Then
-                    For Each group In _signalMgr.GroupedSignalByProcessConfigStepsInput
-                        For Each subgroup In group.SignalList
-                            subgroup.SignalSignature.IsEnabled = True
-                        Next
-                    Next
-                    For Each group In _signalMgr.GroupedSignalByProcessConfigStepsOutput
-                        For Each subgroup In group.SignalList
-                            subgroup.SignalSignature.IsEnabled = True
-                        Next
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByType
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                ElseIf _currentTabIndex = 3 Then
-                    For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
-                        For Each subgroup In group.SignalList
-                            subgroup.SignalSignature.IsEnabled = True
-                        Next
-                    Next
-                    For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
-                        For Each subgroup In group.SignalList
-                            subgroup.SignalSignature.IsEnabled = True
-                        Next
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByType
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                ElseIf _currentTabIndex = 4 Then
-                    For Each group In _signalMgr.GroupedSignalByDetectorInput
-                        For Each subgroup In group.SignalList
-                            subgroup.SignalSignature.IsEnabled = True
-                        Next
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllDataConfigOutputGroupedByType
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllPostProcessOutputGroupedByPMU
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                    For Each group In _signalMgr.AllPostProcessOutputGroupedByType
-                        group.SignalSignature.IsEnabled = True
-                    Next
-                End If
+                '    If _currentTabIndex = 1 Then
+                '        For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
+                '            For Each subgroup In group.SignalList
+                '                If subgroup.SignalSignature.SamplingRate <> freq Then
+                '                    subgroup.SignalSignature.IsEnabled = False
+                '                Else
+                '                    subgroup.SignalSignature.IsEnabled = True
+                '                End If
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
+                '            For Each subgroup In group.SignalList
+                '                If subgroup.SignalSignature.SamplingRate <> freq Then
+                '                    subgroup.SignalSignature.IsEnabled = False
+                '                Else
+                '                    subgroup.SignalSignature.IsEnabled = True
+                '                End If
+                '            Next
+                '        Next
+                '    ElseIf _currentTabIndex = 2 Then
+                '        For Each group In _signalMgr.GroupedSignalByProcessConfigStepsInput
+                '            For Each subgroup In group.SignalList
+                '                If subgroup.SignalSignature.SamplingRate <> freq Then
+                '                    subgroup.SignalSignature.IsEnabled = False
+                '                Else
+                '                    subgroup.SignalSignature.IsEnabled = True
+                '                End If
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.GroupedSignalByProcessConfigStepsOutput
+                '            For Each subgroup In group.SignalList
+                '                If subgroup.SignalSignature.SamplingRate <> freq Then
+                '                    subgroup.SignalSignature.IsEnabled = False
+                '                Else
+                '                    subgroup.SignalSignature.IsEnabled = True
+                '                End If
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByType
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '    ElseIf _currentTabIndex = 3 Then
+                '        For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
+                '            For Each subgroup In group.SignalList
+                '                If subgroup.SignalSignature.SamplingRate <> freq Then
+                '                    subgroup.SignalSignature.IsEnabled = False
+                '                Else
+                '                    subgroup.SignalSignature.IsEnabled = True
+                '                End If
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
+                '            For Each subgroup In group.SignalList
+                '                If subgroup.SignalSignature.SamplingRate <> freq Then
+                '                    subgroup.SignalSignature.IsEnabled = False
+                '                Else
+                '                    subgroup.SignalSignature.IsEnabled = True
+                '                End If
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByType
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '    ElseIf _currentTabIndex = 4 Then
+                '        For Each group In _signalMgr.GroupedSignalByDetectorInput
+                '            For Each subgroup In group.SignalList
+                '                If subgroup.SignalSignature.SamplingRate <> freq Then
+                '                    subgroup.SignalSignature.IsEnabled = False
+                '                Else
+                '                    subgroup.SignalSignature.IsEnabled = True
+                '                End If
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByType
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllPostProcessOutputGroupedByPMU
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '        For Each group In _signalMgr.AllPostProcessOutputGroupedByType
+                '            If group.SignalSignature.SamplingRate <> freq Then
+                '                group.SignalSignature.IsEnabled = False
+                '            Else
+                '                group.SignalSignature.IsEnabled = True
+                '            End If
+                '        Next
+                '    End If
+                'Else        'enable all to be checkable regardless sampling rate
+                '    If _currentTabIndex = 1 Then
+                '        For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
+                '            For Each subgroup In group.SignalList
+                '                subgroup.SignalSignature.IsEnabled = True
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
+                '            For Each subgroup In group.SignalList
+                '                subgroup.SignalSignature.IsEnabled = True
+                '            Next
+                '        Next
+                '    ElseIf _currentTabIndex = 2 Then
+                '        For Each group In _signalMgr.GroupedSignalByProcessConfigStepsInput
+                '            For Each subgroup In group.SignalList
+                '                subgroup.SignalSignature.IsEnabled = True
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.GroupedSignalByProcessConfigStepsOutput
+                '            For Each subgroup In group.SignalList
+                '                subgroup.SignalSignature.IsEnabled = True
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByType
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '    ElseIf _currentTabIndex = 3 Then
+                '        For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
+                '            For Each subgroup In group.SignalList
+                '                subgroup.SignalSignature.IsEnabled = True
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
+                '            For Each subgroup In group.SignalList
+                '                subgroup.SignalSignature.IsEnabled = True
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByType
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '    ElseIf _currentTabIndex = 4 Then
+                '        For Each group In _signalMgr.GroupedSignalByDetectorInput
+                '            For Each subgroup In group.SignalList
+                '                subgroup.SignalSignature.IsEnabled = True
+                '            Next
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllDataConfigOutputGroupedByType
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllPostProcessOutputGroupedByPMU
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '        For Each group In _signalMgr.AllPostProcessOutputGroupedByType
+                '            group.SignalSignature.IsEnabled = True
+                '        Next
+                '    End If
             End If
+            _signalMgr.DetermineSamplingRateCheckableStatus(_currentSelectedStep, _currentTabIndex, freq)
         End Sub
 #Region "Step manipulation: Add a step"
         Private _dqfilterSelected As ICommand
@@ -3356,8 +3467,9 @@ Namespace ViewModels
                             Exit For
                         End If
                     Next
-                    _determineFileDirCheckableStatus()
+                    '_signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
+                    _signalMgr.DetermineSamplingRateCheckableStatus(Nothing, _currentTabIndex, -1)
                     processStep.IsStepSelected = True
 
                     For Each signal In processStep.InputChannels
@@ -3395,7 +3507,7 @@ Namespace ViewModels
                     _signalMgr.GroupedSignalByDataConfigStepsInput = stepsInputAsSignalHierachy
                     _signalMgr.GroupedSignalByDataConfigStepsOutput = stepsOutputAsSignalHierachy
                     _signalMgr.DataConfigDetermineAllParentNodeStatus()
-                    _determineFileDirCheckableStatus()
+                    '_signalMgr.DetermineFileDirCheckableStatus()
                     '_determineSamplingRateCheckableStatus()
 
                     If processStep.Name = "Phasor Creation" Then
@@ -3852,7 +3964,7 @@ Namespace ViewModels
                 '_signalMgr.DataConfigDetermineAllParentNodeStatus()
                 _signalMgr.DetermineAllParentNodeStatus()
 
-                _determineFileDirCheckableStatus()
+                '_signalMgr.DetermineFileDirCheckableStatus()
                 _determineSamplingRateCheckableStatus()
             End If
             SignalSelectionTreeViewVisibility = "Visible"
@@ -4015,12 +4127,21 @@ Namespace ViewModels
         Private Sub _deleteAFileSource(obj As InputFileInfoViewModel)
             Dim result = Forms.MessageBox.Show("Delete this file source: " & obj.Mnemonic & " ?", "Warning!", MessageBoxButtons.OKCancel)
             If result = DialogResult.OK Then
+                'if the file info to be deleted exist in the signal manager, it is a good file info
+                'if it does not exist, it is a bad file info that only exist in the reader property, then look through reader property to deleted it.
+                Dim fileDeleted = False
                 For Each source In SignalMgr.FileInfo
                     If obj Is source Then
-
+                        fileDeleted = True
                         For Each group In _signalMgr.GroupedRawSignalsByType
                             If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
                                 _signalMgr.GroupedRawSignalsByType.Remove(group)
+                                Exit For
+                            End If
+                        Next
+                        For Each group In _signalMgr.ReGroupedRawSignalsByType
+                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                                _signalMgr.ReGroupedRawSignalsByType.Remove(group)
                                 Exit For
                             End If
                         Next
@@ -4031,9 +4152,18 @@ Namespace ViewModels
                             End If
                         Next
                         SignalMgr.FileInfo.Remove(obj)
+                        DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
                         Exit For
                     End If
                 Next
+                If Not fileDeleted Then
+                    For Each source In DataConfigure.ReaderProperty.InputFileInfos
+                        If obj Is source Then
+                            DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
+                            Exit For
+                        End If
+                    Next
+                End If
                 'If _configData IsNot Nothing Then
                 '    _readDataConfigStages(_configData)
                 '    _readProcessConfig(_configData)

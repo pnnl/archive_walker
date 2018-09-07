@@ -91,6 +91,8 @@ Namespace Converters
                     Return "Constant"
                 Case InterpolateType.Linear
                     Return "Linear"
+                Case InterpolateType.Cubic
+                    Return "Cubic"
                 Case Else
                     Throw New Exception("Interpolate type not valid!")
             End Select
@@ -102,6 +104,8 @@ Namespace Converters
                     Return InterpolateType.Constant
                 Case "Linear"
                     Return InterpolateType.Linear
+                Case "Cubic"
+                    Return InterpolateType.Cubic
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

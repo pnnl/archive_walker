@@ -689,7 +689,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         public void AddANewTask(string newtaskName)
         {
-            var taskDir = _model.Projectpath + "Run_" + newtaskName;
+            var taskDir = _model.Projectpath + "Task_" + newtaskName;
             //DirectoryInfo dir = Directory.CreateDirectory(taskDir);
             var controlRunPath = taskDir + "\\ControlRun\\";
             Directory.CreateDirectory(controlRunPath);

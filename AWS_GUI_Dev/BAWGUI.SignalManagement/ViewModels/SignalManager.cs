@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BAWGUI.SignalManagement.ViewModels
 {
@@ -45,6 +46,12 @@ namespace BAWGUI.SignalManagement.ViewModels
             _groupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _reGroupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
+
+            CleanUpSettingsSignals();
+        }
+
+        public void CleanUpSettingsSignals()
+        {
             _groupedSignalByDataConfigStepsInput = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDataConfigStepsOutput = new ObservableCollection<SignalTypeHierachy>();
             _allDataConfigOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
@@ -60,6 +67,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
+
         private MatLabEngine _engine;
 
         private static SignalManager _instance = null;
@@ -74,27 +82,49 @@ namespace BAWGUI.SignalManagement.ViewModels
                 return _instance;
             }
         }
+
         public void AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
+            string MissingExampleFile = "";
             foreach (var item in inputFileInfos)
             {
                 if (!File.Exists(item.ExampleFile))
                 {
-                    item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
+                    //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
+                    //MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);           
+                    MissingExampleFile = MissingExampleFile + "The example file  " + Path.GetFileName(item.ExampleFile) + "  could not be found in the directory  " + Path.GetDirectoryName(item.ExampleFile) + ".\n";
                 }
-                if (File.Exists(item.ExampleFile))
+                else
                 {
                     var aFileInfo = new InputFileInfoViewModel(item);
                     if (item.FileType.ToLower() == "csv")
                     {
-                        _readCSVFile(aFileInfo);
+                        try
+                        {
+                            _readCSVFile(aFileInfo);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Error reading .csv file. " + ex.Message);
+                        }
                     }
                     else
                     {
-                        _readPDATFile(aFileInfo);
+                        try
+                        {
+                            _readPDATFile(aFileInfo);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Error reading .pdat file. " + ex.Message);
+                        }
                     }
                     FileInfo.Add(aFileInfo);
                 }
+            }
+            if (MissingExampleFile.Length > 0)
+            {
+                MessageBox.Show(MissingExampleFile + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
             }
             AllPMUs = _getAllPMU();
         }
@@ -982,10 +1012,10 @@ namespace BAWGUI.SignalManagement.ViewModels
         {
             //var sampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
             //var sampleFile = "";
-            if (!File.Exists(model.ExampleFile))
-            {
-                model.ExampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
-            }
+            //if (!File.Exists(model.ExampleFile))
+            //{
+            //    model.ExampleFile = Utility.FindFirstInputFile(model.FileDirectory, model.Model.FileType);
+            //}
             if (File.Exists(model.ExampleFile))
             {
                 if (model.Model.FileType.ToLower() == "csv")
@@ -1010,6 +1040,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         throw new Exception("Error reading .pdat file. " + ex.Message);
                     }
                 }
+                FileInfo.Add(model);
             }
             AllPMUs = _getAllPMU();
         }
@@ -1517,7 +1548,433 @@ namespace BAWGUI.SignalManagement.ViewModels
                     stepOutput.SignalSignature.IsChecked = false;
             }
         }
-
+        /// <summary>
+        /// Check and decide if a file directory and its sub grouped signal is checkable or not depends on other file directory check status
+        /// </summary>
+        public void DetermineFileDirCheckableStatus()
+        {
+            var disableOthers = false;
+            foreach (var group in GroupedRawSignalsByType)
+            {
+                //null or true
+                if (group.SignalSignature.IsChecked == null || (bool)group.SignalSignature.IsChecked)
+                {
+                    disableOthers = true;
+                    break;
+                }
+            }
+            //null or true
+            if (disableOthers)
+            {
+                foreach (var group in GroupedRawSignalsByType)
+                {
+                    if (group.SignalSignature.IsChecked == null || (bool)group.SignalSignature.IsChecked) //null or false
+                        group.SignalSignature.IsEnabled = true;
+                    else //true
+                        group.SignalSignature.IsEnabled = false;
+                }
+                foreach (var group in GroupedRawSignalsByPMU)
+                {
+                    if (group.SignalSignature.IsChecked == null || (bool)group.SignalSignature.IsChecked)
+                        group.SignalSignature.IsEnabled = true;
+                    else
+                        group.SignalSignature.IsEnabled = false;
+                }
+            }
+            // false
+            else
+            {
+                foreach (var group in GroupedRawSignalsByType)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in GroupedRawSignalsByPMU)
+                    group.SignalSignature.IsEnabled = true;
+            }
+        }
+        public void DetermineSamplingRateCheckableStatus(object _currentSelectedStep, int _currentTabIndex, int freq)
+        {
+            //var freq = -1;
+            if (_currentSelectedStep != null && freq != -1)
+            {
+                //freq = _currentSelectedStep.InputChannels(0).SamplingRate;
+                if (_currentTabIndex == 1)
+                {
+                    foreach (var group in GroupedRawSignalsByType)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedRawSignalsByPMU)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedSignalByDataConfigStepsInput)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedSignalByDataConfigStepsOutput)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                }
+                else if (_currentTabIndex == 2)
+                {
+                    foreach (var group in GroupedRawSignalsByType)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedRawSignalsByPMU)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedSignalByProcessConfigStepsInput)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedSignalByProcessConfigStepsOutput)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in AllDataConfigOutputGroupedByPMU)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllDataConfigOutputGroupedByType)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                }
+                else if (_currentTabIndex == 3)
+                {
+                    foreach (var group in ReGroupedRawSignalsByType)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedRawSignalsByPMU)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedSignalByPostProcessConfigStepsInput)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedSignalByPostProcessConfigStepsOutput)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in AllDataConfigOutputGroupedByPMU)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllDataConfigOutputGroupedByType)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllProcessConfigOutputGroupedByPMU)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllProcessConfigOutputGroupedByType)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                }
+                else if (_currentTabIndex == 4)
+                {
+                    foreach (var group in ReGroupedRawSignalsByType)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedRawSignalsByPMU)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in GroupedSignalByDetectorInput)
+                    {
+                        foreach (var subgroup in group.SignalList)
+                        {
+                            if (subgroup.SignalSignature.SamplingRate != freq)
+                                subgroup.SignalSignature.IsEnabled = false;
+                            else
+                                subgroup.SignalSignature.IsEnabled = true;
+                        }
+                    }
+                    foreach (var group in AllDataConfigOutputGroupedByPMU)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllDataConfigOutputGroupedByType)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllProcessConfigOutputGroupedByPMU)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllProcessConfigOutputGroupedByType)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllPostProcessOutputGroupedByPMU)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                    foreach (var group in AllPostProcessOutputGroupedByType)
+                    {
+                        if (group.SignalSignature.SamplingRate != freq)
+                            group.SignalSignature.IsEnabled = false;
+                        else
+                            group.SignalSignature.IsEnabled = true;
+                    }
+                }
+            }
+            else if (_currentTabIndex == 1)
+            {
+                foreach (var group in GroupedRawSignalsByType)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedRawSignalsByPMU)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedSignalByDataConfigStepsInput)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedSignalByDataConfigStepsOutput)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+            }
+            else if (_currentTabIndex == 2)
+            {
+                foreach (var group in GroupedRawSignalsByType)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedRawSignalsByPMU)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedSignalByProcessConfigStepsInput)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedSignalByProcessConfigStepsOutput)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in AllDataConfigOutputGroupedByPMU)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllDataConfigOutputGroupedByType)
+                    group.SignalSignature.IsEnabled = true;
+            }
+            else if (_currentTabIndex == 3)
+            {
+                foreach (var group in ReGroupedRawSignalsByType)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedRawSignalsByPMU)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedSignalByPostProcessConfigStepsInput)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedSignalByPostProcessConfigStepsOutput)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in AllDataConfigOutputGroupedByPMU)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllDataConfigOutputGroupedByType)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllProcessConfigOutputGroupedByPMU)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllProcessConfigOutputGroupedByType)
+                    group.SignalSignature.IsEnabled = true;
+            }
+            else if (_currentTabIndex == 4)
+            {
+                foreach (var group in ReGroupedRawSignalsByType)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedRawSignalsByPMU)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in GroupedSignalByDetectorInput)
+                {
+                    foreach (var subgroup in group.SignalList)
+                        subgroup.SignalSignature.IsEnabled = true;
+                }
+                foreach (var group in AllDataConfigOutputGroupedByPMU)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllDataConfigOutputGroupedByType)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllProcessConfigOutputGroupedByPMU)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllProcessConfigOutputGroupedByType)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllPostProcessOutputGroupedByPMU)
+                    group.SignalSignature.IsEnabled = true;
+                foreach (var group in AllPostProcessOutputGroupedByType)
+                    group.SignalSignature.IsEnabled = true;
+            }
+        }
+        /// <summary>
+        /// This sub checks/unchecks of all children of a node in the signal grouped by type parent tree
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="isChecked"></param>
+        public void CheckAllChildren(SignalTypeHierachy node, bool isChecked)
+        {
+            if (node.SignalList.Count > 0)
+            {
+                // if not a leaf node, call itself recursively to check/uncheck all children
+                foreach (var child in node.SignalList)
+                {
+                    if ((bool)child.SignalSignature.IsEnabled)
+                    {
+                        child.SignalSignature.IsChecked = isChecked;
+                        CheckAllChildren(child, isChecked);
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Raw signals
