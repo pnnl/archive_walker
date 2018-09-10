@@ -163,18 +163,10 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanBackgroundConverter.cs" />
     <Compile Include="Converters\ViewVisibilityConverter.cs" />
-    <Compile Include="Models\PMUCoordinates.cs" />
-    <Compile Include="Models\SiteCoordinatesReader.cs" />
-    <Compile Include="Models\SiteCoordinatesWriter.cs" />
     <Compile Include="ViewModels\AddProjectViewModel.cs" />
     <Compile Include="ViewModels\AddTaskViewModel.cs" />
-    <Compile Include="ViewModels\CoordinatesTableViewModel.cs" />
-    <Compile Include="ViewModels\SiteCoordinatesViewModel.cs" />
     <Compile Include="Views\AddARunPopup.xaml.cs">
       <DependentUpon>AddARunPopup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CoordsTableView.xaml.cs">
-      <DependentUpon>CoordsTableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectsBrowserView.xaml.cs">
       <DependentUpon>ProjectsBrowserView.xaml</DependentUpon>
@@ -186,10 +178,6 @@
       <DependentUpon>AddAProjectPopup.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\AddARunPopup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CoordsTableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,6 +237,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.CoordinateMapping\BAWGUI.CoordinateMapping.csproj">
+      <Project>{65931574-76AF-4900-86C9-458DED20CE5D}</Project>
+      <Name>BAWGUI.CoordinateMapping</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
@@ -361,6 +353,9 @@
     <Resource Include="..\BAWGUI.Resources\Images\unselect_all.bmp">
       <Link>MyResources\unselect_all.bmp</Link>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,5 @@
-﻿using BAWGUI.Settings.ViewModels;
+﻿using BAWGUI.CoordinateMapping.ViewModels;
+using BAWGUI.Settings.ViewModels;
 using BAWGUI.ViewModels;
 using System;
 using System.Collections.Generic;

@@ -5,20 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using BAWGUI.Xml;
 
-namespace BAWGUI.Models
+namespace BAWGUI.Core
 {
-    public class PMUCoordinates
+    public class SiteCoordinatesModel
     {
-        private ConfigSite item;
+        //private ConfigSite item;
 
-        public PMUCoordinates()
+        public SiteCoordinatesModel()
         {
             Name = "";
             Latitude = "0";
             Longitude = "0";
+            _internalCounter += 1;
+            _internalID = _internalCounter;
         }
 
-        public PMUCoordinates(ConfigSite item)
+        public SiteCoordinatesModel(ConfigSite item) : this()
         {
             Name = item.Name;
             Latitude = item.Latitude;
@@ -28,6 +30,12 @@ namespace BAWGUI.Models
         public string Name { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
+        private static int _internalCounter  = 0;
+        private int _internalID;
+        public int GetInternalID()
+        {
+            return _internalID;
+        }
         //public bool IsChecked { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using BAWGUI.Models;
-using BAWGUI.Settings.ViewModels;
-using BAWGUI.Utilities;
+﻿using BAWGUI.Utilities;
 using MapService.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,8 +11,10 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using GMap.NET.WindowsPresentation;
 using GMap.NET;
+using BAWGUI.CoordinateMapping.Models;
+using BAWGUI.Core;
 
-namespace BAWGUI.ViewModels
+namespace BAWGUI.CoordinateMapping.ViewModels
 {
     public class CoordinatesTableViewModel : ViewModelBase
     {
@@ -42,9 +42,10 @@ namespace BAWGUI.ViewModels
         public ICommand AddALocation { get; set; }
         private void _addALocation(object obj)
         {
-            var newLocation = new PMUCoordinates();
+            var newLocation = new SiteCoordinatesModel();
             var newLocationVM = new SiteCoordinatesViewModel(newLocation);
             newLocationVM.CheckStatusChanged += _modifyMapAnnotation;
+            newLocationVM.SitePropertyChanged += _sitePropertyChangedHandler;
             SiteCoords.Add(newLocationVM);
         }
         public ICommand DeleteARow { get; set; }
@@ -133,10 +134,11 @@ namespace BAWGUI.ViewModels
                 try
                 {
                     var reader = new SiteCoordinatesReader();
-                    SiteCoords = reader.ReadCoordsFile(_locationCoordinatesFilePath);
+                    reader.ReadCoordsFile(_locationCoordinatesFilePath, SiteCoords);
                     foreach (var item in SiteCoords)
                     {
                         item.CheckStatusChanged += _modifyMapAnnotation;
+                        item.SitePropertyChanged += _sitePropertyChangedHandler;
                     }
                 }
                 catch (Exception ex)
@@ -158,11 +160,34 @@ namespace BAWGUI.ViewModels
         private void _modifyMapAnnotation (object sender, EventArgs e)
         {
             var coords = sender as SiteCoordinatesViewModel;
-            var lat = Convert.ToDouble(coords.Latitude);
-            var lng = Convert.ToDouble(coords.Longitude);
-            var location = new PointLatLng(lat, lng);
-            MapVM.ModifyMapAnnotation(location, coords.SiteName, coords.IsChecked);
+            if (coords.IsChecked)
+            {
+                var lat = Convert.ToDouble(coords.Latitude);
+                var lng = Convert.ToDouble(coords.Longitude);
+                var location = new PointLatLng(lat, lng);
+                MapVM.AddAnnotation(location, coords.InternalID, coords.SiteName);
+            }
+            else
+            {
+                MapVM.DeleteAnnotation(coords.InternalID);
+            }
+            MapVM.ModifyMapAnnotation();
         }
+
+        private void _sitePropertyChangedHandler(object sender, EventArgs e)
+        {
+            var coords = sender as SiteCoordinatesViewModel;
+            if (coords.IsChecked)
+            {
+                MapVM.DeleteAnnotation(coords.InternalID);
+                var lat = Convert.ToDouble(coords.Latitude);
+                var lng = Convert.ToDouble(coords.Longitude);
+                var location = new PointLatLng(lat, lng);
+                MapVM.AddAnnotation(location, coords.InternalID, coords.SiteName);
+                MapVM.ModifyMapAnnotation();
+            }
+        }
+
 
     }
 }

@@ -284,5 +284,23 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
+        public SiteCoordinatesModel From
+        {
+            get { return _model.From; }
+            set
+            {
+                _model.From = value;
+                OnPropertyChanged();
+            }
+        }
+        public SiteCoordinatesModel To
+        {
+            get { return _model.To; }
+            set
+            {
+                _model.To = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

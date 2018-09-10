@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BAWGUI.Views
+namespace BAWGUI.CoordinateMapping.Views
 {
     /// <summary>
-    /// Interaction logic for CoordsTableView.xaml
+    /// Interaction logic for SingalCoordinateSetupView.xaml
     /// </summary>
-    public partial class CoordsTableView : UserControl
+    public partial class SingalCoordinateSetupView : UserControl
     {
-        public CoordsTableView()
+        public SingalCoordinateSetupView()
         {
             InitializeComponent();
         }

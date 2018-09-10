@@ -11,6 +11,8 @@
         xmlns:rv="clr-namespace:BAWGUI.Results.Views;assembly=BAWGUI.Results"
         xmlns:localvm="clr-namespace:BAWGUI.ViewModels"
         xmlns:localv="clr-namespace:BAWGUI.Views"
+        xmlns:mapcoordv="clr-namespace:BAWGUI.CoordinateMapping.Views;assembly=BAWGUI.CoordinateMapping"
+        xmlns:mapcoordmv="clr-namespace:BAWGUI.CoordinateMapping.ViewModels;assembly=BAWGUI.CoordinateMapping"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized"
         Name="myMainWindow">
@@ -19,14 +21,16 @@
             <Setter Property="Width" Value="16"></Setter>
             <Setter Property="Height" Value="16"></Setter>
         </Style>
-        <DataTemplate DataType="{x:Type localvm:CoordinatesTableViewModel}">
-            <localv:CoordsTableView/>
+        <DataTemplate DataType="{x:Type mapcoordmv:CoordinatesTableViewModel}">
+            <mapcoordv:CoordsTableView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type rvm:ResultsViewModel}">
-            <rv:ResultsMainView/>
+            <!--<rv:ResultsMainView/>-->
+            <rv:ResultsTabControl/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type svm:SettingsViewModel}">
-            <sv:SettingsView/>
+            <!--<sv:SettingsView/>-->
+            <sv:TabControlForSettingsWindow/>
         </DataTemplate>
         <converters2:ViewVisibilityConverter x:Key="ViewVisibilityConverter"/>
         <converters2:ViewVisibilityConverter2 x:Key="ViewVisibilityConverter2"/>

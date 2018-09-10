@@ -13,11 +13,13 @@ namespace MapService.Models
     {
         public PointLatLng Point;
         public string Info;
+        public int ID;
 
-        public PointAndInfo(PointLatLng point, string info)
+        public PointAndInfo(PointLatLng point, int id, string info)
         {
             Point = point;
             Info = info;
+            ID = id;
         }
     }
 }

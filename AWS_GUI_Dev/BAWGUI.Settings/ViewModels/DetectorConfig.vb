@@ -173,6 +173,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
@@ -339,6 +342,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception

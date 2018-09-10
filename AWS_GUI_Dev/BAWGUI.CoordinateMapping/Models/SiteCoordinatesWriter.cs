@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BAWGUI.CoordinateMapping.ViewModels;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using BAWGUI.ViewModels;
 
-namespace BAWGUI.Models
+namespace BAWGUI.CoordinateMapping.Models
 {
     public class SiteCoordinatesWriter
     {

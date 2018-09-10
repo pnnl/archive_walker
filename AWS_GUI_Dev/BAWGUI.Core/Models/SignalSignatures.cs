@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace BAWGUI.Core
             IsEnabled = true;
             IsCustomSignal = false;
             IsNameTypeUnitChanged = false;
+            From = CoreUtilities.DummySiteCoordinatesModel;
+            To = CoreUtilities.DummySiteCoordinatesModel;
         }
         public SignalSignatures(string pmu, string signal):this()
         {
@@ -36,5 +39,7 @@ namespace BAWGUI.Core
         public int SamplingRate { get; set; }
         public int PassedThroughDQFilter { get; set; }
         public int PassedThroughProcessor { get; set; }
+        public SiteCoordinatesModel From { get; set; }
+        public SiteCoordinatesModel To { get; set; }
     }
 }

@@ -2416,6 +2416,11 @@ Namespace ViewModels
                                 End If
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                             End If
+                            If TypeOf _currentSelectedStep Is PeriodogramDetector Or TypeOf _currentSelectedStep Is SpectralCoherenceDetector Then
+                                'If Not _signalMgr.MappingSignals.Contains(obj.SignalSignature) Then
+                                _signalMgr.MappingSignals.Add(obj.SignalSignature)
+                                'End If
+                            End If
                             _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
                         Else
                             If TypeOf _currentSelectedStep Is DQFilter Then
@@ -2469,6 +2474,11 @@ Namespace ViewModels
                                 'Else
 
                                 'End If
+                            End If
+                            If TypeOf _currentSelectedStep Is PeriodogramDetector Or TypeOf _currentSelectedStep Is SpectralCoherenceDetector Then
+                                If _signalMgr.MappingSignals.Contains(obj.SignalSignature) Then
+                                    _signalMgr.MappingSignals.Remove(obj.SignalSignature)
+                                End If
                             End If
                             _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                         End If
@@ -4212,6 +4222,10 @@ Namespace ViewModels
                         If _oldTabIndex = 2 Then
                             _reGroupRawSignalByType()
                         End If
+                    End If
+
+                    If _currentTabIndex = 5 Then
+                        _signalMgr.DistinctMappingSignal()
                     End If
                 Catch ex As Exception
                     _addLog(ex.Message)

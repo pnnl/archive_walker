@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{908167FB-4C0E-4285-A6EE-0EF81A164929}</ProjectGuid>
+    <ProjectGuid>{65931574-76AF-4900-86C9-458DED20CE5D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MapService</RootNamespace>
-    <AssemblyName>MapService</AssemblyName>
+    <RootNamespace>BAWGUI.CoordinateMapping</RootNamespace>
+    <AssemblyName>BAWGUI.CoordinateMapping</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -56,11 +56,14 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="GMap.NET.Core">
+    <Reference Include="GMap.NET.Core, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
       <HintPath>..\packages\GMap.NET.Windows.1.8.5\lib\net40\GMap.NET.Core.dll</HintPath>
     </Reference>
-    <Reference Include="GMap.NET.WindowsPresentation">
+    <Reference Include="GMap.NET.WindowsPresentation, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
       <HintPath>..\packages\GMap.NET.Windows.1.8.5\lib\net40\GMap.NET.WindowsPresentation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -70,6 +73,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.109.1\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.SQLite.EF6, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.EF6.1.0.109.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
     </Reference>
@@ -77,26 +83,43 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.109.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\PointandInfo.cs" />
+    <Compile Include="Converters\TextBoxSelectionCommandParameterConverter.cs" />
+    <Compile Include="Models\SiteCoordinatesReader.cs" />
+    <Compile Include="Models\SiteCoordinatesWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\MapViewModel.cs" />
-    <Compile Include="Views\MapView.xaml.cs">
-      <DependentUpon>MapView.xaml</DependentUpon>
+    <Compile Include="ViewModels\CoordinatesTableViewModel.cs" />
+    <Compile Include="ViewModels\SignalCoordsMappingViewModel.cs" />
+    <Compile Include="ViewModels\SiteCoordinatesViewModel.cs" />
+    <Compile Include="Views\CoordsTableView.xaml.cs">
+      <DependentUpon>CoordsTableView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalCoordsSetupView.xaml.cs">
+      <DependentUpon>SignalCoordsSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SingalCoordinateSetupView.xaml.cs">
+      <DependentUpon>SingalCoordinateSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\test.xaml.cs">
+      <DependentUpon>test.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -104,27 +127,73 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\MapView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
+      <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
+      <Name>BAWGUI.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
+      <Project>{e0aca34c-2c13-4e98-944d-a419bdd2d116}</Project>
+      <Name>BAWGUI.SignalManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
       <Name>BAWGUI.Utilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
+      <Project>{B948A304-8616-4D5F-9563-9805F8A506C2}</Project>
+      <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MapService\MapService.csproj">
+      <Project>{908167FB-4C0E-4285-A6EE-0EF81A164929}</Project>
+      <Name>MapService</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\BAWGUI.Resources\Images\bigMarkerGreen.png">
-      <Link>MyResources\bigMarkerGreen.png</Link>
-    </Content>
+    <Resource Include="..\BAWGUI.Resources\Images\Add_16x.png">
+      <Link>MyResources\Add_16x.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\delete.bmp">
+      <Link>MyResources\delete.bmp</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
+      <Link>MyResources\open.gif</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\select_all.bmp">
+      <Link>MyResources\select_all.bmp</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\unselect_all.bmp">
+      <Link>MyResources\unselect_all.bmp</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\zoom+.png">
+      <Link>MyResources\zoom+.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\zoom-.png">
+      <Link>MyResources\zoom-.png</Link>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\CoordsTableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignalCoordsSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SingalCoordinateSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\test.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.1\build\net46\System.Data.SQLite.Core.targets')" />

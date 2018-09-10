@@ -26,7 +26,9 @@ namespace MapService.ViewModels
             ChangeZoom = new RelayCommand(_changeMapZoom);
             ZoomIn = new RelayCommand(_mapZoomIn);
             ZoomOut = new RelayCommand(_mapZoomOut);
-            IsOnlineMode = true;
+            IsOfflineMode = true;
+            //MaxZoom = 7;
+            //MinZoom = 0;
             CacheSelectedMapRegion = new RelayCommand(_cacheSelectedMapRegion);
             //GMap.InvalidateVisual();
         }
@@ -40,18 +42,20 @@ namespace MapService.ViewModels
                 OnPropertyChanged();
             }
         }
+        public int MaxZoom { get; set; } = 8;
+        public int MinZoom { get; set; } = 0;
         public void SetUpGMap()
         {
             GMap = new GMapControl();
             //GMap.MapProvider = OpenStreetMapProvider.Instance;
-            GMap.MaxZoom = 10;
-            GMap.MinZoom = 0;
+            GMap.MaxZoom = MaxZoom;
+            GMap.MinZoom = MinZoom;
             GMap.Zoom = 5;
             GMap.CenterPosition = new PointLatLng(37.0902, -95.7129);
             GMap.ShowCenter = false;
 
             GMap.MapProvider = GMapProviders.OpenStreetMap;
-            if (!IsOnlineMode)
+            if (!IsOfflineMode)
             {
                 GMap.Manager.Mode = AccessMode.CacheOnly;
             }
@@ -101,23 +105,16 @@ namespace MapService.ViewModels
         //    //mapgroup.Header = "gmap: " + point;
         //}
 
-        public void ModifyMapAnnotation(PointLatLng location, string siteName, bool isChecked)
+        public void ModifyMapAnnotation()
         {
-            if (isChecked)
-            {
-                Annotations.Add(new PointAndInfo(location, siteName));
-            }
-            else
-            {
-                foreach (var item in Annotations)
-                {
-                    if (item.Info == siteName)
-                    {
-                        Annotations.Remove(item);
-                        break;
-                    }
-                }
-            }
+            //if (isChecked)
+            //{
+            //    Annotations.Add(new PointAndInfo(location, id, siteName));
+            //}
+            //else
+            //{
+            //    DeleteAnnotation(id);
+            //}
             GMap.Markers.Clear();
             foreach (var item in Annotations)
             {
@@ -156,20 +153,20 @@ namespace MapService.ViewModels
         {
             GMap.Zoom = GMap.Zoom - 1;
         }
-        private bool _isOnlineMode;
-        public bool IsOnlineMode
+        private bool _isOfflineMode;
+        public bool IsOfflineMode
         {
-            get { return _isOnlineMode; }
+            get { return _isOfflineMode; }
             set
             {
-                _isOnlineMode = value;
+                _isOfflineMode = value;
                 if (value)
                 {
-                    GMap.Manager.Mode = AccessMode.ServerAndCache;
+                    GMap.Manager.Mode = AccessMode.CacheOnly;
                 }
                 else
                 {
-                    GMap.Manager.Mode = AccessMode.CacheOnly;
+                    GMap.Manager.Mode = AccessMode.ServerAndCache;
                 }
                 OnPropertyChanged();
             }
@@ -206,6 +203,26 @@ namespace MapService.ViewModels
                 MessageBox.Show("Select map area holding ALT", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
 
+        }
+
+        public void DeleteAnnotation(int internalID)
+        {
+            foreach (var item in Annotations)
+            {
+                if (item.ID == internalID)
+                {
+                    Annotations.Remove(item);
+                    break;
+                }
+            }
+        }
+        public void AddAnnotation(PointLatLng location, int id, string siteName)
+        {
+            var exist = Annotations.Any(x => x.ID == id);
+            if (!exist)
+            {
+                Annotations.Add(new PointAndInfo(location, id, siteName));
+            }
         }
     }
 }

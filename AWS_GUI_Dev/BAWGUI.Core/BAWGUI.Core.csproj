@@ -92,6 +92,8 @@
     <Compile Include="Models\AWRun.cs" />
     <Compile Include="Models\EnumDefinitions.cs" />
     <Compile Include="Models\SignalSignatures.cs" />
+    <Compile Include="Models\SiteCoordinatesModel.cs" />
+    <Compile Include="Utilities\CoreUtilities.cs" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\SignalSignatureViewModel.cs" />
@@ -111,6 +113,10 @@
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
+      <Project>{B948A304-8616-4D5F-9563-9805F8A506C2}</Project>
+      <Name>BAWGUI.Xml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

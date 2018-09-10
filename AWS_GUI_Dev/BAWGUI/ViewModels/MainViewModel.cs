@@ -10,6 +10,7 @@ using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using BAWGUI.CoordinateMapping.ViewModels;
 
 namespace BAWGUI.ViewModels
 {
@@ -28,6 +29,7 @@ namespace BAWGUI.ViewModels
             _signalMgr = SignalManager.Instance;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+            SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
         }
 
         private void _matlabEngineStatusChanged(object sender, bool e)
@@ -194,6 +196,7 @@ namespace BAWGUI.ViewModels
             }
         }
         public CoordinatesTableViewModel CoordsTableVM { get; set; }
+        public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
         //private void _projectControlVM_RunSelected(object sender, AWRunViewModel e)
         //{
         //    throw new NotImplementedException();

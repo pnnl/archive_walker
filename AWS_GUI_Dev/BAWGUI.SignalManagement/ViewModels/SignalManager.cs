@@ -38,6 +38,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
             _engine = MatLabEngine.Instance;
+            MappingSignals = new ObservableCollection<SignalSignatureViewModel>();
         }
 
         public void cleanUp()
@@ -48,6 +49,8 @@ namespace BAWGUI.SignalManagement.ViewModels
             _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
 
             CleanUpSettingsSignals();
+
+            MappingSignals = new ObservableCollection<SignalSignatureViewModel>();
         }
 
         public void CleanUpSettingsSignals()
@@ -2192,5 +2195,25 @@ namespace BAWGUI.SignalManagement.ViewModels
             }
         }
         #endregion
+
+        /// <summary>
+        /// signals that are selected by forced oscillation and voltage magnitude in voltage stability need to be marked on map
+        /// </summary>
+        public ObservableCollection<SignalSignatureViewModel> MappingSignals { get; set; }
+        private ObservableCollection<SignalSignatureViewModel> _uniqueMappingSignals;
+        public ObservableCollection<SignalSignatureViewModel> UniqueMappingSignals
+        {
+            get { return _uniqueMappingSignals; }
+            set
+            {
+                _uniqueMappingSignals = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void DistinctMappingSignal()
+        {
+            UniqueMappingSignals = new ObservableCollection<SignalSignatureViewModel>(MappingSignals.Distinct());
+        }
     }
 }

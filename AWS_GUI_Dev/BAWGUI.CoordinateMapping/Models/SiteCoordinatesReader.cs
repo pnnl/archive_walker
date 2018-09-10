@@ -6,16 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using BAWGUI.ViewModels;
+using BAWGUI.CoordinateMapping.ViewModels;
+using BAWGUI.Core;
 using BAWGUI.Xml;
 
-namespace BAWGUI.Models
+namespace BAWGUI.CoordinateMapping.Models
 {
     public class SiteCoordinatesReader
     {
-        internal ObservableCollection<SiteCoordinatesViewModel> ReadCoordsFile(string locationCoordinatesFilePath)
+        internal void ReadCoordsFile(string locationCoordinatesFilePath, ObservableCollection<SiteCoordinatesViewModel> coords)
         {
-            var coords = new ObservableCollection<SiteCoordinatesViewModel>();
+            coords.Clear();
             XmlSerializer serializer = new XmlSerializer(typeof(LocationCoordinatesConfig));
             FileStream stream = new FileStream(locationCoordinatesFilePath, FileMode.Open, FileAccess.Read);
             var content = serializer.Deserialize(stream) as LocationCoordinatesConfig;
@@ -23,11 +24,10 @@ namespace BAWGUI.Models
             {
                 foreach (var item in content.Coordinates)
                 {
-                    var lcl = new PMUCoordinates(item);
+                    var lcl = new SiteCoordinatesModel(item);
                     coords.Add(new SiteCoordinatesViewModel(lcl));
                 }
             }
-            return coords;
         }
     }
 }
