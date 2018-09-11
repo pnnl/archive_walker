@@ -83,9 +83,10 @@ namespace BAWGUI.SignalManagement.ViewModels
             }
         }
 
-        public void AddRawSignals(List<InputFileInfoModel> inputFileInfos)
+        public Boolean AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
             string MissingExampleFile = "";
+            bool Missing = false;
             foreach (var item in inputFileInfos)
             {
                 if (!File.Exists(item.ExampleFile))
@@ -125,8 +126,10 @@ namespace BAWGUI.SignalManagement.ViewModels
             if (MissingExampleFile.Length > 0)
             {
                 MessageBox.Show(MissingExampleFile + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+                Missing = true;
             }
             AllPMUs = _getAllPMU();
+            return Missing;
         }
         private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         {

@@ -165,7 +165,7 @@
                             <Label Grid.Row="9" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Negative Deviation:" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="9" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding RateOfChangeMin}" HorizontalAlignment="Left"/>
                             <!--<Image Grid.Row="8" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
-                            <Label Grid.Row="10" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Rate Of Change Threashold (per second):" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="10" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Rate Of Change Threshold (per second):" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="10" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding RateOfChange}" HorizontalAlignment="Left"/>
                             <Label Grid.Row="11" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum Event Separation (seconds):" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="11" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding EventMergeWindow}" HorizontalAlignment="Left"/>

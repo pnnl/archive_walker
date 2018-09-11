@@ -1684,7 +1684,12 @@ Namespace ViewModels
                         End If
                         If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
                             ' If Dividend and Divisor are the same
+                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                            Dim dummy = New SignalSignatureViewModel("", "")
+                            dummy.IsValid = False
+                            _currentSelectedStep.Dividend = dummy
                             Throw New Exception("Error! Dividend cannot be the same as the Divisor!")
+
                         End If
                         _currentSelectedStep.Dividend = obj.SignalSignature ' Assign the selected signal to Dividend
                         If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Dividend) Then
@@ -1709,6 +1714,10 @@ Namespace ViewModels
                         End If
                         If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
                             ' If Dividend and Divisor are the same
+                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                            Dim dummy = New SignalSignatureViewModel("", "")
+                            dummy.IsValid = False
+                            _currentSelectedStep.Divisor = dummy
                             Throw New Exception("Error! Divisor cannot be the same as the Dividend!")
                         End If
                         _currentSelectedStep.Divisor = obj.SignalSignature ' Assign the selected signal to Divisor
