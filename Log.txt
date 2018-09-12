@@ -14,3 +14,8 @@ SettingViewmodel.vb
 -	Change signal selection
 -	SetFocusedTextboxdivision (the logics are not very clear)
 -	check the divider ‘s unit before divide, if it is scalar, should be do that.
+
+09/11
+Jim - After the warning about the example file being moved, I’m getting errors about reading the config file related to signals not being available. The config shouldn’t be read when the example file is missing.
+
+Urmila - There is a typo in the GUI in Out-of-Range detector section. The threshold is spelt as Threashold in the part where user is required to provide input for rate of change based detection.

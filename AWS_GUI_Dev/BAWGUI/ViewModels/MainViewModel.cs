@@ -169,16 +169,19 @@ namespace BAWGUI.ViewModels
                 {
                     var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
                     _signalMgr.cleanUp();
-                    _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
-                    SettingsVM.SignalMgr = _signalMgr;
-                    SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
-                    SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
-                    SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
-                    SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
-                    e.SelectedRun.Model.DataFileDirectories = new List<string>();
-                    foreach (var info in _signalMgr.FileInfo)
+                    var missing = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
+                    if (!missing)
                     {
-                        e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                        SettingsVM.SignalMgr = _signalMgr;
+                        SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
+                        SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
+                        SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
+                        SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        e.SelectedRun.Model.DataFileDirectories = new List<string>();
+                        foreach (var info in _signalMgr.FileInfo)
+                        {
+                            e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                        }
                     }
                 }
                 catch (Exception ex)
