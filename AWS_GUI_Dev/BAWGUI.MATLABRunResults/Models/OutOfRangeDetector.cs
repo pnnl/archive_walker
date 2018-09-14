@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace BAWGUI.MATLABRunResults.Models
 {
-    public class OutOfRangeDetector
+    public class OutOfRangeDetector : IDetector
     {
-        public string Label;
+        public string Label { get; set; }
         public OutOfRangeDetector()
         {
             _oorSignals = new List<OutOfRangeSignal>();
@@ -56,5 +56,6 @@ namespace BAWGUI.MATLABRunResults.Models
             }
         }
 
+        public int SamplingRate { get; set; }
     }
 }
