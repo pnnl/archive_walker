@@ -1,4 +1,4 @@
-function UpdatePreviousDayModeEst(ModeRem, ResultPath, Mode_n_SysCondList, TimeString ,ModeEstimateCalcIdx)
+function UpdatePreviousDayModeEst(ModeRem, ResultPath, TimeString ,ModeEstimateCalcIdx)
 % TimeStr = datestr(TimeString-1,'yymmdd');
 ModeRem = ModeRem(:);
 DaysBack = 1;
@@ -11,7 +11,7 @@ while ~isempty(FreqMpath)
     % the mode estimates, and then save them
     % again until MpathRemainder is empty.
     
-    FileName = [ResultPath '\' datestr(TimeString-DaysBack,'yymmdd') '_' Mode_n_SysCondList '.csv'];
+    FileName = [ResultPath '\' datestr(TimeString-DaysBack,'yymmdd') '.csv'];
     if exist(FileName,'file') > 0
         % Load the previous days value by accessing previous day file
         ModeEstTable = readtable(FileName);     

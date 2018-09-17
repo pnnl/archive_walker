@@ -183,34 +183,56 @@ namespace VoltageStability.ViewModels
                 _selectedVSEvent = value;
                 if (_selectedVSEvent != null)
                 {
-                    //foreach (var plotM in SparsePlotModels)
-                    //{
-                    //    var lowerRange = DateTime.ParseExact(_selectedVSEvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                    //    var higherRange = DateTime.ParseExact(_selectedVSEvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
-                    //    double axisMin = 0d, axisMax = 0d;
-                    //    foreach (var axis in plotM.SparsePlotModel.Axes)
-                    //    {
-                    //        if (axis.IsVertical())
-                    //        {
-                    //            axisMin = axis.Minimum;
-                    //            axisMax = axis.Maximum;
-                    //        }
-                    //    }
-                    //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
-                    //    {
-                    //        Fill = OxyColor.FromArgb(75, 255, 0, 0),
-                    //        //MinimumX = lowerRange,
-                    //        //MaximumX = higherRange,
-                    //        //Fill = OxyColors.Red,
-                    //        MinimumX = lowerRange - (higherRange - lowerRange),
-                    //        MaximumX = higherRange + (higherRange - lowerRange),
-                    //        MinimumY = axisMin,
-                    //        MaximumY = axisMax
-                    //    };
-                    //    plotM.SparsePlotModel.Annotations.Clear();
-                    //    plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
-                    //    plotM.SparsePlotModel.InvalidatePlot(true);
-                    //}
+                    foreach (var plotM in SparsePlotModels)
+                    {
+                        var lowerRange = DateTime.ParseExact(_selectedVSEvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                        var higherRange = DateTime.ParseExact(_selectedVSEvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                        double yaxisMin = 0d, yaxisMax = 0d, xaxisMin = 0d, xaxisMax = 0d;
+                        foreach (var axis in plotM.SparsePlotModel.Axes)
+                        {
+                            if (axis.IsVertical())
+                            {
+                                yaxisMin = axis.Minimum;
+                                yaxisMax = axis.Maximum;
+                            }
+                            if (axis.IsHorizontal())
+                            {
+                                xaxisMin = axis.ActualMinimum;
+                                xaxisMax = axis.ActualMaximum;
+                            }
+                        }
+                        var highlightWidth = (xaxisMax - xaxisMin) * 0.0005;
+                        var actualHighlightWidth = higherRange - lowerRange;
+                        if (actualHighlightWidth < highlightWidth)
+                        {
+                            lowerRange = lowerRange - highlightWidth / 2;
+                            higherRange = higherRange + highlightWidth / 2;
+                        }
+
+                        //double axisMin = 0d, axisMax = 0d;
+                        //foreach (var axis in plotM.SparsePlotModel.Axes)
+                        //{
+                        //    if (axis.IsVertical())
+                        //    {
+                        //        axisMin = axis.Minimum;
+                        //        axisMax = axis.Maximum;
+                        //    }
+                        //}
+                        var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                        {
+                            Fill = OxyColor.FromArgb(75, 255, 0, 0),
+                            MinimumX = lowerRange,
+                            MaximumX = higherRange,
+                            //Fill = OxyColors.Red,
+                            //MinimumX = lowerRange - (higherRange - lowerRange),
+                            //MaximumX = higherRange + (higherRange - lowerRange),
+                            MinimumY = yaxisMin,
+                            MaximumY = yaxisMax
+                        };
+                        plotM.SparsePlotModel.Annotations.Clear();
+                        plotM.SparsePlotModel.Annotations.Add(rectAnnotation);
+                        plotM.SparsePlotModel.InvalidatePlot(true);
+                    }
                 }
                 OnPropertyChanged();
             }
@@ -400,6 +422,20 @@ namespace VoltageStability.ViewModels
                     //newSeries.MouseDown += RdSparseSeries_MouseDown;
                     a.Series.Add(newSeries);
                 }
+                //if (SelectedVSEvent != null)
+                //{
+                //    var lowerRange = DateTime.ParseExact(SelectedVSEvent.StartTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var higherRange = DateTime.ParseExact(SelectedVSEvent.EndTime, "MM/dd/yy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture).ToOADate();
+                //    var rectAnnotation = new OxyPlot.Annotations.RectangleAnnotation()
+                //    {
+                //        Fill = OxyColor.FromArgb(50, 50, 50, 50),
+                //        MinimumX = lowerRange,
+                //        MaximumX = higherRange,
+                //        MinimumY = axisMin,
+                //        MaximumY = axisMax
+                //    };
+                //    a.Annotations.Add(rectAnnotation);
+                //}
 
 
                 a.LegendPlacement = LegendPlacement.Outside;

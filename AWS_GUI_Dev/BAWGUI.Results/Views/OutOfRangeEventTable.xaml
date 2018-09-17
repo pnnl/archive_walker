@@ -25,8 +25,8 @@
                 <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
             </Style>
             <Style TargetType="{x:Type xcdg:DataRow}">
-                <Setter Property="SelectionBackground" Value="Green"/>
-                <Setter Property="InactiveSelectionBackground" Value="Green"/>
+                <Setter Property="SelectionBackground" Value="LightGreen"  />
+                <Setter Property="InactiveSelectionBackground" Value="LightGreen"/>
             </Style>
         </xcdg:DataGridControl.Resources>
         <xcdg:DataGridControl.View>

@@ -3,7 +3,7 @@
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.13</param.version>
+    <param.version>2.14</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -49,7 +49,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     <param.net.tsa.namespace />
     <param.net.tsa.superclass>GUI2MAT</param.net.tsa.superclass>
     <param.net.tsa.metadata />
-    <param.net.tsa.metadata.assembly>C:\Users\foll154\Documents\MATLAB</param.net.tsa.metadata.assembly>
+    <param.net.tsa.metadata.assembly>C:\Windows\system32</param.net.tsa.metadata.assembly>
     <param.net.saved.interface />
     <unset>
       <param.icon />
@@ -138,7 +138,9 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ConcatenatePMU.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\CreatePMUsegment.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ExtractData.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ExtractDataModemeter.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ExtractSignalInfo.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\GetOutputSignalsRev.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\GetPMU_SignalList.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ExtractModeMeterParams.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
@@ -229,7 +231,6 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\fun_xmlread_comments.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\InitializeBAWS.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\near.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\createPdatStruct.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getCSVFileFolder.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getFocusFiles.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getNextFutureDayFolder.m</file>
@@ -238,10 +239,9 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getPdatFileTime.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\JSIS_CSV_2_Mat.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\LoadFocusFiles.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\pdatRead.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\readConfigFrame.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\pdatReadnCreateStruct.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\readConfigFrameRev.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\SetNameAndUnit_PDAT.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\sortSOC.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Rerun\AddMissingToSparsePMU.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Rerun\AddToSparsePMU.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Rerun\CleanAdditionalOutput.m</file>
@@ -260,7 +260,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2017A</root>
+      <root>c:\Program Files\MATLAB\R2017A</root>
       <toolboxes>
         <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />

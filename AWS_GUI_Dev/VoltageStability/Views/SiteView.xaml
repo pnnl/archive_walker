@@ -15,18 +15,24 @@
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <GroupBox BorderBrush="LightGray" BorderThickness="0.5" Background="{Binding IsSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
-        <GroupBox.Header>
-            <TextBlock FontSize="14" FontWeight="Black" Text="{Binding SiteNumber, StringFormat=Site {0}}"/>
-        </GroupBox.Header>
-        <i:Interaction.Triggers>
+    <Expander BorderBrush="LightGray" BorderThickness="0.5" Background="{Binding IsSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+        <Expander.Header>
+            <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
+                <TextBlock VerticalAlignment="Center" Text="{Binding SiteNumber, StringFormat=Site: {0}}"/>
+                <Button DockPanel.Dock="Right" Margin="0,0,0,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.DeleteASite}" CommandParameter="{Binding}">
+                    <Image Width="16" Height="16" Source="/VoltageStability;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                </Button>
+            </DockPanel>
+            <!--<TextBlock FontSize="14" FontWeight="Black" Text="{Binding SiteNumber, StringFormat=Site {0}}"/>-->
+        </Expander.Header>
+        <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonDown">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SiteSelected}" CommandParameter="{Binding}"/>
             </i:EventTrigger>
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SiteSelected}" CommandParameter="{Binding}"/>
             </i:EventTrigger>
-        </i:Interaction.Triggers>
+        </i:Interaction.Triggers>-->
         <!--<Border.Effect>
             <DropShadowEffect/>
         </Border.Effect>-->
@@ -80,5 +86,5 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
-    </GroupBox>
+    </Expander>
 </UserControl>

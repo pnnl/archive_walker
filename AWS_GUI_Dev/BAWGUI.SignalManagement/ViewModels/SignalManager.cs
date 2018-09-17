@@ -84,13 +84,15 @@ namespace BAWGUI.SignalManagement.ViewModels
         }
         public bool AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
+            string MissingExampleFile = "";
+            bool ReadingSuccess = true;
             foreach (var item in inputFileInfos)
             {
                 if (!File.Exists(item.ExampleFile))
                 {
                     //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
-                    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
-                    return false;
+                    //MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);           
+                    MissingExampleFile = MissingExampleFile + "The example file  " + Path.GetFileName(item.ExampleFile) + "  could not be found in the directory  " + Path.GetDirectoryName(item.ExampleFile) + ".\n";
                 }
                 else
                 {
@@ -104,7 +106,6 @@ namespace BAWGUI.SignalManagement.ViewModels
                         catch (Exception ex)
                         {
                             MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
-                            return false;
                         }
                     }
                     else
@@ -116,14 +117,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                         catch (Exception ex)
                         {
                             MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
-                            return false;
                         }
                     }
                     FileInfo.Add(aFileInfo);
                 }
             }
+            if (MissingExampleFile.Length > 0)
+            {
+                MessageBox.Show(MissingExampleFile + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+                ReadingSuccess = false;
+            }
             AllPMUs = _getAllPMU();
-            return true;
+            return ReadingSuccess;
         }
         private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         {

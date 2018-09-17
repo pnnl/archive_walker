@@ -9,18 +9,18 @@
 %   The AW GUI
 %
 % Calls: 
-%   createPdatStruct
+%   pdatReadnCreateStruct
 %
 % Inputs:
 %   pdatFile - Path to the pdat file that is to be read. String.
 %
 % Outputs:
 %   PMU - Stripped down structure that is the output of the
-%       createPdatStruct function. 
+%       pdatReadnCreateStruct function. 
 
 function PMU = GetPDATexample(pdatFile)
 
-[PMU,~,fs] = createPdatStruct(pdatFile,1,[]);
+[PMU,~,fs] = pdatReadnCreateStruct(pdatFile,1,[]);
 
 PMU = rmfield(PMU,{'Stat','Data','Flag','File_Name','Time_Zone','Signal_Time'});
 PMU(1).fs = fs;
