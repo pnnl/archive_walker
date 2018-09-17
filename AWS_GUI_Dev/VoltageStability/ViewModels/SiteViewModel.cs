@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using VoltageStability.Models;
 
 namespace VoltageStability.ViewModels
@@ -22,8 +23,9 @@ namespace VoltageStability.ViewModels
             //VoltageBuses.Add(new VoltageBusViewModel());
             BranchesAndShunts = new ObservableCollection<object>();
             //BranchesAndShunts.Add(new BranchViewModel());
+            DeleteAVoltageBus = new RelayCommand(_deleteAVoltageBus);
+            DeleteABranchOrShunt = new RelayCommand(_deleteABranchOrShunt);
         }
-
         public SiteViewModel(Site sub, BAWGUI.SignalManagement.ViewModels.SignalManager signalMgr)
         {
             this._model = sub;
@@ -47,6 +49,8 @@ namespace VoltageStability.ViewModels
                 }
             }
             BranchesAndShunts = newBranchesAndShunts;
+            DeleteAVoltageBus = new RelayCommand(_deleteAVoltageBus);
+            DeleteABranchOrShunt = new RelayCommand(_deleteABranchOrShunt);
         }
 
         public SiteViewModel(Site sub)
@@ -63,6 +67,8 @@ namespace VoltageStability.ViewModels
             {
                 BranchesAndShunts.Add(new BranchViewModel((Branch)bs));
             }
+            DeleteAVoltageBus = new RelayCommand(_deleteAVoltageBus);
+            DeleteABranchOrShunt = new RelayCommand(_deleteABranchOrShunt);
         }
 
         public string Name
@@ -113,7 +119,16 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
             }
         }
-        public int SiteNumber { get; set; }
+        private int _siteNumber;
+        public int SiteNumber
+        {
+            get { return _siteNumber; }
+            set
+            {
+                _siteNumber = value;
+                OnPropertyChanged();
+            }
+        }
         private bool _isSelected;
         public bool IsSelected
         {
@@ -123,6 +138,17 @@ namespace VoltageStability.ViewModels
                 _isSelected = value;
                 OnPropertyChanged();
             }
+        }
+        public ICommand DeleteAVoltageBus { get; set; }
+        private void _deleteAVoltageBus(object obj)
+        {
+            var vbToBeDeleted = obj as VoltageBusViewModel;
+            VoltageBuses.Remove(vbToBeDeleted);
+        }
+        public ICommand DeleteABranchOrShunt { get; set; }
+        private void _deleteABranchOrShunt(object obj)
+        {
+            BranchesAndShunts.Remove(obj);
         }
     }
 }
