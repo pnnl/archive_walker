@@ -60,7 +60,7 @@ namespace ModeMeter.ViewModels
         }
         public override string Name
         {
-            get { return "Small Signal Stability Tool"; }
+            get { return "Mode Meter Tool"; }
         }
         public string ModeMeterName
         {

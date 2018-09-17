@@ -58,7 +58,7 @@ Namespace ViewModels
                         DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                     End If
                     'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
-                Case "Small Signal Stability Tool"
+                Case "Mode Meter Tool"
                     If Not _isModeMeterResultFolderExists() Then
                         _generateModeMeterResultFolder()
                     End If

@@ -72,11 +72,11 @@ namespace ModeMeter.Models
 
                 throw ex;
             }
-            var dampRatioThreshold = mode.Element("DampRatioThreshold");
-            if (dampRatioThreshold != null)
-            {
-                newMode.DampRatioThreshold = dampRatioThreshold.Value;
-            }
+            //var dampRatioThreshold = mode.Element("DampRatioThreshold");
+            //if (dampRatioThreshold != null)
+            //{
+            //    newMode.DampRatioThreshold = dampRatioThreshold.Value;
+            //}
             var al = mode.Element("AnalysisLength");
             if (al != null)
             {

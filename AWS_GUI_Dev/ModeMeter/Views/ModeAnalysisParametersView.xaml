@@ -23,7 +23,7 @@
             <coreconverters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <GroupBox Header="Analysis parameters">
+    <GroupBox Header="Analysis Parameters">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -36,21 +36,21 @@
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
-                <Label Content="Analysis Length:" Margin="2"/>
+                <Label Content="Analysis Length (seconds):" Margin="2"/>
                 <TextBox Text="{Binding AnalysisLength}" VerticalAlignment="Center" Margin="130,2,2,2" Width="100"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
                 <Label Content="Retroactive Continuity:" Margin="2"/>
                 <Label Content="Status" Margin="20,2,0,2"/>
                 <ComboBox ItemsSource="{Binding Source={StaticResource RetroactiveContinuityStatusTypeValues}}" Margin="5,2,2,2" Width="50" HorizontalAlignment="Left" Text="{Binding Status, Converter={StaticResource EnumToStringConverter11}}" VerticalContentAlignment="Center"/>
-                <Label Content="Maximum Length" Margin="20,2,2,2" Visibility="{Binding Status, Converter={StaticResource RetroactiveContinuityStatusVisibilityConverter}}"/>
+                <Label Content="Maximum Length (seconds):" Margin="20,2,2,2" Visibility="{Binding Status, Converter={StaticResource RetroactiveContinuityStatusVisibilityConverter}}"/>
                 <TextBox Text="{Binding MaxLength}" VerticalAlignment="Center" Margin="2" Width="100" Visibility="{Binding Status, Converter={StaticResource RetroactiveContinuityStatusVisibilityConverter}}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Margin="2">
-                <Label Content="Damping-ratio detection threshold (%): " Margin="2"/>
+            <!--<StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Margin="2">
+                <Label Content="Damping-Ratio Detection Threshold (%): " Margin="2"/>
                 <TextBox Text="{Binding DampRatioThreshold}" VerticalAlignment="Center" Margin="2" Width="100"/>
-            </StackPanel>
-            <GroupBox Header="FO detection parameters" Grid.Row="3" Grid.Column="1" Margin="0"  Visibility="{Binding Path=IsFODetecotrParametersVisible, Converter={StaticResource BooleanVisibilityConverter}}">
+            </StackPanel>-->
+            <GroupBox Header="FO Detection Parameters" Grid.Row="3" Grid.Column="1" Margin="0"  Visibility="{Binding Path=IsFODetecotrParametersVisible, Converter={StaticResource BooleanVisibilityConverter}}">
                 <local:FOParametersView DataContext="{Binding FODetectorParameters}"/>
             </GroupBox>
             <GroupBox Header="Methods" Grid.Row="3" Grid.Column="0" Margin="2,0,0,0">

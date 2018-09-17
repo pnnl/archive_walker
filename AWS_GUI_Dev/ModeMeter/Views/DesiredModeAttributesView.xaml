@@ -17,7 +17,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
-                <Label Content="Mode of interest: " Width="230"/>
+                <Label Content="Mode of Interest: " Width="230"/>
                 <TextBox Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=2}, Path=DataContext.ModeName}" Margin="2" Width="100"/>
             </StackPanel>
             <Label Grid.Row="1" Content="Mode Parameters: " Margin="2"/>
@@ -26,7 +26,7 @@
                 <TextBox Text="{Binding LowF}" Margin="2" Width="100"/>
             </StackPanel>
             <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="2">
-                <Label Content="Guess Frequency (Hz): " Margin="50,0,0,0" Width="180"/>
+                <Label Content="Nominal Frequency (Hz): " Margin="50,0,0,0" Width="180"/>
                 <TextBox Text="{Binding GuessF}" Margin="2" Width="100"/>
             </StackPanel>
             <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="2">
@@ -34,7 +34,7 @@
                 <TextBox Text="{Binding HighF}" Margin="2" Width="100"/>
             </StackPanel>
             <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="2">
-                <Label Content="Maximum Dampoing Ratio (%): " Margin="50,0,0,0" Width="180"/>
+                <Label Content="Maximum Damping Ratio (%): " Margin="50,0,0,0" Width="180"/>
                 <TextBox Text="{Binding DampMax}" Margin="2" Width="100"/>
             </StackPanel>            
         </Grid>           

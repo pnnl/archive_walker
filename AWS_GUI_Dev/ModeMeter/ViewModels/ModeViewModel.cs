@@ -106,15 +106,15 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        public string DampRatioThreshold
-        {
-            get { return _model.DampRatioThreshold; }
-            set
-            {
-                _model.DampRatioThreshold = value;
-                OnPropertyChanged();
-            }
-        }
+        //public string DampRatioThreshold
+        //{
+        //    get { return _model.DampRatioThreshold; }
+        //    set
+        //    {
+        //        _model.DampRatioThreshold = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
         public RetroactiveContinuityStatusType Status
         {
             get { return _model.RetConTracking.Status; }

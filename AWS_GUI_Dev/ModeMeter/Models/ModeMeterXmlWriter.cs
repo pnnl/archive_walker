@@ -60,7 +60,7 @@ namespace ModeMeter.Models
                     break;
             }
             modeElement.Add(retConTracking);
-            modeElement.Add(new XElement("DampRatioThreshold", mode.DampRatioThreshold));
+            //modeElement.Add(new XElement("DampRatioThreshold", mode.DampRatioThreshold));
             modeElement.Add(new XElement("DesiredModes", new XElement("LowF", mode.DesiredModes.LowF),
                                                          new XElement("HighF", mode.DesiredModes.HighF),
                                                          new XElement("GuessF", mode.DesiredModes.GuessF),
