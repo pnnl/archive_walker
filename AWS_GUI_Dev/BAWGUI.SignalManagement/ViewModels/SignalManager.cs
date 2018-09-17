@@ -84,15 +84,17 @@ namespace BAWGUI.SignalManagement.ViewModels
         }
         public bool AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
-            string MissingExampleFile = "";
+            var MissingExampleFile = new List<string>();
             bool ReadingSuccess = true;
+            // go through each input file source to see if example file exist, if yes, add to file info, if not add to error message to tell user the file source is having problem
+            // so all missing file source and input file reading errors will show up at the same time
             foreach (var item in inputFileInfos)
             {
                 if (!File.Exists(item.ExampleFile))
                 {
                     //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
                     //MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);           
-                    MissingExampleFile = MissingExampleFile + "The example file  " + Path.GetFileName(item.ExampleFile) + "  could not be found in the directory  " + Path.GetDirectoryName(item.ExampleFile) + ".\n";
+                    MissingExampleFile.Add("The example file  " + Path.GetFileName(item.ExampleFile) + "  could not be found in the directory  " + Path.GetDirectoryName(item.ExampleFile) + ".");
                 }
                 else
                 {
@@ -105,7 +107,8 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            MissingExampleFile.Add(MissingExampleFile + "Error reading .csv file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            //MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
                     else
@@ -116,15 +119,16 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            MissingExampleFile.Add(MissingExampleFile + "Error reading .pdat file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
                     FileInfo.Add(aFileInfo);
                 }
             }
-            if (MissingExampleFile.Length > 0)
+            if (MissingExampleFile.Count() > 0)
             {
-                MessageBox.Show(MissingExampleFile + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+                MessageBox.Show(string.Join("\n", MissingExampleFile) + "\nPlease go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
                 ReadingSuccess = false;
             }
             AllPMUs = _getAllPMU();
