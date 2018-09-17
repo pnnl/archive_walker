@@ -1424,12 +1424,16 @@ Namespace ViewModels
         Private Sub _checkDivisionCustomizationOutputTypeAndSamplingRate()
             CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
             If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
-                If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
-                    _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                    Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+                If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
+                    If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
+                        If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
+                            _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+                            Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+                        End If
+                    End If
                 End If
             End If
-            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
+                If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
@@ -1606,73 +1610,143 @@ Namespace ViewModels
                 End If
             End If
         End Sub
+        'Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
+        '    If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
+        '        Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
+        '    Else
+        '        If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
+        '            Throw New Exception("Error! Please select a valid text box (Dividend or Divisor) for this input signal!")
+        '        ElseIf _currentSelectedStep.CurrentCursor = "Dividend" Then
+        '            If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
+        '                Throw New Exception("Dividend cannot be the same as the divisor!")
+        '            End If
+        '            If obj.SignalSignature.IsChecked Then       ' check box checked
+        '                If _currentSelectedStep.Dividend IsNot Nothing And _currentSelectedStep.Dividend IsNot _currentSelectedStep.Divisor Then  ' if the current text box has content and not equal to the divisor
+        '                    _currentSelectedStep.Dividend.IsChecked = False
+        '                    _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
+        '                End If
+        '                _currentSelectedStep.Dividend = obj.SignalSignature
+        '                If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+        '                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+        '                End If
+        '            Else                                        ' check box unchecked
+        '                If _currentSelectedStep.Dividend Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
+        '                    If _currentSelectedStep.Divisor Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
+        '                        obj.SignalSignature.IsChecked = True
+        '                    Else
+        '                        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+        '                    End If
+        '                    Dim dummy = New SignalSignatureViewModel("", "")
+        '                    dummy.IsValid = False
+        '                    _currentSelectedStep.Dividend = dummy
+        '                End If
+        '            End If
+        '            _currentSelectedStep.CurrentCursor = ""
+        '            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+        '            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+        '        ElseIf _currentSelectedStep.CurrentCursor = "Divisor" Then
+        '            If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
+        '                Throw New Exception("Divisor cannot be the same as thedivident!")
+        '            End If
+        '            If obj.SignalSignature.IsChecked Then
+        '                If _currentSelectedStep.Divisor IsNot Nothing And _currentSelectedStep.Divisor IsNot _currentSelectedStep.Dividend Then
+        '                    _currentSelectedStep.Divisor.IsChecked = False
+        '                    _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
+        '                End If
+        '                _currentSelectedStep.Divisor = obj.SignalSignature
+        '                If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+        '                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+        '                End If
+        '            Else
+        '                If _currentSelectedStep.Divisor Is obj.SignalSignature Then
+        '                    If _currentSelectedStep.Dividend Is obj.SignalSignature Then
+        '                        obj.SignalSignature.IsChecked = True
+        '                    Else
+        '                        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+        '                    End If
+        '                    Dim dummy = New SignalSignatureViewModel("", "")
+        '                    dummy.IsValid = False
+        '                    _currentSelectedStep.Divisor = dummy
+        '                End If
+        '            End If
+        '            _currentSelectedStep.CurrentCursor = ""
+        '            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+        '            '_dataConfigDetermineAllParentNodeStatus()
+        '            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+        '        End If
+
+
+
+        '    End If
+        '    '_signalMgr.DetermineFileDirCheckableStatus()
+        'End Sub
         Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
             If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
-                Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
+                Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
             Else
-                If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
-                    Throw New Exception("Error! Please select a valid text box for this input signal!")
+                If _currentSelectedStep.CurrentCursor = "" Then 'If no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
+                    Throw New Exception("Error! Please select a valid text box (Dividend or Divisor) for this input signal!")
+
                 ElseIf _currentSelectedStep.CurrentCursor = "Dividend" Then
-                    If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
-                        Throw New Exception("Divident cannot be the same as thedivisor!")
-                    End If
-                    If obj.SignalSignature.IsChecked Then       ' check box checked
-                        If _currentSelectedStep.Dividend IsNot Nothing And _currentSelectedStep.Dividend IsNot _currentSelectedStep.Divisor Then  ' if the current text box has content and not equal to the divisor
-                            _currentSelectedStep.Dividend.IsChecked = False
+                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                        If _currentSelectedStep.Dividend IsNot Nothing Then ' If the current Dividend box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
                         End If
-                        _currentSelectedStep.Dividend = obj.SignalSignature
-                        If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                        End If
-                    Else                                        ' check box unchecked
-                        If _currentSelectedStep.Dividend Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
-                            If _currentSelectedStep.Divisor Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
-                                obj.SignalSignature.IsChecked = True
-                            Else
-                                _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                            End If
+                        If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
+                            ' If Dividend and Divisor are the same
+                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
                             _currentSelectedStep.Dividend = dummy
+                            Throw New Exception("Error! Dividend cannot be the same as the Divisor!")
+
+                        End If
+                        _currentSelectedStep.Dividend = obj.SignalSignature ' Assign the selected signal to Dividend
+                        If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Dividend) Then
+                            _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Dividend)
+                        End If
+                    Else ' If a Signal box is unselected
+                        If _currentSelectedStep.Dividend Is obj.SignalSignature Then ' If the current Dividend box has PMU and signal names
+                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
+                            Dim dummy = New SignalSignatureViewModel("", "")
+                            dummy.IsValid = False
+                            _currentSelectedStep.Dividend = dummy ' Delete the PMU and signal names in current Dividend box
                         End If
                     End If
                     _currentSelectedStep.CurrentCursor = ""
                     _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                     _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+
                 ElseIf _currentSelectedStep.CurrentCursor = "Divisor" Then
-                    If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
-                        Throw New Exception("Divisor cannot be the same as thedivident!")
-                    End If
-                    If obj.SignalSignature.IsChecked Then
-                        If _currentSelectedStep.Divisor IsNot Nothing And _currentSelectedStep.Divisor IsNot _currentSelectedStep.Dividend Then
-                            _currentSelectedStep.Divisor.IsChecked = False
+                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                        If _currentSelectedStep.Divisor IsNot Nothing Then ' If the current Divisor box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
                         End If
-                        _currentSelectedStep.Divisor = obj.SignalSignature
-                        If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                        End If
-                    Else
-                        If _currentSelectedStep.Divisor Is obj.SignalSignature Then
-                            If _currentSelectedStep.Dividend Is obj.SignalSignature Then
-                                obj.SignalSignature.IsChecked = True
-                            Else
-                                _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                            End If
+                        If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
+                            ' If Dividend and Divisor are the same
+                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
                             _currentSelectedStep.Divisor = dummy
+                            Throw New Exception("Error! Divisor cannot be the same as the Dividend!")
+                        End If
+                        _currentSelectedStep.Divisor = obj.SignalSignature ' Assign the selected signal to Divisor
+                        If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Divisor) Then
+                            _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Divisor)
+                        End If
+                    Else ' If a Signal box is unselected
+                        If _currentSelectedStep.Divisor Is obj.SignalSignature Then ' If the current Divisor box has PMU and signal names
+                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
+                            Dim dummy = New SignalSignatureViewModel("", "")
+                            dummy.IsValid = False
+                            _currentSelectedStep.Divisor = dummy ' Delete the PMU and signal names in current Divisor box
                         End If
                     End If
                     _currentSelectedStep.CurrentCursor = ""
                     _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-                    '_dataConfigDetermineAllParentNodeStatus()
                     _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+
                 End If
-
-
-
             End If
             '_signalMgr.DetermineFileDirCheckableStatus()
         End Sub

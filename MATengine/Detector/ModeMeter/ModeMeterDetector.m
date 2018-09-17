@@ -136,7 +136,7 @@ for ModeIdx = 1:NumMode
                         for ModeIdxToUndateChanIdx = 1:(ModeIdx-1)
                             ChanIdxUpdated = ChanIdxUpdated + NumMethods(ModeIdxToUndateChanIdx)*size(Data{ModeIdxToUndateChanIdx},2);
                         end
-                        UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList,TimeStringDN(end),ChanIdxUpdated + ModeEstimateCalcIdx);
+                        UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,TimeStringDN(end),ChanIdxUpdated + ModeEstimateCalcIdx);
                     end
                 else
                     % Reset the tracking cell
@@ -173,11 +173,7 @@ else
     AdditionalOutput(1).OperatingType = [];
 end
 %Write modeestimates and system operating points to a .csv file
-if ~isempty(PastAdditionalOutput)
-    AdditionalOutput(1).Mode_n_SysCondList = WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPathFinal,PastAdditionalOutput(1).Mode_n_SysCondList);
-else
-    AdditionalOutput(1).Mode_n_SysCondList = WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPathFinal,[]);
-    
-end
+WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPathFinal);
+
 
 

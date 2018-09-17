@@ -173,29 +173,31 @@ namespace BAWGUI.ViewModels
                     //clean up the signal manager
                     _signalMgr.cleanUp();
                     //read input data files and generate all the signal objects from the data files and put them in the signal manager.
-                    _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
-                    //pass signal manager into settings.
-                    SettingsVM.SignalMgr = _signalMgr;
-                    //read config files
-                    SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
-                    SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
-                    SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
-                    SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
-                    e.SelectedRun.Model.DataFileDirectories = new List<string>();
-                    foreach (var info in _signalMgr.FileInfo)
+                    var missing = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
+                    if (!missing)
                     {
-                        e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
-                    }
-
-                    //read voltage stability settings from config file.
-                    var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
-                    //add voltage stability detectors to te detector list in the settings.
-                    if (vsDetectors.Count > 0)
-                    {
-                        SettingsVM.DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible;
-                        foreach (var detector in vsDetectors)
+                        //pass signal manager into settings.
+                        SettingsVM.SignalMgr = _signalMgr;
+                        SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
+                        SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
+                        SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
+                        SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        e.SelectedRun.Model.DataFileDirectories = new List<string>();
+                        foreach (var info in _signalMgr.FileInfo)
                         {
-                            SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
+                            e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                        }
+
+                        //read voltage stability settings from config file.
+                        var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
+                        //add voltage stability detectors to te detector list in the settings.
+                        if (vsDetectors.Count > 0)
+                        {
+                            SettingsVM.DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible;
+                            foreach (var detector in vsDetectors)
+                            {
+                                SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
+                            }
                         }
                     }
                 }

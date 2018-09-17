@@ -82,14 +82,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                 return _instance;
             }
         }
-        public void AddRawSignals(List<InputFileInfoModel> inputFileInfos)
+
+        public Boolean AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
+            string MissingExampleFile = "";
+            bool Missing = false;
             foreach (var item in inputFileInfos)
             {
                 if (!File.Exists(item.ExampleFile))
                 {
                     //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
-                    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                    //MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);           
+                    MissingExampleFile = MissingExampleFile + "The example file  " + Path.GetFileName(item.ExampleFile) + "  could not be found in the directory  " + Path.GetDirectoryName(item.ExampleFile) + ".\n";
                 }
                 else
                 {
@@ -119,7 +123,13 @@ namespace BAWGUI.SignalManagement.ViewModels
                     FileInfo.Add(aFileInfo);
                 }
             }
+            if (MissingExampleFile.Length > 0)
+            {
+                MessageBox.Show(MissingExampleFile + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+                Missing = true;
+            }
             AllPMUs = _getAllPMU();
+            return Missing;
         }
         private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         {

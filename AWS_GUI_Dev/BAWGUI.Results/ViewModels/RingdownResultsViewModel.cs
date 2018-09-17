@@ -540,8 +540,6 @@ namespace BAWGUI.Results.ViewModels
         public ICommand RingdownReRun { get; set; }
         private void _ringdownRerun(object obj)
         {
-            //string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\Project_RerunTestRD\Run_test\";
-            //var controlPath = RunPath + "ControlRerun\\";
             //first stop background normal run if any
             //start rerun in background
             if (File.Exists(ConfigFilePath))
