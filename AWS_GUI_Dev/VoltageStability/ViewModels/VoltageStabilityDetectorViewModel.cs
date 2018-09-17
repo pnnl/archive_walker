@@ -56,6 +56,7 @@ namespace VoltageStability.ViewModels
             AddShunt = new RelayCommand(_addShunt);
             SiteSelected = new RelayCommand(_siteSelected);
             SignalSelectedToChange = new RelayCommand(_signalSelectedToChange);
+            DeleteASite = new RelayCommand(_deleteASite);
         }
 
         private void _updateInputChannel()
@@ -581,6 +582,19 @@ namespace VoltageStability.ViewModels
             }
             _updateInputChannel();
             _signalMgr.DetermineAllParentNodeStatus();
+        }
+        public ICommand DeleteASite { get; set; }
+        private void _deleteASite(object obj)
+        {
+            var siteToBeDeleted = obj as SiteViewModel;
+            _sites.Remove(siteToBeDeleted);
+            foreach (var site in Sites)
+            {
+                if (site.SiteNumber > siteToBeDeleted.SiteNumber)
+                {
+                    site.SiteNumber = site.SiteNumber - 1;
+                }
+            }
         }
     }
 }
