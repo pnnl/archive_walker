@@ -195,16 +195,13 @@ namespace BAWGUI.Results.ViewModels
                         {
                             if (axis.IsVertical())
                             {
-                                if (axis.IsVertical())
-                                {
-                                    yaxisMin = axis.Minimum;
-                                    yaxisMax = axis.Maximum;
-                                }
-                                if (axis.IsHorizontal())
-                                {
-                                    xaxisMin = axis.ActualMinimum;
-                                    xaxisMax = axis.ActualMaximum;
-                                }
+                                yaxisMin = axis.Minimum;
+                                yaxisMax = axis.Maximum;
+                            }
+                            if (axis.IsHorizontal())
+                            {
+                                xaxisMin = axis.ActualMinimum;
+                                xaxisMax = axis.ActualMaximum;
                             }
                         }
                         var lineAnnotation = new OxyPlot.Annotations.LineAnnotation()
