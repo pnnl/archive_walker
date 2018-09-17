@@ -51,6 +51,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _isMatlabEngineRunning = false;
             _runCommands = new RunMATLABViewModel();
             DeleteRun = new RelayCommand(_deleteARun);
+            _canRun = true;
         }
 
         //public ProjectsControlViewModel(string resultsStoragePath)
@@ -116,6 +117,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             set
             {
                 _resultsStoragePath = value;
+                BAWGUI.Properties.Settings.Default.ResultStoragePath = value;
+                BAWGUI.Properties.Settings.Default.Save();
                 try
                 {
                     _generateProjectTree(_resultsStoragePath);
@@ -138,8 +141,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     ResultsStoragePath = fbd.SelectedPath;
-                    BAWGUI.Properties.Settings.Default.ResultStoragePath = ResultsStoragePath;
-                    BAWGUI.Properties.Settings.Default.Save();
                     try
                     {
                         _generateProjectTree(ResultsStoragePath);
@@ -198,6 +199,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             set
             {
                 _selectedRun = value;
+#if !DEBUG
+                CanRun = !_findRunGeneratedFile(value.Model.RunPath);
+#endif
                 OnPropertyChanged();
             }
         }
@@ -350,7 +354,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             foreach (var dir in Directory.GetDirectories(runPath))
             {
-                var result = _findRunGeneratedFile(dir);
+               var result = _findRunGeneratedFile(dir);
                 if (result)
                 {
                     return result;
@@ -506,6 +510,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             var runToDelete = (AWRunViewModel)obj;
             SelectedProject.DeleteARun(runToDelete);
+        }
+        private bool _canRun;
+        public bool CanRun
+        {
+            set
+            {
+                _canRun = value;
+                OnPropertyChanged();
+            }
+            get
+            {
+                return _canRun;
+            }
         }
     }
     public class AWProjectViewModel : ViewModelBase

@@ -35,8 +35,9 @@
             <StackPanel Orientation="Vertical" Grid.Row="3" Margin="2,0">
                 <Separator Margin="0,10,0,5"/>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <Button Margin="2" Command="{Binding RunCommands.RunArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}" ToolTip="Start Archive Walker normal run">
-                        <Image Source="/BAWGUI;component/MyResources/Run_16x.png"/>
+                    <!--<Button Margin="2" Command="{Binding RunCommands.RunArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}" ToolTip="Start Archive Walker normal run">-->
+                    <Button Margin="2" Command="{Binding RunCommands.RunArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding CanRun, Mode=OneWay}" ToolTip="Start Archive Walker normal run">
+                            <Image Source="/BAWGUI;component/MyResources/Run_16x.png"/>
                     </Button>
                     <Button Margin="2" Command="{Binding RunCommands.PauseArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning}" ToolTip="Pause Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource InverseBooleanVisibilityConverter}}">
                         <Image Source="/BAWGUI;component/MyResources/pause.PNG"/>
