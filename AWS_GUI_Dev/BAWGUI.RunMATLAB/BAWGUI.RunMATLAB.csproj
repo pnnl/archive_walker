@@ -122,7 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="MyResources\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
@@ -142,7 +141,23 @@
       <Name>VoltageStability.MATLABRunResults</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\BAWGUI.Resources\Resources.projitems" Label="Shared" />
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
+      <Link>MyResources\open.gif</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\pause.PNG">
+      <Link>MyResources\pause.PNG</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\resume.PNG">
+      <Link>MyResources\resume.PNG</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\Run_16x.png">
+      <Link>MyResources\Run_16x.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\stop.PNG">
+      <Link>MyResources\stop.PNG</Link>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -517,12 +517,12 @@ Namespace ViewModels
                 'If SelectUTCTime Then
                 '_convertStartTimeToSelectedTimeZone()
                 'End If
-                Dim StackTrace = New StackTrace()
-                Dim stackFrames = StackTrace.GetFrames()
+                'Dim StackTrace = New StackTrace()
+                'Dim stackFrames = StackTrace.GetFrames()
 
-                For Each sf In stackFrames
-                    Dim a = sf.GetMethod().Name
-                Next
+                'For Each sf In stackFrames
+                '    Dim a = sf.GetMethod().Name
+                'Next
                 OnPropertyChanged("DateTimeStart")
             End Set
         End Property

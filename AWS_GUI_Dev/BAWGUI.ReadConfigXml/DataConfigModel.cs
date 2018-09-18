@@ -144,8 +144,10 @@ namespace BAWGUI.ReadConfigXml
         private XElement _xElement;
         public ReaderPropertiesModel()
         {
-            DateTimeStart = "01/01/0001 00:00:00";
-            DateTimeEnd = "01/01/0001 00:00:00";
+            //DateTimeStart = "01/01/0001 00:00:00";
+            //DateTimeEnd = "01/01/0001 00:00:00";
+            DateTimeStart = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            DateTimeEnd = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         }
         public ReaderPropertiesModel(XElement xElement)
         {

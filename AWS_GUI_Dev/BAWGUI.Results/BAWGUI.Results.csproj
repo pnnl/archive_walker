@@ -131,6 +131,7 @@
     <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Models\RerunResultDetectGeneral.cs" />
     <Compile Include="Models\ResultsModel.cs" />
     <Compile Include="ViewModels\FOOccurrenceChannelViewModel.cs" />
     <Compile Include="ViewModels\DateStruct.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="ViewModels\OutOfRangeEventViewModel.cs" />
     <Compile Include="ViewModels\RDChannelViewModel.cs" />
     <Compile Include="ViewModels\RDReRunPlotsViewModels.cs" />
+    <Compile Include="ViewModels\ResultsExportingViewModel.cs" />
     <Compile Include="ViewModels\RingdownEventViewModel.cs" />
     <Compile Include="ViewModels\WindRampEventViewModel.cs" />
     <Compile Include="Views\AvailableDates.xaml.cs">
@@ -148,6 +150,9 @@
     </Compile>
     <Compile Include="Views\AvailableDates2.xaml.cs">
       <DependentUpon>AvailableDates2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExportResultsPopup.xaml.cs">
+      <DependentUpon>ExportResultsPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FOChannelTableView.xaml.cs">
       <DependentUpon>FOChannelTableView.xaml</DependentUpon>
@@ -217,6 +222,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AvailableDates2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExportResultsPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -378,6 +387,10 @@
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JSISCSVWriter\JSISCSVWriter.csproj">
+      <Project>{2c6141d9-cf7e-48a4-9479-7bd67340a370}</Project>
+      <Name>JSISCSVWriter</Name>
     </ProjectReference>
     <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
       <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>

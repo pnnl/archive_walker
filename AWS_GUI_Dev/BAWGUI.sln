@@ -74,13 +74,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoltageStability", "Voltage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAWGUI.MATLABRunResults", "BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj", "{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSISCSVWriter", "JSISCSVWriter\JSISCSVWriter.csproj", "{2C6141D9-CF7E-48A4-9479-7BD67340A370}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoltageStability.MATLABRunResults", "VoltageStability.MATLABRunResults\VoltageStability.MATLABRunResults.csproj", "{ECC13D01-5571-4325-8772-70E51982DAAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModeMeter", "ModeMeter\ModeMeter.csproj", "{F28598D8-9C9F-42C9-B828-4D1BD86BB751}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		BAWGUI.Resources\Resources.projitems*{bf338bcb-0788-4de9-8d78-5db5142fbf27}*SharedItemsImports = 4
 		BAWGUI.Resources\Resources.projitems*{c90f12f9-9e00-411c-9b5a-58564d512918}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -248,6 +249,20 @@ Global
 		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|x64.Build.0 = Release|x64
 		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|x86.ActiveCfg = Release|Any CPU
 		{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}.Release|x86.Build.0 = Release|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Debug|x64.Build.0 = Debug|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Debug|x86.Build.0 = Debug|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Release|x64.ActiveCfg = Release|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Release|x64.Build.0 = Release|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C6141D9-CF7E-48A4-9479-7BD67340A370}.Release|x86.Build.0 = Release|Any CPU
+		{ECC13D01-5571-4325-8772-70E51982DAAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC13D01-5571-4325-8772-70E51982DAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECC13D01-5571-4325-8772-70E51982DAAE}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{ECC13D01-5571-4325-8772-70E51982DAAE}.Debug|Any CPU.Build.0 = Debug|x64
 		{ECC13D01-5571-4325-8772-70E51982DAAE}.Debug|x64.ActiveCfg = Debug|x64
