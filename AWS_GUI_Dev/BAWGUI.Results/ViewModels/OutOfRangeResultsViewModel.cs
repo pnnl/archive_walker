@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Results.Models;
+using BAWGUI.Results.Views;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using OxyPlot;
@@ -31,6 +32,7 @@ namespace BAWGUI.Results.ViewModels
             RunSparseMode = new RelayCommand(_runSparseMode);
             OutOfRangeReRun = new RelayCommand(_outOfRangeRerun);
             CancelOutOfRangeReRun = new RelayCommand(_cancelOORReRun);
+            ExportOutOfRangeReRunData = new RelayCommand(_exportData);
             _sparsePlotModels = new ObservableCollection<SparsePlot>();
             _oorReRunPlotModels = new ObservableCollection<OORReRunPlot>();
             //_selectedStartTime = "01/01/0001 00:00:00";
@@ -38,7 +40,6 @@ namespace BAWGUI.Results.ViewModels
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         }
-
         private string _configFilePath;
         public string ConfigFilePath
         {
@@ -887,6 +888,30 @@ namespace BAWGUI.Results.ViewModels
         private void _cancelOORReRun(object obj)
         {
             _engine.CancelOORReRun(_run);
+        }
+        private ExportResultsPopup _exportResultsPopup;
+        public ICommand ExportOutOfRangeReRunData { get; set; }
+        private void _exportData(object obj)
+        {
+            if (ReRunResult.Any())
+            {
+                var exportResult = new ResultsExportingViewModel(ReRunResult);
+                exportResult.ExportDataCancelled += _cancelExportData;
+                _exportResultsPopup = new ExportResultsPopup
+                {
+                    Owner = System.Windows.Application.Current.MainWindow,
+                    DataContext = exportResult
+                };
+                _exportResultsPopup.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please retrieve detail first before exporting data.", "Warning!", MessageBoxButtons.OK);
+            }
+        }
+        private void _cancelExportData(object sender, EventArgs e)
+        {
+            _exportResultsPopup.Close();
         }
     }
 }

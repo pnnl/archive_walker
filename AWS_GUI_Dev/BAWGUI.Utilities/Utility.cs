@@ -16,6 +16,17 @@ namespace BAWGUI.Utilities
             return bbb;
         }
 
+        public static double MatlabDateNumToDotNetSeconds(double item)
+        {
+            return (item - 367) * 86400;
+        }
+
+        public static string SecondsToDateTimeString(double item)
+        {
+            System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            var bbb = dtDateTime.AddSeconds(item);
+            return bbb.ToString("yyyyMMdd_HHmmss");
+        }
         //public static Color HighlightColor = Colors.Cornsilk;
         public static System.Windows.Media.SolidColorBrush HighlightColor = new System.Windows.Media.SolidColorBrush(Colors.Cornsilk);
 

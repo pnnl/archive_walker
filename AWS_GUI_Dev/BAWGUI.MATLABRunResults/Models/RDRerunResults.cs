@@ -24,11 +24,13 @@ namespace BAWGUI.MATLABRunResults.Models
                 double[] t = (double[])(arr.ToVector(MWArrayComponent.Real));
                 var timeStamps = new List<System.DateTime>();
                 var timeStampNumbers = new List<double>();
+                var timeStampNumbersInSeconds = new List<double>();
                 foreach (var item in t)
                 {
                     var tt = Utility.MatlabDateNumToDotNetDateTime(item);
                     timeStamps.Add(tt);
                     timeStampNumbers.Add(tt.ToOADate());
+                    timeStampNumbersInSeconds.Add(Utility.MatlabDateNumToDotNetSeconds(item));
                 }
                 
                 arr = (MWNumericArray)_results["Data", index];
@@ -117,6 +119,8 @@ namespace BAWGUI.MATLABRunResults.Models
                 }
                 var newDetector = new RingdownDetector();
                 newDetector.Label = index.ToString();
+                var fs = (Math.Round((t.Count() - 1) / (Utility.MatlabDateNumToDotNetSeconds(t.LastOrDefault()) - Utility.MatlabDateNumToDotNetSeconds(t.FirstOrDefault()))));
+                newDetector.SamplingRate = (int)fs;
                 for (int signalCount = 0; signalCount < dimEach[1]; signalCount++)
                 {
                     var newRingdownSignal = new RingdownSignal();
@@ -126,6 +130,8 @@ namespace BAWGUI.MATLABRunResults.Models
                     newRingdownSignal.Unit = dataUnit[signalCount];
                     newRingdownSignal.TimeStamps = timeStamps;
                     newRingdownSignal.TimeStampNumber = timeStampNumbers;
+                    newRingdownSignal.SamplingRate = (int)fs;
+                    newRingdownSignal.TimeStampInSeconds = timeStampNumbersInSeconds;
                     newRingdownSignal.Threshold = threshold.GetRange(signalCount * dimEach[0], dimEach[0]);
                     newRingdownSignal.Data = data.GetRange(signalCount * dimEach[0], dimEach[0]);
                     newRingdownSignal.TestStatistic = rms.GetRange(signalCount * dimEach[0], dimEach[0]);
