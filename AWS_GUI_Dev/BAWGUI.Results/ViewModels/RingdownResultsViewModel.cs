@@ -37,8 +37,10 @@ namespace BAWGUI.Results.ViewModels
             _configFilePath = "";
             _reRunResult = new List<RingdownDetector>();
             _run = new AWRunViewModel();
-            _selectedStartTime = "01/01/0001 00:00:00";
-            _selectedEndTime = "01/01/0001 00:00:00";
+            //_selectedStartTime = "01/01/0001 00:00:00";
+            //_selectedEndTime = "01/01/0001 00:00:00";
+            _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         }
 
         private RunMATLAB.ViewModels.MatLabEngine _engine;
