@@ -33,8 +33,10 @@ namespace BAWGUI.Results.ViewModels
             CancelOutOfRangeReRun = new RelayCommand(_cancelOORReRun);
             _sparsePlotModels = new ObservableCollection<SparsePlot>();
             _oorReRunPlotModels = new ObservableCollection<OORReRunPlot>();
-            _selectedStartTime = "01/01/0001 00:00:00";
-            _selectedEndTime = "01/01/0001 00:00:00";
+            //_selectedStartTime = "01/01/0001 00:00:00";
+            //_selectedEndTime = "01/01/0001 00:00:00";
+            _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         }
 
         private string _configFilePath;
