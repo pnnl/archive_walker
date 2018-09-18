@@ -1710,16 +1710,16 @@ Namespace ViewModels
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
 
-            Try
-                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
-            Catch ex As Exception
-                Throw New Exception("Error when sort signals by type in step: " & Name)
-            End Try
-            If postProcess Then
-                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
-            Else
-                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
-            End If
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'If postProcess Then
+            '    signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Else
+            '    signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
