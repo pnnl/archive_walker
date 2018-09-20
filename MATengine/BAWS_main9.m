@@ -121,7 +121,7 @@ if (nargin == 5) && (~Unpause)
         BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
         ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
-    ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],WindAppXML);
+%     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],WindAppXML);
     InitialCondosFilter = [];
     InitialCondosMultiRate = [];
     FinalAngles = [];
@@ -169,7 +169,7 @@ elseif ~Unpause
     end
     
     [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);    
-    ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],[]);
+%     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],[]);
     
     % Error check on RerunDetector entry
     if sum(strcmp(RerunDetector,[{'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
@@ -696,7 +696,7 @@ while(~min(done))
         % Num_Flags is hard coded as 4 to account for the 2 processor flags
         % and the 2 customization flags.
         PMU = DQandCustomization(PMU,PostProcessCustXML,NumPostProcessCustomStages,4);
-        PMU = GetOutputSignalsRev(PMU,ConfigSignalSelection);
+%         PMU = GetOutputSignalsRev(PMU,ConfigSignalSelection);
         
         % *********
         % Detection
