@@ -25,7 +25,7 @@ namespace BAWGUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Examples\\Projects")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Projects")]
         public string ResultStoragePath {
             get {
                 return ((string)(this["ResultStoragePath"]));
