@@ -99,9 +99,6 @@
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PDAT_Reader">
-      <HintPath>..\libs\PDAT_Reader.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
