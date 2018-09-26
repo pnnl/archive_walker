@@ -3,7 +3,6 @@ using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
-using PDAT_Reader;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
