@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="BAWGUI.Results.Views.FOChannelTableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Results.Views"
+             xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
+        <converters:TableValueNANConverter x:Key="TableValueNANConverter"/>
+        <DataTemplate x:Key="FloatCellTemplate">
+            <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
+        </DataTemplate>
+    </UserControl.Resources>
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedOccurrence.Channels}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <xcdg:DataGridControl.Resources>
+            <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
+                <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
+            </Style>
+        </xcdg:DataGridControl.Resources>
+        <xcdg:DataGridControl.View>
+            <xcdg:TableflowView UseDefaultHeadersFooters="False">
+                <xcdg:TableflowView.FixedHeaders>
+                    <DataTemplate>
+                        <DockPanel>
+                            <xcdg:ColumnManagerRow/>
+                        </DockPanel>
+                    </DataTemplate>
+                </xcdg:TableflowView.FixedHeaders>
+            </xcdg:TableflowView>
+        </xcdg:DataGridControl.View>
+        <xcdg:DataGridControl.Columns>
+            <xcdg:Column Title="" FieldName=" " Width="30">
+                <xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource TableRowIndexConverter} }" />
+                    </DataTemplate>
+                </xcdg:Column.CellContentTemplate>
+            </xcdg:Column>
+            <xcdg:Column Title="Name" FieldName="Name" ReadOnly="True" Width="250"/>
+            <xcdg:Column Title="Amplitude" FieldName="Amplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+            <xcdg:Column Title="SNR" FieldName="SNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
+            <xcdg:Column Title="Coherence" FieldName="Coherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+        </xcdg:DataGridControl.Columns>
+    </xcdg:DataGridControl>
+</UserControl>

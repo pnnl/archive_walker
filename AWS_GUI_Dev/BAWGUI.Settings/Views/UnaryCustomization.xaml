@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="UnaryCustomization"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical" Margin="2">
+        <StackPanel Orientation="Horizontal" Margin="280,0,0,0">
+            <!--<Image Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>-->
+            <Label Margin="0,0,0,0" Width="Auto" VerticalAlignment="Center" Content="Custom PMU: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please enter custom PMU name" Width="150" Height="22" Text="{Binding CustPMUname}" Margin="0,0,20,0" HorizontalContentAlignment="Right"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="30,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Input Signals ({0}):}"/>
+            <TextBlock Margin="265,2,2,2" Text="Custom Signals: "/>
+        </StackPanel>
+        <Grid>
+            <StackPanel Orientation="Vertical">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
+                    <ItemsControl ItemsSource="{Binding OutputInputMappingPair}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Name="PMU" Width="100" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <TextBox Name="Channel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="2,0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName}" Margin="70,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <StackPanel Orientation="Horizontal">
+                    <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}" Width="100" Margin="30,0,0,0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus"/>
+                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}"  Width="150" Margin="2,0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus"/>
+                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName}" Margin="70,0" Style="{StaticResource NoItemsTextBoxStyle}" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <!--<i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonUp">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>-->
+    </StackPanel>
+</UserControl>

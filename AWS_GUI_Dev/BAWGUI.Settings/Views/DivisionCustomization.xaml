@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="DivisionCustomization"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             d:DesignHeight="300" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="-10,10,0,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="36"></ColumnDefinition>
+            <ColumnDefinition Width="97*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <xtlkt:WatermarkTextBox Name="MDPMU" ToolTip="Signal 1" Watermark="Select PMU name" Text="{Binding Dividend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Dividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Dividend}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
+            <xtlkt:WatermarkTextBox Name="Dividend" ToolTip="Signal 1" Watermark="Select signal name" Text="{Binding Dividend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Dividend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Dividend}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
+            <TextBlock HorizontalAlignment="Right" Margin="5,0,5,0" FontSize="24" Grid.Row="1" Grid.Column="0" Text="/" VerticalAlignment="Bottom"></TextBlock>
+            <xtlkt:WatermarkTextBox Name="SDPMU" ToolTip="Signal 2" Watermark="Select PMU name" Text="{Binding Divisor.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Divisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Divisor}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
+            <xtlkt:WatermarkTextBox Name="Divisor" ToolTip="Signal 2" Watermark="Select signal name" Text="{Binding Divisor.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Divisor.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotKeyboardFocus">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Divisor}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xtlkt:WatermarkTextBox>
+        </StackPanel>
+        <Separator Grid.Row="1" Grid.Column="1" Width="630" HorizontalAlignment="Left"></Separator>
+        <StackPanel Orientation="Horizontal" Margin="0,2,2,2" Grid.Row="2" Grid.Column="1">
+            <xtlkt:WatermarkTextBox ToolTip="PMU name" Watermark="Enter PMU name" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"></xtlkt:WatermarkTextBox>
+            <xtlkt:WatermarkTextBox ToolTip="Signal name" Watermark="Enter signal name" Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0"/>
+        </StackPanel>
+        <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" FontSize="24" Grid.Row="2" Grid.Column="0" Text="=" VerticalAlignment="Center"></TextBlock>
+    </Grid>
+</UserControl>

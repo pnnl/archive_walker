@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="BAWGUI.Views.ProjectsBrowserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Views"
+             xmlns:converters="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
+             xmlns:converters2="clr-namespace:BAWGUI.Converters"
+             xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <converters:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
+            <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+            <converters:EnabledIfRunningOrPausedConverter x:Key="EnabledIfRunningOrPausedConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxWidth="240" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Please Select Results Storage Directory" VerticalAlignment="Center" Margin="2,0" FontWeight="Black" TextWrapping="WrapWithOverflow" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="1" Text="{Binding ResultsStoragePath}" MinWidth="100" Margin="2,5,2,2" Height="50" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" MaxWidth="236" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <!--<StackPanel Orientation="Vertical" Grid.Row="1">-->
+            <Button Grid.Row="2" Command="{Binding BrowseResultsStorage}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Open results file folder" Margin="2,5,2,0" VerticalAlignment="Top">
+                <Image Source="/BAWGUI;component/MyResources/open.gif"/>
+            </Button>
+            <!--</StackPanel>-->
+            <StackPanel Orientation="Vertical" Grid.Row="3" Margin="2,0">
+                <Separator Margin="0,10,0,5"/>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <!--<Button Margin="2" Command="{Binding RunCommands.RunArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}" ToolTip="Start Archive Walker normal run">-->
+                    <Button Margin="2" Command="{Binding RunCommands.RunArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding CanRun, Mode=OneWay}" ToolTip="Start Archive Walker normal run">
+                            <Image Source="/BAWGUI;component/MyResources/Run_16x.png"/>
+                    </Button>
+                    <Button Margin="2" Command="{Binding RunCommands.PauseArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning}" ToolTip="Pause Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource InverseBooleanVisibilityConverter}}">
+                        <Image Source="/BAWGUI;component/MyResources/pause.PNG"/>
+                    </Button>
+                    <Button Margin="2" Command="{Binding RunCommands.ResumeArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding SelectedRun.IsNormalRunPaused}" ToolTip="Continue Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource BooleanVisibilityConverter}, ConverterParameter=ResumeArchiveWalkerNormal}">
+                        <Image Source="/BAWGUI;component/MyResources/resume.PNG"/>
+                    </Button>
+                    <Button Margin="2"  Command="{Binding RunCommands.StopArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" ToolTip="Stop Archive Walker normal run">
+                        <Image Source="/BAWGUI;component/MyResources/stop.PNG"/>
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource EnabledIfRunningOrPausedConverter}">
+                                <Binding Path="RunCommands.Engine.IsMatlabEngineRunning"/>
+                                <Binding Path="SelectedRun.IsNormalRunPaused"/>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                    <Button Margin="2" Command="{Binding DeleteRun}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">
+                        <Image Source="/BAWGUI;component/MyResources/delete.bmp"/>
+                    </Button>
+                    <!--<Menu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                <MenuItem >
+                    <MenuItem.Icon>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding RunCommands.StopArchiveWalkerNormal}" Header="Stop Run" CommandParameter="{Binding Model}" ToolTip="Stop Archive Walker normal run">
+                    <MenuItem.Icon>
+                    </MenuItem.Icon>
+                    <MenuItem.IsEnabled>
+                    </MenuItem.IsEnabled>
+                </MenuItem>
+                <MenuItem >
+                    -->
+                    <!--<MenuItem Command="{Binding Path=DataContext.DeleteRun, Source={x:Reference myRun}}" CommandParameter="{Binding}" Header="Delete Task" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">-->
+                    <!--
+                    <MenuItem.Icon>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </Menu>-->
+                </StackPanel>
+
+                <Button Content="Add Project" ToolTip="Add A New Project" Margin="0,5" Command="{Binding AddAProject}" Width="100" HorizontalAlignment="Left"/>
+                <!--<Separator/>-->
+                <local:ProjectTreeView/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+
+</UserControl>

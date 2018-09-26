@@ -1,0 +1,16 @@
+clear;
+
+ConfigFile = 'WindApp.XML';
+
+StartTime = '2017-08-08 10:00:00';
+EndTime = '2017-08-08 10:15:00';
+
+SortType = 'EventSize';
+% OR
+% SortType = 'NewestFirst';
+% OR
+% SortType = 'NewestLast';
+
+ReportPath = 'C:\Users\Tony\Documents\MATLAB\ArchiveWalker_WindApp\WindAppStorage\Reports\Report1.docx';
+
+GenerateWindAppReport(ConfigFile,StartTime,EndTime,SortType,ReportPath);

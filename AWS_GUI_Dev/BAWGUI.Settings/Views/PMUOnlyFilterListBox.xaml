@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="PMUOnlyFilterListBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <coreconverter:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <ListView Margin="20,2,2,2" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}}" ItemsSource="{Binding ThisStepOutputsAsSignalHierachyByPMU.SignalList}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="150" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding SignalList}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="2,0" Text="{Binding SignalSignature.PMUName}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock VerticalAlignment="Bottom" Style="{StaticResource NoItemsTextStyle}" Margin="20,2,2,6" Text="Please select signal(s)" Visibility="{Binding InputChannels.Count, Converter={StaticResource VisibleIfNonZeroConverter}, ConverterParameter=HideIfNonZero}" />
+    </Grid>
+</UserControl>

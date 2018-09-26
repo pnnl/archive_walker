@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="MetricPrefixCustomization"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:converters2="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
+             xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:vm="clr-namespace:BAWGUI.Settings"
+             mc:Ignorable="d"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             d:DesignHeight="300" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
+            <converters:UnitMetricConverter x:Key="UnitMetricConverter"/>
+            <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical" Margin="2">
+        <!--<StackPanel Orientation="Horizontal">
+            <RadioButton GroupName="{Binding StepCounter}" Content="Make Custom PMU" IsChecked="{Binding UseCustomPMU}" Margin="2,0"/>
+            <RadioButton GroupName="{Binding StepCounter}" Content="Use Current PMU" IsChecked="{Binding UseCustomPMU, Converter={StaticResource InverseBooleanConverter}}" Margin="10,0"/>
+        </StackPanel>-->
+        <!--<StackPanel Orientation="Horizontal" Margin="20,10,2,2" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}">-->
+        <StackPanel Orientation="Horizontal" Margin="20,10,2,2">
+            <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="20,12,0,0" HorizontalAlignment="Right">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>-->
+            <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="Custom PMU: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
+            <TextBox Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="20,2,2,2" Text="Input PMU:"/>
+            <TextBlock Margin="60,2,2,2" Text="Input Signal:"/>
+            <TextBlock Margin="185,2,2,2" Text="Current Unit:"/>
+            <TextBlock Margin="15,2,2,2" Text="New Unit:"/>
+            <!--<TextBlock Margin="10,2,2,2" Text="Custom Signal:" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>-->
+            <TextBlock Margin="10,2,2,2" Text="Custom Signal:"/>
+        </StackPanel>
+        <ScrollViewer Margin="2" VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
+            <ItemsControl ItemsSource="{Binding OutputInputMappingPair}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <!--<Border BorderBrush="Black" BorderThickness="1" Margin="30,0,0,0" HorizontalAlignment="Left" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus">-->
+                        <StackPanel Orientation="Horizontal">
+                            <!--<TextBox Name="PMU" Width="150" Text="{Binding Path=Value[0].PMUName}" Margin="30,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBox Name="Channel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="2,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>-->
+                            <xtlkt:WatermarkTextBox Focusable="True" Name="PMU" Width="120" Text="{Binding Path=Value[0].PMUName}" Margin="2,0" GotFocus="PMU_GotFocus_1" LostFocus="PMU_LostFocus" Foreground="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsReadOnly="True">
+                                <!--<i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>-->
+                            </xtlkt:WatermarkTextBox>
+                            <xtlkt:WatermarkTextBox Focusable="True" Name="Channel" Width="250" Text="{Binding Path=Value[0].SignalName}" Margin="2,0" GotFocus="Channel_GotFocus_1" LostFocus="Channel_LostFocus" Foreground="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsReadOnly="True">
+                                <!--<i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>-->
+                            </xtlkt:WatermarkTextBox>
+                            <xtlkt:WatermarkTextBox Width="60" Text="{Binding Path=Value[0].OldUnit}" Margin="20,0"/>
+                            <ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" HorizontalContentAlignment="Right" Margin="2,0" SelectedValue="{Binding Path=Key.Unit}" ItemsSource="{Binding Path=Value[0].TypeAbbreviation, Converter={StaticResource UnitMetricConverter}}"/>
+                            <!--<ComboBox.ItemsSource>
+                                    <MultiBinding Converter="{StaticResource UnitMetricConverter}">
+                                        <Binding Path="Value[0].Unit"/>
+                                    </MultiBinding>
+                                </ComboBox.ItemsSource>-->
+                            <xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0"/>
+                            <!--<xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0" Visibility="{Binding DataContext.UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>-->
+                                <!--<i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>-->
+                        </StackPanel>
+                        <!--</Border>-->
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </StackPanel>
+</UserControl>

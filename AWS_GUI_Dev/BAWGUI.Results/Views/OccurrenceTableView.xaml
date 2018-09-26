@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="BAWGUI.Results.Views.OccurrenceTableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Results.Views"
+             xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
+        <converters:TableValueNANConverter x:Key="TableValueNANConverter"/>
+        <DataTemplate x:Key="FloatCellTemplate">
+            <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
+        </DataTemplate>
+        <!--<Style TargetType="{x:Type xcdg:DataCell}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES">
+                    <Setter Property="Foreground" Value="Red"/>
+                    <Setter Property="FontWeight" Value="ExtraBold"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>-->
+    </UserControl.Resources>
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedOscillationEvent.FilteredOccurrences}" SelectedItem="{Binding SelectedOccurrence}" NavigationBehavior="RowOnly" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="DataGridControl_SelectionChanged">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDoubleClick">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowChannelWindow}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <xcdg:DataGridControl.Resources>
+            <Style TargetType="{x:Type xcdg:DataCell}">
+                <!--<Setter Property="CurrentBackground" Value="Blue"/>-->
+                <!--<Setter Property="CurrentForeground" Value="White"/>-->
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=FieldName}" Value="Alarm"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="Red"/>
+                        <Setter Property="FontWeight" Value="ExtraBold"/>
+                    </MultiDataTrigger>
+                    <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.Alarm}" Value="YES">
+                        <Setter Property="Foreground" Value="Red"/>
+                        <Setter Property="FontWeight" Value="ExtraBold"/>
+                    </DataTrigger>-->
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
+                <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
+            </Style>
+            <Style TargetType="{x:Type xcdg:DataRow}">
+                <Setter Property="SelectionBackground" Value="LightGreen"/>
+                <Setter Property="InactiveSelectionBackground" Value="LightGreen"/>
+            </Style>
+        </xcdg:DataGridControl.Resources>
+        <xcdg:DataGridControl.View>
+            <xcdg:TableflowView UseDefaultHeadersFooters="False">
+                <xcdg:TableflowView.FixedHeaders>
+                    <DataTemplate>
+                        <DockPanel>
+                            <xcdg:ColumnManagerRow/>
+                        </DockPanel>
+                    </DataTemplate>
+                </xcdg:TableflowView.FixedHeaders>
+                <xcdg:TableflowView.Theme>
+                    <xcdg:Windows8Theme />
+                </xcdg:TableflowView.Theme>
+            </xcdg:TableflowView>
+        </xcdg:DataGridControl.View>
+        <xcdg:DataGridControl.Columns>
+            <xcdg:Column Title="" FieldName=" " Width="25">
+                <xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource TableRowIndexConverter} }" />
+                    </DataTemplate>
+                </xcdg:Column.CellContentTemplate>
+            </xcdg:Column>
+            <xcdg:Column Title="Start" FieldName="Start" ReadOnly="True" Width="105"/>
+            <xcdg:Column Title="End" FieldName="End" ReadOnly="True" Width="105"/>
+            <xcdg:Column Title="Frequency" FieldName="Frequency" ReadOnly="True" Width="60"/>
+            <xcdg:Column Title="Alarm" FieldName="Alarm" ReadOnly="True" Width="40"/>
+            <xcdg:Column Title="Persistence" FieldName="Persistence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
+            <xcdg:Column Title="Max Amplitude" FieldName="MaxAmplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="80"/>
+            <xcdg:Column Title="Max SNR" FieldName="MaxSNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
+            <xcdg:Column Title="Max Coherence" FieldName="MaxCoherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+        </xcdg:DataGridControl.Columns>
+    </xcdg:DataGridControl>
+</UserControl>

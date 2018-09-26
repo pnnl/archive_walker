@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="BAWGUI.Results.Views.WindRampEventTable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Results.Views"
+             xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <coreconverters:DateTimeStringConverter x:Key="DateTimeStringConverter"/>
+        <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
+    </UserControl.Resources>
+    <xcdg:DataGridControl ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedWREvent}" NavigationBehavior="RowOnly">
+        <!--<i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDoubleClick">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>-->
+        <xcdg:DataGridControl.Resources>
+            <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
+                <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
+            </Style>
+            <Style TargetType="{x:Type xcdg:DataRow}">
+                <Setter Property="SelectionBackground" Value="LightGreen"/>
+                <Setter Property="InactiveSelectionBackground" Value="LightGreen"/>
+                <!--<Setter Property="Foreground" Value="{Binding SignalColorName}"/>-->
+            </Style>
+            <Style TargetType="{x:Type xcdg:DataCell}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=FieldName}" Value="Channel">
+                        <Setter Property="Foreground" Value="{Binding SignalColorName}"/>
+                    </DataTrigger>
+                </Style.Triggers>            
+            </Style>
+        </xcdg:DataGridControl.Resources>
+        <xcdg:DataGridControl.View>
+            <xcdg:TableflowView UseDefaultHeadersFooters="False">
+                <xcdg:TableflowView.FixedHeaders>
+                    <DataTemplate>
+                        <DockPanel>
+                            <xcdg:ColumnManagerRow/>
+                        </DockPanel>
+                    </DataTemplate>
+                </xcdg:TableflowView.FixedHeaders>
+                <xcdg:TableflowView.Theme>
+                    <xcdg:Windows8Theme />
+                </xcdg:TableflowView.Theme>
+            </xcdg:TableflowView>
+        </xcdg:DataGridControl.View>
+        <xcdg:DataGridControl.Columns>
+            <xcdg:Column Title="" FieldName=" " Width="20" AllowSort="False" ReadOnly="True">
+                <xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource TableRowIndexConverter}}" />
+                    </DataTemplate>
+                </xcdg:Column.CellContentTemplate>
+            </xcdg:Column>
+            <xcdg:Column Title="Show Signal?" FieldName="IsSignalSelected" CellEditorDisplayConditions="Always" Width="80">
+                <!--<i:Interaction.Triggers>
+            <i:EventTrigger EventName="">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>-->
+                <!--<xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding Path=.}" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SignalSelectionChanged}"/>
+                    </DataTemplate>
+                </xcdg:Column.CellContentTemplate>-->
+                <xcdg:Column.CellEditor>
+                    <xcdg:CellEditor>
+                        <xcdg:CellEditor.EditTemplate>
+                            <DataTemplate>
+                                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{xcdg:CellEditorBinding}" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.SignalSelectionChanged}" CommandParameter="{Binding}">
+                                    <!--<CheckBox.CommandParameter CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type xcdg:DataRow}}, Path=DataContext}">
+                                        <
+                                    </CheckBox.CommandParameter>-->
+                                </CheckBox>
+                            </DataTemplate>
+                        </xcdg:CellEditor.EditTemplate>
+                    </xcdg:CellEditor>
+                </xcdg:Column.CellEditor>
+            </xcdg:Column>
+            <xcdg:Column Title="Start" FieldName="TrendStart" ReadOnly="True" Width="125"/>
+            <xcdg:Column Title="Duration (minutes)" FieldName="Duration" ReadOnly="True" Width="110"/>
+            <xcdg:Column Title="Change of Power Flow (MW)" FieldName="TrendValue" ReadOnly="True" Width="160"/>
+            <xcdg:Column Title="Signal" FieldName="Channel" ReadOnly="True" Width="120"/>
+            <xcdg:Column Title="PMU" FieldName="PMU" ReadOnly="True" Width="80"/>
+        </xcdg:DataGridControl.Columns>
+    </xcdg:DataGridControl>
+</UserControl>

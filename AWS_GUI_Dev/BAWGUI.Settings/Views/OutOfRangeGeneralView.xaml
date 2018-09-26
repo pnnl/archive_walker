@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="OutOfRangeGeneralView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreconverter:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+            <Expander Grid.Column="0" IsExpanded="{Binding IsExpanded}">
+                <Expander.Header>
+                    <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                        <Binding/>
+                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                    </MultiBinding>
+                </Expander.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                        <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="2" Grid.Column="1">
+                        <Label Content="Parameters:" Margin="2"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Max" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="0" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding Max}" HorizontalAlignment="Left"/>
+                            <Image Grid.Row="1" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Min" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding Min}" HorizontalAlignment="Left"/>
+                            <Image Grid.Row="2" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Duration" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="2" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding Duration}" HorizontalAlignment="Left"/>
+                            <Image Grid.Row="3" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>
+                            <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="AnalysisWindow" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="3" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding AnalysisWindow}" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Expander>
+            <Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
+                <!--<Image Width="16" Height="16" Source="/BAWGUI;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>-->
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

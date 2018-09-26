@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="WrapAnglesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Expander IsExpanded="{Binding IsExpanded}">
+            <Expander.Header>
+                <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding  Converter={StaticResource ExpanderHeaderConverter}}"/>
+                    <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="0,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteWrap}" CommandParameter="{Binding}">
+                        <Image Width="16" Height="16" Source="/BAWGUI.Settings;component/MyResources/RemoveCommand_16x.png" />
+                    </Button>
+                </DockPanel>
+            </Expander.Header>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Hidden">
+                <StackPanel Orientation="Vertical" Margin="2">
+                    <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                    <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Expander>
+    </Border>
+</UserControl>

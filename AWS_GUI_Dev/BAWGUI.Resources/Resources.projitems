@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c90f12f9-9e00-411c-9b5a-58564d512918</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Resources</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Images\AddCommand.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Add_16x.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Asterisk-104.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Asterisk.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\calendar.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\CircledMinus.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\CircledPlus.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\delete.bmp" />
+    <None Include="$(MSBuildThisFileDirectory)Images\NewFile_16x.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\open.gif" />
+    <None Include="$(MSBuildThisFileDirectory)Images\RemoveCommand_16x.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Remove_color_16x.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Run_16x.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Save24.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\saveAs.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\settings24.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Settings_16x.png" />
+    <None Include="$(MSBuildThisFileDirectory)Images\Subtract_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Images\stop.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Images\pause.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Images\resume.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Images\denominator.PNG" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\numerator.PNG" />
+  </ItemGroup>
+</Project>

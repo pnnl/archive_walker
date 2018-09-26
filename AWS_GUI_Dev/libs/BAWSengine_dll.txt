@@ -1,0 +1,1 @@
+To properly compile and integrate the underlying Archive Walker engine into the GUI, you must generate a BAWSengine.dll file.  This is generated using the MATLAB .prj file located under the /MATengine/DLLs folder.  Use the BAWSengine_x.prj file inside MATLAB to build the BAWSengine.dll that would be placed here.

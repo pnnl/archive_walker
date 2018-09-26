@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="BAWGUI.Results.Views.OORReRunPlotView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Results.Views"
+             xmlns:oxy="http://oxyplot.org/wpf"
+             xmlns:converters="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
+             xmlns:converters2="clr-namespace:BAWGUI.Results.Converters"
+             xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+            <converters2:ThumbnailVisibilityConverter x:Key="ThumbnailVisibilityConverter"/>
+            <converters2:VisibleIfNotEqualToOneConverter x:Key="VisibleIfNotEqualToOneConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <!--<StackPanel Orientation="Vertical">-->
+        <oxy:PlotView Grid.Row="0" Model="{Binding OORReRunAllSignalsPlotModel}" MinHeight="150" x:Name="OORReRunDataPlot" Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}"/>
+        <ListView Grid.Row="1" ItemsSource="{Binding ThumbnailPlots}" SelectedItem="{Binding SelectedSignalPlotModel}">
+            <ListView.Visibility>
+                <MultiBinding Converter="{StaticResource ThumbnailVisibilityConverter}">
+                    <Binding Path="IsByDuration"/>
+                    <Binding Path="IsByROC"/>
+                    <Binding Path="ThumbnailPlots.Count"/>
+                </MultiBinding>
+            </ListView.Visibility>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1,1,1,1" Margin="2">
+                        <Border.BorderBrush>
+                            <DrawingBrush Viewport="0,0,2,2" ViewportUnits="Absolute" TileMode="Tile">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <GeometryDrawing Brush="Black">
+                                            <GeometryDrawing.Geometry>
+                                                <GeometryGroup>
+                                                    <RectangleGeometry Rect="0,0,50,50" />
+                                                    <RectangleGeometry Rect="50,50,50,50" />
+                                                </GeometryGroup>
+                                            </GeometryDrawing.Geometry>
+                                        </GeometryDrawing>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Border.BorderBrush>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="{Binding Label}" Width="100" FontSize="8"/>
+                            <Image Width="100" Height="80" Source="{Binding Thumbnail}" Stretch="Uniform"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORSignalPlotModel}" MinHeight="200" x:Name="OORSignalPlot"/>
+        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORDurationPlotModel}" MinHeight="170" x:Name="OORDurationPlot" Visibility="{Binding SelectedSignalPlotModel.IsByDuration, Converter={StaticResource BooleanVisibilityConverter}}"/>
+        <oxy:PlotView Grid.Row="4" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORROCPlotModel}" MinHeight="170" x:Name="OORROCPlot" Visibility="{Binding SelectedSignalPlotModel.IsByROC, Converter={StaticResource BooleanVisibilityConverter}}"/>
+        <!--</StackPanel>-->
+    </Grid>
+</UserControl>
