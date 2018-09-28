@@ -48,4 +48,36 @@ namespace BAWGUI.Core.Converters
             }
         }
     }
+    public class EnumToStringConverter11 : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch (value)
+            {
+                case SignalMapPlotType.Dot:
+                    return "Dot";
+                case SignalMapPlotType.Line:
+                    return "Line";
+                case SignalMapPlotType.Area:
+                    return "Area";
+                default:
+                    throw new Exception("Signal plot type on map not valid!");
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch (value)
+            {
+                case "Dot":
+                    return SignalMapPlotType.Dot;
+                case "Line":
+                    return SignalMapPlotType.Line;
+                case "Area":
+                    return SignalMapPlotType.Area;
+                default:
+                    throw new Exception("Enum type not valid!");
+            }
+        }
+    }
 }

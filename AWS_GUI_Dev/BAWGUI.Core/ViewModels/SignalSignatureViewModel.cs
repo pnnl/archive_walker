@@ -1,4 +1,5 @@
-﻿using BAWGUI.Utilities;
+﻿using BAWGUI.Core.Models;
+using BAWGUI.Utilities;
 
 namespace BAWGUI.Core
 {
@@ -60,6 +61,7 @@ namespace BAWGUI.Core
             _model.SamplingRate = -1;
             _model.Unit = "O";
         }
+
         public bool? IsValid
         {
             get
@@ -231,11 +233,33 @@ namespace BAWGUI.Core
         // End Function
         public static bool operator ==(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
-            return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
+            if (x is null && y is null)
+            {
+                return true;
+            }
+            else if (x is null ^ y is null)
+            {
+                return false;
+            }
+            else
+            {
+
+                return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
+            }
         }
         public static bool operator !=(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
-            return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
+            if (x is null && y is null)
+            {
+                return false;
+            }else if(x is null ^ y is null)
+            {
+                return true;
+            }
+            else
+            {
+                return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
+            }
         }
 
         public bool IsSignalInformationComplete()
@@ -299,6 +323,15 @@ namespace BAWGUI.Core
             set
             {
                 _model.To = value;
+                OnPropertyChanged();
+            }
+        }
+        public SignalMapPlotType MapPlotType
+        {
+            get { return _model.MapPlotType; }
+            set
+            {
+                _model.MapPlotType = value;
                 OnPropertyChanged();
             }
         }

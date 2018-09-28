@@ -80,5 +80,13 @@ namespace BAWGUI.Core.Models
         [Description("Cubic")]
         Cubic
     }
-
+    public enum SignalMapPlotType
+    {
+        [Description("Dot")]
+        Dot,
+        [Description("Line")]
+        Line,
+        [Description("Area")]
+        Area
+    }
 }
