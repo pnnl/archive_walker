@@ -24,11 +24,13 @@ namespace BAWGUI.MATLABRunResults.Models
                 double[] t = (double[])(arr.ToVector(MWArrayComponent.Real));
                 var timeStamps = new List<System.DateTime>();
                 var timeStampNumbers = new List<double>();
+                var timeStampNumbersInSeconds = new List<double>();
                 foreach (var item in t)
                 {
                     var tt = Utility.MatlabDateNumToDotNetDateTime(item);
                     timeStamps.Add(tt);
                     timeStampNumbers.Add(tt.ToOADate());
+                    timeStampNumbersInSeconds.Add(Utility.MatlabDateNumToDotNetSeconds(item));
                 }
 
                 arr = (MWNumericArray)_results["Data", index];
@@ -167,6 +169,8 @@ namespace BAWGUI.MATLABRunResults.Models
                 }
                 var newDetector = new OutOfRangeDetector();
                 newDetector.Label = index.ToString();
+                var fs = (Math.Round((t.Count() - 1) / (Utility.MatlabDateNumToDotNetSeconds(t.LastOrDefault()) - Utility.MatlabDateNumToDotNetSeconds(t.FirstOrDefault()))));
+                newDetector.SamplingRate = (int)fs;
                 for (int signalCount = 0; signalCount < dimEach[1]; signalCount++)
                 {
                     var newOORSignal = new OutOfRangeSignal();
@@ -176,6 +180,8 @@ namespace BAWGUI.MATLABRunResults.Models
                     newOORSignal.Unit = dataUnit[signalCount];
                     newOORSignal.TimeStamps = timeStamps;
                     newOORSignal.TimeStampNumber = timeStampNumbers;
+                    newOORSignal.SamplingRate = (int)fs;
+                    newOORSignal.TimeStampInSeconds = timeStampNumbersInSeconds;
                     newOORSignal.Data = data.GetRange(signalCount * dimEach[0], dimEach[0]);
                     newOORSignal.DurationMaxMat = durationMaxMat.GetRange(signalCount * dimEach[0], dimEach[0]);
                     newOORSignal.DurationMinMat = durationMinMat.GetRange(signalCount * dimEach[0], dimEach[0]);

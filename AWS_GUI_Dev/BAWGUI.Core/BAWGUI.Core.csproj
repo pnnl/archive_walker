@@ -91,6 +91,7 @@
     <Compile Include="Models\AWProject.cs" />
     <Compile Include="Models\AWRun.cs" />
     <Compile Include="Models\EnumDefinitions.cs" />
+    <Compile Include="Models\IDetector.cs" />
     <Compile Include="Models\SignalSignatures.cs" />
     <Compile Include="Models\SiteCoordinatesModel.cs" />
     <Compile Include="Utilities\CoreUtilities.cs" />

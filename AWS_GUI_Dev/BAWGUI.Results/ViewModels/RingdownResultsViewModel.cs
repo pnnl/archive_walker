@@ -37,8 +37,10 @@ namespace BAWGUI.Results.ViewModels
             _configFilePath = "";
             _reRunResult = new List<RingdownDetector>();
             _run = new AWRunViewModel();
-            _selectedStartTime = "01/01/0001 00:00:00";
-            _selectedEndTime = "01/01/0001 00:00:00";
+            //_selectedStartTime = "01/01/0001 00:00:00";
+            //_selectedEndTime = "01/01/0001 00:00:00";
+            _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         }
 
         private RunMATLAB.ViewModels.MatLabEngine _engine;
@@ -540,8 +542,6 @@ namespace BAWGUI.Results.ViewModels
         public ICommand RingdownReRun { get; set; }
         private void _ringdownRerun(object obj)
         {
-            //string RunPath = @"C:\Users\wang690\Desktop\projects\ArchiveWalker\RerunTest\Project_RerunTestRD\Run_test\";
-            //var controlPath = RunPath + "ControlRerun\\";
             //first stop background normal run if any
             //start rerun in background
             if (File.Exists(ConfigFilePath))

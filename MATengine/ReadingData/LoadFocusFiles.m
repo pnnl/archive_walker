@@ -27,7 +27,7 @@ else
         try
             if(strcmpi(FileInfo(idx3).FileType, 'pdat'))
                 % pdat format
-                [PMUbyFileTemp,tPMU] = createPdatStruct(focusFile{idx3},Num_Flags,FileLength);
+                [PMUbyFileTemp,tPMU] = pdatReadnCreateStruct(focusFile{idx3},Num_Flags,FileLength);
             elseif(strcmpi(FileInfo(idx3).FileType, 'csv'))
                 % JSIS_CSV format
                 [PMUbyFileTemp,tPMU] = JSIS_CSV_2_Mat(focusFile{idx3},Num_Flags);

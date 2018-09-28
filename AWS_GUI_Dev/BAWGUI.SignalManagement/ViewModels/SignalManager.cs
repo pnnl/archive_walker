@@ -3,7 +3,6 @@ using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
-using PDAT_Reader;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -85,14 +84,20 @@ namespace BAWGUI.SignalManagement.ViewModels
                 return _instance;
             }
         }
-        public void AddRawSignals(List<InputFileInfoModel> inputFileInfos)
+
+        public Boolean AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
+            var MissingExampleFile = new List<string>();
+            bool ReadingSuccess = true;
+            // go through each input file source to see if example file exist, if yes, add to file info, if not add to error message to tell user the file source is having problem
+            // so all missing file source and input file reading errors will show up at the same time
             foreach (var item in inputFileInfos)
             {
                 if (!File.Exists(item.ExampleFile))
                 {
                     //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
-                    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                    //MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);           
+                    MissingExampleFile.Add("The example file  " + Path.GetFileName(item.ExampleFile) + "  could not be found in the directory  " + Path.GetDirectoryName(item.ExampleFile) + ".");
                 }
                 else
                 {
@@ -105,7 +110,8 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("Error reading .csv file. " + ex.Message);
+                            MissingExampleFile.Add(MissingExampleFile + "Error reading .csv file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            //MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
                     else
@@ -116,13 +122,20 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("Error reading .pdat file. " + ex.Message);
+                            MissingExampleFile.Add(MissingExampleFile + "Error reading .pdat file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
                     FileInfo.Add(aFileInfo);
                 }
             }
+            if (MissingExampleFile.Count() > 0)
+            {
+                MessageBox.Show(string.Join("\n", MissingExampleFile) + "\nPlease go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+                ReadingSuccess = false;
+            }
             AllPMUs = _getAllPMU();
+            return ReadingSuccess;
         }
         private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         {

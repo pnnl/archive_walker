@@ -1,7 +1,8 @@
 % Created by Urmila Agrawal(urmila.agrawal@pnnl.gov) on 07/09/2018
 
-function Mode_n_SysCondListID = WriteOperatingConditionsAndModeValues(AdditionalOutput,ResultPath, Mode_n_SysCondListID)
+function WriteOperatingConditionsAndModeValues(AdditionalOutput,ResultPath)
 TimeString = datestr(AdditionalOutput(1).TimeString{end},'yymmdd');
+FileName = [ResultPath '\' TimeString '.csv'];
 tt = [];
 for tIdx = 1:length(AdditionalOutput(1).t)
     t = (datestr(AdditionalOutput(1).t(tIdx),'HH:MM:SS.FFF'));
@@ -12,9 +13,13 @@ for tIdx = 1:length(AdditionalOutput(1).t)
     end
 end
 tt = round(tt,3);
-if isempty(Mode_n_SysCondListID)
-    Mode_n_SysCondListID = AssignEventID();
-    FileName = [ResultPath '\' TimeString '_' Mode_n_SysCondListID '.csv'];
+if exist(FileName,'file') > 0
+    Habc = readtable(FileName);
+    H1 = Habc.Properties.VariableNames;
+    H2 = Habc{1,:};
+    H3 = Habc{2,:};
+    H4 = Habc{3,:};
+else
     H1 = {'Time'};
     H2 = {''};
     H3 = {''};
@@ -41,43 +46,8 @@ if isempty(Mode_n_SysCondListID)
             H4 = [H4, AdditionalOutput(ModeIdx).MethodName{ModeEstIdx}];
         end
     end
-else
-    FileName = [ResultPath '\' TimeString '_' Mode_n_SysCondListID '.csv'];
-    if exist(FileName,'file') > 0
-        Habc = readtable(FileName);
-        H1 = Habc.Properties.VariableNames;
-        H2 = Habc{1,:};
-        H3 = Habc{2,:};
-        H4 = Habc{3,:};
-    else
-    H1 = {'Time'};
-    H2 = {''};
-    H3 = {''};
-    H4 = {'Hrs'};
-        for SysCondIdx = 1:length(AdditionalOutput(1).OperatingNames)
-            H1 = [H1, 'OperatingValue'];
-            H2= [H2, AdditionalOutput(1).OperatingNames{SysCondIdx}];
-            H3 = [H3, AdditionalOutput(1).OperatingType{SysCondIdx}];
-            H4 = [H4, AdditionalOutput(1).OperatingUnits{SysCondIdx}];
-        end
-        for ModeIdx = 1:length(AdditionalOutput)
-            for ModeEstIdx = 1:length(AdditionalOutput(ModeIdx).ModeOfInterest)
-                H1 = [H1, 'DampingRatio'];
-                H2 = [H2, AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstIdx}];
-                H3 = [H3, AdditionalOutput(ModeIdx).ChannelsName{ModeEstIdx}];
-                H4 = [H4, AdditionalOutput(ModeIdx).MethodName{ModeEstIdx}];
-            end
-        end
-        for ModeIdx = 1:length(AdditionalOutput)
-            for ModeEstIdx = 1:length(AdditionalOutput(ModeIdx).ModeOfInterest)
-                H1 = [H1, 'Frequency'];
-                H2 = [H2, AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstIdx}];
-                H3 = [H3, AdditionalOutput(ModeIdx).ChannelsName{ModeEstIdx}];
-                H4 = [H4, AdditionalOutput(ModeIdx).MethodName{ModeEstIdx}];
-            end
-        end
-    end
 end
+% end
 if ~isempty(AdditionalOutput(1).OperatingNames)
     for SysCondIdx = 1:length(AdditionalOutput(1).OperatingNames)
         T1 = cell2mat({AdditionalOutput(1).OperatingValues});

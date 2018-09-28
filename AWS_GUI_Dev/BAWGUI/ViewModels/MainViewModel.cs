@@ -176,17 +176,24 @@ namespace BAWGUI.ViewModels
                 try
                 {
                     var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
+                    //clean up the signal manager
                     _signalMgr.cleanUp();
-                    _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
-                    SettingsVM.SignalMgr = _signalMgr;
-                    SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
-                    SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
-                    SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
-                    SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
-                    e.SelectedRun.Model.DataFileDirectories = new List<string>();
-                    foreach (var info in _signalMgr.FileInfo)
+                    //read input data files and generate all the signal objects from the data files and put them in the signal manager.
+                    var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
+                    if (readingDataSourceSuccess)
                     {
-                        e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                        //pass signal manager into settings.
+                        SettingsVM.SignalMgr = _signalMgr;
+                        //read config files
+                        SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
+                        SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
+                        SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
+                        SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        e.SelectedRun.Model.DataFileDirectories = new List<string>();
+                        foreach (var info in _signalMgr.FileInfo)
+                        {
+                            e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                        }
                     }
                 }
                 catch (Exception ex)

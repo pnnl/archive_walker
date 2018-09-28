@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BAWGUI.MATLABRunResults.Models
 {
-    public class RingdownDetector
+    public class RingdownDetector : IDetector
     {
-        public string Label;
+        public string Label { get; set; }
         public RingdownDetector()
         {
             _ringdownSignals = new List<RingdownSignal>();
@@ -58,5 +58,7 @@ namespace BAWGUI.MATLABRunResults.Models
                 return "";
             }
         }
+
+        public int SamplingRate { get; set; }
     }
 }

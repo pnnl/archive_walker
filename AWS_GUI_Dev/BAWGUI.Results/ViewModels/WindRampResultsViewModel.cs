@@ -33,8 +33,10 @@ namespace BAWGUI.Results.ViewModels
             _wrSignals = new Dictionary<string, string>();
             SignalSelectionChanged = new RelayCommand(_sortSignalSelection);
             PlotWindRampEvent = new RelayCommand(_drawWREventPlots);
-            _selectedStartTime = "01/01/0001 00:00:00";
-            _selectedEndTime = "01/01/0001 00:00:00";
+            //_selectedStartTime = "01/01/0001 00:00:00";
+            //_selectedEndTime = "01/01/0001 00:00:00";
+            _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         }
         private string _configFilePath;
         public string ConfigFilePath

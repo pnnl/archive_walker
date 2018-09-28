@@ -76,7 +76,9 @@ namespace BAWGUI.Core.Models
         [System.ComponentModel.Description("Linear")]
         Linear,
         [Description("Constant")]
-        Constant
+        Constant,
+        [Description("Cubic")]
+        Cubic
     }
 
 }
