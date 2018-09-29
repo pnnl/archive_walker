@@ -1,4 +1,5 @@
 ﻿Imports System.Globalization
+Imports BAWGUI.CoordinateMapping.Models
 Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
@@ -537,6 +538,13 @@ Namespace ViewModels
                                                   <Configuration></Configuration>
                                               </WindAppConfig>
             _configData.Add(windApplication)
+            '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            '''''''''''Write signal mapping plot settings''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            If _svm.SignalMgr.UniqueMappingSignals.Count <> 0 Then
+                Dim writer = New SignalMappingPlotConfigWriter()
+                _configData.Add(writer.WriteConfigToXMLFormat(_svm.SignalMgr.UniqueMappingSignals))
+            End If
             _configData.Save(filename)
         End Sub
 

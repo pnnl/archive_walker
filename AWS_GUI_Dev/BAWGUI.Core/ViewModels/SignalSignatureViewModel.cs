@@ -1,5 +1,7 @@
 ﻿using BAWGUI.Core.Models;
+using BAWGUI.Core.Utilities;
 using BAWGUI.Utilities;
+using System.Collections.ObjectModel;
 
 namespace BAWGUI.Core
 {
@@ -331,7 +333,46 @@ namespace BAWGUI.Core
             get { return _model.MapPlotType; }
             set
             {
-                _model.MapPlotType = value;
+                if (_model.MapPlotType != value)
+                {
+                    _model.MapPlotType = value;
+                    if (value == SignalMapPlotType.Line)
+                    {
+                        for (int index = Locations.Count; index < 2; index++)
+                        {
+                            Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+                        }
+                    }
+                    if (value == SignalMapPlotType.Area)
+                    {
+                        for (int index = Locations.Count; index < 2; index++)
+                        {
+                            Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+                        }
+                    }
+                    if (value == SignalMapPlotType.Dot)
+                    {
+                        if (Locations.Count == 0)
+                        {
+                            Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+                        }
+                        else
+                        {
+                            var keep = Locations[0];
+                            Locations.Clear();
+                            Locations.Add(keep);
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public ObservableCollection<SiteCoordinatesModel> Locations
+        {
+            get { return _model.Locations; }
+            set
+            {
+                _model.Locations = value;
                 OnPropertyChanged();
             }
         }

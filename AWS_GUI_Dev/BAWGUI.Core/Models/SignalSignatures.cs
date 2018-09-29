@@ -2,6 +2,7 @@
 using BAWGUI.Core.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace BAWGUI.Core
             IsNameTypeUnitChanged = false;
             From = CoreUtilities.DummySiteCoordinatesModel;
             To = CoreUtilities.DummySiteCoordinatesModel;
+            Locations = new ObservableCollection<SiteCoordinatesModel>();
+            Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
             MapPlotType = SignalMapPlotType.Dot;
         }
         public SignalSignatures(string pmu, string signal):this()
@@ -43,6 +46,7 @@ namespace BAWGUI.Core
         public int PassedThroughProcessor { get; set; }
         public SiteCoordinatesModel From { get; set; }
         public SiteCoordinatesModel To { get; set; }
+        public ObservableCollection<SiteCoordinatesModel> Locations { get; set; }
         public SignalMapPlotType MapPlotType { get; set; }
     }
 }

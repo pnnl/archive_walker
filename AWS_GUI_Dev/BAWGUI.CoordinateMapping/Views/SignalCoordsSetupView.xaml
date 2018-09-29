@@ -13,7 +13,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:TextBoxSelectionCommandParameterConverter x:Key="TextBoxSelectionCommandParameterConverter"/>
+            <!--<converters:TextBoxSelectionCommandParameterConverter x:Key="TextBoxSelectionCommandParameterConverter"/>-->
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="PlotTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodel:SignalMapPlotType"/>
@@ -21,55 +21,34 @@
             </ObjectDataProvider>
             <coreconverters:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
             <DataTemplate x:Key="Line">
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Text="{Binding From.Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
+                <local:SignalMappingPlotLineSetupView/>
+            </DataTemplate>
+            <DataTemplate x:Key="Dot">
+                <GroupBox Header="Site" Margin="100,2">
+                    <!--<i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>-->
+                    <TextBox Text="{Binding Locations[0].Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandName="From">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
+                                <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandName="From">
                                     <i:InvokeCommandAction.CommandParameter>
                                         <MultiBinding Converter="{StaticResource TextBoxSelectionCommandParameterConverter}">
                                             <Binding />
                                             <Binding Source="From"/>
                                         </MultiBinding>
                                     </i:InvokeCommandAction.CommandParameter>
-                                </i:InvokeCommandAction>
+                                </i:InvokeCommandAction>-->
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
-                    <TextBox Text="{Binding To.Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="To">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandName="To">
-                                    <i:InvokeCommandAction.CommandParameter>
-                                        <MultiBinding Converter="{StaticResource TextBoxSelectionCommandParameterConverter}">
-                                            <Binding />
-                                            <Binding Source="To"/>
-                                        </MultiBinding>
-                                    </i:InvokeCommandAction.CommandParameter>
-                                </i:InvokeCommandAction>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
-                </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="Dot">
-                <TextBox Text="{Binding From.Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotFocus">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandName="From">
-                                <i:InvokeCommandAction.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource TextBoxSelectionCommandParameterConverter}">
-                                        <Binding />
-                                        <Binding Source="From"/>
-                                    </MultiBinding>
-                                </i:InvokeCommandAction.CommandParameter>
-                            </i:InvokeCommandAction>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
+                </GroupBox>
             </DataTemplate>
             <DataTemplate x:Key="Area">
-                
+                <local:SignalMappingPlotAreaSetupView/>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -87,49 +66,41 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="2">
                     <TextBlock Text="PMU:" Margin="2" Width="150"/>
                     <TextBlock Text="Signal Name:" Margin="2" Width="300"/>
-                    <TextBlock Text="From:" Margin="106,2,2,2" Width="150"/>
-                    <TextBlock Text="To:" Margin="2" Width="100"/>
+                    <TextBlock Text="Plot Type:" Margin="2" Width="100"/>
+                    <!--<TextBlock Text="From:" Margin="106,2,2,2" Width="150"/>
+                    <TextBlock Text="To:" Margin="2" Width="100"/>-->
                 </StackPanel>
                 <ItemsControl ItemsSource="{Binding SignalMgr.UniqueMappingSignals}" Grid.Row="1" Margin="2">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBox Text="{Binding PMUName}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="PMU">
-                                    <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
-                                </TextBox>
-                                <TextBox Text="{Binding SignalName}" Margin="2" Width="300" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="SignalName">
-                                    <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
-                                </TextBox>
-                                <ComboBox ItemsSource="{Binding Source={StaticResource PlotTypeValues}}" Width="100" Text="{Binding MapPlotType, Converter={StaticResource EnumToStringConverter11}}" Margin="2">
-                                    
-                                </ComboBox>
-                                <ContentControl Grid.Row="4" Content="{Binding}">
-                                    <ContentControl.Style>
-                                        <Style TargetType="ContentControl">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding MapPlotType}" Value="0">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource Dot}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding MapPlotType}" Value="1">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource Line}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding MapPlotType}" Value="2">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource Area}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ContentControl.Style>
-                                </ContentControl>
-
-                                <!--<TextBox Text="{Binding From.Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                    <TextBox Text="{Binding PMUName}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="PMU">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <TextBox Text="{Binding SignalName}" Margin="2" Width="300" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="SignalName">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource PlotTypeValues}}" Width="100" Text="{Binding MapPlotType, Converter={StaticResource EnumToStringConverter11}}" Margin="2">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </ComboBox>
+                                    <!--<TextBox Text="{Binding From.Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandName="From">
@@ -157,7 +128,25 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </TextBox>-->
-                            </StackPanel>
+                                </StackPanel>
+                                <ContentControl Grid.Row="1" Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MapPlotType}" Value="0">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource Dot}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding MapPlotType}" Value="1">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource Line}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding MapPlotType}" Value="2">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource Area}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

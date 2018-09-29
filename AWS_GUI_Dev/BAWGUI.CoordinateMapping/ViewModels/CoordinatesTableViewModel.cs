@@ -29,6 +29,11 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             DeleteSelectedRows = new RelayCommand(_deleteSelectedRows);
             LoadCoordinates = new RelayCommand(_openCoordsFile);
             MapVM = new MapViewModel();
+            _locationCoordinatesFilePath = Properties.Settings.Default.LocationCoordinatesFilePath;
+            if (File.Exists(_locationCoordinatesFilePath))
+            {
+                _readLocationCoordsFile(_locationCoordinatesFilePath);
+            }
         }
         private ObservableCollection<SiteCoordinatesViewModel> _siteCoords;
         public ObservableCollection<SiteCoordinatesViewModel> SiteCoords
@@ -120,7 +125,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
             if (!string.IsNullOrEmpty(_locationCoordinatesFilePath))
             {
-                openFileDialog.InitialDirectory = Path.GetFullPath(_locationCoordinatesFilePath);
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(_locationCoordinatesFilePath);
             }
             if (!Directory.Exists(openFileDialog.InitialDirectory))
             {
@@ -131,22 +136,30 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 _locationCoordinatesFilePath = openFileDialog.FileName;
-                try
-                {
-                    var reader = new SiteCoordinatesReader();
-                    reader.ReadCoordsFile(_locationCoordinatesFilePath, SiteCoords);
-                    foreach (var item in SiteCoords)
-                    {
-                        item.CheckStatusChanged += _modifyMapAnnotation;
-                        item.SitePropertyChanged += _sitePropertyChangedHandler;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-                }
+                Properties.Settings.Default.LocationCoordinatesFilePath = _locationCoordinatesFilePath;
+                Properties.Settings.Default.Save();
+                _readLocationCoordsFile(_locationCoordinatesFilePath);
             }
         }
+
+        private void _readLocationCoordsFile(string path)
+        {
+            try
+            {
+                var reader = new SiteCoordinatesReader();
+                reader.ReadCoordsFile(path, SiteCoords);
+                foreach (var item in SiteCoords)
+                {
+                    item.CheckStatusChanged += _modifyMapAnnotation;
+                    item.SitePropertyChanged += _sitePropertyChangedHandler;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+            }
+        }
+
         private MapViewModel _mapVM;
         public MapViewModel MapVM
         {

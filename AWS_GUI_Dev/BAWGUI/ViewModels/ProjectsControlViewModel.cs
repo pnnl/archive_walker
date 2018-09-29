@@ -725,11 +725,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
             newTask.InitializationPath = initPath;
             newTask.RunName = newtaskName;
             newTask.RunPath = taskDir;
-            if (!System.IO.File.Exists(newTask.ConfigFilePath))
+            if (!File.Exists(newTask.ConfigFilePath))
             {
-                System.IO.FileStream fs = System.IO.File.Create(newTask.ConfigFilePath);
+                FileStream fs = File.Create(newTask.ConfigFilePath);
                 fs.Close();
-                var wr = new ConfigFileWriter(new Settings.ViewModels.SettingsViewModel(), newTask);
+                var wr = new ConfigFileWriter(new SettingsViewModel(), newTask);
                 wr.WriteXmlConfigFile(newTask.ConfigFilePath);
             }
             _model.AWRuns.Add(newTask);
