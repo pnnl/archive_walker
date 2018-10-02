@@ -19,9 +19,9 @@ namespace BAWGUI.CoordinateMapping.Views
     /// <summary>
     /// Interaction logic for SignalMappingPlotLineSetupView.xaml
     /// </summary>
-    public partial class SignalMappingPlotLineSetupView : UserControl
+    public partial class SignalMappingPlotLineAreaSetupView : UserControl
     {
-        public SignalMappingPlotLineSetupView()
+        public SignalMappingPlotLineAreaSetupView()
         {
             InitializeComponent();
         }

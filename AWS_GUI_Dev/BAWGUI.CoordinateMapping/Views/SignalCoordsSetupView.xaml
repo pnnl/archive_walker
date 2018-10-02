@@ -20,8 +20,8 @@
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <coreconverters:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
-            <DataTemplate x:Key="Line">
-                <local:SignalMappingPlotLineSetupView/>
+            <DataTemplate x:Key="LineOrArea">
+                <local:SignalMappingPlotLineAreaSetupView/>
             </DataTemplate>
             <DataTemplate x:Key="Dot">
                 <GroupBox Header="Site" Margin="100,2">
@@ -46,9 +46,6 @@
                         </i:Interaction.Triggers>
                     </TextBox>
                 </GroupBox>
-            </DataTemplate>
-            <DataTemplate x:Key="Area">
-                <local:SignalMappingPlotAreaSetupView/>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -137,10 +134,10 @@
                                                     <Setter Property="ContentTemplate" Value="{StaticResource Dot}"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding MapPlotType}" Value="1">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource Line}"/>
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource LineOrArea}"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding MapPlotType}" Value="2">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource Area}"/>
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource LineOrArea}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>

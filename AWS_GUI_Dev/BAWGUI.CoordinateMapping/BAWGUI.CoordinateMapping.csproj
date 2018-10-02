@@ -97,8 +97,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\MapPlotTypeVisibilityConverter.cs" />
     <Compile Include="Converters\SiteCountVisibilityConverter.cs" />
     <Compile Include="Converters\TextBoxSelectionCommandParameterConverter.cs" />
+    <Compile Include="Models\SignalCoordsMappingModel.cs" />
+    <Compile Include="Models\SignalMappingPlotConfigReader.cs" />
     <Compile Include="Models\SignalMappingPlotConfigWriter.cs" />
     <Compile Include="Models\SiteCoordinatesReader.cs" />
     <Compile Include="Models\SiteCoordinatesWriter.cs" />
@@ -122,11 +125,8 @@
     <Compile Include="Views\SignalCoordsSetupView.xaml.cs">
       <DependentUpon>SignalCoordsSetupView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignalMappingPlotAreaSetupView.xaml.cs">
-      <DependentUpon>SignalMappingPlotAreaSetupView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SignalMappingPlotLineSetupView.xaml.cs">
-      <DependentUpon>SignalMappingPlotLineSetupView.xaml</DependentUpon>
+    <Compile Include="Views\SignalMappingPlotLineAreaSetupView.xaml.cs">
+      <DependentUpon>SignalMappingPlotLineAreaSetupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\test.xaml.cs">
       <DependentUpon>test.xaml</DependentUpon>
@@ -200,11 +200,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SignalMappingPlotAreaSetupView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SignalMappingPlotLineSetupView.xaml">
+    <Page Include="Views\SignalMappingPlotLineAreaSetupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

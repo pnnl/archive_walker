@@ -39,7 +39,8 @@ namespace BAWGUI.CoordinateMapping.Models
             foreach (var signal in _mappingSignalsToBeWritten)
             {
                 var sgnl = new XElement("Signal", new XElement("PMU", signal.PMUName),
-                                                    new XElement("SignalName", signal.SignalName));
+                                                    new XElement("SignalName", signal.SignalName),
+                                                    new XElement("Type", signal.MapPlotType.ToString()));
                 var sites = new XElement("Sites");
                 foreach (var lctn in signal.Locations)
                 {

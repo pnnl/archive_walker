@@ -1,7 +1,9 @@
 ﻿using BAWGUI.Core.Models;
 using BAWGUI.Core.Utilities;
 using BAWGUI.Utilities;
+using System;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace BAWGUI.Core
 {
@@ -9,6 +11,10 @@ namespace BAWGUI.Core
     {
         // Implements IDisposable
         private SignalSignatures _model;
+        public SignalSignatures Model
+        {
+            get { return _model; }
+        }
         public SignalSignatureViewModel()
         {
             _model = new SignalSignatures();
@@ -20,48 +26,20 @@ namespace BAWGUI.Core
             // _model.IsNameTypeUnitChanged = False
             _model.SamplingRate = -1;
             _model.Unit = "O";
+            DeleteASite = new RelayCommand(_deleteASite);
+            AddASite = new RelayCommand(_addASite);
         }
-        public SignalSignatureViewModel(string name)
+        public SignalSignatureViewModel(string name) : this()
         {
-            _model = new SignalSignatures();
             _model.SignalName = name;
-            // _model.IsEnabled = True
-            // _model.IsValid = True
-            // _model.IsCustomSignal = False
-            _model.PassedThroughDQFilter = 0;
-            _model.PassedThroughProcessor = 0;
-            // _model.IsNameTypeUnitChanged = False
-            _model.SamplingRate = -1;
-            _model.Unit = "O";
         }
-        public SignalSignatureViewModel(string name, string pmu)
+        public SignalSignatureViewModel(string name, string pmu) : this(name)
         {
-            _model = new SignalSignatures();
-            _model.SignalName = name;
             _model.PMUName = pmu;
-            // _model.IsEnabled = True
-            // _model.IsValid = True
-            // _model.IsCustomSignal = False
-            _model.PassedThroughDQFilter = 0;
-            _model.PassedThroughProcessor = 0;
-            // _model.IsNameTypeUnitChanged = False
-            _model.SamplingRate = -1;
-            _model.Unit = "O";
         }
-        public SignalSignatureViewModel(string name, string pmu, string type)
+        public SignalSignatureViewModel(string name, string pmu, string type) : this (name, pmu)
         {
-            _model = new SignalSignatures();
-            _model.SignalName = name;
-            _model.PMUName = pmu;
             _model.TypeAbbreviation = type;
-            // _model.IsEnabled = True
-            // _model.IsValid = True
-            // _model.IsCustomSignal = False
-            _model.PassedThroughDQFilter = 0;
-            _model.PassedThroughProcessor = 0;
-            // _model.IsNameTypeUnitChanged = False
-            _model.SamplingRate = -1;
-            _model.Unit = "O";
         }
 
         public bool? IsValid
@@ -376,5 +354,23 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
+        public ICommand DeleteASite { get; set; }
+        private void _deleteASite(object obj)
+        {
+            var values = (object[])obj;
+            var currentLocation = (SiteCoordinatesModel)values[0];
+            var selectedTextboxIndex = (int)values[1];
+            Locations.RemoveAt(selectedTextboxIndex);
+            //foreach (var item in Locations)
+            //{
+
+            //}
+        }
+        public ICommand AddASite { get; set; }
+        private void _addASite(object obj)
+        {
+            _model.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+        }
+
     }
 }

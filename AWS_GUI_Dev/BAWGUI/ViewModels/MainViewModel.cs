@@ -11,6 +11,7 @@ using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using BAWGUI.CoordinateMapping.ViewModels;
+using BAWGUI.CoordinateMapping.Models;
 
 namespace BAWGUI.ViewModels
 {
@@ -194,6 +195,9 @@ namespace BAWGUI.ViewModels
                         {
                             e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
                         }
+                        var signalSiteMappingConfig = new SignalMappingPlotConfigReader(e.SelectedRun.Model.ConfigFilePath);
+                        _signalMgr.DistinctMappingSignal();
+                        SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, signalSiteMappingConfig.GetSignalCoordsMappingModel());
                     }
                 }
                 catch (Exception ex)
