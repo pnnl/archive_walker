@@ -118,9 +118,21 @@
                 </Grid>
             </GroupBox>
         </Grid>
-        <GroupBox Grid.Column="1" Margin="4" Header="Locations">
-            <map:MapView DataContext="{Binding MapVM}"/>
-        </GroupBox>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Margin="4" Header="Locations">
+                <map:MapView DataContext="{Binding MapVM}"/>
+            </GroupBox>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="4">
+                <Label Content="Current Longitude: " Margin="2"/>
+                <TextBlock Text="{Binding MapVM.CurrentLng, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center"/>
+                <Label Content="Current Latitude: " Margin="2"/>
+                <TextBlock Text="{Binding MapVM.CurrentLat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
         <GroupBox HorizontalAlignment="Right" Margin="0,7,2,12" VerticalAlignment="Stretch" Header="Zoom" Grid.Column="2">
             <Grid>
                 <Button x:Name="czuZoomUp" Style="{StaticResource ZoomUpButton}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="23.5" Height="25.5" Command="{Binding MapVM.ZoomIn}"/>

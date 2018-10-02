@@ -8,5 +8,5 @@
              xmlns:mapprovider="clr-namespace:GMap.NET.MapProviders;assembly=GMap.NET.Core"
              xmlns:mapvm="clr-namespace:MapService.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Content="{Binding GMap}">
+             d:DesignHeight="450" d:DesignWidth="800" Content="{Binding Gmap}">
 </UserControl>

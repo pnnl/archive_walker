@@ -5,6 +5,8 @@ using GMap.NET.WindowsPresentation;
 using MapService.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,12 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml;
+using GMap.NET.Internals;
+using GMap.NET.Projections;
+using GMap.NET.CacheProviders;
+using System.Net;
+using System.IO;
 
 namespace MapService.ViewModels
 {
@@ -33,7 +41,7 @@ namespace MapService.ViewModels
             //GMap.InvalidateVisual();
         }
         private GMapControl _gMap;
-        public GMapControl GMap
+        public GMapControl Gmap
         {
             get { return _gMap; }
             set
@@ -46,20 +54,23 @@ namespace MapService.ViewModels
         public int MinZoom { get; set; } = 0;
         public void SetUpGMap()
         {
-            GMap = new GMapControl();
+            Gmap = new GMapControl();
             //GMap.MapProvider = OpenStreetMapProvider.Instance;
-            GMap.MaxZoom = MaxZoom;
-            GMap.MinZoom = MinZoom;
-            GMap.Zoom = 5;
-            GMap.CenterPosition = new PointLatLng(37.0902, -95.7129);
-            GMap.ShowCenter = false;
+            Gmap.MaxZoom = MaxZoom;
+            Gmap.MinZoom = MinZoom;
+            Gmap.Zoom = 5;
+            Gmap.CenterPosition = new PointLatLng(37.0902, -95.7129);
+            Gmap.ShowCenter = false;
 
-            GMap.MapProvider = GMapProviders.OpenStreetMap;
+            Gmap.MapProvider = GMapProviders.OpenStreetMap;
             if (!IsOfflineMode)
             {
-                GMap.Manager.Mode = AccessMode.CacheOnly;
+                Gmap.Manager.Mode = AccessMode.ServerAndCache;
             }
-            GMap.CacheLocation = "..\\MapCache";
+            Gmap.CacheLocation = "..\\MapCache";
+            Gmap.MouseMove += GMap_MouseMove;
+            Gmap.MouseLeftButtonDown += GMap_MouseLeftButtonDown;
+        
             //GMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
 
             //MainMap.ScaleMode = ScaleModes.Dynamic;
@@ -73,7 +84,112 @@ namespace MapService.ViewModels
             //GMap.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(MainMap_MouseLeftButtonDown);
             //GMap.MouseEnter += new MouseEventHandler(MainMap_MouseEnter);
         }
+        static readonly string ReverseGeocoderUrlFormat = "http://nominatim.openstreetmap.org/reverse?format=xml&lat={0}&lon={1}&zoom=18&addressdetails=1";
+        private void GMap_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var gctl = sender as GMapControl;
+            var ps = e.GetPosition(gctl);
+            var latlng = gctl.FromLocalToLatLng((int)ps.X, (int)ps.Y);
+            var p = new Placemark();
+            //var info = new GeoCoderStatusCode();
+            if (Gmap.Manager.Mode != AccessMode.CacheOnly)
+            {
+                var url = string.Format(CultureInfo.InvariantCulture, ReverseGeocoderUrlFormat, latlng.Lat, latlng.Lng);
+                //var st = GMapProviders.OpenStreetMap.GetPlacemark(latlng, out info);
+                XmlDocument xmldoc = new XmlDocument();
+                WebClient client = new WebClient();
+                client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+                Stream data = client.OpenRead(url);
+                StreamReader reader = new StreamReader(data);
+                string s = reader.ReadToEnd();
+                xmldoc.LoadXml(s);
+                XmlNode r = xmldoc.SelectSingleNode("/reversegeocode/result");
+                if (r != null)
+                {
+                    XmlNode ad = xmldoc.SelectSingleNode("/reversegeocode/addressparts");
+                    if (ad != null)
+                    {
+                        var vl = ad.SelectSingleNode("country");
+                        if (vl != null)
+                        {
+                            p.CountryName = vl.InnerText;
+                        }
 
+                        vl = ad.SelectSingleNode("country_code");
+                        if (vl != null)
+                        {
+                            p.CountryNameCode = vl.InnerText;
+                        }
+
+                        vl = ad.SelectSingleNode("postcode");
+                        if (vl != null)
+                        {
+                            p.PostalCodeNumber = vl.InnerText;
+                        }
+
+                        vl = ad.SelectSingleNode("state");
+                        if (vl != null)
+                        {
+                            p.AdministrativeAreaName = vl.InnerText;
+                        }
+
+                        vl = ad.SelectSingleNode("region");
+                        if (vl != null)
+                        {
+                            p.SubAdministrativeAreaName = vl.InnerText;
+                        }
+
+                        vl = ad.SelectSingleNode("suburb");
+                        if (vl != null)
+                        {
+                            p.LocalityName = vl.InnerText;
+                        }
+
+                        vl = ad.SelectSingleNode("road");
+                        if (vl != null)
+                        {
+                            p.ThoroughfareName = vl.InnerText;
+                        }
+                    }
+                    data.Close();
+                    reader.Close();
+
+                }
+                //var st = GetPlacemarkFromReverseGeocoderUrl(url, out info); ;
+            }
+        }
+        private void GMap_MouseMove(object sender, MouseEventArgs e)
+        {
+            var gctl = sender as GMapControl;
+            //if (gctl == GMap)
+            //{
+            //    CurrentLng = gctl.Position.Lng;
+            //    CurrentLat = gctl.Position.Lat;
+            //}
+            var ps = e.GetPosition(gctl);
+            CurrentLng = gctl.FromLocalToLatLng((int)ps.X, (int)ps.Y).Lng;
+            CurrentLat = gctl.FromLocalToLatLng((int)ps.X, (int)ps.Y).Lat;
+        }
+        private double _currentLat;
+        public double CurrentLat
+        {
+            get { return _currentLat; }
+            set
+            {
+                _currentLat = value;
+                OnPropertyChanged();
+            }
+        }
+        private double _currentLng;
+        public double CurrentLng
+        {
+            get { return _currentLng; }
+            set
+            {
+                _currentLng = value;
+                OnPropertyChanged();
+            }
+        }
         public List<PointAndInfo> Annotations { get; set; }
         //private void MainMap_MouseMove(object sender, MouseEventArgs e)
         //{
@@ -115,13 +231,13 @@ namespace MapService.ViewModels
             //{
             //    DeleteAnnotation(id);
             //}
-            GMap.Markers.Clear();
+            Gmap.Markers.Clear();
             foreach (var item in Annotations)
             {
                 var newMarker = new GMapMarker(item.Point);
                 {
                     //newMarker.Shape = new CustomMarkerRed(newMarker, item.Info);
-                    var local = GMap.FromLatLngToLocal(item.Point);
+                    var local = Gmap.FromLatLngToLocal(item.Point);
                     //newMarker.Map = GMap;
                     newMarker.Offset = new System.Windows.Point(-12.5, -25);
                     //newMarker.ZIndex = int.MaxValue;
@@ -134,24 +250,24 @@ namespace MapService.ViewModels
                         Source = new BitmapImage(new System.Uri(@"C:\Users\wang690\Desktop\projects\TIP348\VoltageStability\archive_walker\AWS_GUI_Dev\BAWGUI.Resources\Images\bigMarkerGreen.png"))
                     };
                 }
-                GMap.Markers.Add(newMarker);
+                Gmap.Markers.Add(newMarker);
             }
         }
 
         public ICommand ChangeZoom { get; set; }
         private void _changeMapZoom(object obj)
         {
-            GMap.Zoom = GMap.Zoom;
+            Gmap.Zoom = Gmap.Zoom;
         }
         public ICommand ZoomIn { get; set; }
         private void _mapZoomIn(object obj)
         {
-            GMap.Zoom = GMap.Zoom + 1;
+            Gmap.Zoom = Gmap.Zoom + 1;
         }
         public ICommand ZoomOut { get; set; }
         private void _mapZoomOut(object obj)
         {
-            GMap.Zoom = GMap.Zoom - 1;
+            Gmap.Zoom = Gmap.Zoom - 1;
         }
         private bool _isOfflineMode;
         public bool IsOfflineMode
@@ -162,11 +278,11 @@ namespace MapService.ViewModels
                 _isOfflineMode = value;
                 if (value)
                 {
-                    GMap.Manager.Mode = AccessMode.CacheOnly;
+                    Gmap.Manager.Mode = AccessMode.CacheOnly;
                 }
                 else
                 {
-                    GMap.Manager.Mode = AccessMode.ServerAndCache;
+                    Gmap.Manager.Mode = AccessMode.ServerAndCache;
                 }
                 OnPropertyChanged();
             }
@@ -174,10 +290,10 @@ namespace MapService.ViewModels
         public ICommand CacheSelectedMapRegion { get; set; }
         private void _cacheSelectedMapRegion(object obj)
         {
-            RectLatLng area = GMap.SelectedArea;
+            RectLatLng area = Gmap.SelectedArea;
             if (!area.IsEmpty)
             {
-                for (int i = (int)GMap.Zoom; i <= GMap.MaxZoom; i++)
+                for (int i = (int)Gmap.Zoom; i <= Gmap.MaxZoom; i++)
                 {
                     MessageBoxResult res = MessageBox.Show("Ready ripp at Zoom = " + i + " ?", "GMap.NET", MessageBoxButton.YesNoCancel);
 
@@ -186,7 +302,7 @@ namespace MapService.ViewModels
                         TilePrefetcher tileFetcher = new TilePrefetcher();
                         //tileFetcher.Owner = this;
                         tileFetcher.ShowCompleteMessage = true;
-                        tileFetcher.Start(area, i, GMap.MapProvider, 100);
+                        tileFetcher.Start(area, i, Gmap.MapProvider, 100);
                     }
                     else if (res == MessageBoxResult.No)
                     {
