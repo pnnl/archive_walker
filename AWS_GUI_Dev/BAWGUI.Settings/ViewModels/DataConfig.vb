@@ -517,12 +517,12 @@ Namespace ViewModels
                 'If SelectUTCTime Then
                 '_convertStartTimeToSelectedTimeZone()
                 'End If
-                Dim StackTrace = New StackTrace()
-                Dim stackFrames = StackTrace.GetFrames()
+                'Dim StackTrace = New StackTrace()
+                'Dim stackFrames = StackTrace.GetFrames()
 
-                For Each sf In stackFrames
-                    Dim a = sf.GetMethod().Name
-                Next
+                'For Each sf In stackFrames
+                '    Dim a = sf.GetMethod().Name
+                'Next
                 OnPropertyChanged("DateTimeStart")
             End Set
         End Property
@@ -1710,16 +1710,16 @@ Namespace ViewModels
             output.OldSignalName = output.SignalName
             OutputChannels.Add(output)
 
-            Try
-                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
-            Catch ex As Exception
-                Throw New Exception("Error when sort signals by type in step: " & Name)
-            End Try
-            If postProcess Then
-                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
-            Else
-                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
-            End If
+            'Try
+            '    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            'Catch ex As Exception
+            '    Throw New Exception("Error when sort signals by type in step: " & Name)
+            'End Try
+            'If postProcess Then
+            '    signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'Else
+            '    signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            'End If
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception

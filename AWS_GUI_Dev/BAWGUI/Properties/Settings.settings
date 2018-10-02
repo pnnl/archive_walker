@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ResultStoragePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Projects</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -16,6 +16,8 @@ using System.ComponentModel;
 using System.Threading;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
+using System.Collections.ObjectModel;
+using BAWGUI.MATLABRunResults.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -160,11 +162,12 @@ namespace BAWGUI.Results.ViewModels
                     _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
-            _ringdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
-            _ringdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
+            _ringdownResultsViewModel.SparsePlotModels = new ObservableCollection<SparsePlot>();
+            _ringdownResultsViewModel.RdReRunPlotModels = new ObservableCollection<RDreRunPlot>();
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
             _ringdownResultsViewModel.SelectedEndTime = endTimeStr;
             _ringdownResultsViewModel.SelectedStartTime = startTimeStr;
+            _ringdownResultsViewModel.ReRunResult = new List<RingdownDetector>();
             findStartTimeHasEvents = startTime;
             if(_ringdownResultsViewModel.Models.Count()!= 0)
             {
@@ -179,6 +182,7 @@ namespace BAWGUI.Results.ViewModels
             _outOfRangeResultsViewModel.Models = _resultsModel.OutOfRangeEvents;
             _outOfRangeResultsViewModel.SelectedEndTime = endTimeStr;
             _outOfRangeResultsViewModel.SelectedStartTime = startTimeStr;
+            _outOfRangeResultsViewModel.ReRunResult = new List<OutOfRangeDetector>();
             findStartTimeHasEvents = startTime;
             if (_outOfRangeResultsViewModel.Models.Count() != 0)
             {

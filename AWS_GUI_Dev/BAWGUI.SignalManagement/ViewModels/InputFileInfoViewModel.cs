@@ -112,7 +112,10 @@ namespace BAWGUI.SignalManagement.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                    // MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                    MessageBox.Show("The example file  " + Path.GetFileName(value) + "  could not be found in the directory  " + Path.GetDirectoryName(value) + ".\n" 
+                                    + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+
                 }
                 OnPropertyChanged();
             }

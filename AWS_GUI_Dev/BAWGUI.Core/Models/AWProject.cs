@@ -43,7 +43,14 @@ namespace BAWGUI.Core
             foreach (var run in Directory.GetDirectories(dir))
             {
                 var runNameFrac = Path.GetFileName(run).Split(new[] { '_' }, 2);
-                if (runNameFrac[0] == "Run" && Directory.Exists(run))
+                //var newName = "";
+                //if (runNameFrac[0] == "Run" && Directory.Exists(run))
+                //{
+                //    newName = Path.GetDirectoryName(run) + "\\Task_" + runNameFrac[1];
+                //    Directory.Move(run, newName);
+                //}
+                //runNameFrac = Path.GetFileName(newName).Split(new[] { '_' }, 2);
+                if (runNameFrac[0] == "Task" && Directory.Exists(run))
                 {
                     _awRun.Add(new AWRun(run));
                 }
