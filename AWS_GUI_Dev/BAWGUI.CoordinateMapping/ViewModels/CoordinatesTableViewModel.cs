@@ -29,12 +29,23 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             DeleteSelectedRows = new RelayCommand(_deleteSelectedRows);
             LoadCoordinates = new RelayCommand(_openCoordsFile);
             MapVM = new MapViewModel();
+            MapVM.LocationSelected += MapVM_LocationSelected;
             _locationCoordinatesFilePath = Properties.Settings.Default.LocationCoordinatesFilePath;
             if (File.Exists(_locationCoordinatesFilePath))
             {
                 _readLocationCoordsFile(_locationCoordinatesFilePath);
             }
         }
+
+        private void MapVM_LocationSelected(object sender, PointLatLng e)
+        {
+            var newLocation = new SiteCoordinatesModel(e.Lat, e.Lng);
+            var newLocationVM = new SiteCoordinatesViewModel(newLocation);
+            newLocationVM.CheckStatusChanged += _modifyMapAnnotation;
+            newLocationVM.SitePropertyChanged += _sitePropertyChangedHandler;
+            SiteCoords.Add(newLocationVM);
+        }
+
         private ObservableCollection<SiteCoordinatesViewModel> _siteCoords;
         public ObservableCollection<SiteCoordinatesViewModel> SiteCoords
         {

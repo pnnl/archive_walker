@@ -16,6 +16,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Forms;
 using System.Xml;
 using GMap.NET.Internals;
 using GMap.NET.Projections;
@@ -90,7 +91,7 @@ namespace MapService.ViewModels
             var gctl = sender as GMapControl;
             var ps = e.GetPosition(gctl);
             var latlng = gctl.FromLocalToLatLng((int)ps.X, (int)ps.Y);
-            var p = new Placemark();
+            var locationStr = string.Format("Latitude: {0}, longitude: {1}\n", latlng.Lat, latlng.Lng);
             //var info = new GeoCoderStatusCode();
             if (Gmap.Manager.Mode != AccessMode.CacheOnly)
             {
@@ -106,6 +107,7 @@ namespace MapService.ViewModels
                 XmlNode r = xmldoc.SelectSingleNode("/reversegeocode/result");
                 if (r != null)
                 {
+                    var p = new Placemark();
                     XmlNode ad = xmldoc.SelectSingleNode("/reversegeocode/addressparts");
                     if (ad != null)
                     {
@@ -153,12 +155,24 @@ namespace MapService.ViewModels
                     }
                     data.Close();
                     reader.Close();
-
+                    var streetStr = string.Format("{0}, {1}\n{2}, {3} {4}\n{5}, {6}", p.ThoroughfareName, p.LocalityName, p.SubAdministrativeAreaName, p.AdministrativeAreaName, p.PostalCodeNumber, p.CountryName, p.CountryNameCode);
+                    locationStr = locationStr + "\n" + streetStr;
                 }
                 //var st = GetPlacemarkFromReverseGeocoderUrl(url, out info); ;
             }
+
+            var result = System.Windows.Forms.MessageBox.Show("Add location:\n" + locationStr + "\nto coordinate table?", "Warning!", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                OnLocationSelected(latlng);
+            }
         }
-        private void GMap_MouseMove(object sender, MouseEventArgs e)
+        public event EventHandler<PointLatLng> LocationSelected;
+        protected virtual void OnLocationSelected(PointLatLng e)
+        {
+            LocationSelected?.Invoke(this, e);
+        }
+        private void GMap_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var gctl = sender as GMapControl;
             //if (gctl == GMap)
@@ -295,20 +309,20 @@ namespace MapService.ViewModels
             {
                 for (int i = (int)Gmap.Zoom; i <= Gmap.MaxZoom; i++)
                 {
-                    MessageBoxResult res = MessageBox.Show("Ready ripp at Zoom = " + i + " ?", "GMap.NET", MessageBoxButton.YesNoCancel);
+                    var res = System.Windows.Forms.MessageBox.Show("Ready ripp at Zoom = " + i + " ?", "GMap.NET", MessageBoxButtons.YesNoCancel);
 
-                    if (res == MessageBoxResult.Yes)
+                    if (res == DialogResult.Yes)
                     {
                         TilePrefetcher tileFetcher = new TilePrefetcher();
                         //tileFetcher.Owner = this;
                         tileFetcher.ShowCompleteMessage = true;
                         tileFetcher.Start(area, i, Gmap.MapProvider, 100);
                     }
-                    else if (res == MessageBoxResult.No)
+                    else if (res == DialogResult.No)
                     {
                         continue;
                     }
-                    else if (res == MessageBoxResult.Cancel)
+                    else if (res == DialogResult.Cancel)
                     {
                         break;
                     }
@@ -316,7 +330,7 @@ namespace MapService.ViewModels
             }
             else
             {
-                MessageBox.Show("Select map area holding ALT", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                System.Windows.Forms.MessageBox.Show("Select map area holding ALT", "GMap.NET", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
         }

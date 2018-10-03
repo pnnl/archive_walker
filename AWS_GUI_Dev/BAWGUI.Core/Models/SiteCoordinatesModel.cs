@@ -31,6 +31,12 @@ namespace BAWGUI.Core
             Name = name;
         }
 
+        public SiteCoordinatesModel(double lat, double lng) : this()
+        {
+            Latitude = lat.ToString();
+            Longitude = lng.ToString();
+        }
+
         public string Name { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
