@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:viewscore="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             xmlns:runview="clr-namespace:BAWGUI.RunMATLAB.Views;assembly=BAWGUI.RunMATLAB"
              xmlns:con="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:con2="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
              mc:Ignorable="d" 
@@ -22,7 +23,9 @@
             <viewscore:TimeFilterView Height="30" Margin="2"/>
             <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Button Content="Retrieve Detail" Command="{Binding RingdownReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+            <runview:ReRunProgressView Width="200" Height="25" Margin="5,0,2,0"/>
             <Button Content="Cancel" Command="{Binding CancelRingdownReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Export Data" Command="{Binding ExportRDReRunData}" Height="25" Width="100" Margin="25,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="Export ringdown re-run results"/>
         </StackPanel>
         <!--<ScrollViewer Grid.Row="1">-->
             <Grid>

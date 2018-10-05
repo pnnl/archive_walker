@@ -11,7 +11,7 @@ namespace BAWGUI.MATLABRunResults.Models
         public SparseResults(MWStructArray rslts)
         {
             _results = rslts;
-            _sparseDetectorList = new List<SparseDetector>();
+            var sparseDetectorList = new List<SparseDetector>();
             //_dataPMU = new List<string>();
             //_dataChannel = new List<string>();
             for (int index = 1; index <= rslts.NumberOfElements; index++)
@@ -19,11 +19,16 @@ namespace BAWGUI.MATLABRunResults.Models
                 //Console.WriteLine("element: " + index.ToString());
                 MWNumericArray arr = (MWNumericArray)rslts["DataMin", index];
                 int[] dimEach = arr.Dimensions;
+                if (dimEach[0] == 0)
+                {
+                    throw new Exception("Sparse Run returned no Data. Please check you time duration selected.");
+                }
                 if (dimEach.Length != 2)
                 {
                     throw new Exception(String.Format("DataMin of element {0} matrix dimension out of range in sparse rerun.", index));
                 }
-                var dataMin = ((double[])(arr.ToVector(MWArrayComponent.Real))).ToList();
+                var v = arr.ToVector(MWArrayComponent.Real);
+                var dataMin = ((double[])v).ToList();
                 arr = (MWNumericArray)rslts["DataMax", index];
                 dimEach = arr.Dimensions;
                 if (dimEach.Length != 2)
@@ -97,8 +102,9 @@ namespace BAWGUI.MATLABRunResults.Models
                     newSparseSignal.Maximum = dataMax.GetRange(signalCount * dimEach[0], dimEach[0]);
                     detector.SparseSignals.Add(newSparseSignal);
                 }
-                _sparseDetectorList.Add(detector);
+                sparseDetectorList.Add(detector);
             }
+            _sparseDetectorList = sparseDetectorList;
         }
         public int NumberOfDetectors
         {
