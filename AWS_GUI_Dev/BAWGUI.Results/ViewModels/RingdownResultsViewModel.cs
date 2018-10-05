@@ -17,6 +17,8 @@ using BAWGUI.Utilities;
 using BAWGUI.Core;
 using BAWGUI.MATLABRunResults.Models;
 using OxyPlot.Annotations;
+using BAWGUI.Results.Views;
+using System.Windows.Forms;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -41,6 +43,7 @@ namespace BAWGUI.Results.ViewModels
             //_selectedEndTime = "01/01/0001 00:00:00";
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            ExportRDReRunData = new RelayCommand(_exportData);
         }
 
         private RunMATLAB.ViewModels.MatLabEngine _engine;
@@ -229,7 +232,7 @@ namespace BAWGUI.Results.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error plotting data trend. Original Message:\n" + ex.Message, "Error!", MessageBoxButton.OK);
+                        System.Windows.Forms.MessageBox.Show("Error plotting data trend. Original Message:\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                     }
                 }
                 OnPropertyChanged();
@@ -522,7 +525,7 @@ namespace BAWGUI.Results.ViewModels
             }
             else
             {
-                MessageBox.Show("Configuration file not found.", "Error!", MessageBoxButton.OK);
+                System.Windows.Forms.MessageBox.Show("Configuration file not found.", "Error!", MessageBoxButtons.OK);
             }
         }
         private AWRunViewModel _run;
@@ -997,6 +1000,30 @@ namespace BAWGUI.Results.ViewModels
             //var controlPath = RunPath + "ControlRerun\\";
             _engine.CancelRDReRun(_run);
             //MessageBox.Show("method is not implemented yet!!!", "ERROR!", MessageBoxButton.OK);
+        }
+        private ExportResultsPopup _exportResultsPopup;
+        public ICommand ExportRDReRunData { get; set; }
+        private void _exportData(object obj)
+        {
+            if (ReRunResult.Any())
+            {
+                var exportResult = new ResultsExportingViewModel(ReRunResult);
+                exportResult.ExportDataCancelled += _cancelExportData;
+                _exportResultsPopup = new ExportResultsPopup
+                {
+                    Owner = System.Windows.Application.Current.MainWindow,
+                    DataContext = exportResult
+                };
+                _exportResultsPopup.ShowDialog();
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Please retrieve detail first before exporting data.", "Warning!", MessageBoxButtons.OK);
+            }
+        }
+        private void _cancelExportData(object sender, EventArgs e)
+        {
+            _exportResultsPopup.Close();
         }
     }
 }

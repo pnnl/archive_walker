@@ -25,6 +25,7 @@
             <Button Content="Retrieve Detail" Command="{Binding RingdownReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
             <runview:ReRunProgressView Width="200" Height="25" Margin="5,0,2,0"/>
             <Button Content="Cancel" Command="{Binding CancelRingdownReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Export Data" Command="{Binding ExportRDReRunData}" Height="25" Width="100" Margin="25,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="Export ringdown re-run results"/>
         </StackPanel>
         <!--<ScrollViewer Grid.Row="1">-->
             <Grid>
