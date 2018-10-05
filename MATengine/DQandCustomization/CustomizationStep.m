@@ -76,5 +76,7 @@ for CustIdx = 1:NumCusts
             PMU = PrefixCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
         case 'AngleConversion'
             PMU = AngleUnitCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
+        case 'ReplicateSignal'
+            PMU = ReplicateSignalCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
     end
 end
