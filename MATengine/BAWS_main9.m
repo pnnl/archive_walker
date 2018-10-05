@@ -140,6 +140,14 @@ if (nargin == 5) && (~Unpause)
 elseif ~Unpause
     RunMode = 'Rerun';
     
+    S = dir(fullfile([ControlPath '\Progress*']));
+    if length(S) == 1
+        delete(fullfile(S.folder,S.name))
+    end
+    if exist(ControlPath,'dir') == 7
+        csvwrite([ControlPath '\Progress_0.csv'],[]);
+    end
+    
     % Configuration file tied to results
     ConfigFile = varargin{5};
     % Start and end times specified by the user
@@ -378,6 +386,11 @@ while(~min(done))
     if (exist([ControlPath '\RunFlag.txt'],'file') == 0) && (~isempty(ControlPath))
         % The RunFlag file does not exist, so processing is to
         % pause/terminate
+        
+        S = dir(fullfile([ControlPath '\Progress*']));
+        if length(S) == 1
+            delete(fullfile(S.folder,S.name))
+        end
         
         % Check if the PauseFlag file exists
         if exist([ControlPath '\PauseFlag.txt'],'file') ~= 0
@@ -656,6 +669,14 @@ while(~min(done))
                 FileProgress = 100;
             end
             disp(['Progress through files: ' num2str(FileProgress) '%']);
+            
+            S = dir(fullfile([ControlPath '\Progress*']));
+            if length(S) == 1
+                delete(fullfile(S.folder,S.name))
+            end
+            if (FileProgress < 100) && (exist(ControlPath,'dir') == 7)
+                csvwrite([ControlPath '\Progress_' num2str(FileProgress) '.csv'],[]);
+            end
         end
         
         % Apply data quality filters and signal customizations
