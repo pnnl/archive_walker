@@ -19,7 +19,14 @@
                     <RowDefinition Height="4*"/>
                     <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
-                <views:FOEventPlot Grid.Row="0" Margin="0,0,22,0"/>
+                <TabControl Grid.Row="0" Margin="0,0,22,0">
+                    <TabItem Header="Event Plot">
+                        <views:FOEventPlot/>
+                    </TabItem>
+                    <TabItem Header="Event Mapping">
+                        <views:FOEventTableView/>
+                    </TabItem>
+                </TabControl>
                 <DockPanel Grid.Row="1">
                     <Label Content="Events:" DockPanel.Dock="Top"/>
                     <views:FOEventTableView/>

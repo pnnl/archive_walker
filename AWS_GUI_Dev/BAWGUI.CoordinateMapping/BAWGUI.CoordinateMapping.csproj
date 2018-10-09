@@ -128,9 +128,6 @@
     <Compile Include="Views\SignalMappingPlotLineAreaSetupView.xaml.cs">
       <DependentUpon>SignalMappingPlotLineAreaSetupView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\test.xaml.cs">
-      <DependentUpon>test.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -201,10 +198,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalMappingPlotLineAreaSetupView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
