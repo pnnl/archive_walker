@@ -620,24 +620,24 @@ namespace BAWGUI.Results.ViewModels
                 var aDetector = new RDreRunPlot();
                 aDetector.Label = detector.Label;
                 var allSignalsPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
-                //{ PlotAreaBackground = OxyColors.WhiteSmoke}
-                //a.PlotType = PlotType.Cartesian;
-                //var xAxisFormatString = "";
-                //var startTime = detector.RingdownSignals.Min(x => x.TimeStamps.FirstOrDefault());
-                //var endTime = detector.RingdownSignals.Max(x => x.TimeStamps.LastOrDefault());
-                //var time = endTime - startTime;
-                //if (time < TimeSpan.FromHours(24))
-                //{
-                //    xAxisFormatString = "HH:mm";
-                //}
-                //else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
-                //{
-                //    xAxisFormatString = "MM/dd\nHH:mm";
-                //}
-                //else
-                //{
-                //    xAxisFormatString = "MM/dd";
-                //}
+                ////{ PlotAreaBackground = OxyColors.WhiteSmoke}
+                ////a.PlotType = PlotType.Cartesian;
+                ////var xAxisFormatString = "";
+                ////var startTime = detector.RingdownSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                ////var endTime = detector.RingdownSignals.Max(x => x.TimeStamps.LastOrDefault());
+                ////var time = endTime - startTime;
+                ////if (time < TimeSpan.FromHours(24))
+                ////{
+                ////    xAxisFormatString = "HH:mm";
+                ////}
+                ////else if (time >= TimeSpan.FromHours(24) && time < TimeSpan.FromHours(168))
+                ////{
+                ////    xAxisFormatString = "MM/dd\nHH:mm";
+                ////}
+                ////else
+                ////{
+                ////    xAxisFormatString = "MM/dd";
+                ////}
                 OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
                 {
                     Position = OxyPlot.Axes.AxisPosition.Bottom,
@@ -646,13 +646,25 @@ namespace BAWGUI.Results.ViewModels
                     MinorGridlineStyle = LineStyle.Dot,
                     MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
                     TicklineColor = OxyColor.FromRgb(82, 82, 82),
-                    //Title = "Time",
                     IsZoomEnabled = true,
                     IsPanEnabled = true,
                     //StringFormat = xAxisFormatString,
                 };
                 //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
                 allSignalsPlot.Axes.Add(timeXAxis);
+                //OxyPlot.Axes.LinearAxis xAxis = new OxyPlot.Axes.LinearAxis()
+                //{
+                //    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                //    MajorGridlineStyle = LineStyle.Dot,
+                //    MinorGridlineStyle = LineStyle.Dot,
+                //    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                //    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                //    IsZoomEnabled = true,
+                //    IsPanEnabled = true,
+                //    StringFormat = null,
+                //    LabelFormatter = _convertDoubleToTimeString
+                //};
+                //allSignalsPlot.Axes.Add(xAxis);
                 OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
                 {
                     Position = OxyPlot.Axes.AxisPosition.Left,
@@ -693,6 +705,7 @@ namespace BAWGUI.Results.ViewModels
                     for (int i = 0; i < rd.Data.Count; i++)
                     {
                         newSeries.Points.Add(new DataPoint(rd.TimeStampNumber[i], rd.Data[i]));
+                        //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(rd.TimeStamps[i]), rd.Data[i]));
                         //newSeries.Points2.Add(new DataPoint(rd.TimeStampNumber[i], rd.Data[i]));
                     }
                     newSeries.Title = rd.SignalName;
@@ -763,9 +776,15 @@ namespace BAWGUI.Results.ViewModels
             }
             RdReRunPlotModels = rdPlots;
         }
-
-
-
+        /// <summary>
+        /// this function can be implemented if the x axis is going to be linear axis and we manually convert it to a time string to show microseconds
+        /// </summary>
+        /// <param name = "arg" > double value represent time</param>
+        /// <returns></returns>
+        //private string _convertDoubleToTimeString(double arg)
+        //{
+        //    return arg.ToString();
+        //}
         private void RdReRunSeries_MouseDown(object sender, OxyMouseDownEventArgs e)
         {
             var s = (OxyPlot.Series.LineSeries)sender;
@@ -1002,6 +1021,7 @@ namespace BAWGUI.Results.ViewModels
             //MessageBox.Show("method is not implemented yet!!!", "ERROR!", MessageBoxButton.OK);
         }
         private ExportResultsPopup _exportResultsPopup;
+
         public ICommand ExportRDReRunData { get; set; }
         private void _exportData(object obj)
         {
