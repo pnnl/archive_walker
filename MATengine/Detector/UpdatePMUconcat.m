@@ -19,4 +19,5 @@ for PMUidx = 1:length(PMUconcat)
     PMUconcat(PMUidx).Flag = PMUconcat(PMUidx).Flag(idx,:,:);
     PMUconcat(PMUidx).Signal_Time.Time_String = PMUconcat(PMUidx).Signal_Time.Time_String(idx);
     PMUconcat(PMUidx).Signal_Time.Signal_datenum = PMUconcat(PMUidx).Signal_Time.Signal_datenum(idx);
+    PMUconcat(PMUidx).Signal_Time.datetime = PMUconcat(PMUidx).Signal_Time.datetime(idx);
 end

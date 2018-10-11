@@ -151,6 +151,7 @@ for MultiRateIdx = 1:NumMultiRate
     [TimeString,DateNumArray] = GetNewTime(PMU(PMUstructIdx(1)).Signal_Time.Signal_datenum,p,q);
     PMU(NewPMUidx).Signal_Time.Time_String = TimeString;
     PMU(NewPMUidx).Signal_Time.Signal_datenum = DateNumArray; 
+    PMU(NewPMUidx).Signal_Time.datetime = datetime(DateNumArray,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS'); 
     
     FinalCondos{MultiRateIdx} = cell(1,NumPMU);
     if isempty(InitialCondos{MultiRateIdx})

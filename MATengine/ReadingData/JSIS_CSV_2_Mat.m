@@ -202,6 +202,7 @@ PMU.Time_Zone = '-08:00';         % time zone; for now this is just the PST time
 % signal time
 PMU.Signal_Time.Time_String = cellstr(timeStr);
 PMU.Signal_Time.Signal_datenum = timeNum;
+PMU.Signal_Time.datetime = datetime(timeNum,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
 
 % variable names
 PMU.Signal_Name = signalNames;

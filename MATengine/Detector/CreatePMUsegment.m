@@ -18,4 +18,5 @@ for PMUidx = 1:length(PMUsegment)
     PMUsegment(PMUidx).Flag = PMUsegment(PMUidx).Flag(idx,:,:);
     PMUsegment(PMUidx).Signal_Time.Time_String = PMUsegment(PMUidx).Signal_Time.Time_String(idx);
     PMUsegment(PMUidx).Signal_Time.Signal_datenum = PMUsegment(PMUidx).Signal_Time.Signal_datenum(idx);
+    PMUsegment(PMUidx).Signal_Time.datetime = PMUsegment(PMUidx).Signal_Time.datetime(idx);
 end

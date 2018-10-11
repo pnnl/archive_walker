@@ -78,5 +78,7 @@ for CustIdx = 1:NumCusts
             PMU = AngleUnitCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
         case 'ReplicateSignal'
             PMU = ReplicateSignalCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
+        case 'PointOnWavePower'
+            PMU = PointOnWavePowerCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
     end
 end
