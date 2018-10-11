@@ -1,11 +1,11 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Thu Oct 11 15:17:43 2018
+* Date: Thu Oct 11 16:53:30 2018
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
-* ine\GUIfunctions\GetPDATexample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
+* ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
 * ory\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAoscillationApp\
 * AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\foll154\Documents\
 * BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m,C:\Users\foll154
@@ -32,7 +32,7 @@ namespace BAWSengineNative
   /// functions contained in the files:
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// PDATexample.m
+  /// FileExample.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
@@ -165,36 +165,52 @@ namespace BAWSengineNative
     #region Methods
 
     /// <summary>
-    /// Provides a single output, 0-input Objectinterface to the GetPDATexample MATLAB
+    /// Provides a single output, 0-input Objectinterface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
     /// <returns>An Object containing the first output argument.</returns>
     ///
-    public Object GetPDATexample()
+    public Object GetFileExample()
     {
-      return mcr.EvaluateFunction("GetPDATexample", new Object[]{});
+      return mcr.EvaluateFunction("GetFileExample", new Object[]{});
     }
 
 
     /// <summary>
-    /// Provides a single output, 1-input Objectinterface to the GetPDATexample MATLAB
+    /// Provides a single output, 1-input Objectinterface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
-    /// <param name="pdatFile">Input argument #1</param>
+    /// <param name="InputFile">Input argument #1</param>
     /// <returns>An Object containing the first output argument.</returns>
     ///
-    public Object GetPDATexample(Object pdatFile)
+    public Object GetFileExample(Object InputFile)
     {
-      return mcr.EvaluateFunction("GetPDATexample", pdatFile);
+      return mcr.EvaluateFunction("GetFileExample", InputFile);
     }
 
 
     /// <summary>
-    /// Provides the standard 0-input Object interface to the GetPDATexample MATLAB
+    /// Provides a single output, 2-input Objectinterface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExample(Object InputFile, Object FileType)
+    {
+      return mcr.EvaluateFunction("GetFileExample", InputFile, FileType);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input Object interface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -203,31 +219,49 @@ namespace BAWSengineNative
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public Object[] GetPDATexample(int numArgsOut)
+    public Object[] GetFileExample(int numArgsOut)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetPDATexample", new Object[]{});
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", new Object[]{});
     }
 
 
     /// <summary>
-    /// Provides the standard 1-input Object interface to the GetPDATexample MATLAB
+    /// Provides the standard 1-input Object interface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="pdatFile">Input argument #1</param>
+    /// <param name="InputFile">Input argument #1</param>
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public Object[] GetPDATexample(int numArgsOut, Object pdatFile)
+    public Object[] GetFileExample(int numArgsOut, Object InputFile)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetPDATexample", pdatFile);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile);
     }
 
 
     /// <summary>
-    /// Provides an interface for the GetPDATexample function in which the input and
+    /// Provides the standard 2-input Object interface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExample(int numArgsOut, Object InputFile, Object FileType)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile, FileType);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the GetFileExample function in which the input and
     /// output
     /// arguments are specified as an array of Objects.
     /// </summary>
@@ -241,10 +275,10 @@ namespace BAWSengineNative
     /// <param name= "varArgsIn">Array of Object representing variable input
     /// arguments</param>
     ///
-    [MATLABSignature("GetPDATexample", 1, 1, 0)]
-    protected void GetPDATexample(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
+    [MATLABSignature("GetFileExample", 2, 1, 0)]
+    protected void GetFileExample(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
     {
-        mcr.EvaluateFunctionForTypeSafeCall("GetPDATexample", numArgsOut, ref argsOut, argsIn, varArgsIn);
+        mcr.EvaluateFunctionForTypeSafeCall("GetFileExample", numArgsOut, ref argsOut, argsIn, varArgsIn);
     }
     /// <summary>
     /// Provides a single output, 0-input Objectinterface to the GetSparseData MATLAB

@@ -47,7 +47,7 @@
 %   changed PMU.Flag matrix from double to logical matrix
 
 
-function [PMU,tPMU] = JSIS_CSV_2_Mat(inFile,Num_Flags)
+function [PMU,tPMU,fs] = JSIS_CSV_2_Mat(inFile,Num_Flags)
 %% read in headers
 %t1 = now;
 fid = fopen(inFile);
@@ -102,6 +102,8 @@ elseif(timeFormat == 0)
 end
 
 tPMU = timeNum;
+
+fs = round(1/mean((diff(timeNum)*24*60*60))*10)/10;
 
 %% get signal Name, signal type, signal unit, and data
 k = strfind(signalNameStr,',');

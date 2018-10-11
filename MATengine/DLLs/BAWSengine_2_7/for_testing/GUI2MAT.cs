@@ -1,11 +1,11 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Thu Oct 11 15:17:43 2018
+* Date: Thu Oct 11 16:53:30 2018
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
-* ine\GUIfunctions\GetPDATexample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
+* ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
 * ory\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAoscillationApp\
 * AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\foll154\Documents\
 * BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m,C:\Users\foll154
@@ -32,7 +32,7 @@ namespace BAWSengine
   /// functions contained in the files:
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// PDATexample.m
+  /// FileExample.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
@@ -165,36 +165,52 @@ namespace BAWSengine
     #region Methods
 
     /// <summary>
-    /// Provides a single output, 0-input MWArrayinterface to the GetPDATexample MATLAB
+    /// Provides a single output, 0-input MWArrayinterface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetPDATexample()
+    public MWArray GetFileExample()
     {
-      return mcr.EvaluateFunction("GetPDATexample", new MWArray[]{});
+      return mcr.EvaluateFunction("GetFileExample", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides a single output, 1-input MWArrayinterface to the GetPDATexample MATLAB
+    /// Provides a single output, 1-input MWArrayinterface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
-    /// <param name="pdatFile">Input argument #1</param>
+    /// <param name="InputFile">Input argument #1</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetPDATexample(MWArray pdatFile)
+    public MWArray GetFileExample(MWArray InputFile)
     {
-      return mcr.EvaluateFunction("GetPDATexample", pdatFile);
+      return mcr.EvaluateFunction("GetFileExample", InputFile);
     }
 
 
     /// <summary>
-    /// Provides the standard 0-input MWArray interface to the GetPDATexample MATLAB
+    /// Provides a single output, 2-input MWArrayinterface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray GetFileExample(MWArray InputFile, MWArray FileType)
+    {
+      return mcr.EvaluateFunction("GetFileExample", InputFile, FileType);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -203,31 +219,49 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetPDATexample(int numArgsOut)
+    public MWArray[] GetFileExample(int numArgsOut)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetPDATexample", new MWArray[]{});
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides the standard 1-input MWArray interface to the GetPDATexample MATLAB
+    /// Provides the standard 1-input MWArray interface to the GetFileExample MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="pdatFile">Input argument #1</param>
+    /// <param name="InputFile">Input argument #1</param>
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetPDATexample(int numArgsOut, MWArray pdatFile)
+    public MWArray[] GetFileExample(int numArgsOut, MWArray InputFile)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetPDATexample", pdatFile);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile);
     }
 
 
     /// <summary>
-    /// Provides an interface for the GetPDATexample function in which the input and
+    /// Provides the standard 2-input MWArray interface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] GetFileExample(int numArgsOut, MWArray InputFile, MWArray FileType)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile, FileType);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the GetFileExample function in which the input and
     /// output
     /// arguments are specified as an array of MWArrays.
     /// </summary>
@@ -239,9 +273,9 @@ namespace BAWSengine
     /// <param name= "argsOut">Array of MWArray output arguments</param>
     /// <param name= "argsIn">Array of MWArray input arguments</param>
     ///
-    public void GetPDATexample(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    public void GetFileExample(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
-      mcr.EvaluateFunction("GetPDATexample", numArgsOut, ref argsOut, argsIn);
+      mcr.EvaluateFunction("GetFileExample", numArgsOut, ref argsOut, argsIn);
     }
 
 
