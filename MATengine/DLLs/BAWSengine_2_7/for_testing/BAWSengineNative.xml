@@ -10,7 +10,7 @@
             functions contained in the files:
             <newpara></newpara>
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-            PDATexample.m
+            FileExample.m
             <newpara></newpara>
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
             SparseData.m
@@ -59,9 +59,9 @@
             Internal dispose function
             </summary>
         </member>
-        <member name="M:BAWSengineNative.GUI2MAT.GetPDATexample">
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample">
              <summary>
-             Provides a single output, 0-input Objectinterface to the GetPDATexample MATLAB
+             Provides a single output, 0-input Objectinterface to the GetFileExample MATLAB
              function.
              </summary>
              <remarks>
@@ -69,20 +69,32 @@
              <returns>An Object containing the first output argument.</returns>
             
         </member>
-        <member name="M:BAWSengineNative.GUI2MAT.GetPDATexample(System.Object)">
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Object)">
              <summary>
-             Provides a single output, 1-input Objectinterface to the GetPDATexample MATLAB
+             Provides a single output, 1-input Objectinterface to the GetFileExample MATLAB
              function.
              </summary>
              <remarks>
              </remarks>
-             <param name="pdatFile">Input argument #1</param>
+             <param name="InputFile">Input argument #1</param>
              <returns>An Object containing the first output argument.</returns>
             
         </member>
-        <member name="M:BAWSengineNative.GUI2MAT.GetPDATexample(System.Int32)">
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Object,System.Object)">
              <summary>
-             Provides the standard 0-input Object interface to the GetPDATexample MATLAB
+             Provides a single output, 2-input Objectinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the GetFileExample MATLAB
              function.
              </summary>
              <remarks>
@@ -92,22 +104,36 @@
              arguments.</returns>
             
         </member>
-        <member name="M:BAWSengineNative.GUI2MAT.GetPDATexample(System.Int32,System.Object)">
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object)">
              <summary>
-             Provides the standard 1-input Object interface to the GetPDATexample MATLAB
+             Provides the standard 1-input Object interface to the GetFileExample MATLAB
              function.
              </summary>
              <remarks>
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="pdatFile">Input argument #1</param>
+             <param name="InputFile">Input argument #1</param>
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
         </member>
-        <member name="M:BAWSengineNative.GUI2MAT.GetPDATexample(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object,System.Object)">
              <summary>
-             Provides an interface for the GetPDATexample function in which the input and
+             Provides the standard 2-input Object interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the GetFileExample function in which the input and
              output
              arguments are specified as an array of Objects.
              </summary>
