@@ -29,6 +29,8 @@ if(strcmpi(FileInfo.FileType,'pdat'))
     fileType = 1;
 elseif(strcmpi(FileInfo.FileType,'csv'))
     fileType = 2;
+elseif(strcmpi(FileInfo.FileType,'powHQ'))
+    fileType = 3;
 end
 
 if(isempty(FileInfo.lastFocusFile))
@@ -63,13 +65,7 @@ end
 
      
 % find the name and folder of the focus file
-if(fileType == 1)
-    % pdat files
-    [focusFileFolder,focusFile] = getPdatFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
-elseif(fileType == 2)
-    % csv files
-    [focusFileFolder,focusFile] = getCSVFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
-end
+[focusFileFolder,focusFile] = getFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime,fileType);
 
 checking = 1;
 NoFutureCount = 0;
@@ -144,6 +140,8 @@ while(checking == 1)
                     files1 = dir([focusFileFolder,'*.pdat']);
                 elseif(fileType == 2)
                     files1 = dir([focusFileFolder,'*.csv']);
+                elseif(fileType == 3)
+                    files1 = dir([focusFileFolder,'*.mat']);
                 end
                 if(~isempty(files1))
                     files1 = {files1.name};
@@ -168,6 +166,8 @@ while(checking == 1)
                     files2 = dir([nextFileFolder,'*.pdat']);
                 elseif(fileType == 2)
                     files2 = dir([nextFileFolder,'*.csv']);
+                elseif(fileType == 3)
+                    files2 = dir([nextFileFolder,'*.mat']);
                 end
                 if(~isempty(files2))
                     files2 = {files2.name};

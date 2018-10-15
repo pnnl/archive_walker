@@ -336,6 +336,7 @@ elseif ~Unpause
         for pmuIdx = 1:length(PMUbyFile{FileIdx})
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.Signal_datenum = tt;
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.Time_String = ttStr;
+            PMUbyFile{FileIdx}(pmuIdx).Signal_Time.datetime = datetime(tt,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
         end
     end
     
@@ -645,6 +646,7 @@ while(~min(done))
         if (LastShortcutOverEmpty == 1) && (ShortcutOverEmpty == 0) && ~isempty(SecondsToConcat) && ~isnan(SecondsToConcat)
             for PMUidx = 1:length(PMUconcat)
                 PMUconcat(PMUidx).Signal_Time.Time_String = cellstr(datestr(PMUconcat(PMUidx).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'));
+                PMUconcat(PMUidx).Signal_Time.datetime = datetime(PMUconcat(PMUidx).Signal_Time.Signal_datenum,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
             end
         end
         LastShortcutOverEmpty = ShortcutOverEmpty;
@@ -751,6 +753,7 @@ while(~min(done))
                 PMU(TrimIdx).Flag = PMU(TrimIdx).Flag(KeepIdx,:,:);
                 PMU(TrimIdx).Signal_Time.Signal_datenum = PMU(TrimIdx).Signal_Time.Signal_datenum(KeepIdx);
                 PMU(TrimIdx).Signal_Time.Time_String = PMU(TrimIdx).Signal_Time.Time_String(KeepIdx);
+                PMU(TrimIdx).Signal_Time.datetime = PMU(TrimIdx).Signal_Time.datetime(KeepIdx);
             end
             
             % Only need to do this once, so set WindowStartTime to empty so
