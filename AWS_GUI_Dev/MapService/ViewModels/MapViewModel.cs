@@ -71,7 +71,7 @@ namespace MapService.ViewModels
             Gmap.CacheLocation = "..\\MapCache";
             Gmap.MouseMove += GMap_MouseMove;
             Gmap.MouseLeftButtonDown += GMap_MouseLeftButtonDown;
-        
+
             //GMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
 
             //MainMap.ScaleMode = ScaleModes.Dynamic;
@@ -261,7 +261,7 @@ namespace MapService.ViewModels
                     {
                         Width = 25,
                         Height = 25,
-                        Source = new BitmapImage(new System.Uri(@"C:\Users\wang690\Desktop\projects\TIP348\VoltageStability\archive_walker\AWS_GUI_Dev\BAWGUI.Resources\Images\bigMarkerGreen.png"))
+                        Source = new BitmapImage(new System.Uri(@"..\..\..\..\MyResources\bigMarkerGreen.png", UriKind.Relative))
                     };
                 }
                 Gmap.Markers.Add(newMarker);

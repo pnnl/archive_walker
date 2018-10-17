@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:viewscore="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             xmlns:map="clr-namespace:MapService.Views;assembly=MapService"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
     <DockPanel>
@@ -24,7 +25,7 @@
                         <views:FOEventPlot/>
                     </TabItem>
                     <TabItem Header="Event Mapping">
-                        <views:FOEventTableView/>
+                        <map:MapView DataContext="{Binding ResultMapVM}"/>
                     </TabItem>
                 </TabControl>
                 <DockPanel Grid.Row="1">

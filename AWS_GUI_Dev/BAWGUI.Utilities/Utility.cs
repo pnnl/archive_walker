@@ -110,5 +110,31 @@ namespace BAWGUI.Utilities
                 yield return array[index, i];
             }
         }
+        /// <summary>
+        /// function to correct the radian phase angles  by adding ±2π when absolute jumps between consecutive elements are greater than or equal to π radians
+        /// it mimics the unwrap function in matlab but much less powerful http://www.mathworks.com/help/matlab/ref/unwrap.html 
+        /// </summary>
+        /// <param name="numberList">A list of numbers that need to be unwrapped</param>
+        /// <returns>Unwrapped list of numbers</returns>
+        public static  List<double> UnWrap(List<double> numberList)
+        {
+            try
+            {
+                for (var index = 1; index <= numberList.Count - 1; index++)
+                {
+                    var difference = numberList[index] - numberList[index - 1];
+                    var multiplesOf2PI = (Math.Abs(difference) + Math.PI) / (2 * Math.PI);
+                    if (difference >= Math.PI)
+                        numberList[index] = numberList[index] - 2 * Math.PI * multiplesOf2PI;
+                    else if (difference <= -Math.PI)
+                        numberList[index] = numberList[index] + 2 * Math.PI * multiplesOf2PI;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("unWrap error! " + ex.Message);
+            }
+            return numberList;
+        }
     }
 }

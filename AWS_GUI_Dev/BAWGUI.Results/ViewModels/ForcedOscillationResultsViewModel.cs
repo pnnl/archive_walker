@@ -18,6 +18,8 @@ using System.Windows.Forms;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
+using MapService.ViewModels;
+using BAWGUI.SignalManagement.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -43,6 +45,8 @@ namespace BAWGUI.Results.ViewModels
             _selectedOccurrence = new OccurrenceViewModel();
             _configFilePath = "";
             _run = new AWRunViewModel();
+            _signalMgr = SignalManager.Instance;
+            ResultMapVM = new ResultMapViewModel();
             //_selectedStartTime = "01/01/0001 00:00:00";
             //_selectedEndTime = "01/01/0001 00:00:00";
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
@@ -229,25 +233,44 @@ namespace BAWGUI.Results.ViewModels
             get { return _selectedOccurrence; }
             set
             {
-                _selectedOccurrence = value;
-                OnPropertyChanged();
-                if (_selectedOccurrence != null)
+                if (_selectedOccurrence != value)
                 {
-                    foreach (var item in FOPlotModel.Series)
+                    _selectedOccurrence = value;
+                    OnPropertyChanged();
+                    if (_selectedOccurrence != null)
                     {
-                        if (item is LineSeries)
+                        foreach (var item in FOPlotModel.Series)
                         {
-                            var it = item as LineSeries;
-                            if (it.StrokeThickness == 10)
+                            if (item is LineSeries)
                             {
-                                it.StrokeThickness = 5;
-                            }
-                            if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
-                            {
-                                it.StrokeThickness = 10;
-                                FOPlotModel.InvalidatePlot(true);
+                                var it = item as LineSeries;
+                                if (it.StrokeThickness == 10)
+                                {
+                                    it.StrokeThickness = 5;
+                                }
+                                if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
+                                {
+                                    it.StrokeThickness = 10;
+                                    FOPlotModel.InvalidatePlot(true);
+                                }
                             }
                         }
+                        var signalList = new List<SignalSignatureViewModel>();
+                        foreach (var channel in _selectedOccurrence.Channels)
+                        {
+                            var signal = _signalMgr.SearchForSignalInTaggedSignals("", channel.Name);
+                            if (signal != null)
+                            {
+                                signalList.Add(signal);
+                            }
+                        }
+                        //ResultMapVM.Signals = signalList;
+                        ResultMapVM.UpdateResultMap(signalList);
+                        ResultMapVM.AddLineTest();
+                        //TODO: update map here
+                        //find all the signals need to be plotted in the selectedOccurrence as a list
+                        //add them to the resultMapViewModel
+                        //update the map plot
                     }
                 }
             }
@@ -575,5 +598,8 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private SignalManager _signalMgr;
+        public ResultMapViewModel ResultMapVM { get; set; }
     }
 }
