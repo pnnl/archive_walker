@@ -89,4 +89,11 @@ namespace BAWGUI.Core.Models
         [Description("Area")]
         Area
     }
+    public enum CurveDesignOptions
+    {
+        [Description("Option 1")]
+        Option1,
+        [Description("Option 2")]
+        Option2
+    }
 }

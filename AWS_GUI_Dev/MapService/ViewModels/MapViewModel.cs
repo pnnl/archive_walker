@@ -55,7 +55,14 @@ namespace MapService.ViewModels
         public int MinZoom { get; set; } = 0;
         public void SetUpGMap()
         {
-            Gmap = new GMapControl();
+            try
+            {
+                Gmap = new GMapControl();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
             //GMap.MapProvider = OpenStreetMapProvider.Instance;
             Gmap.MaxZoom = MaxZoom;
             Gmap.MinZoom = MinZoom;

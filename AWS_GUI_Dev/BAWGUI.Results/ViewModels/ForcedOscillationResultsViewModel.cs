@@ -46,7 +46,7 @@ namespace BAWGUI.Results.ViewModels
             _configFilePath = "";
             _run = new AWRunViewModel();
             _signalMgr = SignalManager.Instance;
-            ResultMapVM = new ResultMapViewModel();
+            //ResultMapVM = new ResultMapViewModel();
             //_selectedStartTime = "01/01/0001 00:00:00";
             //_selectedEndTime = "01/01/0001 00:00:00";
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
@@ -264,9 +264,9 @@ namespace BAWGUI.Results.ViewModels
                                 signalList.Add(signal);
                             }
                         }
-                        //ResultMapVM.Signals = signalList;
-                        ResultMapVM.UpdateResultMap(signalList);
-                        ResultMapVM.AddLineTest();
+                        ////ResultMapVM.Signals = signalList;
+                        //ResultMapVM.UpdateResultMap(signalList);
+                        //ResultMapVM.AddLineTest();
                         //TODO: update map here
                         //find all the signals need to be plotted in the selectedOccurrence as a list
                         //add them to the resultMapViewModel
