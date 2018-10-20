@@ -41,7 +41,9 @@
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
+            <xcdg:Column Title="PMU" FieldName="PMU" ReadOnly="True" Width="70"/>
             <xcdg:Column Title="Name" FieldName="Name" ReadOnly="True" Width="250"/>
+            <xcdg:Column Title="Unit" FieldName="Unit" ReadOnly="True" Width="40"/>
             <xcdg:Column Title="Amplitude" FieldName="Amplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
             <xcdg:Column Title="SNR" FieldName="SNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
             <xcdg:Column Title="Coherence" FieldName="Coherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>

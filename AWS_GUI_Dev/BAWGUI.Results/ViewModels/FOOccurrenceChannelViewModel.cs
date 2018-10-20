@@ -46,6 +46,13 @@ namespace BAWGUI.Results.ViewModels
                 return _model.Coherence;
             }
         }
-
+        public string PMU
+        {
+            get { return _model.PMU; }
+        }
+        public string Unit
+        {
+            get { return _model.Unit; }
+        }
     }
 }

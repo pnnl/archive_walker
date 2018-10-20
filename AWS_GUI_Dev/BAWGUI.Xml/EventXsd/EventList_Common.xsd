@@ -46,6 +46,8 @@
                   <xs:element name="Amplitude" type="xs:float" />
                   <xs:element name="SNR" type="xs:float" />
                   <xs:element name="Coherence" type="xs:float" />
+                  <xs:element name="PMU" type="xs:string" />
+                  <xs:element name="Unit" type="xs:string" />
                 </xs:sequence>
               </xs:complexType>
             </xs:element>

@@ -46,7 +46,7 @@ namespace BAWGUI.Results.ViewModels
             _configFilePath = "";
             _run = new AWRunViewModel();
             _signalMgr = SignalManager.Instance;
-            //ResultMapVM = new ResultMapViewModel();
+            ResultMapVM = new ResultMapViewModel();
             //_selectedStartTime = "01/01/0001 00:00:00";
             //_selectedEndTime = "01/01/0001 00:00:00";
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
@@ -237,6 +237,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     _selectedOccurrence = value;
                     OnPropertyChanged();
+                    ResultMapVM.ClearMarkers();
                     if (_selectedOccurrence != null)
                     {
                         foreach (var item in FOPlotModel.Series)
@@ -258,14 +259,14 @@ namespace BAWGUI.Results.ViewModels
                         var signalList = new List<SignalSignatureViewModel>();
                         foreach (var channel in _selectedOccurrence.Channels)
                         {
-                            var signal = _signalMgr.SearchForSignalInTaggedSignals("", channel.Name);
+                            var signal = _signalMgr.SearchForSignalInTaggedSignals(channel.PMU, channel.Name);
                             if (signal != null)
                             {
                                 signalList.Add(signal);
                             }
                         }
                         ////ResultMapVM.Signals = signalList;
-                        //ResultMapVM.UpdateResultMap(signalList);
+                        ResultMapVM.UpdateResultMap(signalList);
                         //ResultMapVM.AddLineTest();
                         //TODO: update map here
                         //find all the signals need to be plotted in the selectedOccurrence as a list

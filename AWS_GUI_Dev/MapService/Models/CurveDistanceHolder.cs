@@ -93,8 +93,8 @@ namespace MapService.Models
             {
                 xAccDiff = xAccDiff + Math.Pow(curve1[index].X - curve2[index].X, 2);
                 yAccDiff = yAccDiff + Math.Pow(curve1[index].Y - curve2[index].Y, 2);
-                xAccDiffRev = xAccDiffRev + Math.Pow(curve1[index].X - curve2[curve1.Count - index].X, 2);
-                yAccDiffRev = yAccDiffRev + Math.Pow(curve1[index].Y - curve2[curve1.Count - index].Y, 2);
+                xAccDiffRev = xAccDiffRev + Math.Pow(curve1[index].X - curve2[curve1.Count - 1 - index].X, 2);
+                yAccDiffRev = yAccDiffRev + Math.Pow(curve1[index].Y - curve2[curve1.Count - 1 - index].Y, 2);
             }
             var d1 = Math.Sqrt((xAccDiff + yAccDiff) / curve1.Count);
             var d2 = Math.Sqrt((xAccDiffRev + yAccDiffRev) / curve1.Count);

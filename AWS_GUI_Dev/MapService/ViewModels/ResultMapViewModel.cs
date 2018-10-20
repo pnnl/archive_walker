@@ -5,15 +5,9 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using MapService.Models;
-using MathNet.Numerics;
-using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MapService.ViewModels
 {
@@ -56,7 +50,7 @@ namespace MapService.ViewModels
                     List<CartesianPoint> points = new List<CartesianPoint>();
                     for (int index = 0; index < signal.Locations.Count; index++)
                     {
-                        points.Add(new CartesianPoint(double.Parse(signal.Locations[index].Latitude), double.Parse(signal.Locations[index].Longitude)));
+                        points.Add(new CartesianPoint(double.Parse(signal.Locations[index].Longitude), double.Parse(signal.Locations[index].Latitude)));
                     }
                     for (int index = 0; index < points.Count - 1; index++)
                     {
@@ -165,76 +159,89 @@ namespace MapService.ViewModels
             if (remainedPair != null)
             {
                 var pairedWithRemainedPair = curveDistanceMatrixCopy.Where(x => x.PointPair1 == remainedPair || x.PointPair2 == remainedPair).ToList();
-                var nearestNeighbor = pairedWithRemainedPair.Aggregate((curMin, x) => x.MinDistance < curMin.MinDistance ? x : curMin);
-                if (remainedPair == nearestNeighbor.PointPair1)
+                if (pairedWithRemainedPair.Count != 0)
                 {
-                    if (nearestNeighbor.PointPair2.SelectedCenter == nearestNeighbor.PointPair2.Center1)
+                    var nearestNeighbor = pairedWithRemainedPair.Aggregate((curMin, x) => x.MinDistance < curMin.MinDistance ? x : curMin);
+                    if (remainedPair == nearestNeighbor.PointPair1)
                     {
-                        if (nearestNeighbor.Distance11 > nearestNeighbor.Distance21)
+                        if (nearestNeighbor.PointPair2.SelectedCenter == nearestNeighbor.PointPair2.Center1)
                         {
-                            remainedPair.SelectedCenter = remainedPair.Center1;
-                            remainedPair.SelectedCurve = remainedPair.Curve1;
+                            if (nearestNeighbor.Distance11 > nearestNeighbor.Distance21)
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center1;
+                                remainedPair.SelectedCurve = remainedPair.Curve1;
+                            }
+                            else
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center2;
+                                remainedPair.SelectedCurve = remainedPair.Curve2;
+                            }
                         }
                         else
                         {
-                            remainedPair.SelectedCenter = remainedPair.Center2;
-                            remainedPair.SelectedCurve = remainedPair.Curve2;
+                            if (nearestNeighbor.Distance12 > nearestNeighbor.Distance22)
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center1;
+                                remainedPair.SelectedCurve = remainedPair.Curve1;
+                            }
+                            else
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center2;
+                                remainedPair.SelectedCurve = remainedPair.Curve2;
+                            }
                         }
                     }
                     else
                     {
-                        if (nearestNeighbor.Distance12 > nearestNeighbor.Distance22)
+                        if (nearestNeighbor.PointPair1.SelectedCenter == nearestNeighbor.PointPair1.Center1)
                         {
-                            remainedPair.SelectedCenter = remainedPair.Center1;
-                            remainedPair.SelectedCurve = remainedPair.Curve1;
+                            if (nearestNeighbor.Distance11 > nearestNeighbor.Distance12)
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center1;
+                                remainedPair.SelectedCurve = remainedPair.Curve1;
+                            }
+                            else
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center2;
+                                remainedPair.SelectedCurve = remainedPair.Curve2;
+                            }
                         }
                         else
                         {
-                            remainedPair.SelectedCenter = remainedPair.Center2;
-                            remainedPair.SelectedCurve = remainedPair.Curve2;
+                            if (nearestNeighbor.Distance21 > nearestNeighbor.Distance22)
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center1;
+                                remainedPair.SelectedCurve = remainedPair.Curve1;
+                            }
+                            else
+                            {
+                                remainedPair.SelectedCenter = remainedPair.Center2;
+                                remainedPair.SelectedCurve = remainedPair.Curve2;
+                            }
                         }
                     }
                 }
                 else
                 {
-                    if (nearestNeighbor.PointPair1.SelectedCenter == nearestNeighbor.PointPair1.Center1)
-                    {
-                        if (nearestNeighbor.Distance11 > nearestNeighbor.Distance12)
-                        {
-                            remainedPair.SelectedCenter = remainedPair.Center1;
-                            remainedPair.SelectedCurve = remainedPair.Curve1;
-                        }
-                        else
-                        {
-                            remainedPair.SelectedCenter = remainedPair.Center2;
-                            remainedPair.SelectedCurve = remainedPair.Curve2;
-                        }
-                    }
-                    else
-                    {
-                        if (nearestNeighbor.Distance21 > nearestNeighbor.Distance22)
-                        {
-                            remainedPair.SelectedCenter = remainedPair.Center1;
-                            remainedPair.SelectedCurve = remainedPair.Curve1;
-                        }
-                        else
-                        {
-                            remainedPair.SelectedCenter = remainedPair.Center2;
-                            remainedPair.SelectedCurve = remainedPair.Curve2;
-                        }
-                    }
-                }                
+                    remainedPair.SelectedCenter = remainedPair.Center1;
+                    remainedPair.SelectedCurve = remainedPair.Curve1;
+                }
             }
             foreach (var pair in linePairs)
             {
                 var newCurve = new List<PointLatLng>();
                 foreach (var p in pair.SelectedCurve)
                 {
-                    newCurve.Add(new PointLatLng(p.X, p.Y));
+                    newCurve.Add(new PointLatLng(p.Y, p.X));
                 }
                 curveList.Add(new GMapRoute(newCurve));
             }
             return curveList;
+        }
+
+        public void ClearMarkers()
+        {
+            throw new NotImplementedException();
         }
 
         //private double _distanceBetween2Curves(List<CartesianPoint> curve1, List<CartesianPoint> curve2)
@@ -280,7 +287,7 @@ namespace MapService.ViewModels
 
         private void _addDotToMap()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void _setupMap()

@@ -32,7 +32,7 @@ namespace MapService.Models
             AngleCenter1Point1 = Math.Atan2(Y1 - Center1.Y, X1 - Center1.X);
             AngleCenter1Point2 = Math.Atan2(Y2 - Center1.Y, X2 - Center1.X);
             var Ts1 = Utility.UnWrap(new List<double> { AngleCenter1Point1, AngleCenter1Point2 });
-            var T1 = Vector<double>.Build.DenseOfArray(Generate.LinearRange(Ts1[0], NumberOfPointsForEachCurve, Ts1[1]));
+            var T1 = Vector<double>.Build.DenseOfArray(Generate.LinearRange(Ts1[0], (Ts1[1] - Ts1[0])/NumberOfPointsForEachCurve, Ts1[1]));
             var xx1 = T1.PointwiseCos().Multiply(Radius).Add(Center1.X);
             xx1[0] = X1;
             xx1[xx1.Count - 1] = X2;
@@ -47,7 +47,7 @@ namespace MapService.Models
             var AngleCenter2Point1 = Math.Atan2(Y1 - Center2.Y, X1 - Center2.X);
             var AngleCenter2Point2 = Math.Atan2(Y2 - Center2.Y, X2 - Center2.X);
             var Ts2 = Utility.UnWrap(new List<double> { AngleCenter2Point1, AngleCenter2Point2 });
-            var T2 = Vector<double>.Build.DenseOfArray(Generate.LinearRange(Ts2[0], NumberOfPointsForEachCurve, Ts2[1]));
+            var T2 = Vector<double>.Build.DenseOfArray(Generate.LinearRange(Ts2[0], (Ts2[1] - Ts2[0])/NumberOfPointsForEachCurve, Ts2[1]));
             var xx2 = T2.PointwiseCos().Multiply(Radius).Add(Center2.X);
             xx2[0] = X1;
             xx2[xx2.Count - 1] = X2;
@@ -55,7 +55,7 @@ namespace MapService.Models
             yy2[0] = Y1;
             yy2[yy2.Count - 1] = Y2;
             Curve2 = new List<CartesianPoint>();
-            for (int index = 0; index < xx2.Count - 1; index++)
+            for (int index = 0; index < xx2.Count; index++)
             {
                 Curve2.Add(new CartesianPoint(xx2[index], yy2[index]));
             }

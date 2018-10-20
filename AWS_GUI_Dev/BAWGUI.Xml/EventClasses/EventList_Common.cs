@@ -193,6 +193,10 @@ namespace BAWGUI.Xml
     {
         private string nameField;
 
+        private string pmuField;
+
+        private string unitField;
+
         private float amplitudeField;
 
         private float sNRField;
@@ -206,6 +210,16 @@ namespace BAWGUI.Xml
             set { this.nameField = value; }
         }
 
+        public string PMU
+        {
+            get { return this.pmuField; }
+            set { this.pmuField = value; }
+        }
+        public string Unit
+        {
+            get { return this.unitField; }
+            set { this.unitField = value; }
+        }
         /// <remarks/>
         public float Amplitude
         {
