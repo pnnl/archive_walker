@@ -241,7 +241,7 @@ namespace MapService.ViewModels
 
         public void ClearMarkers()
         {
-            throw new NotImplementedException();
+            Gmap.Markers.Clear();
         }
 
         //private double _distanceBetween2Curves(List<CartesianPoint> curve1, List<CartesianPoint> curve2)
