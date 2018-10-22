@@ -165,15 +165,7 @@ namespace BAWGUI.ViewModels
             if (e != null)
             {
                 SettingsVM.Project = e.Model;
-                //SettingsVM.Run = e.SelectedRun.Model;
-                ResultsVM.Project = e.Model;
-                //ResultsVM.Run = e.SelectedRun.Model;
-                //SettingsVM.Project = e;
                 SettingsVM.Run = e.SelectedRun;
-                //ResultsVM.Project = e;
-                ResultsVM.Run = e.SelectedRun;
-                RunMatlabVM.Run = e.SelectedRun;
-                RunMatlabVM.Project = e.Model;
                 try
                 {
                     var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
@@ -204,6 +196,10 @@ namespace BAWGUI.ViewModels
                 {
                     MessageBox.Show("error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
+                RunMatlabVM.Project = e.Model;
+                RunMatlabVM.Run = e.SelectedRun;
+                ResultsVM.Project = e.Model;
+                ResultsVM.Run = e.SelectedRun;
             }
         }
         public CoordinatesTableViewModel CoordsTableVM { get; set; }

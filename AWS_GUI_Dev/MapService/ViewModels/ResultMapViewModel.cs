@@ -8,6 +8,7 @@ using MapService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace MapService.ViewModels
 {
@@ -37,7 +38,7 @@ namespace MapService.ViewModels
         public int MinZoom { get; set; } = 0;
         private void _updateGmap()
         {
-            var linePairs = new List<PointsPair>();
+            var pointPairs = new List<PointsPair>();
             foreach (var signal in Signals)
             {
                 if (signal.MapPlotType == SignalMapPlotType.Dot)
@@ -54,7 +55,7 @@ namespace MapService.ViewModels
                     }
                     for (int index = 0; index < points.Count - 1; index++)
                     {
-                        linePairs.Add(new PointsPair(points[index], points[index + 1]));
+                        pointPairs.Add(new PointsPair(points[index], points[index + 1]));
                     }
                 }
                 if (signal.MapPlotType == SignalMapPlotType.Area)
@@ -62,16 +63,23 @@ namespace MapService.ViewModels
                     _addPolygonToMap();
                 }
             }
-            if (linePairs.Count != 0)
+            if (pointPairs.Count != 0)
             {
-                _drawCurvesOnMap(linePairs);
+                try
+                {
+                    _drawCurvesOnMap(pointPairs);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error drawing arcs on map.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                }
             }
         }
 
-        private void _drawCurvesOnMap(List<PointsPair> linePairs)
+        private void _drawCurvesOnMap(List<PointsPair> pointPairs)
         {
             //int numberOfPointsForEachCurve = 100;
-            List< GMapRoute> curveList = _designCurves(linePairs);
+            List< GMapRoute> curveList = _designCurves(pointPairs);
             foreach (var curve in curveList)
             {
                 //TODO: change some properties of each curve so they look better
@@ -79,64 +87,66 @@ namespace MapService.ViewModels
             }
         }
 
-        private List<GMapRoute> _designCurves(List<PointsPair> linePairs)
+        private List<GMapRoute> _designCurves(List<PointsPair> pointPairs)
         {
             List<GMapRoute> curveList = new List<GMapRoute>();
             var cuvreDistanceMatrix = new List<CurveDistanceHolder>();
-            for (int index = 0; index < linePairs.Count - 1; index++)
+            for (int index = 0; index < pointPairs.Count - 1; index++)
             {
-                for (int index2 = index + 1; index2 < linePairs.Count; index2++)
+                for (int index2 = index + 1; index2 < pointPairs.Count; index2++)
                 {
-                    cuvreDistanceMatrix.Add(new CurveDistanceHolder(linePairs[index], linePairs[index2]));
-                    //double distance1 = _distanceBetween2Curves(pointPair1.Curve1, pointPair2.Curve1);
-                    //double distance2 = _distanceBetween2Curves(pointPair1.Curve1, pointPair2.Curve2);
-                    //double distance3 = _distanceBetween2Curves(pointPair1.Curve2, pointPair2.Curve1);
-                    //double distance4 = _distanceBetween2Curves(pointPair1.Curve2, pointPair2.Curve2);
+                    cuvreDistanceMatrix.Add(new CurveDistanceHolder(pointPairs[index], pointPairs[index2]));
                 }
             }
             var curveDistanceMatrixCopy = cuvreDistanceMatrix;
-            CurveDistanceHolder selectedpair = null;
+            CurveDistanceHolder selectedLinepair = null;
             while (cuvreDistanceMatrix.Count != 0)
             {
                 if (CurveDesignOption == CurveDesignOptions.Option1)
                 {
                     //cureDistanceMatrix.Select(x => x.MinDistance).Min();
-                    selectedpair = cuvreDistanceMatrix.Aggregate((curMin, x) => x.MinDistance < curMin.MinDistance ? x : curMin);
+                    selectedLinepair = cuvreDistanceMatrix.Aggregate((curMin, x) => x.MinDistance < curMin.MinDistance ? x : curMin);
                 }
                 else
                 {
-                    selectedpair = cuvreDistanceMatrix.Aggregate((curMax, x) => x.MaxDistanceDiff > curMax.MaxDistanceDiff ? x : curMax);
+                    selectedLinepair = cuvreDistanceMatrix.Aggregate((curMax, x) => x.MaxDistanceDiff > curMax.MaxDistanceDiff ? x : curMax);
                 }
-                if (selectedpair != null)
+                if (selectedLinepair != null)
                 {
-                    selectedpair.SetCurveSelection();
-                    cuvreDistanceMatrix = cuvreDistanceMatrix.Where(x => x.PointPair1 != selectedpair.PointPair1 && x.PointPair2 != selectedpair.PointPair2).ToList();
+                    selectedLinepair.SetCurveSelection();
+                    cuvreDistanceMatrix = cuvreDistanceMatrix.Where(x => x.PointPair1 != selectedLinepair.PointPair1 && x.PointPair2 != selectedLinepair.PointPair2 && x.PointPair1 != selectedLinepair.PointPair2 && x.PointPair2 != selectedLinepair.PointPair1).ToList();
                     //cureDistanceMatrix.RemoveAll(x => x.PointPair1 == selectedpair.PointPair1 || x.PointPair2 == selectedpair.PointPair2);
                     //curveList.Add(new GMapRoute(selectedpair.PointPair1.SelectedCurve);
                     //curveList.Add(selectedpair.PointPair2.SelectedCurve);
                 }
-                foreach (var pair in linePairs)
+                foreach (var pair in pointPairs)
                 {
                     if (pair.SelectedCurve.Count == 0)
                     {
-                        if ((pair.X1 == selectedpair.PointPair1.X1 && pair.Y1 == selectedpair.PointPair1.Y1 && pair.X2 == selectedpair.PointPair1.X2 && pair.Y2 == selectedpair.PointPair1.Y2)
-                        || (pair.X1 == selectedpair.PointPair1.X2 && pair.Y1 == selectedpair.PointPair1.Y2 && pair.X2 == selectedpair.PointPair1.X1 && pair.Y2 == selectedpair.PointPair1.Y1))
+                        var foundSamePair = false;
+                        PointsPair foundPair = null;
+                        if ((pair.X1 == selectedLinepair.PointPair1.X1 && pair.Y1 == selectedLinepair.PointPair1.Y1 && pair.X2 == selectedLinepair.PointPair1.X2 && pair.Y2 == selectedLinepair.PointPair1.Y2)
+                        || (pair.X1 == selectedLinepair.PointPair1.X2 && pair.Y1 == selectedLinepair.PointPair1.Y2 && pair.X2 == selectedLinepair.PointPair1.X1 && pair.Y2 == selectedLinepair.PointPair1.Y1))
                         {
-                            if(pair.Center1.Distance(selectedpair.PointPair1.SelectedCenter) < pair.Center2.Distance(selectedpair.PointPair1.SelectedCenter))
+                            foundSamePair = true;
+                            foundPair = selectedLinepair.PointPair1;
+                        }
+                        if ((pair.X1 == selectedLinepair.PointPair2.X1 && pair.Y1 == selectedLinepair.PointPair2.Y1 && pair.X2 == selectedLinepair.PointPair2.X2 && pair.Y2 == selectedLinepair.PointPair2.Y2)
+                        || (pair.X1 == selectedLinepair.PointPair2.X2 && pair.Y1 == selectedLinepair.PointPair2.Y2 && pair.X2 == selectedLinepair.PointPair2.X1 && pair.Y2 == selectedLinepair.PointPair2.Y1))
+                        {
+                            if (foundSamePair)
                             {
-                                pair.SelectedCenter = pair.Center2;
-                                pair.SelectedCurve = pair.Curve2;
+                                throw new Exception("A maximum of two lines can be drawn between two points."); //TODO: Or we can change the arc of the theta of this pair, if we want to draw unlimited arcs between 2 points
                             }
                             else
                             {
-                                pair.SelectedCenter = pair.Center1;
-                                pair.SelectedCurve = pair.Curve1;
+                                foundSamePair = true;
+                                foundPair = selectedLinepair.PointPair1;
                             }
                         }
-                        else if ((pair.X1 == selectedpair.PointPair2.X1 && pair.Y1 == selectedpair.PointPair2.Y1 && pair.X2 == selectedpair.PointPair2.X2 && pair.Y2 == selectedpair.PointPair2.Y2)
-                        || (pair.X1 == selectedpair.PointPair2.X2 && pair.Y1 == selectedpair.PointPair2.Y2 && pair.X2 == selectedpair.PointPair2.X1 && pair.Y2 == selectedpair.PointPair2.Y1))
+                        if (foundSamePair && foundPair != null)
                         {
-                            if (pair.Center1.Distance(selectedpair.PointPair2.SelectedCenter) < pair.Center2.Distance(selectedpair.PointPair2.SelectedCenter))
+                            if (pair.Center1.Distance(foundPair.SelectedCenter) < pair.Center2.Distance(foundPair.SelectedCenter))
                             {
                                 pair.SelectedCenter = pair.Center2;
                                 pair.SelectedCurve = pair.Curve2;
@@ -155,7 +165,7 @@ namespace MapService.ViewModels
                     }
                 }
             }
-            var remainedPair = linePairs.Find(x => x.SelectedCurve.Count == 0);
+            var remainedPair = pointPairs.Find(x => x.SelectedCurve.Count == 0);
             if (remainedPair != null)
             {
                 var pairedWithRemainedPair = curveDistanceMatrixCopy.Where(x => x.PointPair1 == remainedPair || x.PointPair2 == remainedPair).ToList();
@@ -227,7 +237,7 @@ namespace MapService.ViewModels
                     remainedPair.SelectedCurve = remainedPair.Curve1;
                 }
             }
-            foreach (var pair in linePairs)
+            foreach (var pair in pointPairs)
             {
                 var newCurve = new List<PointLatLng>();
                 foreach (var p in pair.SelectedCurve)

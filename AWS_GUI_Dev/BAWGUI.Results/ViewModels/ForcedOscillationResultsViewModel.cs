@@ -267,11 +267,10 @@ namespace BAWGUI.Results.ViewModels
                         }
                         ////ResultMapVM.Signals = signalList;
                         ResultMapVM.UpdateResultMap(signalList);
-                        //ResultMapVM.AddLineTest();
                         //TODO: update map here
-                        //find all the signals need to be plotted in the selectedOccurrence as a list
-                        //add them to the resultMapViewModel
-                        //update the map plot
+                        //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
+                        //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
+                        //need to add a property in the signalviewmodel, might be called intensity
                     }
                 }
             }
