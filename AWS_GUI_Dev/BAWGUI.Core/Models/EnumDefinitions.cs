@@ -42,7 +42,9 @@ namespace BAWGUI.Core.Models
         [Description("PDAT")]
         pdat,
         [Description("JSIS CSV")]
-        csv
+        csv,
+        [Description("HQ Point on Wave")]
+        mat
     }
 
     public enum ModeType

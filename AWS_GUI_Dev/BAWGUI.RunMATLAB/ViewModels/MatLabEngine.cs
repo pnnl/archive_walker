@@ -650,9 +650,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
 
-        public PDATExampleResults ReadPDATSampleFile(string filename)
+        public ReadExampleFileResults GetFileExample(string filename, int fileType)
         {
-            var PDATReadingResults = new PDATExampleResults();
+            var PDATReadingResults = new ReadExampleFileResults();
 
             if (IsMatlabEngineRunning)
             {
@@ -661,7 +661,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                PDATReadingResults.GetSignals((MWStructArray)_matlabEngine.GetPDATexample(filename));
+                PDATReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType));
             }
             catch (Exception ex)
             {
