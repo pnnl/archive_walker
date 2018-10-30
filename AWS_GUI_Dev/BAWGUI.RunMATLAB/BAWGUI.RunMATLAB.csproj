@@ -104,11 +104,18 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\RunMATLABViewModel.cs" />
+    <Compile Include="Views\ReRunProgressView.xaml.cs">
+      <DependentUpon>ReRunProgressView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RunNormalRunView.xaml.cs">
       <DependentUpon>RunNormalRunView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ReRunProgressView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RunNormalRunView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -250,8 +250,6 @@ for RankIdx = unique(EventRank)
                         elseif(strcmpi(PMUfileDir{DirectoryIdx}.FileType, 'csv'))
                             % JSIS_CSV format
                             PMUtemp = JSIS_CSV_2_Mat(PMUfilePath,Num_Flags);
-                        elseif(strcmpi(FileInfo(idx3).FileType, 'powHQ'))
-                            PMUtemp = POWreadHQ(PMUfilePath,Num_Flags);
                         end
 
                         PMUconcat = ConcatenatePMU(PMUconcat,PMUtemp);

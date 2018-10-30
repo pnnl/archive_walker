@@ -25,6 +25,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         public AWRunViewModel()
         {
+            _model = new AWRun();
             //_runCommands = new RunMATLABViewModel();
             //_isNormalRunPaused = false;
         }

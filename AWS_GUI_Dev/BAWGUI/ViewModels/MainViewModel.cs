@@ -25,9 +25,16 @@ namespace BAWGUI.ViewModels
             MainViewSelected = new RelayCommand(_switchView);
             _projectControlVM.RunSelected += _onRunSelected;
             _signalMgr = SignalManager.Instance;
+            //_settingsVM.SaveNewTasl += _settingsVM_SaveNewTasl;
+            _settingsVM.SaveNewTasl += _projectControlVM.CreateNewTask;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
         }
+
+        //private void _settingsVM_SaveNewTasl(ref SettingsViewModel svm)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private void _matlabEngineStatusChanged(object sender, bool e)
         {
