@@ -904,8 +904,11 @@ Namespace ViewModels
                 _updateExampleFile = value
             End Set
         End Property
-
+        Event SaveNewTasl(ByRef svm As SettingsViewModel)
         Private Sub _writeExampleFileAddressToConfig(exampleFilePath As String)
+            If Not File.Exists(Run.Model.ConfigFilePath) Then
+                RaiseEvent SaveNewTasl(Me)
+            End If
             Dim writer = New ConfigFileWriter(Me, Run.Model)
             writer.UpdateExampleFileAddress(exampleFilePath)
         End Sub
