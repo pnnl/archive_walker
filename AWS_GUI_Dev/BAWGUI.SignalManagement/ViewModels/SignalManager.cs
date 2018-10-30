@@ -103,7 +103,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         try
                         {
-                            _readCSVFile(aFileInfo);
+                            _readExampleFile(aFileInfo, 2);
                         }
                         catch (Exception ex)
                         {
@@ -115,7 +115,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         try
                         {
-                            _readPDATFile(aFileInfo);
+                            _readExampleFile(aFileInfo, 1);
                         }
                         catch (Exception ex)
                         {
@@ -134,121 +134,9 @@ namespace BAWGUI.SignalManagement.ViewModels
             AllPMUs = _getAllPMU();
             return ReadingSuccess;
         }
-        private void _readCSVFile(InputFileInfoViewModel aFileInfo)
+        private void _readExampleFile(InputFileInfoViewModel aFileInfo, int fileType)
         {
-            var csvReader = new CSVReader(aFileInfo.ExampleFile);
-            var pmuName = csvReader.pmuName;
-            var SamplingRate = csvReader.SamplingRate;
-            var signalNames = csvReader.signalNames;
-            var signalTypes = csvReader.signalTypes;
-            var signalUnits = csvReader.signalUnits;
-            var signalList = new List<string>();
-            var signalSignatureList = new ObservableCollection<SignalSignatureViewModel>();
-            for (var index = 0; index <= signalNames.Count - 1; index++)
-            {
-                var newSignal = new SignalSignatureViewModel();
-                newSignal.PMUName = pmuName;
-                newSignal.Unit = signalUnits[index];
-                newSignal.SignalName = signalNames[index];
-                newSignal.SamplingRate = (int)SamplingRate;
-                signalList.Add(signalNames[index]);
-                switch (signalTypes[index])
-                {
-                    case "VPM":
-                        {
-                            // signalName = signalNames(index).Split(".")(0) & ".VMP"
-                            // signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "VMP";
-                            break;
-                        }
-
-                    case "VPA":
-                        {
-                            // signalName = signalNames(index).Split(".")(0) & ".VAP"
-                            // signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "VAP";
-                            break;
-                        }
-
-                    case "IPM":
-                        {
-                            // signalName = signalNames(index).Split(".")(0) & ".IMP"
-                            // signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "IMP";
-                            break;
-                        }
-
-                    case "IPA":
-                        {
-                            // signalName = signalNames(index).Split(".")(0) & ".IAP"
-                            // signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "IAP";
-                            break;
-                        }
-
-                    case "F":
-                        {
-                            // signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "F";
-                            break;
-                        }
-
-                    case "P":
-                        {
-                            // signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "P";
-                            break;
-                        }
-
-                    case "Q":
-                        {
-                            // signalName = signalNames(index)
-                            newSignal.TypeAbbreviation = "Q";
-                            break;
-                        }
-
-                    default:
-                        {
-                            throw new Exception("Error! Invalid signal type " + signalTypes[index] + " found in file: " + aFileInfo.ExampleFile + " !");
-                        }
-                }
-                newSignal.OldSignalName = newSignal.SignalName;
-                newSignal.OldTypeAbbreviation = newSignal.TypeAbbreviation;
-                newSignal.OldUnit = newSignal.Unit;
-                signalSignatureList.Add(newSignal);
-            }
-            aFileInfo.SignalList = signalList;
-            aFileInfo.TaggedSignals = signalSignatureList;
-            aFileInfo.SamplingRate = (int)SamplingRate;
-            var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
-            newSig.SamplingRate = (int)SamplingRate;
-            var a = new SignalTypeHierachy(newSig);
-            a.SignalList = SortSignalByPMU(signalSignatureList);
-            GroupedRawSignalsByPMU.Add(a);
-            //newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
-            //newSig.SamplingRate = (int)SamplingRate;
-            var b = new SignalTypeHierachy(newSig);
-            b.SignalList = SortSignalByType(signalSignatureList);
-            GroupedRawSignalsByType.Add(b);
-            ReGroupedRawSignalsByType = GroupedRawSignalsByType;
-        }
-        //private void _readPDATFile(InputFileInfoViewModel aFileInfo)
-        //{
-        //    PDATReader PDATSampleFile = new PDATReader();
-        //    try
-        //    {
-        //        aFileInfo.SignalList = PDATSampleFile.GetPDATSignalNameList(aFileInfo.ExampleFile);
-        //        aFileInfo.SamplingRate = PDATSampleFile.GetSamplingRate();
-        //        TagSignals(aFileInfo, aFileInfo.SignalList);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("PDAT Reading error! " + ex.Message);
-        //    }
-        //}
-        private void _readPDATFile(InputFileInfoViewModel aFileInfo)
-        {
-            var signalInformation = _engine.ReadPDATSampleFile(aFileInfo.ExampleFile);
+            var signalInformation = _engine.GetFileExample(aFileInfo.ExampleFile, fileType);
             aFileInfo.SamplingRate = signalInformation.SamplingRate;
             ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
             for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
@@ -280,6 +168,139 @@ namespace BAWGUI.SignalManagement.ViewModels
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
+
+        //private void _readCSVFile(InputFileInfoViewModel aFileInfo)
+        //{
+        //    var csvReader = new CSVReader(aFileInfo.ExampleFile);
+        //    var pmuName = csvReader.pmuName;
+        //    var SamplingRate = csvReader.SamplingRate;
+        //    var signalNames = csvReader.signalNames;
+        //    var signalTypes = csvReader.signalTypes;
+        //    var signalUnits = csvReader.signalUnits;
+        //    var signalList = new List<string>();
+        //    var signalSignatureList = new ObservableCollection<SignalSignatureViewModel>();
+        //    for (var index = 0; index <= signalNames.Count - 1; index++)
+        //    {
+        //        var newSignal = new SignalSignatureViewModel();
+        //        newSignal.PMUName = pmuName;
+        //        newSignal.Unit = signalUnits[index];
+        //        newSignal.SignalName = signalNames[index];
+        //        newSignal.SamplingRate = (int)SamplingRate;
+        //        signalList.Add(signalNames[index]);
+        //        switch (signalTypes[index])
+        //        {
+        //            case "VPM":
+        //                {
+        //                    // signalName = signalNames(index).Split(".")(0) & ".VMP"
+        //                    // signalName = signalNames(index)
+        //                    newSignal.TypeAbbreviation = "VMP";
+        //                    break;
+        //                }
+
+        //            case "VPA":
+        //                {
+        //                    // signalName = signalNames(index).Split(".")(0) & ".VAP"
+        //                    // signalName = signalNames(index)
+        //                    newSignal.TypeAbbreviation = "VAP";
+        //                    break;
+        //                }
+
+        //            case "IPM":
+        //                {
+        //                    // signalName = signalNames(index).Split(".")(0) & ".IMP"
+        //                    // signalName = signalNames(index)
+        //                    newSignal.TypeAbbreviation = "IMP";
+        //                    break;
+        //                }
+
+        //            case "IPA":
+        //                {
+        //                    // signalName = signalNames(index).Split(".")(0) & ".IAP"
+        //                    // signalName = signalNames(index)
+        //                    newSignal.TypeAbbreviation = "IAP";
+        //                    break;
+        //                }
+
+        //            case "F":
+        //                {
+        //                    // signalName = signalNames(index)
+        //                    newSignal.TypeAbbreviation = "F";
+        //                    break;
+        //                }
+
+        //            case "P":
+        //                {
+        //                    // signalName = signalNames(index)
+        //                    newSignal.TypeAbbreviation = "P";
+        //                    break;
+        //                }
+
+        //            case "Q":
+        //                {
+        //                    // signalName = signalNames(index)
+        //                    newSignal.TypeAbbreviation = "Q";
+        //                    break;
+        //                }
+
+        //            default:
+        //                {
+        //                    throw new Exception("Error! Invalid signal type " + signalTypes[index] + " found in file: " + aFileInfo.ExampleFile + " !");
+        //                }
+        //        }
+        //        newSignal.OldSignalName = newSignal.SignalName;
+        //        newSignal.OldTypeAbbreviation = newSignal.TypeAbbreviation;
+        //        newSignal.OldUnit = newSignal.Unit;
+        //        signalSignatureList.Add(newSignal);
+        //    }
+        //    aFileInfo.SignalList = signalList;
+        //    aFileInfo.TaggedSignals = signalSignatureList;
+        //    aFileInfo.SamplingRate = (int)SamplingRate;
+        //    var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+        //    newSig.SamplingRate = (int)SamplingRate;
+        //    var a = new SignalTypeHierachy(newSig);
+        //    a.SignalList = SortSignalByPMU(signalSignatureList);
+        //    GroupedRawSignalsByPMU.Add(a);
+        //    //newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+        //    //newSig.SamplingRate = (int)SamplingRate;
+        //    var b = new SignalTypeHierachy(newSig);
+        //    b.SignalList = SortSignalByType(signalSignatureList);
+        //    GroupedRawSignalsByType.Add(b);
+        //    ReGroupedRawSignalsByType = GroupedRawSignalsByType;
+        //}
+        //private void _readPDATFile(InputFileInfoViewModel aFileInfo)
+        //{
+        //    var signalInformation = _engine.ReadPDATSampleFile(aFileInfo.ExampleFile);
+        //    aFileInfo.SamplingRate = signalInformation.SamplingRate;
+        //    ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
+        //    for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
+        //    {
+        //        var thisPMU = signalInformation.PMUSignalsList[idx];
+        //        var thisPMUName = signalInformation.PMUSignalsList[idx].PMUname;
+        //        for (int idx2 = 0; idx2 < thisPMU.SignalNames.Count; idx2++)
+        //        {
+        //            var aSignal = new SignalSignatureViewModel();
+        //            aSignal.SamplingRate = aFileInfo.SamplingRate;
+        //            aSignal.PMUName = thisPMUName;
+        //            aSignal.SignalName = thisPMU.SignalNames[idx2];
+        //            aSignal.Unit = thisPMU.SignalUnits[idx2];
+        //            aSignal.TypeAbbreviation = thisPMU.SignalTypes[idx2];
+        //            aSignal.OldSignalName = aSignal.SignalName;
+        //            aSignal.OldTypeAbbreviation = aSignal.TypeAbbreviation;
+        //            aSignal.OldUnit = aSignal.Unit;
+        //            newSignalList.Add(aSignal);
+        //        }
+        //    }
+        //    aFileInfo.TaggedSignals = newSignalList;
+        //    var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+        //    newSig.SamplingRate = aFileInfo.SamplingRate;
+        //    var a = new SignalTypeHierachy(newSig);
+        //    a.SignalList = SortSignalByPMU(newSignalList);
+        //    GroupedRawSignalsByPMU.Add(a);
+        //    var b = new SignalTypeHierachy(newSig);
+        //    b.SignalList = SortSignalByType(newSignalList);
+        //    GroupedRawSignalsByType.Add(b);
+        //    ReGroupedRawSignalsByType = GroupedRawSignalsByType;
+        //}
         public ObservableCollection<InputFileInfoViewModel> FileInfo { get; set; }
         public ObservableCollection<SignalTypeHierachy> SortSignalByType(ObservableCollection<SignalSignatureViewModel> signalList)
         {
@@ -1028,7 +1049,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     try
                     {
-                        _readCSVFile(model);
+                        _readExampleFile(model, 2);
                     }
                     catch (Exception ex)
                     {
@@ -1039,7 +1060,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     try
                     {
-                        _readPDATFile(model);
+                        _readExampleFile(model, 1);
                     }
                     catch (Exception ex)
                     {

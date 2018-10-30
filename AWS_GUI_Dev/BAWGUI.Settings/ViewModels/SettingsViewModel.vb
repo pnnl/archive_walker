@@ -763,7 +763,7 @@ Namespace ViewModels
             openFileDialog.RestoreDirectory = True
             openFileDialog.FileName = ""
             openFileDialog.DefaultExt = ".pdat"
-            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*"
+            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|All files (*.*)|*.*"
             If _lastInputFolderLocation Is Nothing Then
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory
             Else
