@@ -24,6 +24,8 @@ if FileType == 1
     [PMU,~,fs] = pdatReadnCreateStruct(InputFile,0,[]);
 elseif FileType == 2
     [PMU,~,fs] = JSIS_CSV_2_Mat(InputFile,0);
+elseif FileType == 3
+    [PMU,~,fs] = POWreadHQ(InputFile,0);
 else
     error(['FileType = ' num2str(FileType) ' is not a supported value.']);
 end
