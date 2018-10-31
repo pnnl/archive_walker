@@ -44,7 +44,7 @@ namespace BAWGUI.Core.Models
         [Description("JSIS CSV")]
         csv,
         [Description("HQ Point on Wave")]
-        mat
+        powHQ
     }
 
     public enum ModeType

@@ -12,7 +12,7 @@ Namespace Converters
                     Return "JSIS CSV"
                 Case DataFileType.pdat
                     Return "PDAT"
-                Case DataFileType.mat
+                Case DataFileType.powHQ
                     Return "HQ Point on Wave"
                 Case Else
                     Throw New Exception("Data file type not valid!")
@@ -26,7 +26,7 @@ Namespace Converters
                 Case "PDAT"
                     Return DataFileType.pdat
                 Case "HQ Point on Wave"
-                    Return DataFileType.mat
+                    Return DataFileType.powHQ
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select
