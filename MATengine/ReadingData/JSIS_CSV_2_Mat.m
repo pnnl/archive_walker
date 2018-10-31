@@ -225,14 +225,14 @@ PMU.Data = signalData;
 PMU.Stat = zeros(m,1);
 
 % update flag if there are data points that were set to strings or empty
-[row, col] = find(isnan(signalData));
-if(~isempty(row))
-    % has data points that were set to strings or empty
-    flag = false(m,n);
-    idx = sub2ind(size(flag), row, col);  % convert row and col to matlab linear indices
-    flag(idx) = true;
-    PMU.Flag(:,:,end-1) = flag;      
-end
+% [row, col] = find(isnan(signalData));
+% if(~isempty(row))
+%     % has data points that were set to strings or empty
+%     flag = false(m,n);
+%     idx = sub2ind(size(flag), row, col);  % convert row and col to matlab linear indices
+%     flag(idx) = true;
+%     PMU.Flag(:,:,end-1) = flag;      
+% end
 
 
 
