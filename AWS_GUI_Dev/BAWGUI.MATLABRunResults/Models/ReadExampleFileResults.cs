@@ -14,9 +14,10 @@ namespace BAWGUI.MATLABRunResults.Models
 
         public ReadExampleFileResults()
         {
+            PMUSignalsList = new List<PMUSignals>();
         }
 
-        public ReadExampleFileResults(MWStructArray rslt)
+        public ReadExampleFileResults(MWStructArray rslt) : this()
         {
             this._results = rslt;
         }

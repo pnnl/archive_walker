@@ -74,22 +74,22 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     //try
                     //{
-                        var ftyp = Path.GetExtension(value).Substring(1);
-                        switch (ftyp.ToLower())
-                        {
-                            case "pdat":
-                                FileType = DataFileType.pdat;
-                                break;
-                            case "csv":
-                                FileType = DataFileType.csv;
-                                break;
-                            case "mat":
-                                FileType = DataFileType.powHQ;
-                                break;
-                            default:
-                                MessageBox.Show("Data file type " + ftyp + " not recognized.", "Error!", MessageBoxButtons.OK);
-                            break;
-                        }
+                        //var ftyp = Path.GetExtension(value).Substring(1);
+                        //switch (ftyp.ToLower())
+                        //{
+                        //    case "pdat":
+                        //        FileType = DataFileType.pdat;
+                        //        break;
+                        //    case "csv":
+                        //        FileType = DataFileType.csv;
+                        //        break;
+                        //    case "mat":
+                        //        FileType = DataFileType.powHQ;
+                        //        break;
+                        //    default:
+                        //        MessageBox.Show("Data file type " + ftyp + " not recognized.", "Error!", MessageBoxButtons.OK);
+                        //    break;
+                        //}
                         //FileType = (DataFileType)Enum.Parse(typeof(DataFileType), );
                     //}
                     //catch (Exception ex)

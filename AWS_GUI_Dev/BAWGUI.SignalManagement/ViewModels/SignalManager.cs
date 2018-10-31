@@ -112,7 +112,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                             //MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
-                    else if(item.FileType.ToLower() == "pdat")
+                    else if(item.FileType == DataFileType.pdat)
                     {
                         try
                         {
@@ -1069,7 +1069,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         throw new Exception("Error reading .csv file. " + ex.Message);
                     }
                 }
-                else if (model.Model.FileType.ToLower() == "pdat")
+                else if (model.Model.FileType == DataFileType.pdat)
                 {
                     try
                     {

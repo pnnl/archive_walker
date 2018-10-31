@@ -137,7 +137,7 @@
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj">
-      <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
+      <Project>{967b98de-8ed1-4f8a-9c26-c3c9255f8eb8}</Project>
       <Name>BAWGUI.MATLABRunResults</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
