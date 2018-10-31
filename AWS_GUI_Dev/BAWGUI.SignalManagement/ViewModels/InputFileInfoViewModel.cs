@@ -47,11 +47,11 @@ namespace BAWGUI.SignalManagement.ViewModels
         public DataFileType? FileType
         {
             get {
-                var a = Enum.Parse(typeof(DataFileType), _model.FileType);
-                return (DataFileType)a; }
+                //var a = Enum.Parse(typeof(DataFileType), _model.FileType);
+                return _model.FileType; }
             set
             {
-                _model.FileType = value.ToString();
+                _model.FileType = (DataFileType)value;
                 OnPropertyChanged();
             }
         }

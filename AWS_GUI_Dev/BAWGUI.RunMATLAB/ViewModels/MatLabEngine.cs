@@ -710,7 +710,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
         public ReadExampleFileResults GetFileExample(string filename, int fileType)
         {
-            var PDATReadingResults = new ReadExampleFileResults();
+            var FileReadingResults = new ReadExampleFileResults();
 
             if (IsMatlabEngineRunning)
             {
@@ -719,7 +719,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                PDATReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType));
+                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType));
             }
             catch (Exception ex)
             {
@@ -727,7 +727,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
             IsMatlabEngineRunning = false;
-            return PDATReadingResults;
+            return FileReadingResults;
         }
     }
 }

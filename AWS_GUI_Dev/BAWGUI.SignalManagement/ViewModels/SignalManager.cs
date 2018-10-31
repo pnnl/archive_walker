@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
@@ -99,7 +100,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 else
                 {
                     var aFileInfo = new InputFileInfoViewModel(item);
-                    if (item.FileType.ToLower() == "csv")
+                    if (item.FileType == DataFileType.csv)
                     {
                         try
                         {
@@ -1057,7 +1058,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             //}
             if (File.Exists(model.ExampleFile))
             {
-                if (model.Model.FileType.ToLower() == "csv")
+                if (model.Model.FileType == DataFileType.csv)
                 {
                     try
                     {
