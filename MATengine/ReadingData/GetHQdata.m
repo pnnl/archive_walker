@@ -48,10 +48,10 @@ M = [va vb vc ia1 ib1 ic1 ia2 ib2 ic2 ia3 ib3 ic3 ia4 ib4 ic4 ia5 ib5 ic5 ia6 ib
 
 SigName = {'va' 'vb' 'vc' 'ia1' 'ib1' 'ic1' 'ia2' 'ib2' 'ic2' 'ia3' 'ib3' 'ic3' 'ia4' 'ib4' 'ic4' 'ia5' 'ib5' 'ic5' 'ia6' 'ib6' 'ic6'};
 SigType = cell(1,length(SigName));
-% SigType(:) = {'OTHER'};
-SigType(1:3) = {'VPM'};
-SigType(4:end) = {'IPM'};
+SigType(:) = {'OTHER'};
+% SigType(1:3) = {'VPM'};
+% SigType(4:end) = {'IPM'};
 SigUnit = cell(1,length(SigName));
-% SigUnit(:) = {'O'};
-SigUnit(1:3) = {'V'};
-SigUnit(4:end) = {'Amps'};
+SigUnit(:) = {'O'};
+% SigUnit(1:3) = {'V'};
+% SigUnit(4:end) = {'Amps'};
