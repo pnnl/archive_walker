@@ -901,7 +901,10 @@ Namespace ViewModels
         End Sub
 
         Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
-            If obj.FileType.ToString.ToLower = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower Then
+            Dim tp = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower
+            If obj.FileType.ToString.ToLower = tp Then
+                Return True
+            ElseIf obj.FileType = DataFileType.powHQ AndAlso tp = "mat" Then
                 Return True
             Else
                 Return False
