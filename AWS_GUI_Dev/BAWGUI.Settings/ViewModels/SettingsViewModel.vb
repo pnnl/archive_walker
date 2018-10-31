@@ -839,13 +839,13 @@ Namespace ViewModels
             Next
             Dim exampleFile = obj.ExampleFile
             If File.Exists(exampleFile) Then
-                Dim filetype As DataFileType
-                Try
-                    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
-                Catch ex As Exception
-                    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
+                'Dim filetype As DataFileType
+                'Try
+                '    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
+                'Catch ex As Exception
+                '    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End Try
                 'Dim filename = ""
                 'Try
                 '    filename = Path.GetFileNameWithoutExtension(exampleFile)
@@ -909,8 +909,12 @@ Namespace ViewModels
             If Not File.Exists(Run.Model.ConfigFilePath) Then
                 RaiseEvent SaveNewTasl(Me)
             End If
-            Dim writer = New ConfigFileWriter(Me, Run.Model)
-            writer.UpdateExampleFileAddress(exampleFilePath)
+            If File.Exists(Run.Model.ConfigFilePath) Then
+                Dim writer = New ConfigFileWriter(Me, Run.Model)
+                writer.UpdateExampleFileAddress(exampleFilePath)
+            Else
+                Forms.MessageBox.Show("Task does not exist yet.", "Error!", MessageBoxButtons.OK)
+            End If
         End Sub
 
         'Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfoViewModel)

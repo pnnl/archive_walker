@@ -226,12 +226,12 @@ namespace BAWGUI.ReadConfigXml
         public InputFileInfoModel()
         {
             FileDirectory = "";
-            FileType = "pdat";
+            FileType = DataFileType.pdat;
             Mnemonic = "";
             _exampleFile = "";
         }
         public string FileDirectory { get; set; }
-        public string FileType { get; set; }
+        public DataFileType FileType { get; set; }
         public string Mnemonic { get; set; }
         private string _exampleFile;
         public string ExampleFile

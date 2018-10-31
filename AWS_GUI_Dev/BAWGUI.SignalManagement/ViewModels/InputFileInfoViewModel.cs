@@ -47,11 +47,11 @@ namespace BAWGUI.SignalManagement.ViewModels
         public DataFileType? FileType
         {
             get {
-                var a = Enum.Parse(typeof(DataFileType), _model.FileType);
-                return (DataFileType)a; }
+                //var a = Enum.Parse(typeof(DataFileType), _model.FileType);
+                return _model.FileType; }
             set
             {
-                _model.FileType = value.ToString();
+                _model.FileType = (DataFileType)value;
                 OnPropertyChanged();
             }
         }
@@ -72,14 +72,14 @@ namespace BAWGUI.SignalManagement.ViewModels
                 _model.ExampleFile = value;
                 if (File.Exists(value))
                 {
-                    try
-                    {
-                        FileType = (DataFileType)Enum.Parse(typeof(DataFileType), Path.GetExtension(value).Substring(1));
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
+                    //try
+                    //{
+                    //    FileType = (DataFileType)Enum.Parse(typeof(DataFileType), Path.GetExtension(value).Substring(1));
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    //}
                     var filename = "";
                     try
                     {
