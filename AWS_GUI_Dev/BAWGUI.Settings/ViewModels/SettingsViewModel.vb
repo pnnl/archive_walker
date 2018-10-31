@@ -810,91 +810,104 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
-            Dim dirs = New List(Of String)
-            For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                dirs.Add(info.FileDirectory)
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByType
-                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
-                    _signalMgr.GroupedRawSignalsByType.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In _signalMgr.ReGroupedRawSignalsByType
-                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
-                    _signalMgr.ReGroupedRawSignalsByType.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByPMU
-                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
-                    _signalMgr.GroupedRawSignalsByPMU.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByType
-                If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
-                    Exit Sub
-                End If
-            Next
-            Dim exampleFile = obj.ExampleFile
-            If File.Exists(exampleFile) Then
-                'Dim filetype As DataFileType
-                'Try
-                '    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
-                'Catch ex As Exception
-                '    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                '    Exit Sub
-                'End Try
-                'Dim filename = ""
-                'Try
-                '    filename = Path.GetFileNameWithoutExtension(exampleFile)
-                'Catch ex As ArgumentException
-                '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                '    Exit Sub
-                'End Try
-                'Try
-                '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-                'Catch ex As Exception
-                '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                '    Exit Sub
-                'End Try
-                'Try
-                '    Dim fullPath = Path.GetDirectoryName(exampleFile)
-                '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-                '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-                '    obj.FileDirectory = twoLevelUp
-                'Catch ex As Exception
-                '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                '    Exit Sub
-                'End Try
-                If obj.FileType IsNot Nothing Then
-                    Try
-                        _signalMgr.AddRawSignalsFromADir(obj)
-                    Catch ex As Exception
-                        Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                        Exit Sub
-                    End Try
-                End If
-                Try
-                    _writeExampleFileAddressToConfig(exampleFile)
-                    Dim config = New ConfigFileReader(Run.Model.ConfigFilePath)
-                    _signalMgr.CleanUpSettingsSignals()
-                    DataConfigure = New DataConfig(config.DataConfigure, _signalMgr)
-                    ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
-                    PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
-                    DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
-                Catch ex As Exception
-                    Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
-                End Try
-                Run.Model.DataFileDirectories = New List(Of String)
-                For Each info In SignalMgr.FileInfo
-                    Run.Model.DataFileDirectories.Add(info.FileDirectory)
+            If (_checkDataFileMatch(obj)) Then
+                Dim dirs = New List(Of String)
+                For Each info In DataConfigure.ReaderProperty.InputFileInfos
+                    dirs.Add(info.FileDirectory)
                 Next
+                For Each group In _signalMgr.GroupedRawSignalsByType
+                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                        _signalMgr.GroupedRawSignalsByType.Remove(group)
+                        Exit For
+                    End If
+                Next
+                For Each group In _signalMgr.ReGroupedRawSignalsByType
+                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                        _signalMgr.ReGroupedRawSignalsByType.Remove(group)
+                        Exit For
+                    End If
+                Next
+                For Each group In _signalMgr.GroupedRawSignalsByPMU
+                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                        _signalMgr.GroupedRawSignalsByPMU.Remove(group)
+                        Exit For
+                    End If
+                Next
+                For Each group In _signalMgr.GroupedRawSignalsByType
+                    If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
+                        Exit Sub
+                    End If
+                Next
+                Dim exampleFile = obj.ExampleFile
+                If File.Exists(exampleFile) Then
+                    'Dim filetype As DataFileType
+                    'Try
+                    '    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
+                    'Catch ex As Exception
+                    '    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    'Dim filename = ""
+                    'Try
+                    '    filename = Path.GetFileNameWithoutExtension(exampleFile)
+                    'Catch ex As ArgumentException
+                    '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    'Try
+                    '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
+                    'Catch ex As Exception
+                    '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    'Try
+                    '    Dim fullPath = Path.GetDirectoryName(exampleFile)
+                    '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
+                    '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
+                    '    obj.FileDirectory = twoLevelUp
+                    'Catch ex As Exception
+                    '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    If obj.FileType IsNot Nothing Then
+                        Try
+                            _signalMgr.AddRawSignalsFromADir(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            Exit Sub
+                        End Try
+                    End If
+                    Try
+                        _writeExampleFileAddressToConfig(exampleFile)
+                        Dim config = New ConfigFileReader(Run.Model.ConfigFilePath)
+                        _signalMgr.CleanUpSettingsSignals()
+                        DataConfigure = New DataConfig(config.DataConfigure, _signalMgr)
+                        ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
+                        PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
+                        DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
+                    Catch ex As Exception
+                        Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+                    End Try
+                    Run.Model.DataFileDirectories = New List(Of String)
+                    For Each info In SignalMgr.FileInfo
+                        Run.Model.DataFileDirectories.Add(info.FileDirectory)
+                    Next
+                Else
+                    Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
+                End If
             Else
-                Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
+                Forms.MessageBox.Show("Selected example file type does not match selected data input file type.", "Error!", MessageBoxButtons.OK)
             End If
         End Sub
+
+        Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
+            If obj.FileType.ToString.ToLower = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower Then
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+
         Private _updateExampleFile As ICommand
         Public Property UpdateExampleFile As ICommand
             Get
@@ -904,10 +917,10 @@ Namespace ViewModels
                 _updateExampleFile = value
             End Set
         End Property
-        Event SaveNewTasl(ByRef svm As SettingsViewModel)
+        Event SaveNewTask(ByRef svm As SettingsViewModel)
         Private Sub _writeExampleFileAddressToConfig(exampleFilePath As String)
             If Not File.Exists(Run.Model.ConfigFilePath) Then
-                RaiseEvent SaveNewTasl(Me)
+                RaiseEvent SaveNewTask(Me)
             End If
             If File.Exists(Run.Model.ConfigFilePath) Then
                 Dim writer = New ConfigFileWriter(Me, Run.Model)
