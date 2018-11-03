@@ -73,12 +73,18 @@ namespace BAWGUI.Core.Models
     }
     public enum InterpolateType
     {
-        [System.ComponentModel.Description("Linear")]
+        [Description("Linear")]
         Linear,
         [Description("Constant")]
         Constant,
         [Description("Cubic")]
         Cubic
     }
-
+    public enum OutputSignalStorageType
+    {
+        [Description("Create Custom PMU")]
+        CreateCustomPMU,
+        [Description("Replace Input")]
+        ReplaceInput
+    }
 }

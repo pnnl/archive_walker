@@ -398,6 +398,7 @@ Namespace ViewModels
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
+            _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
             _model = New TunableFilterModel()
             Type = TunableFilterType.Rational
             IsExpanded = False
@@ -407,19 +408,51 @@ Namespace ViewModels
             _stopRipple = 50
             _passCutoff = 1.5
             _stopCutoff = 2.5
+            UseCustomPMU = False
         End Sub
 
         Public Sub New(stp As TunableFilterModel, signalsMgr As SignalManager)
             Me.New
             Me._model = stp
             StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
-            'ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & Type.ToString() & " " & Name
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & Type.ToString() & " " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & Type.ToString() & " " & Name
-            Try
-                InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
-            Catch ex As Exception
-                Throw New Exception("Error finding signal in step: " & Name)
-            End Try
+            For Each signal In _model.PMUElementList
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                If input IsNot Nothing Then
+                    If InputChannels.Contains(input) Then
+                        Throw New Exception("Duplicate input signal found in step: " & StepCounter.ToString & " ," & Name & ".")
+                    Else
+                        InputChannels.Add(input)
+                    End If
+                Else
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                End If
+                Dim output As SignalSignatureViewModel = Nothing
+                If _model.UseCustomPMU Then
+                    output = New SignalSignatureViewModel(signal.CustSignalName, signal.PMUName)
+                    output.IsCustomSignal = True
+                    If input.IsValid Then
+                        output.TypeAbbreviation = input.TypeAbbreviation
+                        output.Unit = input.Unit
+                        output.SamplingRate = input.SamplingRate
+                    End If
+                    output.OldUnit = output.Unit
+                    output.OldTypeAbbreviation = output.TypeAbbreviation
+                    output.OldSignalName = output.SignalName
+                Else
+                    output = input
+                End If
+                OutputChannels.Add(output)
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
+                newPair.Value.Add(input)
+                OutputInputMappingPair.Add(newPair)
+            Next
+            'Try
+            '    InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
+            'Catch ex As Exception
+            '    Throw New Exception("Error finding signal in step: " & Name)
+            'End Try
             For Each signal In InputChannels
                 signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
                 OutputChannels.Add(signal)
@@ -430,6 +463,14 @@ Namespace ViewModels
                 Throw New Exception("Error when sort signals by type in step: " & Name)
             End Try
             signalsMgr.GroupedSignalByProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            If _model.UseCustomPMU Then
+                Try
+                    ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+                Catch ex As Exception
+                    Throw New Exception("Error when sort signals by type in step: " & Name)
+                End Try
+                signalsMgr.GroupedSignalByProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
         End Sub
         Public ReadOnly Property Name As String
             Get
@@ -550,6 +591,55 @@ Namespace ViewModels
             End Get
             Set(ByVal value As String)
                 _model.StopCutoff = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _useCustomPMU As Boolean
+        Public Property UseCustomPMU As Boolean
+            Get
+                Return _model.UseCustomPMU
+            End Get
+            Set(ByVal value As Boolean)
+                If _model.UseCustomPMU <> value Then
+                    _model.UseCustomPMU = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _outputStorage As OutputSignalStorageType
+        Public Property OutputSignalStorage As OutputSignalStorageType
+            Get
+                Return _model.OutputSignalStorage
+            End Get
+            Set(ByVal value As OutputSignalStorageType)
+                If _model.OutputSignalStorage <> value Then
+                    _model.OutputSignalStorage = value
+                    If value = OutputSignalStorageType.CreateCustomPMU Then
+                        UseCustomPMU = True
+                    Else
+                        UseCustomPMU = False
+                    End If
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _outputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
+        Public Property OutputInputMappingPair As ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
+            Get
+                Return _outputInputMappingPair
+            End Get
+            Set(ByVal value As ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))))
+                _outputInputMappingPair = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _customPMUName As String
+        Public Property CustPMUName As String
+            Get
+                Return _model.CustPMUName
+            End Get
+            Set(ByVal value As String)
+                _model.CustPMUName = value
                 OnPropertyChanged()
             End Set
         End Property

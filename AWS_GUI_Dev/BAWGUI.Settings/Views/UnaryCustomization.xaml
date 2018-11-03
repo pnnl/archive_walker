@@ -55,7 +55,13 @@
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
                                     </TextBox>
-                                    <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName}" Margin="70,0"/>
+                                    <xtlkt:WatermarkTextBox Name="CustName" Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus" Text="{Binding Path=Key.SignalName}" Margin="70,0">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="GotFocus">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </xtlkt:WatermarkTextBox>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

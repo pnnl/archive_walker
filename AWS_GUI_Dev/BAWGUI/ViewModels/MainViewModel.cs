@@ -197,7 +197,7 @@ namespace BAWGUI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    MessageBox.Show("Error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
             }
         }

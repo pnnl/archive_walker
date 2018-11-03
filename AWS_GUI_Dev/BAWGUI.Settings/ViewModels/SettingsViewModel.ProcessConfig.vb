@@ -1007,6 +1007,9 @@ Namespace ViewModels
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByType, False)
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByType, False)
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllDataConfigOutputGroupedByPMU, False)
+                If TypeOf CurrentSelectedStep Is TunableFilter Then
+                    _currentInputOutputPair = Nothing
+                End If
                 CurrentSelectedStep.IsStepSelected = False
                 CurrentSelectedStep = Nothing
                 '_signalMgr.DetermineFileDirCheckableStatus()

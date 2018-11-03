@@ -11,6 +11,7 @@
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
@@ -23,6 +24,7 @@
             <converters:EnumToStringConverter5 x:Key="EnumToStringConverter5"/>
             <converters:EnumToStringConverter6 x:Key="EnumToStringConverter6"/>
             <converters:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
+            <coreconverter:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
             <converters:TunableFilterExpanderHeaderConverter x:Key="TunableFilterExpanderHeaderConverter"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="InterpolateTypeValues">
                 <ObjectDataProvider.MethodParameters>
@@ -42,6 +44,11 @@
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="TunableFilterTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:TunableFilterType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="OutputSignalStorageTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="coremodels:OutputSignalStorageType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <DataTemplate x:Key="MultiRateOptionButtons">
@@ -298,6 +305,9 @@
             <DataTemplate x:Key="LowPassFilterParameters">
                 <local:LowPassFilterParameters/>
             </DataTemplate>
+            <converters:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
+            <coreconverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}" Margin="2">
@@ -307,6 +317,9 @@
             </i:EventTrigger>
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.ProcessConfigStepSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseLeftButtonUp">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
         <Expander Grid.Column="0" IsExpanded="{Binding IsExpanded}">
@@ -337,12 +350,63 @@
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
-                        <StackPanel Orientation="Horizontal" Margin="2">
-                            <Label Margin="15,2" Width="120" VerticalAlignment="Center" Content="Filter Type: " HorizontalAlignment="Left"/>
-                            <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Right"/>
+                        <StackPanel Orientation="Horizontal" Margin="2,0">
+                            <Label Margin="15,0,0,0" Width="150" VerticalAlignment="Center" Content="Filter Type: " HorizontalAlignment="Left"/>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" HorizontalContentAlignment="Right" Margin="-15,0,0,0"/>
                         </StackPanel>
-                        <TextBlock Margin="20,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
-                        <coreview:FilterListBox DataContext="{Binding InputChannels}"/>
+                        <StackPanel Orientation="Horizontal" Margin="2,0">
+                            <Label Content="Output Signal Storage:" Margin="15,0,0,0" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource OutputSignalStorageTypeValues}}" Text="{Binding OutputSignalStorage, Converter={StaticResource EnumToStringConverter11}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" HorizontalContentAlignment="Right" Margin="-15,0,0,0"/>
+                            <!--<RadioButton GroupName="{Binding StepCounter}" Content="Create Custom PMU" IsChecked="{Binding UseCustomPMU}" Margin="2,0" VerticalAlignment="Center"/>
+                            <RadioButton GroupName="{Binding StepCounter}" Content="Replace Input" IsChecked="{Binding UseCustomPMU, Converter={StaticResource InverseBooleanConverter}}" Margin="10,0" VerticalAlignment="Center"/>-->
+                            <Label Margin="15,0,0,0" Width="85" VerticalAlignment="Center" Content="Custom PMU:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                            <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please enter custom PMU name" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="-5,0,0,0" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                        </StackPanel>
+                        <!--<StackPanel Orientation="Horizontal" Margin="20,10,2,2" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}">
+                        </StackPanel>-->
+                        <TextBlock Margin="22,10,2,2" Text="{Binding InputChannels.Count, StringFormat=Channels ({0}):}"/>
+                        <!--<coreview:FilterListBox DataContext="{Binding InputChannels}"/>-->
+                        <StackPanel Orientation="Horizontal" Margin="2,0">
+                            <TextBlock Margin="30,0,0,0" Text="Input PMU:"/>
+                            <TextBlock Margin="40,0,0,0" Text="Input Signal:"/>
+                            <TextBlock Margin="150,0,0,0" Text="Custom Signal:" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                        </StackPanel>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
+                            <ItemsControl ItemsSource="{Binding OutputInputMappingPair}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <xtlkt:WatermarkTextBox Focusable="True" Name="PMU" Width="100" Text="{Binding Value[0].PMUName}" Margin="30,0,0,0" Height="25" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </xtlkt:WatermarkTextBox>
+                                            <xtlkt:WatermarkTextBox Focusable="True" Name="Channel" Width="150" Text="{Binding Value[0].SignalName}" Margin="2,0,0,0" Height="25" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </xtlkt:WatermarkTextBox>
+                                            <xtlkt:WatermarkTextBox Focusable="True" Name="CustName" Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Height="25" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" Text="{Binding Key.SignalName}" Margin="70,0,0,0" Visibility="{Binding DataContext.UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=1}}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="GotFocus">
+                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </xtlkt:WatermarkTextBox>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <StackPanel Orientation="Horizontal">
+                            <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}" Width="100" Margin="30,0,0,0" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus"/>
+                            <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}"  Width="150" Margin="2,0" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus"/>
+                            <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Margin="70,0" Style="{StaticResource NoItemsTextBoxStyle}" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                        </StackPanel>
                     </StackPanel>
                     <ContentControl Content="{Binding}" Margin="2" Grid.Column="1">
                         <ContentControl.Style>

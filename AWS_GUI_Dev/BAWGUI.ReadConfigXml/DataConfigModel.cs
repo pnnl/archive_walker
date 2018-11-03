@@ -174,7 +174,7 @@ namespace BAWGUI.ReadConfigXml
                     }
                     catch (Exception ex)
                     {
-                        throw ex;
+                        throw new Exception("Data Source Error.\nException message: " + ex.Message + "\nInner exception message: " + ex.InnerException.Message);
                     }
                     if (a != null)
                     {
@@ -391,26 +391,26 @@ namespace BAWGUI.ReadConfigXml
             {
                 var newList = new List<SignalSignatures>();
                 var inputs = item.Elements("PMU");
-                    foreach (var aInput in inputs)
+                foreach (var aInput in inputs)
+                {
+                    var pmuName = aInput.Element("Name").Value;
+                    var channels = aInput.Elements("Channel");
+                    if (channels.Count() > 0)
                     {
-                        var pmuName = aInput.Element("Name").Value;
-                        var channels = aInput.Elements("Channel");
-                        if (channels.Count() > 0)
+                        foreach (var channel in channels)
                         {
-                            foreach (var channel in channels)
-                            {
-                                var channelName = channel.Element("Name").Value;
-                                var newElement = new SignalSignatures(pmuName, channelName);
+                            var channelName = channel.Element("Name").Value;
+                            var newElement = new SignalSignatures(pmuName, channelName);
                             newList.Add(newElement);
-                            }
-                        }
-                        else
-                        {
-                            var newElement = new SignalSignatures();
-                            newElement.PMUName = pmuName;
-                        newList.Add(newElement);
                         }
                     }
+                    else
+                    {
+                        var newElement = new SignalSignatures();
+                        newElement.PMUName = pmuName;
+                        newList.Add(newElement);
+                    }
+                }
                 return newList;
             }
         }
