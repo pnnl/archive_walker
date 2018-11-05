@@ -400,6 +400,7 @@ Namespace ViewModels
             Select Case obj
                 Case "Filter"
                     aStep = New TunableFilter
+                    aStep.UseCustomPMU = True
                 Case "Multirate"
                     aStep = New Multirate
                 Case Else
@@ -677,7 +678,7 @@ Namespace ViewModels
                     'here do all the stuff that is needed such as sort signals to make sure the step is set up.
 
                     CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
-                    If TypeOf CurrentSelectedStep Is Multirate Then
+                    If TypeOf CurrentSelectedStep Is Multirate OrElse (TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.UseCustomPMU) Then
                         CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                     End If
                 End If
@@ -734,7 +735,7 @@ Namespace ViewModels
                         If stp.StepCounter < lastNumberOfSteps Then
                             stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
-                            If TypeOf stp Is Multirate Then
+                            If TypeOf stp Is Multirate OrElse (TypeOf stp Is TunableFilter AndAlso stp.UseCustomPMU) Then
                                 stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                                 stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                             End If
@@ -943,6 +944,18 @@ Namespace ViewModels
         End Property
         Private Sub _deSelectAllProcessConfigSteps()
             If CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    MessageBox.Show("Missing field(s) in step : " + CurrentSelectedStep.Name + " , please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                Else
+                    'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+
+                    CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                    If TypeOf CurrentSelectedStep Is Multirate OrElse (TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.UseCustomPMU) Then
+                        CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                    End If
+                End If
                 For Each signal In CurrentSelectedStep.InputChannels
                     signal.IsChecked = False
                 Next
@@ -962,7 +975,7 @@ Namespace ViewModels
                 For Each stp In ProcessConfigure.CollectionOfSteps
                     stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                     stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
-                    If TypeOf stp Is Multirate Then
+                    If TypeOf stp Is Multirate OrElse (TypeOf stp Is TunableFilter AndAlso stp.UseCustomPMU) Then
                         stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                         stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                     End If

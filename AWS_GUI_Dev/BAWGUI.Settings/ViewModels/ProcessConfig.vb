@@ -616,8 +616,33 @@ Namespace ViewModels
                     _model.OutputSignalStorage = value
                     If value = OutputSignalStorageType.CreateCustomPMU Then
                         UseCustomPMU = True
+                        'OutputChannels.Clear()
+                        For Each signal In InputChannels
+                            Dim newOutput = New SignalSignatureViewModel(signal.SignalName)
+                            If String.IsNullOrEmpty(CustPMUName) Then
+                                'Throw New Exception("Please enter a PMU name for this multirate step.")
+                            Else
+                                newOutput.PMUName = CustPMUName
+                            End If
+                            newOutput.TypeAbbreviation = signal.TypeAbbreviation
+                            newOutput.IsCustomSignal = True
+                            newOutput.Unit = signal.Unit
+                            newOutput.SamplingRate = signal.SamplingRate
+                            newOutput.OldSignalName = newOutput.SignalName
+                            newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                            newOutput.OldUnit = newOutput.Unit
+                            OutputChannels.Add(newOutput)
+                            Dim kvp = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newOutput, New ObservableCollection(Of SignalSignatureViewModel))
+                            kvp.Value.Add(signal)
+                            OutputInputMappingPair.Add(kvp)
+                        Next
                     Else
                         UseCustomPMU = False
+                        OutputChannels.Clear()
+                        OutputInputMappingPair.Clear()
+                        For Each signal In InputChannels
+                            OutputChannels.Add(signal)
+                        Next
                     End If
                     OnPropertyChanged()
                 End If
@@ -640,9 +665,21 @@ Namespace ViewModels
             End Get
             Set(ByVal value As String)
                 _model.CustPMUName = value
+                For Each signal In OutputChannels
+                    signal.PMUName = value
+                Next
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            If UseCustomPMU AndAlso String.IsNullOrEmpty(CustPMUName) Then
+                'Throw New Exception("Please fill in custom PMU name.")
+                Return False
+            Else
+                Return True
+            End If
+        End Function
     End Class
 
     Public Class Multirate

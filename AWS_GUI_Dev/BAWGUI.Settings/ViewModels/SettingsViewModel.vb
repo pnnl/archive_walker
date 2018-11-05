@@ -2492,9 +2492,30 @@ Namespace ViewModels
                                 obj.SignalSignature.PassedThroughDQFilter = obj.SignalSignature.PassedThroughDQFilter + 1
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                             End If
-                            If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
+                            If TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
                                 obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
+                            End If
+                            If TypeOf _currentSelectedStep Is TunableFilter Then
+                                If _currentSelectedStep.UseCustomPMU Then
+                                    Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName)
+                                    If String.IsNullOrEmpty(_currentSelectedStep.CustPMUName) Then
+                                        'Throw New Exception("Please enter a PMU name for this multirate step.")
+                                    Else
+                                        newOutput.PMUName = _currentSelectedStep.CustPMUName
+                                    End If
+                                    newOutput.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
+                                    newOutput.IsCustomSignal = True
+                                    newOutput.Unit = obj.SignalSignature.Unit
+                                    newOutput.SamplingRate = obj.SignalSignature.SamplingRate
+                                    newOutput.OldSignalName = newOutput.SignalName
+                                    newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                                    newOutput.OldUnit = newOutput.Unit
+                                    _currentSelectedStep.OutputChannels.Add(newOutput)
+                                Else
+                                    obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
+                                    _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
+                                End If
                             End If
                             If TypeOf _currentSelectedStep Is Multirate Then
                                 Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName)
