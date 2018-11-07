@@ -1354,6 +1354,10 @@ Namespace ViewModels
                                 ' It only relates to user choice and would only affect MATLAB calculation afterwards
                                 Case "Signal Type/Unit"
                                     _specifySignalTypeUnitSignalSelectionChanged(obj)
+                                Case "Duplicate Signals"
+                                    _changeSignalSelectionUnarySteps(obj)
+                                    '_changeSignalSelection(obj)
+                                    '_checkAdditionCustomizationOutputTypeAndSamplingRate()
                                 Case Else
                                     Throw New Exception("Customization step not supported!")
                             End Select
@@ -1818,10 +1822,10 @@ Namespace ViewModels
                 End If
             End If
 
-            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-            If TypeOf (_currentSelectedStep) Is Customization Then
-                _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
-            End If
+            '_currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+            'If TypeOf (_currentSelectedStep) Is Customization Then
+            '    _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+            'End If
             '_dataConfigDetermineAllParentNodeStatus()
             _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
             '_signalMgr.DetermineFileDirCheckableStatus()
@@ -2349,6 +2353,9 @@ Namespace ViewModels
                 Dim targetToRemove As List(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))) = Nothing
                 If TypeOf _currentSelectedStep Is TunableFilter Then
                     targetToRemove = (From x In DirectCast(_currentSelectedStep, TunableFilter).OutputInputMappingPair Where x.Value(0).SignalName = obj.SignalSignature.SignalName Select x).ToList
+                    If Not _currentSelectedStep.UseCustomPMU Then
+                        obj.SignalSignature.PassedThroughProcessor -= 1
+                    End If
                 Else
                     targetToRemove = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where x.Value(0).SignalName = obj.SignalSignature.SignalName Select x).ToList
                 End If
@@ -2406,15 +2413,14 @@ Namespace ViewModels
                     If TypeOf _currentSelectedStep Is TunableFilter Then
                         Dim newOutput = obj.SignalSignature
                         If _currentSelectedStep.UseCustomPMU Then
-                            newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
-                            newOutput.PMUName = _currentSelectedStep.CustPMUname
+                            newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                            'newOutput.PMUName = _currentSelectedStep.CustPMUname
                             newOutput.SamplingRate = obj.SignalSignature.SamplingRate
+                        Else
+                            newOutput.PassedThroughProcessor += 1
                         End If
                         newOutput.IsCustomSignal = True
-                        Dim units = New List(Of String)(PostProcessConfigure.TypeUnitDictionary(obj.SignalSignature.TypeAbbreviation))
-                        units.Remove(obj.SignalSignature.Unit)
                         newOutput.OldUnit = newOutput.Unit
-                        newOutput.Unit = units.FirstOrDefault()
                         newOutput.OldSignalName = newOutput.SignalName
                         newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
                         _currentSelectedStep.outputChannels.Add(newOutput)
@@ -2446,7 +2452,7 @@ Namespace ViewModels
                             _currentSelectedStep.OutputInputMappingPair.Add(kvp)
                         End If
                     Else
-                        Dim newOutput = New SignalSignatureViewModel("Cust_" & obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                        Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
                         newOutput.IsCustomSignal = True
                         newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         newOutput.Unit = obj.SignalSignature.Unit
@@ -2495,27 +2501,6 @@ Namespace ViewModels
                             If TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
                                 obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
-                            End If
-                            If TypeOf _currentSelectedStep Is TunableFilter Then
-                                If _currentSelectedStep.UseCustomPMU Then
-                                    Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName)
-                                    If String.IsNullOrEmpty(_currentSelectedStep.CustPMUName) Then
-                                        'Throw New Exception("Please enter a PMU name for this multirate step.")
-                                    Else
-                                        newOutput.PMUName = _currentSelectedStep.CustPMUName
-                                    End If
-                                    newOutput.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
-                                    newOutput.IsCustomSignal = True
-                                    newOutput.Unit = obj.SignalSignature.Unit
-                                    newOutput.SamplingRate = obj.SignalSignature.SamplingRate
-                                    newOutput.OldSignalName = newOutput.SignalName
-                                    newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
-                                    newOutput.OldUnit = newOutput.Unit
-                                    _currentSelectedStep.OutputChannels.Add(newOutput)
-                                Else
-                                    obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
-                                    _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
-                                End If
                             End If
                             If TypeOf _currentSelectedStep Is Multirate Then
                                 Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName)
@@ -2570,13 +2555,29 @@ Namespace ViewModels
                                 End If
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                             End If
+                            'If TypeOf _currentSelectedStep Is SignalReplicationCust Then
+                            '    Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName)
+                            '    If String.IsNullOrEmpty(_currentSelectedStep.CustPMUName) Then
+                            '        'Throw New Exception("Please enter a PMU name for this multirate step.")
+                            '    Else
+                            '        newOutput.PMUName = _currentSelectedStep.CustPMUName
+                            '    End If
+                            '    newOutput.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
+                            '    newOutput.IsCustomSignal = True
+                            '    newOutput.Unit = obj.SignalSignature.Unit
+                            '    newOutput.SamplingRate = obj.SignalSignature.SamplingRate
+                            '    newOutput.OldSignalName = newOutput.SignalName
+                            '    newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                            '    newOutput.OldUnit = newOutput.Unit
+                            '    _currentSelectedStep.OutputChannels.Add(newOutput)
+                            'End If
                             _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
                         Else
                             If TypeOf _currentSelectedStep Is DQFilter Then
                                 obj.SignalSignature.PassedThroughDQFilter = obj.SignalSignature.PassedThroughDQFilter - 1
                                 _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
                             End If
-                            If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
+                            If TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
                                 obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor - 1
                                 _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
                             End If
@@ -3425,6 +3426,8 @@ Namespace ViewModels
                         newCustomization = New MetricPrefixCust
                     Case "Angle Conversion"
                         newCustomization = New AngleConversionCust
+                    Case "Duplicate Signals"
+                        newCustomization = New SignalReplicationCust
                     Case Else
                         Throw New Exception("Customization step not supported!")
                 End Select
@@ -3523,6 +3526,25 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _stepSelectedToEdit(processStep As Object)
+
+
+            If processStep IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    Forms.MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+            End If
+
+
+
+
             ' if processStep is already selected, then the selection is not changed, nothing needs to be done.
             ' however, if processStep is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
             If Not processStep.IsStepSelected Then
@@ -3547,10 +3569,10 @@ Namespace ViewModels
                         End If
                         If stp.StepCounter < lastNumberOfSteps Then
                             If TypeOf (stp) Is Customization Then
-                                stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                                'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                                 stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                             End If
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                            'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If stp.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -4001,6 +4023,17 @@ Namespace ViewModels
         ''' </summary>
         Private Sub _deSelectAllDataConfigSteps()
             If _currentSelectedStep IsNot Nothing Then
+
+                If Not _currentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    Forms.MessageBox.Show("Missing field(s) in step : " + CurrentSelectedStep.Name + " , please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+
                 For Each signal In _currentSelectedStep.InputChannels
                     signal.IsChecked = False
                 Next
@@ -4011,12 +4044,14 @@ Namespace ViewModels
                 'End If
                 Dim stepsInputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
                 Dim stepsOutputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
+
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
                 For Each stp In DataConfigure.CollectionOfSteps
                     If TypeOf (stp) Is Customization Then
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                        'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                         stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                     End If
-                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                    'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                     stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                     'If TypeOf (stp) Is Customization Then
                     '    stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
@@ -4056,8 +4091,8 @@ Namespace ViewModels
 
                 '_signalMgr.DetermineFileDirCheckableStatus()
                 _determineSamplingRateCheckableStatus()
+                SignalSelectionTreeViewVisibility = "Visible"
             End If
-            SignalSelectionTreeViewVisibility = "Visible"
         End Sub
         Private Sub _changeCheckStatusAllParentsOfGroupedSignal(groups As ObservableCollection(Of SignalTypeHierachy), checkStatus As Boolean)
             For Each node In groups
@@ -4107,6 +4142,7 @@ Namespace ViewModels
                         Next
                     End If
                     _deSelectAllDataConfigSteps()
+                    CurrentSelectedStep = Nothing
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     DataConfigure.CollectionOfSteps = steps
                     SignalSelectionTreeViewVisibility = "Visible"

@@ -24,7 +24,8 @@ Namespace ViewModels
                                                                             {"Power Calculation", "PowerCalc"},
                                                                             {"Signal Type/Unit", "SpecTypeUnit"},
                                                                             {"Metric Prefix", "MetricPrefix"},
-                                                                            {"Angle Conversion", "AngleConversion"}}
+                                                                            {"Angle Conversion", "AngleConversion"},
+                                                                            {"Duplicate Signals", "ReplicateSignal"}}
             _customizationReverseNameDictionary = _customizationNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
             _customizationList = _customizationNameDictionary.Keys.ToList
             _customizationNameParemetersDictionary = New Dictionary(Of String, List(Of String)) From {{"Scalar Repetition", {"CustPMUname", "scalar", "SignalName", "SignalType", "SignalUnit", "TimeSourcePMU"}.ToList},
@@ -158,6 +159,10 @@ Namespace ViewModels
                         Case "Angle Conversion"
                             stepCounter += 1
                             Dim a = New AngleConversionCust(stp, stepCounter, signalsMgr, True)
+                            allSteps.Add(a)
+                        Case "Duplicate Signals"
+                            stepCounter += 1
+                            Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr)
                             allSteps.Add(a)
                         Case Else
                             Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))

@@ -674,13 +674,12 @@ Namespace ViewModels
                     'here need to check if the currentSelectedStep is complete, if not, cannot switch
                     MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
                     Exit Sub
-                Else
-                    'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
 
-                    CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
-                    If TypeOf CurrentSelectedStep Is Multirate OrElse (TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.UseCustomPMU) Then
-                        CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-                    End If
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Multirate OrElse (TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.UseCustomPMU) Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                 End If
             End If
             If Not processStep.IsStepSelected Then
@@ -699,7 +698,7 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If unwrap.StepCounter < lastNumberOfSteps Then
-                            unwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(unwrap.OutputChannels)
+                            'unwrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(unwrap.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(unwrap.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If unwrap.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -716,7 +715,7 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If intplt.StepCounter < lastNumberOfSteps Then
-                            intplt.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(intplt.OutputChannels)
+                            'intplt.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(intplt.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(intplt.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If intplt.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -733,10 +732,10 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If stp.StepCounter < lastNumberOfSteps Then
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                            'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                             If TypeOf stp Is Multirate OrElse (TypeOf stp Is TunableFilter AndAlso stp.UseCustomPMU) Then
-                                stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                                'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                                 stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                             End If
                         End If
@@ -754,7 +753,7 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If wrap.StepCounter < lastNumberOfSteps Then
-                            wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(wrap.OutputChannels)
+                            'wrap.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(wrap.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(wrap.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If wrap.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -773,7 +772,7 @@ Namespace ViewModels
                                 selectedFound = True
                             End If
                             If newTypeUnit.StepCounter < lastNumberOfSteps Then
-                                newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(newTypeUnit.OutputChannels)
+                                'newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(newTypeUnit.OutputChannels)
                                 stepsOutputAsSignalHierachy.Add(newTypeUnit.ThisStepOutputsAsSignalHierachyByPMU)
                             End If
                             If newTypeUnit.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -948,13 +947,12 @@ Namespace ViewModels
                     'here need to check if the currentSelectedStep is complete, if not, cannot switch
                     MessageBox.Show("Missing field(s) in step : " + CurrentSelectedStep.Name + " , please double check!", "Error!", MessageBoxButtons.OK)
                     Exit Sub
-                Else
-                    'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
 
-                    CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
-                    If TypeOf CurrentSelectedStep Is Multirate OrElse (TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.UseCustomPMU) Then
-                        CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-                    End If
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Multirate OrElse (TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.UseCustomPMU) Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                 End If
                 For Each signal In CurrentSelectedStep.InputChannels
                     signal.IsChecked = False
@@ -973,10 +971,10 @@ Namespace ViewModels
                     stepsOutputAsSignalHierachy.Add(intplt.ThisStepOutputsAsSignalHierachyByPMU)
                 Next
                 For Each stp In ProcessConfigure.CollectionOfSteps
-                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                    'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                     stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                     If TypeOf stp Is Multirate OrElse (TypeOf stp Is TunableFilter AndAlso stp.UseCustomPMU) Then
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                        'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                         stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                     End If
                 Next

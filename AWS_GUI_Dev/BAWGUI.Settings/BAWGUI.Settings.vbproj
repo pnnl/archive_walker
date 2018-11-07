@@ -307,6 +307,9 @@
     <Compile Include="Views\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SignalReplicationCustomization.xaml.vb">
+      <DependentUpon>SignalReplicationCustomization.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SignalSelectionPanel.xaml.vb">
       <DependentUpon>SignalSelectionPanel.xaml</DependentUpon>
     </Compile>
@@ -545,6 +548,10 @@
     <Page Include="Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SignalReplicationCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalSelectionPanel.xaml">
       <Generator>MSBuild:Compile</Generator>

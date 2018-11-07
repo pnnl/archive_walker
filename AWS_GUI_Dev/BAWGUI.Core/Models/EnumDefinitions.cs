@@ -69,7 +69,9 @@ namespace BAWGUI.Core.Models
         [Description("High-Pass")]
         HighPass,
         [Description("Low-Pass")]
-        LowPass
+        LowPass,
+        [Description("Frequency Derivation")]
+        FrequencyDerivation
     }
     public enum InterpolateType
     {

@@ -418,7 +418,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & Type.ToString() & " " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & Type.ToString() & " " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & StepCounter.ToString & " ," & Name & ".")
@@ -426,7 +426,7 @@ Namespace ViewModels
                         InputChannels.Add(input)
                     End If
                 Else
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output As SignalSignatureViewModel = Nothing
                 If _model.UseCustomPMU Then
@@ -616,8 +616,10 @@ Namespace ViewModels
                     _model.OutputSignalStorage = value
                     If value = OutputSignalStorageType.CreateCustomPMU Then
                         UseCustomPMU = True
-                        'OutputChannels.Clear()
+                        OutputChannels.Clear()
+                        OutputInputMappingPair.Clear()
                         For Each signal In InputChannels
+                            signal.PassedThroughProcessor -= 1
                             Dim newOutput = New SignalSignatureViewModel(signal.SignalName)
                             If String.IsNullOrEmpty(CustPMUName) Then
                                 'Throw New Exception("Please enter a PMU name for this multirate step.")
@@ -641,7 +643,11 @@ Namespace ViewModels
                         OutputChannels.Clear()
                         OutputInputMappingPair.Clear()
                         For Each signal In InputChannels
+                            signal.PassedThroughProcessor += 1
                             OutputChannels.Add(signal)
+                            Dim kvp = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(signal, New ObservableCollection(Of SignalSignatureViewModel))
+                            kvp.Value.Add(signal)
+                            OutputInputMappingPair.Add(kvp)
                         Next
                     End If
                     OnPropertyChanged()

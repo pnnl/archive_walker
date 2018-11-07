@@ -760,21 +760,21 @@ Namespace ViewModels
                     Next
                 Case "Signal Type/Unit"
                     aStep = <Customization>
-                                                                                                                                                                               <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                               <Parameters>
-                                                                                                                                                                                   <SigType><%= singleStep.OutputChannels(0).TypeAbbreviation %></SigType>
-                                                                                                                                                                                   <SigUnit><%= singleStep.OutputChannels(0).Unit %></SigUnit>
-                                                                                                                                                                                   <PMU><%= singleStep.InputChannels(0).PMUName %></PMU>
-                                                                                                                                                                                   <Channel><%= singleStep.InputChannels(0).SignalName %></Channel>
-                                                                                                                                                                                   <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                                                   <CustName><%= singleStep.OutputChannels(0).SignalName %></CustName>
-                                                                                                                                                                               </Parameters>
-                                                                                                                                                                           </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <SigType><%= singleStep.OutputChannels(0).TypeAbbreviation %></SigType>
+                                    <SigUnit><%= singleStep.OutputChannels(0).Unit %></SigUnit>
+                                    <PMU><%= singleStep.InputChannels(0).PMUName %></PMU>
+                                    <Channel><%= singleStep.InputChannels(0).SignalName %></Channel>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                    <CustName><%= singleStep.OutputChannels(0).SignalName %></CustName>
+                                </Parameters>
+                            </Customization>
                 Case "Metric Prefix"
                     aStep = <Customization>
-                                                                                                                                                                               <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                               <Parameters></Parameters>
-                                                                                                                                                                           </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters></Parameters>
+                            </Customization>
                     'If singleStep.UseCustomPMU Then
                     aStep.<Parameters>.FirstOrDefault.Add(<CustPMUname><%= singleStep.CustPMUname %></CustPMUname>)
                     'End If
@@ -812,18 +812,32 @@ Namespace ViewModels
                     'End If
                 Case "Angle Conversion"
                     aStep = <Customization>
-                                                                                                                                                                                           <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                           <Parameters>
-                                                                                                                                                                                               <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                                                           </Parameters>
-                                                                                                                                                                                       </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                </Parameters>
+                            </Customization>
                     For Each pair In singleStep.OutputInputMappingPair
                         Dim toConvert As XElement = <ToConvert>
-                                                                                                                                                                                           <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                                                                                                                                                           <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                                                                                                                                                           <CustName><%= pair.Key.SignalName %></CustName>
-                                                                                                                                                                                       </ToConvert>
+                                                        <PMU><%= pair.Value(0).PMUName %></PMU>
+                                                        <Channel><%= pair.Value(0).SignalName %></Channel>
+                                                        <CustName><%= pair.Key.SignalName %></CustName>
+                                                    </ToConvert>
                         aStep.<Parameters>.LastOrDefault.Add(toConvert)
+                    Next
+                Case "Duplicate Signals"
+                    aStep = <Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                </Parameters>
+                            </Customization>
+                    For Each signal In singleStep.InputChannels
+                        Dim toReplicate As XElement = <ToReplicate>
+                                                          <PMU><%= signal.PMUName %></PMU>
+                                                          <Channel><%= signal.SignalName %></Channel>
+                                                      </ToReplicate>
+                        aStep.<Parameters>.LastOrDefault.Add(toReplicate)
                     Next
                 Case "Status Flags"
                     aStep = <Filter>
