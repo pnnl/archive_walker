@@ -392,7 +392,8 @@ Namespace ViewModels
             MyBase.New
             _filterParameterDictionary = New Dictionary(Of TunableFilterType, List(Of String)) From {{TunableFilterType.Rational, {"Numerator", "Denominator"}.ToList()},
                                                                                                     {TunableFilterType.HighPass, {"Order", "Cutoff"}.ToList()},
-                                                                                                    {TunableFilterType.LowPass, {"PassRipple", "StopRipple", "PassCutoff", "StopCutoff"}.ToList()}}
+                                                                                                    {TunableFilterType.LowPass, {"PassRipple", "StopRipple", "PassCutoff", "StopCutoff"}.ToList()},
+                                                                                                    {TunableFilterType.FrequencyDerivation, New List(Of String)()}}
             '{TunableFilterType.Median, {"Order", "Endpoints", "HandleNaN"}.ToList()}}
             InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
@@ -495,8 +496,13 @@ Namespace ViewModels
                 Return _model.Type
             End Get
             Set(value As TunableFilterType)
-                _model.Type = value
-                OnPropertyChanged()
+                If _model.Type <> value Then
+                    _model.Type = value
+                    If _model.Type = TunableFilterType.FrequencyDerivation Then
+                        OutputSignalStorage = OutputSignalStorageType.CreateCustomPMU
+                    End If
+                    OnPropertyChanged()
+                End If
             End Set
         End Property
 

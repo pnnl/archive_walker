@@ -26,6 +26,8 @@
             <converters:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
             <coreconverter:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
             <converters:TunableFilterExpanderHeaderConverter x:Key="TunableFilterExpanderHeaderConverter"/>
+            <converters:TunableFilterTypeVisibilityConverter x:Key="TunableFilterTypeVisibilityConverter"/>
+            <converters:TunableFilterTypeVisibilityInverseConverter x:Key="TunableFilterTypeVisibilityInverseConverter"/>
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="InterpolateTypeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodels:InterpolateType"/>
@@ -356,7 +358,8 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="2,0">
                             <Label Content="Output Signal Storage:" Margin="15,0,0,0" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <ComboBox ItemsSource="{Binding Source={StaticResource OutputSignalStorageTypeValues}}" Text="{Binding OutputSignalStorage, Converter={StaticResource EnumToStringConverter11}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" HorizontalContentAlignment="Right" Margin="-15,0,0,0"/>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource OutputSignalStorageTypeValues}}" Text="{Binding OutputSignalStorage, Converter={StaticResource EnumToStringConverter11}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" HorizontalContentAlignment="Right" Margin="-15,0,0,0" Visibility="{Binding Type, Converter={StaticResource TunableFilterTypeVisibilityConverter}}"/>
+                            <TextBlock Margin="-15,0,0,0" VerticalAlignment="Center" Width="140" Visibility="{Binding Type, Converter={StaticResource TunableFilterTypeVisibilityInverseConverter}}">Custom PMU Only</TextBlock>
                             <!--<RadioButton GroupName="{Binding StepCounter}" Content="Create Custom PMU" IsChecked="{Binding UseCustomPMU}" Margin="2,0" VerticalAlignment="Center"/>
                             <RadioButton GroupName="{Binding StepCounter}" Content="Replace Input" IsChecked="{Binding UseCustomPMU, Converter={StaticResource InverseBooleanConverter}}" Margin="10,0" VerticalAlignment="Center"/>-->
                             <Label Margin="15,0,0,0" Width="85" VerticalAlignment="Center" Content="Custom PMU:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
@@ -411,6 +414,13 @@
                     <ContentControl Content="{Binding}" Margin="2" Grid.Column="1">
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <Grid/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Type}" Value="0">
                                         <Setter Property="ContentTemplate" Value="{StaticResource RationalFilterParameters}"/>

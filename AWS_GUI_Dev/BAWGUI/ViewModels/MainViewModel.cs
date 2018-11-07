@@ -162,6 +162,20 @@ namespace BAWGUI.ViewModels
         {
             if (e != null)
             {
+                SettingsVM = new SettingsViewModel();
+                RunMatlabVM = new RunMATLABViewModel();
+                ResultsVM = new ResultsViewModel();
+                SettingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
+                RunMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+                if (CurrentView is SettingsViewModel)
+                {
+                    CurrentView = SettingsVM;
+                }
+                else
+                {
+                    CurrentView = ResultsVM;
+                }
+
                 SettingsVM.Project = e.Model;
                 //SettingsVM.Run = e.SelectedRun.Model;
                 ResultsVM.Project = e.Model;

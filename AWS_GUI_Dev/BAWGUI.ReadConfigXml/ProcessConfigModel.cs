@@ -205,6 +205,8 @@ namespace BAWGUI.ReadConfigXml
                         StopCutoff = value.Value;
                     }
                     break;
+                case TunableFilterType.FrequencyDerivation:
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
             }

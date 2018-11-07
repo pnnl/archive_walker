@@ -196,7 +196,7 @@ Namespace ViewModels
                                 parameters.Add(<StopCutoff><%= stp.StopCutoff %></StopCutoff>)
                             End If
                             aStep.Add(parameters)
-                        Case Else
+                        Case TunableFilterType.Rational
                             Dim parameters = <Parameters></Parameters>
                             If Not String.IsNullOrEmpty(stp.Numerator) Then
                                 parameters.Add(<Numerator><%= stp.Numerator %></Numerator>)
@@ -204,6 +204,9 @@ Namespace ViewModels
                             If Not String.IsNullOrEmpty(stp.Denominator) Then
                                 parameters.Add(<Denominator><%= stp.Denominator %></Denominator>)
                             End If
+                            aStep.Add(parameters)
+                        Case Else
+                            Dim parameters = <Parameters></Parameters>
                             aStep.Add(parameters)
                     End Select
                     'For Each parameter In stp.FilterParameters
