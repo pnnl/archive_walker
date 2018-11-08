@@ -151,6 +151,15 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _selectedADetector(detector As Object)
+            If detector IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    Forms.MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+                CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+            End If
             ' if detector is already selected, then the selection is not changed, nothing needs to be done.
             ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
             If Not detector.IsStepSelected Then

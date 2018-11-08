@@ -162,6 +162,20 @@ namespace BAWGUI.ViewModels
         {
             if (e != null)
             {
+                //SettingsVM = new SettingsViewModel();
+                //RunMatlabVM = new RunMATLABViewModel();
+                //ResultsVM = new ResultsViewModel();
+                //SettingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
+                //RunMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+                //if (CurrentView is SettingsViewModel)
+                //{
+                //    CurrentView = SettingsVM;
+                //}
+                //else
+                //{
+                //    CurrentView = ResultsVM;
+                //}
+
                 SettingsVM.Project = e.Model;
                 //SettingsVM.Run = e.SelectedRun.Model;
                 ResultsVM.Project = e.Model;
@@ -188,6 +202,7 @@ namespace BAWGUI.ViewModels
                         SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                         SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                         SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        SettingsVM.CurrentSelectedStep = null;
                         e.SelectedRun.Model.DataFileDirectories = new List<string>();
                         foreach (var info in _signalMgr.FileInfo)
                         {
@@ -197,7 +212,7 @@ namespace BAWGUI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    MessageBox.Show("Error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
             }
         }

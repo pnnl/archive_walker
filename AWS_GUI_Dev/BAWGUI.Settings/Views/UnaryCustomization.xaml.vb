@@ -12,6 +12,9 @@ Public Class UnaryCustomization
             If item.Name = "Channel" Then
                 item.Background = Utility.HighlightColor
             End If
+            If item.Name = "CustName" Then
+                item.Background = Utility.HighlightColor
+            End If
         Next
     End Sub
 
@@ -21,6 +24,9 @@ Public Class UnaryCustomization
                 item.Background = New Media.SolidColorBrush(Colors.White)
             End If
             If item.Name = "Channel" Then
+                item.Background = New Media.SolidColorBrush(Colors.White)
+            End If
+            If item.Name = "CustName" Then
                 item.Background = New Media.SolidColorBrush(Colors.White)
             End If
         Next

@@ -80,6 +80,19 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _postProcessConfigureStepSelected(processStep As Object)
+            If processStep IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+            End If
             ' if processStep is already selected, then the selection is not changed, nothing needs to be done.
             ' however, if processStep is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
             If Not processStep.IsStepSelected Then
@@ -97,9 +110,9 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If stp.StepCounter < lastNumberOfSteps Then
-                            stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                            'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                             stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                            'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If stp.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -207,6 +220,17 @@ Namespace ViewModels
         End Property
         Private Sub _deSelectAllPostProcessConfigSteps()
             If _currentSelectedStep IsNot Nothing Then
+
+                If Not _currentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    MessageBox.Show("Missing field(s) in step : " + CurrentSelectedStep.Name + " , please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+
                 For Each signal In _currentSelectedStep.InputChannels
                     signal.IsChecked = False
                 Next

@@ -71,16 +71,26 @@ namespace BAWGUI.Core.Models
         [Description("High-Pass")]
         HighPass,
         [Description("Low-Pass")]
-        LowPass
+        LowPass,
+        [Description("Frequency Derivation")]
+        FrequencyDerivation,
+        [Description("Running Average")]
+        RunningAverage
     }
     public enum InterpolateType
     {
-        [System.ComponentModel.Description("Linear")]
+        [Description("Linear")]
         Linear,
         [Description("Constant")]
         Constant,
         [Description("Cubic")]
         Cubic
     }
-
+    public enum OutputSignalStorageType
+    {
+        [Description("Create Custom PMU")]
+        CreateCustomPMU,
+        [Description("Replace Input")]
+        ReplaceInput
+    }
 }

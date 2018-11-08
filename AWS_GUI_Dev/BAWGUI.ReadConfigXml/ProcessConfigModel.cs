@@ -146,10 +146,10 @@ namespace BAWGUI.ReadConfigXml
     //    [Description("Constant")]
     //    Constant
     //}
-    public class TunableFilterModel : UnwrapModel
+    public class TunableFilterModel
     {
         public TunableFilterModel() { }
-        public TunableFilterModel(XElement filter) : base(filter)
+        public TunableFilterModel(XElement filter)
         {
             //base.Name = "Filter";
             var par = filter.Element("Type");
@@ -205,8 +205,55 @@ namespace BAWGUI.ReadConfigXml
                         StopCutoff = value.Value;
                     }
                     break;
+                case TunableFilterType.FrequencyDerivation:
+                    break;
+                case TunableFilterType.RunningAverage:
+                    value = filter.Element("Parameters").Element("RemoveAve");
+                    if (value != null)
+                    {
+                        RemoveAve = bool.Parse(value.Value);
+                    }
+                    value = filter.Element("Parameters").Element("WindowLength");
+                    if (value != null)
+                    {
+                        WindowLength = value.Value;
+                    }
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
+            }
+            par = filter.Element("CustPMU");
+            if (par != null)
+            {
+                CustPMUName = par.Value;
+                UseCustomPMU = true;
+                OutputSignalStorage = OutputSignalStorageType.CreateCustomPMU;
+            }
+            else
+            {
+                UseCustomPMU = false;
+                OutputSignalStorage = OutputSignalStorageType.ReplaceInput;
+            }
+            var pmus = filter.Elements("PMU");
+            PMUElementList = new List<PMUElementForUnaryCustModel>();
+            foreach (var pmu in pmus)
+            {
+                var pmuName = pmu.Element("Name").Value;
+                var channels = pmu.Elements("Channel");
+                if (channels.Count() > 0)
+                {
+                    foreach (var channel in channels)
+                    {
+                        var channelName = channel.Element("Name").Value;
+                        var custname = "";
+                        if (UseCustomPMU)
+                        {
+                            custname = channel.Element("CustName").Value;
+                        }
+                        var newSignal = new PMUElementForUnaryCustModel(pmuName, channelName, custname);
+                        PMUElementList.Add(newSignal);
+                    }
+                }
             }
         }
         public TunableFilterType Type { get; set; }
@@ -218,10 +265,16 @@ namespace BAWGUI.ReadConfigXml
         public string StopRipple { get; set; }
         public string PassCutoff { get; set; }
         public string StopCutoff { get; set; }
+        public bool RemoveAve { get; set; }
+        public string WindowLength { get; set; }
         public new string Name
         {
             get { return "Filter"; }
         }
+        public bool UseCustomPMU { get; set; }
+        public OutputSignalStorageType OutputSignalStorage { get; set; }
+        public string CustPMUName { get; set; }
+        public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
     }
     //public enum TunableFilterType
     //{

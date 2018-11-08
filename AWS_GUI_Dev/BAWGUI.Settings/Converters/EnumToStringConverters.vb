@@ -177,6 +177,10 @@ Namespace Converters
                     Return "High-Pass"
                 Case TunableFilterType.LowPass
                     Return "Low-Pass"
+                Case TunableFilterType.FrequencyDerivation
+                    Return "Frequency Derivation"
+                Case TunableFilterType.RunningAverage
+                    Return "Running Average"
                     'Case TunableFilterType.Median
                     '    Return "Median"
                 Case Else
@@ -192,6 +196,10 @@ Namespace Converters
                     Return TunableFilterType.HighPass
                 Case "Low-Pass"
                     Return TunableFilterType.LowPass
+                Case "Frequency Derivation"
+                    Return TunableFilterType.FrequencyDerivation
+                Case "Running Average"
+                    Return TunableFilterType.RunningAverage
                     'Case "Median"
                     '    Return TunableFilterType.Median
                 Case Else
