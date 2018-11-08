@@ -205,6 +205,15 @@ Namespace ViewModels
                                 parameters.Add(<Denominator><%= stp.Denominator %></Denominator>)
                             End If
                             aStep.Add(parameters)
+                        Case TunableFilterType.RunningAverage
+                            Dim parameters = <Parameters></Parameters>
+                            If Not String.IsNullOrEmpty(stp.RemoveAve) Then
+                                parameters.Add(<RemoveAve><%= stp.RemoveAve.ToString.ToUpper %></RemoveAve>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.WindowLength) Then
+                                parameters.Add(<WindowLength><%= stp.WindowLength %></WindowLength>)
+                            End If
+                            aStep.Add(parameters)
                         Case Else
                             Dim parameters = <Parameters></Parameters>
                             aStep.Add(parameters)

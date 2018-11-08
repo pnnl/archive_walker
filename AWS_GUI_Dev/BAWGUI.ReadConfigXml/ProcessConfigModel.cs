@@ -207,6 +207,18 @@ namespace BAWGUI.ReadConfigXml
                     break;
                 case TunableFilterType.FrequencyDerivation:
                     break;
+                case TunableFilterType.RunningAverage:
+                    value = filter.Element("Parameters").Element("RemoveAve");
+                    if (value != null)
+                    {
+                        RemoveAve = bool.Parse(value.Value);
+                    }
+                    value = filter.Element("Parameters").Element("WindowLength");
+                    if (value != null)
+                    {
+                        WindowLength = value.Value;
+                    }
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
             }
@@ -253,6 +265,8 @@ namespace BAWGUI.ReadConfigXml
         public string StopRipple { get; set; }
         public string PassCutoff { get; set; }
         public string StopCutoff { get; set; }
+        public bool RemoveAve { get; set; }
+        public string WindowLength { get; set; }
         public new string Name
         {
             get { return "Filter"; }

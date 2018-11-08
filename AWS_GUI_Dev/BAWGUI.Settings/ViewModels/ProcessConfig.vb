@@ -393,7 +393,8 @@ Namespace ViewModels
             _filterParameterDictionary = New Dictionary(Of TunableFilterType, List(Of String)) From {{TunableFilterType.Rational, {"Numerator", "Denominator"}.ToList()},
                                                                                                     {TunableFilterType.HighPass, {"Order", "Cutoff"}.ToList()},
                                                                                                     {TunableFilterType.LowPass, {"PassRipple", "StopRipple", "PassCutoff", "StopCutoff"}.ToList()},
-                                                                                                    {TunableFilterType.FrequencyDerivation, New List(Of String)()}}
+                                                                                                    {TunableFilterType.FrequencyDerivation, New List(Of String)()},
+                                                                                                    {TunableFilterType.RunningAverage, {"RemoveAve", "WindowLength"}.ToList()}}
             '{TunableFilterType.Median, {"Order", "Endpoints", "HandleNaN"}.ToList()}}
             InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
@@ -683,7 +684,30 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-
+        Private _removeAve As Boolean
+        Public Property RemoveAve As Boolean
+            Get
+                Return _model.RemoveAve
+            End Get
+            Set(ByVal value As Boolean)
+                If _model.RemoveAve <> value Then
+                    _model.RemoveAve = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _windowLength As String
+        Public Property WindowLength As String
+            Get
+                Return _model.WindowLength
+            End Get
+            Set(ByVal value As String)
+                If _model.WindowLength <> value Then
+                    _model.WindowLength = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
         Public Overrides Function CheckStepIsComplete() As Boolean
             If UseCustomPMU AndAlso String.IsNullOrEmpty(CustPMUName) Then
                 'Throw New Exception("Please fill in custom PMU name.")

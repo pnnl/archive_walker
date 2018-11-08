@@ -71,7 +71,9 @@ namespace BAWGUI.Core.Models
         [Description("Low-Pass")]
         LowPass,
         [Description("Frequency Derivation")]
-        FrequencyDerivation
+        FrequencyDerivation,
+        [Description("Running Average")]
+        RunningAverage
     }
     public enum InterpolateType
     {

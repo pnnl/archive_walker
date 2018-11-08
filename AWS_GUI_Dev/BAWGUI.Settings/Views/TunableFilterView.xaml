@@ -307,6 +307,9 @@
             <DataTemplate x:Key="LowPassFilterParameters">
                 <local:LowPassFilterParameters/>
             </DataTemplate>
+            <DataTemplate x:Key="RunningAverageFilterParameters">
+                <local:RunningAverageFilterParameters/>
+            </DataTemplate>
             <converters:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
             <coreconverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
@@ -430,6 +433,9 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Type}" Value="2">
                                         <Setter Property="ContentTemplate" Value="{StaticResource LowPassFilterParameters}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="4">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource RunningAverageFilterParameters}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

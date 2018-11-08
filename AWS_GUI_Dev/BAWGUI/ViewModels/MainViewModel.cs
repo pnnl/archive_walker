@@ -162,19 +162,19 @@ namespace BAWGUI.ViewModels
         {
             if (e != null)
             {
-                SettingsVM = new SettingsViewModel();
-                RunMatlabVM = new RunMATLABViewModel();
-                ResultsVM = new ResultsViewModel();
-                SettingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
-                RunMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
-                if (CurrentView is SettingsViewModel)
-                {
-                    CurrentView = SettingsVM;
-                }
-                else
-                {
-                    CurrentView = ResultsVM;
-                }
+                //SettingsVM = new SettingsViewModel();
+                //RunMatlabVM = new RunMATLABViewModel();
+                //ResultsVM = new ResultsViewModel();
+                //SettingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
+                //RunMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+                //if (CurrentView is SettingsViewModel)
+                //{
+                //    CurrentView = SettingsVM;
+                //}
+                //else
+                //{
+                //    CurrentView = ResultsVM;
+                //}
 
                 SettingsVM.Project = e.Model;
                 //SettingsVM.Run = e.SelectedRun.Model;
@@ -202,6 +202,7 @@ namespace BAWGUI.ViewModels
                         SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                         SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                         SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        SettingsVM.CurrentSelectedStep = null;
                         e.SelectedRun.Model.DataFileDirectories = new List<string>();
                         foreach (var info in _signalMgr.FileInfo)
                         {

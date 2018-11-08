@@ -75,8 +75,10 @@ Namespace Converters
                         Return "Step " & number.ToString & " - Low-Pass Filter"
                     Case TunableFilterType.Rational
                         Return "Step " & number.ToString & " - Rational Filter"
-                    Case Else
+                    Case TunableFilterType.FrequencyDerivation
                         Return "Step " & number.ToString & " - Frequency Derivation"
+                    Case Else
+                        Return "Step " & number.ToString & " - RunningAverage"
                 End Select
             Else
                 Return ""

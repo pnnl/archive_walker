@@ -1304,6 +1304,7 @@ Namespace ViewModels
                     ElseIf TypeOf _currentSelectedStep Is TunableFilter Then
                         Try
                             _changeSignalSelectionUnarySteps(obj)
+                            _determineSamplingRateCheckableStatus()
                         Catch ex As Exception
                             _keepOriginalSelection(obj)
                             Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
@@ -1330,14 +1331,12 @@ Namespace ViewModels
                                 Case "Exponential"
                                     _changeSignalSelectionUnarySteps(obj)
                                     _checkRaiseExpCustomizationOutputType()
-                                Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate", "Angle Conversion"
+                                Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate", "Angle Conversion", "Metric Prefix", "Duplicate Signals"
                                     _changeSignalSelectionUnarySteps(obj)
                                 ' For these 7 unary customization steps, the signal type and units of the input signal are applied to the output signal
                                 ' So, the type are applied while signals are added in the _changeSignalSelectionUnarySteps() subroutine
                                 ' Thus we don't need another subroutine to check output signal type
                                 ' However, if we encounter bugs due to type for these steps, we might want to add a subroutine: _checkUnaryCustomizationOutputType()
-                                Case "Metric Prefix"
-                                    _changeSignalSelectionUnarySteps(obj)
                                 Case "Angle Calculation"
                                     _changeSignalSelectionUnarySteps(obj)
                                     _checkAngleForComplexSignalCustomizationOutputType()
@@ -1354,10 +1353,6 @@ Namespace ViewModels
                                 ' It only relates to user choice and would only affect MATLAB calculation afterwards
                                 Case "Signal Type/Unit"
                                     _specifySignalTypeUnitSignalSelectionChanged(obj)
-                                Case "Duplicate Signals"
-                                    _changeSignalSelectionUnarySteps(obj)
-                                    '_changeSignalSelection(obj)
-                                    '_checkAdditionCustomizationOutputTypeAndSamplingRate()
                                 Case Else
                                     Throw New Exception("Customization step not supported!")
                             End Select
@@ -1550,6 +1545,7 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _recoverCheckStatusOfCurrentStep(obj As Object)
+            'why am I doing this? they should be checked already! Need to come back and think.........
             For Each signal In obj.InputChannels
                 signal.IsChecked = True
             Next
@@ -4408,6 +4404,10 @@ Namespace ViewModels
                     Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                 End Try
                 _oldTabIndex = _currentTabIndex
+                If CurrentSelectedStep IsNot Nothing Then
+                    CurrentSelectedStep.IsStepSelected = False
+                    CurrentSelectedStep = Nothing
+                End If
                 OnPropertyChanged()
             End Set
         End Property
