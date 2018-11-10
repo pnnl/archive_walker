@@ -148,8 +148,12 @@ namespace BAWGUI.ReadConfigXml
     //}
     public class TunableFilterModel
     {
-        public TunableFilterModel() { }
-        public TunableFilterModel(XElement filter)
+        public TunableFilterModel()
+        {
+            PointOnWavePowerCalculationFilterParam = new PointOnWavePowerCalculationFilterParameters();
+            PMUElementList = new List<PMUElementForUnaryCustModel>();
+        }
+        public TunableFilterModel(XElement filter) : this()
         {
             //base.Name = "Filter";
             var par = filter.Element("Type");
@@ -219,6 +223,8 @@ namespace BAWGUI.ReadConfigXml
                         WindowLength = value.Value;
                     }
                     break;
+                case TunableFilterType.PointOnWavePower:
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
             }
@@ -235,7 +241,7 @@ namespace BAWGUI.ReadConfigXml
                 OutputSignalStorage = OutputSignalStorageType.ReplaceInput;
             }
             var pmus = filter.Elements("PMU");
-            PMUElementList = new List<PMUElementForUnaryCustModel>();
+            //PMUElementList = new List<PMUElementForUnaryCustModel>();
             foreach (var pmu in pmus)
             {
                 var pmuName = pmu.Element("Name").Value;
@@ -275,6 +281,7 @@ namespace BAWGUI.ReadConfigXml
         public OutputSignalStorageType OutputSignalStorage { get; set; }
         public string CustPMUName { get; set; }
         public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
+        public PointOnWavePowerCalculationFilterParameters PointOnWavePowerCalculationFilterParam { get; set; }
     }
     //public enum TunableFilterType
     //{
@@ -381,5 +388,17 @@ namespace BAWGUI.ReadConfigXml
         public string NewUnit { get; set; }
         public string NewType { get; set; }
     }
-
+    public class PointOnWavePowerCalculationFilterParameters
+    {
+        public string Pname { get; set; }
+        public string Qname { get; set; }
+        public string VA { get; set; }
+        public string VB { get; set; }
+        public string VC { get; set; }
+        public string IA { get; set; }
+        public string IB { get; set; }
+        public string IC { get; set; }
+        public string PhaseShiftV { get; set; }
+        public string PhaseShiftI { get; set; }
+    }
 }

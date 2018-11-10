@@ -214,6 +214,42 @@ Namespace ViewModels
                                 parameters.Add(<WindowLength><%= stp.WindowLength %></WindowLength>)
                             End If
                             aStep.Add(parameters)
+                        Case TunableFilterType.PointOnWavePower
+                            Dim parameters = <Parameters></Parameters>
+                            If Not String.IsNullOrEmpty(stp.Pname) Then
+                                parameters.Add(<Pname><%= stp.Pname %></Pname>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.Qname) Then
+                                parameters.Add(<Qname><%= stp.Qname %></Qname>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.WindowLength) Then
+                                parameters.Add(<WindowLength><%= stp.WindowLength %></WindowLength>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseAVoltage.SignalName) Then
+                                parameters.Add(<VA><%= stp.POWInputSignals.PhaseAVoltage.SignalName %></VA>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseBVoltage.SignalName) Then
+                                parameters.Add(<VB><%= stp.POWInputSignals.PhaseBVoltage.SignalName %></VB>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseCVoltage.SignalName) Then
+                                parameters.Add(<VC><%= stp.POWInputSignals.PhaseCVoltage.SignalName %></VC>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseACurrent.SignalName) Then
+                                parameters.Add(<IA><%= stp.POWInputSignals.PhaseACurrent.SignalName %></IA>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseBCurrent.SignalName) Then
+                                parameters.Add(<IB><%= stp.POWInputSignals.PhaseBCurrent.SignalName %></IB>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseCCurrent.SignalName) Then
+                                parameters.Add(<IC><%= stp.POWInputSignals.PhaseCCurrent.SignalName %></IC>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.PhaseShiftV) Then
+                                parameters.Add(<PhaseShiftV><%= stp.PhaseShiftV %></PhaseShiftV>)
+                            End If
+                            If Not String.IsNullOrEmpty(stp.PhaseShiftI) Then
+                                parameters.Add(<PhaseShiftI><%= stp.PhaseShiftI %></PhaseShiftI>)
+                            End If
+                            aStep.Add(parameters)
                         Case Else
                             Dim parameters = <Parameters></Parameters>
                             aStep.Add(parameters)
@@ -222,7 +258,7 @@ Namespace ViewModels
                     '    Dim para As XElement = New XElement(parameter.ParameterName.ToString, parameter.Value)
                     '    aStep.<Parameters>.LastOrDefault.Add(para)
                     'Next
-                    If stp.UseCustomPMU Then
+                    If stp.UseCustomPMU AndAlso stp.Type <> TunableFilterType.PointOnWavePower Then
                         Dim PMUSignalDictionary = DirectCast(stp, TunableFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                         For Each pmuGroup In PMUSignalDictionary
                             Dim PMU As XElement = <PMU>

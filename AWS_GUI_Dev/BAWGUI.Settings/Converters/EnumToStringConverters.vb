@@ -181,6 +181,8 @@ Namespace Converters
                     Return "Frequency Derivation"
                 Case TunableFilterType.RunningAverage
                     Return "Running Average"
+                Case TunableFilterType.PointOnWavePower
+                    Return "Point on Wave Power Calculation"
                     'Case TunableFilterType.Median
                     '    Return "Median"
                 Case Else
@@ -200,6 +202,8 @@ Namespace Converters
                     Return TunableFilterType.FrequencyDerivation
                 Case "Running Average"
                     Return TunableFilterType.RunningAverage
+                Case "Point on Wave Power Calculation"
+                    Return TunableFilterType.PointOnWavePower
                     'Case "Median"
                     '    Return TunableFilterType.Median
                 Case Else
