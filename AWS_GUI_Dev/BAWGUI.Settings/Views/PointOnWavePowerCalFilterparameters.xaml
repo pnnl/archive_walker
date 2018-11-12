@@ -13,12 +13,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <!--<RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>-->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -34,7 +34,7 @@
         <TextBox Grid.Row="3" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PhaseShiftV}" HorizontalAlignment="Center"/>
         <Label Grid.Row="4" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Current Transducer Phase Shift (degrees):" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="4" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PhaseShiftI}" HorizontalAlignment="Center"/>
-        <Label Grid.Row="5" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="VA:" HorizontalAlignment="Left"/>
+        <!--<Label Grid.Row="5" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="VA:" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="5" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseAVoltage.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
         <Label Grid.Row="6" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="VB:" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="6" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseBVoltage.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
@@ -45,6 +45,6 @@
         <Label Grid.Row="9" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="IB:" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="9" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseBCurrent.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
         <Label Grid.Row="10" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="IC:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="10" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseCCurrent.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
+        <TextBox Grid.Row="10" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseCCurrent.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>-->
     </Grid>
 </UserControl>

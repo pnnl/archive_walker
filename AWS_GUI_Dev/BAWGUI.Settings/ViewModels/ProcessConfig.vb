@@ -435,7 +435,7 @@ Namespace ViewModels
                 If _model.Type <> TunableFilterType.PointOnWavePower Then
                     Dim output As SignalSignatureViewModel = Nothing
                     If _model.UseCustomPMU Then
-                        output = New SignalSignatureViewModel(signal.CustSignalName, signal.PMUName)
+                        output = New SignalSignatureViewModel(signal.CustSignalName, _model.CustPMUName)
                         output.IsCustomSignal = True
                         If input.IsValid Then
                             output.TypeAbbreviation = input.TypeAbbreviation
