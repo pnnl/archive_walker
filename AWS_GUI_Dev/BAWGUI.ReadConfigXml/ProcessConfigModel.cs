@@ -224,6 +224,61 @@ namespace BAWGUI.ReadConfigXml
                     }
                     break;
                 case TunableFilterType.PointOnWavePower:
+                    value = filter.Element("Parameters").Element("Pname");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.Pname = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("Qname");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.Qname = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("WindowLength");
+                    if (value != null)
+                    {
+                        WindowLength = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("VA");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.VA = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("VB");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.VB = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("VC");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.VC = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("IA");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.IA = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("IB");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.IB = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("IC");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.IC = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("PhaseShiftV");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.PhaseShiftV = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("PhaseShiftI");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.PhaseShiftI = value.Value;
+                    }
                     break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
@@ -252,7 +307,7 @@ namespace BAWGUI.ReadConfigXml
                     {
                         var channelName = channel.Element("Name").Value;
                         var custname = "";
-                        if (UseCustomPMU)
+                        if (UseCustomPMU && Type != TunableFilterType.PointOnWavePower)
                         {
                             custname = channel.Element("CustName").Value;
                         }
@@ -282,6 +337,16 @@ namespace BAWGUI.ReadConfigXml
         public string CustPMUName { get; set; }
         public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
         public PointOnWavePowerCalculationFilterParameters PointOnWavePowerCalculationFilterParam { get; set; }
+        //public string Pname { get; private set; }
+        //public string Qname { get; private set; }
+        //public string VA { get; private set; }
+        //public string IC { get; private set; }
+        //public string IB { get; private set; }
+        //public string IA { get; private set; }
+        //public string VC { get; private set; }
+        //public string VB { get; private set; }
+        //public string PhaseShiftV { get; private set; }
+        //public string PhaseShiftI { get; private set; }
     }
     //public enum TunableFilterType
     //{
