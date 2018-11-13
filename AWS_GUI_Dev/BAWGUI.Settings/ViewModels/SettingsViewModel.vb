@@ -4262,7 +4262,11 @@ Namespace ViewModels
                             signal.PassedThroughDQFilter = signal.PassedThroughDQFilter - 1
                         Next
                     End If
-                    _deSelectAllDataConfigSteps()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        _deSelectAllDataConfigSteps()
+                    End If
                     CurrentSelectedStep = Nothing
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     DataConfigure.CollectionOfSteps = steps

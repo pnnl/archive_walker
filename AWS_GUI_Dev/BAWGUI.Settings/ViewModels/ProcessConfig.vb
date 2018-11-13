@@ -1002,9 +1002,11 @@ Namespace ViewModels
             _filterChoice = "0"
         End Sub
 
+        Private Property signalsMgr As SignalManager
         Public Sub New(stp As MultirateModel, signalsMgr As SignalManager)
             Me.New
             Me._model = stp
+            signalsMgr = signalsMgr
             StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & Name
@@ -1077,14 +1079,17 @@ Namespace ViewModels
                 Return _model.NewRate
             End Get
             Set(value As String)
-                _model.NewRate = value
-                If Not String.IsNullOrEmpty(value) Then
-                    For Each signal In OutputChannels
-                        signal.SamplingRate = value
-                    Next
+                If _model.NewRate <> value Then
+                    _model.NewRate = value
+                    If Not String.IsNullOrEmpty(value) Then
+                        For Each signal In OutputChannels
+                            signal.SamplingRate = value
+                        Next
+                    End If
+                    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList =
+                    OnPropertyChanged()
                 End If
-                'ThisStepOutputsAsSignalHierachyByPMU.SignalList =
-                OnPropertyChanged()
             End Set
         End Property
 
@@ -1094,20 +1099,23 @@ Namespace ViewModels
                 Return _model.PElement
             End Get
             Set(value As String)
-                _model.PElement = value
-                Dim q = 1
-                Integer.TryParse(_qElement, q)
-                If q = 0 Then
-                    q = 1
+                If _model.PElement <> value Then
+                    _model.PElement = value
+                    Dim q = 1
+                    Integer.TryParse(_model.QElement, q)
+                    If q = 0 Then
+                        q = 1
+                    End If
+                    Dim p = 1
+                    Integer.TryParse(value, p)
+                    If p <> 0 Then
+                        For index = 0 To OutputChannels.Count - 1
+                            OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
+                        Next
+                    End If
+                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+                    OnPropertyChanged()
                 End If
-                Dim p = 1
-                Integer.TryParse(_pElement, p)
-                If p <> 0 Then
-                    For index = 0 To OutputChannels.Count - 1
-                        OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
-                    Next
-                End If
-                OnPropertyChanged()
             End Set
         End Property
 
@@ -1117,20 +1125,23 @@ Namespace ViewModels
                 Return _model.QElement
             End Get
             Set(value As String)
-                _model.QElement = value
-                Dim p = 1
-                Integer.TryParse(_pElement, p)
-                If p = 0 Then
-                    p = 1
+                If _model.QElement <> value Then
+                    _model.QElement = value
+                    Dim p = 1
+                    Integer.TryParse(_model.PElement, p)
+                    If p = 0 Then
+                        p = 1
+                    End If
+                    Dim q = 1
+                    Integer.TryParse(value, q)
+                    If q <> 0 Then
+                        For index = 0 To OutputChannels.Count - 1
+                            OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
+                        Next
+                    End If
+                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+                    OnPropertyChanged()
                 End If
-                Dim q = 1
-                Integer.TryParse(_qElement, q)
-                If q <> 0 Then
-                    For index = 0 To OutputChannels.Count - 1
-                        OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
-                    Next
-                End If
-                OnPropertyChanged()
             End Set
         End Property
 
