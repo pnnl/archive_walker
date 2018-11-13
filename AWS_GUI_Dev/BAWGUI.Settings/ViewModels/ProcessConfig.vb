@@ -484,8 +484,11 @@ Namespace ViewModels
                 output1.SamplingRate = freq
                 Dim output2 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Qname, CustPMUName, "OTHER")
                 output2.SamplingRate = freq
+                Dim output3 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Fname, CustPMUName, "F")
+                output3.SamplingRate = freq
                 OutputChannels.Add(output1)
                 OutputChannels.Add(output2)
+                OutputChannels.Add(output3)
             End If
             'Try
             '    InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
@@ -876,6 +879,19 @@ Namespace ViewModels
                 If _model.PointOnWavePowerCalculationFilterParam.Qname <> value Then
                     _model.PointOnWavePowerCalculationFilterParam.Qname = value
                     OutputChannels(1).SignalName = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _fName As String
+        Public Property Fname As String
+            Get
+                Return _model.PointOnWavePowerCalculationFilterParam.Fname
+            End Get
+            Set(ByVal value As String)
+                If _model.PointOnWavePowerCalculationFilterParam.Fname <> value Then
+                    _model.PointOnWavePowerCalculationFilterParam.Fname = value
+                    OutputChannels(2).SignalName = value
                     OnPropertyChanged()
                 End If
             End Set

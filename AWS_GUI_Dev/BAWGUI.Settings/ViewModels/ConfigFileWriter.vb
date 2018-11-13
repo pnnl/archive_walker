@@ -222,6 +222,9 @@ Namespace ViewModels
                             If Not String.IsNullOrEmpty(stp.Qname) Then
                                 parameters.Add(<Qname><%= stp.Qname %></Qname>)
                             End If
+                            If Not String.IsNullOrEmpty(stp.Fname) Then
+                                parameters.Add(<Fname><%= stp.Fname %></Fname>)
+                            End If
                             If Not String.IsNullOrEmpty(stp.WindowLength) Then
                                 parameters.Add(<WindowLength><%= stp.WindowLength %></WindowLength>)
                             End If
