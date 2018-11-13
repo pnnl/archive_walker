@@ -604,9 +604,14 @@ Namespace ViewModels
                         output1.SamplingRate = freq
                         Dim output2 = New SignalSignatureViewModel(Qname, CustPMUName, "OTHER")
                         output2.SamplingRate = freq
+                        Dim output3 = New SignalSignatureViewModel(Fname, CustPMUName, "F")
+                        output3.SamplingRate = freq
                         OutputChannels.Add(output1)
                         OutputChannels.Add(output2)
+                        OutputChannels.Add(output3)
                     End If
+                    ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter.ToString & " - " & value.ToString() & " " & Name
+                    ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter.ToString & " - " & value.ToString() & " " & Name
                     OnPropertyChanged()
                 End If
             End Set

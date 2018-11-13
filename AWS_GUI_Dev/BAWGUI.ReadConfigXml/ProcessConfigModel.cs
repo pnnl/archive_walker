@@ -395,9 +395,9 @@ namespace BAWGUI.ReadConfigXml
             }
         }
         public string MultiRatePMU { get; set; }
-        public string NewRate { get; set; } = "1";
-        public string PElement { get; set; } = "1";
-        public string QElement { get; set; } = "1";
+        public string NewRate { get; set; }
+        public string PElement { get; set; }
+        public string QElement { get; set; }
         public int FilterChoice { get; set; }
         public new string Name
         {
