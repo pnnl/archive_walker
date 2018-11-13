@@ -158,11 +158,13 @@ Namespace ViewModels
                     Exit Sub
                 End If
                 'here do all the stuff that is needed such as sort signals to make sure the step is set up.
-                CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                If TypeOf CurrentSelectedStep IsNot AlarmingDetectorBase Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
             End If
-            ' if detector is already selected, then the selection is not changed, nothing needs to be done.
-            ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
-            If Not detector.IsStepSelected Then
+                ' if detector is already selected, then the selection is not changed, nothing needs to be done.
+                ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
+                If Not detector.IsStepSelected Then
                 _aDetectorStepDeSelected()
                 'If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso CurrentSelectedStep.InputChannels.Count = 0 Then
                 '    'Forms.MessageBox.Show("Detectors have to have input signals!", "Error!", MessageBoxButtons.OK)
