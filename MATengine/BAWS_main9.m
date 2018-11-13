@@ -215,8 +215,7 @@ elseif ~Unpause
                 AdditionalOutputRerun = {};
                 return
             end
-        else
-            strcmp(RerunDetector,'Thevenin')
+        elseif strcmp(RerunDetector,'Thevenin')
             % Load the SparsePMU corresponding to the Thevenin application.
             if isfield(DetectorXML,'Thevenin')
                 SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Thevenin');
