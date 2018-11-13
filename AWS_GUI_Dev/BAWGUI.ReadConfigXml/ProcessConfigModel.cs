@@ -234,6 +234,11 @@ namespace BAWGUI.ReadConfigXml
                     {
                         PointOnWavePowerCalculationFilterParam.Qname = value.Value;
                     }
+                    value = filter.Element("Parameters").Element("Fname");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.Fname = value.Value;
+                    }
                     value = filter.Element("Parameters").Element("WindowLength");
                     if (value != null)
                     {
@@ -390,9 +395,9 @@ namespace BAWGUI.ReadConfigXml
             }
         }
         public string MultiRatePMU { get; set; }
-        public string NewRate { get; set; }
-        public string PElement { get; set; }
-        public string QElement { get; set; }
+        public string NewRate { get; set; } = "1";
+        public string PElement { get; set; } = "1";
+        public string QElement { get; set; } = "1";
         public int FilterChoice { get; set; }
         public new string Name
         {
@@ -457,6 +462,7 @@ namespace BAWGUI.ReadConfigXml
     {
         public string Pname { get; set; }
         public string Qname { get; set; }
+        public string Fname { get; set; }
         public string VA { get; set; }
         public string VB { get; set; }
         public string VC { get; set; }
