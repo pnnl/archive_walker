@@ -284,7 +284,11 @@ Namespace ViewModels
                         DetectorConfigure.AlarmingList = newlist
                         _addLog("Alarming detector " & obj.Name & " is deleted from alarming!")
                     End If
-                    _deSelectAllDetectors()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        _deSelectAllDetectors()
+                    End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
                 End Try
