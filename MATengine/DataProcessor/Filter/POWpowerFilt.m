@@ -60,12 +60,22 @@ N = str2num(Parameters.WindowLength)*fs;
 
 b = 1/N*ones(N,1);
 
-FinalCondos = cell(1,4);
+FinalCondos = cell(1,5);
 if isempty(InitialCondos)
-    InitialCondos = cell(1,4);
-    for idx = 1:4
-        [~,InitialCondos{idx}] = filter(b, 1, vd(1)*ones(N,1));
-    end
+    InitialCondos = cell(1,5);
+    
+    % Calculate the initial conditions. Because this filter is so simple,
+    % they can be obtained without actually running the filters:
+%     [~,InitialCondos{1}] = filter(b, 1, vd(1)*ones(N,1));
+%     [~,InitialCondos{2}] = filter(b, 1, vq(1)*ones(N,1));
+%     [~,InitialCondos{3}] = filter(b, 1, id(1)*ones(N,1));
+%     [~,InitialCondos{4}] = filter(b, 1, iq(1)*ones(N,1));
+    icScale = linspace(0,1,N+1);
+    icScale = icScale(end-1:-1:2)';
+    InitialCondos{1} = vd(1)*icScale;
+    InitialCondos{2} = vq(1)*icScale;
+    InitialCondos{3} = id(1)*icScale;
+    InitialCondos{4} = iq(1)*icScale;
 end
 
 [vd,FinalCondos{1}] = filter(b, 1, vd, InitialCondos{1});
@@ -73,17 +83,23 @@ end
 [id,FinalCondos{3}] = filter(b, 1, id, InitialCondos{3});
 [iq,FinalCondos{4}] = filter(b, 1, iq, InitialCondos{4});
 
+% Calculate frequency by taking the first order derivative of the voltage
+% angle
+[Freq,FinalCondos{5}] = filter([1,-1], 1, unwrap(-angle(vd+1i*vq)), InitialCondos{5});
+Freq = Freq*fs/(2*pi) + 60;
+
 S = (vd+1i*vq).*(id-1i*iq);
 
 P = sqrt(3)*real(S);
 Q = -sqrt(3)*imag(S);
 
 % Add the P and Q signals to the PMU
-PMU.Signal_Name = [PMU.Signal_Name Parameters.Pname Parameters.Qname];
-PMU.Signal_Type = [PMU.Signal_Type 'OTHER' 'OTHER'];
-PMU.Signal_Unit = [PMU.Signal_Unit 'O' 'O'];
-PMU.Flag = [PMU.Flag logical(sum(PMU.Flag(:,SigIdx,:),2)) logical(sum(PMU.Flag(:,SigIdx,:),2))];
-PMU.Data = [PMU.Data P Q];
+PMU.Signal_Name = [PMU.Signal_Name Parameters.Pname Parameters.Qname Parameters.Fname];
+PMU.Signal_Type = [PMU.Signal_Type 'OTHER' 'OTHER' 'F'];
+PMU.Signal_Unit = [PMU.Signal_Unit 'O' 'O' 'Hz'];
+Flag = logical(sum(PMU.Flag(:,SigIdx,:),2));
+PMU.Flag = [PMU.Flag Flag Flag Flag];
+PMU.Data = [PMU.Data P Q Freq];
 
 % Remove the input signals from the PMU (it's a custom PMU that was created
 % in DPfilterStep) 
@@ -98,9 +114,9 @@ end
 function [data,ThisSig] = RetrieveData(PMU,SigName)
     ThisSig = find(strcmp(PMU.Signal_Name,SigName));
     if isempty(ThisSig)
-        error(['The signal ' Parameters.VA ' could not be found; point on wave power calculation cannot continue.']);
+        error(['The signal ' SigName ' could not be found; point on wave power calculation cannot continue.']);
     elseif length(ThisSig) > 1
-        error(['The signal ' Parameters.VA ' was found twice in the same PMU structure; point on wave power calculation cannot continue.']);
+        error(['The signal ' SigName ' was found twice in the same PMU structure; point on wave power calculation cannot continue.']);
     else
         data = PMU.Data(:,ThisSig);
     end

@@ -1,6 +1,6 @@
 function [PMU,tPMU,SampleRate] = POWreadHQ(inFile,Num_Flags)
 
-[signalData,SampleRate,signalNames,signalTypes,signalUnits,~,t] = GetHQdata(inFile);
+[signalData,SampleRate,signalNames,signalTypes,signalUnits,t] = GetHQdata(inFile);
 
 tPMU = t/24/3600 + getPdatFileTime(inFile);
 timeStr = datestr(tPMU, 'yyyy-mm-dd HH:MM:SS.FFF');
