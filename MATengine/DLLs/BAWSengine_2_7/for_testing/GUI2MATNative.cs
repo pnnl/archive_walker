@@ -1,6 +1,6 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Wed Oct 31 14:04:31 2018
+* Date: Tue Nov 13 12:35:51 2018
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
@@ -11,8 +11,9 @@
 * BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m,C:\Users\foll154
 * \Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m,C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.
-* m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNo
-* rmalMode.m}"
+* m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Retri
+* eveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctio
+* ns\RunNormalMode.m}"
 */
 using System;
 using System.Reflection;
@@ -48,6 +49,9 @@ namespace BAWSengineNative
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
   /// unThevenin.m
+  /// <newpara></newpara>
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ret
+  /// rieveData.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
   /// NormalMode.m
@@ -2020,6 +2024,337 @@ namespace BAWSengineNative
     protected void RerunThevenin(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
     {
         mcr.EvaluateFunctionForTypeSafeCall("RerunThevenin", numArgsOut, ref argsOut, argsIn, varArgsIn);
+    }
+    /// <summary>
+    /// Provides a single output, 0-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData()
+    {
+      return mcr.EvaluateFunction("RetrieveData", new Object[]{});
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 1-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData(Object RerunStartTime)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 2-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData(Object RerunStartTime, Object RerunEndTime)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 3-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData(Object RerunStartTime, Object RerunEndTime, Object 
+                         ConfigFile)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 4-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData(Object RerunStartTime, Object RerunEndTime, Object 
+                         ConfigFile, Object ControlPath)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 5-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData(Object RerunStartTime, Object RerunEndTime, Object 
+                         ConfigFile, Object ControlPath, Object EventPath)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 6-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData(Object RerunStartTime, Object RerunEndTime, Object 
+                         ConfigFile, Object ControlPath, Object EventPath, Object 
+                         InitializationPath)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 7-input Objectinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <param name="FileDirectory">Input argument #7</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object RetrieveData(Object RerunStartTime, Object RerunEndTime, Object 
+                         ConfigFile, Object ControlPath, Object EventPath, Object 
+                         InitializationPath, Object FileDirectory)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", new Object[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut, Object RerunStartTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut, Object RerunStartTime, Object 
+                           RerunEndTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut, Object RerunStartTime, Object 
+                           RerunEndTime, Object ConfigFile)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 4-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut, Object RerunStartTime, Object 
+                           RerunEndTime, Object ConfigFile, Object ControlPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 5-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut, Object RerunStartTime, Object 
+                           RerunEndTime, Object ConfigFile, Object ControlPath, Object 
+                           EventPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 6-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut, Object RerunStartTime, Object 
+                           RerunEndTime, Object ConfigFile, Object ControlPath, Object 
+                           EventPath, Object InitializationPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 7-input Object interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <param name="FileDirectory">Input argument #7</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] RetrieveData(int numArgsOut, Object RerunStartTime, Object 
+                           RerunEndTime, Object ConfigFile, Object ControlPath, Object 
+                           EventPath, Object InitializationPath, Object FileDirectory)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the RetrieveData function in which the input and output
+    /// arguments are specified as an array of Objects.
+    /// </summary>
+    /// <remarks>
+    /// This method will allocate and return by reference the output argument
+    /// array.<newpara></newpara>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return</param>
+    /// <param name= "argsOut">Array of Object output arguments</param>
+    /// <param name= "argsIn">Array of Object input arguments</param>
+    /// <param name= "varArgsIn">Array of Object representing variable input
+    /// arguments</param>
+    ///
+    [MATLABSignature("RetrieveData", 7, 1, 0)]
+    protected void RetrieveData(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
+    {
+        mcr.EvaluateFunctionForTypeSafeCall("RetrieveData", numArgsOut, ref argsOut, argsIn, varArgsIn);
     }
     /// <summary>
     /// Provides a void output, 0-input Objectinterface to the RunNormalMode MATLAB
