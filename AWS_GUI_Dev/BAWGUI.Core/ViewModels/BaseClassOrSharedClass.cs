@@ -308,6 +308,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
+        public abstract bool CheckStepIsComplete();
     }
 
     public abstract class AlarmingDetectorBase : ViewModelBase
@@ -340,5 +341,6 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
+        public abstract bool CheckStepIsComplete();
     }
 }
