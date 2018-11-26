@@ -95,6 +95,19 @@
              <returns>An Object containing the first output argument.</returns>
             
         </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
         <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32)">
              <summary>
              Provides the standard 0-input Object interface to the GetFileExample MATLAB
@@ -130,6 +143,21 @@
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="InputFile">Input argument #1</param>
              <param name="FileType">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             

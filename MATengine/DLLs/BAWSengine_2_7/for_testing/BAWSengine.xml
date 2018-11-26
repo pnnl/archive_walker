@@ -95,6 +95,19 @@
              <returns>An MWArray containing the first output argument.</returns>
             
         </member>
+        <member name="M:BAWSengine.GUI2MAT.GetFileExample(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 3-input MWArrayinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
         <member name="M:BAWSengine.GUI2MAT.GetFileExample(System.Int32)">
              <summary>
              Provides the standard 0-input MWArray interface to the GetFileExample MATLAB
@@ -130,6 +143,21 @@
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="InputFile">Input argument #1</param>
              <param name="FileType">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.GetFileExample(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 3-input MWArray interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
