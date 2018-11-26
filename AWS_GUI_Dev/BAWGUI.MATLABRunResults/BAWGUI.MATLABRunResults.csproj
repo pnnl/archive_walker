@@ -65,9 +65,9 @@
     <Compile Include="Models\OutOfRangeDetector.cs" />
     <Compile Include="Models\OutOfRangeEvent.cs" />
     <Compile Include="Models\OutOfRangeSignal.cs" />
+    <Compile Include="Models\ReadExampleFileResults.cs" />
     <Compile Include="Models\PMUSignals.cs" />
     <Compile Include="Models\RDRerunResults.cs" />
-    <Compile Include="Models\ReadExampleFileResults.cs" />
     <Compile Include="Models\RingdownDetector.cs" />
     <Compile Include="Models\RingDownEvent.cs" />
     <Compile Include="Models\RingdownSignal.cs" />

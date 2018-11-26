@@ -394,7 +394,8 @@ Namespace ViewModels
                                                                                                     {TunableFilterType.HighPass, {"Order", "Cutoff"}.ToList()},
                                                                                                     {TunableFilterType.LowPass, {"PassRipple", "StopRipple", "PassCutoff", "StopCutoff"}.ToList()},
                                                                                                     {TunableFilterType.FrequencyDerivation, New List(Of String)()},
-                                                                                                    {TunableFilterType.RunningAverage, {"RemoveAve", "WindowLength"}.ToList()}}
+                                                                                                    {TunableFilterType.RunningAverage, {"RemoveAve", "WindowLength"}.ToList()},
+                                                                                                    {TunableFilterType.PointOnWavePower, {"WindowLength"}.ToList()}}
             '{TunableFilterType.Median, {"Order", "Endpoints", "HandleNaN"}.ToList()}}
             InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
@@ -402,6 +403,7 @@ Namespace ViewModels
             ThisStepOutputsAsSignalHierachyByPMU = New SignalTypeHierachy(New SignalSignatureViewModel)
             _outputInputMappingPair = New ObservableCollection(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel)))
             _model = New TunableFilterModel()
+            _powInputSignals = New PointOnWaveCalFilterInputSignals
             Type = TunableFilterType.Rational
             IsExpanded = False
             _order = 1
@@ -430,35 +432,73 @@ Namespace ViewModels
                 Else
                     Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
-                Dim output As SignalSignatureViewModel = Nothing
-                If _model.UseCustomPMU Then
-                    output = New SignalSignatureViewModel(signal.CustSignalName, signal.PMUName)
-                    output.IsCustomSignal = True
-                    If input.IsValid Then
-                        output.TypeAbbreviation = input.TypeAbbreviation
-                        output.Unit = input.Unit
-                        output.SamplingRate = input.SamplingRate
+                If _model.Type <> TunableFilterType.PointOnWavePower Then
+                    Dim output As SignalSignatureViewModel = Nothing
+                    If _model.UseCustomPMU Then
+                        output = New SignalSignatureViewModel(signal.CustSignalName, _model.CustPMUName)
+                        output.IsCustomSignal = True
+                        If input.IsValid Then
+                            output.TypeAbbreviation = input.TypeAbbreviation
+                            output.Unit = input.Unit
+                            output.SamplingRate = input.SamplingRate
+                        End If
+                        output.OldUnit = output.Unit
+                        output.OldTypeAbbreviation = output.TypeAbbreviation
+                        output.OldSignalName = output.SignalName
+                    Else
+                        input.PassedThroughProcessor = input.PassedThroughProcessor + 1
+                        output = input
                     End If
-                    output.OldUnit = output.Unit
-                    output.OldTypeAbbreviation = output.TypeAbbreviation
-                    output.OldSignalName = output.SignalName
-                Else
-                    output = input
+                    OutputChannels.Add(output)
+                    Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
+                    newPair.Value.Add(input)
+                    OutputInputMappingPair.Add(newPair)
                 End If
-                OutputChannels.Add(output)
-                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
-                newPair.Value.Add(input)
-                OutputInputMappingPair.Add(newPair)
             Next
+            If _model.Type = TunableFilterType.PointOnWavePower Then
+                PhaseShiftV = _model.PointOnWavePowerCalculationFilterParam.PhaseShiftV
+                PhaseShiftI = _model.PointOnWavePowerCalculationFilterParam.PhaseShiftI
+                Dim freq = -1
+                For Each signal In InputChannels
+                    If freq = -1 AndAlso signal.SamplingRate <> -1 Then
+                        freq = signal.SamplingRate
+                    End If
+                    Select Case signal.SignalName
+                        Case _model.PointOnWavePowerCalculationFilterParam.VA
+                            POWInputSignals.PhaseAVoltage = signal
+                        Case _model.PointOnWavePowerCalculationFilterParam.VB
+                            POWInputSignals.PhaseBVoltage = signal
+                        Case _model.PointOnWavePowerCalculationFilterParam.VC
+                            POWInputSignals.PhaseCVoltage = signal
+                        Case _model.PointOnWavePowerCalculationFilterParam.IA
+                            POWInputSignals.PhaseACurrent = signal
+                        Case _model.PointOnWavePowerCalculationFilterParam.IB
+                            POWInputSignals.PhaseBCurrent = signal
+                        Case _model.PointOnWavePowerCalculationFilterParam.IC
+                            POWInputSignals.PhaseCCurrent = signal
+                        Case Else
+
+                    End Select
+                Next
+                Dim output1 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Pname, CustPMUName, "OTHER")
+                output1.SamplingRate = freq
+                Dim output2 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Qname, CustPMUName, "OTHER")
+                output2.SamplingRate = freq
+                Dim output3 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Fname, CustPMUName, "F")
+                output3.SamplingRate = freq
+                OutputChannels.Add(output1)
+                OutputChannels.Add(output2)
+                OutputChannels.Add(output3)
+            End If
             'Try
             '    InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
             'Catch ex As Exception
             '    Throw New Exception("Error finding signal in step: " & Name)
             'End Try
-            For Each signal In InputChannels
-                signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
-                OutputChannels.Add(signal)
-            Next
+            'For Each signal In InputChannels
+            '    signal.PassedThroughProcessor = signal.PassedThroughProcessor + 1
+            '    OutputChannels.Add(signal)
+            'Next
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
@@ -498,10 +538,80 @@ Namespace ViewModels
             End Get
             Set(value As TunableFilterType)
                 If _model.Type <> value Then
+                    'if switching from point wave to other type, it must be using custom pmu already, no need to reduce passthroughfilter count, but need to clear output to get rid of p and q, and establish input out put pairs
+                    If _model.Type = TunableFilterType.PointOnWavePower Then
+                        OutputChannels.Clear()
+                        OutputInputMappingPair.Clear()
+                        For Each signal In InputChannels
+                            Dim newOutput = New SignalSignatureViewModel(signal.SignalName)
+                            If String.IsNullOrEmpty(CustPMUName) Then
+                                'Throw New Exception("Please enter a PMU name for this multirate step.")
+                            Else
+                                newOutput.PMUName = CustPMUName
+                            End If
+                            newOutput.TypeAbbreviation = signal.TypeAbbreviation
+                            newOutput.IsCustomSignal = True
+                            newOutput.Unit = signal.Unit
+                            newOutput.SamplingRate = signal.SamplingRate
+                            newOutput.OldSignalName = newOutput.SignalName
+                            newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                            newOutput.OldUnit = newOutput.Unit
+                            OutputChannels.Add(newOutput)
+                            Dim kvp = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newOutput, New ObservableCollection(Of SignalSignatureViewModel))
+                            kvp.Value.Add(signal)
+                            OutputInputMappingPair.Add(kvp)
+                        Next
+                    End If
                     _model.Type = value
-                    If _model.Type = TunableFilterType.FrequencyDerivation Then
+                    'if switching to freq derivation and point on wave, they must be custom pmu
+                    If _model.Type = TunableFilterType.FrequencyDerivation OrElse _model.Type = TunableFilterType.PointOnWavePower Then
                         OutputSignalStorage = OutputSignalStorageType.CreateCustomPMU
                     End If
+                    'if switching to point on wave, need to establish input from point on wave input structure and output from p and q
+                    If _model.Type = TunableFilterType.PointOnWavePower Then
+                        For Each signal In InputChannels
+                            signal.IsChecked = False
+                        Next
+                        InputChannels.Clear()
+                        OutputChannels.Clear()
+                        OutputInputMappingPair.Clear()
+                        If POWInputSignals.PhaseACurrent.SamplingRate <> -1 Then
+                            InputChannels.Add(POWInputSignals.PhaseACurrent)
+                        End If
+                        If POWInputSignals.PhaseAVoltage.SamplingRate <> -1 Then
+                            InputChannels.Add(POWInputSignals.PhaseAVoltage)
+                        End If
+                        If POWInputSignals.PhaseBCurrent.SamplingRate <> -1 Then
+                            InputChannels.Add(POWInputSignals.PhaseBCurrent)
+                        End If
+                        If POWInputSignals.PhaseBVoltage.SamplingRate <> -1 Then
+                            InputChannels.Add(POWInputSignals.PhaseBVoltage)
+                        End If
+                        If POWInputSignals.PhaseCCurrent.SamplingRate <> -1 Then
+                            InputChannels.Add(POWInputSignals.PhaseCCurrent)
+                        End If
+                        If POWInputSignals.PhaseCVoltage.SamplingRate <> -1 Then
+                            InputChannels.Add(POWInputSignals.PhaseCVoltage)
+                        End If
+                        Dim freq = -1
+                        For Each signal In InputChannels
+                            If signal.SamplingRate <> -1 Then
+                                freq = signal.SamplingRate
+                                Exit For
+                            End If
+                        Next
+                        Dim output1 = New SignalSignatureViewModel(Pname, CustPMUName, "OTHER")
+                        output1.SamplingRate = freq
+                        Dim output2 = New SignalSignatureViewModel(Qname, CustPMUName, "OTHER")
+                        output2.SamplingRate = freq
+                        Dim output3 = New SignalSignatureViewModel(Fname, CustPMUName, "F")
+                        output3.SamplingRate = freq
+                        OutputChannels.Add(output1)
+                        OutputChannels.Add(output2)
+                        OutputChannels.Add(output3)
+                    End If
+                    ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter.ToString & " - " & value.ToString() & " " & Name
+                    ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter.ToString & " - " & value.ToString() & " " & Name
                     OnPropertyChanged()
                 End If
             End Set
@@ -621,6 +731,7 @@ Namespace ViewModels
             Set(ByVal value As OutputSignalStorageType)
                 If _model.OutputSignalStorage <> value Then
                     _model.OutputSignalStorage = value
+                    'switch from overwrite original to create custom pmu, need to reduce passthroughfilter count and create output for each input signal
                     If value = OutputSignalStorageType.CreateCustomPMU Then
                         UseCustomPMU = True
                         OutputChannels.Clear()
@@ -646,6 +757,7 @@ Namespace ViewModels
                             OutputInputMappingPair.Add(kvp)
                         Next
                     Else
+                        'switch from custom pmu to overwrite original, need to increase passthroughfilter count and add the input signals to output so they will be over written.
                         UseCustomPMU = False
                         OutputChannels.Clear()
                         OutputInputMappingPair.Clear()
@@ -716,6 +828,163 @@ Namespace ViewModels
                 Return True
             End If
         End Function
+        Private _powInputSignals As PointOnWaveCalFilterInputSignals
+        Public Property POWInputSignals As PointOnWaveCalFilterInputSignals
+            Get
+                Return _powInputSignals
+            End Get
+            Set(ByVal value As PointOnWaveCalFilterInputSignals)
+                _powInputSignals = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _phaseShiftV As String
+        Public Property PhaseShiftV As String
+            Get
+                Return _model.PointOnWavePowerCalculationFilterParam.PhaseShiftV
+            End Get
+            Set(ByVal value As String)
+                If _model.PointOnWavePowerCalculationFilterParam.PhaseShiftV <> value Then
+                    _model.PointOnWavePowerCalculationFilterParam.PhaseShiftV = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _phaseShiftI As String
+        Public Property PhaseShiftI As String
+            Get
+                Return _model.PointOnWavePowerCalculationFilterParam.PhaseShiftI
+            End Get
+            Set(ByVal value As String)
+                If _model.PointOnWavePowerCalculationFilterParam.PhaseShiftI <> value Then
+                    _model.PointOnWavePowerCalculationFilterParam.PhaseShiftI = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _pName As String
+        Public Property Pname As String
+            Get
+                Return _model.PointOnWavePowerCalculationFilterParam.Pname
+            End Get
+            Set(ByVal value As String)
+                If _model.PointOnWavePowerCalculationFilterParam.Pname <> value Then
+                    _model.PointOnWavePowerCalculationFilterParam.Pname = value
+                    OutputChannels(0).SignalName = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _qName As String
+        Public Property Qname As String
+            Get
+                Return _model.PointOnWavePowerCalculationFilterParam.Qname
+            End Get
+            Set(ByVal value As String)
+                If _model.PointOnWavePowerCalculationFilterParam.Qname <> value Then
+                    _model.PointOnWavePowerCalculationFilterParam.Qname = value
+                    OutputChannels(1).SignalName = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _fName As String
+        Public Property Fname As String
+            Get
+                Return _model.PointOnWavePowerCalculationFilterParam.Fname
+            End Get
+            Set(ByVal value As String)
+                If _model.PointOnWavePowerCalculationFilterParam.Fname <> value Then
+                    _model.PointOnWavePowerCalculationFilterParam.Fname = value
+                    OutputChannels(2).SignalName = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+    End Class
+
+    Public Class PointOnWaveCalFilterInputSignals
+        Inherits ViewModelBase
+        Public Sub New()
+            _phaseAVoltage = New SignalSignatureViewModel
+            _phaseBVoltage = New SignalSignatureViewModel
+            _phaseCVoltage = New SignalSignatureViewModel
+            _phaseACurrent = New SignalSignatureViewModel
+            _phaseBCurrent = New SignalSignatureViewModel
+            _phaseCCurrent = New SignalSignatureViewModel
+        End Sub
+        Private _phaseAVoltage As SignalSignatureViewModel
+        Public Property PhaseAVoltage As SignalSignatureViewModel
+            Get
+                Return _phaseAVoltage
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _phaseAVoltage <> value Then
+                    _phaseAVoltage = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _phaseBVoltage As SignalSignatureViewModel
+        Public Property PhaseBVoltage As SignalSignatureViewModel
+            Get
+                Return _phaseBVoltage
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _phaseBVoltage <> value Then
+                    _phaseBVoltage = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _phaseCVoltage As SignalSignatureViewModel
+        Public Property PhaseCVoltage As SignalSignatureViewModel
+            Get
+                Return _phaseCVoltage
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _phaseCVoltage <> value Then
+                    _phaseCVoltage = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _phaseACurrent As SignalSignatureViewModel
+        Public Property PhaseACurrent As SignalSignatureViewModel
+            Get
+                Return _phaseACurrent
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _phaseACurrent <> value Then
+                    _phaseACurrent = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _phaseBCurrent As SignalSignatureViewModel
+        Public Property PhaseBCurrent As SignalSignatureViewModel
+            Get
+                Return _phaseBCurrent
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _phaseBCurrent <> value Then
+                    _phaseBCurrent = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _phaseCCurrent As SignalSignatureViewModel
+        Public Property PhaseCCurrent As SignalSignatureViewModel
+            Get
+                Return _phaseCCurrent
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _phaseCCurrent <> value Then
+                    _phaseCCurrent = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
     End Class
 
     Public Class Multirate
@@ -733,9 +1002,11 @@ Namespace ViewModels
             _filterChoice = "0"
         End Sub
 
+        Private Property signalsMgr As SignalManager
         Public Sub New(stp As MultirateModel, signalsMgr As SignalManager)
             Me.New
             Me._model = stp
+            signalsMgr = signalsMgr
             StepCounter = signalsMgr.GroupedSignalByProcessConfigStepsOutput.Count + 1
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & StepCounter & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & StepCounter & " - " & Name
@@ -808,14 +1079,17 @@ Namespace ViewModels
                 Return _model.NewRate
             End Get
             Set(value As String)
-                _model.NewRate = value
-                If Not String.IsNullOrEmpty(value) Then
-                    For Each signal In OutputChannels
-                        signal.SamplingRate = value
-                    Next
+                If _model.NewRate <> value Then
+                    _model.NewRate = value
+                    If Not String.IsNullOrEmpty(value) Then
+                        For Each signal In OutputChannels
+                            signal.SamplingRate = value
+                        Next
+                    End If
+                    ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList =
+                    OnPropertyChanged()
                 End If
-                'ThisStepOutputsAsSignalHierachyByPMU.SignalList =
-                OnPropertyChanged()
             End Set
         End Property
 
@@ -825,20 +1099,23 @@ Namespace ViewModels
                 Return _model.PElement
             End Get
             Set(value As String)
-                _model.PElement = value
-                Dim q = 1
-                Integer.TryParse(_qElement, q)
-                If q = 0 Then
-                    q = 1
+                If _model.PElement <> value Then
+                    _model.PElement = value
+                    Dim q = 1
+                    Integer.TryParse(_model.QElement, q)
+                    If q = 0 Then
+                        q = 1
+                    End If
+                    Dim p = 1
+                    Integer.TryParse(value, p)
+                    If p <> 0 Then
+                        For index = 0 To OutputChannels.Count - 1
+                            OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
+                        Next
+                    End If
+                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+                    OnPropertyChanged()
                 End If
-                Dim p = 1
-                Integer.TryParse(_pElement, p)
-                If p <> 0 Then
-                    For index = 0 To OutputChannels.Count - 1
-                        OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
-                    Next
-                End If
-                OnPropertyChanged()
             End Set
         End Property
 
@@ -848,20 +1125,23 @@ Namespace ViewModels
                 Return _model.QElement
             End Get
             Set(value As String)
-                _model.QElement = value
-                Dim p = 1
-                Integer.TryParse(_pElement, p)
-                If p = 0 Then
-                    p = 1
+                If _model.QElement <> value Then
+                    _model.QElement = value
+                    Dim p = 1
+                    Integer.TryParse(_model.PElement, p)
+                    If p = 0 Then
+                        p = 1
+                    End If
+                    Dim q = 1
+                    Integer.TryParse(value, q)
+                    If q <> 0 Then
+                        For index = 0 To OutputChannels.Count - 1
+                            OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
+                        Next
+                    End If
+                    'ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+                    OnPropertyChanged()
                 End If
-                Dim q = 1
-                Integer.TryParse(_qElement, q)
-                If q <> 0 Then
-                    For index = 0 To OutputChannels.Count - 1
-                        OutputChannels(index).SamplingRate = InputChannels(index).SamplingRate * p / q
-                    Next
-                End If
-                OnPropertyChanged()
             End Set
         End Property
 

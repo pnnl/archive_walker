@@ -202,6 +202,8 @@ namespace BAWGUI.ViewModels
                         SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                         SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                         SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        var cti = SettingsVM.CurrentTabIndex;
+                        SettingsVM.CurrentTabIndex = cti;
                         SettingsVM.CurrentSelectedStep = null;
                         e.SelectedRun.Model.DataFileDirectories = new List<string>();
                         foreach (var info in _signalMgr.FileInfo)

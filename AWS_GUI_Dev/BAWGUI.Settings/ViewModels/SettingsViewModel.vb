@@ -77,6 +77,7 @@ Namespace ViewModels
             _setCurrentPhasorCreationFocusedTextBox = New DelegateCommand(AddressOf _phasrCreationCurrentFocusedTextBoxChanged, AddressOf CanExecute)
             _readExampleFile = New DelegateCommand(AddressOf _parseExampleFile, AddressOf CanExecute)
             _updateExampleFile = New DelegateCommand(AddressOf _writeExampleFileAddressToConfig, AddressOf CanExecute)
+            _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox = New DelegateCommand(AddressOf _setCurrentPointOnWavePowerCalFilterInput, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
@@ -99,6 +100,7 @@ Namespace ViewModels
             _dummySignature = New SignalSignatureViewModel("", "", "")
             _dummySignature.Unit = ""
             _dummySignature.IsValid = False
+            _dummySignature.SamplingRate = -1
             _dummySignature.IsCustomSignal = True
             _dummySignature.OldSignalName = _dummySignature.SignalName
             _dummySignature.OldTypeAbbreviation = _dummySignature.TypeAbbreviation
@@ -901,7 +903,10 @@ Namespace ViewModels
         End Sub
 
         Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
-            If obj.FileType.ToString.ToLower = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower Then
+            Dim tp = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower
+            If obj.FileType.ToString.ToLower = tp Then
+                Return True
+            ElseIf obj.FileType = DataFileType.powHQ AndAlso tp = "mat" Then
                 Return True
             Else
                 Return False
@@ -1302,13 +1307,26 @@ Namespace ViewModels
                             _addLog("Error selecting signal(s) for detector " & _currentSelectedStep.Name & " ." & ex.Message)
                         End Try
                     ElseIf TypeOf _currentSelectedStep Is TunableFilter Then
-                        Try
-                            _changeSignalSelectionUnarySteps(obj)
-                            _determineSamplingRateCheckableStatus()
-                        Catch ex As Exception
-                            _keepOriginalSelection(obj)
-                            Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
-                        End Try
+                        If DirectCast(_currentSelectedStep, TunableFilter).Type = TunableFilterType.PointOnWavePower Then
+                            Try
+                                _changePointOnWavePowCalFltrInputSignal(obj)
+                                _checkPointOnWavePowCalFltrOutputSamplingRate(obj)
+                                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                                _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+                            Catch ex As Exception
+                                _keepOriginalSelection(obj)
+                                Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            End Try
+                        Else
+                            Try
+                                _changeSignalSelectionUnarySteps(obj)
+                                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                                _determineSamplingRateCheckableStatus()
+                            Catch ex As Exception
+                                _keepOriginalSelection(obj)
+                                Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            End Try
+                        End If
                     Else
                         Try
                             Select Case _currentSelectedStep.Name
@@ -1374,6 +1392,89 @@ Namespace ViewModels
             Else
                 _keepOriginalSelection(obj)
                 Forms.MessageBox.Show("Please select a step first!", "Error!", MessageBoxButtons.OK)
+            End If
+        End Sub
+
+        Private Sub _checkPointOnWavePowCalFltrOutputSamplingRate(obj As SignalTypeHierachy)
+            Dim freq = -1
+            For Each signal In CurrentSelectedStep.InputChannels
+                If signal.SamplingRate <> -1 Then
+                    freq = signal.SamplingRate
+                    Exit For
+                End If
+            Next
+            For Each signal In CurrentSelectedStep.OutputChannels
+                signal.SamplingRate = freq
+            Next
+        End Sub
+        Private Sub _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+            Dim freq = -1
+            For Each signal In CurrentSelectedStep.InputChannels
+                If signal.SamplingRate <> -1 Then
+                    freq = signal.SamplingRate
+                    Exit For
+                End If
+            Next
+            _signalMgr.DetermineSamplingRateCheckableStatus(_currentSelectedStep, _currentTabIndex, freq)
+        End Sub
+        Private Sub _changePointOnWavePowCalFltrInputSignal(obj As SignalTypeHierachy)
+            If obj.SignalList.Count > 0 Then
+                Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
+            Else
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseAVoltage" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseAVoltage)
+                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseAVoltage = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBVoltage" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBVoltage)
+                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseBVoltage = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCVoltage" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCVoltage)
+                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseCVoltage = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseACurrent" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseACurrent)
+                    CurrentSelectedStep.POWInputSignals.PhaseACurrent.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseACurrent = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseACurrent = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBCurrent" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBCurrent)
+                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseBCurrent = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCCurrent" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCCurrent)
+                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseCCurrent = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
             End If
         End Sub
 
@@ -2800,15 +2901,39 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _phasrCreationCurrentFocusedTextBoxChanged(obj As Object)
-            For Each signal In _currentSelectedStep.InputChannels
-                signal.IsChecked = False
-            Next
-            If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
-                obj(1).IsChecked = True
+            If _currentSelectedStep IsNot Nothing Then
+                For Each signal In _currentSelectedStep.InputChannels
+                    signal.IsChecked = False
+                Next
+                If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
+                    obj(1).IsChecked = True
+                End If
+                _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+                _currentInputOutputPair = obj(0)
             End If
-            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-            _currentInputOutputPair = obj(0)
         End Sub
+        Private _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
+        Public Property SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
+            Get
+                Return _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox
+            End Get
+            Set(ByVal value As ICommand)
+                _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox = value
+            End Set
+        End Property
+        Private Sub _setCurrentPointOnWavePowerCalFilterInput(obj As Object)
+            If _currentSelectedStep IsNot Nothing Then
+                For Each signal In _currentSelectedStep.InputChannels
+                    signal.IsChecked = False
+                Next
+                If obj(0) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(0).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(0).PMUName) Then
+                    obj(0).IsChecked = True
+                End If
+                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                _pointOnWavePowCalFltrInputSignalNeedToBeChanged = obj(1)
+            End If
+        End Sub
+        Private _pointOnWavePowCalFltrInputSignalNeedToBeChanged As String
 #End Region
 
         'Private Sub _dataConfigDetermineAllParentNodeStatus()
@@ -4137,7 +4262,11 @@ Namespace ViewModels
                             signal.PassedThroughDQFilter = signal.PassedThroughDQFilter - 1
                         Next
                     End If
-                    _deSelectAllDataConfigSteps()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        _deSelectAllDataConfigSteps()
+                    End If
                     CurrentSelectedStep = Nothing
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     DataConfigure.CollectionOfSteps = steps

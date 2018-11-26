@@ -42,7 +42,9 @@ namespace BAWGUI.Core.Models
         [Description("PDAT")]
         pdat,
         [Description("JSIS CSV")]
-        csv
+        csv,
+        [Description("HQ Point on Wave")]
+        powHQ
     }
 
     public enum ModeType
@@ -73,7 +75,9 @@ namespace BAWGUI.Core.Models
         [Description("Frequency Derivation")]
         FrequencyDerivation,
         [Description("Running Average")]
-        RunningAverage
+        RunningAverage,
+        [Description("Point on Wave Power Calculation")]
+        PointOnWavePower
     }
     public enum InterpolateType
     {

@@ -2,6 +2,7 @@
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
+Imports BAWGUI.Core.Models
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -486,7 +487,10 @@ Namespace ViewModels
                             signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
                         Next
                     End If
-                    _deSelectAllProcessConfigSteps()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    End If
+                    '_deSelectAllProcessConfigSteps()
                     _addLog("Step " & obj.StepCounter.ToString & ", " & obj.Name & " is deleted!")
                 Catch ex As Exception
                     MessageBox.Show("Error deleting a step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
@@ -681,6 +685,9 @@ Namespace ViewModels
                 If TypeOf CurrentSelectedStep Is Multirate OrElse (TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.UseCustomPMU) Then
                     CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                 End If
+                If TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.Type = TunableFilterType.PointOnWavePower Then
+                    _pointOnWavePowCalFltrInputSignalNeedToBeChanged = ""
+                End If
             End If
             If Not processStep.IsStepSelected Then
                 Try
@@ -809,7 +816,11 @@ Namespace ViewModels
                     End If
 
                     CurrentSelectedStep = processStep
-                    _determineSamplingRateCheckableStatus()
+                    If TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.Type = TunableFilterType.PointOnWavePower Then
+                        _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+                    Else
+                        _determineSamplingRateCheckableStatus()
+                    End If
                 Catch ex As Exception
                     MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                 End Try

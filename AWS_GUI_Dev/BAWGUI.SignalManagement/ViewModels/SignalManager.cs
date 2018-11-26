@@ -112,7 +112,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                             //MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
-                    else
+                    else if(item.FileType == DataFileType.pdat)
                     {
                         try
                         {
@@ -121,6 +121,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                         catch (Exception ex)
                         {
                             MissingExampleFile.Add(MissingExampleFile + "Error reading .pdat file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            _readExampleFile(aFileInfo, 3);
+                        }
+                        catch (Exception ex)
+                        {
+                            MissingExampleFile.Add(MissingExampleFile + "Error reading point on wave data:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                             //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
@@ -270,7 +282,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         //}
         //private void _readPDATFile(InputFileInfoViewModel aFileInfo)
         //{
-        //    var signalInformation = _engine.ReadPDATSampleFile(aFileInfo.ExampleFile);
+        //    var signalInformation = _engine.GetFileExample(aFileInfo.ExampleFile, 1);
         //    aFileInfo.SamplingRate = signalInformation.SamplingRate;
         //    ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
         //    for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
@@ -1057,7 +1069,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         throw new Exception("Error reading .csv file. " + ex.Message);
                     }
                 }
-                else
+                else if (model.Model.FileType == DataFileType.pdat)
                 {
                     try
                     {
@@ -1066,6 +1078,17 @@ namespace BAWGUI.SignalManagement.ViewModels
                     catch (Exception ex)
                     {
                         throw new Exception("Error reading .pdat file. " + ex.Message);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        _readExampleFile(model, 3);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading .mat file. " + ex.Message);
                     }
                 }
                 FileInfo.Add(model);

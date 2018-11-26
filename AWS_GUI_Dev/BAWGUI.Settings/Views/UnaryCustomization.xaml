@@ -74,10 +74,5 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
-        <!--<i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseLeftButtonUp">
-                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>-->
     </StackPanel>
 </UserControl>
