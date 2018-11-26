@@ -60,9 +60,9 @@ N = str2num(Parameters.WindowLength)*fs;
 
 b = 1/N*ones(N,1);
 
-FinalCondos = cell(1,5);
+FinalCondos = cell(1,6);
 if isempty(InitialCondos)
-    InitialCondos = cell(1,5);
+    InitialCondos = cell(1,6);
     
     % Calculate the initial conditions. Because this filter is so simple,
     % they can be obtained without actually running the filters:
@@ -85,18 +85,57 @@ end
 
 % Calculate frequency by taking the first order derivative of the voltage
 % angle
-[Freq,FinalCondos{5}] = filter([1,-1], 1, unwrap(-angle(vd+1i*vq)), InitialCondos{5});
+% First, calculate and unwrap the angle. If the final angle from the 
+% previous file is available, use it as the starting point for wrapping.
+if ~isempty(InitialCondos{5})
+    theta = unwrap([InitialCondos{5}; -angle(vd+1i*vq)]);
+    theta = theta(2:end);
+else
+    theta = unwrap(-angle(vd+1i*vq));
+end
+FinalCondos{5} = theta(end);
+[Freq,FinalCondos{6}] = filter([1,-1], 1, theta, InitialCondos{6});
 Freq = Freq*fs/(2*pi) + 60;
 
 S = (vd+1i*vq).*(id-1i*iq);
+
+% Determine units of output powers based on the units of the input voltages
+% and currents (assumes all voltage and current phases have the same units)
+if strcmp(PMU.Signal_Unit{SigIdx(1)},'V')
+    if strcmp(PMU.Signal_Unit{SigIdx(4)},'A')
+        % V and A -> W
+        Punit = 'W';
+        Qunit = 'VAR';
+    elseif strcmp(PMU.Signal_Unit{SigIdx(4)},'kA')
+        % V and kA -> kW
+        Punit = 'kW';
+        Qunit = 'kVAR';
+    else
+        error('Inputs to the point on wave power calculation must have units of V, kV, A, and kA');
+    end
+elseif strcmp(PMU.Signal_Unit{SigIdx(1)},'kV')
+    if strcmp(PMU.Signal_Unit{SigIdx(4)},'A')
+        % kV and A -> kW
+        Punit = 'kW';
+        Qunit = 'kVAR';
+    elseif strcmp(PMU.Signal_Unit{SigIdx(4)},'kA')
+        % kV and kA -> MW
+        Punit = 'MW';
+        Qunit = 'MVAR';
+    else
+        error('Inputs to the point on wave power calculation must have units of V, kV, A, and kA');
+    end
+else
+    error('Inputs to the point on wave power calculation must have units of V, kV, A, and kA');
+end
 
 P = sqrt(3)*real(S);
 Q = -sqrt(3)*imag(S);
 
 % Add the P and Q signals to the PMU
 PMU.Signal_Name = [PMU.Signal_Name Parameters.Pname Parameters.Qname Parameters.Fname];
-PMU.Signal_Type = [PMU.Signal_Type 'OTHER' 'OTHER' 'F'];
-PMU.Signal_Unit = [PMU.Signal_Unit 'O' 'O' 'Hz'];
+PMU.Signal_Type = [PMU.Signal_Type 'P' 'Q' 'F'];
+PMU.Signal_Unit = [PMU.Signal_Unit Punit Qunit 'Hz'];
 Flag = logical(sum(PMU.Flag(:,SigIdx,:),2));
 PMU.Flag = [PMU.Flag Flag Flag Flag];
 PMU.Data = [PMU.Data P Q Freq];

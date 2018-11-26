@@ -1,6 +1,6 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Tue Nov 13 12:35:51 2018
+* Date: Mon Nov 26 13:16:38 2018
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
@@ -214,6 +214,23 @@ namespace BAWSengine
 
 
     /// <summary>
+    /// Provides a single output, 3-input MWArrayinterface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <param name="MetaOnly">Input argument #3</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray GetFileExample(MWArray InputFile, MWArray FileType, MWArray MetaOnly)
+    {
+      return mcr.EvaluateFunction("GetFileExample", InputFile, FileType, MetaOnly);
+    }
+
+
+    /// <summary>
     /// Provides the standard 0-input MWArray interface to the GetFileExample MATLAB
     /// function.
     /// </summary>
@@ -261,6 +278,26 @@ namespace BAWSengine
     public MWArray[] GetFileExample(int numArgsOut, MWArray InputFile, MWArray FileType)
     {
       return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile, FileType);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input MWArray interface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <param name="MetaOnly">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] GetFileExample(int numArgsOut, MWArray InputFile, MWArray FileType, 
+                              MWArray MetaOnly)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile, FileType, MetaOnly);
     }
 
 

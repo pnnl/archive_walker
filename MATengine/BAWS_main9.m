@@ -724,24 +724,26 @@ while(~min(done))
         % and the 2 customization flags.
         PMU = DQandCustomization(PMU,PostProcessCustXML,NumPostProcessCustomStages,4);
         
-        if strcmp(RerunDetector,'RetrieveMode')
-            RetrievePMU = ConcatenatePMU(RetrievePMU,PMU);
-            if RetrievePMU(1).Signal_Time.Signal_datenum(end) >= datenum(ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode.Params.DateTimeEnd)
-                RerunStartTime = datenum(RerunStartTime);
-                RerunEndTime = datenum(RerunEndTime);
-                for PMUidx = 1:length(RetrievePMU)
-                    KeepIdx = find(RetrievePMU(PMUidx).Signal_Time.Signal_datenum >= RerunStartTime, 1) : find(RetrievePMU(PMUidx).Signal_Time.Signal_datenum <= RerunEndTime, 1, 'last');
-                    
-                    RetrievePMU(PMUidx).Data = RetrievePMU(PMUidx).Data(KeepIdx,:);
-                    RetrievePMU(PMUidx).Stat = RetrievePMU(PMUidx).Stat(KeepIdx,:);
-                    RetrievePMU(PMUidx).Flag = RetrievePMU(PMUidx).Flag(KeepIdx,:,:);
-                    RetrievePMU(PMUidx).Signal_Time.Time_String = RetrievePMU(PMUidx).Signal_Time.Time_String(KeepIdx);
-                    RetrievePMU(PMUidx).Signal_Time.Signal_datenum = RetrievePMU(PMUidx).Signal_Time.Signal_datenum(KeepIdx);
-                    RetrievePMU(PMUidx).Signal_Time.datetime = RetrievePMU(PMUidx).Signal_Time.datetime(KeepIdx);
+        if strcmp(RunMode,'Rerun')
+            if strcmp(RerunDetector,'RetrieveMode')
+                RetrievePMU = ConcatenatePMU(RetrievePMU,PMU);
+                if RetrievePMU(1).Signal_Time.Signal_datenum(end) >= datenum(ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode.Params.DateTimeEnd)
+                    RerunStartTime = datenum(RerunStartTime);
+                    RerunEndTime = datenum(RerunEndTime);
+                    for PMUidx = 1:length(RetrievePMU)
+                        KeepIdx = find(RetrievePMU(PMUidx).Signal_Time.Signal_datenum >= RerunStartTime, 1) : find(RetrievePMU(PMUidx).Signal_Time.Signal_datenum <= RerunEndTime, 1, 'last');
+
+                        RetrievePMU(PMUidx).Data = RetrievePMU(PMUidx).Data(KeepIdx,:);
+                        RetrievePMU(PMUidx).Stat = RetrievePMU(PMUidx).Stat(KeepIdx,:);
+                        RetrievePMU(PMUidx).Flag = RetrievePMU(PMUidx).Flag(KeepIdx,:,:);
+                        RetrievePMU(PMUidx).Signal_Time.Time_String = RetrievePMU(PMUidx).Signal_Time.Time_String(KeepIdx);
+                        RetrievePMU(PMUidx).Signal_Time.Signal_datenum = RetrievePMU(PMUidx).Signal_Time.Signal_datenum(KeepIdx);
+                        RetrievePMU(PMUidx).Signal_Time.datetime = RetrievePMU(PMUidx).Signal_Time.datetime(KeepIdx);
+                    end
+                    return
+                else
+                    continue
                 end
-                return
-            else
-                continue
             end
         end
         
