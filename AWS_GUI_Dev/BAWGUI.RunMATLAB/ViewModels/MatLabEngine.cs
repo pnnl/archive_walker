@@ -719,7 +719,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType));
+                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType, 1));
             }
             catch (Exception ex)
             {

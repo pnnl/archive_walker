@@ -29,8 +29,8 @@ namespace BAWGUI.ViewModels
             _settingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+            InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
         }
-
         //private void _settingsVM_SaveNewTasl(ref SettingsViewModel svm)
         //{
         //    throw new NotImplementedException();
@@ -142,9 +142,13 @@ namespace BAWGUI.ViewModels
             {
                 CurrentView = SettingsVM;
             }
-            else
+            else if((string)obj == "Results")
             {
                 CurrentView = ResultsVM;
+            }
+            else
+            {
+                CurrentView = _signalMgr;
             }
         }
         private ProjectsControlViewModel _projectControlVM;
@@ -158,6 +162,10 @@ namespace BAWGUI.ViewModels
             }
         }
         private SignalManager _signalMgr;
+        public SignalManager SignalMgr
+        {
+            get { return _signalMgr; }
+        }
         private void _onRunSelected(object sender, AWProjectViewModel e)
         {
             if (e != null)
@@ -223,6 +231,12 @@ namespace BAWGUI.ViewModels
         //{
         //    throw new NotImplementedException();
         //}
+        public ICommand InspectRawSignal { get; set; }
+        private void _inpsectRawInputSignals(object obj)
+        {
+            CurrentView = _signalMgr;
+            _signalMgr.GetRawSignalData(obj);
+        }
 
     }
 }

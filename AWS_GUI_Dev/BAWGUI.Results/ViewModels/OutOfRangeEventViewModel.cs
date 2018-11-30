@@ -37,21 +37,54 @@ namespace BAWGUI.Results.ViewModels
         {
             get { return _model.End; }
         }
-        public string Duration
+        public double? Duration
         {
-            get { return _model.Duration; }
+            get
+            {
+                try
+                {
+                    var s = Double.Parse(_model.Duration);
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
-        public string Extrema
+        public double? Extrema
         {
-            get { return _model.Extrema; }
+            get
+            {
+                try
+                {
+                    var s = Double.Parse(_model.Extrema);
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
-        public string ExtremaFactor
+        public double? ExtremaFactor
         {
-            get { return _model.ExtremaFactor; }
+            get
+            {
+                try
+                {
+                    var s = Double.Parse(_model.ExtremaFactor);
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
-        public string NumberOfChannels
+        public int NumberOfChannels
         {
-            get { return _model.Channels.Count.ToString(); }
+            get { return _model.Channels.Count; }
         }
         private List<OORChannelViewModel> _channels = new List<OORChannelViewModel>();
         public List<OORChannelViewModel> Channels

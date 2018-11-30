@@ -182,6 +182,10 @@ namespace BAWGUI.SignalManagement.ViewModels
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
 
+        public void GetRawSignalData(object obj)
+        {
+        }
+
         //private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         //{
         //    var csvReader = new CSVReader(aFileInfo.ExampleFile);
