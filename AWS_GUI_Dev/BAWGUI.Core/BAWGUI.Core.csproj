@@ -92,6 +92,7 @@
     <Compile Include="Models\AWRun.cs" />
     <Compile Include="Models\EnumDefinitions.cs" />
     <Compile Include="Models\IDetector.cs" />
+    <Compile Include="Models\ISignal.cs" />
     <Compile Include="Models\SignalSignatures.cs" />
     <Compile Include="ViewModels\BaseClassOrSharedClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

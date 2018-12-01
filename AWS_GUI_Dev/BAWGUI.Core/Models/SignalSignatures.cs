@@ -15,6 +15,7 @@ namespace BAWGUI.Core
             IsEnabled = true;
             IsCustomSignal = false;
             IsNameTypeUnitChanged = false;
+            Data = new List<double>();
         }
         public SignalSignatures(string pmu, string signal):this()
         {
@@ -36,5 +37,6 @@ namespace BAWGUI.Core
         public int SamplingRate { get; set; }
         public int PassedThroughDQFilter { get; set; }
         public int PassedThroughProcessor { get; set; }
+        public List<double> Data { get; set; }
     }
 }

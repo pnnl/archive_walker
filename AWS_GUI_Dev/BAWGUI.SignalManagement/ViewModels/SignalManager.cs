@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.CSVDataReader.CSVDataReader;
+using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
@@ -46,6 +47,8 @@ namespace BAWGUI.SignalManagement.ViewModels
             _groupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _reGroupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
+            SingalWithDataList = new ObservableCollection<SignalSignatureViewModel>();
+            _timeStampNumber = new List<double>();
 
             CleanUpSettingsSignals();
         }
@@ -150,7 +153,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         private void _readExampleFile(InputFileInfoViewModel aFileInfo, int fileType)
         {
             var signalInformation = _engine.GetFileExample(aFileInfo.ExampleFile, fileType);
-            aFileInfo.SamplingRate = signalInformation.SamplingRate;
+            //aFileInfo.SamplingRate = signalInformation.SamplingRate;
             ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
             for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
             {
@@ -159,7 +162,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 for (int idx2 = 0; idx2 < thisPMU.SignalNames.Count; idx2++)
                 {
                     var aSignal = new SignalSignatureViewModel();
-                    aSignal.SamplingRate = aFileInfo.SamplingRate;
+                    aSignal.SamplingRate = thisPMU.SamplingRate;
                     aSignal.PMUName = thisPMUName;
                     aSignal.SignalName = thisPMU.SignalNames[idx2];
                     aSignal.Unit = thisPMU.SignalUnits[idx2];
@@ -170,6 +173,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     newSignalList.Add(aSignal);
                 }
             }
+            aFileInfo.SamplingRate = signalInformation.PMUSignalsList[0].SamplingRate;
             aFileInfo.TaggedSignals = newSignalList;
             var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
             newSig.SamplingRate = aFileInfo.SamplingRate;
@@ -182,8 +186,76 @@ namespace BAWGUI.SignalManagement.ViewModels
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
 
-        public void GetRawSignalData(object obj)
+        public void GetSignalDataByTimeRange(ViewResolvingPlotModel pm, AWRunViewModel run)
         {
+            string start = null;
+            string end = null;
+            foreach (var ax in pm.Axes)
+            {
+                if (ax.IsHorizontal())
+                {
+                    start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss");
+                    end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
+                    break;
+                }
+            }
+            if (!string.IsNullOrEmpty(start) && ! string.IsNullOrEmpty(end))
+            {
+                try
+                {
+                    _engine.RetrieveDataCompletedEvent += _retrieveDataCompleted;
+                    _engine.RetrieveData(start, end, run);
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                }
+            }
+        }
+        private List<double> _timeStampNumber;
+        public ObservableCollection<SignalSignatureViewModel> SingalWithDataList = new ObservableCollection<SignalSignatureViewModel>();
+        private void _retrieveDataCompleted(object sender, ReadExampleFileResults e)
+        {
+            _timeStampNumber = e.TimeStampNumber;
+            SingalWithDataList = new ObservableCollection<SignalSignatureViewModel>();
+            foreach (var pmu in e.PMUSignalsList)
+            {
+                for (int index = 0; index < pmu.SignalCount; index++)
+                {
+                    var aSignal = SearchForSignalInTaggedSignals(pmu.PMUname, pmu.SignalNames[index]);
+                    if (aSignal.TypeAbbreviation == pmu.SignalTypes[index] && aSignal.Unit == pmu.SignalUnits[index] && aSignal.SamplingRate == pmu.SamplingRate)
+                    {
+                        //add data here
+                    }
+                    SingalWithDataList.Add(aSignal);
+                }
+            }
+        }
+        public void GetRawSignalData(InputFileInfoViewModel info)
+        {
+            if (info != null && File.Exists(info.ExampleFile) && Enum.IsDefined(typeof(DataFileType), info.FileType))
+            {
+                try
+                {
+                    _engine.RetrieveDataCompletedEvent += _retrieveDataCompleted;
+                    if (info.FileType == DataFileType.csv)
+                    {
+                        _engine.GetFileExampleSignalData(info.ExampleFile, 2);
+                    }
+                    else if (info.FileType == DataFileType.pdat)
+                    {
+                        _engine.GetFileExampleSignalData(info.ExampleFile, 1);
+                    }
+                    else
+                    {
+                        _engine.GetFileExampleSignalData(info.ExampleFile, 3);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                }
+            }
         }
 
         //private void _readCSVFile(InputFileInfoViewModel aFileInfo)

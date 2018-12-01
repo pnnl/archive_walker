@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using JSISCSVWriter;
 
 namespace BAWGUI.MATLABRunResults.Models
 {
-    public class OutOfRangeSignal : Signal
+    public class OutOfRangeSignal : ISignal
     {
         public OutOfRangeSignal()
         {
@@ -15,6 +16,14 @@ namespace BAWGUI.MATLABRunResults.Models
         public string Label;
         public bool IsByDuration { get; set; }
         public bool IsByROC { get; set; }
+
+        public string SignalName { get; set; }
+        public string PMUname { get; set; }
+        public string Type { get; set; }
+        public string Unit { get; set; }
+        public int SamplingRate { get; set; }
+        public List<double> TimeStampInSeconds { get; set; }
+        public List<double> Data { get; set; }
 
         public List<System.DateTime> TimeStamps;
         public List<double> TimeStampNumber;

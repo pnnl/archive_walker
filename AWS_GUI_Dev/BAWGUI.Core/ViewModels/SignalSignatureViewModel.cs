@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Utilities;
+using System.Collections.Generic;
 
 namespace BAWGUI.Core
 {
@@ -281,6 +282,16 @@ namespace BAWGUI.Core
             set
             {
                 _model.OldTypeAbbreviation = value;
+                OnPropertyChanged();
+            }
+        }
+        private List<double> _data;
+        public List<double> Data
+        {
+            get { return _data; }
+            set
+            {
+                _data = value;
                 OnPropertyChanged();
             }
         }

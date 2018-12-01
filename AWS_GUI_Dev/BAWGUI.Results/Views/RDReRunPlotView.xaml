@@ -22,10 +22,10 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <!--<StackPanel Orientation="Vertical">-->
-        <oxy:PlotView Grid.Row="0" Model="{Binding RDreRunPlotModel}" MinHeight="150" x:Name="RDReRunPlot" Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}">
+        <oxy:PlotView Grid.Row="0" Model="{Binding RDreRunPlotModel}" MinHeight="150" x:Name="RDReRunPlot" Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
             <oxy:PlotView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding}" Header="Go to Signal Inspection for this Time Range" CommandParameter=""/>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding RDreRunPlotModel}"/>
                 </ContextMenu>
             </oxy:PlotView.ContextMenu>
         </oxy:PlotView>
@@ -62,8 +62,20 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}" MinHeight="200" x:Name="RDSignalPlot"/>
-        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}" MinHeight="170" x:Name="RDThresholdRMSPlot"/>
+        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}" MinHeight="200" x:Name="RDSignalPlot" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
+        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}" MinHeight="170" x:Name="RDThresholdRMSPlot" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
         <!--</StackPanel>-->
     </Grid>
 </UserControl>

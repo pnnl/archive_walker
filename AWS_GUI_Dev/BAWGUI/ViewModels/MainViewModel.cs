@@ -10,6 +10,7 @@ using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using BAWGUI.ReadConfigXml;
 
 namespace BAWGUI.ViewModels
 {
@@ -30,6 +31,7 @@ namespace BAWGUI.ViewModels
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
             InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
+            InspectSignalByTimeRange = new RelayCommand(_inpsectAllSignalsByTimeRange);
         }
         //private void _settingsVM_SaveNewTasl(ref SettingsViewModel svm)
         //{
@@ -235,7 +237,25 @@ namespace BAWGUI.ViewModels
         private void _inpsectRawInputSignals(object obj)
         {
             CurrentView = _signalMgr;
-            _signalMgr.GetRawSignalData(obj);
+            var info = (InputFileInfoViewModel)obj;
+            _signalMgr.GetRawSignalData(info);
+        }
+        public ICommand InspectSignalByTimeRange { get; set; }
+        private void _inpsectAllSignalsByTimeRange(object obj)
+        {
+            CurrentView = _signalMgr;
+            var pm = obj as ViewResolvingPlotModel;
+            _signalMgr.GetSignalDataByTimeRange(pm, ResultsVM.Run);
+            //foreach (var ax in pm.Axes)
+            //{
+            //    if (ax.IsHorizontal())
+            //    {
+            //        var start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss");
+            //        var end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
+            //        _signalMgr.GetSignalDataByTimeRange(start, end, ResultsVM.Run);
+            //        break;
+            //    }
+            //}
         }
 
     }
