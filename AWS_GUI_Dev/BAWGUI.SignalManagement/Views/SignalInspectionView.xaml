@@ -4,9 +4,64 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BAWGUI.SignalManagement.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="{Binding Declare}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
+            <ScrollViewer>
+                <Grid Margin="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
+                        <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddPlot}" ToolTip="Add a plot">
+                            <Image Width="16" Height="16" Source="/BAWGUI.SignalManagement;component/MyResources/AddCommand.png" />
+                        </Button>
+                        <Label Content="Add a Plot" Margin="2" FontSize="18" FontWeight="Bold">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding AllPlotsDeSelected}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Label>
+                    </DockPanel>
+                    <ItemsControl ItemsSource="{Binding SignalPlots}" Grid.Row="1">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:ASignalPlotPanel/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Border Grid.Row="2" Margin="2">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ProcessConfigStepDeSelected}"/>-->
+                                <i:InvokeCommandAction Command="{Binding AllPlotsDeSelected}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <TextBlock></TextBlock>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+            <Grid Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Signal Selection Panel" Margin="2"/>
+                <local:SignalSelectionPanel Grid.Row="1" Margin="2"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

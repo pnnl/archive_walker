@@ -38,5 +38,6 @@ namespace BAWGUI.Core
         public int PassedThroughDQFilter { get; set; }
         public int PassedThroughProcessor { get; set; }
         public List<double> Data { get; set; }
+        public List<double> TimeStampNumber { get; set; }
     }
 }

@@ -25,5 +25,6 @@ namespace BAWGUI.MATLABRunResults.Models
 
         public int SignalLength { get; set; }
         public int SignalCount { get; set; }
+        public List<double> TimeStampNumber { get; set; }
     }
 }

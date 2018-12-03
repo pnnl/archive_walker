@@ -5,6 +5,8 @@ using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
+using OxyPlot;
+using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace BAWGUI.SignalManagement.ViewModels
 {
@@ -39,8 +42,11 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
             _engine = MatLabEngine.Instance;
+            _dataViewGroupMethods = new List<string>(new string[] { "View Signal by Type", "View Signal by PMU" });
+            AddPlot = new RelayCommand(_addAPlot);
+            _signalPlots = new ObservableCollection<SignalPlotPanel>();
+            UpdatePlot = new RelayCommand(_updatePlot);
         }
-
         public void cleanUp()
         {
             FileInfo = new ObservableCollection<InputFileInfoViewModel>();
@@ -48,7 +54,10 @@ namespace BAWGUI.SignalManagement.ViewModels
             _reGroupedRawSignalsByType = new ObservableCollection<SignalTypeHierachy>();
             _groupedRawSignalsByPMU = new ObservableCollection<SignalTypeHierachy>();
             SingalWithDataList = new ObservableCollection<SignalSignatureViewModel>();
-            _timeStampNumber = new List<double>();
+            //_timeStampNumber = new List<double>();
+            GroupedSignalsWithDataByPMU = new ObservableCollection<SignalTypeHierachy>();
+            GroupedSignalsWithDataByType = new ObservableCollection<SignalTypeHierachy>();
+            SignalPlots.Clear();
 
             CleanUpSettingsSignals();
         }
@@ -185,9 +194,10 @@ namespace BAWGUI.SignalManagement.ViewModels
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
-
+        #region DrawSignal
         public void GetSignalDataByTimeRange(ViewResolvingPlotModel pm, AWRunViewModel run)
         {
+            //SignalViewPlotModel = null;
             string start = null;
             string end = null;
             foreach (var ax in pm.Axes)
@@ -212,27 +222,175 @@ namespace BAWGUI.SignalManagement.ViewModels
                 }
             }
         }
-        private List<double> _timeStampNumber;
+        //private List<double> _timeStampNumber;
         public ObservableCollection<SignalSignatureViewModel> SingalWithDataList = new ObservableCollection<SignalSignatureViewModel>();
+        private ObservableCollection<SignalTypeHierachy> _groupedSignalsWithDataByPMU;
+        public ObservableCollection<SignalTypeHierachy> GroupedSignalsWithDataByPMU
+        {
+            get
+            {
+                return _groupedSignalsWithDataByPMU;
+            }
+            set
+            {
+                _groupedSignalsWithDataByPMU = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<SignalTypeHierachy> _groupedSignalsWithDataByType;
+        public ObservableCollection<SignalTypeHierachy> GroupedSignalsWithDataByType
+        {
+            get
+            {
+                return _groupedSignalsWithDataByType;
+            }
+            set
+            {
+                _groupedSignalsWithDataByType = value;
+                OnPropertyChanged();
+            }
+        }
         private void _retrieveDataCompleted(object sender, ReadExampleFileResults e)
         {
-            _timeStampNumber = e.TimeStampNumber;
+            //_timeStampNumber = e.TimeStampNumber;
             SingalWithDataList = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var pmu in e.PMUSignalsList)
             {
                 for (int index = 0; index < pmu.SignalCount; index++)
                 {
                     var aSignal = SearchForSignalInTaggedSignals(pmu.PMUname, pmu.SignalNames[index]);
-                    if (aSignal.TypeAbbreviation == pmu.SignalTypes[index] && aSignal.Unit == pmu.SignalUnits[index] && aSignal.SamplingRate == pmu.SamplingRate)
+                    if (aSignal != null && aSignal.TypeAbbreviation == pmu.SignalTypes[index] && aSignal.Unit == pmu.SignalUnits[index] && aSignal.SamplingRate == pmu.SamplingRate)
                     {
-                        //add data here
+                        aSignal.Data = pmu.Data.GetRange(index * pmu.SignalLength, pmu.SignalLength);
+                        aSignal.TimeStampNumber = pmu.TimeStampNumber;
+                        SingalWithDataList.Add(aSignal);
                     }
-                    SingalWithDataList.Add(aSignal);
+                    else
+                    {
+                        var newSignal = new SignalSignatureViewModel(pmu.SignalNames[index], pmu.PMUname, pmu.SignalTypes[index]);
+                        newSignal.SamplingRate = pmu.SamplingRate;
+                        newSignal.Unit = pmu.SignalUnits[index];
+                        newSignal.Data = pmu.Data.GetRange(index * pmu.SignalLength, pmu.SignalLength);
+                        newSignal.TimeStampNumber = pmu.TimeStampNumber;
+                        SingalWithDataList.Add(newSignal);
+                    }
                 }
             }
+            GroupedSignalsWithDataByPMU = SortSignalByPMU(SingalWithDataList);
+            GroupedSignalsWithDataByType = SortSignalByType(SingalWithDataList);
+        }
+        private string _selectedDataViewingGroupMethod;
+        public string SelectedDataViewingGroupMethod
+        {
+            get { return _selectedDataViewingGroupMethod; }
+            set
+            {
+                _selectedDataViewingGroupMethod = value;
+                OnPropertyChanged();
+            }
+        }
+        private List<string> _dataViewGroupMethods;
+        public List<string> DataviewGroupMethods
+        {
+            get { return _dataViewGroupMethods; }
+            set { _dataViewGroupMethods = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<SignalPlotPanel> _signalPlots;
+        public ObservableCollection<SignalPlotPanel> SignalPlots
+        {
+            set { _signalPlots = value;
+                OnPropertyChanged();
+            }
+            get { return _signalPlots; }
+        }
+        public ICommand AddPlot { get; set; }
+        private void _addAPlot(object obj)
+        {
+            var newPlot = new SignalPlotPanel();
+            newPlot.IsPlotSelected = true;
+            SignalPlots.Add(newPlot);
+        }
+        private SignalPlotPanel _selectedSignalPlotPanel;
+        public SignalPlotPanel SelectedSignalPlotPanel
+        {
+            get { return _selectedSignalPlotPanel; }
+            set
+            {
+                _selectedSignalPlotPanel = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand UpdatePlot { get; set; }
+        private void _updatePlot(object obj)
+        {
+            //SelectedSignalPlotPanel.Signals.Add();
+        }
+
+        //private SignalSignatureViewModel _selectedSignalToBeViewed;
+        //public SignalSignatureViewModel SelectedSignalToBeViewed
+        //{
+        //    get { return _selectedSignalToBeViewed; }
+        //    set
+        //    {
+        //        if (value != null && _selectedSignalToBeViewed != value)
+        //        {
+        //            _selectedSignalToBeViewed = value;
+        //            _drawSignal();
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
+        private void _drawSignals()
+        {
+            var AsignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+            OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Bottom,
+                MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true,
+            };
+            AsignalPlot.Axes.Add(timeXAxis);
+            OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Left,
+                //Title = SelectedSignalToBeViewed.TypeAbbreviation,
+                //Unit = SelectedSignalToBeViewed.Unit,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true
+            };
+            AsignalPlot.Axes.Add(yAxis);
+            foreach (var signal in SelectedSignalPlotPanel.Signals)
+            {
+                var newSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+                for (int i = 0; i < signal.Data.Count; i++)
+                {
+                    newSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.Data[i]));
+                }
+                newSeries.Title = signal.SignalName;
+                AsignalPlot.Series.Add(newSeries);
+            }
+            AsignalPlot.LegendPlacement = LegendPlacement.Outside;
+            AsignalPlot.LegendPosition = LegendPosition.RightMiddle;
+            AsignalPlot.LegendPadding = 0.0;
+            AsignalPlot.LegendSymbolMargin = 0.0;
+            AsignalPlot.LegendMargin = 0;
+
+            SelectedSignalPlotPanel.SignalViewPlotModel = AsignalPlot;
         }
         public void GetRawSignalData(InputFileInfoViewModel info)
         {
+            //SignalViewPlotModel = null;
             if (info != null && File.Exists(info.ExampleFile) && Enum.IsDefined(typeof(DataFileType), info.FileType))
             {
                 try
@@ -257,6 +415,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 }
             }
         }
+        #endregion
 
         //private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         //{
@@ -1551,6 +1710,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         {
             _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByType);
             _determineParentGroupedByTypeNodeStatus(GroupedRawSignalsByPMU);
+            _determineParentGroupedByTypeNodeStatus(ReGroupedRawSignalsByType);
             _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByType);
             _determineParentGroupedByTypeNodeStatus(AllDataConfigOutputGroupedByPMU);
             _determineParentGroupedByTypeNodeStatus(AllProcessConfigOutputGroupedByType);

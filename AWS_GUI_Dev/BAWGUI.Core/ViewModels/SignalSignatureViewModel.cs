@@ -232,11 +232,23 @@ namespace BAWGUI.Core
         // End Function
         public static bool operator ==(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
+            if ((object)x == null)
+            {
+                return (object)y == null;
+            }else if((object)y == null)
+            {
+                return false;
+            }
             return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
         }
         public static bool operator !=(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
-            return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
+            return !(x == y);
+            //if ((object)x == null)
+            //{
+            //    return y != null;
+            //}
+            //return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
         }
 
         public bool IsSignalInformationComplete()
@@ -288,10 +300,20 @@ namespace BAWGUI.Core
         private List<double> _data;
         public List<double> Data
         {
-            get { return _data; }
+            get { return _model.Data; }
             set
             {
-                _data = value;
+                _model.Data = value;
+                OnPropertyChanged();
+            }
+        }
+        private List<double> _timeStampNumber;
+        public List<double> TimeStampNumber
+        {
+            get { return _model.TimeStampNumber; }
+            set
+            {
+                _model.TimeStampNumber = value;
                 OnPropertyChanged();
             }
         }

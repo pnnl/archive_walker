@@ -238,14 +238,28 @@ namespace BAWGUI.ViewModels
         {
             CurrentView = _signalMgr;
             var info = (InputFileInfoViewModel)obj;
-            _signalMgr.GetRawSignalData(info);
+            try
+            {
+                _signalMgr.GetRawSignalData(info);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data for viewing from example file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
         }
         public ICommand InspectSignalByTimeRange { get; set; }
         private void _inpsectAllSignalsByTimeRange(object obj)
         {
             CurrentView = _signalMgr;
             var pm = obj as ViewResolvingPlotModel;
-            _signalMgr.GetSignalDataByTimeRange(pm, ResultsVM.Run);
+            try
+            {
+                _signalMgr.GetSignalDataByTimeRange(pm, ResultsVM.Run);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data for viewing from matlab retrieve data function. " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
             //foreach (var ax in pm.Axes)
             //{
             //    if (ax.IsHorizontal())

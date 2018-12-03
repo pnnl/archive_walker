@@ -15,7 +15,7 @@ namespace BAWGUI.MATLABRunResults.Models
         public ReadExampleFileResults()
         {
             PMUSignalsList = new List<PMUSignals>();
-            TimeStampNumber = new List<double>();
+            //TimeStampNumber = new List<double>();
         }
 
         public ReadExampleFileResults(MWStructArray rslt) : this()
@@ -24,7 +24,7 @@ namespace BAWGUI.MATLABRunResults.Models
         }
         //public int SamplingRate { get; set; }
         public List<PMUSignals> PMUSignalsList { get; set; }
-        public List<double> TimeStampNumber { get; set; }
+        //public List<double> TimeStampNumber { get; set; }
         public void GetSignals(MWStructArray rslt)
         {
             this._results = rslt;
@@ -96,9 +96,9 @@ namespace BAWGUI.MATLABRunResults.Models
                     string row = new string(Utility.GetRow(item, 0).ToArray());
                     newPMU.SignalUnits.Add(row);
                 }
-                if (index == 1)
-                {
-                    TimeStampNumber.Clear();
+                //if (index == 1)
+                //{
+                    //TimeStampNumber.Clear();
                     MWNumericArray narr = (MWNumericArray)_results["Signal_Time", index];
                     double[] t = (double[])(narr.ToVector(MWArrayComponent.Real));
 
@@ -106,15 +106,15 @@ namespace BAWGUI.MATLABRunResults.Models
                     //var timeStampNumbers = new List<double>();
                     //var timeStampNumbersInSeconds = new List<double>();
 
-                    foreach (var item in t)
-                    {
-                        //var tt = Utility.MatlabDateNumToDotNetDateTime(item);
-                        //timeStamps.Add(tt);
-                        TimeStampNumber.Add(item - 693960.0); // convert from matlab 0 day which is January 0, 0000 to microsoft 0 day which is midnight, 31 December 1899, by substracting the number of days in between them: 365 * 1900 - 1900 / 4 - 19 + 4, leap years are every 4 years, but not every 100 years and again, every 400 years.
+                foreach (var item in t)
+                {
+                    //var tt = Utility.MatlabDateNumToDotNetDateTime(item);
+                    //timeStamps.Add(tt);
+                    newPMU.TimeStampNumber.Add(item - 693960.0); // convert from matlab 0 day which is January 0, 0000 to microsoft 0 day which is midnight, 31 December 1899, by substracting the number of days in between them: 365 * 1900 - 1900 / 4 - 19 + 4, leap years are every 4 years, but not every 100 years and again, every 400 years.
                         //timeStampNumbers.Add(tt.ToOADate());
                         //timeStampNumbersInSeconds.Add(Utility.MatlabDateNumToDotNetSeconds(item));
-                    }
                 }
+                //}
                 var dataarr = (MWNumericArray)_results["Data", index];
                 int[] dimEach = dataarr.Dimensions;
                 if (dimEach.Length != 2)

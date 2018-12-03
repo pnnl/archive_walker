@@ -780,6 +780,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
         private void _workerRetrieveData_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            worker2.CancelAsync();
+            IsMatlabEngineRunning = false;
+            IsReRunRunning = false;
+            if (Run != null)
+            {
+                Run.IsTaskRunning = false;
+            }
             OnRetrieveDataCompletedEvent(e.Result as ReadExampleFileResults);
         }
 
