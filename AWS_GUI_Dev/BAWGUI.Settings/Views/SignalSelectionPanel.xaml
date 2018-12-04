@@ -122,7 +122,7 @@
                         <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Output from Data Quality and Customization by PMU">
                             <Setter Property="ItemsSource" Value="{Binding SignalMgr.AllDataConfigOutputGroupedByPMU}"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Input to MultiRate steps">
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="Input to MultiRate and Filtering steps">
                             <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByProcessConfigStepsInput}"/>
                         </DataTrigger>
                         <MultiDataTrigger>

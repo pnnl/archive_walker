@@ -31,6 +31,8 @@ else
             elseif(strcmpi(FileInfo(idx3).FileType, 'csv'))
                 % JSIS_CSV format
                 [PMUbyFileTemp,tPMU] = JSIS_CSV_2_Mat(focusFile{idx3},Num_Flags);
+            elseif(strcmpi(FileInfo(idx3).FileType, 'powHQ'))
+                [PMUbyFileTemp,tPMU] = POWreadHQ(focusFile{idx3},Num_Flags);
             end
             
             FailToRead = 0;

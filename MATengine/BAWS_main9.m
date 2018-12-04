@@ -65,8 +65,12 @@
 %   AdditionalOutputRerun - Cell array containing the AdditionalOutput
 %       output of the RunDetection function for each time the function was
 %       called. Only used in rerun mode; set to {} in normal mode.
+%   RetrievePMU - a structure array matching the configuration of the PMU
+%       structures used within the tool. Only used in rerun mode when
+%       RerunDetector == 'RetrieveMode'; set to [] in normal mode and rerun
+%       mode when RerunDetector specifies a detector.
 
-function [DetectionResultsRerun, AdditionalOutputRerun] = BAWS_main9(varargin)
+function [DetectionResultsRerun, AdditionalOutputRerun, RetrievePMU] = BAWS_main9(varargin)
 
 % Collect file paths
 %
@@ -140,6 +144,14 @@ if (nargin == 5) && (~Unpause)
 elseif ~Unpause
     RunMode = 'Rerun';
     
+    S = dir(fullfile([ControlPath '\Progress*']));
+    if length(S) == 1
+        delete(fullfile(S.folder,S.name))
+    end
+    if exist(ControlPath,'dir') == 7
+        csvwrite([ControlPath '\Progress_0.csv'],[]);
+    end
+    
     % Configuration file tied to results
     ConfigFile = varargin{5};
     % Start and end times specified by the user
@@ -172,7 +184,7 @@ elseif ~Unpause
 %     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],[]);
     
     % Error check on RerunDetector entry
-    if sum(strcmp(RerunDetector,[{'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
+    if sum(strcmp(RerunDetector,[{'RetrieveMode', 'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
         error([RerunDetector ' is not a valid detector name.']);
     end
     
@@ -207,8 +219,7 @@ elseif ~Unpause
                 AdditionalOutputRerun = {};
                 return
             end
-        else
-            strcmp(RerunDetector,'Thevenin')
+        elseif strcmp(RerunDetector,'Thevenin')
             % Load the SparsePMU corresponding to the Thevenin application.
             if isfield(DetectorXML,'Thevenin')
                 SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Thevenin');
@@ -271,13 +282,13 @@ elseif ~Unpause
     % FinalAngles, AdditionalOutputCondos
     load(StarterInitializationFile);
     %
-    RerunStartTime = datestr(RerunStartTimeDTadj,'mm/dd/yyyy HH:MM:SS');
+    RerunStartTimeAdj = datestr(RerunStartTimeDTadj,'mm/dd/yyyy HH:MM:SS');
 
     % Adjust ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode 
     % to select archive mode and the start and end times given by
     % RerunStartTime and RerunEndTime
     Mode.Name = 'Archive';
-    Mode.Params.DateTimeStart = RerunStartTime;
+    Mode.Params.DateTimeStart = RerunStartTimeAdj;
     Mode.Params.DateTimeEnd = RerunEndTime;
     ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode = Mode;
 
@@ -322,16 +333,17 @@ elseif ~Unpause
         tt = PMUbyFile{FileIdx}(1).Signal_Time.Signal_datenum;
         % Shift to the specified start time minus the length of the file
         % tt = datenum(RerunStartTime) + (tt - tt(1)) - ((tt(end)-tt(1)) + (tt(2)-tt(1)));
-        tt = datenum(RerunStartTime) + (tt-tt(end)-tt(2)+tt(1));
+        tt = datenum(RerunStartTimeAdj) + (tt-tt(end)-tt(2)+tt(1));
         % Convert to string
         ttStr = cellstr(datestr(tt,'mm/dd/yy HH:MM:SS.FFF'));
         for pmuIdx = 1:length(PMUbyFile{FileIdx})
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.Signal_datenum = tt;
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.Time_String = ttStr;
+            PMUbyFile{FileIdx}(pmuIdx).Signal_Time.datetime = datetime(tt,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
         end
     end
     
-    clear RerunStartTime RerunEndTime RerunStartTimeDT RerunDetector InitializationPathUser IDX StarterInitializationFile Mode
+    clear RerunStartTimeAdj RerunStartTimeDT InitializationPathUser IDX StarterInitializationFile Mode
 end
 
 FlagBitInput = 1; %Bit used to indicate flagged input data to be processed
@@ -344,6 +356,7 @@ NumFlagsProcessor = 4; % Number of bits used to indicate processed data that has
 % returned either way.
 DetectionResultsRerun = {};
 AdditionalOutputRerun = {};
+RetrievePMU = [];
 
 LastShortcutOverEmpty = 0;
 
@@ -378,6 +391,11 @@ while(~min(done))
     if (exist([ControlPath '\RunFlag.txt'],'file') == 0) && (~isempty(ControlPath))
         % The RunFlag file does not exist, so processing is to
         % pause/terminate
+        
+        S = dir(fullfile([ControlPath '\Progress*']));
+        if length(S) == 1
+            delete(fullfile(S.folder,S.name))
+        end
         
         % Check if the PauseFlag file exists
         if exist([ControlPath '\PauseFlag.txt'],'file') ~= 0
@@ -632,6 +650,7 @@ while(~min(done))
         if (LastShortcutOverEmpty == 1) && (ShortcutOverEmpty == 0) && ~isempty(SecondsToConcat) && ~isnan(SecondsToConcat)
             for PMUidx = 1:length(PMUconcat)
                 PMUconcat(PMUidx).Signal_Time.Time_String = cellstr(datestr(PMUconcat(PMUidx).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'));
+                PMUconcat(PMUidx).Signal_Time.datetime = datetime(PMUconcat(PMUidx).Signal_Time.Signal_datenum,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
             end
         end
         LastShortcutOverEmpty = ShortcutOverEmpty;
@@ -656,6 +675,14 @@ while(~min(done))
                 FileProgress = 100;
             end
             disp(['Progress through files: ' num2str(FileProgress) '%']);
+            
+            S = dir(fullfile([ControlPath '\Progress*']));
+            if length(S) == 1
+                delete(fullfile(S.folder,S.name))
+            end
+            if (FileProgress < 100) && (exist(ControlPath,'dir') == 7)
+                csvwrite([ControlPath '\Progress_' num2str(FileProgress) '.csv'],[]);
+            end
         end
         
         % Apply data quality filters and signal customizations
@@ -696,6 +723,30 @@ while(~min(done))
         % Num_Flags is hard coded as 4 to account for the 2 processor flags
         % and the 2 customization flags.
         PMU = DQandCustomization(PMU,PostProcessCustXML,NumPostProcessCustomStages,4);
+        
+        if strcmp(RunMode,'Rerun')
+            if strcmp(RerunDetector,'RetrieveMode')
+                RetrievePMU = ConcatenatePMU(RetrievePMU,PMU);
+                if RetrievePMU(1).Signal_Time.Signal_datenum(end) >= datenum(ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode.Params.DateTimeEnd)
+                    RerunStartTime = datenum(RerunStartTime);
+                    RerunEndTime = datenum(RerunEndTime);
+                    for PMUidx = 1:length(RetrievePMU)
+                        KeepIdx = find(RetrievePMU(PMUidx).Signal_Time.Signal_datenum >= RerunStartTime, 1) : find(RetrievePMU(PMUidx).Signal_Time.Signal_datenum <= RerunEndTime, 1, 'last');
+
+                        RetrievePMU(PMUidx).Data = RetrievePMU(PMUidx).Data(KeepIdx,:);
+                        RetrievePMU(PMUidx).Stat = RetrievePMU(PMUidx).Stat(KeepIdx,:);
+                        RetrievePMU(PMUidx).Flag = RetrievePMU(PMUidx).Flag(KeepIdx,:,:);
+                        RetrievePMU(PMUidx).Signal_Time.Time_String = RetrievePMU(PMUidx).Signal_Time.Time_String(KeepIdx);
+                        RetrievePMU(PMUidx).Signal_Time.Signal_datenum = RetrievePMU(PMUidx).Signal_Time.Signal_datenum(KeepIdx);
+                        RetrievePMU(PMUidx).Signal_Time.datetime = RetrievePMU(PMUidx).Signal_Time.datetime(KeepIdx);
+                    end
+                    return
+                else
+                    continue
+                end
+            end
+        end
+        
 %         PMU = GetOutputSignalsRev(PMU,ConfigSignalSelection);
         
         % *********
@@ -730,6 +781,7 @@ while(~min(done))
                 PMU(TrimIdx).Flag = PMU(TrimIdx).Flag(KeepIdx,:,:);
                 PMU(TrimIdx).Signal_Time.Signal_datenum = PMU(TrimIdx).Signal_Time.Signal_datenum(KeepIdx);
                 PMU(TrimIdx).Signal_Time.Time_String = PMU(TrimIdx).Signal_Time.Time_String(KeepIdx);
+                PMU(TrimIdx).Signal_Time.datetime = PMU(TrimIdx).Signal_Time.datetime(KeepIdx);
             end
             
             % Only need to do this once, so set WindowStartTime to empty so

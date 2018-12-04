@@ -120,6 +120,9 @@ namespace BAWGUI.ReadConfigXml
                             case "AngleConversion":
                                 CollectionOfSteps.Add(new AngleConversionCustModel(item));
                                 break;
+                            case "ReplicateSignal":
+                                CollectionOfSteps.Add(new SignalReplicationCustModel(item));
+                                break;
                             default:
                                 throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
                         }
@@ -174,7 +177,7 @@ namespace BAWGUI.ReadConfigXml
                     }
                     catch (Exception ex)
                     {
-                        throw ex;
+                        throw new Exception("Data Source Error.\nException message: " + ex.Message + "\nInner exception message: " + ex.InnerException.Message);
                     }
                     if (a != null)
                     {
@@ -226,12 +229,12 @@ namespace BAWGUI.ReadConfigXml
         public InputFileInfoModel()
         {
             FileDirectory = "";
-            FileType = "pdat";
+            FileType = DataFileType.pdat;
             Mnemonic = "";
             _exampleFile = "";
         }
         public string FileDirectory { get; set; }
-        public string FileType { get; set; }
+        public DataFileType FileType { get; set; }
         public string Mnemonic { get; set; }
         private string _exampleFile;
         public string ExampleFile
@@ -328,7 +331,17 @@ namespace BAWGUI.ReadConfigXml
     //    public string SignalName { get; set; }
     //}
 
-    public class PMUElementForUnaryCustModel
+    public class ToReplicate
+    {
+        public string PMUName { get; set; }
+        public string Channel { get; set; }
+    }
+    public class ToConvert : ToReplicate
+    {
+        public string NewUnit { get; set; }
+        public string SignalName { get; set; }
+    }
+    public class PMUElementForUnaryCustModel : ToReplicate
     {
         public PMUElementForUnaryCustModel()
         {
@@ -337,12 +350,9 @@ namespace BAWGUI.ReadConfigXml
         public PMUElementForUnaryCustModel(string pmu, string signalName, string custSignalName)
         {
             PMUName = pmu;
-            SignalName = signalName;
+            Channel = signalName;
             CustSignalName = custSignalName;
         }
-
-        public string PMUName { get; set; }
-        public string SignalName { get; set; }
         public string CustSignalName { get; set; }
     }
 

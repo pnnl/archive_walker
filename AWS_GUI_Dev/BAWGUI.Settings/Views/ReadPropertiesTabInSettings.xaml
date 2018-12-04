@@ -192,14 +192,14 @@
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
                                                     <Label Content="File Type:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
-                                                    <!--<ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
-                                                        <i:Interaction.Triggers>
+                                                    <!--<TextBox Text="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>-->
+                                                    <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                        <!--<i:Interaction.Triggers>
                                                             <i:EventTrigger EventName="SelectionChanged">
                                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
                                                             </i:EventTrigger>
-                                                        </i:Interaction.Triggers>
-                                                    </ComboBox>-->
+                                                        </i:Interaction.Triggers>-->
+                                                    </ComboBox>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5,0,0">
                                                     <Label Content="Mnemonic:" Margin="2" Width="100"/>

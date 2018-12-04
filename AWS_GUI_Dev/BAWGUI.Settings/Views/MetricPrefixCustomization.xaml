@@ -69,27 +69,39 @@
                                 </i:Interaction.Triggers>
                             </TextBox>-->
                             <xtlkt:WatermarkTextBox Focusable="True" Name="PMU" Width="120" Text="{Binding Path=Value[0].PMUName}" Margin="2,0" GotFocus="PMU_GotFocus_1" LostFocus="PMU_LostFocus" Foreground="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsReadOnly="True">
-                                <!--<i:Interaction.Triggers>
+                                <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
-                                </i:Interaction.Triggers>-->
+                                </i:Interaction.Triggers>
                             </xtlkt:WatermarkTextBox>
                             <xtlkt:WatermarkTextBox Focusable="True" Name="Channel" Width="250" Text="{Binding Path=Value[0].SignalName}" Margin="2,0" GotFocus="Channel_GotFocus_1" LostFocus="Channel_LostFocus" Foreground="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsReadOnly="True">
-                                <!--<i:Interaction.Triggers>
+                                <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
-                                </i:Interaction.Triggers>-->
+                                </i:Interaction.Triggers>
                             </xtlkt:WatermarkTextBox>
-                            <xtlkt:WatermarkTextBox Width="60" Text="{Binding Path=Value[0].OldUnit}" Margin="20,0"/>
-                            <ComboBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" HorizontalContentAlignment="Right" Margin="2,0" SelectedValue="{Binding Path=Key.Unit}" ItemsSource="{Binding Path=Value[0].TypeAbbreviation, Converter={StaticResource UnitMetricConverter}}"/>
+                            <xtlkt:WatermarkTextBox Width="60" Text="{Binding Path=Value[0].OldUnit}" Margin="20,0" GotFocus="PMU_GotFocus_1" LostFocus="PMU_LostFocus">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </xtlkt:WatermarkTextBox>
+                            <ComboBox Name="UnitCombobox" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" HorizontalContentAlignment="Right" Margin="2,0" SelectedValue="{Binding Path=Key.Unit}" ItemsSource="{Binding Path=Value[0].TypeAbbreviation, Converter={StaticResource UnitMetricConverter}}"/>
                             <!--<ComboBox.ItemsSource>
                                     <MultiBinding Converter="{StaticResource UnitMetricConverter}">
                                         <Binding Path="Value[0].Unit"/>
                                     </MultiBinding>
                                 </ComboBox.ItemsSource>-->
-                            <xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0"/>
+                            <xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0" GotFocus="PMU_GotFocus_1" LostFocus="PMU_LostFocus">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </xtlkt:WatermarkTextBox>
                             <!--<xtlkt:WatermarkTextBox Width="250" Text="{Binding Path=Key.SignalName}" Margin="2,0,0,0" Visibility="{Binding DataContext.UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>-->
                                 <!--<i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">

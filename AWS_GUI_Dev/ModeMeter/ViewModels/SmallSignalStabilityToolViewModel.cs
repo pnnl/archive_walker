@@ -246,5 +246,10 @@ namespace ModeMeter.ViewModels
                 }
             }
         }
+
+        public override bool CheckStepIsComplete()
+        {
+            return true;
+        }
     }
 }

@@ -142,14 +142,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRDReRunMode);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _workerRDReRun_RunWorkerCompleted;
-                worker.WorkerReportsProgress = true;
+                worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
+                worker2.DoWork += _progressReporter;
+                worker2.ProgressChanged += _worker_ProgressChanged;
+                worker2.RunWorkerCompleted += _progressReportsDone;
+                worker2.WorkerReportsProgress = true;
+                worker2.WorkerSupportsCancellation = true;
                 while (worker.IsBusy)
                 {
                     Thread.Sleep(500);
                 }
                 object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories };
                 worker.RunWorkerAsync(parameters);
+                worker2.RunWorkerAsync();
                 IsReRunRunning = true;
                 Run.IsTaskRunning = true;
                 //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
@@ -174,6 +180,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //}
         private void _workerRDReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            worker2.CancelAsync();
             IsMatlabEngineRunning = false;
             IsReRunRunning = false;
             Run.IsTaskRunning = false;
@@ -290,6 +297,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    _runNormalModeByBackgroundWalker();
         //}
         public BackgroundWorker worker = new BackgroundWorker();
+        public BackgroundWorker worker2 = new BackgroundWorker();
 
         //private void _runNormalMode(object sender, DoWorkEventArgs e)
         //{
@@ -398,10 +406,53 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             RunSelected?.Invoke(this, e);
         }
+        private int _reRunProgress;
+        public int ReRunProgress
+        {
+            get { return _reRunProgress; }
+            set
+            {
+                _reRunProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void _progressReporter(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker bwAsync = sender as BackgroundWorker;
+            while (!bwAsync.CancellationPending)
+            {
+                foreach (var f in Directory.GetFiles(Run.Model.ControlRerunPath))
+                {
+                    if (Path.GetExtension(f) == ".csv")
+                    {
+                        bwAsync.ReportProgress(Int32.Parse(Path.GetFileNameWithoutExtension(f).Split('_')[1]));
+                        break;
+                    }
+                }
+                Thread.Sleep(100);
+            }
+            //var i = 0;
+            //while (i < 101)
+            //{
+            //    bwAsync.ReportProgress(i);
+            //    i++;
+            //    Thread.Sleep(100);
+            //}
+            bwAsync.ReportProgress(100);
+            Thread.Sleep(200);
+        }
         private void _worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            //throw new NotImplementedException();
+            ReRunProgress = e.ProgressPercentage;
         }
+
+        private void _progressReportsDone(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //Thread.Sleep(10000);
+            ReRunProgress = 0;
+        }
+
         public void StopMatlabNormalRun()
         {
             if (IsMatlabEngineRunning || IsNormalRunPaused)
@@ -526,6 +577,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 PauseMatlabNormalRun();
             }
             worker = new BackgroundWorker();
+            worker2 = new BackgroundWorker();
             Run = run;
             _controlPath = run.Model.ControlRerunPath;
             _configFilePath = run.Model.ConfigFilePath;
@@ -533,16 +585,21 @@ namespace BAWGUI.RunMATLAB.ViewModels
             try
             {
                 worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runOORReRunMode);
-                worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _workerOORReRun_RunWorkerCompleted;
-                worker.WorkerReportsProgress = true;
+                worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
+                worker2.DoWork += _progressReporter;
+                worker2.ProgressChanged += _worker_ProgressChanged;
+                worker2.RunWorkerCompleted += _progressReportsDone;
+                worker2.WorkerReportsProgress = true;
+                worker2.WorkerSupportsCancellation = true;
                 while (worker.IsBusy)
                 {
                     Thread.Sleep(500);
                 }
                 object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories };
                 worker.RunWorkerAsync(parameters);
+                worker2.RunWorkerAsync();
                 IsReRunRunning = true;
                 Run.IsTaskRunning = true;
             }
@@ -552,9 +609,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
 
         }
-
         private void _workerOORReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            worker2.CancelAsync();
             IsMatlabEngineRunning = false;
             IsReRunRunning = false;
             Run.IsTaskRunning = false;
@@ -635,6 +692,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     dir.Delete();
                 }
+                worker2.CancelAsync();
                 //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
                 //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
                 //System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
@@ -783,9 +841,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
 
 
-        public PDATExampleResults ReadPDATSampleFile(string filename)
+        //public PDATExampleResults ReadPDATSampleFile(string filename)
+        public ReadExampleFileResults GetFileExample(string filename, int fileType)
         {
-            var PDATReadingResults = new PDATExampleResults();
+            var FileReadingResults = new ReadExampleFileResults();
 
             if (IsMatlabEngineRunning)
             {
@@ -794,7 +853,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                PDATReadingResults.GetSignals((MWStructArray)_matlabEngine.GetPDATexample(filename));
+                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType));
             }
             catch (Exception ex)
             {
@@ -802,7 +861,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
             IsMatlabEngineRunning = false;
-            return PDATReadingResults;
+            return FileReadingResults;
         }
     }
 }

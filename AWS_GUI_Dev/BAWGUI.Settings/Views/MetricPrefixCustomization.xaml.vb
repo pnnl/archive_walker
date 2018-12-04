@@ -73,7 +73,9 @@ Public Class MetricPrefixCustomization
     Private Sub PMU_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         For Each item In sender.Parent.Children
             'If item.Name = "PMU" Then
-            item.Background = Utility.HighlightColor
+            If item.Name <> "UnitCombobox" Then
+                item.Background = Utility.HighlightColor
+            End If
             'End If
             'If item.Name = "Channel" Then
             '    item.Background = Brushes.Yellow
@@ -84,7 +86,9 @@ Public Class MetricPrefixCustomization
     Private Sub Channel_MouseDown(sender As Object, e As MouseButtonEventArgs)
         For Each item In sender.Parent.Children
             'If item.Name = "PMU" Then
-            item.Background = Utility.HighlightColor
+            If item.Name <> "UnitCombobox" Then
+                item.Background = Utility.HighlightColor
+            End If
             'End If
             'If item.Name = "Channel" Then
             '    item.Background = Brushes.Yellow
@@ -94,25 +98,33 @@ Public Class MetricPrefixCustomization
 
     Private Sub PMU_GotFocus_1(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Utility.HighlightColor
+            If item.Name <> "UnitCombobox" Then
+                item.Background = Utility.HighlightColor
+            End If
         Next
     End Sub
 
     Private Sub Channel_GotFocus_1(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = Utility.HighlightColor
+            If item.Name <> "UnitCombobox" Then
+                item.Background = Utility.HighlightColor
+            End If
         Next
     End Sub
 
     Private Sub PMU_LostFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = New Media.SolidColorBrush(Colors.White)
+            If item.Name <> "UnitCombobox" Then
+                item.Background = New Media.SolidColorBrush(Colors.White)
+            End If
         Next
     End Sub
 
     Private Sub Channel_LostFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
-            item.Background = New Media.SolidColorBrush(Colors.White)
+            If item.Name <> "UnitCombobox" Then
+                item.Background = New Media.SolidColorBrush(Colors.White)
+            End If
         Next
     End Sub
 End Class

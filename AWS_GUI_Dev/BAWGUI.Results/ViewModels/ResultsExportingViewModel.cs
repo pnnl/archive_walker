@@ -50,6 +50,33 @@ namespace BAWGUI.Results.ViewModels
                 }
             }
         }
+
+        public ResultsExportingViewModel(List<RingdownDetector> reRunResult) : this()
+        {
+            RerunDetectors = new List<RerunResultDetectGeneral>();
+            foreach (var detector in reRunResult)
+            {
+                var newDetector = new RerunResultDetectGeneral();
+                newDetector.Label = detector.Label;
+                newDetector.SamplingRate = detector.SamplingRate;
+                newDetector.Unit = detector.Unit;
+                newDetector.Type = detector.Type;
+                RerunDetectors.Add(newDetector);
+                foreach (var signal in detector.RingdownSignals)
+                {
+                    var newSignal = new Signal();
+                    newSignal.Data = signal.Data;
+                    newSignal.TimeStampInSeconds = signal.TimeStampInSeconds;
+                    newSignal.PMUname = signal.PMUname;
+                    newSignal.SignalName = signal.SignalName;
+                    newSignal.Type = signal.Type;
+                    newSignal.Unit = signal.Unit;
+                    newSignal.SamplingRate = signal.SamplingRate;
+                    newDetector.SignalsList.Add(newSignal);
+                }
+            }
+        }
+
         public ICommand CancelExportData { get; set; }
         private void _cancelExport(object obj)
         {
