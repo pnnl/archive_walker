@@ -3,7 +3,7 @@
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.20</param.version>
+    <param.version>2.21</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -49,7 +49,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     <param.net.tsa.namespace />
     <param.net.tsa.superclass>GUI2MAT</param.net.tsa.superclass>
     <param.net.tsa.metadata />
-    <param.net.tsa.metadata.assembly>C:\Users\foll154\Documents\MATLAB</param.net.tsa.metadata.assembly>
+    <param.net.tsa.metadata.assembly>C:\Users\foll154\Documents\Central America FY17\AW\MM\Analysis</param.net.tsa.metadata.assembly>
     <param.net.saved.interface />
     <unset>
       <param.icon />
@@ -98,6 +98,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     <fileset.exports>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
@@ -110,6 +111,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
         <entity.class name="GUI2MAT">
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
@@ -264,7 +266,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2017A</root>
+      <root>c:\Program Files\MATLAB\R2017A</root>
       <toolboxes>
         <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />
