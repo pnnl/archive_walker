@@ -91,9 +91,6 @@
     <Compile Include="Views\SignalInspectionView.xaml.cs">
       <DependentUpon>SignalInspectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignalPlot.xaml.cs">
-      <DependentUpon>SignalPlot.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SignalSelectionPanel.xaml.cs">
       <DependentUpon>SignalSelectionPanel.xaml</DependentUpon>
     </Compile>
@@ -133,10 +130,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalInspectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SignalPlot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

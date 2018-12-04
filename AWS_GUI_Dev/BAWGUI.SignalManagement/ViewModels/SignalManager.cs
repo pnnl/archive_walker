@@ -46,6 +46,8 @@ namespace BAWGUI.SignalManagement.ViewModels
             AddPlot = new RelayCommand(_addAPlot);
             _signalPlots = new ObservableCollection<SignalPlotPanel>();
             UpdatePlot = new RelayCommand(_updatePlot);
+            PlotSelected = new RelayCommand(_plotSelectedToEdit);
+            DeleteAPlot = new RelayCommand(_deleteAPlot);
         }
         public void cleanUp()
         {
@@ -309,8 +311,9 @@ namespace BAWGUI.SignalManagement.ViewModels
         private void _addAPlot(object obj)
         {
             var newPlot = new SignalPlotPanel();
-            newPlot.IsPlotSelected = true;
+            //newPlot.IsPlotSelected = true;
             SignalPlots.Add(newPlot);
+            _plotSelectedToEdit(newPlot);
         }
         private SignalPlotPanel _selectedSignalPlotPanel;
         public SignalPlotPanel SelectedSignalPlotPanel
@@ -325,9 +328,60 @@ namespace BAWGUI.SignalManagement.ViewModels
         public ICommand UpdatePlot { get; set; }
         private void _updatePlot(object obj)
         {
+            var hk = obj as SignalTypeHierachy;
             //SelectedSignalPlotPanel.Signals.Add();
+            if ((bool)hk.SignalSignature.IsChecked)
+            {
+                _addSignalsToPlot(hk);
+            }
+            else
+            {
+                _removeSignalsFromPlot(hk);
+            }
+            _drawSignals();
         }
-
+        private void _removeSignalsFromPlot(SignalTypeHierachy obj)
+        {
+            if (SelectedSignalPlotPanel != null)
+            {
+                if (obj.SignalList.Count == 0 && SelectedSignalPlotPanel.Signals.Contains(obj.SignalSignature))
+                {
+                    SelectedSignalPlotPanel.Signals.Remove(obj.SignalSignature);
+                }
+                else
+                {
+                    foreach (var hk in obj.SignalList)
+                    {
+                        _removeSignalsFromPlot(hk);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No plot is selected to remove signal.");
+            }
+        }
+        private void _addSignalsToPlot(SignalTypeHierachy obj)
+        {
+            if (SelectedSignalPlotPanel != null)
+            {
+                if (obj.SignalList.Count == 0)
+                {
+                    SelectedSignalPlotPanel.Signals.Add(obj.SignalSignature);
+                }
+                else
+                {
+                    foreach (var hk in obj.SignalList)
+                    {
+                        _addSignalsToPlot(hk);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No plot is selected to add signal.");
+            }
+        }
         //private SignalSignatureViewModel _selectedSignalToBeViewed;
         //public SignalSignatureViewModel SelectedSignalToBeViewed
         //{
@@ -387,6 +441,32 @@ namespace BAWGUI.SignalManagement.ViewModels
             AsignalPlot.LegendMargin = 0;
 
             SelectedSignalPlotPanel.SignalViewPlotModel = AsignalPlot;
+        }
+        public ICommand PlotSelected { get; set; }
+        private void _plotSelectedToEdit(object obj)
+        {
+            var selection = obj as SignalPlotPanel;
+            if (SelectedSignalPlotPanel != selection)
+            {
+                if (SelectedSignalPlotPanel != null)
+                {
+                    SelectedSignalPlotPanel.IsPlotSelected = false;
+                    foreach (var s in SelectedSignalPlotPanel.Signals)
+                    {
+                        s.IsChecked = false;
+                    }
+                }
+                SelectedSignalPlotPanel = selection;
+                SelectedSignalPlotPanel.IsPlotSelected = true;
+                foreach (var s in SelectedSignalPlotPanel.Signals)
+                {
+                    s.IsChecked = true;
+                }
+            }
+        }
+        public ICommand DeleteAPlot { set; get; }
+        private void _deleteAPlot(object obj)
+        {
         }
         public void GetRawSignalData(InputFileInfoViewModel info)
         {

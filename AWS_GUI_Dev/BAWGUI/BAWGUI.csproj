@@ -158,6 +158,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanBackgroundConverter.cs" />
+    <Compile Include="Converters\RadioButtonViewConverter.cs" />
     <Compile Include="Converters\ViewVisibilityConverter.cs" />
     <Compile Include="ViewModels\AddProjectViewModel.cs" />
     <Compile Include="ViewModels\AddTaskViewModel.cs" />
