@@ -68,8 +68,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BAWSengine">
-      <HintPath>..\libs\BAWSengine.dll</HintPath>
+    <Reference Include="BAWSengine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MATengine\DLLs\BAWSengine_2_7\for_redistribution_files_only\BAWSengine.dll</HintPath>
     </Reference>
     <Reference Include="MWArray, Version=2.17.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -103,11 +104,18 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\RunMATLABViewModel.cs" />
+    <Compile Include="Views\ReRunProgressView.xaml.cs">
+      <DependentUpon>ReRunProgressView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RunNormalRunView.xaml.cs">
       <DependentUpon>RunNormalRunView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ReRunProgressView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RunNormalRunView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,7 +137,7 @@
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj">
-      <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
+      <Project>{967b98de-8ed1-4f8a-9c26-c3c9255f8eb8}</Project>
       <Name>BAWGUI.MATLABRunResults</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">

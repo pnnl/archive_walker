@@ -77,6 +77,7 @@ Namespace ViewModels
             _setCurrentPhasorCreationFocusedTextBox = New DelegateCommand(AddressOf _phasrCreationCurrentFocusedTextBoxChanged, AddressOf CanExecute)
             _readExampleFile = New DelegateCommand(AddressOf _parseExampleFile, AddressOf CanExecute)
             _updateExampleFile = New DelegateCommand(AddressOf _writeExampleFileAddressToConfig, AddressOf CanExecute)
+            _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox = New DelegateCommand(AddressOf _setCurrentPointOnWavePowerCalFilterInput, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
 
@@ -99,6 +100,7 @@ Namespace ViewModels
             _dummySignature = New SignalSignatureViewModel("", "", "")
             _dummySignature.Unit = ""
             _dummySignature.IsValid = False
+            _dummySignature.SamplingRate = -1
             _dummySignature.IsCustomSignal = True
             _dummySignature.OldSignalName = _dummySignature.SignalName
             _dummySignature.OldTypeAbbreviation = _dummySignature.TypeAbbreviation
@@ -763,7 +765,7 @@ Namespace ViewModels
             openFileDialog.RestoreDirectory = True
             openFileDialog.FileName = ""
             openFileDialog.DefaultExt = ".pdat"
-            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*"
+            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|All files (*.*)|*.*"
             If _lastInputFolderLocation Is Nothing Then
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory
             Else
@@ -810,91 +812,107 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
-            Dim dirs = New List(Of String)
-            For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                dirs.Add(info.FileDirectory)
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByType
-                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
-                    _signalMgr.GroupedRawSignalsByType.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In _signalMgr.ReGroupedRawSignalsByType
-                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
-                    _signalMgr.ReGroupedRawSignalsByType.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByPMU
-                If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
-                    _signalMgr.GroupedRawSignalsByPMU.Remove(group)
-                    Exit For
-                End If
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByType
-                If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
-                    Exit Sub
-                End If
-            Next
-            Dim exampleFile = obj.ExampleFile
-            If File.Exists(exampleFile) Then
-                Dim filetype As DataFileType
-                Try
-                    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
-                Catch ex As Exception
-                    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    Exit Sub
-                End Try
-                'Dim filename = ""
-                'Try
-                '    filename = Path.GetFileNameWithoutExtension(exampleFile)
-                'Catch ex As ArgumentException
-                '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                '    Exit Sub
-                'End Try
-                'Try
-                '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-                'Catch ex As Exception
-                '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                '    Exit Sub
-                'End Try
-                'Try
-                '    Dim fullPath = Path.GetDirectoryName(exampleFile)
-                '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-                '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-                '    obj.FileDirectory = twoLevelUp
-                'Catch ex As Exception
-                '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                '    Exit Sub
-                'End Try
-                If obj.FileType IsNot Nothing Then
-                    Try
-                        _signalMgr.AddRawSignalsFromADir(obj)
-                    Catch ex As Exception
-                        Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                        Exit Sub
-                    End Try
-                End If
-                Try
-                    _writeExampleFileAddressToConfig(exampleFile)
-                    Dim config = New ConfigFileReader(Run.Model.ConfigFilePath)
-                    _signalMgr.CleanUpSettingsSignals()
-                    DataConfigure = New DataConfig(config.DataConfigure, _signalMgr)
-                    ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
-                    PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
-                    DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
-                Catch ex As Exception
-                    Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
-                End Try
-                Run.Model.DataFileDirectories = New List(Of String)
-                For Each info In SignalMgr.FileInfo
-                    Run.Model.DataFileDirectories.Add(info.FileDirectory)
+            If (_checkDataFileMatch(obj)) Then
+                Dim dirs = New List(Of String)
+                For Each info In DataConfigure.ReaderProperty.InputFileInfos
+                    dirs.Add(info.FileDirectory)
                 Next
+                For Each group In _signalMgr.GroupedRawSignalsByType
+                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                        _signalMgr.GroupedRawSignalsByType.Remove(group)
+                        Exit For
+                    End If
+                Next
+                For Each group In _signalMgr.ReGroupedRawSignalsByType
+                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                        _signalMgr.ReGroupedRawSignalsByType.Remove(group)
+                        Exit For
+                    End If
+                Next
+                For Each group In _signalMgr.GroupedRawSignalsByPMU
+                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                        _signalMgr.GroupedRawSignalsByPMU.Remove(group)
+                        Exit For
+                    End If
+                Next
+                For Each group In _signalMgr.GroupedRawSignalsByType
+                    If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
+                        Exit Sub
+                    End If
+                Next
+                Dim exampleFile = obj.ExampleFile
+                If File.Exists(exampleFile) Then
+                    'Dim filetype As DataFileType
+                    'Try
+                    '    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
+                    'Catch ex As Exception
+                    '    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    'Dim filename = ""
+                    'Try
+                    '    filename = Path.GetFileNameWithoutExtension(exampleFile)
+                    'Catch ex As ArgumentException
+                    '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    'Try
+                    '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
+                    'Catch ex As Exception
+                    '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    'Try
+                    '    Dim fullPath = Path.GetDirectoryName(exampleFile)
+                    '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
+                    '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
+                    '    obj.FileDirectory = twoLevelUp
+                    'Catch ex As Exception
+                    '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                    '    Exit Sub
+                    'End Try
+                    If obj.FileType IsNot Nothing Then
+                        Try
+                            _signalMgr.AddRawSignalsFromADir(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            Exit Sub
+                        End Try
+                    End If
+                    Try
+                        _writeExampleFileAddressToConfig(exampleFile)
+                        Dim config = New ConfigFileReader(Run.Model.ConfigFilePath)
+                        _signalMgr.CleanUpSettingsSignals()
+                        DataConfigure = New DataConfig(config.DataConfigure, _signalMgr)
+                        ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
+                        PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
+                        DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
+                    Catch ex As Exception
+                        Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
+                    End Try
+                    Run.Model.DataFileDirectories = New List(Of String)
+                    For Each info In SignalMgr.FileInfo
+                        Run.Model.DataFileDirectories.Add(info.FileDirectory)
+                    Next
+                Else
+                    Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
+                End If
             Else
-                Forms.MessageBox.Show("Specified example file does not exits.", "Error!", MessageBoxButtons.OK)
+                Forms.MessageBox.Show("Selected example file type does not match selected data input file type.", "Error!", MessageBoxButtons.OK)
             End If
         End Sub
+
+        Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
+            Dim tp = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower
+            If obj.FileType.ToString.ToLower = tp Then
+                Return True
+            ElseIf obj.FileType = DataFileType.powHQ AndAlso tp = "mat" Then
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+
         Private _updateExampleFile As ICommand
         Public Property UpdateExampleFile As ICommand
             Get
@@ -904,10 +922,17 @@ Namespace ViewModels
                 _updateExampleFile = value
             End Set
         End Property
-
+        Event SaveNewTask(ByRef svm As SettingsViewModel)
         Private Sub _writeExampleFileAddressToConfig(exampleFilePath As String)
-            Dim writer = New ConfigFileWriter(Me, Run.Model)
-            writer.UpdateExampleFileAddress(exampleFilePath)
+            If Not File.Exists(Run.Model.ConfigFilePath) Then
+                RaiseEvent SaveNewTask(Me)
+            End If
+            If File.Exists(Run.Model.ConfigFilePath) Then
+                Dim writer = New ConfigFileWriter(Me, Run.Model)
+                writer.UpdateExampleFileAddress(exampleFilePath)
+            Else
+                Forms.MessageBox.Show("Task does not exist yet.", "Error!", MessageBoxButtons.OK)
+            End If
         End Sub
 
         'Private Sub _buildInputFileFolderTree(fileInfo As InputFileInfoViewModel)
@@ -1245,7 +1270,7 @@ Namespace ViewModels
                     _keepOriginalSelection(obj)
                     Forms.MessageBox.Show("Clicked item is not a valid signal, or contains no valid signal!", "Error!", MessageBoxButtons.OK)
                 Else
-                    If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
+                    If TypeOf _currentSelectedStep Is DQFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap OrElse TypeOf _currentSelectedStep Is NameTypeUnitPMU Then
                         Try
                             _changeSignalSelection(obj)
                             '_signalMgr.DetermineFileDirCheckableStatus()
@@ -1281,6 +1306,27 @@ Namespace ViewModels
                             Forms.MessageBox.Show("Error selecting signal(s) for detector " & _currentSelectedStep.Name & " ." & vbCrLf & ex.Message, "Error!", MessageBoxButtons.OK)
                             _addLog("Error selecting signal(s) for detector " & _currentSelectedStep.Name & " ." & ex.Message)
                         End Try
+                    ElseIf TypeOf _currentSelectedStep Is TunableFilter Then
+                        If DirectCast(_currentSelectedStep, TunableFilter).Type = TunableFilterType.PointOnWavePower Then
+                            Try
+                                _changePointOnWavePowCalFltrInputSignal(obj)
+                                _checkPointOnWavePowCalFltrOutputSamplingRate(obj)
+                                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                                _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+                            Catch ex As Exception
+                                _keepOriginalSelection(obj)
+                                Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            End Try
+                        Else
+                            Try
+                                _changeSignalSelectionUnarySteps(obj)
+                                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                                _determineSamplingRateCheckableStatus()
+                            Catch ex As Exception
+                                _keepOriginalSelection(obj)
+                                Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            End Try
+                        End If
                     Else
                         Try
                             Select Case _currentSelectedStep.Name
@@ -1303,14 +1349,12 @@ Namespace ViewModels
                                 Case "Exponential"
                                     _changeSignalSelectionUnarySteps(obj)
                                     _checkRaiseExpCustomizationOutputType()
-                                Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate", "Angle Conversion"
+                                Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate", "Angle Conversion", "Metric Prefix", "Duplicate Signals"
                                     _changeSignalSelectionUnarySteps(obj)
                                 ' For these 7 unary customization steps, the signal type and units of the input signal are applied to the output signal
                                 ' So, the type are applied while signals are added in the _changeSignalSelectionUnarySteps() subroutine
                                 ' Thus we don't need another subroutine to check output signal type
                                 ' However, if we encounter bugs due to type for these steps, we might want to add a subroutine: _checkUnaryCustomizationOutputType()
-                                Case "Metric Prefix"
-                                    _changeSignalSelectionUnarySteps(obj)
                                 Case "Angle Calculation"
                                     _changeSignalSelectionUnarySteps(obj)
                                     _checkAngleForComplexSignalCustomizationOutputType()
@@ -1348,6 +1392,89 @@ Namespace ViewModels
             Else
                 _keepOriginalSelection(obj)
                 Forms.MessageBox.Show("Please select a step first!", "Error!", MessageBoxButtons.OK)
+            End If
+        End Sub
+
+        Private Sub _checkPointOnWavePowCalFltrOutputSamplingRate(obj As SignalTypeHierachy)
+            Dim freq = -1
+            For Each signal In CurrentSelectedStep.InputChannels
+                If signal.SamplingRate <> -1 Then
+                    freq = signal.SamplingRate
+                    Exit For
+                End If
+            Next
+            For Each signal In CurrentSelectedStep.OutputChannels
+                signal.SamplingRate = freq
+            Next
+        End Sub
+        Private Sub _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+            Dim freq = -1
+            For Each signal In CurrentSelectedStep.InputChannels
+                If signal.SamplingRate <> -1 Then
+                    freq = signal.SamplingRate
+                    Exit For
+                End If
+            Next
+            _signalMgr.DetermineSamplingRateCheckableStatus(_currentSelectedStep, _currentTabIndex, freq)
+        End Sub
+        Private Sub _changePointOnWavePowCalFltrInputSignal(obj As SignalTypeHierachy)
+            If obj.SignalList.Count > 0 Then
+                Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
+            Else
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseAVoltage" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseAVoltage)
+                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseAVoltage = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBVoltage" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBVoltage)
+                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseBVoltage = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCVoltage" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCVoltage)
+                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseCVoltage = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseACurrent" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseACurrent)
+                    CurrentSelectedStep.POWInputSignals.PhaseACurrent.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseACurrent = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseACurrent = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBCurrent" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBCurrent)
+                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseBCurrent = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
+                If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCCurrent" Then
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCCurrent)
+                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent.IsChecked = False
+                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent = DummySignature
+                    If obj.SignalSignature.IsChecked Then
+                        CurrentSelectedStep.POWInputSignals.PhaseCCurrent = obj.SignalSignature
+                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    End If
+                End If
             End If
         End Sub
 
@@ -1519,12 +1646,13 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _recoverCheckStatusOfCurrentStep(obj As Object)
+            'why am I doing this? they should be checked already! Need to come back and think.........
             For Each signal In obj.InputChannels
                 signal.IsChecked = True
             Next
             '_dataConfigDetermineAllParentNodeStatus()
             _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-            If _currentSelectedStep IsNot Nothing Then
+            If _currentSelectedStep IsNot Nothing AndAlso TypeOf _currentSelectedStep Is Customization Then
                 _currentSelectedStep.CurrentCursor = ""
             End If
             _currentInputOutputPair = Nothing
@@ -1757,7 +1885,13 @@ Namespace ViewModels
                 ElseIf obj.SignalSignature.IsChecked AndAlso _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
                     Throw New Exception("Selected signal already in this step!")
                 Else
-                    Dim targetPairs = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where x.Key = _currentInputOutputPair.Value.Key Select x).ToList
+                    'Dim targetPairs = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where x.Key = _currentInputOutputPair.Value.Key Select x).ToList
+                    Dim targetPairs As List(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))) = Nothing
+                    If TypeOf _currentSelectedStep Is TunableFilter Then
+                        targetPairs = (From x In DirectCast(_currentSelectedStep, TunableFilter).OutputInputMappingPair Where x.Key = _currentInputOutputPair.Value.Key Select x).ToList
+                    Else
+                        targetPairs = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where x.Key = _currentInputOutputPair.Value.Key Select x).ToList
+                    End If
 
                     If targetPairs.Count = 1 Then
                         Dim oldInput = targetPairs.FirstOrDefault.Value.FirstOrDefault
@@ -1769,7 +1903,7 @@ Namespace ViewModels
                         If obj.SignalSignature.IsChecked Then
                             targetPairs.FirstOrDefault.Value.Add(obj.SignalSignature)
                             _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                            targetPairs.FirstOrDefault.Key.SignalName = "Cust_" & obj.SignalSignature.SignalName
+                            targetPairs.FirstOrDefault.Key.SignalName = obj.SignalSignature.SignalName
                             targetPairs.FirstOrDefault.Key.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
                             targetPairs.FirstOrDefault.Key.SamplingRate = obj.SignalSignature.SamplingRate
                             targetPairs.FirstOrDefault.Key.Unit = obj.SignalSignature.Unit
@@ -1785,10 +1919,10 @@ Namespace ViewModels
                 End If
             End If
 
-            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-            If TypeOf (_currentSelectedStep) Is Customization Then
-                _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
-            End If
+            '_currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+            'If TypeOf (_currentSelectedStep) Is Customization Then
+            '    _currentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+            'End If
             '_dataConfigDetermineAllParentNodeStatus()
             _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
             '_signalMgr.DetermineFileDirCheckableStatus()
@@ -2313,7 +2447,15 @@ Namespace ViewModels
                     _removeMatchingInputOutputSignalsUnary(child)
                 Next
             Else
-                Dim targetToRemove = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where x.Value(0).SignalName = obj.SignalSignature.SignalName Select x).ToList
+                Dim targetToRemove As List(Of KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))) = Nothing
+                If TypeOf _currentSelectedStep Is TunableFilter Then
+                    targetToRemove = (From x In DirectCast(_currentSelectedStep, TunableFilter).OutputInputMappingPair Where x.Value(0).SignalName = obj.SignalSignature.SignalName Select x).ToList
+                    If Not _currentSelectedStep.UseCustomPMU Then
+                        obj.SignalSignature.PassedThroughProcessor -= 1
+                    End If
+                Else
+                    targetToRemove = (From x In DirectCast(_currentSelectedStep, Customization).OutputInputMappingPair Where x.Value(0).SignalName = obj.SignalSignature.SignalName Select x).ToList
+                End If
                 For Each target In targetToRemove
                     _currentSelectedStep.OutputChannels.Remove(target.Key)
                     _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
@@ -2365,7 +2507,27 @@ Namespace ViewModels
                         End If
                     Next
                 Else
-                    If TypeOf _currentSelectedStep Is MetricPrefixCust Then
+                    If TypeOf _currentSelectedStep Is TunableFilter Then
+                        Dim newOutput = obj.SignalSignature
+                        If _currentSelectedStep.UseCustomPMU Then
+                            newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                            'newOutput.PMUName = _currentSelectedStep.CustPMUname
+                            newOutput.SamplingRate = obj.SignalSignature.SamplingRate
+                        Else
+                            newOutput.PassedThroughProcessor += 1
+                        End If
+                        newOutput.IsCustomSignal = True
+                        newOutput.OldUnit = newOutput.Unit
+                        newOutput.OldSignalName = newOutput.SignalName
+                        newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                        _currentSelectedStep.outputChannels.Add(newOutput)
+                        Dim targetkey = (From kvp In DirectCast(_currentSelectedStep, TunableFilter).OutputInputMappingPair Where kvp.Key = newOutput Select kvp Distinct).ToList()
+                        If targetkey.Count = 0 Then
+                            Dim kvp = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newOutput, New ObservableCollection(Of SignalSignatureViewModel))
+                            kvp.Value.Add(obj.SignalSignature)
+                            _currentSelectedStep.OutputInputMappingPair.Add(kvp)
+                        End If
+                    ElseIf TypeOf _currentSelectedStep Is MetricPrefixCust Then
                         Dim newOutput = obj.SignalSignature
                         'If _currentSelectedStep.UseCustomPMU Then
                         newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, obj.SignalSignature.PMUName, obj.SignalSignature.TypeAbbreviation)
@@ -2387,7 +2549,7 @@ Namespace ViewModels
                             _currentSelectedStep.OutputInputMappingPair.Add(kvp)
                         End If
                     Else
-                        Dim newOutput = New SignalSignatureViewModel("Cust_" & obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                        Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
                         newOutput.IsCustomSignal = True
                         newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         newOutput.Unit = obj.SignalSignature.Unit
@@ -2433,7 +2595,7 @@ Namespace ViewModels
                                 obj.SignalSignature.PassedThroughDQFilter = obj.SignalSignature.PassedThroughDQFilter + 1
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                             End If
-                            If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
+                            If TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
                                 obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor + 1
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                             End If
@@ -2490,13 +2652,29 @@ Namespace ViewModels
                                 End If
                                 _currentSelectedStep.OutputChannels.Add(obj.SignalSignature)
                             End If
+                            'If TypeOf _currentSelectedStep Is SignalReplicationCust Then
+                            '    Dim newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName)
+                            '    If String.IsNullOrEmpty(_currentSelectedStep.CustPMUName) Then
+                            '        'Throw New Exception("Please enter a PMU name for this multirate step.")
+                            '    Else
+                            '        newOutput.PMUName = _currentSelectedStep.CustPMUName
+                            '    End If
+                            '    newOutput.TypeAbbreviation = obj.SignalSignature.TypeAbbreviation
+                            '    newOutput.IsCustomSignal = True
+                            '    newOutput.Unit = obj.SignalSignature.Unit
+                            '    newOutput.SamplingRate = obj.SignalSignature.SamplingRate
+                            '    newOutput.OldSignalName = newOutput.SignalName
+                            '    newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
+                            '    newOutput.OldUnit = newOutput.Unit
+                            '    _currentSelectedStep.OutputChannels.Add(newOutput)
+                            'End If
                             _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
                         Else
                             If TypeOf _currentSelectedStep Is DQFilter Then
                                 obj.SignalSignature.PassedThroughDQFilter = obj.SignalSignature.PassedThroughDQFilter - 1
                                 _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
                             End If
-                            If TypeOf _currentSelectedStep Is TunableFilter OrElse TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
+                            If TypeOf _currentSelectedStep Is Wrap OrElse TypeOf _currentSelectedStep Is Interpolate OrElse TypeOf _currentSelectedStep Is Unwrap Then
                                 obj.SignalSignature.PassedThroughProcessor = obj.SignalSignature.PassedThroughProcessor - 1
                                 _currentSelectedStep.OutputChannels.Remove(obj.SignalSignature)
                             End If
@@ -2723,15 +2901,39 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _phasrCreationCurrentFocusedTextBoxChanged(obj As Object)
-            For Each signal In _currentSelectedStep.InputChannels
-                signal.IsChecked = False
-            Next
-            If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
-                obj(1).IsChecked = True
+            If _currentSelectedStep IsNot Nothing Then
+                For Each signal In _currentSelectedStep.InputChannels
+                    signal.IsChecked = False
+                Next
+                If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
+                    obj(1).IsChecked = True
+                End If
+                _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+                _currentInputOutputPair = obj(0)
             End If
-            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-            _currentInputOutputPair = obj(0)
         End Sub
+        Private _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
+        Public Property SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
+            Get
+                Return _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox
+            End Get
+            Set(ByVal value As ICommand)
+                _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox = value
+            End Set
+        End Property
+        Private Sub _setCurrentPointOnWavePowerCalFilterInput(obj As Object)
+            If _currentSelectedStep IsNot Nothing Then
+                For Each signal In _currentSelectedStep.InputChannels
+                    signal.IsChecked = False
+                Next
+                If obj(0) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(0).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(0).PMUName) Then
+                    obj(0).IsChecked = True
+                End If
+                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                _pointOnWavePowCalFltrInputSignalNeedToBeChanged = obj(1)
+            End If
+        End Sub
+        Private _pointOnWavePowCalFltrInputSignalNeedToBeChanged As String
 #End Region
 
         'Private Sub _dataConfigDetermineAllParentNodeStatus()
@@ -3345,6 +3547,8 @@ Namespace ViewModels
                         newCustomization = New MetricPrefixCust
                     Case "Angle Conversion"
                         newCustomization = New AngleConversionCust
+                    Case "Duplicate Signals"
+                        newCustomization = New SignalReplicationCust
                     Case Else
                         Throw New Exception("Customization step not supported!")
                 End Select
@@ -3443,6 +3647,25 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _stepSelectedToEdit(processStep As Object)
+
+
+            If processStep IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    Forms.MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+            End If
+
+
+
+
             ' if processStep is already selected, then the selection is not changed, nothing needs to be done.
             ' however, if processStep is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
             If Not processStep.IsStepSelected Then
@@ -3467,10 +3690,10 @@ Namespace ViewModels
                         End If
                         If stp.StepCounter < lastNumberOfSteps Then
                             If TypeOf (stp) Is Customization Then
-                                stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                                'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                                 stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                             End If
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                            'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If stp.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -3921,6 +4144,17 @@ Namespace ViewModels
         ''' </summary>
         Private Sub _deSelectAllDataConfigSteps()
             If _currentSelectedStep IsNot Nothing Then
+
+                If Not _currentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    Forms.MessageBox.Show("Missing field(s) in step : " + CurrentSelectedStep.Name + " , please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+
                 For Each signal In _currentSelectedStep.InputChannels
                     signal.IsChecked = False
                 Next
@@ -3931,12 +4165,14 @@ Namespace ViewModels
                 'End If
                 Dim stepsInputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
                 Dim stepsOutputAsSignalHierachy As New ObservableCollection(Of SignalTypeHierachy)
+
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
                 For Each stp In DataConfigure.CollectionOfSteps
                     If TypeOf (stp) Is Customization Then
-                        stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                        'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                         stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
                     End If
-                    stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                    'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                     stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                     'If TypeOf (stp) Is Customization Then
                     '    stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
@@ -3976,8 +4212,8 @@ Namespace ViewModels
 
                 '_signalMgr.DetermineFileDirCheckableStatus()
                 _determineSamplingRateCheckableStatus()
+                SignalSelectionTreeViewVisibility = "Visible"
             End If
-            SignalSelectionTreeViewVisibility = "Visible"
         End Sub
         Private Sub _changeCheckStatusAllParentsOfGroupedSignal(groups As ObservableCollection(Of SignalTypeHierachy), checkStatus As Boolean)
             For Each node In groups
@@ -4026,7 +4262,12 @@ Namespace ViewModels
                             signal.PassedThroughDQFilter = signal.PassedThroughDQFilter - 1
                         Next
                     End If
-                    _deSelectAllDataConfigSteps()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        _deSelectAllDataConfigSteps()
+                    End If
+                    CurrentSelectedStep = Nothing
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     DataConfigure.CollectionOfSteps = steps
                     SignalSelectionTreeViewVisibility = "Visible"
@@ -4292,6 +4533,10 @@ Namespace ViewModels
                     Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                 End Try
                 _oldTabIndex = _currentTabIndex
+                If CurrentSelectedStep IsNot Nothing Then
+                    CurrentSelectedStep.IsStepSelected = False
+                    CurrentSelectedStep = Nothing
+                End If
                 OnPropertyChanged()
             End Set
         End Property

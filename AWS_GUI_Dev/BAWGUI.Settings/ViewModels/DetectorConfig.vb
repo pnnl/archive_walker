@@ -181,6 +181,10 @@ Namespace ViewModels
             signalsMgr.GroupedSignalByDetectorInput.Add(ThisStepInputsAsSignalHerachyByType)
         End Sub
 
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
+
         Private _model As PeriodogramDetectorModel
         Public Property Model As PeriodogramDetectorModel
             Get
@@ -492,6 +496,10 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
     End Class
 
     Public Class RingdownDetector
@@ -577,6 +585,10 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
     End Class
 
     Public Class OutOfRangeGeneralDetector
@@ -631,6 +643,10 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
     End Class
 
     Public Class OutOfRangeFrequencyDetector
@@ -797,6 +813,10 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
     End Class
 
     Public Class WindRampDetector
@@ -956,6 +976,10 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
     End Class
 
     'Public Enum DetectorModeType
@@ -996,6 +1020,11 @@ Namespace ViewModels
             Me.New
             Me._model = detector
         End Sub
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
+
         Private _model As AlarmingSpectralCoherenceModel
         Public Property Model As AlarmingSpectralCoherenceModel
             Get
@@ -1074,6 +1103,9 @@ Namespace ViewModels
             Me.New
             Me._model = detector
         End Sub
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
         Private _model As AlarmingPeriodogramModel
         Public Property Model As AlarmingPeriodogramModel
             Get
@@ -1152,6 +1184,9 @@ Namespace ViewModels
             Me.New
             Me._model = detector
         End Sub
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
         Private _model As AlarmingRingdownModel
         Public Property Model As AlarmingRingdownModel
             Get

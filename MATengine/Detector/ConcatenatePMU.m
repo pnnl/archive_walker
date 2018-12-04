@@ -15,5 +15,6 @@ else
         PMUconcat(PMUidx).Flag = [PMUconcat(PMUidx).Flag; PMU(PMUidx).Flag];
         PMUconcat(PMUidx).Signal_Time.Time_String = [PMUconcat(PMUidx).Signal_Time.Time_String; PMU(PMUidx).Signal_Time.Time_String];
         PMUconcat(PMUidx).Signal_Time.Signal_datenum = [PMUconcat(PMUidx).Signal_Time.Signal_datenum; PMU(PMUidx).Signal_Time.Signal_datenum];
+        PMUconcat(PMUidx).Signal_Time.datetime = [PMUconcat(PMUidx).Signal_Time.datetime; PMU(PMUidx).Signal_Time.datetime];
     end
 end

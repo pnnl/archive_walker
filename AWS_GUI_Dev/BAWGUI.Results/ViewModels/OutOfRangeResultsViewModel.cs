@@ -286,6 +286,9 @@ namespace BAWGUI.Results.ViewModels
                     }
                     catch (Exception ex)
                     {
+                        Run.IsTaskRunning = false;
+                        Mouse.OverrideCursor = null;
+                        _engine.IsMatlabEngineRunning = false;
                         System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
                     }
                 }
@@ -331,7 +334,8 @@ namespace BAWGUI.Results.ViewModels
                     }
                     else
                     {
-                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                        //startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                        startTime = Convert.ToDateTime(SelectedStartTime);
                     }
                     endTime = detector.SparseSignals.Max(x => x.TimeStamps.LastOrDefault());
                 }

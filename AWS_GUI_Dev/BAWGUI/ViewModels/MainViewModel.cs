@@ -25,9 +25,16 @@ namespace BAWGUI.ViewModels
             MainViewSelected = new RelayCommand(_switchView);
             _projectControlVM.RunSelected += _onRunSelected;
             _signalMgr = SignalManager.Instance;
+            //_settingsVM.SaveNewTasl += _settingsVM_SaveNewTasl;
+            _settingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
         }
+
+        //private void _settingsVM_SaveNewTasl(ref SettingsViewModel svm)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private void _matlabEngineStatusChanged(object sender, bool e)
         {
@@ -155,6 +162,20 @@ namespace BAWGUI.ViewModels
         {
             if (e != null)
             {
+                //SettingsVM = new SettingsViewModel();
+                //RunMatlabVM = new RunMATLABViewModel();
+                //ResultsVM = new ResultsViewModel();
+                //SettingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
+                //RunMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+                //if (CurrentView is SettingsViewModel)
+                //{
+                //    CurrentView = SettingsVM;
+                //}
+                //else
+                //{
+                //    CurrentView = ResultsVM;
+                //}
+
                 SettingsVM.Project = e.Model;
                 //SettingsVM.Run = e.SelectedRun.Model;
                 ResultsVM.Project = e.Model;
@@ -181,6 +202,9 @@ namespace BAWGUI.ViewModels
                         SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                         SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                         SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        var cti = SettingsVM.CurrentTabIndex;
+                        SettingsVM.CurrentTabIndex = cti;
+                        SettingsVM.CurrentSelectedStep = null;
                         e.SelectedRun.Model.DataFileDirectories = new List<string>();
                         foreach (var info in _signalMgr.FileInfo)
                         {
@@ -190,7 +214,7 @@ namespace BAWGUI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    MessageBox.Show("Error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
             }
         }

@@ -11,8 +11,15 @@ namespace BAWGUI.Utilities
     {
         public static DateTime MatlabDateNumToDotNetDateTime(double item)
         {
+            //datetime object do not have microseconds resolution, so the number of ticks has to be manually calculated and added to the datetime object
+            //there are 10 ticks per microsecond            
             System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            System.DateTime bbb = dtDateTime.AddSeconds((item - 367) * 86400);
+            double milisec = item * 1000.0;
+            double diff = (milisec - 367000.0) * 86400.0;
+            System.DateTime bbb = dtDateTime.AddMilliseconds(diff);
+            double remainigTicks = (diff - Math.Floor(diff)) * 10000; //there are 10000 ticks per millisecond
+            long rt = (long)Math.Round(remainigTicks);
+            System.DateTime ccc = bbb.AddTicks(rt);
             return bbb;
         }
 
