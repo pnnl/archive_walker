@@ -3748,7 +3748,7 @@ Namespace ViewModels
                                 End If
                             End If
                         ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                            _disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
+                            '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
                         ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                             _disableEnableAllButAngleSignalsInDataConfig(True)
                         End If
@@ -3775,7 +3775,7 @@ Namespace ViewModels
                             End If
                         End If
                     ElseIf processStep.Name = "Metric Prefix" Then
-                        _disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(False)
+                        '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(False)
                     ElseIf processStep.Name = "Angle Conversion" Then
                         _disableEnableAllButAngleSignalsInDataConfig(False)
                     End If
@@ -4015,61 +4015,61 @@ Namespace ViewModels
                 Next
             Next
         End Sub
-        Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(isEnabled As Boolean)
-            For Each group In _signalMgr.GroupedRawSignalsByType
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-                            subgroup.SignalSignature.IsEnabled = isEnabled
-                        Else
-                            For Each subsubgroup In subgroup.SignalList
-                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByPMU
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        For Each subsubgroup In subgroup.SignalList
-                            'If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
-                                subsubgroup.SignalSignature.IsEnabled = isEnabled
-                            End If
-                        Next
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-                            subgroup.SignalSignature.IsEnabled = isEnabled
-                        Else
-                            For Each subsubgroup In subgroup.SignalList
-                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        For Each subsubgroup In subgroup.SignalList
-                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
-                                subsubgroup.SignalSignature.IsEnabled = isEnabled
-                            End If
-                        Next
-                    Next
-                Next
-            Next
-        End Sub
+        'Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(isEnabled As Boolean)
+        '    For Each group In _signalMgr.GroupedRawSignalsByType
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
+        '                    subgroup.SignalSignature.IsEnabled = isEnabled
+        '                Else
+        '                    For Each subsubgroup In subgroup.SignalList
+        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
+        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                        End If
+        '                    Next
+        '                End If
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.GroupedRawSignalsByPMU
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                For Each subsubgroup In subgroup.SignalList
+        '                    'If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
+        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
+        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                    End If
+        '                Next
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
+        '                    subgroup.SignalSignature.IsEnabled = isEnabled
+        '                Else
+        '                    For Each subsubgroup In subgroup.SignalList
+        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
+        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                        End If
+        '                    Next
+        '                End If
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                For Each subsubgroup In subgroup.SignalList
+        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
+        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                    End If
+        '                Next
+        '            Next
+        '        Next
+        '    Next
+        'End Sub
         'this function disables/enables or current and voltage signals, including phasor signals
         Private Sub _disableEnableAllButCurrentVoltageSignalsInDataConfig(isEnabled As Boolean)
             For Each group In _signalMgr.GroupedRawSignalsByType
@@ -4213,7 +4213,7 @@ Namespace ViewModels
                         End If
                     End If
                 ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                    _disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
+                    '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInDataConfig(True)
                 End If

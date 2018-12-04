@@ -22,42 +22,60 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <!--<StackPanel Orientation="Vertical">-->
-        <oxy:PlotView Grid.Row="0" Model="{Binding RDreRunPlotModel}" MinHeight="150" x:Name="RDReRunPlot" Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}"/>
+        <oxy:PlotView Grid.Row="0" Model="{Binding RDreRunPlotModel}" MinHeight="150" x:Name="RDReRunPlot" Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding RDreRunPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
         <ListView Grid.Row="1" ItemsSource="{Binding ThumbnailPlots}" SelectedItem="{Binding SelectedSignalPlotModel}"  Visibility="{Binding ThumbnailPlots.Count, Converter={StaticResource VisibleIfNotEqualToOneConverter}}">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderThickness="1,1,1,1" Margin="2">
-                            <Border.BorderBrush>
-                                <DrawingBrush Viewport="0,0,2,2" ViewportUnits="Absolute" TileMode="Tile">
-                                    <DrawingBrush.Drawing>
-                                        <DrawingGroup>
-                                            <GeometryDrawing Brush="Black">
-                                                <GeometryDrawing.Geometry>
-                                                    <GeometryGroup>
-                                                        <RectangleGeometry Rect="0,0,50,50" />
-                                                        <RectangleGeometry Rect="50,50,50,50" />
-                                                    </GeometryGroup>
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                        </DrawingGroup>
-                                    </DrawingBrush.Drawing>
-                                </DrawingBrush>
-                            </Border.BorderBrush>
-                            <StackPanel Orientation="Vertical">
-                                <Label Content="{Binding Label}" Width="100" FontSize="8"/>
-                                <Image Width="100" Height="80" Source="{Binding Thumbnail}" Stretch="Uniform"/>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}" MinHeight="200" x:Name="RDSignalPlot"/>
-        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}" MinHeight="170" x:Name="RDThresholdRMSPlot"/>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1,1,1,1" Margin="2">
+                        <Border.BorderBrush>
+                            <DrawingBrush Viewport="0,0,2,2" ViewportUnits="Absolute" TileMode="Tile">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <GeometryDrawing Brush="Black">
+                                            <GeometryDrawing.Geometry>
+                                                <GeometryGroup>
+                                                    <RectangleGeometry Rect="0,0,50,50" />
+                                                    <RectangleGeometry Rect="50,50,50,50" />
+                                                </GeometryGroup>
+                                            </GeometryDrawing.Geometry>
+                                        </GeometryDrawing>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Border.BorderBrush>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="{Binding Label}" Width="100" FontSize="8"/>
+                            <Image Width="100" Height="80" Source="{Binding Thumbnail}" Stretch="Uniform"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}" MinHeight="200" x:Name="RDSignalPlot" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RDSignalPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
+        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}" MinHeight="170" x:Name="RDThresholdRMSPlot" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding SelectedSignalPlotModel.SignalPlotModelPair.RdThresholdRMSPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
         <!--</StackPanel>-->
     </Grid>
 </UserControl>
