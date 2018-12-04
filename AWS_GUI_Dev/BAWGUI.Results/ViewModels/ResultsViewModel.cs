@@ -19,6 +19,7 @@ using BAWGUI.Utilities;
 using System.Collections.ObjectModel;
 using BAWGUI.MATLABRunResults.Models;
 using VoltageStability.ViewModels;
+using ModeMeter.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -34,6 +35,7 @@ namespace BAWGUI.Results.ViewModels
         private RingdownResultsViewModel _ringdownResultsViewModel;
         private WindRampResultsViewModel _windRampResultsViewModel;
         private VoltageStabilityResultsViewModel _voltageStabilityResultsViewModel;
+        private ModeMeterResultsViewModel _modeMeterResultsViewModel;
         private ResultsModel _resultsModel;
         private RunMATLAB.ViewModels.MatLabEngine _engine;
         public ForcedOscillationResultsViewModel ForcedOscillationResultsViewModel
@@ -65,6 +67,11 @@ namespace BAWGUI.Results.ViewModels
             get { return this._voltageStabilityResultsViewModel; }
             set { _voltageStabilityResultsViewModel = value; OnPropertyChanged(); }
         }
+        public ModeMeterResultsViewModel ModeMeterResultsVM
+        {
+            get { return this._modeMeterResultsViewModel; }
+            set { _modeMeterResultsViewModel = value; OnPropertyChanged(); }
+        }
         public ResultsViewModel()
         {
             _engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
@@ -81,6 +88,7 @@ namespace BAWGUI.Results.ViewModels
             _ringdownResultsViewModel = new RingdownResultsViewModel();
             _windRampResultsViewModel = new WindRampResultsViewModel();
             _voltageStabilityResultsViewModel = new VoltageStabilityResultsViewModel();
+            _modeMeterResultsViewModel = new ModeMeterResultsViewModel();
             _run = new AWRunViewModel();
             _resultsExist = true;
         }
@@ -484,6 +492,7 @@ namespace BAWGUI.Results.ViewModels
             RingdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             WindRampResultsViewModel = new WindRampResultsViewModel();
             VoltageStabilityResultsViewModel = new VoltageStabilityResultsViewModel();
+            ModeMeterResultsVM = new ModeMeterResultsViewModel();
         }
 
         private void _openResultFile(string resultsPath)

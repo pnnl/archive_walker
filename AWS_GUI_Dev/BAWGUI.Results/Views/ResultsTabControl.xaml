@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:vsViews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
+             xmlns:mmViews="clr-namespace:ModeMeter.Views;assembly=ModeMeter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
     <TabControl SelectedIndex="{Binding CurrentTabIndex}">
@@ -22,6 +23,9 @@
         </TabItem>
         <TabItem Header="Voltage Stability">
             <vsViews:VoltageStabilityResultsView DataContext="{Binding VoltageStabilityResultsViewModel}"/>
+        </TabItem>
+        <TabItem Header="Mode Meter">
+            <mmViews:ModeMeterResultsView DataContext="{Binding ModeMeterResultsViewModel}"/>
         </TabItem>
     </TabControl>
 </UserControl>

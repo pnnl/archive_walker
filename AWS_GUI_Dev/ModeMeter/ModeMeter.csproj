@@ -33,11 +33,15 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
+    <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -82,6 +86,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ModeMeterResultsViewModel.cs" />
     <Compile Include="ViewModels\ModeViewModel.cs" />
     <Compile Include="ViewModels\SmallSignalStabilityToolViewModel.cs" />
     <Compile Include="Views\DesiredModeAttributesView.xaml.cs">
@@ -96,8 +101,14 @@
     <Compile Include="Views\MethodsView.xaml.cs">
       <DependentUpon>MethodsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MMReRunPlots.xaml.cs">
+      <DependentUpon>MMReRunPlots.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ModeAnalysisParametersView.xaml.cs">
       <DependentUpon>ModeAnalysisParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModeMeterResultsView.xaml.cs">
+      <DependentUpon>ModeMeterResultsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ModeSignalSelectionView.xaml.cs">
       <DependentUpon>ModeSignalSelectionView.xaml</DependentUpon>
@@ -107,6 +118,9 @@
     </Compile>
     <Compile Include="Views\SmallSignalStabilityToolView.xaml.cs">
       <DependentUpon>SmallSignalStabilityToolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SparseEventPlot.xaml.cs">
+      <DependentUpon>SparseEventPlot.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\YWARMASView.xaml.cs">
       <DependentUpon>YWARMASView.xaml</DependentUpon>
@@ -123,9 +137,17 @@
       <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj">
+      <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
+      <Name>BAWGUI.MATLABRunResults</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.ReadConfigXml\BAWGUI.ReadConfigXml.csproj">
       <Project>{45B27EC1-0A7D-4B08-A11E-04001E70F316}</Project>
       <Name>BAWGUI.ReadConfigXml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
+      <Project>{BF338BCB-0788-4DE9-8D78-5DB5142FBF27}</Project>
+      <Name>BAWGUI.RunMATLAB</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
       <Project>{E0ACA34C-2C13-4E98-944D-A419BDD2D116}</Project>
@@ -153,7 +175,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\MMReRunPlots.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ModeAnalysisParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModeMeterResultsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -166,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SmallSignalStabilityToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SparseEventPlot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
