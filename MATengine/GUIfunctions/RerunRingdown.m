@@ -73,7 +73,8 @@ for DetIdx = 1:Ndet
     % For each entry in AdditionalOutputRerun, which correspond to 
     % files of PMU data, store the relevant values
     for FileIdx = 1:length(AdditionalOutputRerun)
-        RerunOut(DetIdx).t = [RerunOut(DetIdx).t; datetime(AdditionalOutputRerun{FileIdx}(DetIdx).(RerunDetector)(1).TimeString,'InputFormat','yyyy-MM-dd HH:mm:ss.SSS')];
+%         RerunOut(DetIdx).t = [RerunOut(DetIdx).t; datetime(AdditionalOutputRerun{FileIdx}(DetIdx).(RerunDetector)(1).TimeString,'InputFormat','yyyy-MM-dd HH:mm:ss.SSS')];
+        RerunOut(DetIdx).t = [RerunOut(DetIdx).t; AdditionalOutputRerun{FileIdx}(DetIdx).(RerunDetector)(1).TimeDT];
 
         RerunOut(DetIdx).Data = [RerunOut(DetIdx).Data; AdditionalOutputRerun{FileIdx}(DetIdx).(RerunDetector)(1).Data];
         

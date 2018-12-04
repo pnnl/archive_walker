@@ -596,5 +596,10 @@ namespace VoltageStability.ViewModels
                 }
             }
         }
+
+        public override bool CheckStepIsComplete()
+        {
+            return true;
+        }
     }
 }

@@ -47,7 +47,7 @@
 %   changed PMU.Flag matrix from double to logical matrix
 
 
-function [PMU,tPMU] = JSIS_CSV_2_Mat(inFile,Num_Flags)
+function [PMU,tPMU,fs] = JSIS_CSV_2_Mat(inFile,Num_Flags)
 %% read in headers
 %t1 = now;
 fid = fopen(inFile);
@@ -102,6 +102,8 @@ elseif(timeFormat == 0)
 end
 
 tPMU = timeNum;
+
+fs = round(1/mean((diff(timeNum)*24*60*60))*10)/10;
 
 %% get signal Name, signal type, signal unit, and data
 k = strfind(signalNameStr,',');
@@ -202,6 +204,7 @@ PMU.Time_Zone = '-08:00';         % time zone; for now this is just the PST time
 % signal time
 PMU.Signal_Time.Time_String = cellstr(timeStr);
 PMU.Signal_Time.Signal_datenum = timeNum;
+PMU.Signal_Time.datetime = datetime(timeNum,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
 
 % variable names
 PMU.Signal_Name = signalNames;
@@ -222,14 +225,14 @@ PMU.Data = signalData;
 PMU.Stat = zeros(m,1);
 
 % update flag if there are data points that were set to strings or empty
-[row, col] = find(isnan(signalData));
-if(~isempty(row))
-    % has data points that were set to strings or empty
-    flag = false(m,n);
-    idx = sub2ind(size(flag), row, col);  % convert row and col to matlab linear indices
-    flag(idx) = true;
-    PMU.Flag(:,:,end-1) = flag;      
-end
+% [row, col] = find(isnan(signalData));
+% if(~isempty(row))
+%     % has data points that were set to strings or empty
+%     flag = false(m,n);
+%     idx = sub2ind(size(flag), row, col);  % convert row and col to matlab linear indices
+%     flag(idx) = true;
+%     PMU.Flag(:,:,end-1) = flag;      
+% end
 
 
 

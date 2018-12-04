@@ -250,6 +250,8 @@ for RankIdx = unique(EventRank)
                         elseif(strcmpi(PMUfileDir{DirectoryIdx}.FileType, 'csv'))
                             % JSIS_CSV format
                             PMUtemp = JSIS_CSV_2_Mat(PMUfilePath,Num_Flags);
+                        elseif(strcmpi(FileInfo(idx3).FileType, 'powHQ'))
+                            PMUtemp = POWreadHQ(PMUfilePath,Num_Flags);
                         end
 
                         PMUconcat = ConcatenatePMU(PMUconcat,PMUtemp);
@@ -265,9 +267,11 @@ for RankIdx = unique(EventRank)
                             if pmuIdx == 1
                                 PMUtemp(pmuIdx).Signal_Time.Signal_datenum = PMUfileTimes(FileIdx) + linspace(0,FileLength,size(PMUtemp(pmuIdx).Data,1)).'/(60/60/24);
                                 PMUtemp(pmuIdx).Signal_Time.Time_String = cellstr(datestr(PMUtemp(pmuIdx).Signal_Time.Signal_datenum,'mm/dd/yy HH:MM:SS.FFF'));
+                                PMUtemp(pmuIdx).Signal_Time.datetime = datetime(PMUtemp(pmuIdx).Signal_Time.Signal_datenum,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
                             else
                                 PMUtemp(pmuIdx).Signal_Time.Signal_datenum = PMUtemp(1).Signal_Time.Signal_datenum;
                                 PMUtemp(pmuIdx).Signal_Time.Time_String = PMUtemp(1).Signal_Time.Time_String;
+                                PMUtemp(pmuIdx).Signal_Time.datetime = PMUtemp(1).Signal_Time.datetime;
                             end
                         end
 

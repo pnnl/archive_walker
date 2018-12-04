@@ -48,4 +48,32 @@ namespace BAWGUI.Core.Converters
             }
         }
     }
+    public class EnumToStringConverter11 : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch (value)
+            {
+                case OutputSignalStorageType.CreateCustomPMU:
+                    return "Create Custom PMU";
+                case OutputSignalStorageType.ReplaceInput:
+                    return "Replace Input";
+                default:
+                    throw new Exception("Output signal storage type not valid!");
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch (value)
+            {
+                case "Create Custom PMU":
+                    return OutputSignalStorageType.CreateCustomPMU;
+                case "Replace Input":
+                    return OutputSignalStorageType.ReplaceInput;
+                default:
+                    throw new Exception("Enum type not valid!");
+            }
+        }
+    }
 }

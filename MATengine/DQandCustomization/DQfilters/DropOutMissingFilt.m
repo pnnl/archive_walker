@@ -35,6 +35,7 @@ FlagBit = str2num(Parameters.FlagBit);
 % PMU structure
 t_datenum = PMUstruct.Signal_Time.Signal_datenum;
 t_string = PMUstruct.Signal_Time.Time_String;
+t_datetime = PMUstruct.Signal_Time.datetime;
 Data = PMUstruct.Data;
 Flag = PMUstruct.Flag;
 Stat = PMUstruct.Stat;
@@ -57,6 +58,7 @@ AfterJump = BeforeJump + 1;
 t_datenumFix = (t_datenum(1):TsHat:t_datenum(end)).';
 t_stringFix = cell(length(t_datenumFix),1);
 t_stringFix(:) = {NaN};
+t_datetimeFix = NaT(length(t_datenumFix),1);
 DataFix = NaN*ones(length(t_datenumFix),size(Data,2));
 FlagFix = false(length(t_datenumFix),size(Flag,2),size(Flag,3));%FlagBit*ones
 FlagFix(:,:,FlagBit) = true;
@@ -81,6 +83,7 @@ for idx = 1:length(AfterJump)
     % fixed fields. 
     t_datenumFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1) = t_datenum(AfterJump(idx):BeforeJump(idx));
     t_stringFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1) = t_string(AfterJump(idx):BeforeJump(idx));
+    t_datetimeFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1) = t_datetime(AfterJump(idx):BeforeJump(idx));
     DataFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1,:) = Data(AfterJump(idx):BeforeJump(idx),:);
     FlagFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1,:,:) = Flag(AfterJump(idx):BeforeJump(idx),:,:);
     StatFix(NewStartIdx:NewStartIdx+SegSamps(idx)-1) = Stat(AfterJump(idx):BeforeJump(idx));
@@ -89,6 +92,7 @@ end
 % Replace the original fields with the fixed values
 PMUstruct.Signal_Time.Signal_datenum = t_datenumFix;
 PMUstruct.Signal_Time.Time_String = t_stringFix;
+PMUstruct.Signal_Time.t_datetime = t_datetimeFix;
 PMUstruct.Flag = FlagFix;
 PMUstruct.Data = DataFix;
 PMUstruct.Stat = StatFix;

@@ -146,10 +146,14 @@ namespace BAWGUI.ReadConfigXml
     //    [Description("Constant")]
     //    Constant
     //}
-    public class TunableFilterModel : UnwrapModel
+    public class TunableFilterModel
     {
-        public TunableFilterModel() { }
-        public TunableFilterModel(XElement filter) : base(filter)
+        public TunableFilterModel()
+        {
+            PointOnWavePowerCalculationFilterParam = new PointOnWavePowerCalculationFilterParameters();
+            PMUElementList = new List<PMUElementForUnaryCustModel>();
+        }
+        public TunableFilterModel(XElement filter) : this()
         {
             //base.Name = "Filter";
             var par = filter.Element("Type");
@@ -205,8 +209,117 @@ namespace BAWGUI.ReadConfigXml
                         StopCutoff = value.Value;
                     }
                     break;
+                case TunableFilterType.FrequencyDerivation:
+                    break;
+                case TunableFilterType.RunningAverage:
+                    value = filter.Element("Parameters").Element("RemoveAve");
+                    if (value != null)
+                    {
+                        RemoveAve = bool.Parse(value.Value);
+                    }
+                    value = filter.Element("Parameters").Element("WindowLength");
+                    if (value != null)
+                    {
+                        WindowLength = value.Value;
+                    }
+                    break;
+                case TunableFilterType.PointOnWavePower:
+                    value = filter.Element("Parameters").Element("Pname");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.Pname = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("Qname");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.Qname = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("Fname");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.Fname = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("WindowLength");
+                    if (value != null)
+                    {
+                        WindowLength = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("VA");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.VA = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("VB");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.VB = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("VC");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.VC = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("IA");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.IA = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("IB");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.IB = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("IC");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.IC = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("PhaseShiftV");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.PhaseShiftV = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("PhaseShiftI");
+                    if (value != null)
+                    {
+                        PointOnWavePowerCalculationFilterParam.PhaseShiftI = value.Value;
+                    }
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
+            }
+            par = filter.Element("CustPMU");
+            if (par != null)
+            {
+                CustPMUName = par.Value;
+                UseCustomPMU = true;
+                OutputSignalStorage = OutputSignalStorageType.CreateCustomPMU;
+            }
+            else
+            {
+                UseCustomPMU = false;
+                OutputSignalStorage = OutputSignalStorageType.ReplaceInput;
+            }
+            var pmus = filter.Elements("PMU");
+            //PMUElementList = new List<PMUElementForUnaryCustModel>();
+            foreach (var pmu in pmus)
+            {
+                var pmuName = pmu.Element("Name").Value;
+                var channels = pmu.Elements("Channel");
+                if (channels.Count() > 0)
+                {
+                    foreach (var channel in channels)
+                    {
+                        var channelName = channel.Element("Name").Value;
+                        var custname = "";
+                        if (UseCustomPMU && Type != TunableFilterType.PointOnWavePower)
+                        {
+                            custname = channel.Element("CustName").Value;
+                        }
+                        var newSignal = new PMUElementForUnaryCustModel(pmuName, channelName, custname);
+                        PMUElementList.Add(newSignal);
+                    }
+                }
             }
         }
         public TunableFilterType Type { get; set; }
@@ -218,10 +331,27 @@ namespace BAWGUI.ReadConfigXml
         public string StopRipple { get; set; }
         public string PassCutoff { get; set; }
         public string StopCutoff { get; set; }
+        public bool RemoveAve { get; set; }
+        public string WindowLength { get; set; }
         public new string Name
         {
             get { return "Filter"; }
         }
+        public bool UseCustomPMU { get; set; }
+        public OutputSignalStorageType OutputSignalStorage { get; set; }
+        public string CustPMUName { get; set; }
+        public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
+        public PointOnWavePowerCalculationFilterParameters PointOnWavePowerCalculationFilterParam { get; set; }
+        //public string Pname { get; private set; }
+        //public string Qname { get; private set; }
+        //public string VA { get; private set; }
+        //public string IC { get; private set; }
+        //public string IB { get; private set; }
+        //public string IA { get; private set; }
+        //public string VC { get; private set; }
+        //public string VB { get; private set; }
+        //public string PhaseShiftV { get; private set; }
+        //public string PhaseShiftI { get; private set; }
     }
     //public enum TunableFilterType
     //{
@@ -328,5 +458,18 @@ namespace BAWGUI.ReadConfigXml
         public string NewUnit { get; set; }
         public string NewType { get; set; }
     }
-
+    public class PointOnWavePowerCalculationFilterParameters
+    {
+        public string Pname { get; set; }
+        public string Qname { get; set; }
+        public string Fname { get; set; }
+        public string VA { get; set; }
+        public string VB { get; set; }
+        public string VC { get; set; }
+        public string IA { get; set; }
+        public string IB { get; set; }
+        public string IC { get; set; }
+        public string PhaseShiftV { get; set; }
+        public string PhaseShiftI { get; set; }
+    }
 }

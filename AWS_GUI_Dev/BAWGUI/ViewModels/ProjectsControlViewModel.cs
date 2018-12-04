@@ -291,8 +291,18 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand SaveConfigFile { get; set; }
         private void _saveConfigFile(object obj)
         {
-            var mvm = (MainViewModel)obj;
-            var settingNeedsToBeSaved = mvm.SettingsVM;
+            SettingsViewModel settingNeedsToBeSaved = null;
+            if (obj is MainViewModel)
+            {
+                var mvm = (MainViewModel)obj;
+                settingNeedsToBeSaved = mvm.SettingsVM;
+            }
+            else if (obj is SettingsViewModel)
+            {
+                settingNeedsToBeSaved = (SettingsViewModel)obj;
+            }
+            //var mvm = (MainViewModel)obj;
+            //var settingNeedsToBeSaved = mvm.SettingsVM;
             var isTaskRan = false;
             if (_selectedRun != null)
             {
@@ -356,7 +366,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //{
         //    WriteSettingsConfigFile?.Invoke(this, e);
         //}
-
+        public void CreateNewTask(ref SettingsViewModel svm)
+        {
+            _saveConfigFile(svm);
+        }
         private bool _findRunGeneratedFile(string runPath)
         {
             foreach (var file in Directory.GetFiles(runPath))

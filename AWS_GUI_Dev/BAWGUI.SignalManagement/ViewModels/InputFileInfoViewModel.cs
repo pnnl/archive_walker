@@ -47,11 +47,11 @@ namespace BAWGUI.SignalManagement.ViewModels
         public DataFileType? FileType
         {
             get {
-                var a = Enum.Parse(typeof(DataFileType), _model.FileType);
-                return (DataFileType)a; }
+                //var a = Enum.Parse(typeof(DataFileType), _model.FileType);
+                return _model.FileType; }
             set
             {
-                _model.FileType = value.ToString();
+                _model.FileType = (DataFileType)value;
                 OnPropertyChanged();
             }
         }
@@ -72,14 +72,30 @@ namespace BAWGUI.SignalManagement.ViewModels
                 _model.ExampleFile = value;
                 if (File.Exists(value))
                 {
-                    try
-                    {
-                        FileType = (DataFileType)Enum.Parse(typeof(DataFileType), Path.GetExtension(value).Substring(1));
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
+                    //try
+                    //{
+                        //var ftyp = Path.GetExtension(value).Substring(1);
+                        //switch (ftyp.ToLower())
+                        //{
+                        //    case "pdat":
+                        //        FileType = DataFileType.pdat;
+                        //        break;
+                        //    case "csv":
+                        //        FileType = DataFileType.csv;
+                        //        break;
+                        //    case "mat":
+                        //        FileType = DataFileType.powHQ;
+                        //        break;
+                        //    default:
+                        //        MessageBox.Show("Data file type " + ftyp + " not recognized.", "Error!", MessageBoxButtons.OK);
+                        //    break;
+                        //}
+                        //FileType = (DataFileType)Enum.Parse(typeof(DataFileType), );
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    //}
                     var filename = "";
                     try
                     {

@@ -28,7 +28,7 @@
                         </Image.Style>
                     </Image>-->
         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="Upsampling Factor:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Center" Margin="0,2"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PElement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Center" Margin="0,2"/>
         <!--<Image Grid.Row="1" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                         <Image.Style>
                             <Style TargetType="Image">
@@ -41,6 +41,6 @@
                         </Image.Style>
                     </Image>-->
         <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="Downsampling Factor:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding QElement}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Center" Margin="0,2"/>
+        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding QElement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalAlignment="Center" Margin="0,2"/>
     </Grid>
 </UserControl>

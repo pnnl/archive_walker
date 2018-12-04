@@ -165,6 +165,105 @@ for ToConvertIdx = 1:NumToConvert
                 else
                     ErrFlagIncompatible = 1;
                 end
+            case 'MW'
+                % From MW to NewUnit
+                if strcmp(NewUnit,'kW')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'W')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000000;
+                elseif strcmp(NewUnit,'MW')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'kW'
+                % From kW to NewUnit
+                if strcmp(NewUnit,'W')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'MW')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'kW')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'W'
+                % From W to NewUnit
+                if strcmp(NewUnit,'kW')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'MW')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000000;
+                elseif strcmp(NewUnit,'W')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'MVAR'
+                % From MVAR to NewUnit
+                if strcmp(NewUnit,'kVAR')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'VAR')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000000;
+                elseif strcmp(NewUnit,'MVAR')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'kVAR'
+                % From kVAR to NewUnit
+                if strcmp(NewUnit,'VAR')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'MVAR')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'kVAR')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'VAR'
+                % From VAR to NewUnit
+                if strcmp(NewUnit,'kVAR')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'MVAR')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000000;
+                elseif strcmp(NewUnit,'VAR')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'MVA'
+                % From MVA to NewUnit
+                if strcmp(NewUnit,'kVA')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'VA')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000000;
+                elseif strcmp(NewUnit,'MVA')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'kVA'
+                % From kVA to NewUnit
+                if strcmp(NewUnit,'VA')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'MVA')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'kVA')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'VA'
+                % From VA to NewUnit
+                if strcmp(NewUnit,'kVA')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'MVA')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000000;
+                elseif strcmp(NewUnit,'VA')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
             otherwise
                 warning([PMUstruct(custPMUidx).Signal_Unit{SigIdx} ' is an unacceptable input unit. Values were set to NaN and Flags set.']);
                 continue
@@ -270,6 +369,72 @@ for ToConvertIdx = 1:NumToConvert
                 if strcmp(NewUnit,'mHz/sec')
                     PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
                 elseif strcmp(NewUnit,'Hz/sec')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'MW'
+                % From MW to NewUnit
+                if strcmp(NewUnit,'kW')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'W')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000000;
+                elseif strcmp(NewUnit,'MW')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'kW'
+                % From kW to NewUnit
+                if strcmp(NewUnit,'W')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'MW')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'kW')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'W'
+                % From W to NewUnit
+                if strcmp(NewUnit,'kW')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'MW')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000000;
+                elseif strcmp(NewUnit,'W')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'MVAR'
+                % From MVAR to NewUnit
+                if strcmp(NewUnit,'kVAR')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'VAR')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000000;
+                elseif strcmp(NewUnit,'MVAR')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'kVAR'
+                % From kVAR to NewUnit
+                if strcmp(NewUnit,'VAR')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'MVAR')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'kVAR')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'VAR'
+                % From VAR to NewUnit
+                if strcmp(NewUnit,'kVAR')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'MVAR')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000000;
+                elseif strcmp(NewUnit,'VAR')
                     ErrFlagIdentical = 1;
                 else
                     ErrFlagIncompatible = 1;

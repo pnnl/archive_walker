@@ -23,9 +23,13 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left">
+        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical">
+            <TextBlock Margin="0,2,2,2" Text="{Binding InputChannels.Count, StringFormat=Input Signals ({0}):}"/>
+            <local:ChannelsListView/>
+        </StackPanel>
+        <!--<Grid Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left">
             <local:ChannelsListView/>            
-        </Grid>
+        </Grid>-->
         <Separator Grid.Row="1" Grid.Column="1" Width="405" HorizontalAlignment="Left"></Separator>
         <StackPanel Orientation="Horizontal" Margin="0,2,2,2" Grid.Row="2" Grid.Column="1">
             <xtlkt:WatermarkTextBox ToolTip="PMU name" Watermark="Enter PMU name" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"></xtlkt:WatermarkTextBox>
