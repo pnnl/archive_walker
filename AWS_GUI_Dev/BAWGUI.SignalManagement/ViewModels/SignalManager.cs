@@ -48,6 +48,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             UpdatePlot = new RelayCommand(_updatePlot);
             PlotSelected = new RelayCommand(_plotSelectedToEdit);
             DeleteAPlot = new RelayCommand(_deleteAPlot);
+            AllPlotsDeSelected = new RelayCommand(_deSelectAllPlots);
         }
         public void cleanUp()
         {
@@ -328,58 +329,54 @@ namespace BAWGUI.SignalManagement.ViewModels
         public ICommand UpdatePlot { get; set; }
         private void _updatePlot(object obj)
         {
-            var hk = obj as SignalTypeHierachy;
-            //SelectedSignalPlotPanel.Signals.Add();
-            if ((bool)hk.SignalSignature.IsChecked)
-            {
-                _addSignalsToPlot(hk);
-            }
-            else
-            {
-                _removeSignalsFromPlot(hk);
-            }
-            _drawSignals();
-        }
-        private void _removeSignalsFromPlot(SignalTypeHierachy obj)
-        {
             if (SelectedSignalPlotPanel != null)
             {
-                if (obj.SignalList.Count == 0 && SelectedSignalPlotPanel.Signals.Contains(obj.SignalSignature))
+                var hk = obj as SignalTypeHierachy;
+                //SelectedSignalPlotPanel.Signals.Add();
+                if ((bool)hk.SignalSignature.IsChecked)
                 {
-                    SelectedSignalPlotPanel.Signals.Remove(obj.SignalSignature);
+                    _addSignalsToPlot(hk);
                 }
                 else
                 {
-                    foreach (var hk in obj.SignalList)
-                    {
-                        _removeSignalsFromPlot(hk);
-                    }
+                    _removeSignalsFromPlot(hk);
                 }
-            }
-            else
-            {
-                MessageBox.Show("No plot is selected to remove signal.");
-            }
-        }
-        private void _addSignalsToPlot(SignalTypeHierachy obj)
-        {
-            if (SelectedSignalPlotPanel != null)
-            {
-                if (obj.SignalList.Count == 0)
-                {
-                    SelectedSignalPlotPanel.Signals.Add(obj.SignalSignature);
-                }
-                else
-                {
-                    foreach (var hk in obj.SignalList)
-                    {
-                        _addSignalsToPlot(hk);
-                    }
-                }
+                CheckAllChildren(hk, (bool)hk.SignalSignature.IsChecked);
+                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
+                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
+                _drawSignals();
             }
             else
             {
                 MessageBox.Show("No plot is selected to add signal.");
+            }
+        }
+        private void _removeSignalsFromPlot(SignalTypeHierachy obj)
+        {
+            if (obj.SignalList.Count == 0 && SelectedSignalPlotPanel.Signals.Contains(obj.SignalSignature))
+            {
+                SelectedSignalPlotPanel.Signals.Remove(obj.SignalSignature);
+            }
+            else
+            {
+                foreach (var hk in obj.SignalList)
+                {
+                    _removeSignalsFromPlot(hk);
+                }
+            }
+        }
+        private void _addSignalsToPlot(SignalTypeHierachy obj)
+        {
+            if (obj.SignalList.Count == 0)
+            {
+                SelectedSignalPlotPanel.Signals.Add(obj.SignalSignature);
+            }
+            else
+            {
+                foreach (var hk in obj.SignalList)
+                {
+                    _addSignalsToPlot(hk);
+                }
             }
         }
         //private SignalSignatureViewModel _selectedSignalToBeViewed;
@@ -462,12 +459,43 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     s.IsChecked = true;
                 }
+                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
+                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
             }
         }
         public ICommand DeleteAPlot { set; get; }
         private void _deleteAPlot(object obj)
         {
+            var toBeDeleted = obj as SignalPlotPanel;
+            foreach (var s in toBeDeleted.Signals)
+            {
+                s.IsChecked = false;
+            }
+            _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
+            _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
+            toBeDeleted.IsPlotSelected = false;
+            SelectedSignalPlotPanel = null;
+            if (SignalPlots.Contains(toBeDeleted))
+            {
+                SignalPlots.Remove(toBeDeleted);
+            }
         }
+        public ICommand AllPlotsDeSelected { set; get; }
+        private void _deSelectAllPlots(object obj)
+        {
+            if (SelectedSignalPlotPanel != null)
+            {
+                foreach (var s in SelectedSignalPlotPanel.Signals)
+                {
+                    s.IsChecked = false;
+                }
+                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
+                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
+                SelectedSignalPlotPanel.IsPlotSelected = false;
+                SelectedSignalPlotPanel = null;
+            }
+        }
+
         public void GetRawSignalData(InputFileInfoViewModel info)
         {
             //SignalViewPlotModel = null;
