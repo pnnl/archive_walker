@@ -25,10 +25,9 @@ namespace VoltageStability.MATLABRunResults.Models
             _vsDetectorList = new List<TheveninDetector>();
         }
 
-        public TheveninReRunResults(MWStructArray rslts)
+        public TheveninReRunResults(MWStructArray rslts) : this()
         {
             _results = rslts;
-            _vsDetectorList = new List<TheveninDetector>();
             int numberOfElements = 0;
             numberOfElements = _results.NumberOfElements;
             var allTheveninSignals = new List<TheveninSignal>();

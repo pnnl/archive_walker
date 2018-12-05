@@ -96,6 +96,7 @@ namespace BAWGUI.Results.ViewModels
         private void _engine_RunSelected(object sender, AWRunViewModel e)
         {
             _openResultFile(e.Model.EventPath);
+            _modeMeterResultsViewModel.GetMostRecentTimeFromEventFolder();
         }
 
         private AWRunViewModel _run;
@@ -105,6 +106,7 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _run = value;
+                _cleanResults();
                 if (File.Exists(_run.Model.ConfigFilePath))
                 {
                     //ConfigFilePath = _run.Model.ConfigFilePath;
@@ -122,6 +124,7 @@ namespace BAWGUI.Results.ViewModels
                 _ringdownResultsViewModel.Run = _run;
                 _windRampResultsViewModel.Run = _run;
                 _voltageStabilityResultsViewModel.Run = _run;
+                _modeMeterResultsViewModel.Run = _run;
                 OnPropertyChanged();
             }
         }
@@ -472,10 +475,10 @@ namespace BAWGUI.Results.ViewModels
             {
                 _openResultFile(_resultPath);
             }
-            else
-            {
-                _cleanResults();
-            }
+            //else
+            //{
+            //    _cleanResults();
+            //}
         }
 
         private void _cleanResults()
@@ -563,10 +566,10 @@ namespace BAWGUI.Results.ViewModels
                     MessageBox.Show(errorStr, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else
-            {
-                _cleanResults();
-            }            
+            //else
+            //{
+            //    _cleanResults();
+            //}            
         }
         //private string _configFilePath;
         //public string ConfigFilePath
@@ -659,10 +662,10 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _currentTabIndex = value;
-                if (value == 5)
-                {
-                    ModeMeterResultsVM.GetMostRecentTimeFromEventFolder();
-                }
+                //if (value == 5)
+                //{
+                //    ModeMeterResultsVM.GetMostRecentTimeFromEventFolder();
+                //}
                 OnPropertyChanged();
             }
         }

@@ -51,8 +51,11 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
-    <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+    <Reference Include="OxyPlot">
       <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2.0.0.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.2.0.0-unstable0956\lib\net45\OxyPlot.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -140,6 +143,9 @@
     <Compile Include="Views\SparseEventPlot.xaml.cs">
       <DependentUpon>SparseEventPlot.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SparsePlotView.xaml.cs">
+      <DependentUpon>SparsePlotView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\YWARMASView.xaml.cs">
       <DependentUpon>YWARMASView.xaml</DependentUpon>
     </Compile>
@@ -174,6 +180,10 @@
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
       <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModeMeter.MATLABRunResults\ModeMeter.MATLABRunResults.csproj">
+      <Project>{3B62F41C-E552-4F55-962A-B8F54C425390}</Project>
+      <Name>ModeMeter.MATLABRunResults</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +228,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SparseEventPlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SparsePlotView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

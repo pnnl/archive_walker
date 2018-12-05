@@ -80,6 +80,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoltageStability.MATLABRunR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModeMeter", "ModeMeter\ModeMeter.csproj", "{F28598D8-9C9F-42C9-B828-4D1BD86BB751}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModeMeter.MATLABRunResults", "ModeMeter.MATLABRunResults\ModeMeter.MATLABRunResults.csproj", "{3B62F41C-E552-4F55-962A-B8F54C425390}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		BAWGUI.Resources\Resources.projitems*{c90f12f9-9e00-411c-9b5a-58564d512918}*SharedItemsImports = 13
@@ -285,6 +287,18 @@ Global
 		{F28598D8-9C9F-42C9-B828-4D1BD86BB751}.Release|x64.Build.0 = Release|Any CPU
 		{F28598D8-9C9F-42C9-B828-4D1BD86BB751}.Release|x86.ActiveCfg = Release|Any CPU
 		{F28598D8-9C9F-42C9-B828-4D1BD86BB751}.Release|x86.Build.0 = Release|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Debug|x64.ActiveCfg = Debug|x64
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Debug|x64.Build.0 = Debug|x64
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Debug|x86.Build.0 = Debug|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Release|x64.ActiveCfg = Release|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Release|x64.Build.0 = Release|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Release|x86.ActiveCfg = Release|Any CPU
+		{3B62F41C-E552-4F55-962A-B8F54C425390}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

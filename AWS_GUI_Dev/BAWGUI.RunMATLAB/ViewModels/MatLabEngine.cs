@@ -15,6 +15,7 @@ using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
 using VoltageStability.MATLABRunResults.Models;
+using ModeMeter.MATLABRunResults.Models;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
@@ -88,6 +89,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 System.Windows.Forms.MessageBox.Show("Error getting MATLAB engine! Error message: " + ex.Message, "ERROR!", MessageBoxButtons.OK);
             }
         }
+    
         private static MatLabEngine _instance = null;
         public static MatLabEngine Instance
         {
@@ -742,7 +744,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 throw ex;
             }
-
         }
 
         private void _workerVSReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -1029,6 +1030,88 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
 
             e.Result = FileReadingResults;
+        }
+     
+        public void MMRerun(string selectedStartTime, string selectedEndTime, AWRunViewModel run)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                //Here the running engine could be running a rerun instead of the normal run,
+                //need to talk to Jim as how to distinguish normal or rerun,
+                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+            Run = run;
+            _controlPath = run.Model.ControlRerunPath;
+            _configFilePath = run.Model.ConfigFilePath;
+
+            try
+            {
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runMMReRunMode);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerMMReRun_RunWorkerCompleted;
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                object[] parameters = new object[] { selectedStartTime, selectedEndTime, run.Model.EventPath, run.Model.ControlRerunPath };
+                worker.RunWorkerAsync(parameters);
+                IsReRunRunning = true;
+                Run.IsTaskRunning = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void _runMMReRunMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "MMReRunThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var start = parameters[0] as string;
+            var end = parameters[1] as string;
+            var eventPath = parameters[2] as string;
+            var controlPath = parameters[3] as string;
+            var runFlag = controlPath + "RunFlag.txt";
+            if (!System.IO.File.Exists(runFlag))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                fs.Close();
+            }
+            var mmRerunResults = new ModeMeterReRunResults();
+            IsMatlabEngineRunning = true;
+            try
+            {
+                mmRerunResults = new ModeMeterReRunResults((MWStructArray)_matlabEngine.ReadMMdata(start, end, eventPath));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
+                IsReRunRunning = false;
+                MessageBox.Show("Error in running matlab mode meter re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+            e.Result = mmRerunResults.PlotData;
+        }
+        private void _workerMMReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsMatlabEngineRunning = false;
+            IsReRunRunning = false;
+            Run.IsTaskRunning = false;
+            OnMMReRunCompletedEvent(e.Result as List<ModeMeterPlotData>);
+        }
+
+        public Action<object, List<ModeMeterPlotData>> MMReRunCompletedEvent { get; set; }
+        private void OnMMReRunCompletedEvent(List<ModeMeterPlotData> list)
+        {
+            MMReRunCompletedEvent?.Invoke(this, list);
         }
     }
 }

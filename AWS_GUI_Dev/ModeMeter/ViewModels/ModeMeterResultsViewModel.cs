@@ -2,6 +2,7 @@
 using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
+using ModeMeter.MATLABRunResults.Models;
 using OxyPlot;
 using OxyPlot.Axes;
 using System;
@@ -25,8 +26,12 @@ namespace ModeMeter.ViewModels
             get { return _run; }
             set
             {
-                _run = value;
-                OnPropertyChanged();
+                if (_run != value)
+                {
+                    _run = value;
+                    GetMostRecentTimeFromEventFolder();
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -55,7 +60,32 @@ namespace ModeMeter.ViewModels
         public ICommand MMReRun { get; set; }
         private void _mmReRun(object obj)
         {
-            throw new NotImplementedException();
+            if (File.Exists(_run.Model.ConfigFilePath))
+            {
+                var startTime = Convert.ToDateTime(SelectedStartTime);
+                var endTime = Convert.ToDateTime(SelectedEndTime);
+                if (startTime <= endTime)
+                {
+                    try
+                    {
+                        _engine.MMReRunCompletedEvent += _mmReRunCompleted;
+                        _engine.MMRerun(SelectedStartTime, SelectedEndTime, _run);
+                        //ReRunResult = _engine.RDReRunResults;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    }
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Selected start time is later than end time.", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Config file not found. Cannot re-run Out of Range", "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+            }
         }
         public ICommand RunSparseMode { get; set; }
         private void _runSparseMode(object obj)
@@ -218,21 +248,21 @@ namespace ModeMeter.ViewModels
                 }
                 a.Axes.Add(yAxis);
 
-                foreach (var rd in detector.SparseSignals)
+                foreach (var mm in detector.SparseSignals)
                 {
                     var newSeries = new OxyPlot.Series.AreaSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2, Color = OxyColor.FromArgb(50, 0, 150, 0), Color2 = OxyColor.FromArgb(50, 0, 150, 0), Fill = OxyColor.FromArgb(50, 0, 50, 0) };
                     var previousTime = startTime.ToOADate();
-                    for (int i = 0; i < rd.Maximum.Count; i++)
+                    for (int i = 0; i < mm.Maximum.Count; i++)
                     {
-                        newSeries.Points.Add(new DataPoint(previousTime, rd.Maximum[i]));
-                        newSeries.Points.Add(new DataPoint(rd.TimeStampNumber[i], rd.Maximum[i]));
-                        newSeries.Points2.Add(new DataPoint(previousTime, rd.Minimum[i]));
-                        newSeries.Points2.Add(new DataPoint(rd.TimeStampNumber[i], rd.Minimum[i]));
-                        previousTime = rd.TimeStampNumber[i];
+                        newSeries.Points.Add(new DataPoint(previousTime, mm.Maximum[i]));
+                        newSeries.Points.Add(new DataPoint(mm.TimeStampNumber[i], mm.Maximum[i]));
+                        newSeries.Points2.Add(new DataPoint(previousTime, mm.Minimum[i]));
+                        newSeries.Points2.Add(new DataPoint(mm.TimeStampNumber[i], mm.Minimum[i]));
+                        previousTime = mm.TimeStampNumber[i];
                     }
-                    newSeries.Title = rd.SignalName;
+                    newSeries.Title = mm.SignalName;
                     newSeries.TrackerFormatString = "{0}";
-                    sparsePlotLegend.Add(rd.SignalName);
+                    sparsePlotLegend.Add(mm.SignalName);
                     a.Series.Add(newSeries);
                 }
                 a.LegendPlacement = LegendPlacement.Outside;
@@ -305,7 +335,8 @@ namespace ModeMeter.ViewModels
             }
             foreach (var file in Directory.GetFiles(path))
             {
-                if (Path.GetExtension(file).ToLower() == "csv")
+                var ext = Path.GetExtension(file).ToLower();
+                if (ext == ".csv")
                 {
                     try
                     {
@@ -314,26 +345,119 @@ namespace ModeMeter.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        throw;
+                        //throw;
                     }
                 }
             }
         }
+        private void _mmReRunCompleted(object sender, List<ModeMeterPlotData> e)
+        {
+            ReRunResult = e;
+        }
+        private List<ModeMeterPlotData> _reRunResult;
+        public List<ModeMeterPlotData> ReRunResult
+        {
+            get { return _reRunResult; }
+            set
+            {
+                _reRunResult = value;
+                _drawVSReRunPlots();
+                OnPropertyChanged();
+            }
+        }
+        private void _drawVSReRunPlots()
+        {
+            var mmrrPlots = new ObservableCollection<ViewResolvingPlotModel>();
+            foreach (var plot in ReRunResult)
+            {
+                var aPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke, Title = plot.Title };
 
-        //private List<DateTime> _findAllCSVDataFileNames(string path)
-        //{
-        //    foreach (var dir in Directory.GetDirectories(path))
-        //    {
+                OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    MinorIntervalType = OxyPlot.Axes.DateTimeIntervalType.Auto,
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true,
+                };
+                timeXAxis.AxisChanged += ReRunPlotsTimeXAxis_AxisChanged1;
+                aPlot.Axes.Add(timeXAxis);
+                OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left,
+                    Title = plot.YLabel,
+                    TitlePosition = 0.5,
+                    ClipTitle = false,
+                    MajorGridlineStyle = LineStyle.Dot,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                    TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                    IsZoomEnabled = true,
+                    IsPanEnabled = true
+                };
+                aPlot.Axes.Add(yAxis);
+                foreach (var mm in plot.Signals)
+                {
+                    var signalSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+                    for (int i = 0; i < mm.Data.Count; i++)
+                    {
+                        signalSeries.Points.Add(new DataPoint(plot.TimeStampNumber[i], mm.Data[i]));
+                    }
+                    signalSeries.Title = mm.SignalName;
+                    //signalSeries.MouseDown += OORReRunSeries_MouseDown;
+                    aPlot.Series.Add(signalSeries);
+                }
 
-        //    }
-        //    foreach (var file in Directory.GetFiles(path))
-        //    {
-        //        if (Path.GetExtension(file).ToLower() == "csv")
-        //        {
-        //            var filename = DateTime.ParseExact(Path.GetFileNameWithoutExtension(file), "yyMMdd", CultureInfo.InvariantCulture);
-        //        }
-        //    }
-        //    return new List<DateTime>();
-        //}
+                aPlot.LegendPlacement = LegendPlacement.Outside;
+                aPlot.LegendPosition = LegendPosition.RightMiddle;
+                aPlot.LegendPadding = 0.0;
+                aPlot.LegendSymbolMargin = 0.0;
+                aPlot.LegendMargin = 0;
+
+                var currentArea = aPlot.LegendArea;
+                var currentPlotWithAxis = aPlot.PlotAndAxisArea;
+
+                var currentMargins = aPlot.PlotMargins;
+                aPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
+                mmrrPlots.Add(aPlot);
+            }
+            MMReRunPlotModels = mmrrPlots;
+        }
+        private ObservableCollection<ViewResolvingPlotModel> _mmReRunPlotModels;
+        public ObservableCollection<ViewResolvingPlotModel> MMReRunPlotModels
+        {
+            get { return _mmReRunPlotModels; }
+            set
+            {
+                _mmReRunPlotModels = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void ReRunPlotsTimeXAxis_AxisChanged1(object sender, AxisChangedEventArgs e)
+        {
+            var xAxis = sender as OxyPlot.Axes.DateTimeAxis;
+            var parent = xAxis.Parent;
+            foreach (var dtr in MMReRunPlotModels)
+            {
+                if (dtr != parent)
+                {
+                    foreach (var ax in dtr.Axes)
+                    {
+                        if (ax.IsHorizontal() && ax.ActualMinimum != xAxis.ActualMinimum)
+                        {
+                            ax.Zoom(xAxis.ActualMinimum, xAxis.ActualMaximum);
+                            break;
+                        }
+                    }
+                dtr.InvalidatePlot(false);
+                }
+                
+            }
+        }
+
     }
 }

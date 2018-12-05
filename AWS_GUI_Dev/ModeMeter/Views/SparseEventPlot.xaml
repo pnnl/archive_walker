@@ -7,6 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <ItemsControl ItemsSource="{Binding SparsePlotModels}" x:Name="RDPlots">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Expander IsExpanded="True">
+                        <Expander.Header>
+                            <TextBlock Text="{Binding Label}"/>
+                        </Expander.Header>
+                        <local:SparsePlotView/>
+                    </Expander>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>
