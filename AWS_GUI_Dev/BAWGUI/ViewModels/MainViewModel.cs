@@ -10,6 +10,7 @@ using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using BAWGUI.ReadConfigXml;
 using VoltageStability.Models;
 using VoltageStability.ViewModels;
 
@@ -31,8 +32,9 @@ namespace BAWGUI.ViewModels
             _settingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+            InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
+            InspectSignalByTimeRange = new RelayCommand(_inpsectAllSignalsByTimeRange);
         }
-
         //private void _settingsVM_SaveNewTasl(ref SettingsViewModel svm)
         //{
         //    throw new NotImplementedException();
@@ -144,9 +146,13 @@ namespace BAWGUI.ViewModels
             {
                 CurrentView = SettingsVM;
             }
-            else
+            else if((string)obj == "Results")
             {
                 CurrentView = ResultsVM;
+            }
+            else
+            {
+                CurrentView = _signalMgr;
             }
         }
         private ProjectsControlViewModel _projectControlVM;
@@ -160,6 +166,10 @@ namespace BAWGUI.ViewModels
             }
         }
         private SignalManager _signalMgr;
+        public SignalManager SignalMgr
+        {
+            get { return _signalMgr; }
+        }
         private void _onRunSelected(object sender, AWProjectViewModel e)
         {
             if (e != null)
@@ -239,6 +249,44 @@ namespace BAWGUI.ViewModels
         //{
         //    throw new NotImplementedException();
         //}
+        public ICommand InspectRawSignal { get; set; }
+        private void _inpsectRawInputSignals(object obj)
+        {
+            CurrentView = _signalMgr;
+            var info = (InputFileInfoViewModel)obj;
+            try
+            {
+                _signalMgr.GetRawSignalData(info);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data for viewing from example file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+        }
+        public ICommand InspectSignalByTimeRange { get; set; }
+        private void _inpsectAllSignalsByTimeRange(object obj)
+        {
+            CurrentView = _signalMgr;
+            var pm = obj as ViewResolvingPlotModel;
+            try
+            {
+                _signalMgr.GetSignalDataByTimeRange(pm, ResultsVM.Run);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data for viewing from matlab retrieve data function. " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+            //foreach (var ax in pm.Axes)
+            //{
+            //    if (ax.IsHorizontal())
+            //    {
+            //        var start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss");
+            //        var end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
+            //        _signalMgr.GetSignalDataByTimeRange(start, end, ResultsVM.Run);
+            //        break;
+            //    }
+            //}
+        }
 
     }
 }
