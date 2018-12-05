@@ -7,6 +7,7 @@ using OxyPlot.Axes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -42,24 +43,21 @@ namespace ModeMeter.ViewModels
             RunSparseMode = new RelayCommand(_runSparseMode);
             MMReRun = new RelayCommand(_mmReRun);
             CancelMMReRun = new RelayCommand(_cancelMMReRun);
-            _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
-            _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            SelectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            SelectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
         }
 
+        public ICommand CancelMMReRun { get; set; }
         private void _cancelMMReRun(object obj)
         {
             throw new NotImplementedException();
         }
-
+        public ICommand MMReRun { get; set; }
         private void _mmReRun(object obj)
         {
             throw new NotImplementedException();
         }
-
         public ICommand RunSparseMode { get; set; }
-        public ICommand MMReRun { get; set; }
-        public ICommand CancelMMReRun { get; set; }
-
         private void _runSparseMode(object obj)
         {
             if (File.Exists(_run.Model.ConfigFilePath))
@@ -287,5 +285,28 @@ namespace ModeMeter.ViewModels
             }
         }
 
+        public void GetMostRecentTimeFromEventFolder()
+        {
+            if (Run != null && Directory.Exists(Run.Model.EventPath))
+            {
+                var allName = _findAllCSVDataFileNames(Run.Model.EventPath);
+            }
+        }
+
+        private List<DateTime> _findAllCSVDataFileNames(string path)
+        {
+            foreach (var dir in Directory.GetDirectories(path))
+            {
+
+            }
+            foreach (var file in Directory.GetFiles(path))
+            {
+                if (Path.GetExtension(file).ToLower() == "csv")
+                {
+                    var filename = DateTime.ParseExact(Path.GetFileNameWithoutExtension(file), "yyMMdd", CultureInfo.InvariantCulture);
+                }
+            }
+            return new List<DateTime>();
+        }
     }
 }

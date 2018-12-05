@@ -659,6 +659,10 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _currentTabIndex = value;
+                if (value == 5)
+                {
+                    ModeMeterResultsVM.GetMostRecentTimeFromEventFolder();
+                }
                 OnPropertyChanged();
             }
         }

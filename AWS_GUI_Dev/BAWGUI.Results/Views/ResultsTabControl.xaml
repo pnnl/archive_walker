@@ -25,7 +25,7 @@
             <vsViews:VoltageStabilityResultsView DataContext="{Binding VoltageStabilityResultsViewModel}"/>
         </TabItem>
         <TabItem Header="Mode Meter">
-            <mmViews:ModeMeterResultsView DataContext="{Binding ModeMeterResultsViewModel}"/>
+            <mmViews:ModeMeterResultsView DataContext="{Binding ModeMeterResultsVM}"/>
         </TabItem>
     </TabControl>
 </UserControl>
