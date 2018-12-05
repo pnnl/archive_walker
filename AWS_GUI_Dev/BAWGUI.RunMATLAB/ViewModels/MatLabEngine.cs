@@ -232,9 +232,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
+                IsReRunRunning = false;
                 MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
-
             e.Result = RingdownRerunResults.RingdownDetectorList;
         }
 
@@ -670,6 +671,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
+                IsReRunRunning = false;
                 MessageBox.Show("Error in running matlab out of range re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
 
