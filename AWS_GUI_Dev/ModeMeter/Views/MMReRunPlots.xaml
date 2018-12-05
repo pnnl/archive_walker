@@ -11,7 +11,14 @@
         <ItemsControl ItemsSource="{Binding MMReRunPlotModels}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <oxy:PlotView Grid.Row="1" Model="{Binding}" MinHeight="200" x:Name="MMResultSignalPlot"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <oxy:PlotView Grid.Row="1" Model="{Binding}" MinHeight="200" x:Name="MMResultSignalPlot"/>
+                        <ListBox Grid.Column="1" Width="100" ItemsSource="{Binding PlotLegend}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="White" BorderThickness="0"/>
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>            

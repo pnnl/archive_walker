@@ -762,6 +762,7 @@ namespace BAWGUI.Results.ViewModels
                 allSignalsPlot.LegendPadding = 0.0;
                 allSignalsPlot.LegendSymbolMargin = 0.0;
                 allSignalsPlot.LegendMargin = 0;
+                allSignalsPlot.LegendMaxWidth = 50;
 
                 var currentArea = allSignalsPlot.LegendArea;
                 var currentPlotWithAxis = allSignalsPlot.PlotAndAxisArea;
