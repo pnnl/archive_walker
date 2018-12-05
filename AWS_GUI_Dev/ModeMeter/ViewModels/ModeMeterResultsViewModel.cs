@@ -321,9 +321,12 @@ namespace ModeMeter.ViewModels
             {
                 var allName = new List<DateTime>();
                 _findAllCSVDataFileNames(Run.Model.EventPath, allName);
-                var latest = allName.Max();
-                SelectedStartTime = latest.ToString("MM/dd/yyyy HH:mm:ss");
-                SelectedEndTime = latest.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+                if (allName.Count > 0)
+                {
+                    var latest = allName.Max();
+                    SelectedStartTime = latest.ToString("MM/dd/yyyy HH:mm:ss");
+                    SelectedEndTime = latest.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+                }
             }
         }
 

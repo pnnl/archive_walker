@@ -410,7 +410,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
             {
                 Position = OxyPlot.Axes.AxisPosition.Left,
-                //Title = SelectedSignalToBeViewed.TypeAbbreviation,
+                Title = _getUnitFromSignals(SelectedSignalPlotPanel.Signals),
                 //Unit = SelectedSignalToBeViewed.Unit,
                 MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.Dot,
@@ -437,6 +437,26 @@ namespace BAWGUI.SignalManagement.ViewModels
             AsignalPlot.LegendMargin = 0;
 
             SelectedSignalPlotPanel.SignalViewPlotModel = AsignalPlot;
+        }
+        private string _getUnitFromSignals(ObservableCollection<SignalSignatureViewModel> signals)
+        {
+            var unit = "";
+            foreach (var s in signals)
+            {
+                if (string.IsNullOrEmpty(unit))
+                {
+                    unit = s.Unit;
+                }
+                else
+                {
+                    if (unit != s.Unit)
+                    {
+                        unit = "Mixed";
+                        break;
+                    }
+                }
+            }
+            return unit;
         }
         public ICommand PlotSelected { get; set; }
         private void _plotSelectedToEdit(object obj)
@@ -672,536 +692,641 @@ namespace BAWGUI.SignalManagement.ViewModels
                     switch (signalType.Key)
                     {
                         case "S":
+                        {
+                            var groups = signalType.Value.GroupBy(x => x.TypeAbbreviation);
+                            foreach (var group in groups)
                             {
-                                var groups = signalType.Value.GroupBy(x => x.TypeAbbreviation);
-                                foreach (var group in groups)
+                                switch (group.Key)
                                 {
-                                    switch (group.Key)
+                                    case "S":
                                     {
-                                        case "S":
-                                            {
-                                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Apparent"));
-                                                newHierachy.SignalSignature.TypeAbbreviation = "S";
-                                                foreach (var signal in group)
-                                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                                signalTypeTree.Add(newHierachy);
-                                                break;
-                                            }
+                                        var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Apparent"));
+                                        newHierachy.SignalSignature.TypeAbbreviation = "S";
+                                        foreach (var signal in group)
+                                            newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                                        signalTypeTree.Add(newHierachy);
+                                        break;
+                                    }
 
-                                        case "SC":
-                                            {
-                                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Scalar"));
-                                                newHierachy.SignalSignature.TypeAbbreviation = "SC";
-                                                foreach (var signal in group)
-                                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                                signalTypeTree.Add(newHierachy);
-                                                break;
-                                            }
+                                    case "SC":
+                                    {
+                                        var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Scalar"));
+                                        newHierachy.SignalSignature.TypeAbbreviation = "SC";
+                                        foreach (var signal in group)
+                                            newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                                        signalTypeTree.Add(newHierachy);
+                                        break;
+                                    }
 
-                                        default:
-                                            {
-                                                throw new Exception("Unknown signal type: " + group.Key + "found!");
-                                            }
+                                    default:
+                                    {
+                                        throw new Exception("Unknown signal type: " + group.Key + "found!");
                                     }
                                 }
-
-                                break;
                             }
+
+                            break;
+                        }
 
                         case "O":
-                            {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Other"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "OTHER";
-                                foreach (var signal in signalType.Value)
-                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                signalTypeTree.Add(newHierachy);
-                                break;
-                            }
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Other"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "OTHER";
+                            foreach (var signal in signalType.Value)
+                                newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
 
                         case "C":
+                        {
+                            // Dim groups = signalType.Value.GroupBy(Function(x) x.TypeAbbreviation).ToDictionary(Function(x) x.Key, Function(x) New ObservableCollection(Of SignalSignatures)(x.ToList))
+                            var groups = signalType.Value.GroupBy(x => x.TypeAbbreviation);
+                            foreach (var group in groups)
                             {
-                                // Dim groups = signalType.Value.GroupBy(Function(x) x.TypeAbbreviation).ToDictionary(Function(x) x.Key, Function(x) New ObservableCollection(Of SignalSignatures)(x.ToList))
-                                var groups = signalType.Value.GroupBy(x => x.TypeAbbreviation);
-                                foreach (var group in groups)
+                                switch (group.Key)
                                 {
-                                    switch (group.Key)
+                                    case "C":
                                     {
-                                        case "C":
-                                            {
-                                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("CustomizedSignal"));
-                                                newHierachy.SignalSignature.TypeAbbreviation = "C";
-                                                foreach (var signal in group)
-                                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                                signalTypeTree.Add(newHierachy);
-                                                break;
-                                            }
+                                        var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("CustomizedSignal"));
+                                        newHierachy.SignalSignature.TypeAbbreviation = "C";
+                                        foreach (var signal in group)
+                                            newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                                        signalTypeTree.Add(newHierachy);
+                                        break;
+                                    }
 
-                                        case "CP":
-                                            {
-                                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Complex"));
-                                                newHierachy.SignalSignature.TypeAbbreviation = "CP";
-                                                foreach (var signal in group)
-                                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                                signalTypeTree.Add(newHierachy);
-                                                break;
-                                            }
+                                    case "CP":
+                                    {
+                                        var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Complex"));
+                                        newHierachy.SignalSignature.TypeAbbreviation = "CP";
+                                        foreach (var signal in group)
+                                            newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                                        signalTypeTree.Add(newHierachy);
+                                        break;
+                                    }
 
-                                        default:
-                                            {
-                                                throw new Exception("Unknown signal type: " + group.Key + "found!");
-                                            }
+                                    default:
+                                    {
+                                        throw new Exception("Unknown signal type: " + group.Key + "found!");
                                     }
                                 }
-
-                                break;
                             }
+
+                            break;
+                        }
 
                         case "D":
-                            {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Digital"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "D";
-                                foreach (var signal in signalType.Value)
-                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                signalTypeTree.Add(newHierachy);
-                                break;
-                            }
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Digital"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "D";
+                            foreach (var signal in signalType.Value)
+                                newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
 
                         case "F":
-                            {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Frequency"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "F";
-                                foreach (var signal in signalType.Value)
-                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                signalTypeTree.Add(newHierachy);
-                                break;
-                            }
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Frequency"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "F";
+                            foreach (var signal in signalType.Value)
+                                newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
 
                         case "R":
-                            {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Rate of Change of Frequency"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "R";
-                                foreach (var signal in signalType.Value)
-                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                signalTypeTree.Add(newHierachy);
-                                break;
-                            }
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Rate of Change of Frequency"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "R";
+                            foreach (var signal in signalType.Value)
+                                newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
 
                         case "Q":
-                            {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Reactive Power"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "Q";
-                                foreach (var signal in signalType.Value)
-                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                signalTypeTree.Add(newHierachy);
-                                break;
-                            }
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Reactive Power"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "Q";
+                            foreach (var signal in signalType.Value)
+                                newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
 
                         case "P":
-                            {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Active Power"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "P";
-                                foreach (var signal in signalType.Value)
-                                    newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
-                                signalTypeTree.Add(newHierachy);
-                                break;
-                            }
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Active Power"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "P";
+                            foreach (var signal in signalType.Value)
+                                newHierachy.SignalList.Add(new SignalTypeHierachy(signal));
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
 
                         case "V":
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Voltage"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "V";
+                            var voltageHierachy = signalType.Value.GroupBy(y => y.TypeAbbreviation.ToArray()[1].ToString());
+                            foreach (var group in voltageHierachy)
                             {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Voltage"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "V";
-                                var voltageHierachy = signalType.Value.GroupBy(y => y.TypeAbbreviation.ToArray()[1].ToString());
-                                foreach (var group in voltageHierachy)
+                                switch (group.Key)
                                 {
-                                    switch (group.Key)
+                                    case "M":
                                     {
-                                        case "M":
+                                        var mGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Magnitude"));
+                                        mGroup.SignalSignature.TypeAbbreviation = "VM";
+                                        var mGroupHierachky = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in mGroupHierachky)
+                                        {
+                                            switch (phase.Key)
                                             {
-                                                var mGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Magnitude"));
-                                                mGroup.SignalSignature.TypeAbbreviation = "VM";
-                                                var mGroupHierachky = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
-                                                foreach (var phase in mGroupHierachky)
+                                                case "P":
                                                 {
-                                                    switch (phase.Key)
-                                                    {
-                                                        case "P":
-                                                            {
-                                                                var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
-                                                                positiveGroup.SignalSignature.TypeAbbreviation = "VMP";
-                                                                foreach (var signal in phase)
-                                                                    positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(positiveGroup);
-                                                                break;
-                                                            }
-
-                                                        case "A":
-                                                            {
-                                                                var AGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
-                                                                AGroup.SignalSignature.TypeAbbreviation = "VMA";
-                                                                foreach (var signal in phase)
-                                                                    AGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(AGroup);
-                                                                break;
-                                                            }
-
-                                                        case "B":
-                                                            {
-                                                                var BGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
-                                                                BGroup.SignalSignature.TypeAbbreviation = "VMB";
-                                                                foreach (var signal in phase)
-                                                                    BGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(BGroup);
-                                                                break;
-                                                            }
-
-                                                        case "C":
-                                                            {
-                                                                var CGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
-                                                                CGroup.SignalSignature.TypeAbbreviation = "VMC";
-                                                                foreach (var signal in phase)
-                                                                    CGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(CGroup);
-                                                                break;
-                                                            }
-
-                                                        default:
-                                                            {
-                                                                throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage magnitude!");
-                                                            }
-                                                    }
+                                                    var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
+                                                    positiveGroup.SignalSignature.TypeAbbreviation = "VMP";
+                                                    foreach (var signal in phase)
+                                                        positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(positiveGroup);
+                                                    break;
                                                 }
-                                                newHierachy.SignalList.Add(mGroup);
-                                                break;
-                                            }
 
-                                        case "A":
-                                            {
-                                                var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Angle"));
-                                                aGroup.SignalSignature.TypeAbbreviation = "VA";
-                                                var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
-                                                foreach (var phase in aGroupHierachy)
+                                                case "A":
                                                 {
-                                                    switch (phase.Key)
-                                                    {
-                                                        case "P":
-                                                            {
-                                                                var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
-                                                                positiveGroup.SignalSignature.TypeAbbreviation = "VAP";
-                                                                foreach (var signal in phase)
-                                                                    positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(positiveGroup);
-                                                                break;
-                                                            }
-
-                                                        case "A":
-                                                            {
-                                                                var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
-                                                                GroupA.SignalSignature.TypeAbbreviation = "VAA";
-                                                                foreach (var signal in phase)
-                                                                    GroupA.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupA);
-                                                                break;
-                                                            }
-
-                                                        case "B":
-                                                            {
-                                                                var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
-                                                                GroupB.SignalSignature.TypeAbbreviation = "VAB";
-                                                                foreach (var signal in phase)
-                                                                    GroupB.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupB);
-                                                                break;
-                                                            }
-
-                                                        case "C":
-                                                            {
-                                                                var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
-                                                                GroupC.SignalSignature.TypeAbbreviation = "VAC";
-                                                                foreach (var signal in phase)
-                                                                    GroupC.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupC);
-                                                                break;
-                                                            }
-
-                                                        default:
-                                                            {
-                                                                throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
-                                                            }
-                                                    }
+                                                    var AGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                    AGroup.SignalSignature.TypeAbbreviation = "VMA";
+                                                    foreach (var signal in phase)
+                                                        AGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(AGroup);
+                                                    break;
                                                 }
-                                                newHierachy.SignalList.Add(aGroup);
-                                                break;
-                                            }
 
-                                        case "P":
-                                            {
-                                                var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phasor"));
-                                                aGroup.SignalSignature.TypeAbbreviation = "VP";
-                                                var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
-                                                foreach (var phase in aGroupHierachy)
+                                                case "B":
                                                 {
-                                                    switch (phase.Key)
-                                                    {
-                                                        case "P":
-                                                            {
-                                                                var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
-                                                                positiveGroup.SignalSignature.TypeAbbreviation = "VPP";
-                                                                foreach (var signal in phase)
-                                                                    positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(positiveGroup);
-                                                                break;
-                                                            }
-
-                                                        case "A":
-                                                            {
-                                                                var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
-                                                                GroupA.SignalSignature.TypeAbbreviation = "VPA";
-                                                                foreach (var signal in phase)
-                                                                    GroupA.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupA);
-                                                                break;
-                                                            }
-
-                                                        case "B":
-                                                            {
-                                                                var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
-                                                                GroupB.SignalSignature.TypeAbbreviation = "VPB";
-                                                                foreach (var signal in phase)
-                                                                    GroupB.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupB);
-                                                                break;
-                                                            }
-
-                                                        case "C":
-                                                            {
-                                                                var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
-                                                                GroupC.SignalSignature.TypeAbbreviation = "VPC";
-                                                                foreach (var signal in phase)
-                                                                    GroupC.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupC);
-                                                                break;
-                                                            }
-
-                                                        default:
-                                                            {
-                                                                throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
-                                                            }
-                                                    }
+                                                    var BGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                    BGroup.SignalSignature.TypeAbbreviation = "VMB";
+                                                    foreach (var signal in phase)
+                                                        BGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(BGroup);
+                                                    break;
                                                 }
-                                                newHierachy.SignalList.Add(aGroup);
-                                                break;
-                                            }
 
-                                        default:
-                                            {
-                                                throw new Exception("Error! Invalid voltage signal type found: " + group.Key);
+                                                case "C":
+                                                {
+                                                    var CGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                    CGroup.SignalSignature.TypeAbbreviation = "VMC";
+                                                    foreach (var signal in phase)
+                                                        CGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(CGroup);
+                                                    break;
+                                                }
+
+                                                default:
+                                                {
+                                                    throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage magnitude!");
+                                                }
                                             }
+                                        }
+                                        newHierachy.SignalList.Add(mGroup);
+                                        break;
+                                    }
+
+                                    case "A":
+                                    {
+                                        var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Angle"));
+                                        aGroup.SignalSignature.TypeAbbreviation = "VA";
+                                        var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in aGroupHierachy)
+                                        {
+                                            switch (phase.Key)
+                                            {
+                                                case "P":
+                                                {
+                                                    var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
+                                                    positiveGroup.SignalSignature.TypeAbbreviation = "VAP";
+                                                    foreach (var signal in phase)
+                                                        positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(positiveGroup);
+                                                    break;
+                                                }
+
+                                                case "A":
+                                                {
+                                                    var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                    GroupA.SignalSignature.TypeAbbreviation = "VAA";
+                                                    foreach (var signal in phase)
+                                                        GroupA.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(GroupA);
+                                                    break;
+                                                }
+
+                                                case "B":
+                                                {
+                                                    var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                    GroupB.SignalSignature.TypeAbbreviation = "VAB";
+                                                    foreach (var signal in phase)
+                                                        GroupB.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(GroupB);
+                                                    break;
+                                                }
+
+                                                case "C":
+                                                {
+                                                    var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                    GroupC.SignalSignature.TypeAbbreviation = "VAC";
+                                                    foreach (var signal in phase)
+                                                        GroupC.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(GroupC);
+                                                    break;
+                                                }
+
+                                                default:
+                                                {
+                                                    throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
+                                                }
+                                            }
+                                        }
+                                        newHierachy.SignalList.Add(aGroup);
+                                        break;
+                                    }
+
+                                    case "P":
+                                    {
+                                        var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phasor"));
+                                        aGroup.SignalSignature.TypeAbbreviation = "VP";
+                                        var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in aGroupHierachy)
+                                        {
+                                            switch (phase.Key)
+                                            {
+                                                case "P":
+                                                {
+                                                    var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
+                                                    positiveGroup.SignalSignature.TypeAbbreviation = "VPP";
+                                                    foreach (var signal in phase)
+                                                        positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(positiveGroup);
+                                                    break;
+                                                }
+
+                                                case "A":
+                                                {
+                                                    var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                    GroupA.SignalSignature.TypeAbbreviation = "VPA";
+                                                    foreach (var signal in phase)
+                                                        GroupA.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(GroupA);
+                                                    break;
+                                                }
+
+                                                case "B":
+                                                {
+                                                    var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                    GroupB.SignalSignature.TypeAbbreviation = "VPB";
+                                                    foreach (var signal in phase)
+                                                        GroupB.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(GroupB);
+                                                    break;
+                                                }
+
+                                                case "C":
+                                                {
+                                                    var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                    GroupC.SignalSignature.TypeAbbreviation = "VPC";
+                                                    foreach (var signal in phase)
+                                                        GroupC.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    aGroup.SignalList.Add(GroupC);
+                                                    break;
+                                                }
+
+                                                default:
+                                                {
+                                                    throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
+                                                }
+                                            }
+                                        }
+                                        newHierachy.SignalList.Add(aGroup);
+                                        break;
+                                    }
+
+                                    case "W":
+                                    {
+                                        var mGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Wave"));
+                                        mGroup.SignalSignature.TypeAbbreviation = "VM";
+                                        var mGroupHierachky = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in mGroupHierachky)
+                                        {
+                                            switch (phase.Key)
+                                            {
+                                                //case "P":
+                                                //    {
+                                                //        var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
+                                                //        positiveGroup.SignalSignature.TypeAbbreviation = "VMP";
+                                                //        foreach (var signal in phase)
+                                                //            positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                //        mGroup.SignalList.Add(positiveGroup);
+                                                //        break;
+                                                //    }
+
+                                                case "A":
+                                                {
+                                                    var AGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                    AGroup.SignalSignature.TypeAbbreviation = "VWA";
+                                                    foreach (var signal in phase)
+                                                        AGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(AGroup);
+                                                    break;
+                                                }
+
+                                                case "B":
+                                                {
+                                                    var BGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                    BGroup.SignalSignature.TypeAbbreviation = "VWB";
+                                                    foreach (var signal in phase)
+                                                        BGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(BGroup);
+                                                    break;
+                                                }
+
+                                                case "C":
+                                                {
+                                                    var CGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                    CGroup.SignalSignature.TypeAbbreviation = "VWC";
+                                                    foreach (var signal in phase)
+                                                        CGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(CGroup);
+                                                    break;
+                                                }
+
+                                                default:
+                                                {
+                                                    throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage magnitude!");
+                                                }
+                                            }
+                                        }
+                                        newHierachy.SignalList.Add(mGroup);
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        throw new Exception("Error! Invalid voltage signal type found: " + group.Key);
                                     }
                                 }
-                                signalTypeTree.Add(newHierachy);
-                                break;
                             }
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
 
                         case "I":
+                        {
+                            var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Current"));
+                            newHierachy.SignalSignature.TypeAbbreviation = "I";
+                            var currentHierachy = signalType.Value.GroupBy(y => y.TypeAbbreviation.ToArray()[1].ToString());
+                            foreach (var group in currentHierachy)
                             {
-                                var newHierachy = new SignalTypeHierachy(new SignalSignatureViewModel("Current"));
-                                newHierachy.SignalSignature.TypeAbbreviation = "I";
-                                var currentHierachy = signalType.Value.GroupBy(y => y.TypeAbbreviation.ToArray()[1].ToString());
-                                foreach (var group in currentHierachy)
+                                switch (group.Key)
                                 {
-                                    switch (group.Key)
+                                    case "M":
                                     {
-                                        case "M":
+                                        var mGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Magnitude"));
+                                        mGroup.SignalSignature.TypeAbbreviation = "IM";
+                                        var mGroupHierachky = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in mGroupHierachky)
+                                        {
+                                            switch (phase.Key)
                                             {
-                                                var mGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Magnitude"));
-                                                mGroup.SignalSignature.TypeAbbreviation = "IM";
-                                                var mGroupHierachky = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
-                                                foreach (var phase in mGroupHierachky)
-                                                {
-                                                    switch (phase.Key)
+                                                case "P":
                                                     {
-                                                        case "P":
-                                                            {
-                                                                var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
-                                                                positiveGroup.SignalSignature.TypeAbbreviation = "IMP";
-                                                                foreach (var signal in phase)
-                                                                    positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(positiveGroup);
-                                                                break;
-                                                            }
-
-                                                        case "A":
-                                                            {
-                                                                var AGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
-                                                                AGroup.SignalSignature.TypeAbbreviation = "IMA";
-                                                                foreach (var signal in phase)
-                                                                    AGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(AGroup);
-                                                                break;
-                                                            }
-
-                                                        case "B":
-                                                            {
-                                                                var BGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
-                                                                BGroup.SignalSignature.TypeAbbreviation = "IMB";
-                                                                foreach (var signal in phase)
-                                                                    BGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(BGroup);
-                                                                break;
-                                                            }
-
-                                                        case "C":
-                                                            {
-                                                                var CGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
-                                                                CGroup.SignalSignature.TypeAbbreviation = "IMC";
-                                                                foreach (var signal in phase)
-                                                                    CGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                mGroup.SignalList.Add(CGroup);
-                                                                break;
-                                                            }
-
-                                                        default:
-                                                            {
-                                                                throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage magnitude!");
-                                                            }
+                                                        var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
+                                                        positiveGroup.SignalSignature.TypeAbbreviation = "IMP";
+                                                        foreach (var signal in phase)
+                                                            positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        mGroup.SignalList.Add(positiveGroup);
+                                                        break;
                                                     }
-                                                }
-                                                newHierachy.SignalList.Add(mGroup);
-                                                break;
-                                            }
 
-                                        case "A":
-                                            {
-                                                var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Angle"));
-                                                aGroup.SignalSignature.TypeAbbreviation = "IA";
-                                                var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
-                                                foreach (var phase in aGroupHierachy)
-                                                {
-                                                    switch (phase.Key)
+                                                case "A":
                                                     {
-                                                        case "P":
-                                                            {
-                                                                var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
-                                                                positiveGroup.SignalSignature.TypeAbbreviation = "IAP";
-                                                                foreach (var signal in phase)
-                                                                    positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(positiveGroup);
-                                                                break;
-                                                            }
-
-                                                        case "A":
-                                                            {
-                                                                var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
-                                                                GroupA.SignalSignature.TypeAbbreviation = "IAA";
-                                                                foreach (var signal in phase)
-                                                                    GroupA.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupA);
-                                                                break;
-                                                            }
-
-                                                        case "B":
-                                                            {
-                                                                var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
-                                                                GroupB.SignalSignature.TypeAbbreviation = "IAB";
-                                                                foreach (var signal in phase)
-                                                                    GroupB.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupB);
-                                                                break;
-                                                            }
-
-                                                        case "C":
-                                                            {
-                                                                var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
-                                                                GroupC.SignalSignature.TypeAbbreviation = "IAC";
-                                                                foreach (var signal in phase)
-                                                                    GroupC.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupC);
-                                                                break;
-                                                            }
-
-                                                        default:
-                                                            {
-                                                                throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
-                                                            }
+                                                        var AGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                        AGroup.SignalSignature.TypeAbbreviation = "IMA";
+                                                        foreach (var signal in phase)
+                                                            AGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        mGroup.SignalList.Add(AGroup);
+                                                        break;
                                                     }
-                                                }
-                                                newHierachy.SignalList.Add(aGroup);
-                                                break;
-                                            }
 
-                                        case "P":
-                                            {
-                                                var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phasor"));
-                                                aGroup.SignalSignature.TypeAbbreviation = "IP";
-                                                var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
-                                                foreach (var phase in aGroupHierachy)
-                                                {
-                                                    switch (phase.Key)
+                                                case "B":
                                                     {
-                                                        case "P":
-                                                            {
-                                                                var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
-                                                                positiveGroup.SignalSignature.TypeAbbreviation = "IPP";
-                                                                foreach (var signal in phase)
-                                                                    positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(positiveGroup);
-                                                                break;
-                                                            }
-
-                                                        case "A":
-                                                            {
-                                                                var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
-                                                                GroupA.SignalSignature.TypeAbbreviation = "IPA";
-                                                                foreach (var signal in phase)
-                                                                    GroupA.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupA);
-                                                                break;
-                                                            }
-
-                                                        case "B":
-                                                            {
-                                                                var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
-                                                                GroupB.SignalSignature.TypeAbbreviation = "IPB";
-                                                                foreach (var signal in phase)
-                                                                    GroupB.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupB);
-                                                                break;
-                                                            }
-
-                                                        case "C":
-                                                            {
-                                                                var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
-                                                                GroupC.SignalSignature.TypeAbbreviation = "IPC";
-                                                                foreach (var signal in phase)
-                                                                    GroupC.SignalList.Add(new SignalTypeHierachy(signal));
-                                                                aGroup.SignalList.Add(GroupC);
-                                                                break;
-                                                            }
-
-                                                        default:
-                                                            {
-                                                                throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
-                                                            }
+                                                        var BGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                        BGroup.SignalSignature.TypeAbbreviation = "IMB";
+                                                        foreach (var signal in phase)
+                                                            BGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        mGroup.SignalList.Add(BGroup);
+                                                        break;
                                                     }
-                                                }
-                                                newHierachy.SignalList.Add(aGroup);
-                                                break;
-                                            }
 
-                                        default:
-                                            {
-                                                throw new Exception("Error! Invalid voltage signal type found: " + group.Key);
+                                                case "C":
+                                                    {
+                                                        var CGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                        CGroup.SignalSignature.TypeAbbreviation = "IMC";
+                                                        foreach (var signal in phase)
+                                                            CGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        mGroup.SignalList.Add(CGroup);
+                                                        break;
+                                                    }
+
+                                                default:
+                                                    {
+                                                        throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage magnitude!");
+                                                    }
                                             }
+                                        }
+                                        newHierachy.SignalList.Add(mGroup);
+                                        break;
+                                    }
+
+                                    case "A":
+                                    {
+                                        var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Angle"));
+                                        aGroup.SignalSignature.TypeAbbreviation = "IA";
+                                        var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in aGroupHierachy)
+                                        {
+                                            switch (phase.Key)
+                                            {
+                                                case "P":
+                                                    {
+                                                        var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
+                                                        positiveGroup.SignalSignature.TypeAbbreviation = "IAP";
+                                                        foreach (var signal in phase)
+                                                            positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(positiveGroup);
+                                                        break;
+                                                    }
+
+                                                case "A":
+                                                    {
+                                                        var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                        GroupA.SignalSignature.TypeAbbreviation = "IAA";
+                                                        foreach (var signal in phase)
+                                                            GroupA.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(GroupA);
+                                                        break;
+                                                    }
+
+                                                case "B":
+                                                    {
+                                                        var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                        GroupB.SignalSignature.TypeAbbreviation = "IAB";
+                                                        foreach (var signal in phase)
+                                                            GroupB.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(GroupB);
+                                                        break;
+                                                    }
+
+                                                case "C":
+                                                    {
+                                                        var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                        GroupC.SignalSignature.TypeAbbreviation = "IAC";
+                                                        foreach (var signal in phase)
+                                                            GroupC.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(GroupC);
+                                                        break;
+                                                    }
+
+                                                default:
+                                                    {
+                                                        throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
+                                                    }
+                                            }
+                                        }
+                                        newHierachy.SignalList.Add(aGroup);
+                                        break;
+                                    }
+
+                                    case "P":
+                                    {
+                                        var aGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phasor"));
+                                        aGroup.SignalSignature.TypeAbbreviation = "IP";
+                                        var aGroupHierachy = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in aGroupHierachy)
+                                        {
+                                            switch (phase.Key)
+                                            {
+                                                case "P":
+                                                    {
+                                                        var positiveGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Positive Sequence"));
+                                                        positiveGroup.SignalSignature.TypeAbbreviation = "IPP";
+                                                        foreach (var signal in phase)
+                                                            positiveGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(positiveGroup);
+                                                        break;
+                                                    }
+
+                                                case "A":
+                                                    {
+                                                        var GroupA = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                        GroupA.SignalSignature.TypeAbbreviation = "IPA";
+                                                        foreach (var signal in phase)
+                                                            GroupA.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(GroupA);
+                                                        break;
+                                                    }
+
+                                                case "B":
+                                                    {
+                                                        var GroupB = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                        GroupB.SignalSignature.TypeAbbreviation = "IPB";
+                                                        foreach (var signal in phase)
+                                                            GroupB.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(GroupB);
+                                                        break;
+                                                    }
+
+                                                case "C":
+                                                    {
+                                                        var GroupC = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                        GroupC.SignalSignature.TypeAbbreviation = "IPC";
+                                                        foreach (var signal in phase)
+                                                            GroupC.SignalList.Add(new SignalTypeHierachy(signal));
+                                                        aGroup.SignalList.Add(GroupC);
+                                                        break;
+                                                    }
+
+                                                default:
+                                                    {
+                                                        throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage Angle!");
+                                                    }
+                                            }
+                                        }
+                                        newHierachy.SignalList.Add(aGroup);
+                                        break;
+                                    }
+
+                                    case "W":
+                                    {
+                                        var mGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Wave"));
+                                        mGroup.SignalSignature.TypeAbbreviation = "IM";
+                                        var mGroupHierachky = group.GroupBy(z => z.TypeAbbreviation.ToArray()[2].ToString());
+                                        foreach (var phase in mGroupHierachky)
+                                        {
+                                            switch (phase.Key)
+                                            {
+                                                case "A":
+                                                {
+                                                    var AGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase A"));
+                                                    AGroup.SignalSignature.TypeAbbreviation = "IWA";
+                                                    foreach (var signal in phase)
+                                                        AGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(AGroup);
+                                                    break;
+                                                }
+
+                                                case "B":
+                                                {
+                                                    var BGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase B"));
+                                                    BGroup.SignalSignature.TypeAbbreviation = "IWB";
+                                                    foreach (var signal in phase)
+                                                        BGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(BGroup);
+                                                    break;
+                                                }
+
+                                                case "C":
+                                                {
+                                                    var CGroup = new SignalTypeHierachy(new SignalSignatureViewModel("Phase C"));
+                                                    CGroup.SignalSignature.TypeAbbreviation = "IWC";
+                                                    foreach (var signal in phase)
+                                                        CGroup.SignalList.Add(new SignalTypeHierachy(signal));
+                                                    mGroup.SignalList.Add(CGroup);
+                                                    break;
+                                                }
+
+                                                default:
+                                                {
+                                                    throw new Exception("Error! Invalid signal phase: " + phase.Key + " found in Voltage magnitude!");
+                                                }
+                                            }
+                                        }
+                                        newHierachy.SignalList.Add(mGroup);
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        throw new Exception("Error! Invalid voltage signal type found: " + group.Key);
                                     }
                                 }
-                                signalTypeTree.Add(newHierachy);
-                                break;
                             }
-
+                            signalTypeTree.Add(newHierachy);
+                            break;
+                        }
                         default:
-                            {
-                                throw new Exception("Error! Invalid signal type found: " + signalType.Key);
-                            }
+                        {
+                            throw new Exception("Error! Invalid signal type found: " + signalType.Key);
+                        }
                     }
                 }
                 var newSig = new SignalSignatureViewModel("Sampling Rate: " + rate.ToString() + "/Second");

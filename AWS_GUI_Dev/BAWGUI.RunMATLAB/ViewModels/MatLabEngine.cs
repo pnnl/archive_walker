@@ -235,9 +235,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
+                IsReRunRunning = false;
                 MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
-
             e.Result = RingdownRerunResults.RingdownDetectorList;
         }
 
@@ -672,6 +673,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
+                IsReRunRunning = false;
                 MessageBox.Show("Error in running matlab out of range re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
 
@@ -788,10 +791,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 MessageBox.Show(ex.Message);
             }
-
-
-            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            //start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
+            //end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
             var runFlag = controlPath + "RunFlag.txt";
             if (!System.IO.File.Exists(runFlag))
             {
@@ -899,7 +900,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 worker2.WorkerSupportsCancellation = true;
                 while (worker.IsBusy)
                 {
-                    Thread.Sleep(500);
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(500);
                 }
                 object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories };
                 worker.RunWorkerAsync(parameters);
