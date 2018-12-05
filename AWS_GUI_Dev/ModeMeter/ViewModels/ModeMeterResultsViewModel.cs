@@ -289,24 +289,51 @@ namespace ModeMeter.ViewModels
         {
             if (Run != null && Directory.Exists(Run.Model.EventPath))
             {
-                var allName = _findAllCSVDataFileNames(Run.Model.EventPath);
+                var allName = new List<DateTime>();
+                _findAllCSVDataFileNames(Run.Model.EventPath, allName);
+                var latest = allName.Max();
+                SelectedStartTime = latest.ToString("MM/dd/yyyy HH:mm:ss");
+                SelectedEndTime = latest.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
             }
         }
 
-        private List<DateTime> _findAllCSVDataFileNames(string path)
+        private void _findAllCSVDataFileNames(string path, List<DateTime> allName)
         {
             foreach (var dir in Directory.GetDirectories(path))
             {
-
+                _findAllCSVDataFileNames(dir, allName);
             }
             foreach (var file in Directory.GetFiles(path))
             {
                 if (Path.GetExtension(file).ToLower() == "csv")
                 {
-                    var filename = DateTime.ParseExact(Path.GetFileNameWithoutExtension(file), "yyMMdd", CultureInfo.InvariantCulture);
+                    try
+                    {
+                        var filename = DateTime.ParseExact(Path.GetFileNameWithoutExtension(file), "yyMMdd", CultureInfo.InvariantCulture);
+                        allName.Add(filename);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
                 }
             }
-            return new List<DateTime>();
         }
+
+        //private List<DateTime> _findAllCSVDataFileNames(string path)
+        //{
+        //    foreach (var dir in Directory.GetDirectories(path))
+        //    {
+
+        //    }
+        //    foreach (var file in Directory.GetFiles(path))
+        //    {
+        //        if (Path.GetExtension(file).ToLower() == "csv")
+        //        {
+        //            var filename = DateTime.ParseExact(Path.GetFileNameWithoutExtension(file), "yyMMdd", CultureInfo.InvariantCulture);
+        //        }
+        //    }
+        //    return new List<DateTime>();
+        //}
     }
 }
