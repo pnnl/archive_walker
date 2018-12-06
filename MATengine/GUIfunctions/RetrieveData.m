@@ -43,7 +43,7 @@ PMU = rmfield(PMU,{'File_Name','Time_Zone'});
 for idx = 1:length(PMU)
     PMU(idx).PMU_Name = {PMU(idx).PMU_Name};
     
-    PMU(idx).Signal_Time = PMU(idx).Signal_Time.Signal_datenum;
+    PMU(idx).fs = round((length(PMU(idx).Signal_Time.datetime)-1)/seconds(diff(PMU(idx).Signal_Time.datetime([1 end]))));
     
-    PMU(idx).fs = round(mean(1./diff(PMU(idx).Signal_Time)/(24*60*60)));
+    PMU(idx).Signal_Time = PMU(idx).Signal_Time.Signal_datenum;
 end
