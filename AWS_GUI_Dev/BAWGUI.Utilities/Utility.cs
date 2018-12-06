@@ -51,6 +51,7 @@ namespace BAWGUI.Utilities
         public static List<string> SaturatedColors = new List<string>{  "Blue",
                                                                         "Orange",
                                                                         "Black",
+                                                                        "Green",
                                                                         "Purple",
                                                                         "Cyan",
                                                                         "Maroon",
@@ -64,7 +65,6 @@ namespace BAWGUI.Utilities
                                                                         "Turquoise",
                                                                         "Mint",
                                                                         "Red",
-                                                                        "Green",
                                                                         "Yellow",
                                                                         "RoyalBlue",
                                                                         "LimeGreen"
