@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using System;
@@ -64,6 +65,16 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
             }
         }
+        private ObservableCollection<Legend> _rdreRunPlotLegend;
+        public ObservableCollection<Legend> RDreRunPlotLegend
+        {
+            get { return _rdreRunPlotLegend; }
+            set
+            {
+                _rdreRunPlotLegend = value;
+                OnPropertyChanged();
+            }
+        }
     }
     public class PlotModelThumbnailPair:ViewModelBase
     {
@@ -98,7 +109,6 @@ namespace BAWGUI.Results.ViewModels
             }
         }
     }    
-
     public class DataThresholdRMSPlotModelPair:ViewModelBase
     {
         private ViewResolvingPlotModel _rdSignalPlotModel;
