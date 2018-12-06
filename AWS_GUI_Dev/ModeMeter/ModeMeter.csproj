@@ -107,6 +107,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\MMRerunPlotModel.cs" />
     <Compile Include="ViewModels\ModeMeterResultsViewModel.cs" />
     <Compile Include="ViewModels\ModeViewModel.cs" />
     <Compile Include="ViewModels\SmallSignalStabilityToolViewModel.cs" />

@@ -29,6 +29,6 @@
                 </Style>
             </oxy:PlotView.Style>
         </oxy:PlotView>
-        <ListBox Grid.Column="1" Width="100" ItemsSource="{Binding SparsePlotLegend}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="White" BorderThickness="0"/>
+        <ListBox Grid.Column="1" Width="100" ItemsSource="{Binding SparsePlotLegend}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="White" BorderThickness="0" Height="{Binding Path=ActualHeight, ElementName=SparsePlot}"/>
     </Grid>
 </UserControl>

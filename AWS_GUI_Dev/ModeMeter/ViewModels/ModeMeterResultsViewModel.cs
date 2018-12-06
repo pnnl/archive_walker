@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
@@ -8,6 +9,7 @@ using OxyPlot.Axes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -370,10 +372,12 @@ namespace ModeMeter.ViewModels
         }
         private void _drawVSReRunPlots()
         {
-            var mmrrPlots = new ObservableCollection<ViewResolvingPlotModel>();
+            var mmrrPlots = new ObservableCollection<MMRerunPlotModel>();
             foreach (var plot in ReRunResult)
             {
+                var plotWithLegend = new MMRerunPlotModel();
                 var aPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke, Title = plot.Title };
+                ObservableCollection<Legend> legends =new ObservableCollection<Legend>();
 
                 OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
                 {
@@ -402,6 +406,7 @@ namespace ModeMeter.ViewModels
                     IsPanEnabled = true
                 };
                 aPlot.Axes.Add(yAxis);
+                var signalCounter = 0;
                 foreach (var mm in plot.Signals)
                 {
                     var signalSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
@@ -412,6 +417,10 @@ namespace ModeMeter.ViewModels
                     signalSeries.Title = mm.SignalName;
                     //signalSeries.MouseDown += OORReRunSeries_MouseDown;
                     aPlot.Series.Add(signalSeries);
+                    var c = string.Format("#{0:x6}", Color.FromName(Utility.SaturatedColors[signalCounter % 20]).ToArgb());
+                    signalSeries.Color = OxyColor.Parse(c);
+                    legends.Add(new Legend(mm.SignalName, signalSeries.Color));
+                    signalCounter++;
                 }
 
                 aPlot.LegendPlacement = LegendPlacement.Outside;
@@ -419,18 +428,21 @@ namespace ModeMeter.ViewModels
                 aPlot.LegendPadding = 0.0;
                 aPlot.LegendSymbolMargin = 0.0;
                 aPlot.LegendMargin = 0;
+                aPlot.IsLegendVisible = false;
 
                 var currentArea = aPlot.LegendArea;
                 var currentPlotWithAxis = aPlot.PlotAndAxisArea;
 
                 var currentMargins = aPlot.PlotMargins;
                 aPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
-                mmrrPlots.Add(aPlot);
+                plotWithLegend.MMReRunAllSignalsPlotModel = aPlot;
+                plotWithLegend.MMReRunPlotLegend = legends;
+                mmrrPlots.Add(plotWithLegend);
             }
             MMReRunPlotModels = mmrrPlots;
         }
-        private ObservableCollection<ViewResolvingPlotModel> _mmReRunPlotModels;
-        public ObservableCollection<ViewResolvingPlotModel> MMReRunPlotModels
+        private ObservableCollection<MMRerunPlotModel> _mmReRunPlotModels;
+        public ObservableCollection<MMRerunPlotModel> MMReRunPlotModels
         {
             get { return _mmReRunPlotModels; }
             set
@@ -446,9 +458,9 @@ namespace ModeMeter.ViewModels
             var parent = xAxis.Parent;
             foreach (var dtr in MMReRunPlotModels)
             {
-                if (dtr != parent)
+                if (dtr.MMReRunAllSignalsPlotModel != parent)
                 {
-                    foreach (var ax in dtr.Axes)
+                    foreach (var ax in dtr.MMReRunAllSignalsPlotModel.Axes)
                     {
                         if (ax.IsHorizontal() && ax.ActualMinimum != xAxis.ActualMinimum)
                         {
@@ -456,11 +468,9 @@ namespace ModeMeter.ViewModels
                             break;
                         }
                     }
-                dtr.InvalidatePlot(false);
-                }
-                
+                dtr.MMReRunAllSignalsPlotModel.InvalidatePlot(false);
+                }                
             }
         }
-
     }
 }
