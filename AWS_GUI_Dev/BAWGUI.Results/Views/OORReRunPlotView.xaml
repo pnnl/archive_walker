@@ -88,9 +88,27 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORSignalPlotModel}" MinHeight="200" x:Name="OORSignalPlot"/>
-        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORDurationPlotModel}" MinHeight="170" x:Name="OORDurationPlot" Visibility="{Binding SelectedSignalPlotModel.IsByDuration, Converter={StaticResource BooleanVisibilityConverter}}"/>
-        <oxy:PlotView Grid.Row="4" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORROCPlotModel}" MinHeight="170" x:Name="OORROCPlot" Visibility="{Binding SelectedSignalPlotModel.IsByROC, Converter={StaticResource BooleanVisibilityConverter}}"/>
+        <oxy:PlotView Grid.Row="2" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORSignalPlotModel}" MinHeight="200" x:Name="OORSignalPlot" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORSignalPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
+        <oxy:PlotView Grid.Row="3" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORDurationPlotModel}" MinHeight="170" x:Name="OORDurationPlot" Visibility="{Binding SelectedSignalPlotModel.IsByDuration, Converter={StaticResource BooleanVisibilityConverter}}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORDurationPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
+        <oxy:PlotView Grid.Row="4" Model="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORROCPlotModel}" MinHeight="170" x:Name="OORROCPlot" Visibility="{Binding SelectedSignalPlotModel.IsByROC, Converter={StaticResource BooleanVisibilityConverter}}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <oxy:PlotView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.InspectSignalByTimeRange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Go to Signal Inspection for this Time Range" CommandParameter="{Binding SelectedSignalPlotModel.SignalPlotModelTriple.OORROCPlotModel}"/>
+                </ContextMenu>
+            </oxy:PlotView.ContextMenu>
+        </oxy:PlotView>
         <!--</StackPanel>-->
     </Grid>
 </UserControl>

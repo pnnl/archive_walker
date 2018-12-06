@@ -200,6 +200,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         #region DrawSignal
         public void GetSignalDataByTimeRange(ViewResolvingPlotModel pm, AWRunViewModel run)
         {
+            SignalPlots.Clear();
             //SignalViewPlotModel = null;
             string start = null;
             string end = null;
