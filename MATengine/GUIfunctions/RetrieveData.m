@@ -14,9 +14,9 @@
 %
 % Inputs:
 %   RerunStartTime - String specifying the start time for the run in the
-%       format MM/DD/YYYY HH:MM:SS 
+%       format MM/DD/YYYY HH:MM:SS.SSS
 %   RerunEndTime - String specifying the end time for the run in the format
-%       MM/DD/YYYY HH:MM:SS 
+%       MM/DD/YYYY HH:MM:SS.SSS
 %   ConfigFile - Path to the configuration XML used to configure the AW
 %       engine for a run.
 %   ControlPath - Path to folders containing Run.txt and Pause.txt files
@@ -35,15 +35,29 @@
 
 function PMU = RetrieveData(RerunStartTime,RerunEndTime,ConfigFile,ControlPath,EventPath,InitializationPath,FileDirectory)
 
+RerunStartTimeDT = datetime(RerunStartTime,'InputFormat','MM/dd/yyyy HH:mm:ss.SSS');
+RerunEndTimeDT = datetime(RerunEndTime,'InputFormat','MM/dd/yyyy HH:mm:ss.SSS');
+
+RerunStartTimeRound = datestr(dateshift(RerunStartTimeDT,'start','second'),'mm/dd/yyyy HH:MM:SS');
+RerunEndTimeRound = datestr(dateshift(RerunEndTimeDT,'end','second'),'mm/dd/yyyy HH:MM:SS');
+
 RerunDetector = 'RetrieveMode';
-[~, ~, PMU] = BAWS_main9(ControlPath,EventPath,InitializationPath,FileDirectory,ConfigFile, RerunStartTime, RerunEndTime, RerunDetector);
+[~, ~, PMU] = BAWS_main9(ControlPath,EventPath,InitializationPath,FileDirectory,ConfigFile, RerunStartTimeRound, RerunEndTimeRound, RerunDetector);
 
 PMU = rmfield(PMU,{'File_Name','Time_Zone'});
-
 for idx = 1:length(PMU)
     PMU(idx).PMU_Name = {PMU(idx).PMU_Name};
     
     PMU(idx).fs = round((length(PMU(idx).Signal_Time.datetime)-1)/seconds(diff(PMU(idx).Signal_Time.datetime([1 end]))));
+    
+    KeepIdx = find(PMU(idx).Signal_Time.datetime >= RerunStartTimeDT, 1) : find(PMU(idx).Signal_Time.datetime <= RerunEndTimeDT, 1, 'last');
+    %
+    PMU(idx).Data = PMU(idx).Data(KeepIdx,:);
+    PMU(idx).Stat = PMU(idx).Stat(KeepIdx,:);
+    PMU(idx).Flag = PMU(idx).Flag(KeepIdx,:,:);
+    PMU(idx).Signal_Time.Time_String = PMU(idx).Signal_Time.Time_String(KeepIdx);
+    PMU(idx).Signal_Time.Signal_datenum = PMU(idx).Signal_Time.Signal_datenum(KeepIdx);
+    PMU(idx).Signal_Time.datetime = PMU(idx).Signal_Time.datetime(KeepIdx);
     
     PMU(idx).Signal_Time = PMU(idx).Signal_Time.Signal_datenum;
 end

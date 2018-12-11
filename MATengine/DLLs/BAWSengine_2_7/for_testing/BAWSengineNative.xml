@@ -1643,6 +1643,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <returns>An Object containing the first output argument.</returns>
             
@@ -1653,6 +1654,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="RerunStartTime">Input argument #1</param>
              <returns>An Object containing the first output argument.</returns>
@@ -1664,6 +1666,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="RerunStartTime">Input argument #1</param>
              <param name="RerunEndTime">Input argument #2</param>
@@ -1676,6 +1679,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="RerunStartTime">Input argument #1</param>
              <param name="RerunEndTime">Input argument #2</param>
@@ -1689,6 +1693,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="RerunStartTime">Input argument #1</param>
              <param name="RerunEndTime">Input argument #2</param>
@@ -1703,6 +1708,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="RerunStartTime">Input argument #1</param>
              <param name="RerunEndTime">Input argument #2</param>
@@ -1718,6 +1724,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="RerunStartTime">Input argument #1</param>
              <param name="RerunEndTime">Input argument #2</param>
@@ -1734,6 +1741,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="RerunStartTime">Input argument #1</param>
              <param name="RerunEndTime">Input argument #2</param>
@@ -1751,6 +1759,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <returns>An Array of length "numArgsOut" containing the output
@@ -1763,6 +1772,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="RerunStartTime">Input argument #1</param>
@@ -1776,6 +1786,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="RerunStartTime">Input argument #1</param>
@@ -1790,6 +1801,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="RerunStartTime">Input argument #1</param>
@@ -1805,6 +1817,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="RerunStartTime">Input argument #1</param>
@@ -1821,6 +1834,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="RerunStartTime">Input argument #1</param>
@@ -1838,6 +1852,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="RerunStartTime">Input argument #1</param>
@@ -1856,6 +1871,7 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="RerunStartTime">Input argument #1</param>
@@ -1877,6 +1893,7 @@
              <remarks>
              This method will allocate and return by reference the output argument
              array.<newpara></newpara>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of Object output arguments</param>
