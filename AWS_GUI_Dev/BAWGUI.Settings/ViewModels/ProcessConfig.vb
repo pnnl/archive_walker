@@ -1003,7 +1003,7 @@ Namespace ViewModels
             _model = New MultirateModel()
             '_pElement = 1
             '_qElement = 1
-            _newRate = 1
+            '_newRate = 1
             IsExpanded = False
             _filterChoice = "0"
         End Sub
@@ -1023,7 +1023,15 @@ Namespace ViewModels
             End Try
             For Each signal In InputChannels
                 Dim output = New SignalSignatureViewModel(signal.SignalName, MultiRatePMU, signal.TypeAbbreviation)
-                output.SamplingRate = NewRate
+                If NewRate IsNot Nothing Then
+                    output.SamplingRate = NewRate
+                Else
+                    If PElement IsNot Nothing Then
+                        output.SamplingRate = signal.SamplingRate * PElement / QElement
+                    Else
+                        output.SamplingRate = signal.SamplingRate * 1 / QElement
+                    End If
+                End If
                 output.Unit = signal.Unit
                 output.IsCustomSignal = True
                 output.OldSignalName = output.SignalName
