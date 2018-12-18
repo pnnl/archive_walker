@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using BAWGUI.Utilities;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,16 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _isPlotSelected = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<Legend> _legends;
+        public ObservableCollection<Legend> Legends
+        {
+            get { return _legends; }
+            set
+            {
+                _legends = value;
                 OnPropertyChanged();
             }
         }

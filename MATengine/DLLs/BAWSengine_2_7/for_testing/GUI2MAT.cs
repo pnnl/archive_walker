@@ -1,6 +1,6 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Tue Dec 04 08:43:28 2018
+* Date: Tue Dec 18 09:31:19 2018
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
@@ -2222,6 +2222,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
@@ -2236,6 +2237,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="RerunStartTime">Input argument #1</param>
     /// <returns>An MWArray containing the first output argument.</returns>
@@ -2251,6 +2253,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="RerunStartTime">Input argument #1</param>
     /// <param name="RerunEndTime">Input argument #2</param>
@@ -2267,6 +2270,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="RerunStartTime">Input argument #1</param>
     /// <param name="RerunEndTime">Input argument #2</param>
@@ -2285,6 +2289,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="RerunStartTime">Input argument #1</param>
     /// <param name="RerunEndTime">Input argument #2</param>
@@ -2304,6 +2309,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="RerunStartTime">Input argument #1</param>
     /// <param name="RerunEndTime">Input argument #2</param>
@@ -2324,6 +2330,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="RerunStartTime">Input argument #1</param>
     /// <param name="RerunEndTime">Input argument #2</param>
@@ -2346,6 +2353,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="RerunStartTime">Input argument #1</param>
     /// <param name="RerunEndTime">Input argument #2</param>
@@ -2369,6 +2377,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <returns>An Array of length "numArgsOut" containing the output
@@ -2385,6 +2394,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="RerunStartTime">Input argument #1</param>
@@ -2402,6 +2412,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="RerunStartTime">Input argument #1</param>
@@ -2421,6 +2432,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="RerunStartTime">Input argument #1</param>
@@ -2441,6 +2453,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="RerunStartTime">Input argument #1</param>
@@ -2462,6 +2475,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="RerunStartTime">Input argument #1</param>
@@ -2485,6 +2499,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="RerunStartTime">Input argument #1</param>
@@ -2509,6 +2524,7 @@ namespace BAWSengine
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="RerunStartTime">Input argument #1</param>
@@ -2537,6 +2553,7 @@ namespace BAWSengine
     /// <remarks>
     /// This method will allocate and return by reference the output argument
     /// array.<newpara></newpara>
+    /// M-Documentation:
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return</param>
     /// <param name= "argsOut">Array of MWArray output arguments</param>

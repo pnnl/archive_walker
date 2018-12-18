@@ -25,7 +25,7 @@
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddPlot}" ToolTip="Add a plot">
                             <Image Width="16" Height="16" Source="/BAWGUI.SignalManagement;component/MyResources/AddCommand.png" />
                         </Button>
-                        <Label Content="Add a Plot" Margin="2" FontSize="18" FontWeight="Bold">
+                        <Label Content="Add a Plot" Margin="2" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Right">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
                                     <i:InvokeCommandAction Command="{Binding AllPlotsDeSelected}"/>

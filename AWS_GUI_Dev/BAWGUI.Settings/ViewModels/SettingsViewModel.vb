@@ -1328,6 +1328,7 @@ Namespace ViewModels
                             Try
                                 _changePointOnWavePowCalFltrInputSignal(obj)
                                 _checkPointOnWavePowCalFltrOutputSamplingRate(obj)
+                                _checkPointOnWavePowCalFltrOutputUnit()
                                 _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
                                 _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
                             Catch ex As Exception
@@ -1424,6 +1425,33 @@ Namespace ViewModels
                 signal.SamplingRate = freq
             Next
         End Sub
+        Private Sub _checkPointOnWavePowCalFltrOutputUnit()
+            Dim PhAVUnit = CurrentSelectedStep.POWInputSignals.PhaseAVoltage.Unit
+            Dim PhAIUnit = CurrentSelectedStep.POWInputSignals.PhaseACurrent.Unit
+            Dim output1 = CurrentSelectedStep.OutputChannels(0)
+            Dim output2 = CurrentSelectedStep.OutputChannels(1)
+            If PhAVUnit = "V" And PhAIUnit = "A" Then
+                output1.Unit = "W"
+                output2.Unit = "VAR"
+                output1.OldUnit = output1.Unit
+                output2.OldUnit = output2.Unit
+            ElseIf PhAVUnit = "kV" And PhAIUnit = "A" Then
+                output1.Unit = "kW"
+                output2.Unit = "kVAR"
+                output1.OldUnit = output1.Unit
+                output2.OldUnit = output2.Unit
+            ElseIf PhAVUnit = "V" And PhAIUnit = "kA" Then
+                output1.Unit = "kW"
+                output2.Unit = "kVAR"
+                output1.OldUnit = output1.Unit
+                output2.OldUnit = output2.Unit
+            ElseIf PhAVUnit = "kV" And PhAIUnit = "kA" Then
+                output1.Unit = "MW"
+                output2.Unit = "MVAR"
+                output1.OldUnit = output1.Unit
+                output2.OldUnit = output2.Unit
+            End If
+        End Sub
         Private Sub _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
             Dim freq = -1
             For Each signal In CurrentSelectedStep.InputChannels
@@ -1439,6 +1467,9 @@ Namespace ViewModels
                 Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
             Else
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseAVoltage" Then
+                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
+                        Throw New Exception("Input must be a point-on-wave voltage")
+                    End If
                     CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseAVoltage)
                     CurrentSelectedStep.POWInputSignals.PhaseAVoltage.IsChecked = False
                     CurrentSelectedStep.POWInputSignals.PhaseAVoltage = DummySignature
@@ -1448,6 +1479,9 @@ Namespace ViewModels
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBVoltage" Then
+                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
+                        Throw New Exception("Input must be a point-on-wave voltage")
+                    End If
                     CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBVoltage)
                     CurrentSelectedStep.POWInputSignals.PhaseBVoltage.IsChecked = False
                     CurrentSelectedStep.POWInputSignals.PhaseBVoltage = DummySignature
@@ -1457,6 +1491,9 @@ Namespace ViewModels
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCVoltage" Then
+                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
+                        Throw New Exception("Input must be a point-on-wave voltage")
+                    End If
                     CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCVoltage)
                     CurrentSelectedStep.POWInputSignals.PhaseCVoltage.IsChecked = False
                     CurrentSelectedStep.POWInputSignals.PhaseCVoltage = DummySignature
@@ -1466,6 +1503,9 @@ Namespace ViewModels
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseACurrent" Then
+                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                        Throw New Exception("Input must be a point-on-wave current")
+                    End If
                     CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseACurrent)
                     CurrentSelectedStep.POWInputSignals.PhaseACurrent.IsChecked = False
                     CurrentSelectedStep.POWInputSignals.PhaseACurrent = DummySignature
@@ -1475,6 +1515,9 @@ Namespace ViewModels
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBCurrent" Then
+                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                        Throw New Exception("Input must be a point-on-wave current")
+                    End If
                     CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBCurrent)
                     CurrentSelectedStep.POWInputSignals.PhaseBCurrent.IsChecked = False
                     CurrentSelectedStep.POWInputSignals.PhaseBCurrent = DummySignature
@@ -1484,6 +1527,9 @@ Namespace ViewModels
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCCurrent" Then
+                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                        Throw New Exception("Input must be a point-on-wave current")
+                    End If
                     CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCCurrent)
                     CurrentSelectedStep.POWInputSignals.PhaseCCurrent.IsChecked = False
                     CurrentSelectedStep.POWInputSignals.PhaseCCurrent = DummySignature

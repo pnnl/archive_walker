@@ -49,18 +49,18 @@ for MMidx = 1:length(MMfolders)
     Pidx = strcmp(H{3,:},'P');
     Qidx = strcmp(H{3,:},'Q');
 
-    ModeNames = unique(H{2,FreqIdx});
+    ModeNames = unique(H{2,FreqIdx},'stable');
     ModeIdx = cell(1,length(ModeNames));
     for Midx = 1:length(ModeNames)
         ModeIdx{Midx} = strcmp(H{2,:},ModeNames{Midx});
 
-        AlgNames = unique(H{4,ModeIdx{Midx}});
+        AlgNames = unique(H{4,ModeIdx{Midx}},'stable');
         AlgIdx = cell(1,length(AlgNames));
         for Aidx = 1:length(AlgNames)
             AlgIdx{Aidx} = strcmp(H{4,:},AlgNames{Aidx});
 
             F = MM{:,FreqIdx & ModeIdx{Midx} & AlgIdx{Aidx}};
-            D = MM{:,DampIdx & ModeIdx{Midx} & AlgIdx{Aidx}};
+            D = MM{:,DampIdx & ModeIdx{Midx} & AlgIdx{Aidx}}*100;
             SigNames = H{3,FreqIdx & ModeIdx{Midx} & AlgIdx{Aidx}};
             
             PlotInfo(end+1).Data = F;
@@ -77,12 +77,12 @@ for MMidx = 1:length(MMfolders)
         end
     end
 
-    UnitNames = unique(H{4,OpIdx});
+    UnitNames = unique(H{4,OpIdx},'stable');
     UnitIdx = cell(1,length(UnitNames));
     for Uidx = 1:length(UnitNames)
         UnitIdx{Uidx} = strcmp(H{4,:},UnitNames{Uidx});
 
-        TypeNames = unique(H{3,UnitIdx{Uidx}});
+        TypeNames = unique(H{3,UnitIdx{Uidx}},'stable');
         TypeIdx = cell(1,length(TypeNames));
         for Tidx = 1:length(TypeNames)
             TypeIdx{Tidx} = strcmp(H{3,:},TypeNames{Tidx});
@@ -94,7 +94,7 @@ for MMidx = 1:length(MMfolders)
             PlotInfo(end).Time = datenum(t);
             PlotInfo(end).SignalNames = SigNames;
             PlotInfo(end).Ylabel = [TypeNames{Tidx} ' (' UnitNames{Uidx} ')'];
-            PlotInfo(end).Title = '';
+            PlotInfo(end).Title = 'Baselining Signals';
         end
     end
 end
