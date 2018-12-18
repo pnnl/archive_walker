@@ -6,10 +6,12 @@ using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using OxyPlot;
+using OxyPlot.Axes;
 using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -208,8 +210,8 @@ namespace BAWGUI.SignalManagement.ViewModels
             {
                 if (ax.IsHorizontal())
                 {
-                    start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss");
-                    end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
+                    start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss.fff");
+                    end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss.fff");
                     break;
                 }
             }
@@ -345,7 +347,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 CheckAllChildren(hk, (bool)hk.SignalSignature.IsChecked);
                 _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
                 _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
-                _drawSignals();
+                 _drawSignals();
             }
             else
             {
@@ -397,6 +399,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         private void _drawSignals()
         {
             var AsignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+            var legends = new ObservableCollection<Legend>();
             OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
             {
                 Position = OxyPlot.Axes.AxisPosition.Bottom,
@@ -408,6 +411,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 IsZoomEnabled = true,
                 IsPanEnabled = true,
             };
+            timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
             AsignalPlot.Axes.Add(timeXAxis);
             OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
             {
@@ -422,6 +426,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 IsPanEnabled = true
             };
             AsignalPlot.Axes.Add(yAxis);
+            var signalCounter = 0;
             foreach (var signal in SelectedSignalPlotPanel.Signals)
             {
                 var newSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
@@ -430,16 +435,67 @@ namespace BAWGUI.SignalManagement.ViewModels
                     newSeries.Points.Add(new DataPoint(signal.TimeStampNumber[i], signal.Data[i]));
                 }
                 newSeries.Title = signal.SignalName;
+                var c = string.Format("#{0:x6}", Color.FromName(Utility.SaturatedColors[signalCounter % 20]).ToArgb());
+                newSeries.Color = OxyColor.Parse(c);
+                legends.Add(new Legend(signal.SignalName, newSeries.Color));
                 AsignalPlot.Series.Add(newSeries);
+                signalCounter++;
             }
             AsignalPlot.LegendPlacement = LegendPlacement.Outside;
             AsignalPlot.LegendPosition = LegendPosition.RightMiddle;
             AsignalPlot.LegendPadding = 0.0;
             AsignalPlot.LegendSymbolMargin = 0.0;
             AsignalPlot.LegendMargin = 0;
+            AsignalPlot.IsLegendVisible = false;
+            //if (SelectedSignalPlotPanel.SignalViewPlotModel.Series.Count != 0)
+            //{
+            foreach (var ax in SelectedSignalPlotPanel.SignalViewPlotModel.Axes)
+                {
+                    if (ax.IsHorizontal())
+                    {
+                        foreach (var nax in AsignalPlot.Axes)
+                        {
+                            if (nax.IsHorizontal() && (ax.ActualMaximum != nax.ActualMaximum || ax.ActualMinimum != nax.ActualMinimum))
+                            {
+                                nax.Zoom(ax.ActualMinimum, ax.ActualMaximum);
+                                break;
+                            }
+                        }
+                    }
+                    if (ax.IsVertical())
+                    {
+                        foreach (var nax in AsignalPlot.Axes)
+                        {
+                            if (nax.IsVertical() && (ax.ActualMaximum != nax.ActualMaximum || ax.ActualMinimum != nax.ActualMinimum))
+                            {
+                                nax.Zoom(ax.ActualMinimum, ax.ActualMaximum);
+                                break;
+                            }
+                        }
+                    }
+                }
+            //}
 
             SelectedSignalPlotPanel.SignalViewPlotModel = AsignalPlot;
+            SelectedSignalPlotPanel.Legends = legends;
         }
+        private void TimeXAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            var xAxis = sender as OxyPlot.Axes.DateTimeAxis;
+            foreach (var plot in SignalPlots)
+            {
+                foreach (var ax in plot.SignalViewPlotModel.Axes)
+                {
+                    if (ax.IsHorizontal() && (ax.ActualMaximum != xAxis.ActualMaximum || ax.ActualMinimum != xAxis.ActualMinimum))
+                    {
+                        ax.Zoom(xAxis.ActualMinimum, xAxis.ActualMaximum);
+                        plot.SignalViewPlotModel.InvalidatePlot(false);
+                        break;
+                    }
+                }                
+            }
+        }
+
         private string _getUnitFromSignals(ObservableCollection<SignalSignatureViewModel> signals)
         {
             var unit = "";
