@@ -104,16 +104,16 @@ Acceptable(24).Units = {'A' 'kA'};
 %% Power
 
 Acceptable(25).Type = 'P';
-Acceptable(25).Units = {'MW'};
+Acceptable(25).Units = {'W','kW','MW'};
 
 Acceptable(26).Type = 'Q';
-Acceptable(26).Units = {'MVAR'};
+Acceptable(26).Units = {'VAR','kVAR','MVAR'};
 
 Acceptable(27).Type = 'CP';
-Acceptable(27).Units = {'MVA'};
+Acceptable(27).Units = {'VA','kVA','MVA'};
 
 Acceptable(28).Type = 'S';
-Acceptable(28).Units = {'MVA'};
+Acceptable(28).Units = {'VA','kVA','MVA'};
 
 
 %% Frequency
@@ -138,6 +138,30 @@ Acceptable(32).Units = {'SC'};
 % OTHER
 Acceptable(33).Type = 'OTHER';
 Acceptable(33).Units = {'O' 'V' 'kV' 'A' 'kA' 'DEG' 'RAD' 'MW' 'MVAR' 'MVA' 'Hz' 'mHz/sec' 'Hz/sec'};
+
+
+%% Voltage POW
+
+Acceptable(34).Type = 'VWA';
+Acceptable(34).Units = {'V' 'kV'};
+
+Acceptable(35).Type = 'VWB';
+Acceptable(35).Units = {'V' 'kV'};
+
+Acceptable(36).Type = 'VWC';
+Acceptable(36).Units = {'V' 'kV'};
+
+
+%% Current POW
+
+Acceptable(37).Type = 'IWA';
+Acceptable(37).Units = {'A' 'kA'};
+
+Acceptable(38).Type = 'IWB';
+Acceptable(38).Units = {'A' 'kA'};
+
+Acceptable(39).Type = 'IWC';
+Acceptable(39).Units = {'A' 'kA'};
 
 
 %% Check
