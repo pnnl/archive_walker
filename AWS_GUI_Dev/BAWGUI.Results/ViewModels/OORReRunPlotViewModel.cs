@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using System.Collections.ObjectModel;
@@ -66,6 +67,16 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _isByROC = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<Legend> _oorreRunPlotLegend;
+        public ObservableCollection<Legend> OORreRunPlotLegend
+        {
+            get { return _oorreRunPlotLegend; }
+            set
+            {
+                _oorreRunPlotLegend = value;
                 OnPropertyChanged();
             }
         }

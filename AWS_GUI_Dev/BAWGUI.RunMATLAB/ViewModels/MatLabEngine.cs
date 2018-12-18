@@ -232,9 +232,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
+                IsReRunRunning = false;
                 MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
-
             e.Result = RingdownRerunResults.RingdownDetectorList;
         }
 
@@ -243,6 +244,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             RDReRunCompletedEvent?.Invoke(this, e);
         }
+
         //private void _runRDReRunMode(string start, string end, string configFilename, string controlPath)
         //{
         //    if (Thread.CurrentThread.Name == null)
@@ -669,6 +671,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
+                Run.IsTaskRunning = false;
+                IsReRunRunning = false;
                 MessageBox.Show("Error in running matlab out of range re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
 
@@ -719,7 +723,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType));
+                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExample(filename, fileType, 1));
             }
             catch (Exception ex)
             {
@@ -728,6 +732,172 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             IsMatlabEngineRunning = false;
             return FileReadingResults;
+        }
+
+        public event EventHandler<ReadExampleFileResults> RetrieveDataCompletedEvent;
+        protected virtual void OnRetrieveDataCompletedEvent(ReadExampleFileResults e)
+        {
+            RetrieveDataCompletedEvent?.Invoke(this, e);
+        }
+        public void RetrieveData(string start, string end, AWRunViewModel run)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                //Here the running engine could be running a rerun instead of the normal run,
+                //need to talk to Jim as how to distinguish normal or rerun,
+                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+            //IsNormalRunPaused = false;
+            Run = run;
+            _controlPath = run.Model.ControlRerunPath;
+            _configFilePath = run.Model.ConfigFilePath;
+            try
+            {
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrieveDataMode);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
+                worker.WorkerReportsProgress = false;
+                worker.WorkerSupportsCancellation = true;
+                worker2.DoWork += _progressReporter;
+                worker2.ProgressChanged += _worker_ProgressChanged;
+                worker2.RunWorkerCompleted += _progressReportsDone;
+                worker2.WorkerReportsProgress = true;
+                worker2.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories };
+                worker.RunWorkerAsync(parameters);
+                worker2.RunWorkerAsync();
+                IsReRunRunning = true;
+                Run.IsTaskRunning = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void _workerRetrieveData_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            worker2.CancelAsync();
+            IsMatlabEngineRunning = false;
+            IsReRunRunning = false;
+            if (Run != null)
+            {
+                Run.IsTaskRunning = false;
+            }
+            OnRetrieveDataCompletedEvent(e.Result as ReadExampleFileResults);
+        }
+
+        private void _runRetrieveDataMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "RetrieveDataThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var start = parameters[0] as string;
+            var end = parameters[1] as string;
+            var configFilename = parameters[2] as string;
+            var controlPath = parameters[3] as string;
+            var eventPath = parameters[4] as string;
+            var initPath = parameters[5] as string;
+            var dataFileDir = parameters[6] as List<string>;
+
+            MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
+            try
+            {
+                for (int index = 0; index < dataFileDir.Count; index++)
+                {
+                    dataFileDirs[index + 1] = new MWCharArray(dataFileDir[index]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            var runFlag = controlPath + "RunFlag.txt";
+            if (!System.IO.File.Exists(runFlag))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(runFlag);
+                fs.Close();
+            }
+            var FileReadingResults = new ReadExampleFileResults();
+            IsMatlabEngineRunning = true;
+            try
+            {
+                FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.RetrieveData(start, end, configFilename, controlPath, eventPath, initPath, dataFileDirs));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+
+            e.Result = FileReadingResults;
+        }
+        public void GetFileExampleSignalData(string filename, int fileType)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                //Here the running engine could be running a rerun instead of the normal run,
+                //need to talk to Jim as how to distinguish normal or rerun,
+                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+            try
+            {
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrieveExampleFileDataMode);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
+                worker.WorkerReportsProgress = false;
+                worker.WorkerSupportsCancellation = true;
+                worker2.DoWork += _progressReporter;
+                worker2.ProgressChanged += _worker_ProgressChanged;
+                worker2.RunWorkerCompleted += _progressReportsDone;
+                worker2.WorkerReportsProgress = true;
+                worker2.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                object[] parameters = new object[] { filename, fileType };
+                worker.RunWorkerAsync(parameters);
+                worker2.RunWorkerAsync();
+                IsReRunRunning = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        private void _runRetrieveExampleFileDataMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "RetrieveDataThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var filename = parameters[0] as string;
+            var type = (int)parameters[1];
+            var FileReadingResults = new ReadExampleFileResults();
+            IsMatlabEngineRunning = true;
+            try
+            {
+                FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExample(filename, type, 0));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+
+            e.Result = FileReadingResults;
         }
     }
 }

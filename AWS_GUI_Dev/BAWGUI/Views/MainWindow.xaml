@@ -12,6 +12,8 @@
         xmlns:localvm="clr-namespace:BAWGUI.ViewModels"
         xmlns:runv="clr-namespace:BAWGUI.RunMATLAB.Views;assembly=BAWGUI.RunMATLAB"
         xmlns:localv="clr-namespace:BAWGUI.Views"
+        xmlns:sgnlmngr="clr-namespace:BAWGUI.SignalManagement.ViewModels;assembly=BAWGUI.SignalManagement"
+        xmlns:sgnlmngrview="clr-namespace:BAWGUI.SignalManagement.Views;assembly=BAWGUI.SignalManagement"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized"
         Name="myMainWindow">
@@ -26,7 +28,13 @@
         <DataTemplate DataType="{x:Type rvm:ResultsViewModel}">
             <rv:ResultsMainView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type sgnlmngr:SignalManager}">
+            <sgnlmngrview:SignalInspectionView/>
+        </DataTemplate>
         <converters2:ViewVisibilityConverter x:Key="ViewVisibilityConverter"/>
+        <converters2:RadioButtonViewConverter1 x:Key="RadioButtonViewConverter1"/>
+        <converters2:RadioButtonViewConverter2 x:Key="RadioButtonViewConverter2"/>
+        <converters2:RadioButtonViewConverter3 x:Key="RadioButtonViewConverter3"/>
         <!--<DataTemplate DataType="{x:Type runm:RunMATLABViewModel}">
             <runv:RunMatlabMainView/>
         </DataTemplate>-->
@@ -70,12 +78,17 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Column="0">
-                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="True" Command="{Binding MainViewSelected}" CommandParameter="Results">
+                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter1}}" Command="{Binding MainViewSelected}" CommandParameter="Results">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
-                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings">
+                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter2}}" Command="{Binding MainViewSelected}" CommandParameter="Settings">
+                        <RadioButton.Style>
+                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton Content="Signal Inspection" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter3}}" Command="{Binding MainViewSelected}" CommandParameter="SignalInspection">
                         <RadioButton.Style>
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
