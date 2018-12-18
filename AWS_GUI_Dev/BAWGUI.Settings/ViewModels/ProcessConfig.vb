@@ -486,15 +486,38 @@ Namespace ViewModels
 
                     End Select
                 Next
-                Dim output1 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Pname, CustPMUName, "OTHER")
+                Dim output1 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Pname, CustPMUName, "P")
                 output1.SamplingRate = freq
-                Dim output2 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Qname, CustPMUName, "OTHER")
+                Dim output2 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Qname, CustPMUName, "Q")
                 output2.SamplingRate = freq
                 Dim output3 = New SignalSignatureViewModel(_model.PointOnWavePowerCalculationFilterParam.Fname, CustPMUName, "F")
                 output3.SamplingRate = freq
                 OutputChannels.Add(output1)
                 OutputChannels.Add(output2)
                 OutputChannels.Add(output3)
+                Dim PhAVUnit = POWInputSignals.PhaseAVoltage.Unit
+                Dim PhAIUnit = POWInputSignals.PhaseACurrent.Unit
+                If PhAVUnit = "V" And PhAIUnit = "A" Then
+                    output1.Unit = "W"
+                    output2.Unit = "VAR"
+                    output1.OldUnit = output1.Unit
+                    output2.OldUnit = output2.Unit
+                ElseIf PhAVUnit = "kV" And PhAIUnit = "A" Then
+                    output1.Unit = "kW"
+                    output2.Unit = "kVAR"
+                    output1.OldUnit = output1.Unit
+                    output2.OldUnit = output2.Unit
+                ElseIf PhAVUnit = "V" And PhAIUnit = "kA" Then
+                    output1.Unit = "kW"
+                    output2.Unit = "kVAR"
+                    output1.OldUnit = output1.Unit
+                    output2.OldUnit = output2.Unit
+                ElseIf PhAVUnit = "kV" And PhAIUnit = "kA" Then
+                    output1.Unit = "MW"
+                    output2.Unit = "MVAR"
+                    output1.OldUnit = output1.Unit
+                    output2.OldUnit = output2.Unit
+                End If
             End If
             'Try
             '    InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
@@ -606,12 +629,35 @@ Namespace ViewModels
                                 Exit For
                             End If
                         Next
-                        Dim output1 = New SignalSignatureViewModel(Pname, CustPMUName, "OTHER")
+                        Dim output1 = New SignalSignatureViewModel(Pname, CustPMUName, "P")
                         output1.SamplingRate = freq
-                        Dim output2 = New SignalSignatureViewModel(Qname, CustPMUName, "OTHER")
+                        Dim output2 = New SignalSignatureViewModel(Qname, CustPMUName, "Q")
                         output2.SamplingRate = freq
                         Dim output3 = New SignalSignatureViewModel(Fname, CustPMUName, "F")
                         output3.SamplingRate = freq
+                        Dim PhAVUnit = POWInputSignals.PhaseAVoltage.Unit
+                        Dim PhAIUnit = POWInputSignals.PhaseACurrent.Unit
+                        If PhAVUnit = "V" And PhAIUnit = "A" Then
+                            output1.Unit = "W"
+                            output2.Unit = "VAR"
+                            output1.OldUnit = output1.Unit
+                            output2.OldUnit = output2.Unit
+                        ElseIf PhAVUnit = "kV" And PhAIUnit = "A" Then
+                            output1.Unit = "kW"
+                            output2.Unit = "kVAR"
+                            output1.OldUnit = output1.Unit
+                            output2.OldUnit = output2.Unit
+                        ElseIf PhAVUnit = "V" And PhAIUnit = "kA" Then
+                            output1.Unit = "kW"
+                            output2.Unit = "kVAR"
+                            output1.OldUnit = output1.Unit
+                            output2.OldUnit = output2.Unit
+                        ElseIf PhAVUnit = "kV" And PhAIUnit = "kA" Then
+                            output1.Unit = "MW"
+                            output2.Unit = "MVAR"
+                            output1.OldUnit = output1.Unit
+                            output2.OldUnit = output2.Unit
+                        End If
                         OutputChannels.Add(output1)
                         OutputChannels.Add(output2)
                         OutputChannels.Add(output3)
