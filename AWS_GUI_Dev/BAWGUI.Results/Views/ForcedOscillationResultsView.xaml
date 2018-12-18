@@ -25,7 +25,14 @@
                         <views:FOEventPlot/>
                     </TabItem>
                     <TabItem Header="Event Mapping">
-                        <map:MapView DataContext="{Binding ResultMapVM}"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ComboBox Grid.Row="0" Width="100" ItemsSource="{Binding MapPlottingRule}" SelectedItem="{Binding SelectedPlottingRule}" HorizontalAlignment="Right" Margin="2"/>
+                            <map:MapView DataContext="{Binding ResultMapVM}" Grid.Row="1"/>
+                        </Grid>
                     </TabItem>
                 </TabControl>
                 <DockPanel Grid.Row="1">

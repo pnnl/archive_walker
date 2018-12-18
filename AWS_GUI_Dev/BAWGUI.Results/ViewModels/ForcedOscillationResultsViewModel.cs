@@ -51,6 +51,7 @@ namespace BAWGUI.Results.ViewModels
             //_selectedEndTime = "01/01/0001 00:00:00";
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            _mapPlottingRule = new List<string>(new string[]{ "SNR", "Amplitude", "Coherence" });
         }
         private AWRunViewModel _run;
         public AWRunViewModel Run
@@ -256,13 +257,26 @@ namespace BAWGUI.Results.ViewModels
                                 }
                             }
                         }
-                        var signalList = new List<SignalSignatureViewModel>();
+                        var signalList = new List<SignalIntensityViewModel>();
                         foreach (var channel in _selectedOccurrence.Channels)
                         {
                             var signal = _signalMgr.SearchForSignalInTaggedSignals(channel.PMU, channel.Name);
                             if (signal != null)
                             {
-                                signalList.Add(signal);
+                                switch (SelectedPlottingRule)
+                                {
+                                    case "SNR":
+                                        signalList.Add(new SignalIntensityViewModel(signal, channel.SNR));
+                                        break;
+                                    case "Amplitude":
+                                        signalList.Add(new SignalIntensityViewModel(signal, channel.Amplitude));
+                                        break;
+                                    case "Coherence":
+                                        signalList.Add(new SignalIntensityViewModel(signal, channel.Coherence));
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                         ////ResultMapVM.Signals = signalList;
@@ -270,12 +284,24 @@ namespace BAWGUI.Results.ViewModels
                         //TODO: update map here
                         //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
                         //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
-                        //need to add a property in the signalviewmodel, might be called intensity
+                        //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
                     }
                 }
             }
         }
 
+        public List<string> _mapPlottingRule { get; private set; }
+        public List<string> MapPlottingRule { get { return _mapPlottingRule; } }
+        private string _selectedPlottingRule;
+        public string SelectedPlottingRule
+        {
+            get { return _selectedPlottingRule; }
+            set
+            {
+                _selectedPlottingRule = value;
+                OnPropertyChanged();
+            }
+        }
         private OccurrenceTableWindow _occurrenceTableWin;
         public ICommand ShowOccurrenceWindow { get; set; }
         private void _showOccurrenceWindow(object obj)

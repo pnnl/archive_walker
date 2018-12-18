@@ -8,7 +8,9 @@ using MapService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 
 namespace MapService.ViewModels
 {
@@ -19,8 +21,8 @@ namespace MapService.ViewModels
             _curveDesignOption = CurveDesignOptions.Option1;
             _setupMap();
         }
-        private List<SignalSignatureViewModel> _signals;
-        public List<SignalSignatureViewModel> Signals
+        private List<SignalIntensityViewModel> _signals;
+        public List<SignalIntensityViewModel> Signals
         {
             get { return _signals; }
             set
@@ -41,26 +43,46 @@ namespace MapService.ViewModels
             var pointPairs = new List<PointsPair>();
             foreach (var signal in Signals)
             {
-                if (signal.MapPlotType == SignalMapPlotType.Dot)
+                if (signal.Signal.MapPlotType == SignalMapPlotType.Dot)
                 {
-                    _addDotToMap();
+                    //_addDotToMap();
+                    var point = signal.Signal.Locations.FirstOrDefault();
+                    var mkr = new GMapMarker(new PointLatLng(double.Parse(point.Latitude), double.Parse(point.Longitude)));
+                    mkr.Shape = new Ellipse
+                    {
+                        Width = 15,
+                        Height = 15,
+                        Stroke = System.Windows.Media.Brushes.Navy,
+                        Fill = System.Windows.Media.Brushes.Navy
+                    };
+                    Gmap.Markers.Add(mkr);
                 }
-                if (signal.MapPlotType == SignalMapPlotType.Line)
+                if (signal.Signal.MapPlotType == SignalMapPlotType.Line)
                 {
                     //collect all point pairs here a list of tuples, maybe?
                     List<CartesianPoint> points = new List<CartesianPoint>();
-                    for (int index = 0; index < signal.Locations.Count; index++)
+                    for (int index = 0; index < signal.Signal.Locations.Count; index++)
                     {
-                        points.Add(new CartesianPoint(double.Parse(signal.Locations[index].Longitude), double.Parse(signal.Locations[index].Latitude)));
+                        points.Add(new CartesianPoint(double.Parse(signal.Signal.Locations[index].Longitude), double.Parse(signal.Signal.Locations[index].Latitude)));
                     }
                     for (int index = 0; index < points.Count - 1; index++)
                     {
                         pointPairs.Add(new PointsPair(points[index], points[index + 1]));
                     }
                 }
-                if (signal.MapPlotType == SignalMapPlotType.Area)
+                if (signal.Signal.MapPlotType == SignalMapPlotType.Area)
                 {
-                    _addPolygonToMap();
+                    var points = new List<PointLatLng>();
+                    var points2 = new List<Point>();
+                    foreach (var pnt in signal.Signal.Locations)
+                    {
+                        points.Add(new PointLatLng(double.Parse(pnt.Latitude), double.Parse(pnt.Longitude)));
+                        points2.Add(new Point(double.Parse(pnt.Latitude), double.Parse(pnt.Longitude)));
+                    }
+                    var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
+                    //var path = mkr.CreatePath(points2, true);
+                    Gmap.Markers.Add(mkr);
+                    //_addPolygonToMap();
                 }
             }
             if (pointPairs.Count != 0)
@@ -71,7 +93,7 @@ namespace MapService.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error drawing arcs on map.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    System.Windows.Forms.MessageBox.Show("Error drawing arcs on map.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
             }
         }
@@ -79,7 +101,7 @@ namespace MapService.ViewModels
         private void _drawCurvesOnMap(List<PointsPair> pointPairs)
         {
             //int numberOfPointsForEachCurve = 100;
-            List< GMapRoute> curveList = _designCurves(pointPairs);
+            List<GMapRoute> curveList = _designCurves(pointPairs);
             foreach (var curve in curveList)
             {
                 //TODO: change some properties of each curve so they look better
@@ -324,7 +346,7 @@ namespace MapService.ViewModels
             }
         }
 
-        public void UpdateResultMap(List<SignalSignatureViewModel> signalList)
+        public void UpdateResultMap(List<SignalIntensityViewModel> signalList)
         {
             Signals = signalList;
         }

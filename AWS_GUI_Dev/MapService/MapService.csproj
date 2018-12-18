@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="ViewModels\ResultMapViewModel.cs" />
+    <Compile Include="ViewModels\SignalIntensityViewModel.cs" />
     <Compile Include="Views\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
