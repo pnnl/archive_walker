@@ -19,7 +19,7 @@
                     <x:Type TypeName="coremodel:SignalMapPlotType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <coreconverters:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
+            <coreconverters:EnumToStringConverter12 x:Key="EnumToStringConverter12"/>
             <DataTemplate x:Key="LineOrArea">
                 <local:SignalMappingPlotLineAreaSetupView/>
             </DataTemplate>
@@ -90,7 +90,7 @@
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
                                     </TextBox>
-                                    <ComboBox ItemsSource="{Binding Source={StaticResource PlotTypeValues}}" Width="100" Text="{Binding MapPlotType, Converter={StaticResource EnumToStringConverter11}}" Margin="2">
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource PlotTypeValues}}" Width="100" Text="{Binding MapPlotType, Converter={StaticResource EnumToStringConverter12}}" Margin="2">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="GotFocus">
                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>

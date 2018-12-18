@@ -93,13 +93,12 @@
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
-                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter2}}" Command="{Binding MainViewSelected}" CommandParameter="Settings">
-                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Results">
+                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter1}}" Command="{Binding MainViewSelected}" CommandParameter="Results">
                         <RadioButton.Style>
-                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
-                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings">
+                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter2}}" Command="{Binding MainViewSelected}" CommandParameter="Settings">
                         <RadioButton.Style>
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
@@ -109,7 +108,7 @@
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
-                    <!--<RadioButton Content="Run Control" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Run"/>-->
+                <!--<RadioButton Content="Run Control" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Run"/>-->
                     <Button ToolTip="Save Config File" Width="22" Height="22" Margin="2" Command="{Binding ProjectControlVM.SaveConfigFile}" CommandParameter="{Binding}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter}}">
                         <Image Source="/BAWGUI;component/MyResources/Save24.png"/>
                 </Button>

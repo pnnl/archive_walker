@@ -149,14 +149,13 @@ namespace BAWGUI.ViewModels
                 CurrentView = SettingsVM;
             }
             else if((string)obj == "Results")
+            {
+                CurrentView = ResultsVM;
+            }
             else if((string)obj == "Coordinates")
             {
                 CurrentView = CoordsTableVM;
                 //CoordsTableVM.MapVM.GMap.InvalidateVisual();
-            }
-            else
-            {
-                CurrentView = ResultsVM;
             }
             else
             {
