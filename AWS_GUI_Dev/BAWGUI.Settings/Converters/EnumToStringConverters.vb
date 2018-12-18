@@ -12,6 +12,8 @@ Namespace Converters
                     Return "JSIS CSV"
                 Case DataFileType.pdat
                     Return "PDAT"
+                Case DataFileType.powHQ
+                    Return "HQ Point on Wave"
                 Case Else
                     Throw New Exception("Data file type not valid!")
             End Select
@@ -23,6 +25,8 @@ Namespace Converters
                     Return DataFileType.csv
                 Case "PDAT"
                     Return DataFileType.pdat
+                Case "HQ Point on Wave"
+                    Return DataFileType.powHQ
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select
@@ -173,6 +177,12 @@ Namespace Converters
                     Return "High-Pass"
                 Case TunableFilterType.LowPass
                     Return "Low-Pass"
+                Case TunableFilterType.FrequencyDerivation
+                    Return "Frequency Derivation"
+                Case TunableFilterType.RunningAverage
+                    Return "Running Average"
+                Case TunableFilterType.PointOnWavePower
+                    Return "Point on Wave Power Calculation"
                     'Case TunableFilterType.Median
                     '    Return "Median"
                 Case Else
@@ -188,6 +198,12 @@ Namespace Converters
                     Return TunableFilterType.HighPass
                 Case "Low-Pass"
                     Return TunableFilterType.LowPass
+                Case "Frequency Derivation"
+                    Return TunableFilterType.FrequencyDerivation
+                Case "Running Average"
+                    Return TunableFilterType.RunningAverage
+                Case "Point on Wave Power Calculation"
+                    Return TunableFilterType.PointOnWavePower
                     'Case "Median"
                     '    Return TunableFilterType.Median
                 Case Else

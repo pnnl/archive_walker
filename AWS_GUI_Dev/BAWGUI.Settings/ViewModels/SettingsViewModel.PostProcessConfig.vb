@@ -80,6 +80,19 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _postProcessConfigureStepSelected(processStep As Object)
+            If processStep IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+            End If
             ' if processStep is already selected, then the selection is not changed, nothing needs to be done.
             ' however, if processStep is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
             If Not processStep.IsStepSelected Then
@@ -97,9 +110,9 @@ Namespace ViewModels
                             selectedFound = True
                         End If
                         If stp.StepCounter < lastNumberOfSteps Then
-                            stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
+                            'stp.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(stp.InputChannels)
                             stepsInputAsSignalHierachy.Add(stp.ThisStepInputsAsSignalHerachyByType)
-                            stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
+                            'stp.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(stp.OutputChannels)
                             stepsOutputAsSignalHierachy.Add(stp.ThisStepOutputsAsSignalHierachyByPMU)
                         End If
                         If stp.StepCounter >= lastNumberOfSteps AndAlso selectedFound Then
@@ -133,7 +146,7 @@ Namespace ViewModels
                                 End If
                             End If
                         ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                            _disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(True)
+                            '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(True)
                         ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                             _disableEnableAllButAngleSignalsInPostProcessConfig(True)
                         End If
@@ -157,7 +170,7 @@ Namespace ViewModels
                             End If
                         End If
                     ElseIf processStep.Name = "Metric Prefix" Then
-                        _disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(False)
+                        '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(False)
                     ElseIf processStep.Name = "Angle Conversion" Then
                         _disableEnableAllButAngleSignalsInPostProcessConfig(False)
                     End If
@@ -207,6 +220,17 @@ Namespace ViewModels
         End Property
         Private Sub _deSelectAllPostProcessConfigSteps()
             If _currentSelectedStep IsNot Nothing Then
+
+                If Not _currentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    MessageBox.Show("Missing field(s) in step : " + CurrentSelectedStep.Name + " , please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                CurrentSelectedStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList = _signalMgr.SortSignalByPMU(_currentSelectedStep.OutputChannels)
+                If TypeOf CurrentSelectedStep Is Customization Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+
                 For Each signal In _currentSelectedStep.InputChannels
                     signal.IsChecked = False
                 Next
@@ -230,7 +254,7 @@ Namespace ViewModels
                         End If
                     End If
                 ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                    _disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(True)
+                    '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(True)
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInPostProcessConfig(True)
                 End If
@@ -350,105 +374,105 @@ Namespace ViewModels
                 Next
             Next
         End Sub
-        Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(isEnabled As Boolean)
-            'For Each group In GroupedRawSignalsByType
-            For Each group In _signalMgr.ReGroupedRawSignalsByType
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-                            subgroup.SignalSignature.IsEnabled = isEnabled
-                        Else
-                            For Each subsubgroup In subgroup.SignalList
-                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedRawSignalsByPMU
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        For Each subsubgroup In subgroup.SignalList
-                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-                                subsubgroup.SignalSignature.IsEnabled = isEnabled
-                            End If
-                        Next
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.AllDataConfigOutputGroupedByType
-                For Each subgroupBySamplingRate In group.SignalList
-                    If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" AndAlso group.SignalSignature.TypeAbbreviation <> "F" AndAlso group.SignalSignature.TypeAbbreviation <> "R" Then
-                        subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
-                    Else
-                        For Each subgroup In subgroupBySamplingRate.SignalList
-                            If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                                subgroup.SignalSignature.IsEnabled = isEnabled
-                            End If
-                        Next
-                    End If
-                Next
-            Next
-            For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-                            subgroup.SignalSignature.IsEnabled = isEnabled
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
-                For Each subgroupBySamplingRate In group.SignalList
-                    If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" AndAlso group.SignalSignature.TypeAbbreviation <> "F" AndAlso group.SignalSignature.TypeAbbreviation <> "R" Then
-                        subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
-                    Else
-                        For Each subgroup In subgroupBySamplingRate.SignalList
-                            If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                                subgroup.SignalSignature.IsEnabled = isEnabled
-                            End If
-                        Next
-                    End If
-                Next
-            Next
-            For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-                            subgroup.SignalSignature.IsEnabled = isEnabled
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-                            subgroup.SignalSignature.IsEnabled = isEnabled
-                        Else
-                            For Each subsubgroup In subgroup.SignalList
-                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
-                                End If
-                            Next
-                        End If
-                    Next
-                Next
-            Next
-            For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
-                For Each subgroupBySamplingRate In group.SignalList
-                    For Each subgroup In subgroupBySamplingRate.SignalList
-                        For Each subsubgroup In subgroup.SignalList
-                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-                                subsubgroup.SignalSignature.IsEnabled = isEnabled
-                            End If
-                        Next
-                    Next
-                Next
-            Next
-        End Sub
+        'Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignalsInPostProcessConfig(isEnabled As Boolean)
+        '    'For Each group In GroupedRawSignalsByType
+        '    For Each group In _signalMgr.ReGroupedRawSignalsByType
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
+        '                    subgroup.SignalSignature.IsEnabled = isEnabled
+        '                Else
+        '                    For Each subsubgroup In subgroup.SignalList
+        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
+        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                        End If
+        '                    Next
+        '                End If
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.GroupedRawSignalsByPMU
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                For Each subsubgroup In subgroup.SignalList
+        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
+        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                    End If
+        '                Next
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.AllDataConfigOutputGroupedByType
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" AndAlso group.SignalSignature.TypeAbbreviation <> "F" AndAlso group.SignalSignature.TypeAbbreviation <> "R" Then
+        '                subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
+        '            Else
+        '                For Each subgroup In subgroupBySamplingRate.SignalList
+        '                    If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
+        '                        subgroup.SignalSignature.IsEnabled = isEnabled
+        '                    End If
+        '                Next
+        '            End If
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.AllDataConfigOutputGroupedByPMU
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
+        '                    subgroup.SignalSignature.IsEnabled = isEnabled
+        '                End If
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.AllProcessConfigOutputGroupedByType
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            If subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroupBySamplingRate.SignalSignature.TypeAbbreviation <> "V" AndAlso group.SignalSignature.TypeAbbreviation <> "F" AndAlso group.SignalSignature.TypeAbbreviation <> "R" Then
+        '                subgroupBySamplingRate.SignalSignature.IsEnabled = isEnabled
+        '            Else
+        '                For Each subgroup In subgroupBySamplingRate.SignalList
+        '                    If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
+        '                        subgroup.SignalSignature.IsEnabled = isEnabled
+        '                    End If
+        '                Next
+        '            End If
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.AllProcessConfigOutputGroupedByPMU
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                If String.IsNullOrEmpty(subgroup.SignalSignature.TypeAbbreviation) OrElse (subgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
+        '                    subgroup.SignalSignature.IsEnabled = isEnabled
+        '                End If
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsInput
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
+        '                    subgroup.SignalSignature.IsEnabled = isEnabled
+        '                Else
+        '                    For Each subsubgroup In subgroup.SignalList
+        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
+        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                        End If
+        '                    Next
+        '                End If
+        '            Next
+        '        Next
+        '    Next
+        '    For Each group In _signalMgr.GroupedSignalByPostProcessConfigStepsOutput
+        '        For Each subgroupBySamplingRate In group.SignalList
+        '            For Each subgroup In subgroupBySamplingRate.SignalList
+        '                For Each subsubgroup In subgroup.SignalList
+        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
+        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
+        '                    End If
+        '                Next
+        '            Next
+        '        Next
+        '    Next
+        'End Sub
         Private Sub _disableEnableAllButPhasorSignalsInPostProcessConfig(isEnabled As Boolean)
             'For Each group In GroupedRawSignalsByType
             For Each group In _signalMgr.ReGroupedRawSignalsByType
@@ -656,7 +680,11 @@ Namespace ViewModels
                             stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
                         End If
                     Next
-                    _deSelectAllPostProcessConfigSteps()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        _deSelectAllPostProcessConfigSteps()
+                    End If
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     PostProcessConfigure.CollectionOfSteps = steps
                     SignalSelectionTreeViewVisibility = "Visible"

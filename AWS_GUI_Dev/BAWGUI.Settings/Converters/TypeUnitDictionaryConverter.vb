@@ -39,6 +39,15 @@ Namespace Converters
                     Return New List(Of String) From {"Hz/sec", "mHz/sec"}.ToList
                 Case "F"
                     Return New List(Of String) From {"Hz", "mHz"}.ToList
+                Case "P"
+                    Return New List(Of String) From {"W", "kW", "MW"}.ToList
+                Case "QP"
+                    Return New List(Of String) From {"VAR", "kVAR", "MVAR"}.ToList
+                Case "CP"
+                    Return New List(Of String) From {"VA", "kVA", "MVA"}.ToList
+                Case "S"
+                    Return New List(Of String) From {"VA", "kVA", "MVA"}.ToList
+
                 Case Else
                     Return DependencyProperty.UnsetValue
             End Select

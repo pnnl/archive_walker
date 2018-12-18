@@ -19,6 +19,8 @@ using BAWGUI.MATLABRunResults.Models;
 using OxyPlot.Annotations;
 using BAWGUI.Results.Views;
 using System.Windows.Forms;
+using BAWGUI.Core.Models;
+using System.Drawing;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -620,6 +622,7 @@ namespace BAWGUI.Results.ViewModels
                 var aDetector = new RDreRunPlot();
                 aDetector.Label = detector.Label;
                 var allSignalsPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+                var legends = new ObservableCollection<Legend>();
                 ////{ PlotAreaBackground = OxyColors.WhiteSmoke}
                 ////a.PlotType = PlotType.Cartesian;
                 ////var xAxisFormatString = "";
@@ -694,6 +697,7 @@ namespace BAWGUI.Results.ViewModels
                 //a.DefaultColors.Clear();
                 //var alarmSeries = new OxyPlot.Series.ScatterSeries() { MarkerType = MarkerType.Circle, MarkerFill = OxyColors.Red, MarkerSize = 4, Title = "Alarms", ColorAxisKey = null };
                 //var trackerKey = 0;
+                var signalCounter = 0;
                 foreach (var rd in detector.RingdownSignals)
                 {
                     //OxyColor eventColor = _mapFrequencyToColor(fo.TypicalFrequency);
@@ -710,8 +714,13 @@ namespace BAWGUI.Results.ViewModels
                     }
                     newSeries.Title = rd.SignalName;
                     newSeries.TrackerKey = rd.Label;
+                    var c = string.Format("#{0:x6}", Color.FromName(Utility.SaturatedColors[signalCounter % 20]).ToArgb());
+                    newSeries.Color = OxyColor.Parse(c);
+                    //var c = newSeries.ActualColor;
+                    legends.Add(new Legend(rd.SignalName, newSeries.Color));
                     //newSeries.MouseMove += RdReRunSeries_MouseMove;
                     newSeries.MouseDown += RdReRunSeries_MouseDown;
+                    signalCounter++;
                     //if (ocur == SelectedOccurrence)
                     //{
                     //    newSeries.StrokeThickness = 10;
@@ -762,6 +771,7 @@ namespace BAWGUI.Results.ViewModels
                 allSignalsPlot.LegendPadding = 0.0;
                 allSignalsPlot.LegendSymbolMargin = 0.0;
                 allSignalsPlot.LegendMargin = 0;
+                allSignalsPlot.IsLegendVisible = false;
 
                 var currentArea = allSignalsPlot.LegendArea;
                 var currentPlotWithAxis = allSignalsPlot.PlotAndAxisArea;
@@ -771,6 +781,7 @@ namespace BAWGUI.Results.ViewModels
                 var currentMargins = allSignalsPlot.PlotMargins;
                 allSignalsPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aDetector.RDreRunPlotModel = allSignalsPlot;
+                aDetector.RDreRunPlotLegend = legends;
                 aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
                 rdPlots.Add(aDetector);
             }

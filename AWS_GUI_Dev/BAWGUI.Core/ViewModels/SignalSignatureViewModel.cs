@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Core.Models;
 using BAWGUI.Core.Utilities;
 using BAWGUI.Utilities;
+using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -213,6 +214,14 @@ namespace BAWGUI.Core
         // End Function
         public static bool operator ==(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
+            if ((object)x == null)
+            {
+                return (object)y == null;
+            }else if((object)y == null)
+            {
+                return false;
+            }
+            return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
             if (x is null && y is null)
             {
                 return true;
@@ -229,6 +238,12 @@ namespace BAWGUI.Core
         }
         public static bool operator !=(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
+            return !(x == y);
+            //if ((object)x == null)
+            //{
+            //    return y != null;
+            //}
+            //return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
             if (x is null && y is null)
             {
                 return false;
@@ -285,6 +300,26 @@ namespace BAWGUI.Core
             set
             {
                 _model.OldTypeAbbreviation = value;
+                OnPropertyChanged();
+            }
+        }
+        private List<double> _data;
+        public List<double> Data
+        {
+            get { return _model.Data; }
+            set
+            {
+                _model.Data = value;
+                OnPropertyChanged();
+            }
+        }
+        private List<double> _timeStampNumber;
+        public List<double> TimeStampNumber
+        {
+            get { return _model.TimeStampNumber; }
+            set
+            {
+                _model.TimeStampNumber = value;
                 OnPropertyChanged();
             }
         }

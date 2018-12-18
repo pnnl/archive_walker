@@ -11,6 +11,8 @@
         xmlns:rv="clr-namespace:BAWGUI.Results.Views;assembly=BAWGUI.Results"
         xmlns:localvm="clr-namespace:BAWGUI.ViewModels"
         xmlns:localv="clr-namespace:BAWGUI.Views"
+        xmlns:sgnlmngr="clr-namespace:BAWGUI.SignalManagement.ViewModels;assembly=BAWGUI.SignalManagement"
+        xmlns:sgnlmngrview="clr-namespace:BAWGUI.SignalManagement.Views;assembly=BAWGUI.SignalManagement"
         xmlns:mapcoordv="clr-namespace:BAWGUI.CoordinateMapping.Views;assembly=BAWGUI.CoordinateMapping"
         xmlns:mapcoordmv="clr-namespace:BAWGUI.CoordinateMapping.ViewModels;assembly=BAWGUI.CoordinateMapping"
         mc:Ignorable="d"
@@ -28,11 +30,17 @@
             <!--<rv:ResultsMainView/>-->
             <rv:ResultsTabControl/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type sgnlmngr:SignalManager}">
+            <sgnlmngrview:SignalInspectionView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type svm:SettingsViewModel}">
             <!--<sv:SettingsView/>-->
             <sv:TabControlForSettingsWindow/>
         </DataTemplate>
         <converters2:ViewVisibilityConverter x:Key="ViewVisibilityConverter"/>
+        <converters2:RadioButtonViewConverter1 x:Key="RadioButtonViewConverter1"/>
+        <converters2:RadioButtonViewConverter2 x:Key="RadioButtonViewConverter2"/>
+        <converters2:RadioButtonViewConverter3 x:Key="RadioButtonViewConverter3"/>
         <converters2:ViewVisibilityConverter2 x:Key="ViewVisibilityConverter2"/>
         <!--<DataTemplate DataType="{x:Type runm:RunMATLABViewModel}">
             <runv:RunMatlabMainView/>
@@ -75,6 +83,9 @@
                 <!--<Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter1}}" Command="{Binding MainViewSelected}" CommandParameter="Results">
                 </Grid.ColumnDefinitions>-->
                 <StackPanel Orientation="Horizontal" Grid.Row="0">
                     <RadioButton Content="Coordinates" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Coordinates">
@@ -82,12 +93,18 @@
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
+                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter2}}" Command="{Binding MainViewSelected}" CommandParameter="Settings">
                     <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Results">
                         <RadioButton.Style>
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
                     <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Settings">
+                        <RadioButton.Style>
+                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton Content="Signal Inspection" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter3}}" Command="{Binding MainViewSelected}" CommandParameter="SignalInspection">
                         <RadioButton.Style>
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>

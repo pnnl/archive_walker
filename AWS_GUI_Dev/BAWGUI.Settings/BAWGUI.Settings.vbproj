@@ -277,6 +277,9 @@
     <Compile Include="Views\PMUOnlyFilterListBox.xaml.vb">
       <DependentUpon>PMUOnlyFilterListBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PointOnWavePowerCalFilterparameters.xaml.vb">
+      <DependentUpon>PointOnWavePowerCalFilterparameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PostProcessingConfigTabInSettings.xaml.vb">
       <DependentUpon>PostProcessingConfigTabInSettings.xaml</DependentUpon>
     </Compile>
@@ -298,6 +301,9 @@
     <Compile Include="Views\RingdownView.xaml.vb">
       <DependentUpon>RingdownView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\RunningAverageFilterParameters.xaml.vb">
+      <DependentUpon>RunningAverageFilterParameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ScalarRepCustomization.xaml.vb">
       <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
     </Compile>
@@ -306,6 +312,9 @@
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalReplicationCustomization.xaml.vb">
+      <DependentUpon>SignalReplicationCustomization.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignalSelectionPanel.xaml.vb">
       <DependentUpon>SignalSelectionPanel.xaml</DependentUpon>
@@ -324,6 +333,12 @@
     </Compile>
     <Compile Include="Views\TabControlForSettingsWindow.xaml.vb">
       <DependentUpon>TabControlForSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TunableFilterInputSignalView1.xaml.vb">
+      <DependentUpon>TunableFilterInputSignalView1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TunableFilterInputSignalView2.xaml.vb">
+      <DependentUpon>TunableFilterInputSignalView2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TunableFilterView.xaml.vb">
       <DependentUpon>TunableFilterView.xaml</DependentUpon>
@@ -507,6 +522,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\PointOnWavePowerCalFilterparameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PostProcessingConfigTabInSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -535,6 +554,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\RunningAverageFilterParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ScalarRepCustomization.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -546,6 +569,10 @@
     <Page Include="Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SignalReplicationCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalSelectionPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -570,6 +597,14 @@
     <Page Include="Views\TabControlForSettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TunableFilterInputSignalView1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TunableFilterInputSignalView2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TunableFilterView.xaml">
       <SubType>Designer</SubType>

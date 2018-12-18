@@ -42,7 +42,9 @@ namespace BAWGUI.Core.Models
         [Description("PDAT")]
         pdat,
         [Description("JSIS CSV")]
-        csv
+        csv,
+        [Description("HQ Point on Wave")]
+        powHQ
     }
 
     public enum ModeType
@@ -69,16 +71,29 @@ namespace BAWGUI.Core.Models
         [Description("High-Pass")]
         HighPass,
         [Description("Low-Pass")]
-        LowPass
+        LowPass,
+        [Description("Frequency Derivation")]
+        FrequencyDerivation,
+        [Description("Running Average")]
+        RunningAverage,
+        [Description("Point on Wave Power Calculation")]
+        PointOnWavePower
     }
     public enum InterpolateType
     {
-        [System.ComponentModel.Description("Linear")]
+        [Description("Linear")]
         Linear,
         [Description("Constant")]
         Constant,
         [Description("Cubic")]
         Cubic
+    }
+    public enum OutputSignalStorageType
+    {
+        [Description("Create Custom PMU")]
+        CreateCustomPMU,
+        [Description("Replace Input")]
+        ReplaceInput
     }
     public enum SignalMapPlotType
     {

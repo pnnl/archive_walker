@@ -181,6 +181,7 @@
                                                         <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ReadExampleFile}" Margin="2" ToolTip="Update selected example file and settings" Height="25" CommandParameter="{Binding}" Content="Read File" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                    <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.InspectRawSignal}" Margin="2" ToolTip="Inspect input signals from this example file" Height="25" CommandParameter="{Binding}" Content="Inspect Signals" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}"/>
                                                     <!--<Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.UpdateExampleFile}" CommandParameter="{Binding ExampleFile}" Margin="2" ToolTip="Update example file in Config.xml file" Height="25" Content="Update Example File" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}"/>-->
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
@@ -192,14 +193,14 @@
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
                                                     <Label Content="File Type:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
-                                                    <!--<ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
-                                                        <i:Interaction.Triggers>
+                                                    <!--<TextBox Text="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>-->
+                                                    <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                        <!--<i:Interaction.Triggers>
                                                             <i:EventTrigger EventName="SelectionChanged">
                                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
                                                             </i:EventTrigger>
-                                                        </i:Interaction.Triggers>
-                                                    </ComboBox>-->
+                                                        </i:Interaction.Triggers>-->
+                                                    </ComboBox>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5,0,0">
                                                     <Label Content="Mnemonic:" Margin="2" Width="100"/>

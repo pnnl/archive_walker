@@ -59,7 +59,7 @@ Namespace Converters
                                            "All Initial Input Channels by PMU",
                                            "Output from Data Quality and Customization by Signal Type",
                                            "Output from Data Quality and Customization by PMU",
-                                           "Input to MultiRate steps",
+                                           "Input to MultiRate and Filtering steps",
                                            "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
                     Case 3

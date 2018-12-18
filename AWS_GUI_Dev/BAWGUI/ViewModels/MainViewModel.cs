@@ -10,6 +10,7 @@ using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using BAWGUI.ReadConfigXml;
 using BAWGUI.CoordinateMapping.ViewModels;
 using BAWGUI.CoordinateMapping.Models;
 
@@ -28,10 +29,18 @@ namespace BAWGUI.ViewModels
             MainViewSelected = new RelayCommand(_switchView);
             _projectControlVM.RunSelected += _onRunSelected;
             _signalMgr = SignalManager.Instance;
+            //_settingsVM.SaveNewTasl += _settingsVM_SaveNewTasl;
+            _settingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+            InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
+            InspectSignalByTimeRange = new RelayCommand(_inpsectAllSignalsByTimeRange);
             SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
         }
+        //private void _settingsVM_SaveNewTasl(ref SettingsViewModel svm)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private void _matlabEngineStatusChanged(object sender, bool e)
         {
@@ -139,6 +148,7 @@ namespace BAWGUI.ViewModels
             {
                 CurrentView = SettingsVM;
             }
+            else if((string)obj == "Results")
             else if((string)obj == "Coordinates")
             {
                 CurrentView = CoordsTableVM;
@@ -147,6 +157,10 @@ namespace BAWGUI.ViewModels
             else
             {
                 CurrentView = ResultsVM;
+            }
+            else
+            {
+                CurrentView = _signalMgr;
             }
         }
         private ProjectsControlViewModel _projectControlVM;
@@ -160,10 +174,28 @@ namespace BAWGUI.ViewModels
             }
         }
         private SignalManager _signalMgr;
+        public SignalManager SignalMgr
+        {
+            get { return _signalMgr; }
+        }
         private void _onRunSelected(object sender, AWProjectViewModel e)
         {
             if (e != null)
             {
+                //SettingsVM = new SettingsViewModel();
+                //RunMatlabVM = new RunMATLABViewModel();
+                //ResultsVM = new ResultsViewModel();
+                //SettingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
+                //RunMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
+                //if (CurrentView is SettingsViewModel)
+                //{
+                //    CurrentView = SettingsVM;
+                //}
+                //else
+                //{
+                //    CurrentView = ResultsVM;
+                //}
+
                 SettingsVM.Project = e.Model;
                 SettingsVM.Run = e.SelectedRun;
                 try
@@ -182,6 +214,9 @@ namespace BAWGUI.ViewModels
                         SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                         SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                         SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                        var cti = SettingsVM.CurrentTabIndex;
+                        SettingsVM.CurrentTabIndex = cti;
+                        SettingsVM.CurrentSelectedStep = null;
                         e.SelectedRun.Model.DataFileDirectories = new List<string>();
                         foreach (var info in _signalMgr.FileInfo)
                         {
@@ -194,7 +229,7 @@ namespace BAWGUI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    MessageBox.Show("Error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
                 RunMatlabVM.Project = e.Model;
                 RunMatlabVM.Run = e.SelectedRun;
@@ -208,6 +243,44 @@ namespace BAWGUI.ViewModels
         //{
         //    throw new NotImplementedException();
         //}
+        public ICommand InspectRawSignal { get; set; }
+        private void _inpsectRawInputSignals(object obj)
+        {
+            CurrentView = _signalMgr;
+            var info = (InputFileInfoViewModel)obj;
+            try
+            {
+                _signalMgr.GetRawSignalData(info);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data for viewing from example file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+        }
+        public ICommand InspectSignalByTimeRange { get; set; }
+        private void _inpsectAllSignalsByTimeRange(object obj)
+        {
+            CurrentView = _signalMgr;
+            var pm = obj as ViewResolvingPlotModel;
+            try
+            {
+                _signalMgr.GetSignalDataByTimeRange(pm, ResultsVM.Run);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error retrieving data for viewing from matlab retrieve data function. " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+            //foreach (var ax in pm.Axes)
+            //{
+            //    if (ax.IsHorizontal())
+            //    {
+            //        var start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss");
+            //        var end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss");
+            //        _signalMgr.GetSignalDataByTimeRange(start, end, ResultsVM.Run);
+            //        break;
+            //    }
+            //}
+        }
 
     }
 }

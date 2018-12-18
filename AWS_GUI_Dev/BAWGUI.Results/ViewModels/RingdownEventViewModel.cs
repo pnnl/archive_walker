@@ -1,5 +1,6 @@
 ﻿using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Results.Models;
+using System;
 using System.Collections.Generic;
 
 namespace BAWGUI.Results.ViewModels
@@ -33,13 +34,24 @@ namespace BAWGUI.Results.ViewModels
         {
             get { return _model.EndTime; }
         }
-        public string Duration
+        public double? Duration
         {
-            get { return _model.Duration; }
+            get
+            {
+                try
+                {
+                    var s = Double.Parse(_model.Duration);
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
-        public string NumberOfChannels
+        public int NumberOfChannels
         {
-            get { return _model.Channels.Count.ToString(); }
+            get { return _model.Channels.Count; }
         }
         private List<RDChannelViewModel> _channels = new List<RDChannelViewModel>();
         public List<RDChannelViewModel> Channels

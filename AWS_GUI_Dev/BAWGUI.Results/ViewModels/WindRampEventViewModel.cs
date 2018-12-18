@@ -67,9 +67,20 @@ namespace BAWGUI.Results.ViewModels
         {
             get { return _model.Channel; }
         }
-        public string Duration
+        public double? Duration
         {
-            get { return _model.Duration; }
+            get
+            {
+                try
+                {
+                    var s = Double.Parse(_model.Duration);
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
         public float ValueStart
         {

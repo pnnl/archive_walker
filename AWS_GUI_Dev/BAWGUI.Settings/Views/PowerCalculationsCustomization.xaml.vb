@@ -31,22 +31,22 @@ Public Class PowerCalculationsCustomization
     Private Sub VmagPhasorTextBoxLostFocus(sender As Object, e As RoutedEventArgs)
         For Each item In sender.Parent.Children
             If item.Name = "VmagPMU" Then
-                item.Background = New Media.SolidColorBrush(Colors.White)
+                item.Background = New SolidColorBrush(Colors.White)
             End If
             'If item.Name = "VangPMU" Then
             '    item.Background = New Media.SolidColorBrush(Colors.White)
             'End If
             If item.Name = "VmagChannel" Then
-                item.Background = New Media.SolidColorBrush(Colors.White)
+                item.Background = New SolidColorBrush(Colors.White)
             End If
             'If item.Name = "VangChannel" Then
             '    item.Background = New Media.SolidColorBrush(Colors.White)
             'End If
             If item.Name = "VphasorPMU" Then
-                item.Background = New Media.SolidColorBrush(Colors.White)
+                item.Background = New SolidColorBrush(Colors.White)
             End If
             If item.Name = "VphasorChannel" Then
-                item.Background = New Media.SolidColorBrush(Colors.White)
+                item.Background = New SolidColorBrush(Colors.White)
             End If
         Next
     End Sub

@@ -15,6 +15,9 @@
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
             SparseData.m
             <newpara></newpara>
+            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
+            dMMdata.m
+            <newpara></newpara>
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
             unForcedOscillation.m
             <newpara></newpara>
@@ -26,6 +29,9 @@
             <newpara></newpara>
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
             unThevenin.m
+            <newpara></newpara>
+            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ret
+            rieveData.m
             <newpara></newpara>
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
             NormalMode.m
@@ -92,6 +98,19 @@
              <returns>An MWArray containing the first output argument.</returns>
             
         </member>
+        <member name="M:BAWSengine.GUI2MAT.GetFileExample(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 3-input MWArrayinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
         <member name="M:BAWSengine.GUI2MAT.GetFileExample(System.Int32)">
              <summary>
              Provides the standard 0-input MWArray interface to the GetFileExample MATLAB
@@ -127,6 +146,21 @@
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="InputFile">Input argument #1</param>
              <param name="FileType">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.GetFileExample(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 3-input MWArray interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
@@ -307,6 +341,120 @@
              array.<newpara></newpara>
              M-Documentation:
              Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of MWArray output arguments</param>
+             <param name= "argsIn">Array of MWArray input arguments</param>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata">
+             <summary>
+             Provides a single output, 0-input MWArrayinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 1-input MWArrayinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 2-input MWArrayinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 3-input MWArrayinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(System.Int32)">
+             <summary>
+             Provides the standard 0-input MWArray interface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 1-input MWArray interface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 2-input MWArray interface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 3-input MWArray interface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.ReadMMdata(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray[]@,MathWorks.MATLAB.NET.Arrays.MWArray[])">
+             <summary>
+             Provides an interface for the ReadMMdata function in which the input and output
+             arguments are specified as an array of MWArrays.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of MWArray output arguments</param>
@@ -1473,6 +1621,269 @@
              array.<newpara></newpara>
              M-Documentation:
              Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of MWArray output arguments</param>
+             <param name= "argsIn">Array of MWArray input arguments</param>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData">
+             <summary>
+             Provides a single output, 0-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 1-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 2-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 3-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 4-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 5-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 6-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 7-input MWArrayinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32)">
+             <summary>
+             Provides the standard 0-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 1-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 2-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 3-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 4-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 5-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 6-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 7-input MWArray interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.RetrieveData(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray[]@,MathWorks.MATLAB.NET.Arrays.MWArray[])">
+             <summary>
+             Provides an interface for the RetrieveData function in which the input and output
+             arguments are specified as an array of MWArrays.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of MWArray output arguments</param>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JSISCSVWriter
+namespace BAWGUI.Core
 {
     public interface ISignal
     {

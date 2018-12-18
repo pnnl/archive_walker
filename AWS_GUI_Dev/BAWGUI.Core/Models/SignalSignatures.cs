@@ -18,6 +18,7 @@ namespace BAWGUI.Core
             IsEnabled = true;
             IsCustomSignal = false;
             IsNameTypeUnitChanged = false;
+            Data = new List<double>();
             From = CoreUtilities.DummySiteCoordinatesModel;
             To = CoreUtilities.DummySiteCoordinatesModel;
             Locations = new ObservableCollection<SiteCoordinatesModel>();
@@ -44,6 +45,8 @@ namespace BAWGUI.Core
         public int SamplingRate { get; set; }
         public int PassedThroughDQFilter { get; set; }
         public int PassedThroughProcessor { get; set; }
+        public List<double> Data { get; set; }
+        public List<double> TimeStampNumber { get; set; }
         public SiteCoordinatesModel From { get; set; }
         public SiteCoordinatesModel To { get; set; }
         public ObservableCollection<SiteCoordinatesModel> Locations { get; set; }

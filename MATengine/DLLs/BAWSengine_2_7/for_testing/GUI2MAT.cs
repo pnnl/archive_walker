@@ -1,18 +1,20 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Fri Oct 12 16:16:00 2018
+* Date: Tue Dec 18 09:31:19 2018
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
 * ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
 * ory\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAoscillationApp\
-* AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\foll154\Documents\
-* BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m,C:\Users\foll154
-* \Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m,C:\User
-* s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.
-* m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNo
-* rmalMode.m}"
+* AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Documents\BPAoscillati
+* onApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\foll154\Docu
+* ments\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m,C:\Users\f
+* oll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m,C
+* :\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThe
+* venin.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions
+* \RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIf
+* unctions\RunNormalMode.m}"
 */
 using System;
 using System.Reflection;
@@ -37,6 +39,9 @@ namespace BAWSengine
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
   /// <newpara></newpara>
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
+  /// dMMdata.m
+  /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
   /// unForcedOscillation.m
   /// <newpara></newpara>
@@ -48,6 +53,9 @@ namespace BAWSengine
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
   /// unThevenin.m
+  /// <newpara></newpara>
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ret
+  /// rieveData.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
   /// NormalMode.m
@@ -210,6 +218,23 @@ namespace BAWSengine
 
 
     /// <summary>
+    /// Provides a single output, 3-input MWArrayinterface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <param name="MetaOnly">Input argument #3</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray GetFileExample(MWArray InputFile, MWArray FileType, MWArray MetaOnly)
+    {
+      return mcr.EvaluateFunction("GetFileExample", InputFile, FileType, MetaOnly);
+    }
+
+
+    /// <summary>
     /// Provides the standard 0-input MWArray interface to the GetFileExample MATLAB
     /// function.
     /// </summary>
@@ -257,6 +282,26 @@ namespace BAWSengine
     public MWArray[] GetFileExample(int numArgsOut, MWArray InputFile, MWArray FileType)
     {
       return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile, FileType);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input MWArray interface to the GetFileExample MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="InputFile">Input argument #1</param>
+    /// <param name="FileType">Input argument #2</param>
+    /// <param name="MetaOnly">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] GetFileExample(int numArgsOut, MWArray InputFile, MWArray FileType, 
+                              MWArray MetaOnly)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExample", InputFile, FileType, MetaOnly);
     }
 
 
@@ -493,6 +538,157 @@ namespace BAWSengine
     public void GetSparseData(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
       mcr.EvaluateFunction("GetSparseData", numArgsOut, ref argsOut, argsIn);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 0-input MWArrayinterface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray ReadMMdata()
+    {
+      return mcr.EvaluateFunction("ReadMMdata", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 1-input MWArrayinterface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray ReadMMdata(MWArray StartTime)
+    {
+      return mcr.EvaluateFunction("ReadMMdata", StartTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 2-input MWArrayinterface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray ReadMMdata(MWArray StartTime, MWArray EndTime)
+    {
+      return mcr.EvaluateFunction("ReadMMdata", StartTime, EndTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 3-input MWArrayinterface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray ReadMMdata(MWArray StartTime, MWArray EndTime, MWArray EventPath)
+    {
+      return mcr.EvaluateFunction("ReadMMdata", StartTime, EndTime, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] ReadMMdata(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "ReadMMdata", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input MWArray interface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] ReadMMdata(int numArgsOut, MWArray StartTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "ReadMMdata", StartTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input MWArray interface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] ReadMMdata(int numArgsOut, MWArray StartTime, MWArray EndTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "ReadMMdata", StartTime, EndTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input MWArray interface to the ReadMMdata MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] ReadMMdata(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                          MWArray EventPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "ReadMMdata", StartTime, EndTime, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the ReadMMdata function in which the input and output
+    /// arguments are specified as an array of MWArrays.
+    /// </summary>
+    /// <remarks>
+    /// This method will allocate and return by reference the output argument
+    /// array.<newpara></newpara>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return</param>
+    /// <param name= "argsOut">Array of MWArray output arguments</param>
+    /// <param name= "argsIn">Array of MWArray input arguments</param>
+    ///
+    public void ReadMMdata(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    {
+      mcr.EvaluateFunction("ReadMMdata", numArgsOut, ref argsOut, argsIn);
     }
 
 
@@ -2018,6 +2214,354 @@ namespace BAWSengine
     public void RerunThevenin(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
       mcr.EvaluateFunction("RerunThevenin", numArgsOut, ref argsOut, argsIn);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 0-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData()
+    {
+      return mcr.EvaluateFunction("RetrieveData", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 1-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData(MWArray RerunStartTime)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 2-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData(MWArray RerunStartTime, MWArray RerunEndTime)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 3-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
+                          ConfigFile)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 4-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
+                          ConfigFile, MWArray ControlPath)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 5-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
+                          ConfigFile, MWArray ControlPath, MWArray EventPath)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 6-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
+                          ConfigFile, MWArray ControlPath, MWArray EventPath, MWArray 
+                          InitializationPath)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 7-input MWArrayinterface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <param name="FileDirectory">Input argument #7</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray RetrieveData(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
+                          ConfigFile, MWArray ControlPath, MWArray EventPath, MWArray 
+                          InitializationPath, MWArray FileDirectory)
+    {
+      return mcr.EvaluateFunction("RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut, MWArray RerunStartTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut, MWArray RerunStartTime, MWArray 
+                            RerunEndTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut, MWArray RerunStartTime, MWArray 
+                            RerunEndTime, MWArray ConfigFile)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 4-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut, MWArray RerunStartTime, MWArray 
+                            RerunEndTime, MWArray ConfigFile, MWArray ControlPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 5-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut, MWArray RerunStartTime, MWArray 
+                            RerunEndTime, MWArray ConfigFile, MWArray ControlPath, 
+                            MWArray EventPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 6-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut, MWArray RerunStartTime, MWArray 
+                            RerunEndTime, MWArray ConfigFile, MWArray ControlPath, 
+                            MWArray EventPath, MWArray InitializationPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 7-input MWArray interface to the RetrieveData MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="RerunStartTime">Input argument #1</param>
+    /// <param name="RerunEndTime">Input argument #2</param>
+    /// <param name="ConfigFile">Input argument #3</param>
+    /// <param name="ControlPath">Input argument #4</param>
+    /// <param name="EventPath">Input argument #5</param>
+    /// <param name="InitializationPath">Input argument #6</param>
+    /// <param name="FileDirectory">Input argument #7</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] RetrieveData(int numArgsOut, MWArray RerunStartTime, MWArray 
+                            RerunEndTime, MWArray ConfigFile, MWArray ControlPath, 
+                            MWArray EventPath, MWArray InitializationPath, MWArray 
+                            FileDirectory)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "RetrieveData", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the RetrieveData function in which the input and output
+    /// arguments are specified as an array of MWArrays.
+    /// </summary>
+    /// <remarks>
+    /// This method will allocate and return by reference the output argument
+    /// array.<newpara></newpara>
+    /// M-Documentation:
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return</param>
+    /// <param name= "argsOut">Array of MWArray output arguments</param>
+    /// <param name= "argsIn">Array of MWArray input arguments</param>
+    ///
+    public void RetrieveData(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    {
+      mcr.EvaluateFunction("RetrieveData", numArgsOut, ref argsOut, argsIn);
     }
 
 

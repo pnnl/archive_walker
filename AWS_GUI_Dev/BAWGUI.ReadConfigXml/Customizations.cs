@@ -396,7 +396,7 @@ namespace BAWGUI.ReadConfigXml
                 var va = convert.Element("PMU");
                 if (va != null)
                 {
-                    newConvert.PMU = va.Value;
+                    newConvert.PMUName = va.Value;
                 }
                 va = convert.Element("Channel");
                 if (va != null)
@@ -454,7 +454,7 @@ namespace BAWGUI.ReadConfigXml
             foreach (var convert in toConverts)
             {
                 var newConvert = new ToConvert();
-                newConvert.PMU = convert.Element("PMU").Value;
+                newConvert.PMUName = convert.Element("PMU").Value;
                 newConvert.Channel = convert.Element("Channel").Value;
                 newConvert.SignalName = convert.Element("CustName").Value;
                 ToConverts.Add(newConvert);
@@ -463,12 +463,31 @@ namespace BAWGUI.ReadConfigXml
         public new string Name { get => "Angle Conversion"; }
         public List<ToConvert> ToConverts { get; set; }
     }
-
-    public class ToConvert
+    public class SignalReplicationCustModel : CustomizationModel
     {
-        public string PMU { get; set; }
-        public string Channel { get; set; }
-        public string NewUnit { get; set; }
-        public string SignalName { get; set; }
+        public SignalReplicationCustModel() { }
+        private XElement item;
+
+        public SignalReplicationCustModel(XElement item)
+        {
+            this.item = item;
+            var par = item.Element("Parameters").Element("CustPMUname").Value;
+            if (par != null)
+            {
+                CustPMUname = par;
+            }
+            ToRep = new List<ToReplicate>();
+            var toReps = item.Element("Parameters").Elements("ToReplicate");
+            foreach (var rep in toReps)
+            {
+                var newRep = new ToReplicate();
+                newRep.PMUName = rep.Element("PMU").Value;
+                newRep.Channel = rep.Element("Channel").Value;
+                ToRep.Add(newRep);
+            }
+        }
+
+        public List<ToReplicate> ToRep { get; set; }
+        public new string Name { get => "Duplicate Signals"; }
     }
 }

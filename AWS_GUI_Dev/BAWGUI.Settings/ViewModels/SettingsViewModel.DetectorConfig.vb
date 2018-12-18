@@ -151,9 +151,20 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _selectedADetector(detector As Object)
-            ' if detector is already selected, then the selection is not changed, nothing needs to be done.
-            ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
-            If Not detector.IsStepSelected Then
+            If detector IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    Forms.MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+                If TypeOf CurrentSelectedStep IsNot AlarmingDetectorBase Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+            End If
+                ' if detector is already selected, then the selection is not changed, nothing needs to be done.
+                ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
+                If Not detector.IsStepSelected Then
                 _aDetectorStepDeSelected()
                 'If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso CurrentSelectedStep.InputChannels.Count = 0 Then
                 '    'Forms.MessageBox.Show("Detectors have to have input signals!", "Error!", MessageBoxButtons.OK)
@@ -273,7 +284,11 @@ Namespace ViewModels
                         DetectorConfigure.AlarmingList = newlist
                         _addLog("Alarming detector " & obj.Name & " is deleted from alarming!")
                     End If
-                    _deSelectAllDetectors()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        _deSelectAllDetectors()
+                    End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
                 End Try
