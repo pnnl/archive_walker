@@ -94,7 +94,6 @@
   <ItemGroup>
     <Compile Include="Converters\EnabledIfRunningOrPausedConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\InverseBooleanVisibilityConverter.cs" />
     <Compile Include="ViewModels\AWRunViewModel.cs" />
     <Compile Include="ViewModels\MatLabEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,6 +10,7 @@
              xmlns:reader="clr-namespace:BAWGUI.ReadConfigXml;assembly=BAWGUI.ReadConfigXml"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
+             xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -23,6 +24,7 @@
             <converters:FileTypeToRowNumberConverter2 x:Key="FileTypeToRowNumberConverter2"/>
             <converters:FileTypeToRowNumberConverter3 x:Key="FileTypeToRowNumberConverter3"/>
             <converters:FileTypeToBooleanConverter x:Key="FileTypeToBooleanConverter"/>
+            <coreConverter:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
             <!--<converters:InputFileTypesToAvailableModeConverter x:Key="InputFileTypesToAvailableModeConverter"/>-->
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="ModeValues">
                 <ObjectDataProvider.MethodParameters>
@@ -241,6 +243,10 @@
                             </Style>
                         </ContentControl.Style>
                     </ContentControl>
+                    <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="2" Visibility="{Binding CanChooseMode, Converter={StaticResource InverseBooleanVisibilityConverter}}">
+                        <Label Content="Update Interval (sec):" FontSize="18" FontWeight="Bold"/>
+                        <TextBox Text="{Binding DetectorConfigure.ResultUpdateInterval}"  Margin="5,2" Height="22" Width="120" VerticalAlignment="Center"/>
+                    </StackPanel>
                     <!--<Label Content="Additional Paths:" FontWeight="Bold" FontSize="18" Grid.Row="5"/>
                     <StackPanel Orientation="Horizontal" Grid.Row="6">
                         <Label Content="Initialization Path:" Width="150"/>

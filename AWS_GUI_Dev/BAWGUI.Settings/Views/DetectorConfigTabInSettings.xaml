@@ -14,6 +14,7 @@
         <ResourceDictionary>
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -89,7 +90,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Label>
-                        <TextBox Text="{Binding DetectorConfigure.ResultUpdateInterval}"  Margin="0,20,7,0" Height="22" Width="120" VerticalAlignment="Center">
+                        <TextBox Text="{Binding DetectorConfigure.ResultUpdateInterval}"  Margin="0,20,7,0" Height="22" Width="120" VerticalAlignment="Center" IsReadOnly="{Binding CanChooseMode, Converter={StaticResource InverseBooleanConverter}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->

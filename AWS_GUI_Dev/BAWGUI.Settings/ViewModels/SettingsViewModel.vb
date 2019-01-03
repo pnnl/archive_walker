@@ -4506,6 +4506,15 @@ Namespace ViewModels
                         End If
                     Next
                 End If
+                If obj.FileType = DataFileType.piDatabase Then
+                    CanChooseMode = True
+                    For Each info In DataConfigure.ReaderProperty.InputFileInfos
+                        If info.FileType = DataFileType.piDatabase Then
+                            CanChooseMode = False
+                            Exit For
+                        End If
+                    Next
+                End If
                 'If _configData IsNot Nothing Then
                 '    _readDataConfigStages(_configData)
                 '    _readProcessConfig(_configData)
