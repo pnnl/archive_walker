@@ -70,10 +70,12 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _model.ExampleFile = value;
-                if (File.Exists(value))
+                if (!string.IsNullOrEmpty(value))
                 {
-                    //try
-                    //{
+                    if (File.Exists(value))
+                    {
+                        //try
+                        //{
                         //var ftyp = Path.GetExtension(value).Substring(1);
                         //switch (ftyp.ToLower())
                         //{
@@ -91,47 +93,64 @@ namespace BAWGUI.SignalManagement.ViewModels
                         //    break;
                         //}
                         //FileType = (DataFileType)Enum.Parse(typeof(DataFileType), );
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    //}
-                    var filename = "";
-                    try
-                    {
-                        filename = Path.GetFileNameWithoutExtension(value);
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        //}
+                        var filename = "";
+                        try
+                        {
+                            filename = Path.GetFileNameWithoutExtension(value);
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                        if (FileType == DataFileType.piDatabase)
+                        {
+                            Mnemonic = "";
+                            //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.
+                            try
+                            {
+                                FileDirectory = Path.GetDirectoryName(value);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Mnemonic = filename.Substring(0, filename.Length - 16);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            }
+                            //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.
+                            try
+                            {
+                                var fullPath = Path.GetDirectoryName(value);
+                                var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
+                                var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
+                                FileDirectory = twoLevelUp;
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            }
+                        }
                     }
-                    catch (ArgumentException ex)
+                    else
                     {
-                        MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                    try
-                    {
-                        Mnemonic = filename.Substring(0, filename.Length - 16);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                    //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.
-                    try
-                    {
-                        var fullPath = Path.GetDirectoryName(value);
-                        var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
-                        var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
-                        FileDirectory = twoLevelUp;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                }
-                else
-                {
-                    // MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
-                    MessageBox.Show("The example file  " + Path.GetFileName(value) + "  could not be found in the directory  " + Path.GetDirectoryName(value) + ".\n" 
-                                    + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+                        // MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                        MessageBox.Show("The example file  " + Path.GetFileName(value) + "  could not be found in the directory  " + Path.GetDirectoryName(value) + ".\n"
+                                        + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
 
+                    }
                 }
                 OnPropertyChanged();
             }

@@ -18,6 +18,12 @@
             <converters:EnumToStringConverter1 x:Key="EnumToStringConverter1"/>
             <converters:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <converters:FileTypeToLabelConverter x:Key="FileTypeToLabelConverter"/>
+            <converters:FileTypeToRowNumberConverter1 x:Key="FileTypeToRowNumberConverter1"/>
+            <converters:FileTypeToRowNumberConverter2 x:Key="FileTypeToRowNumberConverter2"/>
+            <converters:FileTypeToRowNumberConverter3 x:Key="FileTypeToRowNumberConverter3"/>
+            <converters:FileTypeToBooleanConverter x:Key="FileTypeToBooleanConverter"/>
+            <!--<converters:InputFileTypesToAvailableModeConverter x:Key="InputFileTypesToAvailableModeConverter"/>-->
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="ModeValues">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="coremodel:ModeType"/>
@@ -175,6 +181,17 @@
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5,0,0">
+                                                    <Label Content="File Type:" Margin="2" Width="100"/>
+                                                    <!--<TextBox Text="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>-->
+                                                    <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="SelectionChanged">
+                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                    </ComboBox>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter1}}" Margin="0,5,0,0">
                                                     <Label Content="Example File:" Margin="2" Width="100"/>
                                                     <TextBox Text="{Binding ExampleFile}" Margin="2" VerticalAlignment="Center" MinWidth="100" MaxWidth="600" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
@@ -184,27 +201,16 @@
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.InspectRawSignal}" Margin="2" ToolTip="Inspect input signals from this example file" Height="25" CommandParameter="{Binding}" Content="Inspect Signals" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}"/>
                                                     <!--<Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.UpdateExampleFile}" CommandParameter="{Binding ExampleFile}" Margin="2" ToolTip="Update example file in Config.xml file" Height="25" Content="Update Example File" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}"/>-->
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
+                                                <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter2}}" Margin="0,5,0,0">
                                                     <Label Content="File Directory:" Margin="2" Width="100"/>
                                                     <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
                                                     <!--<Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
                                                         <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>-->
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
-                                                    <Label Content="File Type:" Margin="2" Width="100"/>
-                                                    <!--<TextBox Text="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>-->
-                                                    <ComboBox SelectedValue="{Binding FileType, Converter={StaticResource EnumToStringConverter1}}" Margin="2" VerticalAlignment="Center" MinWidth="200" ItemsSource="{Binding Source={StaticResource DataFileTypeValues}}">
-                                                        <!--<i:Interaction.Triggers>
-                                                            <i:EventTrigger EventName="SelectionChanged">
-                                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.FileTypeChanged}" CommandParameter="{Binding}"/>
-                                                            </i:EventTrigger>
-                                                        </i:Interaction.Triggers>-->
-                                                    </ComboBox>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5,0,0">
-                                                    <Label Content="Mnemonic:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
+                                                <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter3}}" Margin="0,5,0,0">
+                                                    <Label Content="{Binding FileType, Converter={StaticResource FileTypeToLabelConverter}}" Margin="2" Width="100"/>
+                                                    <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="{Binding FileType, Converter={StaticResource FileTypeToBooleanConverter}}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>
@@ -217,7 +223,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     <Label Content="Mode" Grid.Row="2" Margin="2" FontSize="18" FontWeight="Bold"/>
-                    <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="3" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="10,2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
+                    <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="3" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="10,2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}" IsEnabled="{Binding CanChooseMode}"/>
                     <ContentControl Grid.Row="4" Content="{Binding}">
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">

@@ -270,17 +270,31 @@ namespace BAWGUI.ReadConfigXml
                     //{
                     //    MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                     //}
-                    try
+                    if (FileType == DataFileType.piDatabase)
                     {
-                        var fullPath = Path.GetDirectoryName(value);
-                        var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
-                        var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
-                        FileDirectory = twoLevelUp;
+                        try
+                        {
+                            FileDirectory = Path.GetDirectoryName(value);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
+                        try
+                        {
+                            var fullPath = Path.GetDirectoryName(value);
+                            var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
+                            var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
+                            FileDirectory = twoLevelUp;
+                        }
+                        catch (Exception ex)
+                        {
 
-                        MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
                     }
                 }
                 //else

@@ -1,6 +1,7 @@
 ﻿Imports System.Globalization
 Imports System.Windows
 Imports System.Windows.Data
+Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Converters
@@ -155,4 +156,94 @@ Namespace Converters
             Return DependencyProperty.UnsetValue
         End Function
     End Class
+
+    Public Class FileTypeToLabelConverter
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.piDatabase Then
+                Return "Preset:"
+            Else
+                Return "Mnemonic:"
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToRowNumberConverter1
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.piDatabase Then
+                Return 2
+            Else
+                Return 1
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToRowNumberConverter2
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.piDatabase Then
+                Return 3
+            Else
+                Return 2
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToRowNumberConverter3
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.piDatabase Then
+                Return 1
+            Else
+                Return 3
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToBooleanConverter
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.piDatabase Then
+                Return False
+            Else
+                Return True
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    'Public Class InputFileTypesToAvailableModeConverter
+    '    Implements IValueConverter
+
+    '    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+    '        For Each info In value
+
+    '        Next
+    '        Return True
+    '    End Function
+
+    '    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+    '        Return DependencyProperty.UnsetValue
+    '    End Function
+    'End Class
 End Namespace

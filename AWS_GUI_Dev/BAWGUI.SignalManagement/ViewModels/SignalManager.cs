@@ -141,7 +141,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                             //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
-                    else
+                    else if(item.FileType == DataFileType.powHQ)
                     {
                         try
                         {
@@ -151,6 +151,17 @@ namespace BAWGUI.SignalManagement.ViewModels
                         {
                             MissingExampleFile.Add(MissingExampleFile + "Error reading point on wave data:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                             //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                    }
+                    else if(item.FileType == DataFileType.piDatabase)
+                    {
+                        try
+                        {
+                            //_readPIExampleFile();
+                        }
+                        catch (Exception ex)
+                        {
+                            MissingExampleFile.Add(MissingExampleFile + "Error reading PI database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
                     FileInfo.Add(aFileInfo);
@@ -589,9 +600,13 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         _engine.GetFileExampleSignalData(info.ExampleFile, 1);
                     }
-                    else
+                    else if (info.FileType == DataFileType.powHQ)
                     {
                         _engine.GetFileExampleSignalData(info.ExampleFile, 3);
+                    }
+                    else if (info.FileType == DataFileType.piDatabase)
+                    {
+                        //_engine.GetFileExamplePISignals
                     }
                 }
                 catch (Exception ex)
@@ -1605,7 +1620,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         throw new Exception("Error reading .pdat file. " + ex.Message);
                     }
                 }
-                else
+                else if (model.Model.FileType == DataFileType.powHQ)
                 {
                     try
                     {
@@ -1614,6 +1629,17 @@ namespace BAWGUI.SignalManagement.ViewModels
                     catch (Exception ex)
                     {
                         throw new Exception("Error reading .mat file. " + ex.Message);
+                    }
+                }
+                else if(model.Model.FileType == DataFileType.piDatabase)
+                {
+                    try
+                    {
+                        //_readPIExampleFile();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading PI database. " + ex.Message);
                     }
                 }
                 FileInfo.Add(model);
