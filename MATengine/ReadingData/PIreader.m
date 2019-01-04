@@ -4,7 +4,6 @@ EndTime = StartTime + FileLength/(60*60*24);
 
 time_start = datestr(StartTime,'dd-mmm-yyyy HH:MM:SS');
 time_end = datestr(EndTime,'dd-mmm-yyyy HH:MM:SS');
-time_offset = -8;
 
 % PresetFile = 'C:\Users\foll154\Documents\Central America FY17\PI_Reader_package\PI_presets.xml';
 
@@ -15,6 +14,7 @@ time_offset = -8;
 %% Choose a preset
 
 % Reduce PMU to just that preset
+Server = Server{strcmp({PMU.PMU_Name},preset)};
 PMU = PMU(strcmp({PMU.PMU_Name},preset));
 
 %% Setup for talking to PI
@@ -50,6 +50,11 @@ for idx = 1:length(PMU.Signal_Name)
         v{idx}(i) = pi_data1.Item(i).Value;
         
         if idx == 1
+            if i == 1
+                % Handles differences between the requested time and the
+                % time returned by PI, which adjusts for time zones.
+                time_offset = round((StartTime - (pi_data1.Item(i).TimeStamp.UTCSeconds/60/60/24 + datenum(1970,0,1,0,0,0)))*24);
+            end
             tPMU(i) = pi_data1.Item(i).TimeStamp.UTCSeconds/60/60/24 + datenum(1970,0,1,0,0,0) + time_offset/24;
         end
     end

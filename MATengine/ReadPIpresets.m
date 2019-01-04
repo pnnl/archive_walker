@@ -46,9 +46,17 @@ for k = 2:LengthOfFile
             % All subfields are listed on this line
             
             % Get the subfield names and values listed on this line
-            SS = strsplit(CurrTextVal(2:end),{' ','=','>','"'});
-            FNall = SS(2:2:end-2);
-            FVall = SS(3:2:end-2);
+%             SS = strsplit(CurrTextVal(2:end),{' ','=','>','"'});
+            
+            CurrTextVal = strrep(CurrTextVal,'""','"EMPTY"');
+            SS = strsplit(CurrTextVal(2:end),{'="','" '});
+            SS{1} = SS{1}(strfind(SS{1},' ')+1:end);
+            SS{end} = SS{end}(1:strfind(SS{end},'"')-1);
+            FNall = SS(1:2:end);
+            FVall = SS(2:2:end);
+            
+%             FNall = SS(2:2:end-2);
+%             FVall = SS(3:2:end-2);
             
             for idx = 1:length(FNall)
                 FN = [FN FNall{idx}];
@@ -137,7 +145,7 @@ end
 % Convert to our structure (meta only)
 MT = cell(1,length(X.Presets.Preset));
 PMU = struct('PMU_Name',MT,'Signal_Name',MT,'Signal_Type',MT,'Signal_Unit',MT);
-Server = [];
+Server = MT;
 for idx = 1:length(PMU)
     PMU(idx).PMU_Name = X.Presets.Preset(idx).name;
     
@@ -150,15 +158,21 @@ for idx = 1:length(PMU)
         SigTypes{SigIdx} = X.Presets.Preset(idx).Signal(SigIdx).Type;
         SigUnits{SigIdx} = X.Presets.Preset(idx).Signal(SigIdx).Unit;
         
-        if isempty(Server)
-            Server = X.Presets.Preset(idx).Signal(SigIdx).Server;
-        elseif ~strcmp(Server, X.Presets.Preset(idx).Signal(SigIdx).Server)
-            error('All signals must be from the same server');
+        if isempty(Server{idx})
+            Server{idx} = X.Presets.Preset(idx).Signal(SigIdx).Server;
+        elseif ~strcmp(Server{idx}, X.Presets.Preset(idx).Signal(SigIdx).Server)
+            error('All signals within a preset must be from the same server');
         end
     end
     PMU(idx).Signal_Name = SigNames;
-    PMU(idx).Signal_Type = SigTypes;
-    PMU(idx).Signal_Unit = SigUnits;
+    PMU(idx).Signal_Type = TranslateSigTypes(SigTypes);
+    PMU(idx).Signal_Unit = TranslateSigUnits(SigUnits);
+    
+    for SigIdx = 1:length(PMU(idx).Signal_Type)
+        if ~CheckTypeAndUnits(PMU(idx).Signal_Type{SigIdx},PMU(idx).Signal_Unit{SigIdx})
+            error(['Signal type ' PMU(idx).Signal_Type{SigIdx} ' does not match unit ' PMU(idx).Signal_Unit{SigIdx}]);
+        end
+    end
 end
 end
 
@@ -188,4 +202,51 @@ for idx = 1:length(FN)-1
 end
 
 res = isfield(eval(ToExe),FN{end});
+end
+
+
+function SigTypes = TranslateSigTypes(SigTypes)
+for idx = 1:length(SigTypes)
+    switch SigTypes{idx}
+        case 'VoltageMagnitude'
+            SigTypes{idx} = 'VMP';
+        case 'VoltageAngle'
+            SigTypes{idx} = 'VAP';
+        case 'CurrentMagnitude'
+            SigTypes{idx} = 'IMP';
+        case 'CurrentAngle'
+            SigTypes{idx} = 'IAP';
+        case 'ActPower'
+            SigTypes{idx} = 'P';
+        case 'ReactivePower'
+            SigTypes{idx} = 'Q';
+        case 'Frequency'
+            SigTypes{idx} = 'F';
+        case 'Unknown'
+            SigTypes{idx} = 'OTHER';
+        otherwise
+            SigTypes{idx} = 'OTHER';
+    end
+end
+end
+
+function SigUnits = TranslateSigUnits(SigUnits)
+for idx = 1:length(SigUnits)
+    switch SigUnits{idx}
+        case 'Amps'
+            SigUnits{idx} = 'A';
+        case 'DEG'
+            SigUnits{idx} = 'DEG';
+        case 'kV'
+            SigUnits{idx} = 'kV';
+        case 'Hz'
+            SigUnits{idx} = 'Hz';
+        case 'MW'
+            SigUnits{idx} = 'MW';
+        case 'MVAR'
+            SigUnits{idx} = 'MVAR';
+        otherwise
+            SigUnits{idx} = 'O';
+    end
+end
 end
