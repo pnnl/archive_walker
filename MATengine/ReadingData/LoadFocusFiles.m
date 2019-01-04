@@ -1,4 +1,4 @@
-function [PMU,PMUbyFile,DataInfo,FileInfo,FileLength] = LoadFocusFiles(FileIdx,SkippedFiles,FileInfo,PMUbyFile,idx,DataInfo,focusFile,FileLength,Num_Flags)
+function [PMU,PMUbyFile,DataInfo,FileInfo,FileLength] = LoadFocusFiles(FileIdx,SkippedFiles,FileInfo,PMUbyFile,idx,DataInfo,focusFile,FileLength,Num_Flags,FileDirectory)
 
 if FileIdx < SkippedFiles+1
     % This FileIdx corresponds to a missing file
@@ -33,6 +33,8 @@ else
                 [PMUbyFileTemp,tPMU] = JSIS_CSV_2_Mat(focusFile{idx3},Num_Flags);
             elseif(strcmpi(FileInfo(idx3).FileType, 'powHQ'))
                 [PMUbyFileTemp,tPMU] = POWreadHQ(focusFile{idx3},Num_Flags);
+            elseif(strcmpi(FileInfo(idx3).FileType, 'PI'))
+                [PMUbyFileTemp,tPMU] = PIreader(focusFile{idx3},Num_Flags,FileLength,FileInfo.FileMnemonic,DataInfo.PresetFile);
             end
             
             FailToRead = 0;

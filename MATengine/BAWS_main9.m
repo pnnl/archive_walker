@@ -422,7 +422,7 @@ while(~min(done))
         SkippedFiles = zeros(1,length(FileInfo));
         FocusFileTime = zeros(1,length(FileInfo));
         for FileIdx = 1:length(FileInfo)
-            [focusFile{FileIdx},done(FileIdx),SkippedFiles(FileIdx),FocusFileTime(FileIdx),DataInfo] = getFocusFiles(FileInfo(FileIdx),FileDirectory{FileIdx},DataInfo,FileLength);
+            [focusFile{FileIdx},done(FileIdx),SkippedFiles(FileIdx),FocusFileTime(FileIdx),DataInfo,FileLength] = getFocusFiles(FileInfo(FileIdx),FileDirectory{FileIdx},DataInfo,FileLength,ResultUpdateInterval);
             FileInfo(FileIdx).lastFocusFile = focusFile{FileIdx};
         end
         %
@@ -499,7 +499,7 @@ while(~min(done))
     end
     
     for FileIdx = 1:(SkippedFiles+1)
-        [PMU,PMUbyFile,DataInfo,FileInfo,FileLength] = LoadFocusFiles(FileIdx,SkippedFiles,FileInfo,PMUbyFile,idx,DataInfo,focusFile,FileLength,Num_Flags);
+        [PMU,PMUbyFile,DataInfo,FileInfo,FileLength] = LoadFocusFiles(FileIdx,SkippedFiles,FileInfo,PMUbyFile,idx,DataInfo,focusFile,FileLength,Num_Flags,FileDirectory);
         
         if isempty(PMU)
             % Files from each directory have not yet been successfully

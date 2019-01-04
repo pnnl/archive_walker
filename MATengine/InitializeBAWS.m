@@ -202,6 +202,12 @@ for idx = 1:length(FileInfo)
     FileInfo(idx).FileType = DataXML.ReaderProperties.FilePath{idx}.FileType;
 end
 
+if(strcmpi(FileInfo(1).FileType,'PI'))
+    [~,name,ext] = fileparts(DataXML.ReaderProperties.FilePath{1}.ExampleFile); 
+    DataInfo.PIpresetFile = [name ext];
+%     DataInfo.PIpresetFile = fullfile(DataXML.ReaderProperties.FilePath{1}.ExampleFile);
+end
+
 if(strcmp(DataInfo.mode, 'Archive'))
     DataInfo.DateTimeStart = DateTimeStart(1:19);
     DataInfo.DateTimeEnd = DateTimeEnd(1:19);

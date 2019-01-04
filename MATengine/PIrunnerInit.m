@@ -8,7 +8,7 @@ time_offset = -8;
 
 Num_Flags = 0;
 
-MetaOnly = 1;
+MetaOnly = 0;
 
 PresetFile = 'C:\Users\foll154\Documents\Central America FY17\PI_Reader_package\PI_presets.xml';
 
@@ -24,9 +24,12 @@ PMUinit = PMUinit(strcmp({PMUinit.PMU_Name},preset));
 
 %% Setup for talking to PI
 
-pisdk = NET.addAssembly('OSIsoft.PISDK')
-pisdksrv = NET.addAssembly('OSIsoft.PITimeServer')
-pisdkcom = NET.addAssembly('OSIsoft.PISDKCommon')
+% pisdk = NET.addAssembly('OSIsoft.PISDK');
+% pisdksrv = NET.addAssembly('OSIsoft.PITimeServer');
+% pisdkcom = NET.addAssembly('OSIsoft.PISDKCommon');
+NET.addAssembly('OSIsoft.PISDK');
+NET.addAssembly('OSIsoft.PITimeServer');
+NET.addAssembly('OSIsoft.PISDKCommon');
 import PISDK.*
 
 pi_sdk =  PISDK.PISDKClass();

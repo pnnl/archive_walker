@@ -77,10 +77,6 @@ FldIdxTrack = [];
 Flds = {};
 FldsIdx = [];
 for idx = 1:length(FN)
-    if idx == 104
-        'pause';
-    end
-    
     if strcmp(FV{idx}, ' ')
         if ~isempty(OpnrTrack)
             if strcmp(OpnrTrack{end}, FN{idx})
@@ -98,7 +94,7 @@ for idx = 1:length(FN)
                 if CheckIfField(X,OpnrTrack) == 0
                     % Add field
                     ToEval = StoreInStruct(X,OpnrTrack);
-                    eval([ToEval ' = struct()']);
+                    eval([ToEval ' = struct();']);
                 end
             end
         else
@@ -111,13 +107,13 @@ for idx = 1:length(FN)
             if CheckIfField(X,OpnrTrack) == 0
                 % Add field
                 ToEval = StoreInStruct(X,OpnrTrack);
-                eval([ToEval ' = struct()']);
+                eval([ToEval ' = struct();']);
             end
         end
     else
         if CheckIfField(X,OpnrTrack) == 0
             ToEval = StoreInStruct(X,OpnrTrack);
-            eval([ToEval '.' FN{idx} ' = ''' FV{idx} '''']);
+            eval([ToEval '.' FN{idx} ' = ''' FV{idx} ''';']);
         else
             if CheckIfField(X,[OpnrTrack FN{idx}]) == 0
                 ToEval = StoreInStruct(X,OpnrTrack);
@@ -132,7 +128,7 @@ for idx = 1:length(FN)
                 ToEval = StoreInStruct(X,OpnrTrack);
                 ArrayIdx = ['(' num2str(eval(['length(' ToEval ')'])+1) ')'];
             end
-            eval([ToEval ArrayIdx '.' FN{idx} ' = ''' FV{idx} '''']);
+            eval([ToEval ArrayIdx '.' FN{idx} ' = ''' FV{idx} ''';']);
         end
     end
 end
@@ -140,7 +136,7 @@ end
 
 % Convert to our structure (meta only)
 MT = cell(1,length(X.Presets.Preset));
-PMU = struct('PMU_Name',MT,'Signal_Name',MT,'Signal_Type',MT,'Signal_Unit',MT,'fs',MT);
+PMU = struct('PMU_Name',MT,'Signal_Name',MT,'Signal_Type',MT,'Signal_Unit',MT);
 Server = [];
 for idx = 1:length(PMU)
     PMU(idx).PMU_Name = X.Presets.Preset(idx).name;
