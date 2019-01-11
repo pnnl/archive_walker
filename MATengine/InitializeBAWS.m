@@ -307,14 +307,14 @@ end
 if isfield(temp,'ModeMeter')
     if length(temp.ModeMeter) == 1
         % The modal analysis algorithm needs ResultUpdateInterval, so
-        %add it to the Thevenin portion of the configuration structure.
+        %add it to the ModeMeter portion of the configuration structure.
         temp.ModeMeter = {temp.ModeMeter};
         DetectorXML.ModeMeter.ResultUpdateInterval = ResultUpdateInterval;
         DetectorXML.ModeMeter.ResultPathFinal = [EventPath DetectorXML.ModeMeter.ResultPath];
     else
         for idx = 1:length(temp.ModeMeter)
             % The modal analysis algorithm needs ResultUpdateInterval, so
-            %add it to the Thevenin portion of the configuration structure.
+            %add it to the ModeMeter portion of the configuration structure.
             DetectorXML.ModeMeter{idx}.ResultUpdateInterval = ResultUpdateInterval;
             DetectorXML.ModeMeter{idx}.ResultPathFinal = [EventPath DetectorXML.ModeMeter{idx}.ResultPath];
         end

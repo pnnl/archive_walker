@@ -34,6 +34,10 @@ end
 try
     for ModeIdx = 1:NumMode
         [Data{ModeIdx}, DataPMU{ModeIdx}, DataChannel{ModeIdx}, DataType{ModeIdx}, DataUnit{ModeIdx}, ~, fs{ModeIdx}, TimeString{ModeIdx}] = ExtractData(PMUstruct,Parameters.Mode{ModeIdx});
+        
+        AnalysisLength = str2double(Parameters.Mode{ModeIdx}.AnalysisLength)*fs{ModeIdx};
+        Data{ModeIdx} = Data{ModeIdx}(end-AnalysisLength+1:end,:);
+        TimeString{ModeIdx} = TimeString{ModeIdx}(end-AnalysisLength+1:end);
     end
 catch
     warning('Input data for the mode-meter could not be used.');
@@ -48,6 +52,12 @@ AdditionalOutput = struct([]);
 ExtractedParametersAll = ExtractModeMeterParams(Parameters,fs);
 AdditionalOutput(1).OperatingValues = [];
 
+if isempty(PastAdditionalOutput)
+    FirstCall = true;
+else
+    FirstCall = false;
+end
+
 for ModeIdx = 1:NumMode
     ModeEstimateCalcIdx = 1;
     ExtractedParameters = ExtractedParametersAll{ModeIdx};
@@ -59,7 +69,7 @@ for ModeIdx = 1:NumMode
     AdditionalOutput(ModeIdx).DataType = DataType{ModeIdx};
     AdditionalOutput(ModeIdx).DataUnit = DataUnit{ModeIdx};
     AdditionalOutput(ModeIdx).TimeString = TimeString{ModeIdx}(end-size(Data{ModeIdx},1)+1:end);
-    if isempty(PastAdditionalOutput)
+    if FirstCall
         AdditionalOutput(ModeIdx).Modetrack = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).Modetrack(:) = {{}};
         AdditionalOutput(ModeIdx).t = TimeStringDN(end);
@@ -67,6 +77,9 @@ for ModeIdx = 1:NumMode
         AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+        
+        AdditionalOutput(ModeIdx).EventDet = cell(1,size(Data{ModeIdx},2));
+        PastAdditionalOutput(ModeIdx).EventDet = cell(1,size(Data{ModeIdx},2));
     else
         AdditionalOutput(ModeIdx).Modetrack = PastAdditionalOutput(ModeIdx).Modetrack;
         AdditionalOutput(ModeIdx).ModeOriginal = PastAdditionalOutput(ModeIdx).ModeOriginal;
@@ -109,17 +122,30 @@ for ModeIdx = 1:NumMode
                 ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
             end
         else
+            % Forced oscillation detection
             if ~isempty(ExtractedParameters.FOdetectorPara)
                 % Run FO detection algorithm
-                DetectionResults(ModeIdx).FOfreq{ChanIdx}...
-                    = FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx},ExtractedParameters.AnalysisLength);
+                DetectionResults(ModeIdx).FOfreq{ChanIdx} = ...
+                    FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx});
             else
                 DetectionResults(ModeIdx).FOfreq{ChanIdx} = [];
             end
+            
+            % High-energy event detection
+            if ~isempty(ExtractedParameters.EventDetectorPara)
+                % Run event detection algorithm
+                AdditionalOutput(ModeIdx).EventDet{ChanIdx} = ...
+                    EventDetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.EventDetectorPara,Parameters.ResultUpdateInterval,fs{ModeIdx},PastAdditionalOutput(ModeIdx).EventDet{ChanIdx});
+                
+                win = AdditionalOutput(ModeIdx).EventDet{ChanIdx}.win;
+            else
+                win = ones(size(Data{ModeIdx}(:,ChanIdx)));
+            end
+            
             for MethodIdx = 1:NumMethods(ModeIdx)
                 [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
                     = eval([ExtractedParameters.MethodName{MethodIdx}...
-                    '(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
+                    '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
                 DampingRatio = -real(Mode)/abs(Mode);
                 Frequency = abs(imag(Mode))/2/pi;
                 Frequency(isnan(DampingRatio))= NaN;
@@ -159,10 +185,10 @@ if isfield(Parameters,'BaseliningSignals')
     [Data, ~, OperatingNames, OperatingType, OperatingUnits, ~, ~, ~] = ExtractData(PMUstruct,Parameters.BaseliningSignals);
     OperatingValues = Data(end,:);
     
-    if isempty(PastAdditionalOutput)
+    if FirstCall
         AdditionalOutput(1).OperatingValues = OperatingValues;
     else
-        AdditionalOutput(1).OperatingValues = [PastAdditionalOutput(1).OperatingValues; OperatingValues;];
+        AdditionalOutput(1).OperatingValues = [PastAdditionalOutput(1).OperatingValues; OperatingValues];
     end
     AdditionalOutput(1).OperatingNames = OperatingNames;
     AdditionalOutput(1).OperatingUnits = OperatingUnits;
