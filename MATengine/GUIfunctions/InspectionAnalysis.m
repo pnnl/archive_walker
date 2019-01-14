@@ -1,12 +1,12 @@
 function Res = InspectionAnalysis(Func,Data,t,Params)
 
-save('Inputs.mat');
-Res = struct();
-return
+% save('Inputs.mat');
+% Res = struct();
+% return
 
 switch Func
     case 'Spectral'
-        Res = InspectionSpectral(Data,t,Params);
+        Res = InspectionSpectral(Data,Params);
     otherwise
         warning(['The function ' Func ' was not recognized.']);
         Res = struct();
