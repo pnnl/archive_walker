@@ -21,17 +21,8 @@
 %   3. modifed the code after DataInfo doesn't have a list of files that should be processed in the archive mode
 %
 %%
-function [focusFile,done,SkippedFiles,FocusFileTime,DataInfo] = getFocusFiles(FileInfo,FileDirectory,DataInfo,FileLength)
+function [focusFile,done,SkippedFiles,FocusFileTime,DataInfo,FileLength] = getFocusFiles(FileInfo,FileDirectory,DataInfo,FileLength,ResultUpdateInterval)
 done = 0; % used as a flag to identify the prcessing should be ended
-
-% file type
-if(strcmpi(FileInfo.FileType,'pdat'))
-    fileType = 1;
-elseif(strcmpi(FileInfo.FileType,'csv'))
-    fileType = 2;
-elseif(strcmpi(FileInfo.FileType,'powHQ'))
-    fileType = 3;
-end
 
 if(isempty(FileInfo.lastFocusFile))
     % no last focus file, this is at the beginning of processing
@@ -61,6 +52,22 @@ if(InitialFocusFileTime > DateTimeEnd)
         DataInfo.DateTimeEnd = [];
         DataInfo.mode = 'RealTime';
     end
+end
+
+% file type
+if(strcmpi(FileInfo.FileType,'pdat'))
+    fileType = 1;
+elseif(strcmpi(FileInfo.FileType,'csv'))
+    fileType = 2;
+elseif(strcmpi(FileInfo.FileType,'powHQ'))
+    fileType = 3;
+elseif(strcmpi(FileInfo.FileType,'PI'))
+    SkippedFiles = 0;
+    FocusFileTime = InitialFocusFileTime;
+    focusFile = FocusFileTime;
+    FileLength = ResultUpdateInterval;
+    DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PIpresetFile);
+    return
 end
 
      

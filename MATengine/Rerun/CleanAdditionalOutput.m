@@ -45,3 +45,7 @@ if isfield(AdditionalOutputCondos,'Thevenin')
         end
     end
 end
+
+if isfield(AdditionalOutputCondos,'ModeMeter')
+    AdditionalOutputCondos = rmfield(AdditionalOutputCondos,'ModeMeter');
+end
