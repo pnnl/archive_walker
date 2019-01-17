@@ -246,6 +246,7 @@ namespace BAWGUI.ViewModels
                             {
                                 SettingsVM.DetectorConfigure.DetectorList.Add(new SmallSignalStabilityToolViewModel(mm, _signalMgr));
                             }
+                            _checkMMDirsStatus(e.SelectedRun, modeMeters);
                         }
                     }
                     catch (Exception ex)
@@ -260,6 +261,30 @@ namespace BAWGUI.ViewModels
                 //need to read signal stability results
 
             }
+        }
+
+        private void _checkMMDirsStatus(AWRunViewModel task, List<SmallSignalStabilityTool> modeMeters)
+        {
+            var eventPath = task.Model.EventPath;
+            var mm = eventPath + "\\MM";
+            if (!Directory.Exists(mm))
+            {
+                Directory.CreateDirectory(mm);
+                System.Windows.Forms.MessageBox.Show("Modemeter event subfolder MM was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            foreach (var meter in modeMeters)
+            {
+                var meterDir = mm + "\\" + meter.ModeMeterName;
+                if (!Directory.Exists(meterDir))
+                {
+                    Directory.CreateDirectory(meterDir);
+                    System.Windows.Forms.MessageBox.Show("Subfolder for mode meter " + meter.ModeMeterName + " was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+                }
+            }
+        }
+
+        private void _checkMMDirsStatus(AWRunViewModel task)
+        {
         }
 
         //private void _projectControlVM_RunSelected(object sender, AWRunViewModel e)
