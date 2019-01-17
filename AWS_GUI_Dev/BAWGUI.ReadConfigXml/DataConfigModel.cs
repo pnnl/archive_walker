@@ -234,7 +234,44 @@ namespace BAWGUI.ReadConfigXml
             _exampleFile = "";
         }
         public string FileDirectory { get; set; }
-        public DataFileType FileType { get; set; }
+        private DataFileType _fileType;
+        public DataFileType FileType
+        {
+            get { return _fileType; }
+            set
+            {
+                _fileType = value;
+                if (File.Exists(ExampleFile) && CheckDataFileMatch())
+                {
+                    if (value == DataFileType.PI)
+                    {
+                        try
+                        {
+                            FileDirectory = Path.GetDirectoryName(ExampleFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var fullPath = Path.GetDirectoryName(ExampleFile);
+                            var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
+                            var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
+                            FileDirectory = twoLevelUp;
+                        }
+                        catch (Exception ex)
+                        {
+
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                    }
+                }
+            }
+        }
         public string Mnemonic { get; set; }
         private string _exampleFile;
         public string ExampleFile
@@ -243,7 +280,7 @@ namespace BAWGUI.ReadConfigXml
             set
             {
                 _exampleFile = value;
-                if (File.Exists(value))
+                if (File.Exists(value) && CheckDataFileMatch())
                 {
                     //try
                     //{
@@ -270,7 +307,7 @@ namespace BAWGUI.ReadConfigXml
                     //{
                     //    MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                     //}
-                    if (FileType == DataFileType.piDatabase)
+                    if (FileType == DataFileType.PI)
                     {
                         try
                         {
@@ -302,6 +339,25 @@ namespace BAWGUI.ReadConfigXml
                 //    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
                 //}
             }
+        }
+        public bool CheckDataFileMatch()
+        {
+            var tp = "";
+            try
+            {
+                tp = Path.GetExtension(ExampleFile).Substring(1).ToLower();
+            }
+            catch
+            {
+            }
+            if (FileType.ToString().ToLower() == tp)
+                return true;
+            else if (FileType == DataFileType.powHQ && tp == "mat")
+                return true;
+            else if (FileType == DataFileType.PI && tp == "xml")
+                return true;
+            else
+                return false;
         }
     }
 

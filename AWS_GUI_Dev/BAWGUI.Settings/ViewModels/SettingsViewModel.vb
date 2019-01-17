@@ -29,7 +29,6 @@ Namespace ViewModels
             _run = New AWRunViewModel()
             _project = New AWProject()
             _isMatlabEngineRunning = False
-            _canChooseMode = True
 
             '_openConfigFile = New DelegateCommand(AddressOf openConfigXMLFile, AddressOf CanExecute)
             _browseInputFileDir = New DelegateCommand(AddressOf _browseInputFileFolder, AddressOf CanExecute)
@@ -771,7 +770,7 @@ Namespace ViewModels
             If obj.FileType = DataFileType.csv Then
                 openFileDialog.DefaultExt = ".csv"
                 openFileDialog.Filter = "JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|All files (*.*)|*.*"
-            ElseIf obj.FileType = DataFileType.piDatabase Then
+            ElseIf obj.FileType = DataFileType.PI Then
                 openFileDialog.DefaultExt = ".xml"
                 openFileDialog.Filter = "PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|All files (*.*)|*.*"
             ElseIf obj.FileType = DataFileType.powHQ Then
@@ -824,7 +823,7 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
-            If (_checkDataFileMatch(obj)) Then
+            If (obj.Model.CheckDataFileMatch()) Then
                 Dim dirs = New List(Of String)
                 For Each info In DataConfigure.ReaderProperty.InputFileInfos
                     dirs.Add(info.FileDirectory)
@@ -883,9 +882,9 @@ Namespace ViewModels
                     '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                     '    Exit Sub
                     'End Try
-                    If obj.FileType IsNot Nothing Then
+                    If obj.FileType IsNot Nothing And DataConfigure.ReaderProperty IsNot Nothing Then
                         Try
-                            _signalMgr.AddRawSignalsFromADir(obj)
+                            _signalMgr.AddRawSignalsFromADir(obj, DataConfigure.ReaderProperty.DateTimeStart)
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                             Exit Sub
@@ -914,23 +913,23 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
-            Dim tp = ""
-            Try
-                tp = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower()
-            Catch
+        'Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
+        '    Dim tp = ""
+        '    Try
+        '        tp = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower()
+        '    Catch
 
-            End Try
-            If obj.FileType.ToString.ToLower = tp Then
-                Return True
-            ElseIf obj.FileType = DataFileType.powHQ AndAlso tp = "mat" Then
-                Return True
-            ElseIf obj.FileType = DataFileType.piDatabase AndAlso tp = "xml" Then
-                Return True
-            Else
-                Return False
-            End If
-        End Function
+        '    End Try
+        '    If obj.FileType.ToString.ToLower = tp Then
+        '        Return True
+        '    ElseIf obj.FileType = DataFileType.powHQ AndAlso tp = "mat" Then
+        '        Return True
+        '    ElseIf obj.FileType = DataFileType.PI AndAlso tp = "xml" Then
+        '        Return True
+        '    Else
+        '        Return False
+        '    End If
+        'End Function
 
         Private _updateExampleFile As ICommand
         Public Property UpdateExampleFile As ICommand
@@ -1105,29 +1104,29 @@ Namespace ViewModels
             obj.ExampleFile = ""
             obj.FileDirectory = ""
             obj.Mnemonic = ""
-            If obj.FileType = DataFileType.piDatabase Then
+            If obj.FileType = DataFileType.PI Then
                 DataConfigure.ReaderProperty.ModeName = ModeType.Archive
-                CanChooseMode = False
+                DataConfigure.ReaderProperty.CanChooseMode = False
             Else
-                CanChooseMode = True
+                DataConfigure.ReaderProperty.CanChooseMode = True
                 For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                    If info.FileType = DataFileType.piDatabase Then
-                        CanChooseMode = False
+                    If info.FileType = DataFileType.PI Then
+                        DataConfigure.ReaderProperty.CanChooseMode = False
                         Exit For
                     End If
                 Next
             End If
         End Sub
-        Private _canChooseMode As Boolean
-        Public Property CanChooseMode As Boolean
-            Get
-                Return _canChooseMode
-            End Get
-            Set(ByVal value As Boolean)
-                _canChooseMode = value
-                OnPropertyChanged()
-            End Set
-        End Property
+        'Private _canChooseMode As Boolean
+        'Public Property CanChooseMode As Boolean
+        '    Get
+        '        Return _canChooseMode
+        '    End Get
+        '    Set(ByVal value As Boolean)
+        '        _canChooseMode = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
         Private _configFileName As String
         Public Property ConfigFileName As String
             Get
@@ -1641,7 +1640,7 @@ Namespace ViewModels
                     End If
                 End If
             End If
-                If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
+            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
@@ -4506,11 +4505,11 @@ Namespace ViewModels
                         End If
                     Next
                 End If
-                If obj.FileType = DataFileType.piDatabase Then
-                    CanChooseMode = True
+                If obj.FileType = DataFileType.PI Then
+                    DataConfigure.ReaderProperty.CanChooseMode = True
                     For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                        If info.FileType = DataFileType.piDatabase Then
-                            CanChooseMode = False
+                        If info.FileType = DataFileType.PI Then
+                            DataConfigure.ReaderProperty.CanChooseMode = False
                             Exit For
                         End If
                     Next

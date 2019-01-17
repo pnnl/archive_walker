@@ -72,7 +72,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 _model.ExampleFile = value;
                 if (!string.IsNullOrEmpty(value))
                 {
-                    if (File.Exists(value))
+                    if (File.Exists(value) && Model.CheckDataFileMatch())
                     {
                         //try
                         //{
@@ -107,7 +107,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         {
                             MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
-                        if (FileType == DataFileType.piDatabase)
+                        if (FileType == DataFileType.PI)
                         {
                             Mnemonic = "";
                             //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.
@@ -159,5 +159,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         public ObservableCollection<SignalSignatureViewModel> TaggedSignals { get; internal set; }
         public int SamplingRate { get; internal set; }
         public bool IsExpanded { get; set; }
+
+
     }
 }

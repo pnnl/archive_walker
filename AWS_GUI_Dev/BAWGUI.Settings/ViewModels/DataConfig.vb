@@ -227,7 +227,6 @@ Namespace ViewModels
                 OnPropertyChanged("ReaderProperty")
             End Set
         End Property
-
         'Private _collectionOfSteps As ObservableCollection(Of Object)
         'Public Overloads Property CollectionOfSteps As ObservableCollection(Of Object)
         '    Get
@@ -363,6 +362,7 @@ Namespace ViewModels
             '_selectedStartTime = "01/01/0001 00:00:00"
             '_selectedEndTime = "01/01/0001 00:00:00"
             '_selectedTimeZone = TimeZoneInfo.Utc
+            _canChooseMode = True
 
             _inputFileInfos = New ObservableCollection(Of InputFileInfoViewModel)
         End Sub
@@ -376,7 +376,7 @@ Namespace ViewModels
             For Each info In _model.InputFileInfos
                 Dim infoFound = False
                 For Each existingInfo In signalsMgr.FileInfo
-                    If info.ExampleFile = existingInfo.ExampleFile Then
+                    If info.ExampleFile = existingInfo.ExampleFile AndAlso info.Mnemonic = existingInfo.Mnemonic Then
                         _inputFileInfos.Add(existingInfo)
                         infoFound = True
                         Exit For
@@ -398,6 +398,25 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        Private _canChooseMode As Boolean
+        Public Property CanChooseMode As Boolean
+            Get
+                Return GetCanChooseMode()
+            End Get
+            Set(ByVal value As Boolean)
+                _canChooseMode = value
+                OnPropertyChanged()
+            End Set
+        End Property
+
+        Public Function GetCanChooseMode() As Boolean
+            For Each info In InputFileInfos
+                If info.FileType = DataFileType.PI Then
+                    Return False
+                End If
+            Next
+            Return True
+        End Function
         'Private _fileDirectory As String
         'Public Property FileDirectory As String
         '    Get

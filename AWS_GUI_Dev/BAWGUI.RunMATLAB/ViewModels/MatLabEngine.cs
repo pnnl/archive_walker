@@ -734,6 +734,28 @@ namespace BAWGUI.RunMATLAB.ViewModels
             return FileReadingResults;
         }
 
+        public ReadExampleFileResults GetPIFileExample(string starttime, string preset, string filename)
+        {
+            var FileReadingResults = new ReadExampleFileResults();
+
+            if (IsMatlabEngineRunning)
+            {
+                PauseMatlabNormalRun();
+            }
+            IsMatlabEngineRunning = true;
+            try
+            {
+                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExamplePI(starttime, preset, filename, 1));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+            IsMatlabEngineRunning = false;
+            return FileReadingResults;
+        }
+
         public event EventHandler<ReadExampleFileResults> RetrieveDataCompletedEvent;
         protected virtual void OnRetrieveDataCompletedEvent(ReadExampleFileResults e)
         {
@@ -890,6 +912,68 @@ namespace BAWGUI.RunMATLAB.ViewModels
             try
             {
                 FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExample(filename, type, 0));
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+            }
+
+            e.Result = FileReadingResults;
+        }
+
+        public void GetPIExamplePISignals(string starttime, string mnemonic, string exampleFile)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                //Here the running engine could be running a rerun instead of the normal run,
+                //need to talk to Jim as how to distinguish normal or rerun,
+                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+            try
+            {
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrievePIDataMode);
+                worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
+                worker.WorkerReportsProgress = false;
+                worker.WorkerSupportsCancellation = true;
+                worker2.DoWork += _progressReporter;
+                worker2.ProgressChanged += _worker_ProgressChanged;
+                worker2.RunWorkerCompleted += _progressReportsDone;
+                worker2.WorkerReportsProgress = true;
+                worker2.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                object[] parameters = new object[] { starttime, mnemonic, exampleFile };
+                worker.RunWorkerAsync(parameters);
+                worker2.RunWorkerAsync();
+                IsReRunRunning = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void _runRetrievePIDataMode(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "RetrieveDataThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var starttime = parameters[0] as string;
+            var preset = parameters[1] as string;
+            var filename = parameters[2] as string;
+            var FileReadingResults = new ReadExampleFileResults();
+            IsMatlabEngineRunning = true;
+            try
+            {
+                FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExamplePI(starttime, preset, filename, 0));
             }
             catch (Exception ex)
             {

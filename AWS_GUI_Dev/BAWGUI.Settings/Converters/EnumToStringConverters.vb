@@ -14,7 +14,7 @@ Namespace Converters
                     Return "PDAT"
                 Case DataFileType.powHQ
                     Return "HQ Point on Wave"
-                Case DataFileType.piDatabase
+                Case DataFileType.PI
                     Return "PI Database"
                 Case Else
                     Throw New Exception("Data file type not valid!")
@@ -30,7 +30,7 @@ Namespace Converters
                 Case "HQ Point on Wave"
                     Return DataFileType.powHQ
                 Case "PI Database"
-                    Return DataFileType.piDatabase
+                    Return DataFileType.PI
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

@@ -202,13 +202,15 @@ namespace BAWGUI.ViewModels
                     //clean up the signal manager
                     _signalMgr.cleanUp();
                     //read input data files and generate all the signal objects from the data files and put them in the signal manager.
-                    var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
-                    if (readingDataSourceSuccess)
-                    {
+                    var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos, config.DataConfigure.ReaderProperty.DateTimeStart);
+                    //if (readingDataSourceSuccess)
+                    //{
                         //pass signal manager into settings.
                         SettingsVM.SignalMgr = _signalMgr;
                         //read config files
                         SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
+                    if (readingDataSourceSuccess)
+                    {
                         SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                         SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                         SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
@@ -238,14 +240,21 @@ namespace BAWGUI.ViewModels
         {
             CurrentView = _signalMgr;
             var info = (InputFileInfoViewModel)obj;
-            try
-            {
-                _signalMgr.GetRawSignalData(info);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error retrieving data for viewing from example file. " + ex.Message, "Error!", MessageBoxButtons.OK);
-            }
+            //if ((info.FileType == Core.Models.DataFileType.piDatabase) && (SettingsVM.DataConfigure.ReaderProperty.Model != null))
+            //{
+
+            //}
+            //else
+            //{
+                try
+                {
+                    _signalMgr.GetRawSignalData(info, SettingsVM.DataConfigure.ReaderProperty.DateTimeStart);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error retrieving data for viewing from example file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                }
+            //}
         }
         public ICommand InspectSignalByTimeRange { get; set; }
         private void _inpsectAllSignalsByTimeRange(object obj)

@@ -161,7 +161,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.piDatabase Then
+            If value = DataFileType.PI Then
                 Return "Preset:"
             Else
                 Return "Mnemonic:"
@@ -176,7 +176,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.piDatabase Then
+            If value = DataFileType.PI Then
                 Return 2
             Else
                 Return 1
@@ -191,7 +191,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.piDatabase Then
+            If value = DataFileType.PI Then
                 Return 3
             Else
                 Return 2
@@ -206,7 +206,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.piDatabase Then
+            If value = DataFileType.PI Then
                 Return 1
             Else
                 Return 3
@@ -221,7 +221,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.piDatabase Then
+            If value = DataFileType.PI Then
                 Return False
             Else
                 Return True
