@@ -20,6 +20,8 @@ namespace ModeMeter.Models
             AlgNames = new List<ModeMethod>();
             FODetectorParameters = new PeriodogramDetectorModel();
             AnalysisLength = 600;
+            EventDetectionPara = new EventDetectionParameters();
+            ShowEventDetectionParameters = false;
         }
         public string ModeName { get; set; }
         public List<SignalSignatures> PMUs { get; set; }
@@ -29,6 +31,8 @@ namespace ModeMeter.Models
         public DesiredModeAttributes DesiredModes { get; set; }
         public List<ModeMethod> AlgNames { get; set; }
         public PeriodogramDetectorModel FODetectorParameters { get; set; }
+        public EventDetectionParameters EventDetectionPara { get; set; }
+        public bool ShowEventDetectionParameters { get; set; }
     }
     public class RetroactiveContinuity
     {
@@ -89,5 +93,19 @@ namespace ModeMeter.Models
         ON,
         [Description("OFF")]
         OFF
+    }
+    public class EventDetectionParameters
+    {
+        public EventDetectionParameters()
+        {
+            RMSlength = "15";
+            RMSmedianFilterTime = "120";
+            RingThresholdScale = "5";
+            MinAnalysisLength = "600";
+        }
+        public string RMSlength { get; set; }
+        public string RMSmedianFilterTime { get; set; }
+        public string RingThresholdScale { get; set; }
+        public string MinAnalysisLength { get; set; }
     }
 }

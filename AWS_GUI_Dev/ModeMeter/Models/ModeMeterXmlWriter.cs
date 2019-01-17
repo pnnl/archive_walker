@@ -74,7 +74,34 @@ namespace ModeMeter.Models
                 XElement foParameters = _writeFOParameterElement(mode.FODetectorParameters);
                 modeElement.Add(foParameters);
             }
+            if (mode.ShowEventDetectionParameters)
+            {
+                XElement eventDetectionparams = _writeEventDetectionParameterElement(mode.EventDetectionParameters);
+                modeElement.Add(eventDetectionparams);
+            }
             mmElement.Add(modeElement);
+        }
+
+        private XElement _writeEventDetectionParameterElement(EventDetectionParametersViewModel parameters)
+        {
+            var edParameters = new XElement("EventDetectorParam");
+            if (!string.IsNullOrEmpty(parameters.RMSlength))
+            {
+                edParameters.Add(new XElement("RMSlength", parameters.RMSlength));
+            }
+            if (!string.IsNullOrEmpty(parameters.RMSmedianFilterTime))
+            {
+                edParameters.Add(new XElement("RMSmedianFilterTime", parameters.RMSmedianFilterTime));
+            }
+            if (!string.IsNullOrEmpty(parameters.RingThresholdScale))
+            {
+                edParameters.Add(new XElement("RingThresholdScale", parameters.RingThresholdScale));
+            }
+            if (!string.IsNullOrEmpty(parameters.MinAnalysisLength))
+            {
+                edParameters.Add(new XElement("MinAnalysisLength", parameters.MinAnalysisLength));
+            }
+            return edParameters;
         }
 
         private static void _writeAMethod(XElement modeElement, ModeMethodViewModel method)

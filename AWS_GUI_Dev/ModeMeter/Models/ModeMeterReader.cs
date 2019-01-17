@@ -112,7 +112,40 @@ namespace ModeMeter.Models
                 var foDetectorParameters = ReadFODetectorParameters(foDetectorParams);
                 newMode.FODetectorParameters = foDetectorParameters;
             }
+            var eventDetectionParameters = mode.Element("EventDetectorParam");
+            if (eventDetectionParameters != null && eventDetectionParameters.HasElements)
+            {
+                newMode.ShowEventDetectionParameters = true;
+                var eventDetectionParams = ReadEventDetectionParameters(eventDetectionParameters);
+                newMode.EventDetectionPara = eventDetectionParams;
+            }    
             return newMode;
+        }
+
+        private EventDetectionParameters ReadEventDetectionParameters(XElement eventDetectionParameters)
+        {
+            var parameters = new EventDetectionParameters();
+            var par = eventDetectionParameters.Element("RMSlength");
+            if (par != null)
+            {
+                parameters.RMSlength = par.Value;
+            }
+            par = eventDetectionParameters.Element("RMSmedianFilterTime");
+            if (par != null)
+            {
+                parameters.RMSmedianFilterTime = par.Value;
+            }
+            par = eventDetectionParameters.Element("RingThresholdScale");
+            if (par != null)
+            {
+                parameters.RingThresholdScale = par.Value;
+            }
+            par = eventDetectionParameters.Element("MinAnalysisLength");
+            if (par != null)
+            {
+                parameters.MinAnalysisLength = par.Value;
+            }
+            return parameters;
         }
 
         public PeriodogramDetectorModel ReadFODetectorParameters(XElement foDetectorParams)

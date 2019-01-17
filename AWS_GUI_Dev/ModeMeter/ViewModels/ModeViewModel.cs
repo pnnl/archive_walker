@@ -20,6 +20,7 @@ namespace ModeMeter.ViewModels
         public ModeViewModel(Mode mode, SignalManager _signalMgr)
         {
             this._model = mode;
+            _showEventDetectionParameters = false;
             PMUs = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in _model.PMUs)
             {
@@ -62,6 +63,7 @@ namespace ModeMeter.ViewModels
             DeleteAMethod = new RelayCommand(_deleteAMethod);
             IsFODetecotrParametersVisible = _checkFOParameterVisibility();
             AddAMethod = new RelayCommand(_addAMethod);
+            EventDetectionParameters = new EventDetectionParametersViewModel(_model.EventDetectionPara);
         }
 
         private void OnModeMethodChanged(object sender, ModeMethodViewModel e)
@@ -133,6 +135,16 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
+        private bool _showEventDetectionParameters;
+        public bool ShowEventDetectionParameters
+        {
+            get { return _model.ShowEventDetectionParameters; }
+            set
+            {
+                _model.ShowEventDetectionParameters = value;
+                OnPropertyChanged();
+            }
+        }
         private ObservableCollection<ModeMethodViewModel> _methods = new ObservableCollection<ModeMethodViewModel>();
         public ObservableCollection<ModeMethodViewModel> Methods
         {
@@ -144,6 +156,7 @@ namespace ModeMeter.ViewModels
             }
         }
         public PeriodogramDetectorParametersViewModel FODetectorParameters { get; set; }
+        public EventDetectionParametersViewModel EventDetectionParameters { get; set; }
         public ICommand DeleteAMethod { get; set; }
         private void _deleteAMethod(object obj)
         {
@@ -512,6 +525,54 @@ namespace ModeMeter.ViewModels
             set
             {
                 _model.FrequencyTolerance = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    public class EventDetectionParametersViewModel : ViewModelBase
+    {
+        private EventDetectionParameters _model;
+        public EventDetectionParametersViewModel(EventDetectionParameters m)
+        {
+            _model = m;
+        }
+        private string _rmslength;
+        public string RMSlength
+        {
+            get { return _model.RMSlength; }
+            set
+            {
+                _model.RMSlength = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _rmsmedianFilterTime;
+        public string RMSmedianFilterTime
+        {
+            get { return _model.RMSmedianFilterTime; }
+            set
+            {
+                _model.RMSmedianFilterTime = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _ringThresholdScale;
+        public string RingThresholdScale
+        {
+            get { return _model.RingThresholdScale; }
+            set
+            {
+                _model.RingThresholdScale = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _minAnalysisLength;
+        public string MinAnalysisLength
+        {
+            get { return _model.MinAnalysisLength; }
+            set
+            {
+                _model.MinAnalysisLength = value;
                 OnPropertyChanged();
             }
         }
