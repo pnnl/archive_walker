@@ -106,6 +106,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
     </fileset.exports>
     <fileset.classes>
       <entity.package name="">
@@ -120,6 +121,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
         </entity.class>
       </entity.package>
     </fileset.classes>

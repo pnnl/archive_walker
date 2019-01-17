@@ -196,37 +196,44 @@ namespace BAWGUI.ViewModels
                 ResultsVM.Run = e.SelectedRun;
                 RunMatlabVM.Run = e.SelectedRun;
                 RunMatlabVM.Project = e.Model;
-                try
+                if (File.Exists(e.SelectedRun.Model.ConfigFilePath))
                 {
-                    var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
-                    //clean up the signal manager
-                    _signalMgr.cleanUp();
-                    //read input data files and generate all the signal objects from the data files and put them in the signal manager.
-                    var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos, config.DataConfigure.ReaderProperty.DateTimeStart);
-                    //if (readingDataSourceSuccess)
-                    //{
+                    try
+                    {
+                        var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
+                        //clean up the signal manager
+                        _signalMgr.cleanUp();
+                        //read input data files and generate all the signal objects from the data files and put them in the signal manager.
+                        var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos, config.DataConfigure.ReaderProperty.DateTimeStart);
+                        //if (readingDataSourceSuccess)
+                        //{
                         //pass signal manager into settings.
                         SettingsVM.SignalMgr = _signalMgr;
                         //read config files
                         SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
-                    if (readingDataSourceSuccess)
-                    {
-                        SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
-                        SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
-                        SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
-                        var cti = SettingsVM.CurrentTabIndex;
-                        SettingsVM.CurrentTabIndex = cti;
-                        SettingsVM.CurrentSelectedStep = null;
-                        e.SelectedRun.Model.DataFileDirectories = new List<string>();
-                        foreach (var info in _signalMgr.FileInfo)
+                        if (readingDataSourceSuccess)
                         {
-                            e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                            SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
+                            SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
+                            SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
+                            var cti = SettingsVM.CurrentTabIndex;
+                            SettingsVM.CurrentTabIndex = cti;
+                            SettingsVM.CurrentSelectedStep = null;
+                            e.SelectedRun.Model.DataFileDirectories = new List<string>();
+                            foreach (var info in _signalMgr.FileInfo)
+                            {
+                                e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show("Error in reading config file.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
+                    MessageBox.Show("No Config.xml file found in the task folder.", "Error!", MessageBoxButtons.OK);
                 }
             }
         }
