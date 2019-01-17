@@ -625,9 +625,58 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
         private void _onOneOfTheRunSelected(object sender, AWRunViewModel e)
         {
+            _checktaskdirintegrity(e);
             SelectedRun = e;
             OnProjectSelected(this);
         }
+        /// <summary>
+        /// in the situation where user created a task folder outside the GUI without create any of the subfolders,
+        /// this function will create all necessary subfolders except the ones for mode meter usage
+        /// </summary>
+        private void _checktaskdirintegrity(AWRunViewModel task)
+        {
+            var taskDir = task.Model.RunPath;
+            var runName = task.Model.RunName;
+            var controlRunPath = taskDir + "\\ControlRun\\";
+            if (!Directory.Exists(controlRunPath))
+            {
+                Directory.CreateDirectory(controlRunPath);
+                task.Model.ControlRunPath = controlRunPath;
+                System.Windows.Forms.MessageBox.Show("ControlRun subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var controlReRunPath = taskDir + "\\ControlRerun\\";
+            if (!Directory.Exists(controlReRunPath))
+            {
+                Directory.CreateDirectory(controlReRunPath);
+                task.Model.ControlRerunPath = controlReRunPath;
+                System.Windows.Forms.MessageBox.Show("ControlReRun subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var eventPath = taskDir + "\\Event";
+            if (!Directory.Exists(eventPath))
+            {
+                Directory.CreateDirectory(eventPath);
+                task.Model.EventPath = eventPath;
+                System.Windows.Forms.MessageBox.Show("Event subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var initPath = taskDir + "\\Init";
+            if (!Directory.Exists(initPath))
+            {
+                Directory.CreateDirectory(initPath);
+                task.Model.InitializationPath = initPath;
+                System.Windows.Forms.MessageBox.Show("Init subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var configFilePath = taskDir + "\\Config.xml";
+            if (!File.Exists(configFilePath))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(configFilePath);
+                fs.Close();
+                var wr = new ConfigFileWriter(new Settings.ViewModels.SettingsViewModel(), task.Model);
+                wr.WriteXmlConfigFile(configFilePath);
+                task.Model.ConfigFilePath = configFilePath;
+                System.Windows.Forms.MessageBox.Show("Config.xml was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+        }
+
         public event EventHandler<AWProjectViewModel> ProjectSelected;
         protected virtual void OnProjectSelected(AWProjectViewModel e)
         {
