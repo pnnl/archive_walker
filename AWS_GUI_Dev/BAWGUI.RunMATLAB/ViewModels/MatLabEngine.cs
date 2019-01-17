@@ -737,6 +737,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ReadExampleFileResults GetPIFileExample(string starttime, string preset, string filename)
         {
             var FileReadingResults = new ReadExampleFileResults();
+            var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
 
             if (IsMatlabEngineRunning)
             {
@@ -745,7 +746,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExamplePI(starttime, preset, filename, 1));
+                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExamplePI(start, preset, filename, 1));
             }
             catch (Exception ex)
             {
@@ -934,6 +935,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             worker = new BackgroundWorker();
             try
             {
+                var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
                 worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrievePIDataMode);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
@@ -948,7 +950,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     Thread.Sleep(500);
                 }
-                object[] parameters = new object[] { starttime, mnemonic, exampleFile };
+                object[] parameters = new object[] { start, mnemonic, exampleFile };
                 worker.RunWorkerAsync(parameters);
                 worker2.RunWorkerAsync();
                 IsReRunRunning = true;
