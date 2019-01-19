@@ -16,6 +16,8 @@ namespace BAWGUI.Core
             IsCustomSignal = false;
             IsNameTypeUnitChanged = false;
             Data = new List<double>();
+            MATLABTimeStampNumber = new List<double>();
+            TimeStampNumber = new List<double>();
         }
         public SignalSignatures(string pmu, string signal):this()
         {
@@ -39,5 +41,6 @@ namespace BAWGUI.Core
         public int PassedThroughProcessor { get; set; }
         public List<double> Data { get; set; }
         public List<double> TimeStampNumber { get; set; }
+        public List<double> MATLABTimeStampNumber { get; internal set; }
     }
 }
