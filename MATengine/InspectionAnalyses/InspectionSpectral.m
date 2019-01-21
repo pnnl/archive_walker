@@ -5,20 +5,19 @@ fs = Params.fs;
 N = round(Params.AnalysisLength*fs);
 Nw = round(Params.WindowLength*fs);
 Nover = round(Params.WindowOverlap*fs);
-Nzp = round(Params.ZeroPadding);
 LS = Params.LogScale;
 
 % Create window
 switch Params.Window
-    case 'Rectangular'
+    case 'rectwin'
         win = rectwin(Nw);
-    case 'Bartlett'
+    case 'bartlett'
         win = bartlett(Nw);
-    case 'Hann'
+    case 'hann'
         win = hann(Nw);
-    case 'Hamming'
+    case 'hamming'
         win = hamming(Nw);
-    case 'Blackman'
+    case 'blackman'
         win = blackman(Nw);
     otherwise
         error([Params.Window ' is not an acceptable window type']);
@@ -37,10 +36,19 @@ if isfield(Params,'FreqMax')
 else
     FreqMax = fs/2;
 end
+%
+if isfield(Params,'ZeroPadding')
+    Nzp = Params.ZeroPadding;
+else
+    Nzp = N;
+end
 
 % Truncate to the specified analysis length. This makes it easier for the
 % user to select a window that will minimize leakage.
-Data = Data(1:N,:);
+Data = Data(:,1:N)';
+
+% Remove mean
+Data = Data - ones(N,1)*mean(Data);
 
 % Calculate the Welch Periodogram, then trim to the specified frequency
 % range.

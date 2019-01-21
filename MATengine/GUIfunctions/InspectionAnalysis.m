@@ -1,9 +1,5 @@
 function Res = InspectionAnalysis(Func,Data,t,Params)
 
-% save('Inputs.mat');
-% Res = struct();
-% return
-
 switch Func
     case 'Spectral'
         Res = InspectionSpectral(Data,Params);
