@@ -47,7 +47,6 @@ P = length(FOfreq);
 
 % Handles zeros in y for robustness
 N = length(y);
-w = ones(N,1);
 r = zeros(nb+L+1,1);
 for lag = 0:nb+L
     % New version handles windows with values other than 0 and 1
