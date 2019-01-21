@@ -26,6 +26,7 @@
 function PMU = GetFileExamplePI(StartTime,preset,PresetFile,MetaOnly)
 
 FileLength = 60;
+StartTime = datenum(StartTime,'mm/dd/yyyy HH:MM:SS');
 [PMU,~,fs] = PIreader(StartTime,0,FileLength,preset,PresetFile);
 
 if MetaOnly == 1
