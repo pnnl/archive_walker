@@ -27,6 +27,7 @@ namespace BAWGUI.MATLABRunResults.Models
 
         public List<System.DateTime> TimeStamps;
         public List<double> TimeStampNumber;
+        public List<double> MATLABTimeStampNumber;
 
         public List<double> DurationMaxMat { get; set; }
         public List<double> DurationMinMat { get; set; }

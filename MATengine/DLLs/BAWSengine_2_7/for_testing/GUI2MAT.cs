@@ -63,6 +63,9 @@ namespace BAWSengine
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
   /// NormalMode.m
+  /// <newpara></newpara>
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Upd
+  /// ateOBATpreset.m
   /// </summary>
   /// <remarks>
   /// @Version 4.0
@@ -2970,6 +2973,221 @@ namespace BAWSengine
                              FileDirectory, MWArray ConfigFile)
     {
       return mcr.EvaluateFunction(numArgsOut, "RunNormalMode", ControlPath, EventPath, InitializationPath, FileDirectory, ConfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 0-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray UpdateOBATpreset()
+    {
+      return mcr.EvaluateFunction("UpdateOBATpreset", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 1-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray UpdateOBATpreset(MWArray NewPreset)
+    {
+      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 2-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="Detector">Input argument #2</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray UpdateOBATpreset(MWArray NewPreset, MWArray Detector)
+    {
+      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 3-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="Detector">Input argument #2</param>
+    /// <param name="AWconfigFile">Input argument #3</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray UpdateOBATpreset(MWArray NewPreset, MWArray Detector, MWArray 
+                              AWconfigFile)
+    {
+      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector, AWconfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 4-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="Detector">Input argument #2</param>
+    /// <param name="AWconfigFile">Input argument #3</param>
+    /// <param name="OBATpresetFile">Input argument #4</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray UpdateOBATpreset(MWArray NewPreset, MWArray Detector, MWArray 
+                              AWconfigFile, MWArray OBATpresetFile)
+    {
+      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector, AWconfigFile, OBATpresetFile);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] UpdateOBATpreset(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="Detector">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset, MWArray Detector)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="Detector">Input argument #2</param>
+    /// <param name="AWconfigFile">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset, MWArray 
+                                Detector, MWArray AWconfigFile)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector, AWconfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 4-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="Detector">Input argument #2</param>
+    /// <param name="AWconfigFile">Input argument #3</param>
+    /// <param name="OBATpresetFile">Input argument #4</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset, MWArray 
+                                Detector, MWArray AWconfigFile, MWArray OBATpresetFile)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector, AWconfigFile, OBATpresetFile);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the UpdateOBATpreset function in which the input and
+    /// output
+    /// arguments are specified as an array of MWArrays.
+    /// </summary>
+    /// <remarks>
+    /// This method will allocate and return by reference the output argument
+    /// array.<newpara></newpara>
+    /// M-Documentation:
+    /// Read the OBAT preset file into cell A
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return</param>
+    /// <param name= "argsOut">Array of MWArray output arguments</param>
+    /// <param name= "argsIn">Array of MWArray input arguments</param>
+    ///
+    public void UpdateOBATpreset(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    {
+      mcr.EvaluateFunction("UpdateOBATpreset", numArgsOut, ref argsOut, argsIn);
     }
 
 
