@@ -529,6 +529,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
@@ -596,7 +599,9 @@ Namespace ViewModels
             Return InputChannels.Count > 0
         End Function
     End Class
-
+    ''' <summary>
+    ''' This class is not used anymore, as the outofrangeFrequencydetector is kept as the more general one.
+    ''' </summary>
     Public Class OutOfRangeGeneralDetector
         Inherits DetectorBase
         Public Sub New()
@@ -654,7 +659,9 @@ Namespace ViewModels
             Return InputChannels.Count > 0
         End Function
     End Class
-
+    ''' <summary>
+    ''' This detector is considered the more general one and used in the GUI as the out-of-range general detector.
+    ''' </summary>
     Public Class OutOfRangeFrequencyDetector
         Inherits DetectorBase
         Public Sub New()
@@ -673,6 +680,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception

@@ -2714,7 +2714,7 @@ Namespace ViewModels
                             '    newOutput.OldUnit = newOutput.Unit
                             '    _currentSelectedStep.OutputChannels.Add(newOutput)
                             'End If
-                            If TypeOf _currentSelectedStep Is PeriodogramDetector Or TypeOf _currentSelectedStep Is SpectralCoherenceDetector Then
+                            If TypeOf _currentSelectedStep Is PeriodogramDetector Or TypeOf _currentSelectedStep Is SpectralCoherenceDetector Or TypeOf _currentSelectedStep Is OutOfRangeFrequencyDetector Or TypeOf _currentSelectedStep Is RingdownDetector Then
                                 'If Not _signalMgr.MappingSignals.Contains(obj.SignalSignature) Then
                                 _signalMgr.MappingSignals.Add(obj.SignalSignature)
                                 'End If
@@ -2773,7 +2773,7 @@ Namespace ViewModels
 
                                 'End If
                             End If
-                            If TypeOf _currentSelectedStep Is PeriodogramDetector Or TypeOf _currentSelectedStep Is SpectralCoherenceDetector Then
+                            If TypeOf _currentSelectedStep Is PeriodogramDetector Or TypeOf _currentSelectedStep Is SpectralCoherenceDetector Or TypeOf _currentSelectedStep Is OutOfRangeFrequencyDetector Or TypeOf _currentSelectedStep Is RingdownDetector Then
                                 If _signalMgr.MappingSignals.Contains(obj.SignalSignature) Then
                                     _signalMgr.MappingSignals.Remove(obj.SignalSignature)
                                 End If
