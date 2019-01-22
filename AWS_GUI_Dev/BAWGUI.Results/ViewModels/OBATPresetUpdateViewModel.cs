@@ -143,5 +143,19 @@ namespace BAWGUI.Results.ViewModels
             //call engine to do the update
             _engine.UpdateOBATPreset(NewPresetName, DetectorName, ConfigFilePath, OBATPresetFilePath);
         }
+        private bool _canAddNewPreset;
+        public bool CanAddNewPreset
+        {
+            get { return _canAddNewPreset; }
+            set
+            {
+                _canAddNewPreset = value;
+                if (value)
+                {
+                    NewPresetName = "";
+                }
+                OnPropertyChanged();
+            }
+        }
     }
 }
