@@ -46,7 +46,7 @@
         <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Window Overlap (seconds):" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlap}" HorizontalAlignment="Left"/>
         <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Zero Padding (samples):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ZeroPadding}" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ZeroPadding}" HorizontalAlignment="Left"/>
         <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Log Scaling:" HorizontalAlignment="Left"/>
         <CheckBox Grid.Row="5" Grid.Column="1" Margin="0,1" VerticalAlignment="Center" IsChecked="{Binding LogScale}" HorizontalAlignment="Left"/>
         <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Frequency Range (Hz):" HorizontalAlignment="Left"/>

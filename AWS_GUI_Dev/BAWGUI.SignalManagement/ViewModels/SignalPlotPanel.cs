@@ -58,5 +58,25 @@ namespace BAWGUI.SignalManagement.ViewModels
                 OnPropertyChanged();
             }
         }
+        private ViewResolvingPlotModel _spectralInspectionPlotModel;
+        public ViewResolvingPlotModel SpectralInspectionPlotModel
+        {
+            get { return _spectralInspectionPlotModel; }
+            set
+            {
+                _spectralInspectionPlotModel = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _addATab;
+        public bool AddATab
+        {
+            get { return _addATab; }
+            set
+            {
+                _addATab = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

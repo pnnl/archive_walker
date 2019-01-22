@@ -51,7 +51,7 @@ namespace BAWGUI.Core.ViewModels
                 OnPropertyChanged();
             }
         }
-        public int ZeroPadding
+        public int? ZeroPadding
         {
             get { return _model.ZeroPadding; }
             set
@@ -78,7 +78,7 @@ namespace BAWGUI.Core.ViewModels
                 OnPropertyChanged();
             }
         }
-        public int FreqMin
+        public int? FreqMin
         {
             get { return _model.FreqMin; }
             set
@@ -87,7 +87,7 @@ namespace BAWGUI.Core.ViewModels
                 OnPropertyChanged();
             }
         }
-        public int FreqMax
+        public int? FreqMax
         {
             get { return _model.FreqMax; }
             set

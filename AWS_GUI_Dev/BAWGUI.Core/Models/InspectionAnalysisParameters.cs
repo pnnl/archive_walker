@@ -15,11 +15,11 @@ namespace BAWGUI.Core.Models
             _windowType = DetectorWindowType.hann;
             _windowLength = 12;
             _windowOverlap = 6;
-            ZeroPadding = -1;
+            //ZeroPadding = -1;
             Fs = -1;
             LogScale = false;
-            FreqMin = -1;
-            FreqMax = -1;
+            //FreqMin = -1;
+            //FreqMax = -1;
         }
         private int _analysisLength;
         public int AnalysisLength
@@ -72,10 +72,10 @@ namespace BAWGUI.Core.Models
                 _windowOverlap = value;
             }
         }
-        public int ZeroPadding { get; set; }
+        public int? ZeroPadding { get; set; }
         public int Fs { get; set; }
         public bool LogScale { get; set; }
-        public int FreqMin { get; set; }
-        public int FreqMax { get; set; }
+        public int? FreqMin { get; set; }
+        public int? FreqMax { get; set; }
     }
 }
