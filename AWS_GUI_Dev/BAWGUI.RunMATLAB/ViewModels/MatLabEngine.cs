@@ -899,5 +899,21 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
             e.Result = FileReadingResults;
         }
+        public void UpdateOBATPreset(string newPresetName, string detectorName, string configFilePath, string oBATPresetFilePath)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                PauseMatlabNormalRun();
+            }
+            IsMatlabEngineRunning = true;
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+            Run.IsTaskRunning = true;
+            var updateStatus = _matlabEngine.UpdateOBATpreset(newPresetName, detectorName, configFilePath, oBATPresetFilePath);
+            //need to show the returned string updateSuccess here as a message.
+            MessageBox.Show(updateStatus.ToString(), "Done", MessageBoxButtons.OK);
+            Run.IsTaskRunning = false;
+            Mouse.OverrideCursor = null;
+            IsMatlabEngineRunning = false;
+        }
     }
 }

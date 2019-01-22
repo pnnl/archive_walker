@@ -1842,7 +1842,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         /// <param name="groups"></param>
         private void _determineParentGroupedByTypeNodeStatus(ObservableCollection<SignalTypeHierachy> groups)
         {
-            if (groups.Count > 0)
+            if (groups != null && groups.Count > 0)
             {
                 foreach (var group in groups)
                 {

@@ -8,13 +8,36 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Results.Models;
+using BAWGUI.Results.Views;
+using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using JSISCSVWriter;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class ResultsExportingViewModel
+    public class ResultsExportingViewModel : ViewModelBase
     {
+        private string _detectorType;
+        public string DetectorType
+        {
+            get { return _detectorType; }
+            set
+            {
+                _detectorType = value;
+                OnPropertyChanged();
+            }
+        }
+        private AWRunViewModel _run;
+        public AWRunViewModel Run
+        {
+            get { return _run; }
+            set
+            {
+                _run = value;
+                OnPropertyChanged();
+            }
+        }
+        private UpdateOBATPresetPopup _updateOBATPresetPopup;
         public List<RerunResultDetectGeneral> RerunDetectors { get; set; }
         public List<Signal> SignalsToBeSaved { get; set; }
         public List<Signal> UniqueSignalsToBeSaved { get; set; }
@@ -24,9 +47,12 @@ namespace BAWGUI.Results.ViewModels
             CancelExportData = new RelayCommand(_cancelExport);
             SignalsToBeSaved = new List<Signal>();
             UniqueSignalsToBeSaved = new List<Signal>();
+            _detectorType = "";
         }
-        public ResultsExportingViewModel(List<OutOfRangeDetector> reRunResult) : this()
+        public ResultsExportingViewModel(List<OutOfRangeDetector> reRunResult, AWRunViewModel run) : this()
         {
+            DetectorType = "OutOfRangeGeneral";
+            Run = run;
             RerunDetectors = new List<RerunResultDetectGeneral>();
             foreach (var detector in reRunResult)
             {
@@ -51,8 +77,10 @@ namespace BAWGUI.Results.ViewModels
             }
         }
 
-        public ResultsExportingViewModel(List<RingdownDetector> reRunResult) : this()
+        public ResultsExportingViewModel(List<RingdownDetector> reRunResult, AWRunViewModel run) : this()
         {
+            DetectorType = "Ringdown";
+            Run = run;
             RerunDetectors = new List<RerunResultDetectGeneral>();
             foreach (var detector in reRunResult)
             {
@@ -94,7 +122,22 @@ namespace BAWGUI.Results.ViewModels
             if (checkedDetectorStatus == 1)
             {
                 _consolidateDataToExport();
-                _exportDateToCSV();
+                var filename = _exportDateToCSV();
+                var result = MessageBox.Show("Do you want to update the OBAT preset file?", "", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    //pop up window to browse and save the preset file, show NewPreset, Detector, AWconfigFile path to let the user confirem they are right.
+                    //check reRunResult type to know the detector type.
+                    //the AWconfig file path need to be  find out by the run.
+                    var updateOBATPreset = new OBATPresetUpdateViewModel(filename, DetectorType, Run);
+                    updateOBATPreset.UpdateOBATPresetCancelled += _cancelUpateOBATPreset;
+                    _updateOBATPresetPopup = new UpdateOBATPresetPopup
+                    {
+                        Owner = System.Windows.Application.Current.MainWindow,
+                        DataContext = updateOBATPreset
+                    };
+                    _updateOBATPresetPopup.ShowDialog();
+                }
             }
             else if(checkedDetectorStatus == 0)
             {
@@ -104,6 +147,11 @@ namespace BAWGUI.Results.ViewModels
             {
                 MessageBox.Show("Selected detectors have to have the same sampling rate.", "Error!", MessageBoxButtons.OK);
             }
+        }
+
+        private void _cancelUpateOBATPreset(object sender, EventArgs e)
+        {
+            _updateOBATPresetPopup.Close();
         }
 
         private void _consolidateDataToExport()
@@ -119,8 +167,9 @@ namespace BAWGUI.Results.ViewModels
             UniqueSignalsToBeSaved = SignalsToBeSaved.GroupBy(p => new { p.PMUname, p.SignalName }).Select(g => g.First()).ToList();
         }
 
-        private void _exportDateToCSV()
+        private string _exportDateToCSV()
         {
+            string fullname = null;
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             saveFileDialog1.Title = "Export Result Data File";
@@ -131,7 +180,7 @@ namespace BAWGUI.Results.ViewModels
                     var time = UniqueSignalsToBeSaved.FirstOrDefault().TimeStampInSeconds[0];
                     var timeStr = Utility.SecondsToDateTimeString(time);
                     var path = Path.GetFullPath(saveFileDialog1.FileName);
-                    var fullname = path.Split('.')[0] + "_" + timeStr + ".csv";
+                    fullname = path.Split('.')[0] + "_" + timeStr + ".csv";
                     var index = 1;
                     while (File.Exists(fullname))
                     {
@@ -142,6 +191,7 @@ namespace BAWGUI.Results.ViewModels
                     ExportDataCancelled?.Invoke(this, EventArgs.Empty);
                 }
             }
+            return fullname;
         }
 
         private void _saveData(string fullname)
