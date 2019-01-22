@@ -2515,6 +2515,13 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _selectedSignalPlotPanel = value;
+                //figure out the sampling rate of the current plot selected, 
+                //if no signals on this plot, do not change sampling rate of the inspection analysis parameter,
+                //if there's any signals, reflect it in the inspection analysis parameter
+                if (_selectedSignalPlotPanel.Signals.Any())
+                {
+                    InspectionAnalysisParams.Fs = _selectedSignalPlotPanel.Signals.FirstOrDefault().SamplingRate;
+                }                
                 OnPropertyChanged();
             }
         }
@@ -2544,6 +2551,10 @@ namespace BAWGUI.SignalManagement.ViewModels
                     _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
                     _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
                     _drawSignals();
+                    if (SelectedSignalPlotPanel.Signals.Count > 0 && InspectionAnalysisParams.Fs != SelectedSignalPlotPanel.Signals[0].SamplingRate)
+                    {
+                        InspectionAnalysisParams.Fs = SelectedSignalPlotPanel.Signals[0].SamplingRate;
+                    }
                 }
                 else
                 {
