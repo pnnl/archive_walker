@@ -43,6 +43,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             var newLocationVM = new SiteCoordinatesViewModel(newLocation);
             newLocationVM.CheckStatusChanged += _modifyMapAnnotation;
             newLocationVM.SitePropertyChanged += _sitePropertyChangedHandler;
+            newLocationVM.IsChecked = true;
             SiteCoords.Add(newLocationVM);
         }
 
@@ -163,6 +164,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 {
                     item.CheckStatusChanged += _modifyMapAnnotation;
                     item.SitePropertyChanged += _sitePropertyChangedHandler;
+                    item.IsChecked = true;
                 }
             }
             catch (Exception ex)

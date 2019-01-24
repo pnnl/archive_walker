@@ -56,7 +56,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             }
         }
         /// <summary>
-        /// to decide if show on the map when the site coordinates are set up 
+        /// to decide if show on the map when the site coordinates are set up, used in the table.
         /// </summary>
         private bool _isChecked;
         public bool IsChecked
@@ -74,6 +74,9 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         {
             CheckStatusChanged?.Invoke(this, EventArgs.Empty);
         }
+        /// <summary>
+        /// this is used in the settings for this coordinate to be associated or de-associated to a signal.
+        /// </summary>
         private bool _isSelected;
         public bool IsSelected
         {
