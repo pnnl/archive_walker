@@ -44,7 +44,8 @@
                         <oxy:PlotView Model="{Binding SignalViewPlotModel}" MinHeight="300" MinWidth="400"  Grid.Column="0" Name="signalPlot" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=2}}">
                             <oxy:PlotView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.SpectralInspection, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Spectral Inspection" CommandParameter="{Binding Signals}"/>
+                                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.SpectralInspection, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Spectral Inspection" CommandParameter="{Binding}"/>
+                                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.ExportData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Export Data" CommandParameter="{Binding}"/>
                                 </ContextMenu>
                             </oxy:PlotView.ContextMenu>
                         </oxy:PlotView>

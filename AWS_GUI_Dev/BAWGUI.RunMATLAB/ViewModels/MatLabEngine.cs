@@ -910,15 +910,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
             e.Result = FileReadingResults;
         }
 
-        public InspectionAnalysisResults InspectionAnalysis(string func, ObservableCollection<SignalSignatureViewModel> signals, InspectionAnalysisParametersViewModel inspectionAnalysisParams)
+        public InspectionAnalysisResults InspectionAnalysis(string func, double[][] allData, double[] time, ObservableCollection<SignalSignatureViewModel> signals, InspectionAnalysisParametersViewModel inspectionAnalysisParams)
         {
             InspectionAnalysisResults result = null;
             if (signals.Count > 0)
             {
                 MWCellArray signalNames = new MWCellArray(signals.Count);
-                double[][] allData = signals.Select(a => a.Data.ToArray()).ToArray();
                 MWNumericArray data = new MWNumericArray(allData);
-                MWNumericArray t = new MWNumericArray(signals[0].MATLABTimeStampNumber.ToArray());
+                MWNumericArray t = new MWNumericArray(time);
                 var listOfParameters = new List<string>(new string[] { "AnalysisLength", "WindowLength", "Window", "WindowOverlap", "fs", "LogScale", "SigNames" });
                 if (inspectionAnalysisParams.ZeroPadding != null)
                 {

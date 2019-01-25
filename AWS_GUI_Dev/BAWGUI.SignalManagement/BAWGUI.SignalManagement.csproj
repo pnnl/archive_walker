@@ -141,6 +141,10 @@
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JSISCSVWriter\JSISCSVWriter.csproj">
+      <Project>{2C6141D9-CF7E-48A4-9479-7BD67340A370}</Project>
+      <Name>JSISCSVWriter</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

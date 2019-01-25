@@ -129,7 +129,7 @@ namespace BAWGUI.Results.ViewModels
                 if (saveFileDialog1.FileName != "")
                 {
                     var time = UniqueSignalsToBeSaved.FirstOrDefault().TimeStampInSeconds[0];
-                    var timeStr = Utility.SecondsToDateTimeString(time);
+                    var timeStr = Utility.MATLABSecondsToDateTimeString(time);
                     var path = Path.GetFullPath(saveFileDialog1.FileName);
                     var fullname = path.Split('.')[0] + "_" + timeStr + ".csv";
                     var index = 1;

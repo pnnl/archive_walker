@@ -6,6 +6,7 @@ using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
+using JSISCSVWriter;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Wpf;
@@ -55,8 +56,8 @@ namespace BAWGUI.SignalManagement.ViewModels
 
             _inspectionAnalysisParams = new InspectionAnalysisParametersViewModel();
             SpectralInspection = new RelayCommand(_spectralInspection);
+            ExportData = new RelayCommand(_exportData);
         }
-
         public void cleanUp()
         {
             FileInfo = new ObservableCollection<InputFileInfoViewModel>();
@@ -2838,7 +2839,38 @@ namespace BAWGUI.SignalManagement.ViewModels
         public ICommand SpectralInspection { get; set; }
         private void _spectralInspection(object obj)
         {
-            InspectionAnalysisResults iaResult = _engine.InspectionAnalysis("Spectral", (ObservableCollection<SignalSignatureViewModel>)obj, InspectionAnalysisParams);
+            var plot = obj as SignalPlotPanel;
+            //string start = null;
+            //string end = null;
+            double startPoint = 0;
+            double endPoint = 0;
+            int startIndex = 0;
+            int endIndex = 0;
+            foreach (var ax in plot.SignalViewPlotModel.Axes)
+            {
+                if (ax.IsHorizontal())
+                {
+                    startPoint = ax.ActualMinimum;
+                    endPoint = ax.ActualMaximum;
+                    //start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss.fff");
+                    //end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss.fff");
+                    break;
+                }
+            }
+            var timeStamp = plot.Signals[0].TimeStampNumber;
+            startIndex = timeStamp.FindLastIndex(a => a <= startPoint);
+            endIndex = timeStamp.FindIndex(a => a >= endPoint);
+            if (startIndex == -1)
+            {
+                startIndex = 0;
+            }
+            if (endIndex == -1)
+            {
+                endIndex = timeStamp.Count - 1; 
+            }
+            double[][] allData = plot.Signals.Select(a => a.Data.GetRange(startIndex, endIndex - startIndex + 1).ToArray()).ToArray();
+            double[] t = timeStamp.GetRange(startIndex, endIndex - startIndex + 1).ToArray();
+            InspectionAnalysisResults iaResult = _engine.InspectionAnalysis("Spectral", allData, t, plot.Signals, InspectionAnalysisParams);
             SelectedSignalPlotPanel.AddATab = true;
             if (iaResult != null)
             {
@@ -2846,7 +2878,6 @@ namespace BAWGUI.SignalManagement.ViewModels
                 _plotInspectionAnalysisResult(iaResult);
             }
         }
-
         private void _plotInspectionAnalysisResult(InspectionAnalysisResults iaResult)
         {
             var AsignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
@@ -2907,6 +2938,78 @@ namespace BAWGUI.SignalManagement.ViewModels
             AsignalPlot.LegendMargin = 0;
             AsignalPlot.IsLegendVisible = false;
             SelectedSignalPlotPanel.SpectralInspectionPlotModel = AsignalPlot;
+        }
+        public ICommand ExportData { get; set; }
+        private void _exportData(object obj)
+        {
+            var plot = obj as SignalPlotPanel;
+            double startPoint = 0;
+            double endPoint = 0;
+            int startIndex = 0;
+            int endIndex = 0;
+            foreach (var ax in plot.SignalViewPlotModel.Axes)
+            {
+                if (ax.IsHorizontal())
+                {
+                    startPoint = ax.ActualMinimum;
+                    endPoint = ax.ActualMaximum;
+                    break;
+                }
+            }
+            var timeStamp = plot.Signals[0].TimeStampNumber;
+            startIndex = timeStamp.FindLastIndex(a => a <= startPoint);
+            endIndex = timeStamp.FindIndex(a => a >= endPoint);
+            if (startIndex == -1)
+            {
+                startIndex = 0;
+            }
+            if (endIndex == -1)
+            {
+                endIndex = timeStamp.Count - 1;
+            }
+            //double[][] allData = plot.Signals.Select(a => a.Data.GetRange(startIndex, endIndex - startIndex + 1).ToArray()).ToArray();
+            var t = timeStamp.GetRange(startIndex, endIndex - startIndex + 1).ToList();
+
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+            saveFileDialog1.Title = "Export Result Data File";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    var timeStr = DateTime.FromOADate(t[0]).ToString(@"yyyyMMdd_HHmmss");
+                    var path = Path.GetFullPath(saveFileDialog1.FileName);
+                    var fullname = path.Split('.')[0] + "_" + timeStr + ".csv";
+                    var index = 1;
+                    while (File.Exists(fullname))
+                    {
+                        fullname = fullname.Split(new char[] { '(', '.' })[0] + "(" + index.ToString() + ").csv";
+                        index++;
+                    }
+                    var writer = new JSIS_CSV_Writer();
+                    writer.Signals = _convertDataToBeExported(plot.Signals, startIndex, endIndex, t);
+                    writer.FileToBeSaved = fullname;
+                    writer.WriteJSISCSV();
+                }
+            }
+        }
+
+        private List<Signal> _convertDataToBeExported(ObservableCollection<SignalSignatureViewModel> signals, int startIndex, int endIndex, List<double> t)
+        {
+            var newSignals = new List<Signal>();
+            foreach (var item in signals)
+            {
+                var newSignal = new Signal();
+                newSignal.Data = item.Data.GetRange(startIndex, endIndex - startIndex + 1);
+                newSignal.PMUname = item.PMUName;
+                newSignal.SamplingRate = item.SamplingRate;
+                newSignal.SignalName = item.SignalName;
+                newSignal.TimeStampInSeconds = t;
+                newSignal.Type = item.TypeAbbreviation;
+                newSignal.Unit = item.Unit;
+                newSignals.Add(newSignal);
+            }
+            return newSignals;
         }
     }
 }
