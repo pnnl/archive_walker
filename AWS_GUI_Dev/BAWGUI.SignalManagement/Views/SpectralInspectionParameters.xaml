@@ -26,6 +26,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -38,20 +39,29 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Analysis Length (seconds):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding AnalysisLength}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding AnalysisLengthStr}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="0" Grid.Column="2" Margin="0,1" Width="20" VerticalAlignment="Center" Content="=" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="3" Margin="0,1" Width="50" VerticalAlignment="Center" Text="{Binding NumberOfSamplesInAnalysisLength, Mode=OneWay}" HorizontalAlignment="Center"/>
+        <Label Grid.Row="0" Grid.Column="4" Margin="0,1" Width="70" VerticalAlignment="Center" Content="samples" HorizontalAlignment="Left"/>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Window Length (seconds):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowLength}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowLengthStr}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="1" Grid.Column="2" Margin="0,1" Width="20" VerticalAlignment="Center" Content="=" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="3" Margin="0,1" Width="50" VerticalAlignment="Center" Text="{Binding NumberOfSamplesInWindowLength, Mode=OneWay}" HorizontalAlignment="Right"/>
+        <Label Grid.Row="1" Grid.Column="4" Margin="0,1" Width="70" VerticalAlignment="Center" Content="samples" HorizontalAlignment="Left"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window:" HorizontalAlignment="Left"/>
         <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource DetectorWindowTypeValues}}" Text="{Binding WindowType, Converter={StaticResource EnumToStringConverter9}}" HorizontalAlignment="Left"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Window Overlap (seconds):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlap}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlapStr}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="3" Grid.Column="2" Margin="0,1" Width="20" VerticalAlignment="Center" Content="=" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Row="3" Grid.Column="3" Margin="0,1" Width="50" VerticalAlignment="Center" Text="{Binding NumberOfSamplesInWindowOverlap, Mode=OneWay}" HorizontalAlignment="Right"/>
+        <Label Grid.Row="3" Grid.Column="4" Margin="0,1" Width="70" VerticalAlignment="Center" Content="samples" HorizontalAlignment="Left"/>
         <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Zero Padding (samples):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ZeroPadding}" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ZeroPadding}" HorizontalAlignment="Left"/>
         <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Log Scaling:" HorizontalAlignment="Left"/>
         <CheckBox Grid.Row="5" Grid.Column="1" Margin="0,1" VerticalAlignment="Center" IsChecked="{Binding LogScale}" HorizontalAlignment="Left"/>
         <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Frequency Range (Hz):" HorizontalAlignment="Left"/>
         <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FreqMin}" HorizontalAlignment="Left"/>
-        <Label Grid.Row="6" Grid.Column="2" Margin="5,1" Width="50" VerticalAlignment="Center" Content="to" HorizontalAlignment="Center"/>
-        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="6" Grid.Column="3" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FreqMax}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="6" Grid.Column="2" Margin="5,1" Width="20" VerticalAlignment="Center" Content="to" HorizontalAlignment="Center"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FreqMax}" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>

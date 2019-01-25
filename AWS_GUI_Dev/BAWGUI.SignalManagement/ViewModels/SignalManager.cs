@@ -2515,6 +2515,13 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _selectedSignalPlotPanel = value;
+                //figure out the sampling rate of the current plot selected, 
+                //if no signals on this plot, do not change sampling rate of the inspection analysis parameter,
+                //if there's any signals, reflect it in the inspection analysis parameter
+                if (_selectedSignalPlotPanel.Signals.Any())
+                {
+                    InspectionAnalysisParams.Fs = _selectedSignalPlotPanel.Signals.FirstOrDefault().SamplingRate;
+                }                
                 OnPropertyChanged();
             }
         }
@@ -2544,6 +2551,10 @@ namespace BAWGUI.SignalManagement.ViewModels
                     _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
                     _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
                     _drawSignals();
+                    if (SelectedSignalPlotPanel.Signals.Count > 0 && InspectionAnalysisParams.Fs != SelectedSignalPlotPanel.Signals[0].SamplingRate)
+                    {
+                        InspectionAnalysisParams.Fs = SelectedSignalPlotPanel.Signals[0].SamplingRate;
+                    }
                 }
                 else
                 {
@@ -2827,7 +2838,75 @@ namespace BAWGUI.SignalManagement.ViewModels
         public ICommand SpectralInspection { get; set; }
         private void _spectralInspection(object obj)
         {
-            _engine.InspectionAnalysis("Spectral", (ObservableCollection<SignalSignatureViewModel>)obj, InspectionAnalysisParams);
+            InspectionAnalysisResults iaResult = _engine.InspectionAnalysis("Spectral", (ObservableCollection<SignalSignatureViewModel>)obj, InspectionAnalysisParams);
+            SelectedSignalPlotPanel.AddATab = true;
+            if (iaResult != null)
+            {
+                //plot it!
+                _plotInspectionAnalysisResult(iaResult);
+            }
+        }
+
+        private void _plotInspectionAnalysisResult(InspectionAnalysisResults iaResult)
+        {
+            var AsignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+            //var legends = new ObservableCollection<Legend>();
+            OxyPlot.Axes.LinearAxis xAxis = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Bottom,
+                Title = iaResult.Xlabel,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true,
+            };
+            //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+            AsignalPlot.Axes.Add(xAxis);
+            OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Left,
+                Title = iaResult.Ylabel,
+                //Unit = SelectedSignalToBeViewed.Unit,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true
+            };
+            AsignalPlot.Axes.Add(yAxis);
+            //var signalCounter = 0;
+            for (int index = 0; index < iaResult.Y.Count; index++)
+            {
+                var newSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+                for (int i = 0; i < iaResult.Y[index].Count; i++)
+                {
+                    newSeries.Points.Add(new DataPoint(iaResult.X[i], iaResult.Y[index][i]));
+                }
+                newSeries.Title = iaResult.Signalnames[index];
+                foreach (var item in SelectedSignalPlotPanel.Legends)
+                {
+                    if (newSeries.Title == item.Name)
+                    {
+                        newSeries.Color = item.Color;
+                    }
+                }
+                //var c = string.Format("#{0:x6}", Color.FromName(Utility.SaturatedColors[signalCounter % 20]).ToArgb());
+                //newSeries.Color = OxyColor.Parse(c);
+                //legends.Add(new Legend(signal.SignalName, newSeries.Color));
+                AsignalPlot.Series.Add(newSeries);
+                //signalCounter++;
+
+            }
+            AsignalPlot.LegendPlacement = LegendPlacement.Outside;
+            AsignalPlot.LegendPosition = LegendPosition.RightMiddle;
+            AsignalPlot.LegendPadding = 0.0;
+            AsignalPlot.LegendSymbolMargin = 0.0;
+            AsignalPlot.LegendMargin = 0;
+            AsignalPlot.IsLegendVisible = false;
+            SelectedSignalPlotPanel.SpectralInspectionPlotModel = AsignalPlot;
         }
     }
 }

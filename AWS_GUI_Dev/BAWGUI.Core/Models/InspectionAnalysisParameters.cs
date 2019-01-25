@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,41 +12,43 @@ namespace BAWGUI.Core.Models
     {
         public InspectionAnalysisParameters()
         {
-            _analysisLength = 60;
+            _analysisLengthStr = "";
             _windowType = DetectorWindowType.hann;
-            _windowLength = 12;
-            _windowOverlap = 6;
-            ZeroPadding = -1;
+            _windowLengthStr = "";
+            _windowOverlapStr = "";
+            //ZeroPadding = -1;
             Fs = -1;
             LogScale = false;
-            FreqMin = -1;
-            FreqMax = -1;
+            //FreqMin = -1;
+            //FreqMax = -1;
         }
-        private int _analysisLength;
-        public int AnalysisLength
+        private string _analysisLengthStr;
+        public string AnalysisLengthStr
         {
             get
             {
-                return _analysisLength;
+                return _analysisLengthStr;
             }
             set
             {
-                _analysisLength = value;
-                WindowLength = (int)Math.Floor(value / (double)5);
+                _analysisLengthStr = value;
+                //DataTable dt = new DataTable();
+                //AnalysisLength = (double)dt.Compute(value, "");
 
             }
         }
-        private int _windowLength;
-        public int WindowLength
+        private string _windowLengthStr;
+        public string WindowLengthStr
         {
             get
             {
-                return _windowLength;
+                return _windowLengthStr;
             }
             set
             {
-                _windowLength = value;
-                WindowOverlap = (int)Math.Floor(value / (double)2);
+                _windowLengthStr = value;
+                //DataTable dt = new DataTable();
+                //WindowLength = (double)dt.Compute(value, "");
             }
         }
         private DetectorWindowType _windowType;
@@ -60,22 +63,76 @@ namespace BAWGUI.Core.Models
                 _windowType = value;
             }
         }
-        private int _windowOverlap;
-        public int WindowOverlap
+        private string _windowOverlapStr;
+        public string WindowOverlapStr
         {
             get
             {
-                return _windowOverlap;
+                return _windowOverlapStr;
             }
             set
             {
-                _windowOverlap = value;
+                _windowOverlapStr = value;
+                //DataTable dt = new DataTable();
+                //WindowOverlap = (double)dt.Compute(value, "");
             }
         }
-        public int ZeroPadding { get; set; }
-        public int Fs { get; set; }
+        public int? ZeroPadding { get; set; }
+        public int _fs;
+        public int Fs
+        {
+            get { return _fs; }
+            set
+            {
+                _fs = value;
+                //NumberOfSamplesInAnalysisLength = _analysisLength * Fs;
+                //NumberOfSamplesInWindowLength = _windowLength * Fs;
+                //NumberOfSamplesInWindowOverlap = _windowOverlap * Fs;
+            }
+        }
         public bool LogScale { get; set; }
-        public int FreqMin { get; set; }
-        public int FreqMax { get; set; }
+        public double? FreqMin { get; set; }
+        public double? FreqMax { get; set; }
+        private double _analysisLength;
+        public double AnalysisLength
+        {
+            get { return _analysisLength; }
+            set
+            {
+                _analysisLength = value;
+                //NumberOfSamplesInAnalysisLength = value * Fs;
+            }
+        }
+        private double _windowLength;
+        public double WindowLength
+        {
+            get { return _windowLength; }
+            set
+            {
+                _windowLength = value;
+                //NumberOfSamplesInWindowLength = value * Fs;
+            }
+        }
+        private double _windowOverlap;
+        public double WindowOverlap
+        {
+            get { return _windowOverlap; }
+            set
+            {
+                _windowOverlap = value;
+                //NumberOfSamplesInWindowOverlap = value * Fs;
+            }
+        }
+
+
+
+        private double _numberOfSamplesInAnalysisLength;
+        public double NumberOfSamplesInAnalysisLength
+        {
+            get { return _numberOfSamplesInAnalysisLength; }
+            set { _numberOfSamplesInAnalysisLength = value; }
+        }
+        public double NumberOfSamplesInWindowLength { get; set; }
+        public double NumberOfSamplesInWindowOverlap { get; set; }
     }
 }

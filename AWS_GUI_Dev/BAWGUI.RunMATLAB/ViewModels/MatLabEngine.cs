@@ -902,15 +902,29 @@ namespace BAWGUI.RunMATLAB.ViewModels
             e.Result = FileReadingResults;
         }
 
-        public void InspectionAnalysis(string func, ObservableCollection<SignalSignatureViewModel> signals, InspectionAnalysisParametersViewModel inspectionAnalysisParams)
+        public InspectionAnalysisResults InspectionAnalysis(string func, ObservableCollection<SignalSignatureViewModel> signals, InspectionAnalysisParametersViewModel inspectionAnalysisParams)
         {
+            InspectionAnalysisResults result = null;
             if (signals.Count > 0)
             {
                 MWCellArray signalNames = new MWCellArray(signals.Count);
                 double[][] allData = signals.Select(a => a.Data.ToArray()).ToArray();
                 MWNumericArray data = new MWNumericArray(allData);
                 MWNumericArray t = new MWNumericArray(signals[0].MATLABTimeStampNumber.ToArray());
-                MWStructArray parameters = new MWStructArray(1, 1, new string[] { "AnalysisLength", "WindowLength", "Window", "WindowOverlap", "ZeroPadding", "fs", "LogScale", "SigNames", "FreqMin", "FreqMax" });
+                var listOfParameters = new List<string>(new string[] { "AnalysisLength", "WindowLength", "Window", "WindowOverlap", "fs", "LogScale", "SigNames" });
+                if (inspectionAnalysisParams.ZeroPadding != null)
+                {
+                    listOfParameters.Add("ZeroPadding");
+                }
+                if (inspectionAnalysisParams.FreqMin != null)
+                {
+                    listOfParameters.Add("FreqMin");
+                }
+                if (inspectionAnalysisParams.FreqMax != null)
+                {
+                    listOfParameters.Add("FreqMax");
+                }
+                MWStructArray parameters = new MWStructArray(1, 1, listOfParameters.ToArray());
                 try
                 {
                     for (int index = 0; index < signals.Count; index++)
@@ -927,10 +941,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 parameters["WindowLength", 1] = inspectionAnalysisParams.WindowLength;
                 parameters["Window", 1] = inspectionAnalysisParams.WindowType.ToString();
                 parameters["WindowOverlap", 1] = inspectionAnalysisParams.WindowOverlap;
-                parameters["ZeroPadding", 1] = inspectionAnalysisParams.ZeroPadding;
+                if (inspectionAnalysisParams.ZeroPadding != null)
+                {
+                    parameters["ZeroPadding", 1] = (int)inspectionAnalysisParams.ZeroPadding;
+                }
                 parameters["LogScale", 1] = inspectionAnalysisParams.LogScale.ToString().ToUpper();
-                parameters["FreqMin", 1] = inspectionAnalysisParams.FreqMin;
-                parameters["FreqMax", 1] = inspectionAnalysisParams.FreqMax;
+                if (inspectionAnalysisParams.FreqMin != null)
+                {
+                    parameters["FreqMin", 1] = (int)inspectionAnalysisParams.FreqMin;
+                }
+                if (inspectionAnalysisParams.FreqMax != null)
+                {
+                    parameters["FreqMax", 1] = (int)inspectionAnalysisParams.FreqMax;
+                }
                 parameters["fs", 1] = signals[0].SamplingRate;
 
                 if (IsMatlabEngineRunning)
@@ -941,12 +964,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
                 Run.IsTaskRunning = true;
 
-                var result = _matlabEngine.InspectionAnalysis(func, data, t, parameters);
+                result = new InspectionAnalysisResults((MWStructArray)_matlabEngine.InspectionAnalysis(func, data, t, parameters));
 
                 Run.IsTaskRunning = false;
                 Mouse.OverrideCursor = null;
                 IsMatlabEngineRunning = false;
             }
+            return result;
         }
     }
 }
