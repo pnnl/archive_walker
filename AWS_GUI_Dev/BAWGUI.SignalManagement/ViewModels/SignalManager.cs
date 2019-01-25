@@ -2518,7 +2518,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 //figure out the sampling rate of the current plot selected, 
                 //if no signals on this plot, do not change sampling rate of the inspection analysis parameter,
                 //if there's any signals, reflect it in the inspection analysis parameter
-                if (_selectedSignalPlotPanel.Signals.Any())
+                if (value != null && _selectedSignalPlotPanel.Signals.Any())
                 {
                     InspectionAnalysisParams.Fs = _selectedSignalPlotPanel.Signals.FirstOrDefault().SamplingRate;
                 }                

@@ -280,7 +280,15 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             run.IsTaskRunning = true;
-            var sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, run.Model.InitializationPath, detector));
+            SparseResults sparseResults = null;
+            try
+            {
+                sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, run.Model.InitializationPath, detector));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+            }
             run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;
@@ -963,9 +971,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 IsMatlabEngineRunning = true;
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
                 Run.IsTaskRunning = true;
-
-                result = new InspectionAnalysisResults((MWStructArray)_matlabEngine.InspectionAnalysis(func, data, t, parameters));
-
+                try
+                {
+                    result = new InspectionAnalysisResults((MWStructArray)_matlabEngine.InspectionAnalysis(func, data, t, parameters));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+                }
                 Run.IsTaskRunning = false;
                 Mouse.OverrideCursor = null;
                 IsMatlabEngineRunning = false;

@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BAWGUI.Core.ViewModels
 {
@@ -23,7 +24,22 @@ namespace BAWGUI.Core.ViewModels
             {
                 _model.AnalysisLengthStr = value;
                 DataTable dt = new DataTable();
-                AnalysisLength = (double)dt.Compute(value, "");
+                try
+                {
+                    var result = dt.Compute(value, "");
+                    if (result != DBNull.Value)
+                    {
+                        AnalysisLength = Convert.ToDouble(result);
+                    }
+                    else
+                    {
+                        AnalysisLength = 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK);
+                }
                 OnPropertyChanged();
             }
         }
@@ -34,7 +50,22 @@ namespace BAWGUI.Core.ViewModels
             {
                 _model.WindowLengthStr = value;
                 DataTable dt = new DataTable();
-                WindowLength = (double)dt.Compute(value, "");
+                try
+                {
+                    var result = dt.Compute(value, "");
+                    if (result != DBNull.Value)
+                    {
+                        WindowLength = Convert.ToDouble(result);
+                    }
+                    else
+                    {
+                        WindowLength = 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK);
+                }
                 OnPropertyChanged();
             }
         }
@@ -54,7 +85,22 @@ namespace BAWGUI.Core.ViewModels
             {
                 _model.WindowOverlapStr = value;
                 DataTable dt = new DataTable();
-                WindowOverlap = (double)dt.Compute(value, "");
+                try
+                {
+                    var result = dt.Compute(value, "");
+                    if (result != DBNull.Value)
+                    {
+                        WindowOverlap = Convert.ToDouble(result);
+                    }
+                    else
+                    {
+                        WindowOverlap = 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK);
+                }
                 OnPropertyChanged();
             }
         }
