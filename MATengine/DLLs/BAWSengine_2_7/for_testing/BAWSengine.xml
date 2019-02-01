@@ -15,6 +15,9 @@
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
             SparseData.m
             <newpara></newpara>
+            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ins
+            pectionAnalysis.m
+            <newpara></newpara>
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
             dMMdata.m
             <newpara></newpara>
@@ -344,6 +347,151 @@
              array.<newpara></newpara>
              M-Documentation:
              Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of MWArray output arguments</param>
+             <param name= "argsIn">Array of MWArray input arguments</param>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis">
+             <summary>
+             Provides a single output, 0-input MWArrayinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 1-input MWArrayinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 2-input MWArrayinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 3-input MWArrayinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides a single output, 4-input MWArrayinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <param name="Params">Input argument #4</param>
+             <returns>An MWArray containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(System.Int32)">
+             <summary>
+             Provides the standard 0-input MWArray interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 1-input MWArray interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 2-input MWArray interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 3-input MWArray interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
+             <summary>
+             Provides the standard 4-input MWArray interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <param name="Params">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengine.GUI2MAT.InspectionAnalysis(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray[]@,MathWorks.MATLAB.NET.Arrays.MWArray[])">
+             <summary>
+             Provides an interface for the InspectionAnalysis function in which the input and
+             output
+             arguments are specified as an array of MWArrays.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of MWArray output arguments</param>

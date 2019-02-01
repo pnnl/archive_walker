@@ -14,6 +14,7 @@ namespace BAWGUI.Core
         string Unit { get; set; }
         int SamplingRate { get; set; }
         List<double> Data { get; set; }
-        List<double> TimeStampInSeconds { get; set; }
+        //List<double> TimeStampInSeconds { get; set; }
+        List<double> TimeStampNumber { get; set; }
     }
 }

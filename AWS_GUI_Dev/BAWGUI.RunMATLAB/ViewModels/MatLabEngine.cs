@@ -14,6 +14,8 @@ using System.Windows.Input;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
+using System.Collections.ObjectModel;
+using BAWGUI.Core.ViewModels;
 
 [assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
@@ -278,7 +280,15 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             run.IsTaskRunning = true;
-            var sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, run.Model.InitializationPath, detector));
+            SparseResults sparseResults = null;
+            try
+            {
+                sparseResults = new SparseResults((MWStructArray)_matlabEngine.GetSparseData(start, end, run.Model.InitializationPath, detector));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+            }
             run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;
@@ -898,6 +908,81 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
 
             e.Result = FileReadingResults;
+        }
+
+        public InspectionAnalysisResults InspectionAnalysis(string func, double[][] allData, double[] time, ObservableCollection<SignalSignatureViewModel> signals, InspectionAnalysisParametersViewModel inspectionAnalysisParams)
+        {
+            InspectionAnalysisResults result = null;
+            if (signals.Count > 0)
+            {
+                MWCellArray signalNames = new MWCellArray(signals.Count);
+                MWNumericArray data = new MWNumericArray(allData);
+                MWNumericArray t = new MWNumericArray(time);
+                var listOfParameters = new List<string>(new string[] { "AnalysisLength", "WindowLength", "Window", "WindowOverlap", "fs", "LogScale", "SigNames" });
+                if (inspectionAnalysisParams.ZeroPadding != null)
+                {
+                    listOfParameters.Add("ZeroPadding");
+                }
+                if (inspectionAnalysisParams.FreqMin != null)
+                {
+                    listOfParameters.Add("FreqMin");
+                }
+                if (inspectionAnalysisParams.FreqMax != null)
+                {
+                    listOfParameters.Add("FreqMax");
+                }
+                MWStructArray parameters = new MWStructArray(1, 1, listOfParameters.ToArray());
+                try
+                {
+                    for (int index = 0; index < signals.Count; index++)
+                    {
+                        signalNames[index + 1] = new MWCharArray(signals[index].SignalName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                parameters["SigNames", 1] = signalNames;
+                parameters["AnalysisLength", 1] = inspectionAnalysisParams.AnalysisLength;
+                parameters["WindowLength", 1] = inspectionAnalysisParams.WindowLength;
+                parameters["Window", 1] = inspectionAnalysisParams.WindowType.ToString();
+                parameters["WindowOverlap", 1] = inspectionAnalysisParams.WindowOverlap;
+                if (inspectionAnalysisParams.ZeroPadding != null)
+                {
+                    parameters["ZeroPadding", 1] = (int)inspectionAnalysisParams.ZeroPadding;
+                }
+                parameters["LogScale", 1] = inspectionAnalysisParams.LogScale.ToString().ToUpper();
+                if (inspectionAnalysisParams.FreqMin != null)
+                {
+                    parameters["FreqMin", 1] = (int)inspectionAnalysisParams.FreqMin;
+                }
+                if (inspectionAnalysisParams.FreqMax != null)
+                {
+                    parameters["FreqMax", 1] = (int)inspectionAnalysisParams.FreqMax;
+                }
+                parameters["fs", 1] = signals[0].SamplingRate;
+
+                if (IsMatlabEngineRunning)
+                {
+                    PauseMatlabNormalRun();
+                }
+                IsMatlabEngineRunning = true;
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                Run.IsTaskRunning = true;
+                try
+                {
+                    result = new InspectionAnalysisResults((MWStructArray)_matlabEngine.InspectionAnalysis(func, data, t, parameters));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+                }
+                Run.IsTaskRunning = false;
+                Mouse.OverrideCursor = null;
+                IsMatlabEngineRunning = false;
+            }
+            return result;
         }
         public void UpdateOBATPreset(string newPresetName, string detectorName, string configFilePath, string oBATPresetFilePath)
         {

@@ -28,12 +28,18 @@ namespace BAWGUI.Utilities
             return (item - 367) * 86400;
         }
 
-        public static string SecondsToDateTimeString(double item)
+        public static string MATLABSecondsToDateTimeString(double item)
         {
             System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             var bbb = dtDateTime.AddSeconds(item);
             return bbb.ToString("yyyyMMdd_HHmmss");
         }
+        //public static string DotNetDaysToDateTimeString(double item)
+        //{
+        //    System.DateTime dtDateTime = new DateTime(1899, 12, 30, 0, 0, 0, 0, System.DateTimeKind.Utc);
+        //    var bbb = dtDateTime.AddDays(item);
+        //    return bbb.ToString("yyyyMMdd_HHmmss");
+        //}
         //public static Color HighlightColor = Colors.Cornsilk;
         public static System.Windows.Media.SolidColorBrush HighlightColor = new System.Windows.Media.SolidColorBrush(Colors.Cornsilk);
 

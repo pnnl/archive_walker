@@ -66,6 +66,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             set
             {
                 _run = value;
+                Engine.Run = _run;
                 OnPropertyChanged();
             }
         }
