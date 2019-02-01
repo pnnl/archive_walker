@@ -2463,6 +2463,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         newSignal.SamplingRate = pmu.SamplingRate;
                         newSignal.Unit = pmu.SignalUnits[index];
                         newSignal.Data = pmu.Data.GetRange(index * pmu.SignalLength, pmu.SignalLength);
+                        newSignal.TimeStampNumber = pmu.TimeStampNumber;
                         newSignal.MATLABTimeStampNumber = pmu.MATLABTimeStampNumber;
                         SingalWithDataList.Add(newSignal);
                     }
@@ -3004,7 +3005,8 @@ namespace BAWGUI.SignalManagement.ViewModels
                 newSignal.PMUname = item.PMUName;
                 newSignal.SamplingRate = item.SamplingRate;
                 newSignal.SignalName = item.SignalName;
-                newSignal.TimeStampInSeconds = t;
+                //newSignal.TimeStampInSeconds = t;
+                newSignal.TimeStampNumber = t;
                 newSignal.Type = item.TypeAbbreviation;
                 newSignal.Unit = item.Unit;
                 newSignals.Add(newSignal);

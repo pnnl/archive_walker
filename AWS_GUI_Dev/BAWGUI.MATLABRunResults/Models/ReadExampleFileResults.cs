@@ -84,6 +84,7 @@ namespace BAWGUI.MATLABRunResults.Models
                     string row = new string(Utility.GetRow(item, 0).ToArray());
                     newPMU.SignalNames.Add(row);
                 }
+                //var arraatfgssa = ((MWCellArray)_results["Signal_Name", index]).ToString().Split(new char[] { '\n', ' ' }).Select(x => x.Trim(new char[] { '\'', ' ' })).Where(y => !string.IsNullOrEmpty(y)).ToList();
                 arr = (MWCellArray)_results["Signal_Type", index];
                 foreach (char[,] item in arr.ToArray())
                 {
@@ -98,8 +99,8 @@ namespace BAWGUI.MATLABRunResults.Models
                 }
                 //if (index == 1)
                 //{
-                    //TimeStampNumber.Clear();
-                    MWNumericArray narr = (MWNumericArray)_results["Signal_Time", index];
+                //TimeStampNumber.Clear();
+                MWNumericArray narr = (MWNumericArray)_results["Signal_Time", index];
                     double[] t = (double[])(narr.ToVector(MWArrayComponent.Real));
 
                     //var timeStamps = new List<System.DateTime>();

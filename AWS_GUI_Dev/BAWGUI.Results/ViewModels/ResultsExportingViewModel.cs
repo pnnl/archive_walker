@@ -40,7 +40,8 @@ namespace BAWGUI.Results.ViewModels
                 {
                     var newSignal = new Signal();
                     newSignal.Data = signal.Data;
-                    newSignal.TimeStampInSeconds = signal.TimeStampInSeconds;
+                    //newSignal.TimeStampInSeconds = signal.TimeStampInSeconds;
+                    newSignal.TimeStampNumber = signal.TimeStampNumber;
                     newSignal.PMUname = signal.PMUname;
                     newSignal.SignalName = signal.SignalName;
                     newSignal.Type = signal.Type;
@@ -66,7 +67,8 @@ namespace BAWGUI.Results.ViewModels
                 {
                     var newSignal = new Signal();
                     newSignal.Data = signal.Data;
-                    newSignal.TimeStampInSeconds = signal.TimeStampInSeconds;
+                    //newSignal.TimeStampInSeconds = signal.TimeStampInSeconds;
+                    newSignal.TimeStampNumber = signal.TimeStampNumber;
                     newSignal.PMUname = signal.PMUname;
                     newSignal.SignalName = signal.SignalName;
                     newSignal.Type = signal.Type;
@@ -128,8 +130,9 @@ namespace BAWGUI.Results.ViewModels
             {
                 if (saveFileDialog1.FileName != "")
                 {
-                    var time = UniqueSignalsToBeSaved.FirstOrDefault().TimeStampInSeconds[0];
-                    var timeStr = Utility.MATLABSecondsToDateTimeString(time);
+                    //var time = UniqueSignalsToBeSaved.FirstOrDefault().TimeStampInSeconds[0];
+                    //var timeStr = Utility.MATLABSecondsToDateTimeString(time);
+                    var timeStr = DateTime.FromOADate(UniqueSignalsToBeSaved.FirstOrDefault().TimeStampNumber[0]).ToString(@"yyyyMMdd_HHmmss");
                     var path = Path.GetFullPath(saveFileDialog1.FileName);
                     var fullname = path.Split('.')[0] + "_" + timeStr + ".csv";
                     var index = 1;
