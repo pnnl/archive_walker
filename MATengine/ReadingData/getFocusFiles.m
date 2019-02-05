@@ -66,7 +66,14 @@ elseif(strcmpi(FileInfo.FileType,'PI'))
     FocusFileTime = InitialFocusFileTime;
     focusFile = FocusFileTime;
     FileLength = ResultUpdateInterval;
-    DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PIpresetFile);
+    DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PresetFileInit);
+    return
+elseif(strcmpi(FileInfo.FileType,'OpenHistorian'))
+    SkippedFiles = 0;
+    FocusFileTime = InitialFocusFileTime;
+    focusFile = FocusFileTime;
+    FileLength = ResultUpdateInterval;
+    DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PresetFileInit);
     return
 end
 

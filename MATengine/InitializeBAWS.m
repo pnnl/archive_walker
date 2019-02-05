@@ -204,8 +204,10 @@ end
 
 if(strcmpi(FileInfo(1).FileType,'PI'))
     [~,name,ext] = fileparts(DataXML.ReaderProperties.FilePath{1}.ExampleFile); 
-    DataInfo.PIpresetFile = [name ext];
-%     DataInfo.PIpresetFile = fullfile(DataXML.ReaderProperties.FilePath{1}.ExampleFile);
+    DataInfo.PresetFileInit = [name ext];
+elseif(strcmpi(FileInfo(1).FileType,'OpenHistorian'))
+    [~,name,ext] = fileparts(DataXML.ReaderProperties.FilePath{1}.ExampleFile); 
+    DataInfo.PresetFileInit = [name ext];
 end
 
 if(strcmp(DataInfo.mode, 'Archive'))

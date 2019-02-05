@@ -35,6 +35,8 @@ else
                 [PMUbyFileTemp,tPMU] = POWreadHQ(focusFile{idx3},Num_Flags);
             elseif(strcmpi(FileInfo(idx3).FileType, 'PI'))
                 [PMUbyFileTemp,tPMU] = PIreader(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
+            elseif(strcmpi(FileInfo(idx3).FileType, 'OpenHistorian'))
+                [PMUbyFileTemp,tPMU] = OHreader(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
             end
             
             FailToRead = 0;

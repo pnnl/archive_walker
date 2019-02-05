@@ -1,4 +1,4 @@
-function [PMU,Server] = ReadPIpresets(XMLFileIn)
+function [Preset,Server,Instance,GEPPort,SystemXML,ID] = ReadOHpresets(XMLFileIn)
 
 %Get the file handle
 fHandle = fopen(XMLFileIn,'rt');
@@ -140,35 +140,45 @@ end
 
 % Convert to our structure (meta only)
 MT = cell(1,length(X.Presets.Preset));
-PMU = struct('PMU_Name',MT,'Signal_Name',MT,'Signal_Type',MT,'Signal_Unit',MT);
+Preset = MT;
 Server = MT;
-for idx = 1:length(PMU)
-    PMU(idx).PMU_Name = X.Presets.Preset(idx).name;
+Instance = MT;
+GEPPort = MT;
+SystemXML = MT;
+ID = MT;
+for idx = 1:length(X.Presets.Preset)
+    Preset{idx} = X.Presets.Preset(idx).name;
     
     NumSigs = length(X.Presets.Preset(idx).Signal);
-    SigNames = cell(1,NumSigs);
-    SigTypes = cell(1,NumSigs);
-    SigUnits = cell(1,NumSigs);
+    SigID = '';
     for SigIdx = 1:NumSigs
-        SigNames{SigIdx} = X.Presets.Preset(idx).Signal(SigIdx).Tag;
-        SigTypes{SigIdx} = X.Presets.Preset(idx).Signal(SigIdx).Type;
-        SigUnits{SigIdx} = X.Presets.Preset(idx).Signal(SigIdx).Unit;
+        SigID = [SigID ',' X.Presets.Preset(idx).Signal(SigIdx).ID];
         
         if isempty(Server{idx})
             Server{idx} = X.Presets.Preset(idx).Signal(SigIdx).Server;
         elseif ~strcmp(Server{idx}, X.Presets.Preset(idx).Signal(SigIdx).Server)
             error('All signals within a preset must be from the same server');
         end
-    end
-    PMU(idx).Signal_Name = SigNames;
-    PMU(idx).Signal_Type = TranslateSigTypes(SigTypes);
-    PMU(idx).Signal_Unit = TranslateSigUnits(SigUnits);
-    
-    for SigIdx = 1:length(PMU(idx).Signal_Type)
-        if ~CheckTypeAndUnits(PMU(idx).Signal_Type{SigIdx},PMU(idx).Signal_Unit{SigIdx})
-            error(['Signal type ' PMU(idx).Signal_Type{SigIdx} ' does not match unit ' PMU(idx).Signal_Unit{SigIdx}]);
+        
+        if isempty(Instance{idx})
+            Instance{idx} = X.Presets.Preset(idx).Signal(SigIdx).Instance;
+        elseif ~strcmp(Instance{idx}, X.Presets.Preset(idx).Signal(SigIdx).Instance)
+            error('All signals within a preset must be from the same server');
+        end
+        
+        if isempty(GEPPort{idx})
+            GEPPort{idx} = X.Presets.Preset(idx).Signal(SigIdx).GEPPort;
+        elseif ~strcmp(GEPPort{idx}, X.Presets.Preset(idx).Signal(SigIdx).GEPPort)
+            error('All signals within a preset must be from the same server');
+        end
+        
+        if isempty(SystemXML{idx})
+            SystemXML{idx} = X.Presets.Preset(idx).Signal(SigIdx).SystemXML;
+        elseif ~strcmp(SystemXML{idx}, X.Presets.Preset(idx).Signal(SigIdx).SystemXML)
+            error('All signals within a preset must be from the same server');
         end
     end
+    ID{idx} = SigID(2:end);
 end
 end
 
@@ -198,51 +208,4 @@ for idx = 1:length(FN)-1
 end
 
 res = isfield(eval(ToExe),FN{end});
-end
-
-
-function SigTypes = TranslateSigTypes(SigTypes)
-for idx = 1:length(SigTypes)
-    switch SigTypes{idx}
-        case 'VoltageMagnitude'
-            SigTypes{idx} = 'VMP';
-        case 'VoltageAngle'
-            SigTypes{idx} = 'VAP';
-        case 'CurrentMagnitude'
-            SigTypes{idx} = 'IMP';
-        case 'CurrentAngle'
-            SigTypes{idx} = 'IAP';
-        case 'ActPower'
-            SigTypes{idx} = 'P';
-        case 'ReactivePower'
-            SigTypes{idx} = 'Q';
-        case 'Frequency'
-            SigTypes{idx} = 'F';
-        case 'Unknown'
-            SigTypes{idx} = 'OTHER';
-        otherwise
-            SigTypes{idx} = 'OTHER';
-    end
-end
-end
-
-function SigUnits = TranslateSigUnits(SigUnits)
-for idx = 1:length(SigUnits)
-    switch SigUnits{idx}
-        case 'Amps'
-            SigUnits{idx} = 'A';
-        case 'DEG'
-            SigUnits{idx} = 'DEG';
-        case 'kV'
-            SigUnits{idx} = 'kV';
-        case 'Hz'
-            SigUnits{idx} = 'Hz';
-        case 'MW'
-            SigUnits{idx} = 'MW';
-        case 'MVAR'
-            SigUnits{idx} = 'MVAR';
-        otherwise
-            SigUnits{idx} = 'O';
-    end
-end
 end
