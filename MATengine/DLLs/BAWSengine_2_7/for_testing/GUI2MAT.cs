@@ -1,12 +1,12 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Thu Jan 17 10:26:40 2019
+* Date: Tue Feb 05 15:54:52 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
 * ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
-* ory\MATengine\GUIfunctions\GetFileExamplePI.m,C:\Users\foll154\Documents\BPAoscillationA
+* ory\MATengine\GUIfunctions\GetFileExampleDB.m,C:\Users\foll154\Documents\BPAoscillationA
 * pp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAosc
 * illationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Documents\
 * BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\
@@ -38,7 +38,7 @@ namespace BAWSengine
   /// FileExample.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// FileExamplePI.m
+  /// FileExampleDB.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
@@ -329,21 +329,21 @@ namespace BAWSengine
 
 
     /// <summary>
-    /// Provides a single output, 0-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 0-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI()
+    public MWArray GetFileExampleDB()
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", new MWArray[]{});
+      return mcr.EvaluateFunction("GetFileExampleDB", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides a single output, 1-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 1-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -351,14 +351,14 @@ namespace BAWSengine
     /// <param name="StartTime">Input argument #1</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime)
+    public MWArray GetFileExampleDB(MWArray StartTime)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime);
     }
 
 
     /// <summary>
-    /// Provides a single output, 2-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 2-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -367,14 +367,14 @@ namespace BAWSengine
     /// <param name="preset">Input argument #2</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime, MWArray preset)
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset);
     }
 
 
     /// <summary>
-    /// Provides a single output, 3-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 3-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -384,14 +384,14 @@ namespace BAWSengine
     /// <param name="PresetFile">Input argument #3</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime, MWArray preset, MWArray PresetFile)
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset, MWArray PresetFile)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset, PresetFile);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile);
     }
 
 
     /// <summary>
-    /// Provides a single output, 4-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 4-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -402,15 +402,35 @@ namespace BAWSengine
     /// <param name="MetaOnly">Input argument #4</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime, MWArray preset, MWArray 
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset, MWArray 
                               PresetFile, MWArray MetaOnly)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset, PresetFile, MetaOnly);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
     }
 
 
     /// <summary>
-    /// Provides the standard 0-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 5-input MWArrayinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset, MWArray 
+                              PresetFile, MWArray MetaOnly, MWArray DBtype)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -419,14 +439,14 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut)
+    public MWArray[] GetFileExampleDB(int numArgsOut)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", new MWArray[]{});
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides the standard 1-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 1-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -436,14 +456,14 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime)
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime);
     }
 
 
     /// <summary>
-    /// Provides the standard 2-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 2-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -454,14 +474,14 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime, MWArray preset)
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset);
     }
 
 
     /// <summary>
-    /// Provides the standard 3-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 3-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -473,15 +493,15 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime, MWArray preset, 
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset, 
                                 MWArray PresetFile)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset, PresetFile);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile);
     }
 
 
     /// <summary>
-    /// Provides the standard 4-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 4-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -494,15 +514,37 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime, MWArray preset, 
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset, 
                                 MWArray PresetFile, MWArray MetaOnly)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset, PresetFile, MetaOnly);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
     }
 
 
     /// <summary>
-    /// Provides an interface for the GetFileExamplePI function in which the input and
+    /// Provides the standard 5-input MWArray interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset, 
+                                MWArray PresetFile, MWArray MetaOnly, MWArray DBtype)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the GetFileExampleDB function in which the input and
     /// output
     /// arguments are specified as an array of MWArrays.
     /// </summary>
@@ -514,9 +556,9 @@ namespace BAWSengine
     /// <param name= "argsOut">Array of MWArray output arguments</param>
     /// <param name= "argsIn">Array of MWArray input arguments</param>
     ///
-    public void GetFileExamplePI(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    public void GetFileExampleDB(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
-      mcr.EvaluateFunction("GetFileExamplePI", numArgsOut, ref argsOut, argsIn);
+      mcr.EvaluateFunction("GetFileExampleDB", numArgsOut, ref argsOut, argsIn);
     }
 
 

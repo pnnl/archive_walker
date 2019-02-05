@@ -1,12 +1,12 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Thu Jan 17 10:26:40 2019
+* Date: Tue Feb 05 15:54:52 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
 * ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
-* ory\MATengine\GUIfunctions\GetFileExamplePI.m,C:\Users\foll154\Documents\BPAoscillationA
+* ory\MATengine\GUIfunctions\GetFileExampleDB.m,C:\Users\foll154\Documents\BPAoscillationA
 * pp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAosc
 * illationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Documents\
 * BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\
@@ -38,7 +38,7 @@ namespace BAWSengineNative
   /// FileExample.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// FileExamplePI.m
+  /// FileExampleDB.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
@@ -330,21 +330,21 @@ namespace BAWSengineNative
         mcr.EvaluateFunctionForTypeSafeCall("GetFileExample", numArgsOut, ref argsOut, argsIn, varArgsIn);
     }
     /// <summary>
-    /// Provides a single output, 0-input Objectinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 0-input Objectinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
     /// <returns>An Object containing the first output argument.</returns>
     ///
-    public Object GetFileExamplePI()
+    public Object GetFileExampleDB()
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", new Object[]{});
+      return mcr.EvaluateFunction("GetFileExampleDB", new Object[]{});
     }
 
 
     /// <summary>
-    /// Provides a single output, 1-input Objectinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 1-input Objectinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -352,14 +352,14 @@ namespace BAWSengineNative
     /// <param name="StartTime">Input argument #1</param>
     /// <returns>An Object containing the first output argument.</returns>
     ///
-    public Object GetFileExamplePI(Object StartTime)
+    public Object GetFileExampleDB(Object StartTime)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime);
     }
 
 
     /// <summary>
-    /// Provides a single output, 2-input Objectinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 2-input Objectinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -368,14 +368,14 @@ namespace BAWSengineNative
     /// <param name="preset">Input argument #2</param>
     /// <returns>An Object containing the first output argument.</returns>
     ///
-    public Object GetFileExamplePI(Object StartTime, Object preset)
+    public Object GetFileExampleDB(Object StartTime, Object preset)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset);
     }
 
 
     /// <summary>
-    /// Provides a single output, 3-input Objectinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 3-input Objectinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -385,14 +385,14 @@ namespace BAWSengineNative
     /// <param name="PresetFile">Input argument #3</param>
     /// <returns>An Object containing the first output argument.</returns>
     ///
-    public Object GetFileExamplePI(Object StartTime, Object preset, Object PresetFile)
+    public Object GetFileExampleDB(Object StartTime, Object preset, Object PresetFile)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset, PresetFile);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile);
     }
 
 
     /// <summary>
-    /// Provides a single output, 4-input Objectinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 4-input Objectinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -403,15 +403,35 @@ namespace BAWSengineNative
     /// <param name="MetaOnly">Input argument #4</param>
     /// <returns>An Object containing the first output argument.</returns>
     ///
-    public Object GetFileExamplePI(Object StartTime, Object preset, Object PresetFile, 
+    public Object GetFileExampleDB(Object StartTime, Object preset, Object PresetFile, 
                              Object MetaOnly)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset, PresetFile, MetaOnly);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
     }
 
 
     /// <summary>
-    /// Provides the standard 0-input Object interface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 5-input Objectinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExampleDB(Object StartTime, Object preset, Object PresetFile, 
+                             Object MetaOnly, Object DBtype)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input Object interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -420,14 +440,14 @@ namespace BAWSengineNative
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public Object[] GetFileExamplePI(int numArgsOut)
+    public Object[] GetFileExampleDB(int numArgsOut)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", new Object[]{});
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", new Object[]{});
     }
 
 
     /// <summary>
-    /// Provides the standard 1-input Object interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 1-input Object interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -437,14 +457,14 @@ namespace BAWSengineNative
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public Object[] GetFileExamplePI(int numArgsOut, Object StartTime)
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime);
     }
 
 
     /// <summary>
-    /// Provides the standard 2-input Object interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 2-input Object interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -455,14 +475,14 @@ namespace BAWSengineNative
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public Object[] GetFileExamplePI(int numArgsOut, Object StartTime, Object preset)
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset);
     }
 
 
     /// <summary>
-    /// Provides the standard 3-input Object interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 3-input Object interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -474,15 +494,15 @@ namespace BAWSengineNative
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public Object[] GetFileExamplePI(int numArgsOut, Object StartTime, Object preset, 
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset, 
                                Object PresetFile)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset, PresetFile);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile);
     }
 
 
     /// <summary>
-    /// Provides the standard 4-input Object interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 4-input Object interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -495,15 +515,37 @@ namespace BAWSengineNative
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public Object[] GetFileExamplePI(int numArgsOut, Object StartTime, Object preset, 
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset, 
                                Object PresetFile, Object MetaOnly)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset, PresetFile, MetaOnly);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
     }
 
 
     /// <summary>
-    /// Provides an interface for the GetFileExamplePI function in which the input and
+    /// Provides the standard 5-input Object interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset, 
+                               Object PresetFile, Object MetaOnly, Object DBtype)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the GetFileExampleDB function in which the input and
     /// output
     /// arguments are specified as an array of Objects.
     /// </summary>
@@ -517,10 +559,10 @@ namespace BAWSengineNative
     /// <param name= "varArgsIn">Array of Object representing variable input
     /// arguments</param>
     ///
-    [MATLABSignature("GetFileExamplePI", 4, 1, 0)]
-    protected void GetFileExamplePI(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
+    [MATLABSignature("GetFileExampleDB", 5, 1, 0)]
+    protected void GetFileExampleDB(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
     {
-        mcr.EvaluateFunctionForTypeSafeCall("GetFileExamplePI", numArgsOut, ref argsOut, argsIn, varArgsIn);
+        mcr.EvaluateFunctionForTypeSafeCall("GetFileExampleDB", numArgsOut, ref argsOut, argsIn, varArgsIn);
     }
     /// <summary>
     /// Provides a single output, 0-input Objectinterface to the GetSparseData MATLAB
