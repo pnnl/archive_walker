@@ -37,7 +37,7 @@ end
 %
 % If in Hybrid mode, update the end time based on the current system time
 if(strcmp(DataInfo.mode, 'Hybrid'))
-    DataInfo.DateTimeEnd = datestr(datetime('now','TimeZone',DataInfo.TimeZone)-DataInfo.RealTimeRange/60/24,'yyyy-mm-dd HH:MM:SS');
+    DataInfo.DateTimeEnd = datestr(datetime('now','TimeZone','UTC')+DataInfo.UTCoffset-DataInfo.RealTimeRange/60/60/24,'yyyy-mm-dd HH:MM:SS');
 end
 DateTimeEnd = datenum(DataInfo.DateTimeEnd);
 % If statement will evaluate to false if DateTimeEnd is empty (real-time
@@ -67,13 +67,65 @@ elseif(strcmpi(FileInfo.FileType,'PI'))
     focusFile = FocusFileTime;
     FileLength = ResultUpdateInterval;
     DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PresetFileInit);
+    
+    % Data from FocusFileTime to (FocusFileTime+FileLength) will be read.
+    %
+    % If FocusFileTime is in the future, throw an error to avoid being
+    % essentially stuck in matlab during a very long wait. 
+    %
+    % If FocusFileTime+FileLength is in the future, pause until that time
+    % is reached so that all data will be available.
+    %
+    % Only applicable in Real-Time and Hybrid modes (UTCoffset field not set
+    % in Archive mode)
+    if isfield(DataInfo,'UTCoffset')
+        % Current time in data's time zone
+        CurrentTime = datenum(datetime('now','TimeZone','UTC')+DataInfo.UTCoffset);
+        
+        if FocusFileTime > CurrentTime
+            error('Requested data should not be in the future.');
+        elseif (FocusFileTime + FileLength/(60*60*24)) > CurrentTime
+            % CurrentTime is (FocusFileTime+FileLength-CurrentTime) into
+            % the future. Pause for this amount of time so that all
+            % requested data will be available.
+%             disp(['Pausing for ' num2str((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60) ' seconds']);
+            pause((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60);
+        end
+    end
+    
     return
 elseif(strcmpi(FileInfo.FileType,'OpenHistorian'))
     SkippedFiles = 0;
     FocusFileTime = InitialFocusFileTime;
     focusFile = FocusFileTime;
-    FileLength = ResultUpdateInterval;
+    FileLength = ResultUpdateInterval;  
     DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PresetFileInit);
+    
+    % Data from FocusFileTime to (FocusFileTime+FileLength) will be read.
+    %
+    % If FocusFileTime is in the future, throw an error to avoid being
+    % essentially stuck in matlab during a very long wait. 
+    %
+    % If FocusFileTime+FileLength is in the future, pause until that time
+    % is reached so that all data will be available.
+    %
+    % Only applicable in Real-Time and Hybrid modes (UTCoffset field not set
+    % in Archive mode)
+    if isfield(DataInfo,'UTCoffset')
+        % Current time in data's time zone
+        CurrentTime = datenum(datetime('now','TimeZone','UTC')+DataInfo.UTCoffset);
+        
+        if FocusFileTime > CurrentTime
+            error('Requested data should not be in the future.');
+        elseif (FocusFileTime + FileLength/(60*60*24)) > CurrentTime
+            % CurrentTime is (FocusFileTime+FileLength-CurrentTime) into
+            % the future. Pause for this amount of time so that all
+            % requested data will be available.
+%             disp(['Pausing for ' num2str((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60) ' seconds']);
+            pause((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60);
+        end
+    end
+    
     return
 end
 

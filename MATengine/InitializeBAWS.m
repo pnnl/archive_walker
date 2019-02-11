@@ -100,12 +100,14 @@ elseif (strcmp(DataXML.ReaderProperties.Mode.Name, 'RealTime') || ...
         strcmp(DataXML.ReaderProperties.Mode.Name, 'Hybrid'))
     % Real-time and Archiver mode parameters
     
+    UTCoffset = str2double(DataXML.ReaderProperties.Mode.Params.UTCoffset)/24;
+    
     % Start time for processing
     if(strcmp(DataXML.ReaderProperties.Mode.Name,'Hybrid'))
         DateTimeStart = DataXML.ReaderProperties.Mode.Params.DateTimeStart;
     else
         % we will use the current time as the start time; still need to consider time zone
-        DateTimeStart = datestr(datetime('now','TimeZone',DataXML.ReaderProperties.Mode.Params.TimeZone),'yyyy-mm-dd HH:MM:00');
+        DateTimeStart = datestr(datetime('now','TimeZone','UTC')+UTCoffset,'yyyy-mm-dd HH:MM:00');
     end
     
     % Wait time when no future data is available (seconds)
@@ -229,9 +231,10 @@ else
     DataInfo.FutureWait = FutureWait;
     DataInfo.MaxFutureCount = MaxFutureCount;
     
+    DataInfo.UTCoffset = UTCoffset;
+    
     if strcmp(DataInfo.mode, 'Hybrid')
         DataInfo.RealTimeRange = RealTimeRange;
-        DataInfo.TimeZone = DateTimeStart(21:end);
     end
 end
 

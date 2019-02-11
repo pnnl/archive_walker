@@ -16,7 +16,16 @@ else
         % this pause to the first file loaded. 
         if RealTimePause && isempty(DataInfo.DateTimeEnd)
             RealTimePause = false;
-            pause(10);
+            
+            % If a database is being used, the pause doesn't need to be as
+            % long.
+            if strcmpi(FileInfo(idx3).FileType, 'OpenHistorian') || strcmpi(FileInfo(idx3).FileType, 'PI')
+                PauseDuration = 1;
+            else
+                PauseDuration = 10;
+            end
+            
+            pause(PauseDuration);
         end
 
         % ***********

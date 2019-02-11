@@ -22,7 +22,17 @@ ID = ID{KeepIdx};
 %% Load GetHistorianData from C# dll.
 % Note that The ability to unload an assembly is not available in MATLAB,
 % restart MATLAB to release the assembly.
-dllpath  = 'C:\Users\foll154\Documents\GMLC Open Apps\GPA\Xinya\ReadHistorian_0130\ReadHistorian_0130\Release\ReadHistorian.dll'; % Full pathname is required
+if isdeployed
+    % The GUI is calling the function, so point to the matlabDLLs folder
+    % within the GUI folder
+    [~,result] = system('path');
+    SourceDir = char(regexpi(result, 'Path=(.*?);', 'tokens', 'once'));
+    dllpath  = [SourceDir '\matlabDLLs\Release\ReadHistorian.dll']; % Full pathname is required
+else
+    % The function is being called from a Matlab session, so the path must
+    % be specified.
+    dllpath  = 'C:\Users\foll154\Documents\ArchiveWalker\Release\ReadHistorian.dll'; % Full pathname is required
+end
 asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
 
 %% Setup rules to query data from OpenHistorian
