@@ -4,7 +4,7 @@
 %     ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll)
 
 function [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
-    BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
+    BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
     NumProcessingStages,DataInfo,FileInfo,...
     ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath)
 
@@ -21,7 +21,8 @@ clear ConfigAll
 % operate on a block of data sliding through time, while the file
 % detectors operate on data as if it were streaming.
 BlockDetectors = {'Periodogram', 'SpectralCoherence', 'Thevenin','ModeMeter'};
-FileDetectors = {'Ringdown', 'OutOfRangeGeneral','WindRamp'};
+FileDetectors = {'Ringdown', 'OutOfRangeGeneral','WindRamp','DataWriter'};
+OmitFromSparse = {'DataWriter'};
 
 if length(DataXML.ReaderProperties.FilePath) == 1
     % Places the contents in a cell array so that indexing is the same as

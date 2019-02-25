@@ -31,9 +31,13 @@ if isdeployed
 else
     % The function is being called from a Matlab session, so the path must
     % be specified.
-    dllpath  = 'C:\Users\foll154\Documents\ArchiveWalker\Release\ReadHistorian.dll'; % Full pathname is required
+    dllpath  = 'C:\Users\foll154\Documents\GMLC Open Apps\GPA\Xinya\ReadHistorian_0130\ReadHistorian_0130\Release\ReadHistorian.dll'; % Full pathname is required
 end
-asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
+try
+    asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
+catch
+    warning('Path to ReadHistorian.dll may not be accurate in OHreader.m, leading to error.');
+end
 
 %% Setup rules to query data from OpenHistorian
 Configuration                 = struct;
