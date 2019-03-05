@@ -28,7 +28,7 @@ function PMU = GetFileExampleDB(StartTime,preset,PresetFile,MetaOnly,DBtype)
 FileLength = 60;
 StartTime = datenum(StartTime,'mm/dd/yyyy HH:MM:SS');
 if strcmp(DBtype,'PI')
-    [PMU,~,fs] = PIreader(StartTime,0,FileLength,preset,PresetFile);
+    [PMU,~,fs] = PIreaderDLL(StartTime,0,FileLength,preset,PresetFile);
 elseif strcmp(DBtype,'OpenHistorian')
     [PMU,~,fs] = OHreader(StartTime,0,FileLength,preset,PresetFile);
 end
