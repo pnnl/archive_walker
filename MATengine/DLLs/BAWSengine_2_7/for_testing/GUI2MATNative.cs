@@ -1,11 +1,16 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
+<<<<<<< HEAD
 * Date: Fri Jan 25 08:29:08 2019
+=======
+* Date: Wed Mar 06 08:38:14 2019
+>>>>>>> PIdatabase
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
 * ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
+<<<<<<< HEAD
 * ory\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAoscillationApp\
 * AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m,C:\Users\foll154\Documents\BPAo
 * scillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Document
@@ -17,6 +22,19 @@
 * e\GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\
 * MATengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAoscillationApp\AWre
 * pository\MATengine\GUIfunctions\UpdateOBATpreset.m}"
+=======
+* ory\MATengine\GUIfunctions\GetFileExampleDB.m,C:\Users\foll154\Documents\BPAoscillationA
+* pp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAosc
+* illationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Documents\
+* BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\
+* foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.
+* m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rerun
+* Ringdown.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfuncti
+* ons\RerunThevenin.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\
+* GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MA
+* Tengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepo
+* sitory\MATengine\GUIfunctions\WriteMMreport.m}"
+>>>>>>> PIdatabase
 */
 using System;
 using System.Reflection;
@@ -37,6 +55,9 @@ namespace BAWSengineNative
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// FileExample.m
+  /// <newpara></newpara>
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
+  /// FileExampleDB.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
@@ -65,8 +86,13 @@ namespace BAWSengineNative
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
   /// NormalMode.m
   /// <newpara></newpara>
+<<<<<<< HEAD
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Upd
   /// ateOBATpreset.m
+=======
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Wri
+  /// teMMreport.m
+>>>>>>> PIdatabase
   /// </summary>
   /// <remarks>
   /// @Version 4.0
@@ -332,6 +358,241 @@ namespace BAWSengineNative
     protected void GetFileExample(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
     {
         mcr.EvaluateFunctionForTypeSafeCall("GetFileExample", numArgsOut, ref argsOut, argsIn, varArgsIn);
+    }
+    /// <summary>
+    /// Provides a single output, 0-input Objectinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExampleDB()
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", new Object[]{});
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 1-input Objectinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExampleDB(Object StartTime)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 2-input Objectinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExampleDB(Object StartTime, Object preset)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 3-input Objectinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExampleDB(Object StartTime, Object preset, Object PresetFile)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 4-input Objectinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExampleDB(Object StartTime, Object preset, Object PresetFile, 
+                             Object MetaOnly)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 5-input Objectinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object GetFileExampleDB(Object StartTime, Object preset, Object PresetFile, 
+                             Object MetaOnly, Object DBtype)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input Object interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExampleDB(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", new Object[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input Object interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input Object interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input Object interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset, 
+                               Object PresetFile)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 4-input Object interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset, 
+                               Object PresetFile, Object MetaOnly)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 5-input Object interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] GetFileExampleDB(int numArgsOut, Object StartTime, Object preset, 
+                               Object PresetFile, Object MetaOnly, Object DBtype)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the GetFileExampleDB function in which the input and
+    /// output
+    /// arguments are specified as an array of Objects.
+    /// </summary>
+    /// <remarks>
+    /// This method will allocate and return by reference the output argument
+    /// array.<newpara></newpara>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return</param>
+    /// <param name= "argsOut">Array of Object output arguments</param>
+    /// <param name= "argsIn">Array of Object input arguments</param>
+    /// <param name= "varArgsIn">Array of Object representing variable input
+    /// arguments</param>
+    ///
+    [MATLABSignature("GetFileExampleDB", 5, 1, 0)]
+    protected void GetFileExampleDB(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
+    {
+        mcr.EvaluateFunctionForTypeSafeCall("GetFileExampleDB", numArgsOut, ref argsOut, argsIn, varArgsIn);
     }
     /// <summary>
     /// Provides a single output, 0-input Objectinterface to the GetSparseData MATLAB
@@ -2993,11 +3254,16 @@ namespace BAWSengineNative
         mcr.EvaluateFunctionForTypeSafeCall("RunNormalMode", numArgsOut, ref argsOut, argsIn, varArgsIn);
     }
     /// <summary>
+<<<<<<< HEAD
     /// Provides a single output, 0-input Objectinterface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides a single output, 0-input Objectinterface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <returns>An Object containing the first output argument.</returns>
@@ -3005,15 +3271,29 @@ namespace BAWSengineNative
     public Object UpdateOBATpreset()
     {
       return mcr.EvaluateFunction("UpdateOBATpreset", new Object[]{});
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport()
+    {
+      return mcr.EvaluateFunction("WriteMMreport", new Object[]{});
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides a single output, 1-input Objectinterface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides a single output, 1-input Objectinterface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="NewPreset">Input argument #1</param>
@@ -3022,15 +3302,30 @@ namespace BAWSengineNative
     public Object UpdateOBATpreset(Object NewPreset)
     {
       return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport(Object StartTime)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides a single output, 2-input Objectinterface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides a single output, 2-input Objectinterface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="NewPreset">Input argument #1</param>
@@ -3040,15 +3335,31 @@ namespace BAWSengineNative
     public Object UpdateOBATpreset(Object NewPreset, Object Detector)
     {
       return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport(Object StartTime, Object EndTime)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides a single output, 3-input Objectinterface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides a single output, 3-input Objectinterface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="NewPreset">Input argument #1</param>
@@ -3059,15 +3370,32 @@ namespace BAWSengineNative
     public Object UpdateOBATpreset(Object NewPreset, Object Detector, Object AWconfigFile)
     {
       return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector, AWconfigFile);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport(Object StartTime, Object EndTime, Object EventPath)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides a single output, 4-input Objectinterface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides a single output, 4-input Objectinterface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="NewPreset">Input argument #1</param>
@@ -3080,15 +3408,34 @@ namespace BAWSengineNative
                              AWconfigFile, Object OBATpresetFile)
     {
       return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector, AWconfigFile, OBATpresetFile);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport(Object StartTime, Object EndTime, Object EventPath, 
+                          Object ReportType)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides the standard 0-input Object interface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides a single output, 5-input Objectinterface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
@@ -3098,15 +3445,162 @@ namespace BAWSengineNative
     public Object[] UpdateOBATpreset(int numArgsOut)
     {
       return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", new Object[]{});
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport(Object StartTime, Object EndTime, Object EventPath, 
+                          Object ReportType, Object DampThresh)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh);
     }
 
 
     /// <summary>
-    /// Provides the standard 1-input Object interface to the UpdateOBATpreset MATLAB
+    /// Provides a single output, 6-input Objectinterface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport(Object StartTime, Object EndTime, Object EventPath, 
+                          Object ReportType, Object DampThresh, Object EventSepMinutes)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 7-input Objectinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <param name="ReportPath">Input argument #7</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object WriteMMreport(Object StartTime, Object EndTime, Object EventPath, 
+                          Object ReportType, Object DampThresh, Object EventSepMinutes, 
+                          Object ReportPath)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes, ReportPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input Object interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", new Object[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input Object interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut, Object StartTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input Object interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut, Object StartTime, Object EndTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input Object interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut, Object StartTime, Object EndTime, 
+                            Object EventPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath);
+>>>>>>> PIdatabase
+    }
+
+
+    /// <summary>
+<<<<<<< HEAD
+    /// Provides the standard 1-input Object interface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides the standard 4-input Object interface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
@@ -3117,15 +3611,36 @@ namespace BAWSengineNative
     public Object[] UpdateOBATpreset(int numArgsOut, Object NewPreset)
     {
       return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut, Object StartTime, Object EndTime, 
+                            Object EventPath, Object ReportType)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides the standard 2-input Object interface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides the standard 5-input Object interface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
@@ -3137,15 +3652,37 @@ namespace BAWSengineNative
     public Object[] UpdateOBATpreset(int numArgsOut, Object NewPreset, Object Detector)
     {
       return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut, Object StartTime, Object EndTime, 
+                            Object EventPath, Object ReportType, Object DampThresh)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides the standard 3-input Object interface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides the standard 6-input Object interface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
@@ -3159,15 +3696,39 @@ namespace BAWSengineNative
                                Object AWconfigFile)
     {
       return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector, AWconfigFile);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut, Object StartTime, Object EndTime, 
+                            Object EventPath, Object ReportType, Object DampThresh, 
+                            Object EventSepMinutes)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides the standard 4-input Object interface to the UpdateOBATpreset MATLAB
+=======
+    /// Provides the standard 7-input Object interface to the WriteMMreport MATLAB
+>>>>>>> PIdatabase
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
@@ -3182,11 +3743,35 @@ namespace BAWSengineNative
                                Object AWconfigFile, Object OBATpresetFile)
     {
       return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector, AWconfigFile, OBATpresetFile);
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <param name="ReportPath">Input argument #7</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] WriteMMreport(int numArgsOut, Object StartTime, Object EndTime, 
+                            Object EventPath, Object ReportType, Object DampThresh, 
+                            Object EventSepMinutes, Object ReportPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes, ReportPath);
+>>>>>>> PIdatabase
     }
 
 
     /// <summary>
+<<<<<<< HEAD
     /// Provides an interface for the UpdateOBATpreset function in which the input and
+=======
+    /// Provides an interface for the WriteMMreport function in which the input and
+>>>>>>> PIdatabase
     /// output
     /// arguments are specified as an array of Objects.
     /// </summary>
@@ -3194,7 +3779,11 @@ namespace BAWSengineNative
     /// This method will allocate and return by reference the output argument
     /// array.<newpara></newpara>
     /// M-Documentation:
+<<<<<<< HEAD
     /// Read the OBAT preset file into cell A
+=======
+    /// Identify periods separated by at least EventSepSamp samples
+>>>>>>> PIdatabase
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return</param>
     /// <param name= "argsOut">Array of Object output arguments</param>
@@ -3202,10 +3791,17 @@ namespace BAWSengineNative
     /// <param name= "varArgsIn">Array of Object representing variable input
     /// arguments</param>
     ///
+<<<<<<< HEAD
     [MATLABSignature("UpdateOBATpreset", 4, 1, 0)]
     protected void UpdateOBATpreset(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
     {
         mcr.EvaluateFunctionForTypeSafeCall("UpdateOBATpreset", numArgsOut, ref argsOut, argsIn, varArgsIn);
+=======
+    [MATLABSignature("WriteMMreport", 7, 1, 0)]
+    protected void WriteMMreport(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
+    {
+        mcr.EvaluateFunctionForTypeSafeCall("WriteMMreport", numArgsOut, ref argsOut, argsIn, varArgsIn);
+>>>>>>> PIdatabase
     }
 
     /// <summary>
