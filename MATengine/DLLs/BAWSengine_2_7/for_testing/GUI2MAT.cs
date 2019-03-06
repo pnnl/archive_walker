@@ -1,6 +1,6 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Mon Feb 11 15:34:54 2019
+* Date: Wed Mar 06 08:38:14 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
@@ -15,7 +15,8 @@
 * Ringdown.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfuncti
 * ons\RerunThevenin.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\
 * GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MA
-* Tengine\GUIfunctions\RunNormalMode.m}"
+* Tengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepo
+* sitory\MATengine\GUIfunctions\WriteMMreport.m}"
 */
 using System;
 using System.Reflection;
@@ -63,6 +64,9 @@ namespace BAWSengine
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
   /// NormalMode.m
+  /// <newpara></newpara>
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Wri
+  /// teMMreport.m
   /// </summary>
   /// <remarks>
   /// @Version 4.0
@@ -3011,6 +3015,368 @@ namespace BAWSengine
                              FileDirectory, MWArray ConfigFile)
     {
       return mcr.EvaluateFunction(numArgsOut, "RunNormalMode", ControlPath, EventPath, InitializationPath, FileDirectory, ConfigFile);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 0-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport()
+    {
+      return mcr.EvaluateFunction("WriteMMreport", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 1-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 2-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 3-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 4-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 5-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType, MWArray DampThresh)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 6-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType, MWArray DampThresh, MWArray 
+                           EventSepMinutes)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 7-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <param name="ReportPath">Input argument #7</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType, MWArray DampThresh, MWArray 
+                           EventSepMinutes, MWArray ReportPath)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes, ReportPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", new MWArray[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 4-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 5-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType, MWArray DampThresh)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 6-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType, MWArray DampThresh, 
+                             MWArray EventSepMinutes)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 7-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <param name="ReportPath">Input argument #7</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType, MWArray DampThresh, 
+                             MWArray EventSepMinutes, MWArray ReportPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes, ReportPath);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the WriteMMreport function in which the input and
+    /// output
+    /// arguments are specified as an array of MWArrays.
+    /// </summary>
+    /// <remarks>
+    /// This method will allocate and return by reference the output argument
+    /// array.<newpara></newpara>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return</param>
+    /// <param name= "argsOut">Array of MWArray output arguments</param>
+    /// <param name= "argsIn">Array of MWArray input arguments</param>
+    ///
+    public void WriteMMreport(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    {
+      mcr.EvaluateFunction("WriteMMreport", numArgsOut, ref argsOut, argsIn);
     }
 
 

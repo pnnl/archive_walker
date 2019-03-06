@@ -6,11 +6,11 @@ if isdeployed
     % within the GUI folder
     [~,result] = system('path');
     SourceDir = char(regexpi(result, 'Path=(.*?);', 'tokens', 'once'));
-    dllpath  = [SourceDir '\matlabDLLs\PIconnect\OpenPI.dll']; % Full pathname is required
+    dllpath  = [SourceDir '\matlabDLLs\PI\OpenPI.dll']; % Full pathname is required
 else
     % The function is being called from a Matlab session, so the path must
     % be specified.
-    dllpath  = 'C:\Users\foll154\Documents\BPAoscillationApp\PI\OpenPI_02282019\dll\OpenPI.dll'; % Full pathname is required
+    dllpath  = 'C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\matlabDLLs\PI\OpenPI.dll'; % Full pathname is required
 end
 try
     asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
