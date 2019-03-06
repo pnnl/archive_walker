@@ -18,9 +18,6 @@
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
             SparseData.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ins
-            pectionAnalysis.m
-            <newpara></newpara>
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
             dMMdata.m
             <newpara></newpara>
@@ -42,13 +39,8 @@
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
             NormalMode.m
             <newpara></newpara>
-<<<<<<< HEAD
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Upd
-            ateOBATpreset.m
-=======
             C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Wri
             teMMreport.m
->>>>>>> PIdatabase
             </summary>
             <remarks>
             @Version 4.0
@@ -536,153 +528,6 @@
              array.<newpara></newpara>
              M-Documentation:
              Convert string times to datetime
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return</param>
-             <param name= "argsOut">Array of Object output arguments</param>
-             <param name= "argsIn">Array of Object input arguments</param>
-             <param name= "varArgsIn">Array of Object representing variable input
-             arguments</param>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis">
-             <summary>
-             Provides a single output, 0-input Objectinterface to the InspectionAnalysis
-             MATLAB function.
-             </summary>
-             <remarks>
-             </remarks>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object)">
-             <summary>
-             Provides a single output, 1-input Objectinterface to the InspectionAnalysis
-             MATLAB function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="Func">Input argument #1</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object,System.Object)">
-             <summary>
-             Provides a single output, 2-input Objectinterface to the InspectionAnalysis
-             MATLAB function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="Func">Input argument #1</param>
-             <param name="Data">Input argument #2</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object,System.Object,System.Object)">
-             <summary>
-             Provides a single output, 3-input Objectinterface to the InspectionAnalysis
-             MATLAB function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="Func">Input argument #1</param>
-             <param name="Data">Input argument #2</param>
-             <param name="t">Input argument #3</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object,System.Object,System.Object,System.Object)">
-             <summary>
-             Provides a single output, 4-input Objectinterface to the InspectionAnalysis
-             MATLAB function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="Func">Input argument #1</param>
-             <param name="Data">Input argument #2</param>
-             <param name="t">Input argument #3</param>
-             <param name="Params">Input argument #4</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32)">
-             <summary>
-             Provides the standard 0-input Object interface to the InspectionAnalysis MATLAB
-             function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object)">
-             <summary>
-             Provides the standard 1-input Object interface to the InspectionAnalysis MATLAB
-             function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="Func">Input argument #1</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object,System.Object)">
-             <summary>
-             Provides the standard 2-input Object interface to the InspectionAnalysis MATLAB
-             function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="Func">Input argument #1</param>
-             <param name="Data">Input argument #2</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object,System.Object,System.Object)">
-             <summary>
-             Provides the standard 3-input Object interface to the InspectionAnalysis MATLAB
-             function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="Func">Input argument #1</param>
-             <param name="Data">Input argument #2</param>
-             <param name="t">Input argument #3</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object,System.Object,System.Object,System.Object)">
-             <summary>
-             Provides the standard 4-input Object interface to the InspectionAnalysis MATLAB
-             function.
-             </summary>
-             <remarks>
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="Func">Input argument #1</param>
-             <param name="Data">Input argument #2</param>
-             <param name="t">Input argument #3</param>
-             <param name="Params">Input argument #4</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object[]@,System.Object[],System.Object[])">
-             <summary>
-             Provides an interface for the InspectionAnalysis function in which the input and
-             output
-             arguments are specified as an array of Objects.
-             </summary>
-             <remarks>
-             This method will allocate and return by reference the output argument
-             array.<newpara></newpara>
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of Object output arguments</param>
@@ -2415,52 +2260,25 @@
              arguments</param>
             
         </member>
-<<<<<<< HEAD
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset">
-             <summary>
-             Provides a single output, 0-input Objectinterface to the UpdateOBATpreset MATLAB
-=======
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport">
              <summary>
              Provides a single output, 0-input Objectinterface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-=======
              Identify periods separated by at least EventSepSamp samples
->>>>>>> PIdatabase
              </remarks>
              <returns>An Object containing the first output argument.</returns>
             
         </member>
-<<<<<<< HEAD
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object)">
-             <summary>
-             Provides a single output, 1-input Objectinterface to the UpdateOBATpreset MATLAB
-=======
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object)">
              <summary>
              Provides a single output, 1-input Objectinterface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="NewPreset">Input argument #1</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object,System.Object)">
-             <summary>
-             Provides a single output, 2-input Objectinterface to the UpdateOBATpreset MATLAB
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="StartTime">Input argument #1</param>
@@ -2470,23 +2288,10 @@
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object)">
              <summary>
              Provides a single output, 2-input Objectinterface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="NewPreset">Input argument #1</param>
-             <param name="Detector">Input argument #2</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object,System.Object,System.Object)">
-             <summary>
-             Provides a single output, 3-input Objectinterface to the UpdateOBATpreset MATLAB
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="StartTime">Input argument #1</param>
@@ -2497,24 +2302,10 @@
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object)">
              <summary>
              Provides a single output, 3-input Objectinterface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="NewPreset">Input argument #1</param>
-             <param name="Detector">Input argument #2</param>
-             <param name="AWconfigFile">Input argument #3</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object,System.Object,System.Object,System.Object)">
-             <summary>
-             Provides a single output, 4-input Objectinterface to the UpdateOBATpreset MATLAB
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="StartTime">Input argument #1</param>
@@ -2526,25 +2317,10 @@
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object,System.Object)">
              <summary>
              Provides a single output, 4-input Objectinterface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="NewPreset">Input argument #1</param>
-             <param name="Detector">Input argument #2</param>
-             <param name="AWconfigFile">Input argument #3</param>
-             <param name="OBATpresetFile">Input argument #4</param>
-             <returns>An Object containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32)">
-             <summary>
-             Provides the standard 0-input Object interface to the UpdateOBATpreset MATLAB
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="StartTime">Input argument #1</param>
@@ -2557,16 +2333,10 @@
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object,System.Object,System.Object)">
              <summary>
              Provides a single output, 5-input Objectinterface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="StartTime">Input argument #1</param>
@@ -2672,30 +2442,17 @@
              <param name="StartTime">Input argument #1</param>
              <param name="EndTime">Input argument #2</param>
              <param name="EventPath">Input argument #3</param>
->>>>>>> PIdatabase
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
         </member>
-<<<<<<< HEAD
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object)">
-             <summary>
-             Provides the standard 1-input Object interface to the UpdateOBATpreset MATLAB
-=======
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object)">
              <summary>
              Provides the standard 4-input Object interface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="NewPreset">Input argument #1</param>
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
@@ -2703,31 +2460,17 @@
              <param name="EndTime">Input argument #2</param>
              <param name="EventPath">Input argument #3</param>
              <param name="ReportType">Input argument #4</param>
->>>>>>> PIdatabase
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
         </member>
-<<<<<<< HEAD
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object,System.Object)">
-             <summary>
-             Provides the standard 2-input Object interface to the UpdateOBATpreset MATLAB
-=======
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
              <summary>
              Provides the standard 5-input Object interface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="NewPreset">Input argument #1</param>
-             <param name="Detector">Input argument #2</param>
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
@@ -2736,32 +2479,17 @@
              <param name="EventPath">Input argument #3</param>
              <param name="ReportType">Input argument #4</param>
              <param name="DampThresh">Input argument #5</param>
->>>>>>> PIdatabase
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
         </member>
-<<<<<<< HEAD
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object,System.Object,System.Object)">
-             <summary>
-             Provides the standard 3-input Object interface to the UpdateOBATpreset MATLAB
-=======
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
              <summary>
              Provides the standard 6-input Object interface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="NewPreset">Input argument #1</param>
-             <param name="Detector">Input argument #2</param>
-             <param name="AWconfigFile">Input argument #3</param>
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
@@ -2771,33 +2499,17 @@
              <param name="ReportType">Input argument #4</param>
              <param name="DampThresh">Input argument #5</param>
              <param name="EventSepMinutes">Input argument #6</param>
->>>>>>> PIdatabase
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
         </member>
-<<<<<<< HEAD
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object,System.Object,System.Object,System.Object)">
-             <summary>
-             Provides the standard 4-input Object interface to the UpdateOBATpreset MATLAB
-=======
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
              <summary>
              Provides the standard 7-input Object interface to the WriteMMreport MATLAB
->>>>>>> PIdatabase
              function.
              </summary>
              <remarks>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="NewPreset">Input argument #1</param>
-             <param name="Detector">Input argument #2</param>
-             <param name="AWconfigFile">Input argument #3</param>
-             <param name="OBATpresetFile">Input argument #4</param>
-=======
              Identify periods separated by at least EventSepSamp samples
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
@@ -2808,20 +2520,13 @@
              <param name="DampThresh">Input argument #5</param>
              <param name="EventSepMinutes">Input argument #6</param>
              <param name="ReportPath">Input argument #7</param>
->>>>>>> PIdatabase
              <returns>An Array of length "numArgsOut" containing the output
              arguments.</returns>
             
         </member>
-<<<<<<< HEAD
-        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object[]@,System.Object[],System.Object[])">
-             <summary>
-             Provides an interface for the UpdateOBATpreset function in which the input and
-=======
         <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object[]@,System.Object[],System.Object[])">
              <summary>
              Provides an interface for the WriteMMreport function in which the input and
->>>>>>> PIdatabase
              output
              arguments are specified as an array of Objects.
              </summary>
@@ -2829,11 +2534,7 @@
              This method will allocate and return by reference the output argument
              array.<newpara></newpara>
              M-Documentation:
-<<<<<<< HEAD
-             Read the OBAT preset file into cell A
-=======
              Identify periods separated by at least EventSepSamp samples
->>>>>>> PIdatabase
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of Object output arguments</param>
