@@ -196,6 +196,12 @@
     <Compile Include="Views\DataConfigStagesTabInSettings.xaml.vb">
       <DependentUpon>DataConfigStagesTabInSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DataWriterDetectorTab.xaml.vb">
+      <DependentUpon>DataWriterDetectorTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DataWriterDetectorView.xaml.vb">
+      <DependentUpon>DataWriterDetectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DetectorConfigTabInSettings.xaml.vb">
       <DependentUpon>DetectorConfigTabInSettings.xaml</DependentUpon>
     </Compile>
@@ -412,6 +418,14 @@
     <Page Include="Views\DataConfigStagesTabInSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DataWriterDetectorTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DataWriterDetectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DetectorConfigTabInSettings.xaml">
       <Generator>MSBuild:Compile</Generator>

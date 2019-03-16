@@ -23,10 +23,10 @@
             <Setter Property="Height" Value="16"></Setter>
         </Style>
         <DataTemplate DataType="{x:Type svm:SettingsViewModel}">
-            <sv:SettingsView/>
+            <sv:TabControlForSettingsWindow/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type rvm:ResultsViewModel}">
-            <rv:ResultsMainView/>
+            <rv:ResultsTabControl/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type sgnlmngr:SignalManager}">
             <sgnlmngrview:SignalInspectionView/>

@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows
+Imports System.Windows.Input
 Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.ReadConfigXml
@@ -11,6 +12,7 @@ Namespace ViewModels
         Inherits ViewModelBase
         Public Sub New()
             _detectorList = New ObservableCollection(Of DetectorBase)
+            _dataWriterDetectorList = New ObservableCollection(Of DataWriterDetectorViewModel)
             _alarmingList = New ObservableCollection(Of AlarmingDetectorBase)
             _model = New DetectorConfigModel()
             _resultUpdateIntervalVisibility = Visibility.Collapsed
@@ -22,12 +24,13 @@ Namespace ViewModels
             _alarmingDetectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}
+            _addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
         End Sub
-
         Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfigModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detectorConfigure
             Dim newDetectorList = New ObservableCollection(Of DetectorBase)
+            Dim newDataWriterDetectorList = New ObservableCollection(Of DataWriterDetectorViewModel)
             For Each detector In _model.DetectorList
                 Select Case detector.Name
                     Case "Out-Of-Range Detector"
@@ -42,11 +45,14 @@ Namespace ViewModels
                     Case "Spectral Coherence Forced Oscillation Detector"
                         newDetectorList.Add(New SpectralCoherenceDetector(detector, signalsMgr))
                         ResultUpdateIntervalVisibility = Visibility.Visible
+                    Case "Data Writer Detector"
+                        newDataWriterDetectorList.Add(New DataWriterDetectorViewModel(detector, signalsMgr))
                     Case Else
                         Throw New Exception("Unknown element found in DetectorConfig in config file.")
                 End Select
             Next
             DetectorList = newDetectorList
+            DataWriterDetectorList = newDataWriterDetectorList
             Dim newAlarmingList = New ObservableCollection(Of AlarmingDetectorBase)
             For Each alarm In _model.AlarmingList
                 Select Case alarm.Name
@@ -104,6 +110,16 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        Private _dataWriterDetectorList As ObservableCollection(Of DataWriterDetectorViewModel)
+        Public Property DataWriterDetectorList As ObservableCollection(Of DataWriterDetectorViewModel)
+            Get
+                Return _dataWriterDetectorList
+            End Get
+            Set(ByVal value As ObservableCollection(Of DataWriterDetectorViewModel))
+                _dataWriterDetectorList = value
+                OnPropertyChanged()
+            End Set
+        End Property
         Private _alarmingList As ObservableCollection(Of AlarmingDetectorBase)
         Public Property AlarmingList As ObservableCollection(Of AlarmingDetectorBase)
             Get
@@ -144,6 +160,18 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        Private _addDataWriterDetector As ICommand
+        Public Property AddDataWriterDetector As ICommand
+            Get
+                Return _addDataWriterDetector
+            End Get
+            Set(value As ICommand)
+                _addDataWriterDetector = value
+            End Set
+        End Property
+        Private Sub _addADataWriterDetector(obj As Object)
+            DataWriterDetectorList.Add(New DataWriterDetectorViewModel)
+        End Sub
     End Class
 
     Public Class PeriodogramDetector
@@ -977,6 +1005,81 @@ Namespace ViewModels
             End Set
         End Property
 
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
+    End Class
+
+    Public Class DataWriterDetectorViewModel
+        Inherits DetectorBase
+        Public Sub New()
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            _model = New DataWriterDetectorModel()
+            IsExpanded = True
+        End Sub
+
+        Public Sub New(detector As DataWriterDetectorModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = detector
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & Name)
+            End Try
+            Try
+                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error sorting output signals by PMU in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByDataWriterDetectorInput.Add(ThisStepInputsAsSignalHerachyByType)
+        End Sub
+        Private _model As DataWriterDetectorModel
+        Public Property Model As DataWriterDetectorModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As DataWriterDetectorModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Overrides ReadOnly Property Name As String
+            Get
+                Return "Data Writer Detector"
+            End Get
+        End Property
+        Private _savePath As String
+        Public Property SavePath As String
+            Get
+                Return _model.SavePath
+            End Get
+            Set(ByVal value As String)
+                _model.SavePath = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _separatePMUs As Boolean
+        Public Property SeparatePMUs As Boolean
+            Get
+                Return _model.SeparatePMUs
+            End Get
+            Set(ByVal value As Boolean)
+                _model.SeparatePMUs = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _mnemonic As String
+        Public Property Mnemonic As String
+            Get
+                Return _model.Mnemonic
+            End Get
+            Set(ByVal value As String)
+                _model.Mnemonic = value
+                OnPropertyChanged()
+            End Set
+        End Property
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return InputChannels.Count > 0
         End Function

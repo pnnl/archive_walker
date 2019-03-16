@@ -45,6 +45,8 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByDataWriterDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+
             _engine = MatLabEngine.Instance;
             _dataViewGroupMethods = new List<string>(new string[] { "View Signal by Type", "View Signal by PMU" });
             AddPlot = new RelayCommand(_addAPlot);
@@ -89,6 +91,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByDataWriterDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
 
         private MatLabEngine _engine;
@@ -2377,6 +2380,19 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _groupedSignalByDetectorInput = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<SignalTypeHierachy> _groupedSignalByDataWriterDetectorInput;
+        public ObservableCollection<SignalTypeHierachy> GroupedSignalByDataWriterDetectorInput
+        {
+            get
+            {
+                return _groupedSignalByDataWriterDetectorInput;
+            }
+            set
+            {
+                _groupedSignalByDataWriterDetectorInput = value;
                 OnPropertyChanged();
             }
         }
