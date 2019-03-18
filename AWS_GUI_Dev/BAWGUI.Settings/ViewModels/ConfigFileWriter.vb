@@ -578,6 +578,23 @@ Namespace ViewModels
                 detectorConfig.<Configuration>.LastOrDefault.Add(element)
                 'End If
             Next
+            For Each detector In _svm.DetectorConfigure.DataWriterDetectorList
+                Dim element As XElement
+                Dim dt = DirectCast(detector, DataWriterDetectorViewModel)
+                element = <DataWriter></DataWriter>
+                If Not String.IsNullOrEmpty(dt.SavePath) Then
+                    element.Add(<SavePath><%= dt.SavePath %></SavePath>)
+                End If
+                element.Add(<SeparatePMUs><%= dt.SeparatePMUs.ToString.ToUpper %></SeparatePMUs>)
+                If Not dt.SeparatePMUs AndAlso Not String.IsNullOrEmpty(dt.Mnemonic) Then
+                    element.Add(<Mnemonic><%= dt.Mnemonic %></Mnemonic>)
+                Else
+                    element.Add(<Mnemonic></Mnemonic>)
+                End If
+                Dim PMUSignalDictionary = detector.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(element, PMUSignalDictionary)
+                detectorConfig.<Configuration>.LastOrDefault.Add(element)
+            Next
             detectorConfig.<Configuration>.LastOrDefault.Add(<Alarming></Alarming>)
             For Each alarm In _svm.DetectorConfigure.AlarmingList
                 Dim element As XElement

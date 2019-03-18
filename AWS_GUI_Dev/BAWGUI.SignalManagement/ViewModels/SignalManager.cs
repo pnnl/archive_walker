@@ -1675,6 +1675,16 @@ namespace BAWGUI.SignalManagement.ViewModels
                 else
                     stepInput.SignalSignature.IsChecked = false;
             }
+            foreach (var stepInput in GroupedSignalByDataWriterDetectorInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
         }
         public void PostProcessDetermineAllParentNodeStatus()
         {
@@ -1952,7 +1962,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                             group.SignalSignature.IsEnabled = true;
                     }
                 }
-                else if (_currentTabIndex == 4)
+                else if (_currentTabIndex == 4 || _currentTabIndex == 5)
                 {
                     foreach (var group in ReGroupedRawSignalsByType)
                     {
@@ -2109,7 +2119,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 foreach (var group in AllProcessConfigOutputGroupedByType)
                     group.SignalSignature.IsEnabled = true;
             }
-            else if (_currentTabIndex == 4)
+            else if (_currentTabIndex == 4 || _currentTabIndex == 5)
             {
                 foreach (var group in ReGroupedRawSignalsByType)
                 {

@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows
+Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
@@ -12,7 +13,7 @@ Namespace ViewModels
         Inherits ViewModelBase
         Public Sub New()
             _detectorList = New ObservableCollection(Of DetectorBase)
-            _dataWriterDetectorList = New ObservableCollection(Of DataWriterDetectorViewModel)
+            _dataWriterDetectorList = New ObservableCollection(Of DetectorBase)
             _alarmingList = New ObservableCollection(Of AlarmingDetectorBase)
             _model = New DetectorConfigModel()
             _resultUpdateIntervalVisibility = Visibility.Collapsed
@@ -24,13 +25,15 @@ Namespace ViewModels
             _alarmingDetectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}
-            _addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
+            '_addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
+            _signalsMgr = SignalManager.Instance
+            _browseSavePath = New DelegateCommand(AddressOf _openSavePath, AddressOf CanExecute)
         End Sub
         Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfigModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detectorConfigure
             Dim newDetectorList = New ObservableCollection(Of DetectorBase)
-            Dim newDataWriterDetectorList = New ObservableCollection(Of DataWriterDetectorViewModel)
+            Dim newDataWriterDetectorList = New ObservableCollection(Of DetectorBase)
             For Each detector In _model.DetectorList
                 Select Case detector.Name
                     Case "Out-Of-Range Detector"
@@ -68,8 +71,9 @@ Namespace ViewModels
 
             Next
             AlarmingList = newAlarmingList
+            _signalsMgr = signalsMgr
         End Sub
-
+        Private _signalsMgr As SignalManager
         Private _model As DetectorConfigModel
         Public Property Model As DetectorConfigModel
             Get
@@ -110,12 +114,12 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private _dataWriterDetectorList As ObservableCollection(Of DataWriterDetectorViewModel)
-        Public Property DataWriterDetectorList As ObservableCollection(Of DataWriterDetectorViewModel)
+        Private _dataWriterDetectorList As ObservableCollection(Of DetectorBase)
+        Public Property DataWriterDetectorList As ObservableCollection(Of DetectorBase)
             Get
                 Return _dataWriterDetectorList
             End Get
-            Set(ByVal value As ObservableCollection(Of DataWriterDetectorViewModel))
+            Set(ByVal value As ObservableCollection(Of DetectorBase))
                 _dataWriterDetectorList = value
                 OnPropertyChanged()
             End Set
@@ -160,17 +164,45 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private _addDataWriterDetector As ICommand
-        Public Property AddDataWriterDetector As ICommand
+        'Private _addDataWriterDetector As ICommand
+        'Public Property AddDataWriterDetector As ICommand
+        '    Get
+        '        Return _addDataWriterDetector
+        '    End Get
+        '    Set(value As ICommand)
+        '        _addDataWriterDetector = value
+        '    End Set
+        'End Property
+        'Private Sub _addADataWriterDetector(obj As Object)
+        '    Dim newDetector = New DataWriterDetectorViewModel
+        '    newDetector.IsExpanded = True
+        '    newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalsMgr.GroupedSignalByDataWriterDetectorInput.Count + 1).ToString & " " & newDetector.Name
+        '    _signalsMgr.GroupedSignalByDataWriterDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+        '    DataWriterDetectorList.Add(newDetector)
+        'End Sub
+        Private _lastSavePath As String
+        Private _browseSavePath As ICommand
+        Public Property BrowseSavePath As ICommand
             Get
-                Return _addDataWriterDetector
+                Return _browseSavePath
             End Get
-            Set(value As ICommand)
-                _addDataWriterDetector = value
+            Set(ByVal value As ICommand)
+                _browseSavePath = value
             End Set
         End Property
-        Private Sub _addADataWriterDetector(obj As Object)
-            DataWriterDetectorList.Add(New DataWriterDetectorViewModel)
+        Private Sub _openSavePath(obj As Object)
+            Dim openDirectoryDialog As New FolderBrowserDialog()
+            openDirectoryDialog.Description = "Select the save path"
+            If _lastSavePath Is Nothing Then
+                openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+            Else
+                openDirectoryDialog.SelectedPath = _lastSavePath
+            End If
+            openDirectoryDialog.ShowNewFolderButton = True
+            If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+                _lastSavePath = openDirectoryDialog.SelectedPath
+                obj.SavePath = openDirectoryDialog.SelectedPath
+            End If
         End Sub
     End Class
 
@@ -1016,13 +1048,13 @@ Namespace ViewModels
             InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
             _model = New DataWriterDetectorModel()
-            IsExpanded = True
+            IsExpanded = False
+            '_browseSavePath = New DelegateCommand(AddressOf _openSavePath, AddressOf CanExecute)
         End Sub
-
         Public Sub New(detector As DataWriterDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
-            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDataWriterDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
             Catch ex As Exception
@@ -1083,6 +1115,30 @@ Namespace ViewModels
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return InputChannels.Count > 0
         End Function
+        'Private _lastSavePath As String
+        'Private _browseSavePath As ICommand
+        'Public Property BrowseSavePath As ICommand
+        '    Get
+        '        Return _browseSavePath
+        '    End Get
+        '    Set(ByVal value As ICommand)
+        '        _browseSavePath = value
+        '    End Set
+        'End Property
+        'Private Sub _openSavePath(obj As Object)
+        '    Dim openDirectoryDialog As New FolderBrowserDialog()
+        '    openDirectoryDialog.Description = "Select the save path"
+        '    If _lastSavePath Is Nothing Then
+        '        openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+        '    Else
+        '        openDirectoryDialog.SelectedPath = _lastSavePath
+        '    End If
+        '    openDirectoryDialog.ShowNewFolderButton = True
+        '    If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+        '        _lastSavePath = openDirectoryDialog.SelectedPath
+        '        SavePath = openDirectoryDialog.SelectedPath
+        '    End If
+        'End Sub
     End Class
 
     'Public Enum DetectorModeType

@@ -130,6 +130,7 @@ Namespace ViewModels
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllPostProcessOutputGroupedByPMU, False)
 
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByDetectorInput, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByDataWriterDetectorInput, False)
 
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByPMU, False)
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByType, False)
@@ -172,6 +173,16 @@ Namespace ViewModels
                 Try
                     Dim selectedFound = False
                     For Each dt In DetectorConfigure.DetectorList
+                        If dt.IsStepSelected Then
+                            dt.IsStepSelected = False
+                            For Each signal In dt.InputChannels
+                                signal.IsChecked = False
+                            Next
+                            selectedFound = True
+                            Exit For
+                        End If
+                    Next
+                    For Each dt In DetectorConfigure.DataWriterDetectorList
                         If dt.IsStepSelected Then
                             dt.IsStepSelected = False
                             For Each signal In dt.InputChannels
@@ -314,7 +325,62 @@ Namespace ViewModels
 
 #End Region
 
-
+#Region "Data writer detector tab controls"
+        Private _addDataWriterDetector As ICommand
+        Public Property AddDataWriterDetector As ICommand
+            Get
+                Return _addDataWriterDetector
+            End Get
+            Set(value As ICommand)
+                _addDataWriterDetector = value
+            End Set
+        End Property
+        Private Sub _addADataWriterDetector(obj As Object)
+            _aDetectorStepDeSelected()
+            Dim newDetector = New DataWriterDetectorViewModel
+            newDetector.IsExpanded = True
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalMgr.GroupedSignalByDataWriterDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            _signalMgr.GroupedSignalByDataWriterDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            DetectorConfigure.DataWriterDetectorList.Add(newDetector)
+            _selectedADetector(newDetector)
+        End Sub
+        Private _deleteDataWriterDetector As ICommand
+        Public Property DeleteDataWriterDetector As ICommand
+            Get
+                Return _deleteDataWriterDetector
+            End Get
+            Set(ByVal value As ICommand)
+                _deleteDataWriterDetector = value
+            End Set
+        End Property
+        Private Sub _deleteADataWriterDetector(obj As Object)
+            If CurrentSelectedStep IsNot obj Then
+                _aDetectorStepDeSelected()
+            End If
+            Dim result = Forms.MessageBox.Show("Delete this data writer detector?", "Warning!", MessageBoxButtons.OKCancel)
+            If result = DialogResult.OK Then
+                Try
+                    Dim newlist = New ObservableCollection(Of DetectorBase)(DetectorConfigure.DataWriterDetectorList)
+                    newlist.Remove(obj)
+                    DetectorConfigure.DataWriterDetectorList = newlist
+                    _addLog("Detector " & obj.Name & " is deleted!")
+                    _signalMgr.GroupedSignalByDataWriterDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
+                    For index = 1 To _signalMgr.GroupedSignalByDataWriterDetectorInput.Count
+                        _signalMgr.GroupedSignalByDataWriterDetectorInput(index - 1).SignalSignature.SignalName = "Detector " & index.ToString & " " & DetectorConfigure.DataWriterDetectorList(index - 1).Name
+                    Next
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        _deSelectAllDetectors()
+                    End If
+                Catch ex As Exception
+                    Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
+                End Try
+            Else
+                Exit Sub
+            End If
+        End Sub
+#End Region
     End Class
 
 End Namespace
