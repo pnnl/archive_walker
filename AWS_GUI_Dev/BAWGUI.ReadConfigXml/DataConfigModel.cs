@@ -199,6 +199,7 @@ namespace BAWGUI.ReadConfigXml
                     MaxNoFutureCount = mode.Element("Params").Element("MaxNoFutureCount").Value;
                     FutureWait = mode.Element("Params").Element("FutureWait").Value;
                     MaxFutureCount = mode.Element("Params").Element("MaxFutureCount").Value;
+                    UTCoffset = mode.Element("Params").Element("UTCoffset").Value;
                     break;
                 case ModeType.Hybrid:
                     DateTimeStart = mode.Element("Params").Element("DateTimeStart").Value;
@@ -207,6 +208,7 @@ namespace BAWGUI.ReadConfigXml
                     FutureWait = mode.Element("Params").Element("FutureWait").Value;
                     MaxFutureCount = mode.Element("Params").Element("MaxFutureCount").Value;
                     RealTimeRange = mode.Element("Params").Element("RealTimeRange").Value;
+                    UTCoffset = mode.Element("Params").Element("UTCoffset").Value;
                     break;
                 default:
                     throw new Exception("Mode type not recognized.");
@@ -222,6 +224,7 @@ namespace BAWGUI.ReadConfigXml
         public string FutureWait { get; set; }
         public string MaxFutureCount { get; set; }
         public string RealTimeRange { get; set; }
+        public string UTCoffset { get; set; }
     }
 
     public class InputFileInfoModel

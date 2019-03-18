@@ -74,8 +74,8 @@ Namespace ViewModels
                         dtEnd = DateTime.Now
                         'Throw New Exception("Error parsing end time.")
                     End Try
-                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
-                    Dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss")
                     Dim parameters As XElement = <Params>
                                                      <DateTimeStart><%= dtStringStart %></DateTimeStart>
                                                      <DateTimeEnd><%= dtStringEnd %></DateTimeEnd>
@@ -87,8 +87,9 @@ Namespace ViewModels
                     Catch ex As Exception
                         Throw New Exception("Error parsing start time.")
                     End Try
-                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
                     Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= _svm.DataConfigure.ReaderProperty.UTCoffset %></UTCoffset>
                                                      <DateTimeStart><%= dtStringStart %></DateTimeStart>
                                                      <NoFutureWait><%= _svm.DataConfigure.ReaderProperty.NoFutureWait %></NoFutureWait>
                                                      <MaxNoFutureCount><%= _svm.DataConfigure.ReaderProperty.MaxNoFutureCount %></MaxNoFutureCount>
@@ -99,6 +100,7 @@ Namespace ViewModels
                     mode.Add(parameters)
                 Case ModeType.RealTime
                     Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= _svm.DataConfigure.ReaderProperty.UTCoffset %></UTCoffset>
                                                      <NoFutureWait><%= _svm.DataConfigure.ReaderProperty.NoFutureWait %></NoFutureWait>
                                                      <MaxNoFutureCount><%= _svm.DataConfigure.ReaderProperty.MaxNoFutureCount %></MaxNoFutureCount>
                                                      <FutureWait><%= _svm.DataConfigure.ReaderProperty.FutureWait %></FutureWait>
