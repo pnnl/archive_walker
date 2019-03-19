@@ -1462,7 +1462,7 @@ namespace BAWGUI.ReadConfigXml
         {
             get
             {
-                return "Data Writer Detector";
+                return "Data Writer";
             }
         }
         public string SavePath { get; set; }

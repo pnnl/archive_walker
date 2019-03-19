@@ -110,6 +110,13 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding SignalMgr.ReGroupedRawSignalsByType}"/>
                         </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="5"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.ReGroupedRawSignalsByType}"/>
+                        </MultiDataTrigger>
                         <!--<DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type">
                             <Setter Property="ItemsSource" Value="{Binding GroupedRawSignalsByType}"/>
                         </DataTrigger>-->
@@ -178,6 +185,20 @@
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="4"/>
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDetectorInput}"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input to Detectors by Step"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="5"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDetectorInput}"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="5"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDataWriterDetectorInput}"/>
                         </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>

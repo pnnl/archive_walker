@@ -357,7 +357,7 @@ Namespace ViewModels
             If CurrentSelectedStep IsNot obj Then
                 _aDetectorStepDeSelected()
             End If
-            Dim result = Forms.MessageBox.Show("Delete this data writer detector?", "Warning!", MessageBoxButtons.OKCancel)
+            Dim result = Forms.MessageBox.Show("Delete this data writer?", "Warning!", MessageBoxButtons.OKCancel)
             If result = DialogResult.OK Then
                 Try
                     Dim newlist = New ObservableCollection(Of DetectorBase)(DetectorConfigure.DataWriterDetectorList)

@@ -69,7 +69,7 @@ Namespace Converters
             If values(0) IsNot Nothing AndAlso TypeOf values(0) Is DataWriterDetectorViewModel Then
                 str = (values(1).IndexOf(values(0)) + 1).ToString & " - " & values(0).Name
             Else
-                str = "No detector Selected Yet!"
+                str = "No Data Writer Selected Yet!"
             End If
             Return str
         End Function

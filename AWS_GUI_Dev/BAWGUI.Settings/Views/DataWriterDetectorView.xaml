@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <coreconverter:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
-            <coreconverter:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <coreconverter:DataWriterExpanderHeaderConverter x:Key="DataWriterExpanderHeaderConverter"/>
             <coreconverter:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -31,7 +31,7 @@
                     <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
                         <TextBlock VerticalAlignment="Center">
                             <TextBlock.Text>
-                                <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                                <MultiBinding Converter="{StaticResource DataWriterExpanderHeaderConverter}">
                                     <Binding/>
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
                                 </MultiBinding>
@@ -70,7 +70,7 @@
                             </Button>
                             <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="150" VerticalAlignment="Center" Content="Separate Data by PMU:" HorizontalAlignment="Left"/>
                             <CheckBox Grid.Row="1" Grid.Column="1" Margin="0,1" VerticalAlignment="Center" IsChecked="{Binding SeparatePMUs}" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="150" VerticalAlignment="Center" Content="File Name:" HorizontalAlignment="Left" Visibility="{Binding SeparatePMUs, Converter={StaticResource InverseBooleanVisibilityConverter}}"/>
+                            <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="150" VerticalAlignment="Center" Content="File Mnemonic:" HorizontalAlignment="Left" Visibility="{Binding SeparatePMUs, Converter={StaticResource InverseBooleanVisibilityConverter}}"/>
                             <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="450" VerticalAlignment="Center" Text="{Binding Mnemonic}" HorizontalAlignment="Left" Visibility="{Binding SeparatePMUs, Converter={StaticResource InverseBooleanVisibilityConverter}}"/>
                         </Grid>
                     </Grid>

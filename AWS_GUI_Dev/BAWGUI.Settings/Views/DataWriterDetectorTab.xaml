@@ -28,7 +28,7 @@
                         <Button  DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,14,2,0" Command="{Binding AddDataWriterDetector}" CommandParameter="{Binding}">
                             <Image Width="16" Height="16" Source="/BAWGUI.Settings;component/MyResources/AddCommand.png" HorizontalAlignment="Right" Margin="0"/>
                         </Button>
-                        <Label Content="Data Writer Detectors" Margin="2" FontSize="18" FontWeight="Bold">
+                        <Label Content="Data Writers" Margin="2" FontSize="18" FontWeight="Bold">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
                                     <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>

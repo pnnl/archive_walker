@@ -7,6 +7,7 @@ Imports BAWGUI.Core.Models
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
+Imports Microsoft.WindowsAPICodePack.Dialogs
 
 Namespace ViewModels
     Public Class DetectorConfig
@@ -48,7 +49,7 @@ Namespace ViewModels
                     Case "Spectral Coherence Forced Oscillation Detector"
                         newDetectorList.Add(New SpectralCoherenceDetector(detector, signalsMgr))
                         ResultUpdateIntervalVisibility = Visibility.Visible
-                    Case "Data Writer Detector"
+                    Case "Data Writer"
                         newDataWriterDetectorList.Add(New DataWriterDetectorViewModel(detector, signalsMgr))
                     Case Else
                         Throw New Exception("Unknown element found in DetectorConfig in config file.")
@@ -191,17 +192,38 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _openSavePath(obj As Object)
-            Dim openDirectoryDialog As New FolderBrowserDialog()
-            openDirectoryDialog.Description = "Select the save path"
+            'Dim openDirectoryDialog As New FolderBrowserDialog()
+            'openDirectoryDialog.Description = "Select the Save Path"
+            'If _lastSavePath Is Nothing Then
+            '    openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+            'Else
+            '    openDirectoryDialog.SelectedPath = _lastSavePath
+            'End If
+            'openDirectoryDialog.ShowNewFolderButton = True
+            'If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+            '    _lastSavePath = openDirectoryDialog.SelectedPath
+            '    obj.SavePath = openDirectoryDialog.SelectedPath
+            'End If
+            Dim openDirectoryDialog As New CommonOpenFileDialog
+            openDirectoryDialog.Title = "Select the Save Path"
+            openDirectoryDialog.IsFolderPicker = True
             If _lastSavePath Is Nothing Then
-                openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+                openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
             Else
-                openDirectoryDialog.SelectedPath = _lastSavePath
+                openDirectoryDialog.InitialDirectory = _lastSavePath
             End If
-            openDirectoryDialog.ShowNewFolderButton = True
-            If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
-                _lastSavePath = openDirectoryDialog.SelectedPath
-                obj.SavePath = openDirectoryDialog.SelectedPath
+            openDirectoryDialog.AddToMostRecentlyUsedList = True
+            openDirectoryDialog.AllowNonFileSystemItems = False
+            openDirectoryDialog.DefaultDirectory = Environment.CurrentDirectory
+            openDirectoryDialog.EnsureFileExists = True
+            openDirectoryDialog.EnsurePathExists = True
+            openDirectoryDialog.EnsureReadOnly = False
+            openDirectoryDialog.EnsureValidNames = True
+            openDirectoryDialog.Multiselect = False
+            openDirectoryDialog.ShowPlacesList = True
+            If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
+                _lastSavePath = openDirectoryDialog.FileName
+                obj.SavePath = openDirectoryDialog.FileName
             End If
         End Sub
     End Class
@@ -1079,7 +1101,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Data Writer Detector"
+                Return "Data Writer"
             End Get
         End Property
         Private _savePath As String
