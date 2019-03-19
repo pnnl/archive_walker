@@ -211,6 +211,12 @@ namespace BAWGUI.ViewModels
                         SettingsVM.SignalMgr = _signalMgr;
                         //read config files
                         SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
+                        ////if (readingDataSourceSuccess)
+                        ////{
+                        ////pass signal manager into settings.
+                        //SettingsVM.SignalMgr = _signalMgr;
+                        ////read config files
+                        //SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
                         if (readingDataSourceSuccess)
                         {
                             SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);

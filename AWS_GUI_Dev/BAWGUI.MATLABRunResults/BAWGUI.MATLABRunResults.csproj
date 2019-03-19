@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Models\DatedForcedOscillationEvent.cs" />
     <Compile Include="Models\DatedOccurrence.cs" />
+    <Compile Include="Models\InspectionAnalysisResults.cs" />
     <Compile Include="Models\OORRerunResults.cs" />
     <Compile Include="Models\OutOfRangeDetector.cs" />
     <Compile Include="Models\OutOfRangeEvent.cs" />

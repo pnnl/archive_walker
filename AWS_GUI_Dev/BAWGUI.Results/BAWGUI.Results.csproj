@@ -136,6 +136,7 @@
     <Compile Include="ViewModels\FOOccurrenceChannelViewModel.cs" />
     <Compile Include="ViewModels\DateStruct.cs" />
     <Compile Include="ViewModels\ForcedOscillationResultViewModel.cs" />
+    <Compile Include="ViewModels\OBATPresetUpdateViewModel.cs" />
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
     <Compile Include="ViewModels\OORChannelViewModel.cs" />
     <Compile Include="ViewModels\OORReRunPlotViewModel.cs" />
@@ -210,6 +211,9 @@
     </Compile>
     <Compile Include="Views\RingdownResultsView.xaml.cs">
       <DependentUpon>RingdownResultsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UpdateOBATPresetPopup.xaml.cs">
+      <DependentUpon>UpdateOBATPresetPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindRampEventTable.xaml.cs">
       <DependentUpon>WindRampEventTable.xaml</DependentUpon>
@@ -331,6 +335,10 @@
     <Page Include="Views\RingdownResultsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UpdateOBATPresetPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\WindRampEventTable.xaml">
       <SubType>Designer</SubType>

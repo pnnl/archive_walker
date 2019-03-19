@@ -55,10 +55,12 @@
             <Grid Margin="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Signal Selection Panel" Margin="2"/>
                 <local:SignalSelectionPanel Grid.Row="1" Margin="2"/>
+                <local:SpectralInspectionParameters Grid.Row="2" Margin="2" DataContext="{Binding InspectionAnalysisParams}"/>
             </Grid>
         </Border>
     </Grid>

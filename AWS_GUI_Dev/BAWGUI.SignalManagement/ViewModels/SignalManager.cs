@@ -1,10 +1,12 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.Core.Models;
+using BAWGUI.Core.ViewModels;
 using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
+using JSISCSVWriter;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Wpf;
@@ -51,6 +53,10 @@ namespace BAWGUI.SignalManagement.ViewModels
             PlotSelected = new RelayCommand(_plotSelectedToEdit);
             DeleteAPlot = new RelayCommand(_deleteAPlot);
             AllPlotsDeSelected = new RelayCommand(_deSelectAllPlots);
+
+            _inspectionAnalysisParams = new InspectionAnalysisParametersViewModel();
+            SpectralInspection = new RelayCommand(_spectralInspection);
+            ExportData = new RelayCommand(_exportData);
         }
         public void cleanUp()
         {
@@ -281,8 +287,6 @@ namespace BAWGUI.SignalManagement.ViewModels
             GroupedRawSignalsByType.Add(b);
             ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
-
-
 
         //private void _readCSVFile(InputFileInfoViewModel aFileInfo)
         //{
@@ -1473,7 +1477,7 @@ namespace BAWGUI.SignalManagement.ViewModels
         /// <param name="groups"></param>
         private void _determineParentGroupedByTypeNodeStatus(ObservableCollection<SignalTypeHierachy> groups)
         {
-            if (groups.Count > 0)
+            if (groups != null && groups.Count > 0)
             {
                 foreach (var group in groups)
                 {
@@ -2483,6 +2487,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         aSignal.Data = pmu.Data.GetRange(index * pmu.SignalLength, pmu.SignalLength);
                         aSignal.TimeStampNumber = pmu.TimeStampNumber;
+                        aSignal.MATLABTimeStampNumber = pmu.MATLABTimeStampNumber;
                         SingalWithDataList.Add(aSignal);
                     }
                     else
@@ -2492,6 +2497,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         newSignal.Unit = pmu.SignalUnits[index];
                         newSignal.Data = pmu.Data.GetRange(index * pmu.SignalLength, pmu.SignalLength);
                         newSignal.TimeStampNumber = pmu.TimeStampNumber;
+                        newSignal.MATLABTimeStampNumber = pmu.MATLABTimeStampNumber;
                         SingalWithDataList.Add(newSignal);
                     }
                 }
@@ -2544,6 +2550,13 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _selectedSignalPlotPanel = value;
+                //figure out the sampling rate of the current plot selected, 
+                //if no signals on this plot, do not change sampling rate of the inspection analysis parameter,
+                //if there's any signals, reflect it in the inspection analysis parameter
+                if (value != null && _selectedSignalPlotPanel.Signals.Any())
+                {
+                    InspectionAnalysisParams.Fs = _selectedSignalPlotPanel.Signals.FirstOrDefault().SamplingRate;
+                }                
                 OnPropertyChanged();
             }
         }
@@ -2552,26 +2565,55 @@ namespace BAWGUI.SignalManagement.ViewModels
         {
             if (SelectedSignalPlotPanel != null)
             {
+                var freqMatch = true;
                 var hk = obj as SignalTypeHierachy;
-                //SelectedSignalPlotPanel.Signals.Add();
-                if ((bool)hk.SignalSignature.IsChecked)
+                if (SelectedSignalPlotPanel.Signals.Count > 0)
                 {
-                    _addSignalsToPlot(hk);
+                    freqMatch = _checkFreq(SelectedSignalPlotPanel.Signals[0].SamplingRate, hk);
+                }
+                //SelectedSignalPlotPanel.Signals.Add();
+                if (freqMatch)
+                {
+                    if ((bool)hk.SignalSignature.IsChecked)
+                    {
+                        _addSignalsToPlot(hk);
+                    }
+                    else
+                    {
+                        _removeSignalsFromPlot(hk);
+                    }
+                    CheckAllChildren(hk, (bool)hk.SignalSignature.IsChecked);
+                    _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
+                    _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
+                    _drawSignals();
+                    if (SelectedSignalPlotPanel.Signals.Count > 0 && InspectionAnalysisParams.Fs != SelectedSignalPlotPanel.Signals[0].SamplingRate)
+                    {
+                        InspectionAnalysisParams.Fs = SelectedSignalPlotPanel.Signals[0].SamplingRate;
+                    }
                 }
                 else
                 {
-                    _removeSignalsFromPlot(hk);
+                    MessageBox.Show("Selected signal has a different sampling rate than the plotted ones.");
                 }
-                CheckAllChildren(hk, (bool)hk.SignalSignature.IsChecked);
-                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByPMU);
-                _determineParentGroupedByTypeNodeStatus(GroupedSignalsWithDataByType);
-                _drawSignals();
             }
             else
             {
                 MessageBox.Show("No plot is selected to add signal.");
             }
         }
+
+        private bool _checkFreq(int samplingRate, SignalTypeHierachy hk)
+        {
+            if (hk.SignalList.Count > 0)
+            {
+                return _checkFreq(samplingRate, hk.SignalList[0]);
+            }
+            else
+            {
+                return hk.SignalSignature.SamplingRate == samplingRate;
+            }
+        }
+
         private void _removeSignalsFromPlot(SignalTypeHierachy obj)
         {
             if (obj.SignalList.Count == 0 && SelectedSignalPlotPanel.Signals.Contains(obj.SignalSignature))
@@ -2713,6 +2755,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 }
             }
         }
+
         private string _getUnitFromSignals(ObservableCollection<SignalSignatureViewModel> signals)
         {
             var unit = "";
@@ -2789,7 +2832,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 SelectedSignalPlotPanel = null;
             }
         }
-        public void GetRawSignalData(InputFileInfoViewModel info, string starttime)
+        public void GetRawSignalData(InputFileInfoViewModel info)
         {
             //SignalViewPlotModel = null;
             if (info != null && File.Exists(info.ExampleFile) && Enum.IsDefined(typeof(DataFileType), info.FileType))
@@ -2805,13 +2848,9 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         _engine.GetFileExampleSignalData(info.ExampleFile, 1);
                     }
-                    else if (info.FileType == DataFileType.powHQ)
+                    else
                     {
                         _engine.GetFileExampleSignalData(info.ExampleFile, 3);
-                    }
-                    else if (info.FileType == DataFileType.PI)
-                    {
-                        _engine.GetPIExamplePISignals(starttime, info.Mnemonic, info.ExampleFile);
                     }
                 }
                 catch (Exception ex)
@@ -2821,7 +2860,191 @@ namespace BAWGUI.SignalManagement.ViewModels
             }
         }
         #endregion
+        private InspectionAnalysisParametersViewModel _inspectionAnalysisParams;
+        public InspectionAnalysisParametersViewModel InspectionAnalysisParams
+        {
+            get { return _inspectionAnalysisParams; }
+            set
+            {
+                _inspectionAnalysisParams = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand SpectralInspection { get; set; }
+        private void _spectralInspection(object obj)
+        {
+            var plot = obj as SignalPlotPanel;
+            //string start = null;
+            //string end = null;
+            double startPoint = 0;
+            double endPoint = 0;
+            int startIndex = 0;
+            int endIndex = 0;
+            foreach (var ax in plot.SignalViewPlotModel.Axes)
+            {
+                if (ax.IsHorizontal())
+                {
+                    startPoint = ax.ActualMinimum;
+                    endPoint = ax.ActualMaximum;
+                    //start = DateTime.FromOADate(ax.ActualMinimum).ToString("MM/dd/yyyy HH:mm:ss.fff");
+                    //end = DateTime.FromOADate(ax.ActualMaximum).ToString("MM/dd/yyyy HH:mm:ss.fff");
+                    break;
+                }
+            }
+            var timeStamp = plot.Signals[0].TimeStampNumber;
+            startIndex = timeStamp.FindLastIndex(a => a <= startPoint);
+            endIndex = timeStamp.FindIndex(a => a >= endPoint);
+            if (startIndex == -1)
+            {
+                startIndex = 0;
+            }
+            if (endIndex == -1)
+            {
+                endIndex = timeStamp.Count - 1; 
+            }
+            double[][] allData = plot.Signals.Select(a => a.Data.GetRange(startIndex, endIndex - startIndex + 1).ToArray()).ToArray();
+            double[] t = timeStamp.GetRange(startIndex, endIndex - startIndex + 1).ToArray();
+            InspectionAnalysisResults iaResult = _engine.InspectionAnalysis("Spectral", allData, t, plot.Signals, InspectionAnalysisParams);
+            SelectedSignalPlotPanel.AddATab = true;
+            if (iaResult != null)
+            {
+                //plot it!
+                _plotInspectionAnalysisResult(iaResult);
+            }
+        }
+        private void _plotInspectionAnalysisResult(InspectionAnalysisResults iaResult)
+        {
+            var AsignalPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+            //var legends = new ObservableCollection<Legend>();
+            OxyPlot.Axes.LinearAxis xAxis = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Bottom,
+                Title = iaResult.Xlabel,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true,
+            };
+            //timeXAxis.AxisChanged += TimeXAxis_AxisChanged;
+            AsignalPlot.Axes.Add(xAxis);
+            OxyPlot.Axes.LinearAxis yAxis = new OxyPlot.Axes.LinearAxis()
+            {
+                Position = OxyPlot.Axes.AxisPosition.Left,
+                Title = iaResult.Ylabel,
+                //Unit = SelectedSignalToBeViewed.Unit,
+                MajorGridlineStyle = LineStyle.Dot,
+                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
+                TicklineColor = OxyColor.FromRgb(82, 82, 82),
+                IsZoomEnabled = true,
+                IsPanEnabled = true
+            };
+            AsignalPlot.Axes.Add(yAxis);
+            //var signalCounter = 0;
+            for (int index = 0; index < iaResult.Y.Count; index++)
+            {
+                var newSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
+                for (int i = 0; i < iaResult.Y[index].Count; i++)
+                {
+                    newSeries.Points.Add(new DataPoint(iaResult.X[i], iaResult.Y[index][i]));
+                }
+                newSeries.Title = iaResult.Signalnames[index];
+                foreach (var item in SelectedSignalPlotPanel.Legends)
+                {
+                    if (newSeries.Title == item.Name)
+                    {
+                        newSeries.Color = item.Color;
+                    }
+                }
+                //var c = string.Format("#{0:x6}", Color.FromName(Utility.SaturatedColors[signalCounter % 20]).ToArgb());
+                //newSeries.Color = OxyColor.Parse(c);
+                //legends.Add(new Legend(signal.SignalName, newSeries.Color));
+                AsignalPlot.Series.Add(newSeries);
+                //signalCounter++;
 
+            }
+            AsignalPlot.LegendPlacement = LegendPlacement.Outside;
+            AsignalPlot.LegendPosition = LegendPosition.RightMiddle;
+            AsignalPlot.LegendPadding = 0.0;
+            AsignalPlot.LegendSymbolMargin = 0.0;
+            AsignalPlot.LegendMargin = 0;
+            AsignalPlot.IsLegendVisible = false;
+            SelectedSignalPlotPanel.SpectralInspectionPlotModel = AsignalPlot;
+        }
+        public ICommand ExportData { get; set; }
+        private void _exportData(object obj)
+        {
+            var plot = obj as SignalPlotPanel;
+            double startPoint = 0;
+            double endPoint = 0;
+            int startIndex = 0;
+            int endIndex = 0;
+            foreach (var ax in plot.SignalViewPlotModel.Axes)
+            {
+                if (ax.IsHorizontal())
+                {
+                    startPoint = ax.ActualMinimum;
+                    endPoint = ax.ActualMaximum;
+                    break;
+                }
+            }
+            var timeStamp = plot.Signals[0].TimeStampNumber;
+            startIndex = timeStamp.FindLastIndex(a => a <= startPoint);
+            endIndex = timeStamp.FindIndex(a => a >= endPoint);
+            if (startIndex == -1)
+            {
+                startIndex = 0;
+            }
+            if (endIndex == -1)
+            {
+                endIndex = timeStamp.Count - 1;
+            }
+            //double[][] allData = plot.Signals.Select(a => a.Data.GetRange(startIndex, endIndex - startIndex + 1).ToArray()).ToArray();
+            var t = timeStamp.GetRange(startIndex, endIndex - startIndex + 1).ToList();
 
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+            saveFileDialog1.Title = "Export Result Data File";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    var timeStr = DateTime.FromOADate(t[0]).ToString(@"yyyyMMdd_HHmmss");
+                    var path = Path.GetFullPath(saveFileDialog1.FileName);
+                    var fullname = path.Split('.')[0] + "_" + timeStr + ".csv";
+                    var index = 1;
+                    while (File.Exists(fullname))
+                    {
+                        fullname = fullname.Split(new char[] { '(', '.' })[0] + "(" + index.ToString() + ").csv";
+                        index++;
+                    }
+                    var writer = new JSIS_CSV_Writer();
+                    writer.Signals = _convertDataToBeExported(plot.Signals, startIndex, endIndex, t);
+                    writer.FileToBeSaved = fullname;
+                    writer.WriteJSISCSV();
+                }
+            }
+        }
+
+        private List<Signal> _convertDataToBeExported(ObservableCollection<SignalSignatureViewModel> signals, int startIndex, int endIndex, List<double> t)
+        {
+            var newSignals = new List<Signal>();
+            foreach (var item in signals)
+            {
+                var newSignal = new Signal();
+                newSignal.Data = item.Data.GetRange(startIndex, endIndex - startIndex + 1);
+                newSignal.PMUname = item.PMUName;
+                newSignal.SamplingRate = item.SamplingRate;
+                newSignal.SignalName = item.SignalName;
+                //newSignal.TimeStampInSeconds = t;
+                newSignal.TimeStampNumber = t;
+                newSignal.Type = item.TypeAbbreviation;
+                newSignal.Unit = item.Unit;
+                newSignals.Add(newSignal);
+            }
+            return newSignals;
+        }
     }
 }

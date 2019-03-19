@@ -25,6 +25,7 @@ namespace BAWGUI.MATLABRunResults.Models
                 var timeStamps = new List<System.DateTime>();
                 var timeStampNumbers = new List<double>();
                 var timeStampNumbersInSeconds = new List<double>();
+                var matlabtimeStampNumbers = new List<double>();
                 foreach (var item in t)
                 {
                     var tt = Utility.MatlabDateNumToDotNetDateTime(item);
@@ -32,6 +33,7 @@ namespace BAWGUI.MATLABRunResults.Models
                     timeStampNumbers.Add(item - 693960.0); // convert from matlab 0 day which is January 0, 0000 to microsoft 0 day which is midnight, 31 December 1899, by substracting the number of days in between them: 365 * 1900 - 1900 / 4 - 19 + 4, leap years are every 4 years, but not every 100 years and again, every 400 years.
                     //timeStampNumbers.Add(tt.ToOADate());
                     timeStampNumbersInSeconds.Add(Utility.MatlabDateNumToDotNetSeconds(item));
+                    matlabtimeStampNumbers.Add(item);
                 }
 
                 arr = (MWNumericArray)_results["Data", index];
@@ -181,6 +183,7 @@ namespace BAWGUI.MATLABRunResults.Models
                     newOORSignal.Unit = dataUnit[signalCount];
                     newOORSignal.TimeStamps = timeStamps;
                     newOORSignal.TimeStampNumber = timeStampNumbers;
+                    newOORSignal.MATLABTimeStampNumber = matlabtimeStampNumbers;
                     newOORSignal.SamplingRate = (int)fs;
                     newOORSignal.TimeStampInSeconds = timeStampNumbersInSeconds;
                     newOORSignal.Data = data.GetRange(signalCount * dimEach[0], dimEach[0]);

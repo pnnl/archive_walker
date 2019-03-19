@@ -1038,7 +1038,7 @@ namespace BAWGUI.Results.ViewModels
         {
             if (ReRunResult.Any())
             {
-                var exportResult = new ResultsExportingViewModel(ReRunResult);
+                var exportResult = new ResultsExportingViewModel(ReRunResult, Run);
                 exportResult.ExportDataCancelled += _cancelExportData;
                 _exportResultsPopup = new ExportResultsPopup
                 {

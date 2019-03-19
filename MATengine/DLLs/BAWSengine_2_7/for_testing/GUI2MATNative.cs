@@ -1,11 +1,23 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
+* Date: Fri Jan 25 08:29:08 2019
 * Date: Thu Jan 17 10:26:40 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
 * ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
+* ory\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAoscillationApp\
+* AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m,C:\Users\foll154\Documents\BPAo
+* scillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Document
+* s\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\User
+* s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRang
+* e.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
+* unRingdown.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunc
+* tions\RerunThevenin.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengin
+* e\GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\
+* MATengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAoscillationApp\AWre
+* pository\MATengine\GUIfunctions\UpdateOBATpreset.m}"
 * ory\MATengine\GUIfunctions\GetFileExamplePI.m,C:\Users\foll154\Documents\BPAoscillationA
 * pp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAosc
 * illationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Documents\
@@ -42,6 +54,9 @@ namespace BAWSengineNative
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
+  /// <newpara></newpara>
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ins
+  /// pectionAnalysis.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
   /// dMMdata.m
@@ -742,6 +757,197 @@ namespace BAWSengineNative
     protected void GetSparseData(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
     {
         mcr.EvaluateFunctionForTypeSafeCall("GetSparseData", numArgsOut, ref argsOut, argsIn, varArgsIn);
+    }
+    /// <summary>
+    /// Provides a single output, 0-input Objectinterface to the InspectionAnalysis
+    /// MATLAB function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object InspectionAnalysis()
+    {
+      return mcr.EvaluateFunction("InspectionAnalysis", new Object[]{});
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 1-input Objectinterface to the InspectionAnalysis
+    /// MATLAB function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="Func">Input argument #1</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object InspectionAnalysis(Object Func)
+    {
+      return mcr.EvaluateFunction("InspectionAnalysis", Func);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 2-input Objectinterface to the InspectionAnalysis
+    /// MATLAB function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="Func">Input argument #1</param>
+    /// <param name="Data">Input argument #2</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object InspectionAnalysis(Object Func, Object Data)
+    {
+      return mcr.EvaluateFunction("InspectionAnalysis", Func, Data);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 3-input Objectinterface to the InspectionAnalysis
+    /// MATLAB function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="Func">Input argument #1</param>
+    /// <param name="Data">Input argument #2</param>
+    /// <param name="t">Input argument #3</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object InspectionAnalysis(Object Func, Object Data, Object t)
+    {
+      return mcr.EvaluateFunction("InspectionAnalysis", Func, Data, t);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 4-input Objectinterface to the InspectionAnalysis
+    /// MATLAB function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="Func">Input argument #1</param>
+    /// <param name="Data">Input argument #2</param>
+    /// <param name="t">Input argument #3</param>
+    /// <param name="Params">Input argument #4</param>
+    /// <returns>An Object containing the first output argument.</returns>
+    ///
+    public Object InspectionAnalysis(Object Func, Object Data, Object t, Object Params)
+    {
+      return mcr.EvaluateFunction("InspectionAnalysis", Func, Data, t, Params);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input Object interface to the InspectionAnalysis MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] InspectionAnalysis(int numArgsOut)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", new Object[]{});
+    }
+
+
+    /// <summary>
+    /// Provides the standard 1-input Object interface to the InspectionAnalysis MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="Func">Input argument #1</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] InspectionAnalysis(int numArgsOut, Object Func)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 2-input Object interface to the InspectionAnalysis MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="Func">Input argument #1</param>
+    /// <param name="Data">Input argument #2</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] InspectionAnalysis(int numArgsOut, Object Func, Object Data)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func, Data);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 3-input Object interface to the InspectionAnalysis MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="Func">Input argument #1</param>
+    /// <param name="Data">Input argument #2</param>
+    /// <param name="t">Input argument #3</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] InspectionAnalysis(int numArgsOut, Object Func, Object Data, Object t)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func, Data, t);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 4-input Object interface to the InspectionAnalysis MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="Func">Input argument #1</param>
+    /// <param name="Data">Input argument #2</param>
+    /// <param name="t">Input argument #3</param>
+    /// <param name="Params">Input argument #4</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public Object[] InspectionAnalysis(int numArgsOut, Object Func, Object Data, Object 
+                                 t, Object Params)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func, Data, t, Params);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the InspectionAnalysis function in which the input and
+    /// output
+    /// arguments are specified as an array of Objects.
+    /// </summary>
+    /// <remarks>
+    /// This method will allocate and return by reference the output argument
+    /// array.<newpara></newpara>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return</param>
+    /// <param name= "argsOut">Array of Object output arguments</param>
+    /// <param name= "argsIn">Array of Object input arguments</param>
+    /// <param name= "varArgsIn">Array of Object representing variable input
+    /// arguments</param>
+    ///
+    [MATLABSignature("InspectionAnalysis", 4, 1, 0)]
+    protected void InspectionAnalysis(int numArgsOut, ref Object[] argsOut, Object[] argsIn, params Object[] varArgsIn)
+    {
+        mcr.EvaluateFunctionForTypeSafeCall("InspectionAnalysis", numArgsOut, ref argsOut, argsIn, varArgsIn);
     }
     /// <summary>
     /// Provides a single output, 0-input Objectinterface to the ReadMMdata MATLAB

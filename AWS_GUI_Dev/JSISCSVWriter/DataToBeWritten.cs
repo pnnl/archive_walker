@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Utilities;
 using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
@@ -45,8 +46,12 @@ namespace JSISCSVWriter
         {
             if (InputSignals.Count != 0)
             {
-                var timeArr = InputSignals.FirstOrDefault().TimeStampInSeconds.ToArray();
-                Data = Matrix<double>.Build.Dense(timeArr.Count(), 1, (i, j) => (double)i/(double)InputSignals.FirstOrDefault().SamplingRate); 
+                var firstTimeStamp = DateTime.FromOADate(InputSignals.FirstOrDefault().TimeStampNumber.FirstOrDefault()).ToString(@"yyyyMMdd_HHmmss");
+                var firstDateTime = DateTime.ParseExact(firstTimeStamp, "yyyyMMdd_HHmmss", null, System.Globalization.DateTimeStyles.None).ToOADate();// - new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                var timeArr = InputSignals.FirstOrDefault().TimeStampNumber.ToArray();
+                //var firstTimeStamp2 = DateTime.FromOADate(InputSignals.FirstOrDefault().TimeStampNumber.FirstOrDefault()).ToString(@"yyyyMMdd_HHmmss.ffffff");
+                //Data = Matrix<double>.Build.Dense(timeArr.Count(), 1, (i, j) => (double)i / (double)InputSignals.FirstOrDefault().SamplingRate);
+                Data = Matrix<double>.Build.Dense(timeArr.Count(), 1, (i, j) => (timeArr[i] - firstDateTime)*86400);
                 var orderedSignal = InputSignals.OrderBy(x => x.PMUname);
                 foreach (var signal in orderedSignal)
                 {
