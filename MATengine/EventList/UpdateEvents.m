@@ -82,6 +82,9 @@ for DetectorType = DetectorTypes
 %                     FieldName = 'ModeMeter';
 %                     FunctionName = 'UpdateModeMeterEvents';
 %                     AlarmParams.ModeMeter{1} = [];
+                otherwise
+                    % DataWriter, for example
+                    continue;
             end
             
             if ~isfield(EventList, FieldName)

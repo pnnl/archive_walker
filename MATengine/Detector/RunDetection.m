@@ -68,6 +68,7 @@ function [DetectionResults, AdditionalOutput] = RunDetection(PMUstruct,DetectorX
 %#function SpectralCoherenceDetector
 %#function TheveninDetector
 %#function ModeMeterDetector
+%#function DataWriterDetector
 
 % If TimeStamp was not included, set it to the default value
 if ~exist('TimeStamp','var')

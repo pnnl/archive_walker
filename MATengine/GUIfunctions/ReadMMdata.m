@@ -44,10 +44,6 @@ for MMidx = 1:length(MMfolders)
     FreqIdx = contains(VarNames,'Frequency');
     DampIdx = contains(VarNames,'DampingRatio');
     OpIdx = contains(VarNames,'OperatingValue');
-    YWidx = contains(H{4,:},'YW');
-    LSidx = contains(H{4,:},'LS');
-    Pidx = strcmp(H{3,:},'P');
-    Qidx = strcmp(H{3,:},'Q');
 
     ModeNames = unique(H{2,FreqIdx},'stable');
     ModeIdx = cell(1,length(ModeNames));

@@ -4,7 +4,7 @@
 %     ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll)
 
 function [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
-    BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
+    BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
     NumProcessingStages,DataInfo,FileInfo,...
     ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath)
 
@@ -21,7 +21,8 @@ clear ConfigAll
 % operate on a block of data sliding through time, while the file
 % detectors operate on data as if it were streaming.
 BlockDetectors = {'Periodogram', 'SpectralCoherence', 'Thevenin','ModeMeter'};
-FileDetectors = {'Ringdown', 'OutOfRangeGeneral','WindRamp'};
+FileDetectors = {'Ringdown', 'OutOfRangeGeneral','WindRamp','DataWriter'};
+OmitFromSparse = {'DataWriter'};
 
 if length(DataXML.ReaderProperties.FilePath) == 1
     % Places the contents in a cell array so that indexing is the same as
@@ -100,12 +101,14 @@ elseif (strcmp(DataXML.ReaderProperties.Mode.Name, 'RealTime') || ...
         strcmp(DataXML.ReaderProperties.Mode.Name, 'Hybrid'))
     % Real-time and Archiver mode parameters
     
+    UTCoffset = str2double(DataXML.ReaderProperties.Mode.Params.UTCoffset)/24;
+    
     % Start time for processing
     if(strcmp(DataXML.ReaderProperties.Mode.Name,'Hybrid'))
         DateTimeStart = DataXML.ReaderProperties.Mode.Params.DateTimeStart;
     else
         % we will use the current time as the start time; still need to consider time zone
-        DateTimeStart = datestr(datetime('now','TimeZone',DataXML.ReaderProperties.Mode.Params.TimeZone),'yyyy-mm-dd HH:MM:00');
+        DateTimeStart = datestr(datetime('now','TimeZone','UTC')+UTCoffset,'yyyy-mm-dd HH:MM:00');
     end
     
     % Wait time when no future data is available (seconds)
@@ -204,8 +207,10 @@ end
 
 if(strcmpi(FileInfo(1).FileType,'PI'))
     [~,name,ext] = fileparts(DataXML.ReaderProperties.FilePath{1}.ExampleFile); 
-    DataInfo.PIpresetFile = [name ext];
-%     DataInfo.PIpresetFile = fullfile(DataXML.ReaderProperties.FilePath{1}.ExampleFile);
+    DataInfo.PresetFileInit = [name ext];
+elseif(strcmpi(FileInfo(1).FileType,'OpenHistorian'))
+    [~,name,ext] = fileparts(DataXML.ReaderProperties.FilePath{1}.ExampleFile); 
+    DataInfo.PresetFileInit = [name ext];
 end
 
 if(strcmp(DataInfo.mode, 'Archive'))
@@ -227,9 +232,10 @@ else
     DataInfo.FutureWait = FutureWait;
     DataInfo.MaxFutureCount = MaxFutureCount;
     
+    DataInfo.UTCoffset = UTCoffset;
+    
     if strcmp(DataInfo.mode, 'Hybrid')
         DataInfo.RealTimeRange = RealTimeRange;
-        DataInfo.TimeZone = DateTimeStart(21:end);
     end
 end
 

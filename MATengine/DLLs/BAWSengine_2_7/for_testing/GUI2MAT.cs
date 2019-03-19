@@ -1,24 +1,12 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Fri Jan 25 08:29:08 2019
-* Date: Thu Jan 17 10:26:40 2019
+* Date: Wed Mar 06 09:08:18 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
 * ting""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATeng
 * ine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWreposit
-* ory\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAoscillationApp\
-* AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m,C:\Users\foll154\Documents\BPAo
-* scillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Document
-* s\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\User
-* s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRang
-* e.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-* unRingdown.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunc
-* tions\RerunThevenin.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengin
-* e\GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\
-* MATengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAoscillationApp\AWre
-* pository\MATengine\GUIfunctions\UpdateOBATpreset.m}"
-* ory\MATengine\GUIfunctions\GetFileExamplePI.m,C:\Users\foll154\Documents\BPAoscillationA
+* ory\MATengine\GUIfunctions\GetFileExampleDB.m,C:\Users\foll154\Documents\BPAoscillationA
 * pp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPAosc
 * illationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\foll154\Documents\
 * BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\Users\
@@ -27,7 +15,8 @@
 * Ringdown.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfuncti
 * ons\RerunThevenin.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\
 * GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MA
-* Tengine\GUIfunctions\RunNormalMode.m}"
+* Tengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepo
+* sitory\MATengine\GUIfunctions\WriteMMreport.m}"
 */
 using System;
 using System.Reflection;
@@ -50,13 +39,10 @@ namespace BAWSengine
   /// FileExample.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// FileExamplePI.m
+  /// FileExampleDB.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
   /// SparseData.m
-  /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ins
-  /// pectionAnalysis.m
   /// <newpara></newpara>
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
   /// dMMdata.m
@@ -79,8 +65,8 @@ namespace BAWSengine
   /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
   /// NormalMode.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Upd
-  /// ateOBATpreset.m
+  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Wri
+  /// teMMreport.m
   /// </summary>
   /// <remarks>
   /// @Version 4.0
@@ -347,21 +333,21 @@ namespace BAWSengine
 
 
     /// <summary>
-    /// Provides a single output, 0-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 0-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// </remarks>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI()
+    public MWArray GetFileExampleDB()
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", new MWArray[]{});
+      return mcr.EvaluateFunction("GetFileExampleDB", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides a single output, 1-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 1-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -369,14 +355,14 @@ namespace BAWSengine
     /// <param name="StartTime">Input argument #1</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime)
+    public MWArray GetFileExampleDB(MWArray StartTime)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime);
     }
 
 
     /// <summary>
-    /// Provides a single output, 2-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 2-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -385,14 +371,14 @@ namespace BAWSengine
     /// <param name="preset">Input argument #2</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime, MWArray preset)
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset);
     }
 
 
     /// <summary>
-    /// Provides a single output, 3-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 3-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -402,14 +388,14 @@ namespace BAWSengine
     /// <param name="PresetFile">Input argument #3</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime, MWArray preset, MWArray PresetFile)
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset, MWArray PresetFile)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset, PresetFile);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile);
     }
 
 
     /// <summary>
-    /// Provides a single output, 4-input MWArrayinterface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 4-input MWArrayinterface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -420,15 +406,35 @@ namespace BAWSengine
     /// <param name="MetaOnly">Input argument #4</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray GetFileExamplePI(MWArray StartTime, MWArray preset, MWArray 
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset, MWArray 
                               PresetFile, MWArray MetaOnly)
     {
-      return mcr.EvaluateFunction("GetFileExamplePI", StartTime, preset, PresetFile, MetaOnly);
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
     }
 
 
     /// <summary>
-    /// Provides the standard 0-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides a single output, 5-input MWArrayinterface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray GetFileExampleDB(MWArray StartTime, MWArray preset, MWArray 
+                              PresetFile, MWArray MetaOnly, MWArray DBtype)
+    {
+      return mcr.EvaluateFunction("GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -437,14 +443,14 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut)
+    public MWArray[] GetFileExampleDB(int numArgsOut)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", new MWArray[]{});
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides the standard 1-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 1-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -454,14 +460,14 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime)
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime);
     }
 
 
     /// <summary>
-    /// Provides the standard 2-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 2-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -472,14 +478,14 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime, MWArray preset)
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset);
     }
 
 
     /// <summary>
-    /// Provides the standard 3-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 3-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -491,15 +497,15 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime, MWArray preset, 
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset, 
                                 MWArray PresetFile)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset, PresetFile);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile);
     }
 
 
     /// <summary>
-    /// Provides the standard 4-input MWArray interface to the GetFileExamplePI MATLAB
+    /// Provides the standard 4-input MWArray interface to the GetFileExampleDB MATLAB
     /// function.
     /// </summary>
     /// <remarks>
@@ -512,15 +518,37 @@ namespace BAWSengine
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] GetFileExamplePI(int numArgsOut, MWArray StartTime, MWArray preset, 
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset, 
                                 MWArray PresetFile, MWArray MetaOnly)
     {
-      return mcr.EvaluateFunction(numArgsOut, "GetFileExamplePI", StartTime, preset, PresetFile, MetaOnly);
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly);
     }
 
 
     /// <summary>
-    /// Provides an interface for the GetFileExamplePI function in which the input and
+    /// Provides the standard 5-input MWArray interface to the GetFileExampleDB MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="preset">Input argument #2</param>
+    /// <param name="PresetFile">Input argument #3</param>
+    /// <param name="MetaOnly">Input argument #4</param>
+    /// <param name="DBtype">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] GetFileExampleDB(int numArgsOut, MWArray StartTime, MWArray preset, 
+                                MWArray PresetFile, MWArray MetaOnly, MWArray DBtype)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "GetFileExampleDB", StartTime, preset, PresetFile, MetaOnly, DBtype);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the GetFileExampleDB function in which the input and
     /// output
     /// arguments are specified as an array of MWArrays.
     /// </summary>
@@ -532,9 +560,9 @@ namespace BAWSengine
     /// <param name= "argsOut">Array of MWArray output arguments</param>
     /// <param name= "argsIn">Array of MWArray input arguments</param>
     ///
-    public void GetFileExamplePI(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    public void GetFileExampleDB(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
-      mcr.EvaluateFunction("GetFileExamplePI", numArgsOut, ref argsOut, argsIn);
+      mcr.EvaluateFunction("GetFileExampleDB", numArgsOut, ref argsOut, argsIn);
     }
 
 
@@ -752,199 +780,6 @@ namespace BAWSengine
     public void GetSparseData(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
       mcr.EvaluateFunction("GetSparseData", numArgsOut, ref argsOut, argsIn);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 0-input MWArrayinterface to the InspectionAnalysis
-    /// MATLAB function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray InspectionAnalysis()
-    {
-      return mcr.EvaluateFunction("InspectionAnalysis", new MWArray[]{});
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 1-input MWArrayinterface to the InspectionAnalysis
-    /// MATLAB function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="Func">Input argument #1</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray InspectionAnalysis(MWArray Func)
-    {
-      return mcr.EvaluateFunction("InspectionAnalysis", Func);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 2-input MWArrayinterface to the InspectionAnalysis
-    /// MATLAB function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="Func">Input argument #1</param>
-    /// <param name="Data">Input argument #2</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray InspectionAnalysis(MWArray Func, MWArray Data)
-    {
-      return mcr.EvaluateFunction("InspectionAnalysis", Func, Data);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 3-input MWArrayinterface to the InspectionAnalysis
-    /// MATLAB function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="Func">Input argument #1</param>
-    /// <param name="Data">Input argument #2</param>
-    /// <param name="t">Input argument #3</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray InspectionAnalysis(MWArray Func, MWArray Data, MWArray t)
-    {
-      return mcr.EvaluateFunction("InspectionAnalysis", Func, Data, t);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 4-input MWArrayinterface to the InspectionAnalysis
-    /// MATLAB function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="Func">Input argument #1</param>
-    /// <param name="Data">Input argument #2</param>
-    /// <param name="t">Input argument #3</param>
-    /// <param name="Params">Input argument #4</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray InspectionAnalysis(MWArray Func, MWArray Data, MWArray t, MWArray 
-                                Params)
-    {
-      return mcr.EvaluateFunction("InspectionAnalysis", Func, Data, t, Params);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 0-input MWArray interface to the InspectionAnalysis MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] InspectionAnalysis(int numArgsOut)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", new MWArray[]{});
-    }
-
-
-    /// <summary>
-    /// Provides the standard 1-input MWArray interface to the InspectionAnalysis MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="Func">Input argument #1</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] InspectionAnalysis(int numArgsOut, MWArray Func)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 2-input MWArray interface to the InspectionAnalysis MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="Func">Input argument #1</param>
-    /// <param name="Data">Input argument #2</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] InspectionAnalysis(int numArgsOut, MWArray Func, MWArray Data)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func, Data);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 3-input MWArray interface to the InspectionAnalysis MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="Func">Input argument #1</param>
-    /// <param name="Data">Input argument #2</param>
-    /// <param name="t">Input argument #3</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] InspectionAnalysis(int numArgsOut, MWArray Func, MWArray Data, 
-                                  MWArray t)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func, Data, t);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 4-input MWArray interface to the InspectionAnalysis MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="Func">Input argument #1</param>
-    /// <param name="Data">Input argument #2</param>
-    /// <param name="t">Input argument #3</param>
-    /// <param name="Params">Input argument #4</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] InspectionAnalysis(int numArgsOut, MWArray Func, MWArray Data, 
-                                  MWArray t, MWArray Params)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "InspectionAnalysis", Func, Data, t, Params);
-    }
-
-
-    /// <summary>
-    /// Provides an interface for the InspectionAnalysis function in which the input and
-    /// output
-    /// arguments are specified as an array of MWArrays.
-    /// </summary>
-    /// <remarks>
-    /// This method will allocate and return by reference the output argument
-    /// array.<newpara></newpara>
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return</param>
-    /// <param name= "argsOut">Array of MWArray output arguments</param>
-    /// <param name= "argsIn">Array of MWArray input arguments</param>
-    ///
-    public void InspectionAnalysis(int numArgsOut, ref MWArray[] argsOut, MWArray[] 
-                         argsIn)
-    {
-      mcr.EvaluateFunction("InspectionAnalysis", numArgsOut, ref argsOut, argsIn);
     }
 
 
@@ -3184,201 +3019,348 @@ namespace BAWSengine
 
 
     /// <summary>
-    /// Provides a single output, 0-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// Provides a single output, 0-input MWArrayinterface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray UpdateOBATpreset()
+    public MWArray WriteMMreport()
     {
-      return mcr.EvaluateFunction("UpdateOBATpreset", new MWArray[]{});
+      return mcr.EvaluateFunction("WriteMMreport", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides a single output, 1-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// Provides a single output, 1-input MWArrayinterface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
-    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="StartTime">Input argument #1</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray UpdateOBATpreset(MWArray NewPreset)
+    public MWArray WriteMMreport(MWArray StartTime)
     {
-      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset);
+      return mcr.EvaluateFunction("WriteMMreport", StartTime);
     }
 
 
     /// <summary>
-    /// Provides a single output, 2-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// Provides a single output, 2-input MWArrayinterface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
-    /// <param name="NewPreset">Input argument #1</param>
-    /// <param name="Detector">Input argument #2</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray UpdateOBATpreset(MWArray NewPreset, MWArray Detector)
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime)
     {
-      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector);
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime);
     }
 
 
     /// <summary>
-    /// Provides a single output, 3-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// Provides a single output, 3-input MWArrayinterface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
-    /// <param name="NewPreset">Input argument #1</param>
-    /// <param name="Detector">Input argument #2</param>
-    /// <param name="AWconfigFile">Input argument #3</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray UpdateOBATpreset(MWArray NewPreset, MWArray Detector, MWArray 
-                              AWconfigFile)
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath)
     {
-      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector, AWconfigFile);
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath);
     }
 
 
     /// <summary>
-    /// Provides a single output, 4-input MWArrayinterface to the UpdateOBATpreset MATLAB
+    /// Provides a single output, 4-input MWArrayinterface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
-    /// <param name="NewPreset">Input argument #1</param>
-    /// <param name="Detector">Input argument #2</param>
-    /// <param name="AWconfigFile">Input argument #3</param>
-    /// <param name="OBATpresetFile">Input argument #4</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
     /// <returns>An MWArray containing the first output argument.</returns>
     ///
-    public MWArray UpdateOBATpreset(MWArray NewPreset, MWArray Detector, MWArray 
-                              AWconfigFile, MWArray OBATpresetFile)
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType)
     {
-      return mcr.EvaluateFunction("UpdateOBATpreset", NewPreset, Detector, AWconfigFile, OBATpresetFile);
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType);
     }
 
 
     /// <summary>
-    /// Provides the standard 0-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// Provides a single output, 5-input MWArrayinterface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType, MWArray DampThresh)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 6-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType, MWArray DampThresh, MWArray 
+                           EventSepMinutes)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes);
+    }
+
+
+    /// <summary>
+    /// Provides a single output, 7-input MWArrayinterface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <param name="ReportPath">Input argument #7</param>
+    /// <returns>An MWArray containing the first output argument.</returns>
+    ///
+    public MWArray WriteMMreport(MWArray StartTime, MWArray EndTime, MWArray EventPath, 
+                           MWArray ReportType, MWArray DampThresh, MWArray 
+                           EventSepMinutes, MWArray ReportPath)
+    {
+      return mcr.EvaluateFunction("WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes, ReportPath);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 0-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] UpdateOBATpreset(int numArgsOut)
+    public MWArray[] WriteMMreport(int numArgsOut)
     {
-      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", new MWArray[]{});
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", new MWArray[]{});
     }
 
 
     /// <summary>
-    /// Provides the standard 1-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// Provides the standard 1-input MWArray interface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="NewPreset">Input argument #1</param>
+    /// <param name="StartTime">Input argument #1</param>
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset)
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime)
     {
-      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset);
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime);
     }
 
 
     /// <summary>
-    /// Provides the standard 2-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// Provides the standard 2-input MWArray interface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="NewPreset">Input argument #1</param>
-    /// <param name="Detector">Input argument #2</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset, MWArray Detector)
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime)
     {
-      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector);
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime);
     }
 
 
     /// <summary>
-    /// Provides the standard 3-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// Provides the standard 3-input MWArray interface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="NewPreset">Input argument #1</param>
-    /// <param name="Detector">Input argument #2</param>
-    /// <param name="AWconfigFile">Input argument #3</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset, MWArray 
-                                Detector, MWArray AWconfigFile)
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath)
     {
-      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector, AWconfigFile);
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath);
     }
 
 
     /// <summary>
-    /// Provides the standard 4-input MWArray interface to the UpdateOBATpreset MATLAB
+    /// Provides the standard 4-input MWArray interface to the WriteMMreport MATLAB
     /// function.
     /// </summary>
     /// <remarks>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="NewPreset">Input argument #1</param>
-    /// <param name="Detector">Input argument #2</param>
-    /// <param name="AWconfigFile">Input argument #3</param>
-    /// <param name="OBATpresetFile">Input argument #4</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
     /// <returns>An Array of length "numArgsOut" containing the output
     /// arguments.</returns>
     ///
-    public MWArray[] UpdateOBATpreset(int numArgsOut, MWArray NewPreset, MWArray 
-                                Detector, MWArray AWconfigFile, MWArray OBATpresetFile)
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType)
     {
-      return mcr.EvaluateFunction(numArgsOut, "UpdateOBATpreset", NewPreset, Detector, AWconfigFile, OBATpresetFile);
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType);
     }
 
 
     /// <summary>
-    /// Provides an interface for the UpdateOBATpreset function in which the input and
+    /// Provides the standard 5-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType, MWArray DampThresh)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 6-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType, MWArray DampThresh, 
+                             MWArray EventSepMinutes)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes);
+    }
+
+
+    /// <summary>
+    /// Provides the standard 7-input MWArray interface to the WriteMMreport MATLAB
+    /// function.
+    /// </summary>
+    /// <remarks>
+    /// M-Documentation:
+    /// Identify periods separated by at least EventSepSamp samples
+    /// </remarks>
+    /// <param name="numArgsOut">The number of output arguments to return.</param>
+    /// <param name="StartTime">Input argument #1</param>
+    /// <param name="EndTime">Input argument #2</param>
+    /// <param name="EventPath">Input argument #3</param>
+    /// <param name="ReportType">Input argument #4</param>
+    /// <param name="DampThresh">Input argument #5</param>
+    /// <param name="EventSepMinutes">Input argument #6</param>
+    /// <param name="ReportPath">Input argument #7</param>
+    /// <returns>An Array of length "numArgsOut" containing the output
+    /// arguments.</returns>
+    ///
+    public MWArray[] WriteMMreport(int numArgsOut, MWArray StartTime, MWArray EndTime, 
+                             MWArray EventPath, MWArray ReportType, MWArray DampThresh, 
+                             MWArray EventSepMinutes, MWArray ReportPath)
+    {
+      return mcr.EvaluateFunction(numArgsOut, "WriteMMreport", StartTime, EndTime, EventPath, ReportType, DampThresh, EventSepMinutes, ReportPath);
+    }
+
+
+    /// <summary>
+    /// Provides an interface for the WriteMMreport function in which the input and
     /// output
     /// arguments are specified as an array of MWArrays.
     /// </summary>
@@ -3386,15 +3368,15 @@ namespace BAWSengine
     /// This method will allocate and return by reference the output argument
     /// array.<newpara></newpara>
     /// M-Documentation:
-    /// Read the OBAT preset file into cell A
+    /// Identify periods separated by at least EventSepSamp samples
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return</param>
     /// <param name= "argsOut">Array of MWArray output arguments</param>
     /// <param name= "argsIn">Array of MWArray input arguments</param>
     ///
-    public void UpdateOBATpreset(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
+    public void WriteMMreport(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
-      mcr.EvaluateFunction("UpdateOBATpreset", numArgsOut, ref argsOut, argsIn);
+      mcr.EvaluateFunction("WriteMMreport", numArgsOut, ref argsOut, argsIn);
     }
 
 

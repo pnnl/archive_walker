@@ -122,7 +122,7 @@ if (nargin == 5) && (~Unpause)
     end
     
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
-        BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
+        BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
         ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
 %     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],WindAppXML);
@@ -180,7 +180,7 @@ elseif ~Unpause
         error(['Configuration file ' ConfigFile ' does not exist.']);
     end
     
-    [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);    
+    [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,OmitFromSparse,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);    
 %     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],[]);
     
     % Error check on RerunDetector entry
@@ -295,7 +295,7 @@ elseif ~Unpause
     % Get everything set up based on the configuration structure stored in
     % the initialization file.
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
-        BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
+        BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
         ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
     
@@ -374,7 +374,7 @@ while(~min(done))
             warning(['Attempt to unpause failed because ' ControlPath '\PauseData.mat could not be loaded.']);
             return
         end
-        [~,~,~,DetectorXML,~,~,~,~,~,~,~,~,~,~,~] = InitializeBAWS(ConfigAll,EventPath);
+        [~,~,~,DetectorXML,~,~,~,~,~,~,~,~,~,~,~,~] = InitializeBAWS(ConfigAll,EventPath);
         try
             delete([ControlPath '\PauseData.mat'])
         catch
@@ -753,7 +753,7 @@ while(~min(done))
 
             EventList = WindApplication(PMU,WindAppXML,EventList,DetectorXML,FileLength);
             
-            SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,FileDetectors);
+            SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,setdiff(FileDetectors,OmitFromSparse));
         elseif ~isempty(FirstWindowStartTime)
             % Running in rerun mode with forced oscillation detectors
             
@@ -808,7 +808,7 @@ while(~min(done))
                     if strcmp(RunMode,'Normal')
                         EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,BlockDetectors,EventList);
                         
-                        SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,BlockDetectors);
+                        SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,setdiff(BlockDetectors,OmitFromSparse));
                     else
                         % Rerun mode 
                         
