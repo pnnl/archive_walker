@@ -191,24 +191,80 @@ namespace BAWGUI.ReadConfigXml
             switch (ModeName)
             {
                 case ModeType.Archive:
-                    DateTimeStart = mode.Element("Params").Element("DateTimeStart").Value.Substring(0,19);
-                    DateTimeEnd = mode.Element("Params").Element("DateTimeEnd").Value.Substring(0, 19);
+                    var input = mode.Element("Params").Element("DateTimeStart");
+                    if (input != null)
+                    {
+                        DateTimeStart = input.Value.Substring(0, 19);
+                    }
+                    input = mode.Element("Params").Element("DateTimeEnd");
+                    if (input != null)
+                    {
+                        DateTimeEnd = input.Value.Substring(0, 19);
+                    }
                     break;
                 case ModeType.RealTime:
-                    NoFutureWait = mode.Element("Params").Element("NoFutureWait").Value;
-                    MaxNoFutureCount = mode.Element("Params").Element("MaxNoFutureCount").Value;
-                    FutureWait = mode.Element("Params").Element("FutureWait").Value;
-                    MaxFutureCount = mode.Element("Params").Element("MaxFutureCount").Value;
-                    UTCoffset = mode.Element("Params").Element("UTCoffset").Value;
+                    input = mode.Element("Params").Element("NoFutureWait");
+                    if(input != null)
+                    {
+                        NoFutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxNoFutureCount");
+                    if (input != null)
+                    {
+                        MaxNoFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("FutureWait");
+                    if (true)
+                    {
+                        FutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxFutureCount");
+                    if (input != null)
+                    {
+                        MaxFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("UTCoffset");
+                    if (input != null)
+                    {
+                        UTCoffset = input.Value;
+                    }
                     break;
                 case ModeType.Hybrid:
-                    DateTimeStart = mode.Element("Params").Element("DateTimeStart").Value;
-                    NoFutureWait = mode.Element("Params").Element("NoFutureWait").Value;
-                    MaxNoFutureCount = mode.Element("Params").Element("MaxNoFutureCount").Value;
-                    FutureWait = mode.Element("Params").Element("FutureWait").Value;
-                    MaxFutureCount = mode.Element("Params").Element("MaxFutureCount").Value;
-                    RealTimeRange = mode.Element("Params").Element("RealTimeRange").Value;
-                    UTCoffset = mode.Element("Params").Element("UTCoffset").Value;
+                    input = mode.Element("Params").Element("DateTimeStart");
+                    if (input != null)
+                    {
+                        DateTimeStart = input.Value.Substring(0, 19);
+                    }
+                    input = mode.Element("Params").Element("NoFutureWait");
+                    if (input != null)
+                    {
+                        NoFutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxNoFutureCount");
+                    if (input != null)
+                    {
+                        MaxNoFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("FutureWait");
+                    if (true)
+                    {
+                        FutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxFutureCount");
+                    if (input != null)
+                    {
+                        MaxFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("UTCoffset");
+                    if (input != null)
+                    {
+                        UTCoffset = input.Value;
+                    }
+                    input = mode.Element("Params").Element("RealTimeRange");
+                    if (input != null)
+                    {
+                        RealTimeRange = input.Value;
+                    }
                     break;
                 default:
                     throw new Exception("Mode type not recognized.");
