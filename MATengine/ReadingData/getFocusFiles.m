@@ -30,6 +30,10 @@ if(isempty(FileInfo.lastFocusFile))
 else
     % tPMU is from the last processed focus file
     InitialFocusFileTime = ceil(FileInfo.tPMU(end)*24*3600)/24/3600; 
+    
+%     while InitialFocusFileTime > datenum(datetime('now','TimeZone','UTC'))-110.6478
+%         pause(10);
+%     end
 end
 
 % Check focus file time: time to quit?, time to transition to real-time
