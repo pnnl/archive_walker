@@ -89,7 +89,6 @@
     <Compile Include="Converters\DateTimeStringConverter.cs" />
     <Compile Include="Converters\DetectorExpanderHeaderConverter.cs" />
     <Compile Include="Converters\EnumToStringConverters.cs" />
-    <Compile Include="Converters\InverseBooleanVisibilityConverter.cs" />
     <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
     <Compile Include="Converters\SelectionStatusBackgroundConverter.cs" />
     <Compile Include="Converters\TableRowIndexConverter.cs" />

@@ -107,7 +107,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         {
                             MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
-                        if (FileType == DataFileType.PI)
+                        if (FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian)
                         {
                             Mnemonic = "";
                             //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.

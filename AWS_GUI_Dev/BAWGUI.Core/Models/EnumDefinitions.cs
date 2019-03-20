@@ -46,7 +46,9 @@ namespace BAWGUI.Core.Models
         [Description("HQ Point on Wave")]
         powHQ,
         [Description("PI Database")]
-        PI
+        PI,
+        [Description("openHistorian")]
+        OpenHistorian
     }
 
     public enum ModeType

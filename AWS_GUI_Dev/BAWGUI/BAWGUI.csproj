@@ -337,4 +337,8 @@
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Debug XCOPY /Y /S /F "$(SolutionDir)..\MATengine\matlabDLLs" "$(TargetDir)matlabDLLs\"
+if $(ConfigurationName) == Release XCOPY /Y /S /F "$(SolutionDir)..\MATengine\matlabDLLs" "$(TargetDir)..\matlabDLLs\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

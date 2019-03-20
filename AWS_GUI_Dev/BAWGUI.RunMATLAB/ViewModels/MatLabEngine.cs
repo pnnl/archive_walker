@@ -17,7 +17,7 @@ using BAWGUI.MATLABRunResults.Models;
 using System.Collections.ObjectModel;
 using BAWGUI.Core.ViewModels;
 
-[assembly: NOJVM(true)]
+//[assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
 {
     public class MatLabEngine : ViewModelBase
@@ -738,13 +738,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
-                MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                MessageBox.Show("Error in running matlab GetFileExample: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
             IsMatlabEngineRunning = false;
             return FileReadingResults;
         }
 
-        public ReadExampleFileResults GetPIFileExample(string starttime, string preset, string filename)
+        public ReadExampleFileResults GetDBFileExample(string starttime, string preset, string filename, string dbtype)
         {
             var FileReadingResults = new ReadExampleFileResults();
             var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
@@ -756,13 +756,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "PI"));
-                //FileReadingResults.GetSignals((MWStructArray)_matlabEngine.(start, preset, filename, 1));
+                if (dbtype == "PI")
+                {
+                    FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "PI"));
+                }
+                else if (dbtype == "openHistorian")
+                {
+                    FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "OpenHistorian"));
+                }
+                else { }            
             }
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
-                MessageBox.Show("Error in running matlab ringdown re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                MessageBox.Show("Error in running matlab GetFileExampleDB: " + ex.Message, "Error!", MessageBoxButtons.OK);
             }
             IsMatlabEngineRunning = false;
             return FileReadingResults;
@@ -1025,7 +1032,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = false;
         }
 
-        public void GetPIExamplePISignals(string starttime, string mnemonic, string exampleFile)
+        public void GetDBExampleSignals(string starttime, string mnemonic, string exampleFile, string dbtype)
         {
             if (IsMatlabEngineRunning)
             {
@@ -1038,7 +1045,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             try
             {
                 var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
-                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrievePIDataMode);
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrieveDBDataMode);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
                 worker.WorkerReportsProgress = false;
@@ -1052,7 +1059,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     Thread.Sleep(500);
                 }
-                object[] parameters = new object[] { start, mnemonic, exampleFile };
+                object[] parameters = new object[] { start, mnemonic, exampleFile, dbtype };
                 worker.RunWorkerAsync(parameters);
                 worker2.RunWorkerAsync();
                 IsReRunRunning = true;
@@ -1063,7 +1070,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
         }
 
-        private void _runRetrievePIDataMode(object sender, DoWorkEventArgs e)
+        private void _runRetrieveDBDataMode(object sender, DoWorkEventArgs e)
         {
             if (Thread.CurrentThread.Name == null)
             {
@@ -1073,12 +1080,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
             var starttime = parameters[0] as string;
             var preset = parameters[1] as string;
             var filename = parameters[2] as string;
+            var dbtype = parameters[3] as string;
             var FileReadingResults = new ReadExampleFileResults();
             IsMatlabEngineRunning = true;
             try
             {
-                FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "PI"));
-                //FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExamplePI(starttime, preset, filename, 0));
+                if (dbtype == "PI")
+                {
+                    FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "PI"));
+                }
+                else if (dbtype == "openHistorian")
+                {
+                    FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "OpenHistorian"));
+                }
             }
             catch (Exception ex)
             {

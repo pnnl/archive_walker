@@ -1,6 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows.Forms
-Imports PDAT_Reader
 Imports System.IO
 Imports System.Windows.Input
 Imports System.Windows
@@ -768,16 +767,19 @@ Namespace ViewModels
             openFileDialog.RestoreDirectory = True
             openFileDialog.FileName = ""
             openFileDialog.DefaultExt = ".pdat"
-            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
             If obj.FileType = DataFileType.csv Then
                 openFileDialog.DefaultExt = ".csv"
-                openFileDialog.Filter = "JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|All files (*.*)|*.*"
+                openFileDialog.Filter = "JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
             ElseIf obj.FileType = DataFileType.PI Then
                 openFileDialog.DefaultExt = ".xml"
-                openFileDialog.Filter = "PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|All files (*.*)|*.*"
+                openFileDialog.Filter = "PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
             ElseIf obj.FileType = DataFileType.powHQ Then
                 openFileDialog.DefaultExt = ".mat"
-                openFileDialog.Filter = "HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
+                openFileDialog.Filter = "HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            ElseIf obj.FileType = DataFileType.OpenHistorian Then
+                openFileDialog.DefaultExt = ".xml"
+                openFileDialog.Filter = "openHistorian Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
             End If
             If _lastInputFolderLocation Is Nothing Then
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory
@@ -1106,18 +1108,18 @@ Namespace ViewModels
             obj.ExampleFile = ""
             obj.FileDirectory = ""
             obj.Mnemonic = ""
-            If obj.FileType = DataFileType.PI Then
-                DataConfigure.ReaderProperty.ModeName = ModeType.Archive
-                DataConfigure.ReaderProperty.CanChooseMode = False
-            Else
-                DataConfigure.ReaderProperty.CanChooseMode = True
-                For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                    If info.FileType = DataFileType.PI Then
-                        DataConfigure.ReaderProperty.CanChooseMode = False
-                        Exit For
-                    End If
-                Next
-            End If
+            'If obj.FileType = DataFileType.PI Then
+            '    DataConfigure.ReaderProperty.ModeName = ModeType.Archive
+            '    DataConfigure.ReaderProperty.CanChooseMode = False
+            'Else
+            'DataConfigure.ReaderProperty.CanChooseMode = True
+            '    For Each info In DataConfigure.ReaderProperty.InputFileInfos
+            '        If info.FileType = DataFileType.PI Then
+            '            DataConfigure.ReaderProperty.CanChooseMode = False
+            '            Exit For
+            '        End If
+            '    Next
+            'End If
         End Sub
         'Private _canChooseMode As Boolean
         'Public Property CanChooseMode As Boolean
@@ -4507,15 +4509,15 @@ Namespace ViewModels
                         End If
                     Next
                 End If
-                If obj.FileType = DataFileType.PI Then
-                    DataConfigure.ReaderProperty.CanChooseMode = True
-                    For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                        If info.FileType = DataFileType.PI Then
-                            DataConfigure.ReaderProperty.CanChooseMode = False
-                            Exit For
-                        End If
-                    Next
-                End If
+                'If obj.FileType = DataFileType.PI Then
+                '    DataConfigure.ReaderProperty.CanChooseMode = True
+                '    For Each info In DataConfigure.ReaderProperty.InputFileInfos
+                '        If info.FileType = DataFileType.PI Then
+                '            DataConfigure.ReaderProperty.CanChooseMode = False
+                '            Exit For
+                '        End If
+                '    Next
+                'End If
                 'If _configData IsNot Nothing Then
                 '    _readDataConfigStages(_configData)
                 '    _readProcessConfig(_configData)

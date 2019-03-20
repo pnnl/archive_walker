@@ -166,11 +166,22 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         try
                         {
-                            _readPIExampleFile(aFileInfo, starttime);
+                            _readDBExampleFile(aFileInfo, starttime, "PI");
                         }
                         catch (Exception ex)
                         {
                             MissingExampleFile.Add(MissingExampleFile + "Error reading PI database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                        }
+                    }
+                    else if (item.FileType == DataFileType.OpenHistorian)
+                    {
+                        try
+                        {
+                            _readDBExampleFile(aFileInfo, starttime, "openHistorian");
+                        }
+                        catch (Exception ex)
+                        {
+                            MissingExampleFile.Add(MissingExampleFile + "Error reading openHistorian database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
                     FileInfo.Add(aFileInfo);
@@ -232,11 +243,22 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     try
                     {
-                        _readPIExampleFile(model, starttime);
+                        _readDBExampleFile(model, starttime, "PI");
                     }
                     catch (Exception ex)
                     {
                         throw new Exception("Error reading PI database. " + ex.Message);
+                    }
+                }
+                else if (model.Model.FileType == DataFileType.OpenHistorian)
+                {
+                    try
+                    {
+                        _readDBExampleFile(model, starttime, "openHistorian");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading openHistorian database. " + ex.Message);
                     }
                 }
                 FileInfo.Add(model);
@@ -251,9 +273,9 @@ namespace BAWGUI.SignalManagement.ViewModels
             _organizeSignals(aFileInfo, signalInformation);
         }
 
-        private void _readPIExampleFile(InputFileInfoViewModel model, string starttime)
+        private void _readDBExampleFile(InputFileInfoViewModel model, string starttime, string dbtype)
         {
-            var signalInformation = _engine.GetPIFileExample(starttime, model.Mnemonic, model.ExampleFile);
+            var signalInformation = _engine.GetDBFileExample(starttime, model.Mnemonic, model.ExampleFile, dbtype);
             _organizeSignals(model, signalInformation);
         }
 
@@ -2880,7 +2902,11 @@ namespace BAWGUI.SignalManagement.ViewModels
                     }
                     else if (info.FileType == DataFileType.PI)
                     {
-                        _engine.GetPIExamplePISignals(starttime, info.Mnemonic, info.ExampleFile);
+                        _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "PI");
+                    }
+                    else if (info.FileType == DataFileType.OpenHistorian)
+                    {
+                        _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "OpenHistorian");
                     }
                 }
                 catch (Exception ex)

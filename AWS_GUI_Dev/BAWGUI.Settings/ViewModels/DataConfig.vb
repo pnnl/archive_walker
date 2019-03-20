@@ -410,11 +410,11 @@ Namespace ViewModels
         End Property
 
         Public Function GetCanChooseMode() As Boolean
-            For Each info In InputFileInfos
-                If info.FileType = DataFileType.PI Then
-                    Return False
-                End If
-            Next
+            'For Each info In InputFileInfos
+            '    If info.FileType = DataFileType.PI Then
+            '        Return False
+            '    End If
+            'Next
             Return True
         End Function
         'Private _fileDirectory As String
