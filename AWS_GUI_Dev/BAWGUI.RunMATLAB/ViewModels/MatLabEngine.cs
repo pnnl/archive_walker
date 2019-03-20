@@ -756,8 +756,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                //FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "PI"));
-                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.(start, preset, filename, 1));
+                FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "PI"));
+                //FileReadingResults.GetSignals((MWStructArray)_matlabEngine.(start, preset, filename, 1));
             }
             catch (Exception ex)
             {
@@ -1077,8 +1077,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                //FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "PI"));
-                FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExamplePI(starttime, preset, filename, 0));
+                FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "PI"));
+                //FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExamplePI(starttime, preset, filename, 0));
             }
             catch (Exception ex)
             {

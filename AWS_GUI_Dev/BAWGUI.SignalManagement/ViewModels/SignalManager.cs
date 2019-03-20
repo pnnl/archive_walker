@@ -2832,7 +2832,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 SelectedSignalPlotPanel = null;
             }
         }
-        public void GetRawSignalData(InputFileInfoViewModel info)
+        public void GetRawSignalData(InputFileInfoViewModel info, string starttime)
         {
             //SignalViewPlotModel = null;
             if (info != null && File.Exists(info.ExampleFile) && Enum.IsDefined(typeof(DataFileType), info.FileType))
@@ -2848,9 +2848,13 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         _engine.GetFileExampleSignalData(info.ExampleFile, 1);
                     }
-                    else
+                    else if (info.FileType == DataFileType.powHQ)
                     {
                         _engine.GetFileExampleSignalData(info.ExampleFile, 3);
+                    }
+                    else if (info.FileType == DataFileType.PI)
+                    {
+                        _engine.GetPIExamplePISignals(starttime, info.Mnemonic, info.ExampleFile);
                     }
                 }
                 catch (Exception ex)
