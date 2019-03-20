@@ -22,5 +22,8 @@
         <TabItem Header="Detection">
             <local:DetectorConfigTabInSettings/>
         </TabItem>
+        <TabItem Header="Data Writer">
+            <local:DataWriterDetectorTab/>
+        </TabItem>
     </TabControl>
 </UserControl>

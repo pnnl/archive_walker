@@ -62,7 +62,12 @@
                 <GroupBox Header="Real-Time Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" Margin="2">
-                            <TextBlock VerticalAlignment="Center" TextWrapping="WrapWithOverflow"> When data beyond the expected file is not available, wait</TextBlock>
+                            <TextBlock VerticalAlignment="Center" TextWrapping="WrapWithOverflow"> UTC Offset of Data Timestamps </TextBlock>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.UTCoffset}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                            <TextBlock VerticalAlignment="Center"> (hours). </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock VerticalAlignment="Center" TextWrapping="WrapWithOverflow"> When data beyond the expected file is not available, wait </TextBlock>
                             <TextBox Text="{Binding DataConfigure.ReaderProperty.NoFutureWait}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
                             <TextBlock VerticalAlignment="Center"> seconds </TextBlock>
                             <TextBox Text="{Binding DataConfigure.ReaderProperty.MaxNoFutureCount}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
@@ -81,6 +86,11 @@
             <DataTemplate x:Key="HybridParameter">
                 <GroupBox Header="Hybrid Mode Parameters" BorderBrush="LightGray" BorderThickness="1" Margin="4,10">
                     <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock VerticalAlignment="Center" TextWrapping="WrapWithOverflow"> UTC Offset of Data Timestamps</TextBlock>
+                            <TextBox Text="{Binding DataConfigure.ReaderProperty.UTCoffset}" HorizontalAlignment="Right" Margin="8" Width="100" HorizontalContentAlignment="Right"/>
+                            <TextBlock VerticalAlignment="Center"> (hours). </TextBlock>
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="2">
                             <Label Content="Start Time" Width="150" Margin="2" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Vertical" Margin="2">

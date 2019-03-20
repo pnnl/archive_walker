@@ -80,6 +80,8 @@ Namespace ViewModels
             _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox = New DelegateCommand(AddressOf _setCurrentPointOnWavePowerCalFilterInput, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
+            _addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
+            _deleteDataWriterDetector = New DelegateCommand(AddressOf _deleteADataWriterDetector, AddressOf CanExecute)
 
             '_inputFileDirTree = New ObservableCollection(Of Folder)
             _signalMgr = SignalManager.Instance
@@ -4540,6 +4542,10 @@ Namespace ViewModels
                         '_groupAllPostProcessConfigOutputSignal()
                         _deSelectAllDetectors()
                     End If
+                    If _oldTabIndex = 5 And _currentTabIndex <> 5 Then
+                        '_groupAllPostProcessConfigOutputSignal()
+                        _deSelectAllDetectors()
+                    End If
 
                     If (_currentTabIndex <= 1 AndAlso _oldTabIndex >= 2) OrElse (_currentTabIndex >= 2 AndAlso _oldTabIndex <= 1) Then
                         _reverseSignalPassedThroughNameTypeUnit()
@@ -4560,7 +4566,7 @@ Namespace ViewModels
                         If _oldTabIndex = 2 Then
                             _reGroupRawSignalByType()
                         End If
-                    ElseIf _currentTabIndex = 4 Then
+                    ElseIf _currentTabIndex = 4 OrElse _currentTabIndex = 5 Then
                         Dim allDataConfigOutputSignals = _getAllDataConfigOutput()
                         _signalMgr.AllDataConfigOutputGroupedByType = _signalMgr.SortSignalByType(allDataConfigOutputSignals)
                         _signalMgr.AllDataConfigOutputGroupedByPMU = _signalMgr.SortSignalByPMU(allDataConfigOutputSignals)

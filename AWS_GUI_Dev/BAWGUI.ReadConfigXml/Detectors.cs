@@ -1423,4 +1423,51 @@ namespace BAWGUI.ReadConfigXml
         }
     }
 
+    public class DataWriterDetectorModel
+    {
+        private XElement _item;
+        public DataWriterDetectorModel()
+        {
+
+        }
+        public DataWriterDetectorModel(XElement item)
+        {
+            this._item = item;
+            PMUElementList = PMUElementReader.ReadPMUElements(_item);
+            var par = _item.Element("SavePath");
+            if (par != null)
+            {
+                SavePath = par.Value;
+            }
+            par = _item.Element("SeparatePMUs");
+            if (par != null)
+            {
+                if (par.Value.ToLower() == "true")
+                {
+                    SeparatePMUs = true;
+                }
+                else
+                {
+                    SeparatePMUs = false;
+                }
+            }
+            par = _item.Element("Mnemonic");
+            if (par != null)
+            {
+                Mnemonic = par.Value;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return "Data Writer";
+            }
+        }
+        public string SavePath { get; set; }
+        public bool SeparatePMUs { get; set; }
+        public string Mnemonic { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
+    }
 }
