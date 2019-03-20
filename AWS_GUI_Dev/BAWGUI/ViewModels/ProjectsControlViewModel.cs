@@ -13,6 +13,7 @@ using BAWGUI.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.Settings.ViewModels;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -133,21 +134,31 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand BrowseResultsStorage { get; set; }
         private void _browseResultsStorage(object obj)
         {
-            using (var fbd = new FolderBrowserDialog())
+            using (var fbd = new CommonOpenFileDialog())
             {
-                fbd.SelectedPath = ResultsStoragePath;
-                DialogResult result = fbd.ShowDialog();
+                fbd.InitialDirectory = ResultsStoragePath;
+                fbd.IsFolderPicker = true;
+                fbd.AddToMostRecentlyUsedList = true;
+                fbd.AllowNonFileSystemItems = false;
+                fbd.DefaultDirectory = ResultsStoragePath;
+                fbd.EnsureFileExists = true;
+                fbd.EnsurePathExists = true;
+                fbd.EnsureReadOnly = false;
+                fbd.EnsureValidNames = true;
+                fbd.Multiselect = false;
+                fbd.ShowPlacesList = true;
+                CommonFileDialogResult result = fbd.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                if (result == CommonFileDialogResult.Ok && !string.IsNullOrWhiteSpace(fbd.FileName))
                 {
-                    ResultsStoragePath = fbd.SelectedPath;
+                    ResultsStoragePath = fbd.FileName;
                     try
                     {
                         _generateProjectTree(ResultsStoragePath);
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
+                        System.Windows.Forms.MessageBox.Show("Error reading project folder. Original error: " + ex.Message, "Error!", MessageBoxButtons.OK);
                     }
                     //string[] files = Directory.GetFiles(ResultsStoragePath);
                 }
