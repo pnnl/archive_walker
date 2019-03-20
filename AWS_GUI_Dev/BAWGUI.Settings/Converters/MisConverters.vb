@@ -83,6 +83,17 @@ Namespace Converters
                                            "Output from Post-Processing Customization by Signal Type",
                                            "Output from Post-Processing Customization by PMU",
                                            "Input Channels by Step"}.ToList
+                    Case 5
+                        value1 = {"All Initial Input Channels by Signal Type",
+                                           "All Initial Input Channels by PMU",
+                                           "Output from Data Quality and Customization by Signal Type",
+                                           "Output from Data Quality and Customization by PMU",
+                                           "Output from Signal Processing by Signal Type",
+                                           "Output from Signal Processing by PMU",
+                                           "Output from Post-Processing Customization by Signal Type",
+                                           "Output from Post-Processing Customization by PMU",
+                                           "Input to Detectors by Step",
+                                           "Input Channels by Step"}.ToList
                 End Select
             End If
             Return value1

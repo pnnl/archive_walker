@@ -706,7 +706,16 @@ Namespace ViewModels
             End Set
         End Property
 
-
+        Private _utcoffset As String
+        Public Property UTCoffset As String
+            Get
+                Return _model.UTCoffset
+            End Get
+            Set(ByVal value As String)
+                _model.UTCoffset = value
+                OnPropertyChanged()
+            End Set
+        End Property
         'Private _modeParams As ObservableCollection(Of ParameterValuePair)
         'Public Property ModeParams As ObservableCollection(Of ParameterValuePair)
         '    Get

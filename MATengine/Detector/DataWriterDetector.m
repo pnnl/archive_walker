@@ -37,7 +37,7 @@ Mnemonic = ExtractedParameters.Mnemonic;
 if SeparatePMUs
     % PMUs are to be separated into different folders
     uPMU = unique(DataPMU);
-    FolderIdx = cell(1,length(FolderIdx));
+    FolderIdx = cell(1,length(uPMU));
     
     for uIdx = 1:length(uPMU)
         FolderIdx{uIdx} = find(strcmp(uPMU{uIdx}, DataPMU));
@@ -65,7 +65,7 @@ for idx = 1:length(FolderIdx)
     H1 = ['Time' DataChannel(ThisIdx)];
     H2 = ['Type' DataType(ThisIdx)];
     H3 = ['second' DataUnit(ThisIdx)];
-    H4 = H1;
+    H4 = ['Time' strcat(DataPMU(ThisIdx), '_', DataChannel(ThisIdx))];
     H = {H1,H2,H3,H4};
     
     FullSavePath = fullfile(SavePath,ThisSubFolder,TS(1:4),TS(3:8));

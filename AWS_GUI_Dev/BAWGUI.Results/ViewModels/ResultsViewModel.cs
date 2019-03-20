@@ -428,7 +428,7 @@ namespace BAWGUI.Results.ViewModels
             var dateTimeNode = from el in _configData.Descendants("DateTimeEnd") select(string)el;
             if (dateTimeNode.Any())
             {
-                _lastDateOfTheRun = System.DateTime.ParseExact(dateTimeNode.FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
+                _lastDateOfTheRun = System.DateTime.ParseExact(dateTimeNode.FirstOrDefault(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
             }
             //_lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
             if (!String.IsNullOrEmpty(_resultPath) && Directory.Exists(_resultPath))

@@ -45,6 +45,8 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByDataWriterDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+
             _engine = MatLabEngine.Instance;
             _dataViewGroupMethods = new List<string>(new string[] { "View Signal by Type", "View Signal by PMU" });
             AddPlot = new RelayCommand(_addAPlot);
@@ -89,6 +91,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             _allPostProcessOutputGroupedByType = new ObservableCollection<SignalTypeHierachy>();
             _allPostProcessOutputGroupedByPMU = new ObservableCollection<SignalTypeHierachy>();
             _groupedSignalByDetectorInput = new ObservableCollection<SignalTypeHierachy>();
+            _groupedSignalByDataWriterDetectorInput = new ObservableCollection<SignalTypeHierachy>();
         }
 
         private MatLabEngine _engine;
@@ -1705,6 +1708,16 @@ namespace BAWGUI.SignalManagement.ViewModels
                 else
                     stepInput.SignalSignature.IsChecked = false;
             }
+            foreach (var stepInput in GroupedSignalByDataWriterDetectorInput)
+            {
+                if (stepInput.SignalList.Count > 0)
+                {
+                    _determineParentGroupedByTypeNodeStatus(stepInput.SignalList);
+                    _determineParentCheckStatus(stepInput);
+                }
+                else
+                    stepInput.SignalSignature.IsChecked = false;
+            }
         }
         public void PostProcessDetermineAllParentNodeStatus()
         {
@@ -1982,7 +1995,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                             group.SignalSignature.IsEnabled = true;
                     }
                 }
-                else if (_currentTabIndex == 4)
+                else if (_currentTabIndex == 4 || _currentTabIndex == 5)
                 {
                     foreach (var group in ReGroupedRawSignalsByType)
                     {
@@ -2139,7 +2152,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 foreach (var group in AllProcessConfigOutputGroupedByType)
                     group.SignalSignature.IsEnabled = true;
             }
-            else if (_currentTabIndex == 4)
+            else if (_currentTabIndex == 4 || _currentTabIndex == 5)
             {
                 foreach (var group in ReGroupedRawSignalsByType)
                 {
@@ -2410,6 +2423,19 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _groupedSignalByDetectorInput = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<SignalTypeHierachy> _groupedSignalByDataWriterDetectorInput;
+        public ObservableCollection<SignalTypeHierachy> GroupedSignalByDataWriterDetectorInput
+        {
+            get
+            {
+                return _groupedSignalByDataWriterDetectorInput;
+            }
+            set
+            {
+                _groupedSignalByDataWriterDetectorInput = value;
                 OnPropertyChanged();
             }
         }
