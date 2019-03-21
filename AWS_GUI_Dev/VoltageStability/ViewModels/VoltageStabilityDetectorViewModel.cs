@@ -12,9 +12,9 @@ using VoltageStability.Models;
 
 namespace VoltageStability.ViewModels
 {
-    public class VoltageStabilityDetectorViewModel:DetectorBase
+    public class VoltageStabilityDetectorViewModel : DetectorBase
     {
-        public VoltageStabilityDetectorViewModel(SignalManager signalMgr)
+        public VoltageStabilityDetectorViewModel(SignalManager signalMgr) : this()
         {
             var newDetector = new VoltageStabilityDetector();
             newDetector.Sites = new ObservableCollection<Site>();
@@ -28,11 +28,18 @@ namespace VoltageStability.ViewModels
             _signalMgr = signalMgr;
             _setUpVSViewModel();
         }
-        public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr)
+        public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr) : this()
         {
             _model = model;
             _signalMgr = signalMgr;
             _setUpVSViewModel();
+        }
+
+        public VoltageStabilityDetectorViewModel()
+        {
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>();
+            ThisStepInputsAsSignalHerachyByType = new SignalTypeHierachy();
+            IsExpanded = false;
         }
 
         private void _setUpVSViewModel()
@@ -294,7 +301,7 @@ namespace VoltageStability.ViewModels
                     var parent = parameter1 as SiteViewModel;
                     switch (parameter2)
                     {
-                        case "Frequency": 
+                        case "Frequency":
                             keepSignal = parent.Frequency;
                             break;
                         default:
@@ -360,12 +367,12 @@ namespace VoltageStability.ViewModels
                 default:
                     break;
             }
-                foreach (var sig in InputChannels)
+            foreach (var sig in InputChannels)
+            {
+                if (sig != keepSignal)
                 {
-                    if (sig != keepSignal)
-                    {
-                        sig.IsChecked = false;
-                    }
+                    sig.IsChecked = false;
+                }
             }
             if (keepSignal != null)
             {
@@ -413,7 +420,7 @@ namespace VoltageStability.ViewModels
                     break;
                 case "VoltageBusViewModel":
                     var parent2 = parameter1 as VoltageBusViewModel;
-                    switch(parameter2)
+                    switch (parameter2)
                     {
                         case "Magnitude":
                             if ((bool)newSignal.IsChecked)
