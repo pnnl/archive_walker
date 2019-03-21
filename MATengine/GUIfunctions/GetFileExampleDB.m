@@ -27,10 +27,24 @@ function PMU = GetFileExampleDB(StartTime,preset,PresetFile,MetaOnly,DBtype)
 
 FileLength = 60;
 StartTime = datenum(StartTime,'mm/dd/yyyy HH:MM:SS');
-if strcmp(DBtype,'PI')
-    [PMU,~,fs] = PIreaderDLL(StartTime,0,FileLength,preset,PresetFile);
-elseif strcmp(DBtype,'OpenHistorian')
-    [PMU,~,fs] = OHreader(StartTime,0,FileLength,preset,PresetFile);
+
+try
+    Unsupported = 0;
+    if strcmp(DBtype,'PI')
+        [PMU,~,fs] = PIreaderDLL(StartTime,0,FileLength,preset,PresetFile);
+    elseif strcmp(DBtype,'OpenHistorian')
+        [PMU,~,fs] = OHreader(StartTime,0,FileLength,preset,PresetFile);
+    else
+        Unsupported = 1;
+        error(['FileType = ' num2str(FileType) ' is not a supported value.']);
+    end
+catch e
+    if Unsupported == 1
+        % Repeat error so that the message is captured by the GUI
+        error(['Database type ' DBtype ' is not supported.']);
+    else
+        error('Attempt to read data failed. Error message: \n%s',e.message)
+    end
 end
 
 if MetaOnly == 1
