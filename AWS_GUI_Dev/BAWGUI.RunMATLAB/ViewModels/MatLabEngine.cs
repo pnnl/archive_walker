@@ -769,7 +769,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
-                MessageBox.Show("Error in running matlab GetFileExampleDB: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                //MessageBox.Show("Error in running matlab GetFileExampleDB: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                throw new Exception("\nError in running matlab GetFileExampleDB: " + ex.Message);
             }
             IsMatlabEngineRunning = false;
             return FileReadingResults;
@@ -1097,7 +1098,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
-                MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                IsReRunRunning = false;
+                //MessageBox.Show("\nError in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                throw new Exception("\nError in running matlab retrieve data mode on background worker thread: " + ex.Message);
             }
 
             e.Result = FileReadingResults;

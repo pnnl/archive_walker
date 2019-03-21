@@ -134,7 +134,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            MissingExampleFile.Add(MissingExampleFile + "Error reading .csv file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            MissingExampleFile.Add("\nError reading .csv file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                             //MessageBox.Show("Error reading .csv file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
@@ -146,7 +146,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            MissingExampleFile.Add(MissingExampleFile + "Error reading .pdat file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            MissingExampleFile.Add("\nError reading .pdat file:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                             //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
@@ -158,7 +158,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            MissingExampleFile.Add(MissingExampleFile + "Error reading point on wave data:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            MissingExampleFile.Add("\nError reading point on wave data:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                             //MessageBox.Show("Error reading .pdat file. " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
                     }
@@ -170,7 +170,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            MissingExampleFile.Add(MissingExampleFile + "Error reading PI database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            MissingExampleFile.Add("\nError reading PI database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
                     else if (item.FileType == DataFileType.OpenHistorian)
@@ -181,7 +181,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            MissingExampleFile.Add(MissingExampleFile + "Error reading openHistorian database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                            MissingExampleFile.Add("\nError reading openHistorian database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
                     FileInfo.Add(aFileInfo);
@@ -281,36 +281,39 @@ namespace BAWGUI.SignalManagement.ViewModels
 
         private void _organizeSignals(InputFileInfoViewModel aFileInfo, ReadExampleFileResults signalInformation)
         {
-            ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
-            for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
+            if (signalInformation != null && signalInformation.PMUSignalsList != null && signalInformation.PMUSignalsList.Count > 0)
             {
-                var thisPMU = signalInformation.PMUSignalsList[idx];
-                var thisPMUName = signalInformation.PMUSignalsList[idx].PMUname;
-                for (int idx2 = 0; idx2 < thisPMU.SignalNames.Count; idx2++)
+                ObservableCollection<SignalSignatureViewModel> newSignalList = new ObservableCollection<SignalSignatureViewModel>();
+                for (int idx = 0; idx < signalInformation.PMUSignalsList.Count; idx++)
                 {
-                    var aSignal = new SignalSignatureViewModel();
-                    aSignal.SamplingRate = thisPMU.SamplingRate;
-                    aSignal.PMUName = thisPMUName;
-                    aSignal.SignalName = thisPMU.SignalNames[idx2];
-                    aSignal.Unit = thisPMU.SignalUnits[idx2];
-                    aSignal.TypeAbbreviation = thisPMU.SignalTypes[idx2];
-                    aSignal.OldSignalName = aSignal.SignalName;
-                    aSignal.OldTypeAbbreviation = aSignal.TypeAbbreviation;
-                    aSignal.OldUnit = aSignal.Unit;
-                    newSignalList.Add(aSignal);
+                    var thisPMU = signalInformation.PMUSignalsList[idx];
+                    var thisPMUName = signalInformation.PMUSignalsList[idx].PMUname;
+                    for (int idx2 = 0; idx2 < thisPMU.SignalNames.Count; idx2++)
+                    {
+                        var aSignal = new SignalSignatureViewModel();
+                        aSignal.SamplingRate = thisPMU.SamplingRate;
+                        aSignal.PMUName = thisPMUName;
+                        aSignal.SignalName = thisPMU.SignalNames[idx2];
+                        aSignal.Unit = thisPMU.SignalUnits[idx2];
+                        aSignal.TypeAbbreviation = thisPMU.SignalTypes[idx2];
+                        aSignal.OldSignalName = aSignal.SignalName;
+                        aSignal.OldTypeAbbreviation = aSignal.TypeAbbreviation;
+                        aSignal.OldUnit = aSignal.Unit;
+                        newSignalList.Add(aSignal);
+                    }
                 }
+                aFileInfo.SamplingRate = signalInformation.PMUSignalsList[0].SamplingRate;
+                aFileInfo.TaggedSignals = newSignalList;
+                var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+                newSig.SamplingRate = aFileInfo.SamplingRate;
+                var a = new SignalTypeHierachy(newSig);
+                a.SignalList = SortSignalByPMU(newSignalList);
+                GroupedRawSignalsByPMU.Add(a);
+                var b = new SignalTypeHierachy(newSig);
+                b.SignalList = SortSignalByType(newSignalList);
+                GroupedRawSignalsByType.Add(b);
+                ReGroupedRawSignalsByType = GroupedRawSignalsByType;
             }
-            aFileInfo.SamplingRate = signalInformation.PMUSignalsList[0].SamplingRate;
-            aFileInfo.TaggedSignals = newSignalList;
-            var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
-            newSig.SamplingRate = aFileInfo.SamplingRate;
-            var a = new SignalTypeHierachy(newSig);
-            a.SignalList = SortSignalByPMU(newSignalList);
-            GroupedRawSignalsByPMU.Add(a);
-            var b = new SignalTypeHierachy(newSig);
-            b.SignalList = SortSignalByType(newSignalList);
-            GroupedRawSignalsByType.Add(b);
-            ReGroupedRawSignalsByType = GroupedRawSignalsByType;
         }
 
         //private void _readCSVFile(InputFileInfoViewModel aFileInfo)
