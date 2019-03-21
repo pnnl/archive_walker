@@ -12,7 +12,7 @@ using VoltageStability.Models;
 
 namespace VoltageStability.ViewModels
 {
-    public class VoltageStabilityDetectorViewModel:DetectorBase
+    public class VoltageStabilityDetectorViewModel : DetectorBase
     {
         public VoltageStabilityDetectorViewModel(SignalManager signalMgr) : this()
         {
@@ -301,7 +301,7 @@ namespace VoltageStability.ViewModels
                     var parent = parameter1 as SiteViewModel;
                     switch (parameter2)
                     {
-                        case "Frequency": 
+                        case "Frequency":
                             keepSignal = parent.Frequency;
                             break;
                         default:
@@ -367,12 +367,12 @@ namespace VoltageStability.ViewModels
                 default:
                     break;
             }
-                foreach (var sig in InputChannels)
+            foreach (var sig in InputChannels)
+            {
+                if (sig != keepSignal)
                 {
-                    if (sig != keepSignal)
-                    {
-                        sig.IsChecked = false;
-                    }
+                    sig.IsChecked = false;
+                }
             }
             if (keepSignal != null)
             {
@@ -420,7 +420,7 @@ namespace VoltageStability.ViewModels
                     break;
                 case "VoltageBusViewModel":
                     var parent2 = parameter1 as VoltageBusViewModel;
-                    switch(parameter2)
+                    switch (parameter2)
                     {
                         case "Magnitude":
                             if ((bool)newSignal.IsChecked)
