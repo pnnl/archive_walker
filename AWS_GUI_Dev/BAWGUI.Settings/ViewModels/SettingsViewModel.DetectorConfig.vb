@@ -357,7 +357,7 @@ Namespace ViewModels
         End Property
 
         Private Sub _aDetectorStepDeSelected()
-            If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso CurrentSelectedStep.InputChannels.Count = 0 Then
+            If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso Not CurrentSelectedStep.CheckStepIsComplete Then
                 Forms.MessageBox.Show("Detectors have to have input signals!", "Error!", MessageBoxButtons.OK)
             End If
         End Sub

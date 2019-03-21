@@ -14,7 +14,7 @@ namespace VoltageStability.ViewModels
 {
     public class VoltageStabilityDetectorViewModel:DetectorBase
     {
-        public VoltageStabilityDetectorViewModel(SignalManager signalMgr)
+        public VoltageStabilityDetectorViewModel(SignalManager signalMgr) : this()
         {
             var newDetector = new VoltageStabilityDetector();
             newDetector.Sites = new ObservableCollection<Site>();
@@ -28,11 +28,18 @@ namespace VoltageStability.ViewModels
             _signalMgr = signalMgr;
             _setUpVSViewModel();
         }
-        public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr)
+        public VoltageStabilityDetectorViewModel(VoltageStabilityDetector model, SignalManager signalMgr) : this()
         {
             _model = model;
             _signalMgr = signalMgr;
             _setUpVSViewModel();
+        }
+
+        public VoltageStabilityDetectorViewModel()
+        {
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>();
+            ThisStepInputsAsSignalHerachyByType = new SignalTypeHierachy();
+            IsExpanded = false;
         }
 
         private void _setUpVSViewModel()
