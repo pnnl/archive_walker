@@ -172,6 +172,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             //return e.RingdownRerunResults.RingdownDetectorList;
         }
+
         //private List<RingdownDetector> _rdReRunResults = new List<RingdownDetector>();
         //public List<RingdownDetector> RDReRunResults
         //{
@@ -1215,6 +1216,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;
+        }
+
+        public void GenerateMMreport(string start, string end, string eventPath, string reportType, int dampThresh, int eventSepMinutes, string reportPath)
+        {
+            throw new NotImplementedException();
         }
     }
 }

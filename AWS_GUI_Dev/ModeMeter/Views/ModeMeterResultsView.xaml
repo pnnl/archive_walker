@@ -19,6 +19,7 @@
             <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Button Content="Retrieve Detail" Command="{Binding MMReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
             <Button Content="Cancel" Command="{Binding CancelMMReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Generate Report" Command="{Binding GenerateMMReport}" Height="25" Width="100" Margin="0" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Center"/>
         </StackPanel>
         <Grid>
             <Grid.RowDefinitions>
