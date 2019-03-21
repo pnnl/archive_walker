@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="ModeMeter.Views.ModeMeterResultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewscore="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             xmlns:local="clr-namespace:ModeMeter.Views"
+             xmlns:con="clr-namespace:BAWGUI.RunMATLAB.Converters;assembly=BAWGUI.RunMATLAB"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <con:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <viewscore:TimeFilterView Height="30" Margin="2"/>
+            <Button Content="Overview" Command="{Binding RunSparseMode}" Height="25" Width="80" Margin="20,2,5,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Retrieve Detail" Command="{Binding MMReRun}" Height="25" Width="100" Margin="40,0,2,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="{Binding Engine.IsReRunRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+            <Button Content="Cancel" Command="{Binding CancelMMReRun}" Height="25" Width="50" Margin="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                <TextBlock Text="Input" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Top" Margin="0,0,0,5"/>
+            </Grid>
+            <Expander Grid.Row="0" VerticalAlignment="Top" Margin="0" IsExpanded="True">
+                <ScrollViewer Grid.Row="1" MaxHeight="600">
+                    <local:SparseEventPlot/>
+                </ScrollViewer>
+            </Expander>
+            <Grid Grid.Row="1">
+                <Rectangle Height="22" Fill="MediumSeaGreen" Stroke="ForestGreen" HorizontalAlignment="Stretch"/>
+                <TextBlock Text="Output" FontSize="16" HorizontalAlignment="Center" FontWeight="Black" VerticalAlignment="Center" Margin="0,0,0,5"/>
+            </Grid>
+            <ScrollViewer Grid.Row="2" >
+                <local:MMReRunPlots/>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</UserControl>

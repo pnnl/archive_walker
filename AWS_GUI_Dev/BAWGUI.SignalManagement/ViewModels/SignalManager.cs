@@ -108,8 +108,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 return _instance;
             }
         }
-
-        public Boolean AddRawSignals(List<InputFileInfoModel> inputFileInfos)
+        public bool AddRawSignals(List<InputFileInfoModel> inputFileInfos)
         {
             var MissingExampleFile = new List<string>();
             bool ReadingSuccess = true;

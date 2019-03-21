@@ -22,7 +22,9 @@ Namespace ViewModels
                                                           "Spectral Coherence Forced Oscillation Detector",
                                                           "Ringdown Detector",
                                                           "Out-of-Range Detector",
-                                                          "Wind Ramp Detector"}
+                                                          "Wind Ramp Detector",
+                                                          "Voltage Stability",
+                                                          "Mode Meter Tool"}
             _alarmingDetectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}

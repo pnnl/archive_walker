@@ -1417,6 +1417,7 @@ Namespace ViewModels
             _signalMgr.GroupedSignalByDetectorInput = New ObservableCollection(Of SignalTypeHierachy)
             Dim newDetectorList = New ObservableCollection(Of DetectorBase)
             Dim detectors = From el In configData.<Config>.<DetectorConfig>.<Configuration>.Elements Select el
+            'Dim previousVoltageStabilityDetector As VoltageStability.Models.VoltageStabilityDetector
             For Each detector In detectors
                 Select Case detector.Name
                     Case "EventPath"
@@ -1440,6 +1441,26 @@ Namespace ViewModels
                         DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                     Case "Alarming"
                         _readAlarming(detector)
+                        'Case "Thevenin"
+                        '    Dim newVoltageStabilityDetector As VoltageStability.Models.VoltageStabilityDetector
+                        '    Dim newDetectorGroupID = detector.<DetectorGroupID>.Value
+                        '    If previousVoltageStabilityDetector IsNot Nothing AndAlso previousVoltageStabilityDetector.DetectorGroupID = newDetectorGroupID Then
+                        '        Dim newMethod = detector.<Method>.Value
+                        '        previousVoltageStabilityDetector.AddMethod(newMethod)
+                        '    Else
+                        '        newVoltageStabilityDetector = New VoltageStability.Models.VoltageStabilityDetectorGroupReader(detector).GetDetector()
+                        '        newDetectorList.Add(New VoltageStability.ViewModels.VoltageStabilityDetectorViewModel(newVoltageStabilityDetector))
+                        '        previousVoltageStabilityDetector = newVoltageStabilityDetector
+                        'Else
+                        '    If previousVoltageStabilityDetector.DetectorGroupID = newDetectorGroupID Then
+                        '        Dim newMethod = detector.<Method>.Value
+                        '        previousVoltageStabilityDetector.AddMethod(newMethod)
+                        '    Else
+                        '        newVoltageStabilityDetector = New VoltageStability.Models.VoltageStabilityDetectorGroupReader(detector).GetDetector()
+                        '        newDetectorList.Add(newVoltageStabilityDetector)
+                        '        previousVoltageStabilityDetector = newVoltageStabilityDetector
+                        '    End If
+                        'End If
                     Case Else
                         Throw New Exception("Unknown element found in DetectorConfig in config file.")
                 End Select

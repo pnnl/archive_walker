@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="ModeMeter.Views.FOParametersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModeMeter.Views"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="DetectorWindowTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="coremodels:DetectorWindowType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <coreconverters:EnumToStringConverter9 x:Key="EnumToStringConverter9"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="2" Grid.Column="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Type:" HorizontalAlignment="Left"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource DetectorWindowTypeValues}}" Text="{Binding WindowType, Converter={StaticResource EnumToStringConverter9}}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Interval (Hz):" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyInterval}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Length (seconds):" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowLength}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Overlap (seconds):" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlap}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Median Filter Width (Hz):" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MedianFilterFrequencyWidth}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Probability of False Detection:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding Pfa}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum Frequency (Hz):" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMin}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="7" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum Frequency (Hz):" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMax}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="8" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Tolerance (Hz):" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="8" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyTolerance}" HorizontalAlignment="Left"/>
+    </Grid>
+</UserControl>

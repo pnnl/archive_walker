@@ -13,6 +13,10 @@ using BAWGUI.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.Settings.ViewModels;
+using VoltageStability.Models;
+using VoltageStability.ViewModels;
+using ModeMeter.ViewModels;
+using ModeMeter.Models;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BAWGUI.RunMATLAB.ViewModels
@@ -338,6 +342,38 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
+                var detectorList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is VoltageStabilityDetectorViewModel).Select(x=>(VoltageStabilityDetectorViewModel)x).ToList();
+                if (detectorList.Count > 0)
+                {
+                    var MMDir = _generatedNewRun.Model.EventPath + "\\MM\\";
+                    if (!Directory.Exists(MMDir))
+                    {
+                        Directory.CreateDirectory(MMDir);
+                    }
+                    var vsWriter = new VoltageStabilityDetectorGroupWriter();
+                    try
+                    {
+                        vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
+                }
+                var modeMeterList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is SmallSignalStabilityToolViewModel).Select(x => (SmallSignalStabilityToolViewModel)x).ToList();
+                if (modeMeterList.Count > 0)
+                {
+                    var mmWriter = new ModeMeterXmlWriter();
+                    try
+                    {
+                        mmWriter.WriteXmlCofigFile(_generatedNewRun.Model, modeMeterList);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
+                }
+                if (SelectedRun != null)
                 //if matlab engine is running, only save the new config file, but not switch selected run so it won't trigger possible matlab engine to read pdat file in the newly selected run
                 if (IsMatlabEngineRunning)
                 {

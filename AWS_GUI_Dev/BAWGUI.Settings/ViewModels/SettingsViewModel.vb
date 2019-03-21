@@ -10,6 +10,8 @@ Imports BAWGUI.Utilities
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.Core.Models
+Imports VoltageStability.ViewModels
+Imports ModeMeter.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -1298,6 +1300,21 @@ Namespace ViewModels
                             Forms.MessageBox.Show("Please choose a way to specify sampling rate for Multirate!", "Error!", MessageBoxButtons.OK)
                             _addLog("Error selecting signal(s) for Multirate! No sampling rate specified!")
                         End If
+                    ElseIf TypeOf _currentSelectedStep Is VoltageStabilityDetectorViewModel Then
+                        'If obj.SignalList.Count > 0 Then
+                        '    Throw New Exception("Only single signal selection is allowed.")
+                        'End If
+                        Try
+                            _currentSelectedStep.ChangeASignal(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing voltage stability detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
+                    ElseIf TypeOf _currentSelectedStep Is SmallSignalStabilityToolViewModel Then
+                        Try
+                            _currentSelectedStep.ChangeSignalSelection(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing mode meter signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try
                             _changeSignalSelection(obj)

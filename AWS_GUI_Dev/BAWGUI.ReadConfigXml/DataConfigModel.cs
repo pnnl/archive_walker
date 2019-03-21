@@ -460,25 +460,32 @@ namespace BAWGUI.ReadConfigXml
             {
                 var newList = new List<SignalSignatures>();
                 var inputs = item.Elements("PMU");
-                foreach (var aInput in inputs)
+                if (inputs != null)
                 {
-                    var pmuName = aInput.Element("Name").Value;
-                    var channels = aInput.Elements("Channel");
-                    if (channels.Count() > 0)
+                    foreach (var aInput in inputs)
                     {
-                        foreach (var channel in channels)
+                        var pmuName = aInput.Element("Name").Value;
+                        var channels = aInput.Elements("Channel");
+                        if (channels.Count() > 0)
                         {
-                            var channelName = channel.Element("Name").Value;
-                            var newElement = new SignalSignatures(pmuName, channelName);
+                            foreach (var channel in channels)
+                            {
+                                var channelName = channel.Element("Name").Value;
+                                var newElement = new SignalSignatures(pmuName, channelName);
+                                newList.Add(newElement);
+                            }
+                        }
+                        else
+                        {
+                            var newElement = new SignalSignatures();
+                            newElement.PMUName = pmuName;
                             newList.Add(newElement);
                         }
                     }
-                    else
-                    {
-                        var newElement = new SignalSignatures();
-                        newElement.PMUName = pmuName;
-                        newList.Add(newElement);
-                    }
+                }
+                else
+                {
+                    throw new Exception("No PMU element found!");
                 }
                 return newList;
             }
