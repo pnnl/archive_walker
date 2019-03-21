@@ -952,7 +952,7 @@ Namespace ViewModels
             If File.Exists(Run.Model.ConfigFilePath) Then
                 Dim writer = New ConfigFileWriter(Me, Run.Model)
                 'writer.UpdateExampleFileAddress(exampleFilePath)
-                writer.WriteXmlConfigFile(exampleFilePath)
+                writer.WriteXmlConfigFile(Run.Model.ConfigFilePath)
             Else
                 Forms.MessageBox.Show("Task does not exist yet.", "Error!", MessageBoxButtons.OK)
             End If
