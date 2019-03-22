@@ -4,9 +4,11 @@ function [PMU,tPMU,fs] = PIreaderDLL(StartTime,Num_Flags,FileLength,preset,Prese
 if isdeployed
     % The GUI is calling the function, so point to the matlabDLLs folder
     % within the GUI folder
-    [~,result] = system('path');
-    SourceDir = char(regexpi(result, 'Path=(.*?);', 'tokens', 'once'));
-    dllpath  = [SourceDir '\matlabDLLs\PI\OpenPI.dll']; % Full pathname is required
+%     [~,result] = system('path');
+%     SourceDir = char(regexpi(result, 'Path=(.*?);', 'tokens', 'once'));
+%     dllpath  = [SourceDir '\matlabDLLs\PI\OpenPI.dll']; % Full pathname is required
+    
+    dllpath = [pwd '\matlabDLLs\PI\OpenPI.dll'];
 else
     % The function is being called from a Matlab session, so the path must
     % be specified.
@@ -15,7 +17,7 @@ end
 try
     asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
 catch
-    warning('Path to OpenPI.dll may not be accurate in OHreader.m, leading to error.');
+    error(['Adding OpenPI.dll unsuccessful. Ensure ' dllpath ' is valid.']);
 end
 
 %%
@@ -46,6 +48,16 @@ tPMUsig = cell(1,length(PMU.Signal_Name));
 fs = zeros(1,length(PMU.Signal_Name));
 for idx = 1:length(PMU.Signal_Name)
     DataTable  = ALLDataTable(ALLDataTable.Signal == idx,:);
+    
+    if size(DataTable,1) == 2
+        % Only two points were returned, indicating that the measurements
+        % are not available (PI creates the values based on interpolation
+        % of the nearest available measurements)
+        fs(idx) = NaN;
+        v{idx} = NaN;
+        continue;
+    end
+    
     % One extra sample is always retrieved, so remove it
     DataTable(end,:) = [];
     
@@ -61,7 +73,10 @@ for idx = 1:length(PMU.Signal_Name)
     fsTemp = fsTemp((2/3*fsTempMed < fsTemp) & (fsTemp < 2*fsTempMed));
     fs(idx) = round(mean(fsTemp));
 end
-fs = median(fs);
+fs = median(fs,'omitnan');
+if isnan(fs)
+    error('Time period does not appear to contain any of the selected signals.');
+end
 tPMU = StartTime + (0:1/fs:FileLength)'/86400;
 tPMU = tPMU(1:end-1);
 N = length(tPMU);
@@ -69,6 +84,11 @@ N = length(tPMU);
 for idx = 1:length(v)
     if N == length(v{idx})
         % Has the right number of samples, skip to the next one
+        continue;
+    elseif 1 == length(v{idx})
+        % Signal was not returned from PI database (data is missing), so
+        % set the signal to a vector of NaNs and skip to next signal
+        v{idx} = NaN(N,1);
         continue;
     end
     

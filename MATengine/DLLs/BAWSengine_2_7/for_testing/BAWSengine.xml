@@ -83,6 +83,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <returns>An MWArray containing the first output argument.</returns>
             
@@ -93,6 +95,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="InputFile">Input argument #1</param>
              <returns>An MWArray containing the first output argument.</returns>
@@ -104,6 +108,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="InputFile">Input argument #1</param>
              <param name="FileType">Input argument #2</param>
@@ -116,6 +122,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="InputFile">Input argument #1</param>
              <param name="FileType">Input argument #2</param>
@@ -129,6 +137,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <returns>An Array of length "numArgsOut" containing the output
@@ -141,6 +151,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="InputFile">Input argument #1</param>
@@ -154,6 +166,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="InputFile">Input argument #1</param>
@@ -168,6 +182,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="InputFile">Input argument #1</param>
@@ -186,6 +202,8 @@
              <remarks>
              This method will allocate and return by reference the output argument
              array.<newpara></newpara>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of MWArray output arguments</param>
@@ -198,6 +216,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <returns>An MWArray containing the first output argument.</returns>
             
@@ -208,6 +228,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="StartTime">Input argument #1</param>
              <returns>An MWArray containing the first output argument.</returns>
@@ -219,6 +241,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="StartTime">Input argument #1</param>
              <param name="preset">Input argument #2</param>
@@ -231,6 +255,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="StartTime">Input argument #1</param>
              <param name="preset">Input argument #2</param>
@@ -244,6 +270,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="StartTime">Input argument #1</param>
              <param name="preset">Input argument #2</param>
@@ -258,6 +286,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="StartTime">Input argument #1</param>
              <param name="preset">Input argument #2</param>
@@ -273,6 +303,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <returns>An Array of length "numArgsOut" containing the output
@@ -285,6 +317,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="StartTime">Input argument #1</param>
@@ -298,6 +332,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="StartTime">Input argument #1</param>
@@ -312,6 +348,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="StartTime">Input argument #1</param>
@@ -327,6 +365,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="StartTime">Input argument #1</param>
@@ -343,6 +383,8 @@
              function.
              </summary>
              <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return.</param>
              <param name="StartTime">Input argument #1</param>
@@ -363,6 +405,8 @@
              <remarks>
              This method will allocate and return by reference the output argument
              array.<newpara></newpara>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
              </remarks>
              <param name="numArgsOut">The number of output arguments to return</param>
              <param name= "argsOut">Array of MWArray output arguments</param>
