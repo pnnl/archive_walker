@@ -41,9 +41,9 @@ try
 catch e
     if Unsupported == 1
         % Repeat error so that the message is captured by the GUI
-        error(['Database type ' DBtype ' is not supported.']);
+        throw(MException('Engine:Error',['Database type ' DBtype ' is not supported.']));
     else
-        error('Attempt to read data failed. Error message: \n%s',e.message)
+        throw(MException('Engine:Error','Attempt to read data failed. Error message: \n%s',e.message));
     end
 end
 
