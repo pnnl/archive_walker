@@ -852,42 +852,16 @@ Namespace ViewModels
                         Exit For
                     End If
                 Next
-                For Each group In _signalMgr.GroupedRawSignalsByType
-                    If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
-                        Exit Sub
-                    End If
-                Next
+                ' this for each loop is trying to avoid read the example file and load everything again when user accidentally clicked the read file button
+                ' however, since the database preset.xml file do not change and the preset could be changed
+                ' even we read the same file, we want a different preset, so we reload everything, till I find a way to compare to previous mnemonic
+                'For Each group In _signalMgr.GroupedRawSignalsByType
+                '    If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
+                '        Exit Sub
+                '    End If
+                'Next
                 Dim exampleFile = obj.ExampleFile
                 If File.Exists(exampleFile) Then
-                    'Dim filetype As DataFileType
-                    'Try
-                    '    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
-                    'Catch ex As Exception
-                    '    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
-                    'Dim filename = ""
-                    'Try
-                    '    filename = Path.GetFileNameWithoutExtension(exampleFile)
-                    'Catch ex As ArgumentException
-                    '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
-                    'Try
-                    '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-                    'Catch ex As Exception
-                    '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
-                    'Try
-                    '    Dim fullPath = Path.GetDirectoryName(exampleFile)
-                    '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-                    '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-                    '    obj.FileDirectory = twoLevelUp
-                    'Catch ex As Exception
-                    '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
                     If obj.FileType IsNot Nothing And DataConfigure.ReaderProperty IsNot Nothing Then
                         Try
                             _signalMgr.AddRawSignalsFromADir(obj, DataConfigure.ReaderProperty.DateTimeStart)
@@ -1111,6 +1085,7 @@ Namespace ViewModels
             obj.ExampleFile = ""
             obj.FileDirectory = ""
             obj.Mnemonic = ""
+            DataConfigure.ReaderProperty.CheckHasDBDataSource()
             'If obj.FileType = DataFileType.PI Then
             '    DataConfigure.ReaderProperty.ModeName = ModeType.Archive
             '    DataConfigure.ReaderProperty.CanChooseMode = False
@@ -4527,6 +4502,7 @@ Namespace ViewModels
                         End If
                     Next
                 End If
+                DataConfigure.ReaderProperty.CheckHasDBDataSource()
                 'If obj.FileType = DataFileType.PI Then
                 '    DataConfigure.ReaderProperty.CanChooseMode = True
                 '    For Each info In DataConfigure.ReaderProperty.InputFileInfos

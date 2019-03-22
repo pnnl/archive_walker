@@ -56,8 +56,14 @@ Namespace ViewModels
                                        </FilePath>
                 '<FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
                 dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(info)
-
             Next
+            Dim exampleTime As String
+            Try
+                exampleTime = DateTime.Parse(_svm.DataConfigure.ReaderProperty.ExampleTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal).ToString("MM/dd/yyyy HH:mm:ss")
+            Catch ex As Exception
+                exampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss")
+            End Try
+            dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(<ExampleTime><%= exampleTime %></ExampleTime>)
             Dim mode As XElement = <Mode>
                                        <Name><%= _svm.DataConfigure.ReaderProperty.ModeName %></Name>
                                    </Mode>

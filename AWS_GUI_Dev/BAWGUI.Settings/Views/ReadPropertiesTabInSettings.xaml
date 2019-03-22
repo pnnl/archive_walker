@@ -19,6 +19,7 @@
             <converters:EnumToStringConverter1 x:Key="EnumToStringConverter1"/>
             <converters:EnumToStringConverter2 x:Key="EnumToStringConverter2"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters:FileTypeToLabelConverter x:Key="FileTypeToLabelConverter"/>
             <converters:FileTypeToRowNumberConverter1 x:Key="FileTypeToRowNumberConverter1"/>
             <converters:FileTypeToRowNumberConverter2 x:Key="FileTypeToRowNumberConverter2"/>
@@ -167,7 +168,6 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
                         <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2,14,2,2" VerticalAlignment="Top" Command="{Binding AddFileSource}">
@@ -234,9 +234,13 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <Label Content="Mode" Grid.Row="2" Margin="2" FontSize="18" FontWeight="Bold"/>
-                    <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="3" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="10,2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}" IsEnabled="{Binding DataConfigure.ReaderProperty.CanChooseMode}"/>
-                    <ContentControl Grid.Row="4" Content="{Binding}">
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Visibility="{Binding DataConfigure.ReaderProperty.HasDBDataSource, Converter={StaticResource BooleanVisibilityConverter}}">
+                        <Label Content="Example Time" Margin="2" FontSize="18" FontWeight="Bold"/>
+                        <toolkit:DateTimePicker AutoCloseCalendar="True" Value="{Binding DataConfigure.ReaderProperty.ExampleTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="2,5,2,0" MinWidth="170" HorizontalContentAlignment="Right" FormatString="MM/dd/yyyy HH:mm:ss" Format="Custom" Kind="Utc" Height="20" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Label Content="Mode" Grid.Row="3" Margin="2" FontSize="18" FontWeight="Bold"/>
+                    <ComboBox HorizontalAlignment="left" Width="200" Grid.Row="4" Text="{Binding DataConfigure.ReaderProperty.ModeName, Converter={StaticResource EnumToStringConverter2}}" Margin="10,2" MinWidth="200" ItemsSource="{Binding Source={StaticResource ModeValues}}"/>
+                    <ContentControl Grid.Row="5" Content="{Binding}">
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">
                                 <Style.Triggers>
@@ -253,25 +257,10 @@
                             </Style>
                         </ContentControl.Style>
                     </ContentControl>
-                    <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="2" Visibility="{Binding CanChooseMode, Converter={StaticResource InverseBooleanVisibilityConverter}}">
+                    <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="2">
                         <Label Content="Update Interval (sec):" FontSize="18" FontWeight="Bold"/>
                         <TextBox Text="{Binding DetectorConfigure.ResultUpdateInterval}"  Margin="5,2" Height="22" Width="120" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <!--<Label Content="Additional Paths:" FontWeight="Bold" FontSize="18" Grid.Row="5"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="6">
-                        <Label Content="Initialization Path:" Width="150"/>
-                        <TextBox Text="{Binding ProcessConfigure.InitializationPath}" MinWidth="100" Margin="2"/>
-                        <Button ToolTip="Open Config File" Width="25" Height="25" Margin="2" Command="{Binding SpecifyInitializationPath}">
-                            <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="7">
-                        <Label Content="Event Path:" Width="150"/>
-                        <TextBox Text="{Binding DetectorConfigure.EventPath}" MinWidth="100" Margin="2"/>
-                        <Button ToolTip="Open Config File" Width="25" Height="25" Margin="2" Command="{Binding SpecifyEventPath}">
-                            <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
-                        </Button>
-                    </StackPanel>-->
                 </Grid>
             </ScrollViewer>
         </Border>

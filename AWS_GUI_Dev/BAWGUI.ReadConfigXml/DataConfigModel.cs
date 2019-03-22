@@ -3,6 +3,7 @@ using BAWGUI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -151,6 +152,7 @@ namespace BAWGUI.ReadConfigXml
             //DateTimeEnd = "01/01/0001 00:00:00";
             DateTimeStart = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             DateTimeEnd = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            ExampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss");
         }
         public ReaderPropertiesModel(XElement xElement)
         {
@@ -184,6 +186,19 @@ namespace BAWGUI.ReadConfigXml
                         InputFileInfos.Add(a);
                     }
                 }
+            }
+            var exampleTime = xElement.Element("ExampleTime");
+            if (exampleTime != null)
+            {
+                ExampleTime = exampleTime.Value;
+            }
+            try
+            {
+                DateTime.ParseExact(ExampleTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                ExampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss");
             }
             var mode = xElement.Element("Mode");
             //var modeName = mode.Element("Name").Value;
@@ -281,6 +296,7 @@ namespace BAWGUI.ReadConfigXml
         public string MaxFutureCount { get; set; }
         public string RealTimeRange { get; set; }
         public string UTCoffset { get; set; }
+        public string ExampleTime { get; set; }
     }
 
     public class InputFileInfoModel

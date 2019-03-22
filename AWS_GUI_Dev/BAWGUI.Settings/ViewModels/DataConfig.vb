@@ -357,12 +357,13 @@ Namespace ViewModels
             'RealTimeModeVisibility = Visibility.Collapsed
             'HybridModeVisibility = Visibility.Collapsed
             _model = New ReadConfigXml.ReaderPropertiesModel
+            _hasDBDataSource = False
             '_dateTimeStart = "01/01/0001 00:00:00"
             '_dateTimeEnd = "01/01/0001 00:00:00"
             '_selectedStartTime = "01/01/0001 00:00:00"
             '_selectedEndTime = "01/01/0001 00:00:00"
             '_selectedTimeZone = TimeZoneInfo.Utc
-            _canChooseMode = True
+            '_canChooseMode = True
 
             _inputFileInfos = New ObservableCollection(Of InputFileInfoViewModel)
         End Sub
@@ -386,6 +387,7 @@ Namespace ViewModels
                     _inputFileInfos.Add(New InputFileInfoViewModel(info))
                 End If
             Next
+            CheckHasDBDataSource()
         End Sub
 
         Private _inputFileInfos As ObservableCollection(Of InputFileInfoViewModel)
@@ -398,68 +400,54 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        Private _canChooseMode As Boolean
-        Public Property CanChooseMode As Boolean
+        Private _hasDBDataSource As Boolean
+        Public Property HasDBDataSource As Boolean
             Get
-                Return GetCanChooseMode()
+                Return _hasDBDataSource
             End Get
             Set(ByVal value As Boolean)
-                _canChooseMode = value
+                _hasDBDataSource = value
                 OnPropertyChanged()
             End Set
         End Property
-
-        Public Function GetCanChooseMode() As Boolean
-            'For Each info In InputFileInfos
-            '    If info.FileType = DataFileType.PI Then
-            '        Return False
-            '    End If
-            'Next
-            Return True
-        End Function
-        'Private _fileDirectory As String
-        'Public Property FileDirectory As String
+        Public Sub CheckHasDBDataSource()
+            HasDBDataSource = False
+            For Each info In InputFileInfos
+                If info.FileType = DataFileType.PI OrElse info.FileType = DataFileType.OpenHistorian Then
+                    HasDBDataSource = True
+                    Exit For
+                End If
+            Next
+        End Sub
+        Private _exampleTime As String
+        Public Property ExampleTime As String
+            Get
+                Return _model.ExampleTime
+            End Get
+            Set(ByVal value As String)
+                _model.ExampleTime = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        'Private _canChooseMode As Boolean
+        'Public Property CanChooseMode As Boolean
         '    Get
-        '        Return _fileDirectory
+        '        Return GetCanChooseMode()
         '    End Get
-        '    Set(ByVal value As String)
-        '        _fileDirectory = value
-        '        OnPropertyChanged("FileDirectory")
+        '    Set(ByVal value As Boolean)
+        '        _canChooseMode = value
+        '        OnPropertyChanged()
         '    End Set
         'End Property
 
-        'Private _fileType As DataFileType
-        'Public Property FileType As DataFileType
-        '    Get
-        '        Return _fileType
-        '    End Get
-        '    Set(ByVal value As DataFileType)
-        '        _fileType = value
-        '        OnPropertyChanged("FileType")
-        '    End Set
-        'End Property
-
-        'Private _mnemonic As String
-        'Public Property Mnemonic As String
-        '    Get
-        '        Return _mnemonic
-        '    End Get
-        '    Set(ByVal value As String)
-        '        _mnemonic = value
-        '        OnPropertyChanged("Mnemonic")
-        '    End Set
-        'End Property
-
-        'Private _mode As Dictionary(Of ModeType, Dictionary(Of String, String))
-        'Public Property Mode As Dictionary(Of ModeType, Dictionary(Of String, String))
-        '    Get
-        '        Return _mode
-        '    End Get
-        '    Set(ByVal value As Dictionary(Of ModeType, Dictionary(Of String, String)))
-        '        _mode = value
-        '        OnPropertyChanged("Mode")
-        '    End Set
-        'End Property
+        'Public Function GetCanChooseMode() As Boolean
+        '    'For Each info In InputFileInfos
+        '    '    If info.FileType = DataFileType.PI Then
+        '    '        Return False
+        '    '    End If
+        '    'Next
+        '    Return True
+        'End Function
 
         Private _modeName As ModeType
         Public Property ModeName As ModeType
