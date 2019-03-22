@@ -40,9 +40,9 @@ try
 catch e
     if Unsupported == 1
         % Repeat error so that the message is captured by the GUI
-        error(['FileType = ' num2str(FileType) ' is not a supported value.']);
+        throw(MException('Engine:Error',['FileType = ' num2str(FileType) ' is not a supported value.']));
     else
-        error('Attempt to read the file failed. It may be corrupt or the wrong type. Error message: \n%s',e.message)
+        throw(MException('Engine:Error','Attempt to read the file failed. It may be corrupt or the wrong type. Error message: \n%s',e.message));
     end
 end
 
