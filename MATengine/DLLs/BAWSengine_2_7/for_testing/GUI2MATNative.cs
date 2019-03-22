@@ -1,6 +1,6 @@
 /*
 * MATLAB Compiler: 6.4 (R2017a)
-* Date: Tue Mar 19 12:54:34 2019
+* Date: Thu Mar 21 13:23:34 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes
@@ -193,6 +193,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <returns>An Object containing the first output argument.</returns>
     ///
@@ -207,6 +209,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="InputFile">Input argument #1</param>
     /// <returns>An Object containing the first output argument.</returns>
@@ -222,6 +226,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="InputFile">Input argument #1</param>
     /// <param name="FileType">Input argument #2</param>
@@ -238,6 +244,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="InputFile">Input argument #1</param>
     /// <param name="FileType">Input argument #2</param>
@@ -255,6 +263,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <returns>An Array of length "numArgsOut" containing the output
@@ -271,6 +281,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="InputFile">Input argument #1</param>
@@ -288,6 +300,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="InputFile">Input argument #1</param>
@@ -306,6 +320,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="InputFile">Input argument #1</param>
@@ -329,6 +345,8 @@ namespace BAWSengineNative
     /// <remarks>
     /// This method will allocate and return by reference the output argument
     /// array.<newpara></newpara>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return</param>
     /// <param name= "argsOut">Array of Object output arguments</param>
@@ -346,6 +364,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <returns>An Object containing the first output argument.</returns>
     ///
@@ -360,6 +380,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="StartTime">Input argument #1</param>
     /// <returns>An Object containing the first output argument.</returns>
@@ -375,6 +397,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="StartTime">Input argument #1</param>
     /// <param name="preset">Input argument #2</param>
@@ -391,6 +415,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="StartTime">Input argument #1</param>
     /// <param name="preset">Input argument #2</param>
@@ -408,6 +434,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="StartTime">Input argument #1</param>
     /// <param name="preset">Input argument #2</param>
@@ -427,6 +455,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="StartTime">Input argument #1</param>
     /// <param name="preset">Input argument #2</param>
@@ -447,6 +477,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <returns>An Array of length "numArgsOut" containing the output
@@ -463,6 +495,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="StartTime">Input argument #1</param>
@@ -480,6 +514,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="StartTime">Input argument #1</param>
@@ -498,6 +534,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="StartTime">Input argument #1</param>
@@ -518,6 +556,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="StartTime">Input argument #1</param>
@@ -539,6 +579,8 @@ namespace BAWSengineNative
     /// function.
     /// </summary>
     /// <remarks>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return.</param>
     /// <param name="StartTime">Input argument #1</param>
@@ -564,6 +606,8 @@ namespace BAWSengineNative
     /// <remarks>
     /// This method will allocate and return by reference the output argument
     /// array.<newpara></newpara>
+    /// M-Documentation:
+    /// Repeat error so that the message is captured by the GUI
     /// </remarks>
     /// <param name="numArgsOut">The number of output arguments to return</param>
     /// <param name= "argsOut">Array of Object output arguments</param>

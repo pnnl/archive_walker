@@ -1735,7 +1735,7 @@ Namespace ViewModels
             If _timeSourcePMU IsNot Nothing Then
                 output.SamplingRate = _timeSourcePMU.SamplingRate
             Else
-                Throw New Exception("PMU for time source is required for Scalar Repetition Customization.")
+                MessageBox.Show(_model.TimeSourcePMU + " is not found, valid PMU for time source is required for Scalar Repetition Customization.", "Warning!", MessageBoxButtons.OK)
             End If
             output.OldUnit = output.Unit
             output.OldTypeAbbreviation = output.TypeAbbreviation
@@ -1755,7 +1755,7 @@ Namespace ViewModels
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
-                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+                MessageBox.Show("Error when sort signals by PMU in step: " & Name, "Warning!", MessageBoxButtons.OK)
             End Try
             If postProcess Then
                 signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
@@ -1764,7 +1764,7 @@ Namespace ViewModels
             End If
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Return True
+            Return TimeSourcePMU IsNot Nothing
         End Function
         Public ReadOnly Property Name As String
             Get

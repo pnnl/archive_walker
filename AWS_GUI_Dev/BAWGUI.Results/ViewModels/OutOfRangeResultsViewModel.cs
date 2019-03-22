@@ -21,7 +21,7 @@ using System.Windows.Input;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class OutOfRangeResultsViewModel:ViewModelBase
+    public class OutOfRangeResultsViewModel : ViewModelBase
     {
         public OutOfRangeResultsViewModel()
         {
@@ -200,16 +200,13 @@ namespace BAWGUI.Results.ViewModels
                         {
                             if (axis.IsVertical())
                             {
-                                if (axis.IsVertical())
-                                {
-                                    yaxisMin = axis.Minimum;
-                                    yaxisMax = axis.Maximum;
-                                }
-                                if (axis.IsHorizontal())
-                                {
-                                    xaxisMin = axis.ActualMinimum;
-                                    xaxisMax = axis.ActualMaximum;
-                                }
+                                yaxisMin = axis.Minimum;
+                                yaxisMax = axis.Maximum;
+                            }
+                            if (axis.IsHorizontal())
+                            {
+                                xaxisMin = axis.ActualMinimum;
+                                xaxisMax = axis.ActualMaximum;
                             }
                         }
                         var lineAnnotation = new OxyPlot.Annotations.LineAnnotation()

@@ -32,6 +32,8 @@ namespace BAWGUI.Xml
 
         private OutOfRangeFrequencyType[] outOfRangeFrequencyField;
 
+        private TheveninType[] theveninField;
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ForcedOscillation")]
         public ForcedOscillationType[] ForcedOscillation
@@ -62,6 +64,14 @@ namespace BAWGUI.Xml
         {
             get { return this.outOfRangeFrequencyField; }
             set { this.outOfRangeFrequencyField = value; }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Thevenin")]
+        public TheveninType[] Thevenin
+        {
+            get { return this.theveninField; }
+            set { this.theveninField = value; }
         }
     }
 
@@ -466,6 +476,69 @@ namespace BAWGUI.Xml
         {
             get { return this.valueEndField; }
             set { this.valueEndField = value; }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class TheveninType
+    {
+        private decimal idField;
+
+        private string startField;
+
+        private string endField;
+
+        private TheveninTypeSub[] subField;
+
+        /// <remarks/>
+        public decimal ID
+        {
+            get { return this.idField; }
+            set { this.idField = value; }
+        }
+
+        /// <remarks/>
+        public string Start
+        {
+            get { return this.startField; }
+            set { this.startField = value; }
+        }
+
+        /// <remarks/>
+        public string End
+        {
+            get { return this.endField; }
+            set { this.endField = value; }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Sub")]
+        public TheveninTypeSub[] Sub
+        {
+            get { return this.subField; }
+            set { this.subField = value; }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class TheveninTypeSub
+    {
+        private string nameField;
+
+        /// <remarks/>
+        public string Name
+        {
+            get { return this.nameField; }
+            set { this.nameField = value; }
         }
     }
 

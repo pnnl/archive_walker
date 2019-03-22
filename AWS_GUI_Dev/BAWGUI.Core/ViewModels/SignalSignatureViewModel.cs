@@ -61,6 +61,7 @@ namespace BAWGUI.Core
             _model.SamplingRate = -1;
             _model.Unit = "O";
         }
+
         public bool? IsValid
         {
             get

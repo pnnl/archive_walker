@@ -3,6 +3,8 @@ Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
+Imports ModeMeter.ViewModels
+Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Public Class ConfigFileWriter
@@ -431,6 +433,7 @@ Namespace ViewModels
                         If Not String.IsNullOrEmpty(dt.EventMergeWindow) Then
                             element.Add(<EventMergeWindow><%= dt.EventMergeWindow %></EventMergeWindow>)
                         End If
+                    'PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 'Case GetType(OutOfRangeGeneralDetector)
                 '    Dim dt = DirectCast(detector, OutOfRangeGeneralDetector)
                 '    element = <OutOfRangeGeneral>
@@ -571,6 +574,10 @@ Namespace ViewModels
                         '    <FrequencyMax><%= dt.FrequencyMax %></FrequencyMax>
                         '    <FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>
                         '</Periodogram>
+                    Case GetType(VoltageStabilityDetectorViewModel)
+                        Continue For
+                    Case GetType(SmallSignalStabilityToolViewModel)
+                        Continue For
                     Case Else
                         Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
                 End Select

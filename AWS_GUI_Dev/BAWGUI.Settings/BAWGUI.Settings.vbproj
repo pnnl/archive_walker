@@ -678,6 +678,14 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
+      <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>
+      <Name>ModeMeter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6f2a8bd2-ee3e-465b-9b64-362a35846f4d}</Project>
+      <Name>VoltageStability</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\Asterisk.png">

@@ -25,9 +25,11 @@ ID = ID{KeepIdx};
 if isdeployed
     % The GUI is calling the function, so point to the matlabDLLs folder
     % within the GUI folder
-    [~,result] = system('path');
-    SourceDir = char(regexpi(result, 'Path=(.*?);', 'tokens', 'once'));
-    dllpath  = [SourceDir '\matlabDLLs\OH\ReadHistorian.dll']; % Full pathname is required
+%     [~,result] = system('path');
+%     SourceDir = char(regexpi(result, 'Path=(.*?);', 'tokens', 'once'));
+%     dllpath  = [SourceDir '\matlabDLLs\OH\ReadHistorian.dll']; % Full pathname is required
+    
+    dllpath = [pwd '\matlabDLLs\OH\ReadHistorian.dll'];
 else
     % The function is being called from a Matlab session, so the path must
     % be specified.
@@ -36,7 +38,7 @@ end
 try
     asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
 catch
-    warning('Path to ReadHistorian.dll may not be accurate in OHreader.m, leading to error.');
+    error(['Adding ReadHistorian.dll unsuccessful. Ensure ' dllpath ' is valid.']);
 end
 
 %% Setup rules to query data from OpenHistorian
