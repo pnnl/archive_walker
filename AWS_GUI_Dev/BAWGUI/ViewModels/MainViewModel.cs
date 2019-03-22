@@ -209,14 +209,12 @@ namespace BAWGUI.ViewModels
                         _signalMgr.cleanUp();
                         //read input data files and generate all the signal objects from the data files and put them in the signal manager.
                         var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
-                        //if (readingDataSourceSuccess)
-                        //{
-                        //pass signal manager into settings.
-                        SettingsVM.SignalMgr = _signalMgr;
-                        //read config files
-                        SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
                         if (readingDataSourceSuccess)
                         {
+                            //pass signal manager into settings.
+                            SettingsVM.SignalMgr = _signalMgr;
+                            //read config files
+                            SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
                             SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                             SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                             SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
