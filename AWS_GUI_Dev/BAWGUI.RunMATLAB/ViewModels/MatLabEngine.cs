@@ -19,7 +19,7 @@ using ModeMeter.MATLABRunResults.Models;
 using System.Collections.ObjectModel;
 using BAWGUI.Core.ViewModels;
 
-[assembly: NOJVM(true)]
+//[assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
 {
     public class MatLabEngine : ViewModelBase
@@ -1267,12 +1267,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             try
             {
-                _matlabEngine.WriteMMreport(start, end, eventPath, reportType, dampThresh, eventSepMinutes, reportPath);
+                var result = _matlabEngine.WriteMMreport(start, end, eventPath, reportType, dampThresh, eventSepMinutes, reportPath);
+                MessageBox.Show(result.ToString(), "", MessageBoxButtons.OK);
             }
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
                 IsReRunRunning = false;
+                Run.IsTaskRunning = false;
                 //MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
                 throw new Exception("\nError in running matlab retrieve data mode on background worker thread: " + ex.Message);
             }
@@ -1282,6 +1284,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             IsMatlabEngineRunning = false;
             IsReRunRunning = false;
+            Run.IsTaskRunning = false;
         }
     }
 }
