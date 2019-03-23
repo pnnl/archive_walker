@@ -17,7 +17,7 @@ namespace ModeMeter.ViewModels
         private SmallSignalStabilityTool _model;
         private SignalManager _signalMgr;
 
-        public SmallSignalStabilityToolViewModel(SignalManager signalMgr)
+        public SmallSignalStabilityToolViewModel(SignalManager signalMgr) : this()
         {
             _model = new SmallSignalStabilityTool();
             // need to set up result path if not exists
@@ -25,12 +25,18 @@ namespace ModeMeter.ViewModels
             _setupMMViewModel();
         }
 
-        public SmallSignalStabilityToolViewModel(SmallSignalStabilityTool model, SignalManager signalMgr)
+        public SmallSignalStabilityToolViewModel(SmallSignalStabilityTool model, SignalManager signalMgr) : this(signalMgr)
         {
             this._model = model;
-            _signalMgr = signalMgr;
-            _setupMMViewModel();
         }
+
+        public SmallSignalStabilityToolViewModel()
+        {
+            InputChannels = new ObservableCollection<SignalSignatureViewModel>();
+            ThisStepInputsAsSignalHerachyByType = new SignalTypeHierachy();
+            IsExpanded = false;
+        }
+
         private void _setupMMViewModel()
         {
             InputChannels = new ObservableCollection<SignalSignatureViewModel>();

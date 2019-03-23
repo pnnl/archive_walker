@@ -172,6 +172,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             //return e.RingdownRerunResults.RingdownDetectorList;
         }
+
         //private List<RingdownDetector> _rdReRunResults = new List<RingdownDetector>();
         //public List<RingdownDetector> RDReRunResults
         //{
@@ -1070,7 +1071,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             catch (Exception ex)
             {
                 IsMatlabEngineRunning = false;
-                MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                //MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                throw new Exception("\nError in running matlab retrieve data mode on background worker thread: " + ex.Message);
             }
 
             e.Result = FileReadingResults;
@@ -1140,7 +1142,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 IsMatlabEngineRunning = false;
                 Run.IsTaskRunning = false;
                 IsReRunRunning = false;
-                MessageBox.Show("Error in running matlab mode meter re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                //MessageBox.Show("Error in running matlab mode meter re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                throw new Exception("Error in running matlab mode meter re-run mode on background worker thread: " + ex.Message);
             }
             e.Result = mmRerunResults.PlotData;
         }
@@ -1247,6 +1250,73 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;
+        }
+
+        public void GenerateMMreport(string start, string end, string eventPath, string reportType, int dampThresh, int eventSepMinutes, string reportPath)
+        {
+            if (IsMatlabEngineRunning)
+            {
+                PauseMatlabNormalRun();
+            }
+            worker = new BackgroundWorker();
+
+            try
+            {
+                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runGenerateMMReport);
+                //worker.ProgressChanged += _worker_ProgressChanged;
+                worker.RunWorkerCompleted += _workerGenerateMMreport_RunWorkerCompleted;
+                worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                while (worker.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+                object[] parameters = new object[] { start, end, eventPath, reportType, dampThresh, eventSepMinutes, reportPath };
+                worker.RunWorkerAsync(parameters);
+                IsReRunRunning = true;
+                Run.IsTaskRunning = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void _runGenerateMMReport(object sender, DoWorkEventArgs e)
+        {
+            if (Thread.CurrentThread.Name == null)
+            {
+                Thread.CurrentThread.Name = "GenerateMMreportThread";
+            }
+            object[] parameters = e.Argument as object[];
+            var start = parameters[0] as string;
+            var end = parameters[1] as string;
+            var eventPath = parameters[2] as string;
+            var reportType = parameters[3] as string;
+            var dampThresh = (int)parameters[4];
+            var eventSepMinutes = (int)parameters[5];
+            var reportPath = parameters[6] as string;
+            IsMatlabEngineRunning = true;
+            try
+            {
+                var result = _matlabEngine.WriteMMreport(start, end, eventPath, reportType, dampThresh, eventSepMinutes, reportPath);
+                MessageBox.Show(result.ToString(), "", MessageBoxButtons.OK);
+            }
+            catch (Exception ex)
+            {
+                IsMatlabEngineRunning = false;
+                IsReRunRunning = false;
+                Run.IsTaskRunning = false;
+                //MessageBox.Show("Error in running matlab retrieve data mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                throw new Exception("\nError in running matlab retrieve data mode on background worker thread: " + ex.Message);
+            }
+        }
+
+        private void _workerGenerateMMreport_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsMatlabEngineRunning = false;
+            IsReRunRunning = false;
+            Run.IsTaskRunning = false;
         }
 
         public void GetDBExampleSignals(string starttime, string mnemonic, string exampleFile, string dbtype)

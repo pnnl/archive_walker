@@ -51,6 +51,12 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Core.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Shell.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot">
       <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
     </Reference>
@@ -107,6 +113,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\GenerateReportViewModel.cs" />
     <Compile Include="ViewModels\MMRerunPlotModel.cs" />
     <Compile Include="ViewModels\ModeMeterResultsViewModel.cs" />
     <Compile Include="ViewModels\ModeViewModel.cs" />
@@ -119,6 +126,9 @@
     </Compile>
     <Compile Include="Views\FOParametersView.xaml.cs">
       <DependentUpon>FOParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GenerateMMReportView.xaml.cs">
+      <DependentUpon>GenerateMMReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LSARMAView.xaml.cs">
       <DependentUpon>LSARMAView.xaml</DependentUpon>
@@ -203,6 +213,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GenerateMMReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LSARMAView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -220,8 +234,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ModeMeterResultsView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ModeSignalSelectionView.xaml">
       <SubType>Designer</SubType>
@@ -266,6 +280,11 @@
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\AddCommand.png">
       <Link>MyResources\AddCommand.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
+      <Link>MyResources\open.gif</Link>
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

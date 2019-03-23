@@ -4,6 +4,7 @@ using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using ModeMeter.MATLABRunResults.Models;
+using ModeMeter.Views;
 using OxyPlot;
 using OxyPlot.Axes;
 using System;
@@ -52,8 +53,8 @@ namespace ModeMeter.ViewModels
             CancelMMReRun = new RelayCommand(_cancelMMReRun);
             SelectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             SelectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            GenerateMMReport = new RelayCommand(_generatemmreport);
         }
-
         public ICommand CancelMMReRun { get; set; }
         private void _cancelMMReRun(object obj)
         {
@@ -471,6 +472,25 @@ namespace ModeMeter.ViewModels
                 dtr.MMReRunAllSignalsPlotModel.InvalidatePlot(false);
                 }                
             }
+        }
+
+        private GenerateMMReportView _generateMMReportPopup;
+        public ICommand GenerateMMReport { get; set; }
+        private void _generatemmreport(object obj)
+        {
+            var report = new GenerateReportViewModel(SelectedStartTime, SelectedEndTime, Run, Engine);
+            report.GenerateReportCancelled += _cancelGenerateReport;
+            _generateMMReportPopup = new GenerateMMReportView
+            {
+                Owner = System.Windows.Application.Current.MainWindow,
+                DataContext = report
+            };
+            _generateMMReportPopup.ShowDialog();
+        }
+
+        private void _cancelGenerateReport(object sender, EventArgs e)
+        {
+            _generateMMReportPopup.Close();
         }
     }
 }
