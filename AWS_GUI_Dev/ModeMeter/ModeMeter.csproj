@@ -283,9 +283,9 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\BAWGUI.Resources\Images\open.gif">
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
       <Link>MyResources\open.gif</Link>
-    </Content>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
