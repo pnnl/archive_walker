@@ -374,19 +374,20 @@ Namespace ViewModels
             'look for input file info in signal manager first, 
             'If exist Then, the file info Is sound And can be added To the reader Property To be displayed
             'if cannot be found, then, the file info is bad, add the file info only to the reader property to be displayed
-            For Each info In _model.InputFileInfos
-                Dim infoFound = False
-                For Each existingInfo In signalsMgr.FileInfo
-                    If info.ExampleFile = existingInfo.ExampleFile AndAlso info.Mnemonic = existingInfo.Mnemonic Then
-                        _inputFileInfos.Add(existingInfo)
-                        infoFound = True
-                        Exit For
-                    End If
-                Next
-                If Not infoFound Then
-                    _inputFileInfos.Add(New InputFileInfoViewModel(info))
-                End If
-            Next
+            'For Each info In _model.InputFileInfos
+            '    Dim infoFound = False
+            '    For Each existingInfo In signalsMgr.FileInfo
+            '        If info.ExampleFile = existingInfo.ExampleFile AndAlso info.Mnemonic = existingInfo.Mnemonic Then
+            '            _inputFileInfos.Add(existingInfo)
+            '            infoFound = True
+            '            Exit For
+            '        End If
+            '    Next
+            '    If Not infoFound Then
+            '        _inputFileInfos.Add(New InputFileInfoViewModel(info))
+            '    End If
+            'Next
+            _inputFileInfos = signalsMgr.FileInfo
             CheckHasDBDataSource()
         End Sub
 

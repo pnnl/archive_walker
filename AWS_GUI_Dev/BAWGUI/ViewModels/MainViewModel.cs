@@ -308,7 +308,7 @@ namespace BAWGUI.ViewModels
             //{
                 try
                 {
-                    _signalMgr.GetRawSignalData(info, SettingsVM.DataConfigure.ReaderProperty.DateTimeStart);
+                    _signalMgr.GetRawSignalData(info, SettingsVM.DataConfigure.ReaderProperty.ExampleTime);
                 }
                 catch (Exception ex)
                 {

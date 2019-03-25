@@ -113,10 +113,31 @@ namespace BAWGUI.SignalManagement.ViewModels
         {
             var MissingExampleFile = new List<string>();
             bool ReadingSuccess = true;
+            var dirs = new List<String>();
+            var dirMnDict = new Dictionary<string, List<string>>();
             // go through each input file source to see if example file exist, if yes, add to file info, if not add to error message to tell user the file source is having problem
             // so all missing file source and input file reading errors will show up at the same time
             foreach (var item in inputFileInfos)
             {
+                var aFileInfo = new InputFileInfoViewModel(item);
+                FileInfo.Add(aFileInfo);
+                if (!dirs.Contains(item.FileDirectory))
+                {
+                    dirs.Add(item.FileDirectory);
+                }
+                if (!dirMnDict.ContainsKey(item.FileDirectory))
+                {
+                    dirMnDict[item.FileDirectory] = new List<string>();
+                }
+                if (!dirMnDict[item.FileDirectory].Contains(item.Mnemonic))
+                {
+                    dirMnDict[item.FileDirectory].Add(item.Mnemonic);
+                }
+                else
+                {
+                    MissingExampleFile.Add("\nDuplicate file source not allowed! File source in directory: " + item.FileDirectory + " with Mnemonic " + item.Mnemonic);
+                    continue;
+                }
                 if (!File.Exists(item.ExampleFile))
                 {
                     //item.ExampleFile = Utility.FindFirstInputFile(item.FileDirectory, item.FileType);
@@ -125,7 +146,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 }
                 else
                 {
-                    var aFileInfo = new InputFileInfoViewModel(item);
+                    //var aFileInfo = new InputFileInfoViewModel(item);
                     if (item.FileType == DataFileType.csv)
                     {
                         try
@@ -184,7 +205,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                             MissingExampleFile.Add("\nError reading openHistorian database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
-                    FileInfo.Add(aFileInfo);
+                    //FileInfo.Add(aFileInfo);
                 }
             }
             if (MissingExampleFile.Count() > 0)
@@ -261,7 +282,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         throw new Exception("Error reading openHistorian database. " + ex.Message);
                     }
                 }
-                FileInfo.Add(model);
+                //FileInfo.Add(model);
             }
             AllPMUs = _getAllPMU();
         }

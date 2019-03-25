@@ -835,11 +835,18 @@ Namespace ViewModels
                 Dim dirs = New List(Of String)
                 Dim dirMnDict = New Dictionary(Of String, List(Of String))
                 For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                    dirs.Add(info.FileDirectory)
+                    If Not dirs.Contains(info.FileDirectory) Then
+                        dirs.Add(info.FileDirectory)
+                    End If
                     If Not dirMnDict.ContainsKey(info.FileDirectory) Then
                         dirMnDict(info.FileDirectory) = New List(Of String)
                     End If
-                    dirMnDict(info.FileDirectory).Add(info.Mnemonic)
+                    If Not dirMnDict(info.FileDirectory).Contains(info.Mnemonic) Then
+                        dirMnDict(info.FileDirectory).Add(info.Mnemonic)
+                    Else
+                        Forms.MessageBox.Show("Duplicate file source not allowed:" + Environment.NewLine + info.FileDirectory + Environment.NewLine + info.Mnemonic, "Warning!", MessageBoxButtons.OK)
+                        Exit Sub
+                    End If
                 Next
                 For Each group In _signalMgr.GroupedRawSignalsByType
                     Dim frags = group.SignalSignature.SignalName.Split(",")
@@ -4696,13 +4703,17 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-
+        ''' <summary>
+        ''' if signal type has been changed in the prosessing tab, need to re-group them by type
+        ''' </summary>
         Private Sub _reGroupRawSignalByType()
             SignalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             For Each info In SignalMgr.FileInfo
-                Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
-                b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
-                SignalMgr.ReGroupedRawSignalsByType.Add(b)
+                If info.TaggedSignals.Count > 0 Then
+                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
+                    SignalMgr.ReGroupedRawSignalsByType.Add(b)
+                End If
             Next
             'For Each info In DataConfigure.ReaderProperty.InputFileInfos
             '    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
