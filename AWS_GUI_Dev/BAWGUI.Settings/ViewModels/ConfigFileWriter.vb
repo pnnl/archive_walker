@@ -1115,6 +1115,82 @@ Namespace ViewModels
             End Select
         End Sub
 
+        Friend Sub WriteReaderProperties(configFilePath As String, readerProperty As ReaderProperties)
+            Dim config = XDocument.Load(configFilePath)
+            Dim inputInformation = config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements
+            inputInformation.Remove
+            For Each fileInfo In readerProperty.InputFileInfos
+                Dim info As XElement = <FilePath>
+                                           <ExampleFile><%= fileInfo.ExampleFile %></ExampleFile>
+                                           <FileType><%= fileInfo.FileType %></FileType>
+                                           <Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>
+                                       </FilePath>
+                '<FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
+                config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.LastOrDefault.Add(info)
+            Next
+            Dim exampleTime As String
+            Try
+                exampleTime = DateTime.Parse(readerProperty.ExampleTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal).ToString("MM/dd/yyyy HH:mm:ss")
+            Catch ex As Exception
+                exampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss")
+            End Try
+            config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.LastOrDefault.Add(<ExampleTime><%= exampleTime %></ExampleTime>)
+            Dim mode As XElement = <Mode>
+                                       <Name><%= readerProperty.ModeName %></Name>
+                                   </Mode>
+            Dim dtStart, dtEnd As DateTime
+            Select Case readerProperty.ModeName
+                Case ModeType.Archive
+                    Try
+                        dtStart = DateTime.Parse(readerProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                    Catch ex As Exception
+                        dtStart = DateTime.Now
+                        'Throw New Exception("Error parsing start time.")
+                    End Try
+                    Try
+                        dtEnd = DateTime.Parse(readerProperty.DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                    Catch ex As Exception
+                        dtEnd = DateTime.Now
+                        'Throw New Exception("Error parsing end time.")
+                    End Try
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim parameters As XElement = <Params>
+                                                     <DateTimeStart><%= dtStringStart %></DateTimeStart>
+                                                     <DateTimeEnd><%= dtStringEnd %></DateTimeEnd>
+                                                 </Params>
+                    mode.Add(parameters)
+                Case ModeType.Hybrid
+                    Try
+                        dtStart = DateTime.Parse(readerProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                    Catch ex As Exception
+                        Throw New Exception("Error parsing start time.")
+                    End Try
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= readerProperty.UTCoffset %></UTCoffset>
+                                                     <DateTimeStart><%= dtStringStart %></DateTimeStart>
+                                                     <NoFutureWait><%= readerProperty.NoFutureWait %></NoFutureWait>
+                                                     <MaxNoFutureCount><%= readerProperty.MaxNoFutureCount %></MaxNoFutureCount>
+                                                     <FutureWait><%= readerProperty.FutureWait %></FutureWait>
+                                                     <MaxFutureCount><%= readerProperty.MaxFutureCount %></MaxFutureCount>
+                                                     <RealTimeRange><%= readerProperty.RealTimeRange %></RealTimeRange>
+                                                 </Params>
+                    mode.Add(parameters)
+                Case ModeType.RealTime
+                    Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= readerProperty.UTCoffset %></UTCoffset>
+                                                     <NoFutureWait><%= readerProperty.NoFutureWait %></NoFutureWait>
+                                                     <MaxNoFutureCount><%= readerProperty.MaxNoFutureCount %></MaxNoFutureCount>
+                                                     <FutureWait><%= readerProperty.FutureWait %></FutureWait>
+                                                     <MaxFutureCount><%= readerProperty.MaxFutureCount %></MaxFutureCount>
+                                                 </Params>
+                    mode.Add(parameters)
+            End Select
+            config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.LastOrDefault.Add(mode)
+            config.Save(_saveToRun.ConfigFilePath)
+        End Sub
+
         Friend Sub UpdateExampleFileAddress(exampleFilePath As String)
             Dim config = XDocument.Load(_saveToRun.ConfigFilePath)
             Dim inputInformation = From el In config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements Where el.Name = "FilePath" Select el

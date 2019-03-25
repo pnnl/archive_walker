@@ -304,7 +304,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 }
                 aFileInfo.SamplingRate = signalInformation.PMUSignalsList[0].SamplingRate;
                 aFileInfo.TaggedSignals = newSignalList;
-                var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
+                var newSig = new SignalSignatureViewModel(aFileInfo.FileDirectory + ", " + aFileInfo.Mnemonic + ", Sampling Rate: " + aFileInfo.SamplingRate + "/Second");
                 newSig.SamplingRate = aFileInfo.SamplingRate;
                 var a = new SignalTypeHierachy(newSig);
                 a.SignalList = SortSignalByPMU(newSignalList);

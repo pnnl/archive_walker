@@ -11,6 +11,8 @@ Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.Core.Models
 Imports VoltageStability.ViewModels
 Imports ModeMeter.ViewModels
+Imports VoltageStability.Models
+Imports ModeMeter.Models
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -831,40 +833,73 @@ Namespace ViewModels
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
             If (obj.Model.CheckDataFileMatch()) Then
                 Dim dirs = New List(Of String)
+                Dim dirMnDict = New Dictionary(Of String, List(Of String))
                 For Each info In DataConfigure.ReaderProperty.InputFileInfos
                     dirs.Add(info.FileDirectory)
+                    If Not dirMnDict.ContainsKey(info.FileDirectory) Then
+                        dirMnDict(info.FileDirectory) = New List(Of String)
+                    End If
+                    dirMnDict(info.FileDirectory).Add(info.Mnemonic)
                 Next
                 For Each group In _signalMgr.GroupedRawSignalsByType
-                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If Not dirs.Contains(dir) Then
                         _signalMgr.GroupedRawSignalsByType.Remove(group)
                         Exit For
+                    Else
+                        If Not dirMnDict(dir).Contains(mnic) Then
+                            _signalMgr.GroupedRawSignalsByType.Remove(group)
+                            Exit For
+                        End If
                     End If
                 Next
                 For Each group In _signalMgr.ReGroupedRawSignalsByType
-                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If Not dirs.Contains(dir) Then
                         _signalMgr.ReGroupedRawSignalsByType.Remove(group)
                         Exit For
+                    Else
+                        If Not dirMnDict(dir).Contains(mnic) Then
+                            _signalMgr.ReGroupedRawSignalsByType.Remove(group)
+                            Exit For
+                        End If
                     End If
                 Next
                 For Each group In _signalMgr.GroupedRawSignalsByPMU
-                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If Not dirs.Contains(dir) Then
                         _signalMgr.GroupedRawSignalsByPMU.Remove(group)
                         Exit For
+                    Else
+                        If Not dirMnDict(dir).Contains(mnic) Then
+                            _signalMgr.GroupedRawSignalsByPMU.Remove(group)
+                            Exit For
+                        End If
                     End If
                 Next
                 ' this for each loop is trying to avoid read the example file and load everything again when user accidentally clicked the read file button
+                ' it also avoid load the same multiple times
                 ' however, since the database preset.xml file do not change and the preset could be changed
                 ' even we read the same file, we want a different preset, so we reload everything, till I find a way to compare to previous mnemonic
-                'For Each group In _signalMgr.GroupedRawSignalsByType
-                '    If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
-                '        Exit Sub
-                '    End If
-                'Next
+                For Each group In _signalMgr.GroupedRawSignalsByType
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If obj.FileDirectory = dir And obj.Mnemonic = mnic Then
+                        Exit Sub
+                    End If
+                Next
                 Dim exampleFile = obj.ExampleFile
                 If File.Exists(exampleFile) Then
                     If obj.FileType IsNot Nothing And DataConfigure.ReaderProperty IsNot Nothing Then
                         Try
-                            _signalMgr.AddRawSignalsFromADir(obj, DataConfigure.ReaderProperty.DateTimeStart)
+                            _signalMgr.AddRawSignalsFromADir(obj, DataConfigure.ReaderProperty.ExampleTime)
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                             Exit Sub
@@ -878,6 +913,25 @@ Namespace ViewModels
                         ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
                         PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
                         DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
+
+                        'read voltage stability settings from config file.
+                        Dim vsDetectors = New VoltageStabilityDetectorGroupReader(Run.Model.ConfigFilePath).GetDetector
+                        'add voltage stability detectors to te detector list in the settings.
+                        If vsDetectors.Count > 0 Then
+                            DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible
+                            For Each detector In vsDetectors
+                                DetectorConfigure.DetectorList.Add(New VoltageStabilityDetectorViewModel(detector, _signalMgr))
+                            Next
+                        End If
+                        Dim modeMeters = New ModeMeterReader(Run.Model.ConfigFilePath).GetDetectors
+                        If modeMeters.Count > 0 Then
+                            For Each mm In modeMeters
+                                DetectorConfigure.DetectorList.Add(New SmallSignalStabilityToolViewModel(mm, _signalMgr))
+                            Next
+                            ModeMeterXmlWriter.CheckMMDirsStatus(Run.Model, modeMeters)
+                        End If
+
+
                     Catch ex As Exception
                         Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
@@ -927,8 +981,9 @@ Namespace ViewModels
             End If
             If File.Exists(Run.Model.ConfigFilePath) Then
                 Dim writer = New ConfigFileWriter(Me, Run.Model)
+                writer.WriteReaderProperties(Run.Model.ConfigFilePath, DataConfigure.ReaderProperty)
                 'writer.UpdateExampleFileAddress(exampleFilePath)
-                writer.WriteXmlConfigFile(Run.Model.ConfigFilePath)
+                'writer.WriteXmlConfigFile(Run.Model.ConfigFilePath)
             Else
                 Forms.MessageBox.Show("Task does not exist yet.", "Error!", MessageBoxButtons.OK)
             End If
