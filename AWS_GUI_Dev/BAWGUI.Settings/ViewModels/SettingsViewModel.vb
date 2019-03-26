@@ -4511,8 +4511,9 @@ Namespace ViewModels
         Private Sub _addAFileSource(obj As Object)
             Dim newFileSource = New InputFileInfoViewModel()
             newFileSource.IsExpanded = True
-            SignalMgr.FileInfo.Add(newFileSource)
+            'SignalMgr.FileInfo.Add(newFileSource)
             DataConfigure.ReaderProperty.InputFileInfos.Add(newFileSource)
+            SignalMgr.FileInfo = DataConfigure.ReaderProperty.InputFileInfos
         End Sub
         Private _deleteThisFileSource As ICommand
         Public Property DeleteThisFileSource As ICommand
@@ -4529,41 +4530,51 @@ Namespace ViewModels
             If result = DialogResult.OK Then
                 'if the file info to be deleted exist in the signal manager, it is a good file info
                 'if it does not exist, it is a bad file info that only exist in the reader property, then look through reader property to deleted it.
-                Dim fileDeleted = False
-                For Each source In SignalMgr.FileInfo
+                'Dim fileDeleted = False
+                For Each source In DataConfigure.ReaderProperty.InputFileInfos
                     If obj Is source Then
-                        fileDeleted = True
+                        'fileDeleted = True
                         For Each group In _signalMgr.GroupedRawSignalsByType
-                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            Dim frags = group.SignalSignature.SignalName.Split(",")
+                            Dim dir = frags(0).Trim
+                            Dim mnic = frags(1).Trim
+                            If dir = obj.FileDirectory AndAlso mnic = obj.Mnemonic Then
                                 _signalMgr.GroupedRawSignalsByType.Remove(group)
                                 Exit For
                             End If
                         Next
+
                         For Each group In _signalMgr.ReGroupedRawSignalsByType
-                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            Dim frags = group.SignalSignature.SignalName.Split(",")
+                            Dim dir = frags(0).Trim
+                            Dim mnic = frags(1).Trim
+                            If dir = obj.FileDirectory AndAlso mnic = obj.Mnemonic Then
                                 _signalMgr.ReGroupedRawSignalsByType.Remove(group)
                                 Exit For
                             End If
                         Next
                         For Each group In _signalMgr.GroupedRawSignalsByPMU
-                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            Dim frags = group.SignalSignature.SignalName.Split(",")
+                            Dim dir = frags(0).Trim
+                            Dim mnic = frags(1).Trim
+                            If dir = obj.FileDirectory AndAlso mnic = obj.Mnemonic Then
                                 _signalMgr.GroupedRawSignalsByPMU.Remove(group)
                                 Exit For
                             End If
                         Next
-                        SignalMgr.FileInfo.Remove(obj)
                         DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
+                        'SignalMgr.FileInfo = DataConfigure.ReaderProperty.InputFileInfos
                         Exit For
                     End If
                 Next
-                If Not fileDeleted Then
-                    For Each source In DataConfigure.ReaderProperty.InputFileInfos
-                        If obj Is source Then
-                            DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
-                            Exit For
-                        End If
-                    Next
-                End If
+                'If Not fileDeleted Then
+                '    For Each source In DataConfigure.ReaderProperty.InputFileInfos
+                '        If obj Is source Then
+                '            DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
+                '            Exit For
+                '        End If
+                '    Next
+                'End If
                 DataConfigure.ReaderProperty.CheckHasDBDataSource()
                 'If obj.FileType = DataFileType.PI Then
                 '    DataConfigure.ReaderProperty.CanChooseMode = True
