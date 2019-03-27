@@ -323,6 +323,16 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
+        private List<double> _matlabTimeStampNumber;
+        public List<double> MATLABTimeStampNumber
+        {
+            get { return _model.MATLABTimeStampNumber; }
+            set
+            {
+                _model.MATLABTimeStampNumber = value;
+                OnPropertyChanged();
+            }
+        }
         public SiteCoordinatesModel From
         {
             get { return _model.From; }

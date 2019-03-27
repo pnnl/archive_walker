@@ -84,6 +84,7 @@ namespace BAWGUI.MATLABRunResults.Models
                     string row = new string(Utility.GetRow(item, 0).ToArray());
                     newPMU.SignalNames.Add(row);
                 }
+                //var arraatfgssa = ((MWCellArray)_results["Signal_Name", index]).ToString().Split(new char[] { '\n', ' ' }).Select(x => x.Trim(new char[] { '\'', ' ' })).Where(y => !string.IsNullOrEmpty(y)).ToList();
                 arr = (MWCellArray)_results["Signal_Type", index];
                 foreach (char[,] item in arr.ToArray())
                 {
@@ -98,8 +99,8 @@ namespace BAWGUI.MATLABRunResults.Models
                 }
                 //if (index == 1)
                 //{
-                    //TimeStampNumber.Clear();
-                    MWNumericArray narr = (MWNumericArray)_results["Signal_Time", index];
+                //TimeStampNumber.Clear();
+                MWNumericArray narr = (MWNumericArray)_results["Signal_Time", index];
                     double[] t = (double[])(narr.ToVector(MWArrayComponent.Real));
 
                     //var timeStamps = new List<System.DateTime>();
@@ -111,8 +112,9 @@ namespace BAWGUI.MATLABRunResults.Models
                     //var tt = Utility.MatlabDateNumToDotNetDateTime(item);
                     //timeStamps.Add(tt);
                     newPMU.TimeStampNumber.Add(item - 693960.0); // convert from matlab 0 day which is January 0, 0000 to microsoft 0 day which is midnight, 31 December 1899, by substracting the number of days in between them: 365 * 1900 - 1900 / 4 - 19 + 4, leap years are every 4 years, but not every 100 years and again, every 400 years.
-                        //timeStampNumbers.Add(tt.ToOADate());
-                        //timeStampNumbersInSeconds.Add(Utility.MatlabDateNumToDotNetSeconds(item));
+                                                                 //timeStampNumbers.Add(tt.ToOADate());
+                                                                 //timeStampNumbersInSeconds.Add(Utility.MatlabDateNumToDotNetSeconds(item));
+                    newPMU.MATLABTimeStampNumber.Add(item);
                 }
                 //}
                 var dataarr = (MWNumericArray)_results["Data", index];

@@ -4,6 +4,8 @@ Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
+Imports ModeMeter.ViewModels
+Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Public Class ConfigFileWriter
@@ -55,8 +57,14 @@ Namespace ViewModels
                                        </FilePath>
                 '<FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
                 dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(info)
-
             Next
+            Dim exampleTime As String
+            Try
+                exampleTime = DateTime.Parse(_svm.DataConfigure.ReaderProperty.ExampleTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal).ToString("MM/dd/yyyy HH:mm:ss")
+            Catch ex As Exception
+                exampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss")
+            End Try
+            dataConfig.<Configuration>.<ReaderProperties>.LastOrDefault.Add(<ExampleTime><%= exampleTime %></ExampleTime>)
             Dim mode As XElement = <Mode>
                                        <Name><%= _svm.DataConfigure.ReaderProperty.ModeName %></Name>
                                    </Mode>
@@ -75,8 +83,8 @@ Namespace ViewModels
                         dtEnd = DateTime.Now
                         'Throw New Exception("Error parsing end time.")
                     End Try
-                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
-                    Dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss")
                     Dim parameters As XElement = <Params>
                                                      <DateTimeStart><%= dtStringStart %></DateTimeStart>
                                                      <DateTimeEnd><%= dtStringEnd %></DateTimeEnd>
@@ -88,8 +96,9 @@ Namespace ViewModels
                     Catch ex As Exception
                         Throw New Exception("Error parsing start time.")
                     End Try
-                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss") & " GMT"
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
                     Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= _svm.DataConfigure.ReaderProperty.UTCoffset %></UTCoffset>
                                                      <DateTimeStart><%= dtStringStart %></DateTimeStart>
                                                      <NoFutureWait><%= _svm.DataConfigure.ReaderProperty.NoFutureWait %></NoFutureWait>
                                                      <MaxNoFutureCount><%= _svm.DataConfigure.ReaderProperty.MaxNoFutureCount %></MaxNoFutureCount>
@@ -100,6 +109,7 @@ Namespace ViewModels
                     mode.Add(parameters)
                 Case ModeType.RealTime
                     Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= _svm.DataConfigure.ReaderProperty.UTCoffset %></UTCoffset>
                                                      <NoFutureWait><%= _svm.DataConfigure.ReaderProperty.NoFutureWait %></NoFutureWait>
                                                      <MaxNoFutureCount><%= _svm.DataConfigure.ReaderProperty.MaxNoFutureCount %></MaxNoFutureCount>
                                                      <FutureWait><%= _svm.DataConfigure.ReaderProperty.FutureWait %></FutureWait>
@@ -430,6 +440,7 @@ Namespace ViewModels
                         If Not String.IsNullOrEmpty(dt.EventMergeWindow) Then
                             element.Add(<EventMergeWindow><%= dt.EventMergeWindow %></EventMergeWindow>)
                         End If
+                    'PMUSignalDictionary = dt.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                 'Case GetType(OutOfRangeGeneralDetector)
                 '    Dim dt = DirectCast(detector, OutOfRangeGeneralDetector)
                 '    element = <OutOfRangeGeneral>
@@ -570,6 +581,10 @@ Namespace ViewModels
                         '    <FrequencyMax><%= dt.FrequencyMax %></FrequencyMax>
                         '    <FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>
                         '</Periodogram>
+                    Case GetType(VoltageStabilityDetectorViewModel)
+                        Continue For
+                    Case GetType(SmallSignalStabilityToolViewModel)
+                        Continue For
                     Case Else
                         Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
                 End Select
@@ -578,6 +593,23 @@ Namespace ViewModels
                 _writePMUElements(element, PMUSignalDictionary)
                 detectorConfig.<Configuration>.LastOrDefault.Add(element)
                 'End If
+            Next
+            For Each detector In _svm.DetectorConfigure.DataWriterDetectorList
+                Dim element As XElement
+                Dim dt = DirectCast(detector, DataWriterDetectorViewModel)
+                element = <DataWriter></DataWriter>
+                If Not String.IsNullOrEmpty(dt.SavePath) Then
+                    element.Add(<SavePath><%= dt.SavePath %></SavePath>)
+                End If
+                element.Add(<SeparatePMUs><%= dt.SeparatePMUs.ToString.ToUpper %></SeparatePMUs>)
+                If Not dt.SeparatePMUs AndAlso Not String.IsNullOrEmpty(dt.Mnemonic) Then
+                    element.Add(<Mnemonic><%= dt.Mnemonic %></Mnemonic>)
+                Else
+                    element.Add(<Mnemonic></Mnemonic>)
+                End If
+                Dim PMUSignalDictionary = detector.InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
+                _writePMUElements(element, PMUSignalDictionary)
+                detectorConfig.<Configuration>.LastOrDefault.Add(element)
             Next
             detectorConfig.<Configuration>.LastOrDefault.Add(<Alarming></Alarming>)
             For Each alarm In _svm.DetectorConfigure.AlarmingList
@@ -1089,6 +1121,82 @@ Namespace ViewModels
                     '    _writePMUElements(aStep, PMUSignalDictionary)
                     'End If
             End Select
+        End Sub
+
+        Friend Sub WriteReaderProperties(configFilePath As String, readerProperty As ReaderProperties)
+            Dim config = XDocument.Load(configFilePath)
+            Dim inputInformation = config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.Elements
+            inputInformation.Remove
+            For Each fileInfo In readerProperty.InputFileInfos
+                Dim info As XElement = <FilePath>
+                                           <ExampleFile><%= fileInfo.ExampleFile %></ExampleFile>
+                                           <FileType><%= fileInfo.FileType %></FileType>
+                                           <Mnemonic><%= fileInfo.Mnemonic %></Mnemonic>
+                                       </FilePath>
+                '<FileDirectory><%= fileInfo.FileDirectory %></FileDirectory>
+                config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.LastOrDefault.Add(info)
+            Next
+            Dim exampleTime As String
+            Try
+                exampleTime = DateTime.Parse(readerProperty.ExampleTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal).ToString("MM/dd/yyyy HH:mm:ss")
+            Catch ex As Exception
+                exampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss")
+            End Try
+            config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.LastOrDefault.Add(<ExampleTime><%= exampleTime %></ExampleTime>)
+            Dim mode As XElement = <Mode>
+                                       <Name><%= readerProperty.ModeName %></Name>
+                                   </Mode>
+            Dim dtStart, dtEnd As DateTime
+            Select Case readerProperty.ModeName
+                Case ModeType.Archive
+                    Try
+                        dtStart = DateTime.Parse(readerProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                    Catch ex As Exception
+                        dtStart = DateTime.Now
+                        'Throw New Exception("Error parsing start time.")
+                    End Try
+                    Try
+                        dtEnd = DateTime.Parse(readerProperty.DateTimeEnd, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                    Catch ex As Exception
+                        dtEnd = DateTime.Now
+                        'Throw New Exception("Error parsing end time.")
+                    End Try
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim dtStringEnd = dtEnd.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim parameters As XElement = <Params>
+                                                     <DateTimeStart><%= dtStringStart %></DateTimeStart>
+                                                     <DateTimeEnd><%= dtStringEnd %></DateTimeEnd>
+                                                 </Params>
+                    mode.Add(parameters)
+                Case ModeType.Hybrid
+                    Try
+                        dtStart = DateTime.Parse(readerProperty.DateTimeStart, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal Or DateTimeStyles.AdjustToUniversal)
+                    Catch ex As Exception
+                        Throw New Exception("Error parsing start time.")
+                    End Try
+                    Dim dtStringStart = dtStart.ToString("yyyy-MM-dd HH:mm:ss")
+                    Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= readerProperty.UTCoffset %></UTCoffset>
+                                                     <DateTimeStart><%= dtStringStart %></DateTimeStart>
+                                                     <NoFutureWait><%= readerProperty.NoFutureWait %></NoFutureWait>
+                                                     <MaxNoFutureCount><%= readerProperty.MaxNoFutureCount %></MaxNoFutureCount>
+                                                     <FutureWait><%= readerProperty.FutureWait %></FutureWait>
+                                                     <MaxFutureCount><%= readerProperty.MaxFutureCount %></MaxFutureCount>
+                                                     <RealTimeRange><%= readerProperty.RealTimeRange %></RealTimeRange>
+                                                 </Params>
+                    mode.Add(parameters)
+                Case ModeType.RealTime
+                    Dim parameters As XElement = <Params>
+                                                     <UTCoffset><%= readerProperty.UTCoffset %></UTCoffset>
+                                                     <NoFutureWait><%= readerProperty.NoFutureWait %></NoFutureWait>
+                                                     <MaxNoFutureCount><%= readerProperty.MaxNoFutureCount %></MaxNoFutureCount>
+                                                     <FutureWait><%= readerProperty.FutureWait %></FutureWait>
+                                                     <MaxFutureCount><%= readerProperty.MaxFutureCount %></MaxFutureCount>
+                                                 </Params>
+                    mode.Add(parameters)
+            End Select
+            config.<Config>.<DataConfig>.<Configuration>.<ReaderProperties>.LastOrDefault.Add(mode)
+            config.Save(_saveToRun.ConfigFilePath)
         End Sub
 
         Friend Sub UpdateExampleFileAddress(exampleFilePath As String)

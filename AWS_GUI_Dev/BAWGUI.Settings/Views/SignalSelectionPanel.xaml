@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
         <converters:DetectorExpanderHeaderConverter2 x:Key="DetectorExpanderHeaderConverter2"/>
+        <converters:DetectorExpanderHeaderConverter3 x:Key="DetectorExpanderHeaderConverter3"/>
         <converters:DQFilteredSignalFlagConverter x:Key="DQFilteredSignalFlagConverter"/>
         <converters:SignalSelectionDropDownConverter x:Key="SignalSelectionDropDownConverter"/>
         <converters:ProcessedSignalFlagConverter x:Key="ProcessedSignalFlagConverter"/>
@@ -31,6 +32,16 @@
                 </Label.Content>
             </Label>
         </DataTemplate>
+        <DataTemplate x:Key="DataWriterDetectorTabStyle">
+            <Label ContentStringFormat="Pick Channels for: {0}">
+                <Label.Content>
+                    <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter3}">
+                        <Binding Path="CurrentSelectedStep"/>
+                        <Binding Path="DetectorConfigure.DataWriterDetectorList"/>
+                    </MultiBinding>
+                </Label.Content>
+            </Label>
+        </DataTemplate>
     </UserControl.Resources>
     <!--<avalonDock:LayoutAnchorable Title="Signal Selection Panel">-->
     <Grid>
@@ -48,6 +59,9 @@
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding CurrentTabIndex}" Value="4">
                             <Setter Property="ContentTemplate" Value="{StaticResource DetectorStyle}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CurrentTabIndex}" Value="5">
+                            <Setter Property="ContentTemplate" Value="{StaticResource DataWriterDetectorTabStyle}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -93,6 +107,13 @@
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="4"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.ReGroupedRawSignalsByType}"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="5"/>
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding SignalMgr.ReGroupedRawSignalsByType}"/>
                         </MultiDataTrigger>
@@ -164,6 +185,20 @@
                                 <Condition Binding="{Binding CurrentTabIndex}" Value="4"/>
                             </MultiDataTrigger.Conditions>
                             <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDetectorInput}"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input to Detectors by Step"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="5"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDetectorInput}"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedSelectionMethod}" Value="Input Channels by Step"/>
+                                <Condition Binding="{Binding CurrentTabIndex}" Value="5"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedSignalByDataWriterDetectorInput}"/>
                         </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>

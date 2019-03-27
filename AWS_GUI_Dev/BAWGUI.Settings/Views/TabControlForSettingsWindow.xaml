@@ -23,6 +23,9 @@
         <TabItem Header="Detection">
             <local:DetectorConfigTabInSettings/>
         </TabItem>
+        <TabItem Header="Data Writer">
+            <local:DataWriterDetectorTab/>
+        </TabItem>
         <TabItem Header="Signal Coordinates Setup" DataContext="{Binding RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType=Window}, Path=DataContext.SignalCoordsMappingVM}">
             <mapcoordv:SignalCoordsSetupView/>
         </TabItem>

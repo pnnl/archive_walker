@@ -1,7 +1,7 @@
 % Created by Urmila Agrawal
 
 
-function Freq_FO_Refined = FOdetectionForModeMeter(y,Parameters,fs,AnalysisLength)
+function Freq_FO_Refined = FOdetectionForModeMeter(y,Parameters,fs)
 
 %Extract parameters from the structure
 WindowType = Parameters.WindowType;
@@ -14,7 +14,7 @@ FrequencyMin = Parameters.FrequencyMin;
 FrequencyMax = Parameters.FrequencyMax;
 FrequencyTolerance = Parameters.FrequencyTolerance;
 % Window for test statistic periodogram
-PeriodogramWindow = eval([WindowType '(AnalysisLength)']);
+PeriodogramWindow = eval([WindowType '(length(y))']);
 
 % Window for the GMSC and Daniell-Welch periodogram (PSD estimate)
 GMSCandPSDwindow = eval([WindowType '(WindowLength)']);

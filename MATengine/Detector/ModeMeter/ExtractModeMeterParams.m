@@ -266,9 +266,99 @@ if isfield(Parameters,'Mode')
             else
                 FOdetector = struct([]);
             end
+            
+            % Event detection parameters
+            if isfield(TempXML,'EventDetectorParam')
+                EventParamExtrXML = TempXML.EventDetectorParam;
+                
+                % Length for RMS calculation
+                if isfield(EventParamExtrXML,'RMSlength')
+                    % Use specified length
+                    RMSlength = str2double(EventParamExtrXML.RMSlength)*fs{ModeIdx};
+
+                    if isnan(RMSlength)
+                        % str2double sets the value to NaN when it can't make it a number
+                        warning('RMSlength is not a number. Default of 15 will be used.');
+                        RMSlength = 15*fs{ModeIdx};
+                    end
+                else
+                    % Use default length
+                    RMSlength = 15*fs{ModeIdx};
+                end
+
+                % Forgetting factor for threshold
+                if isfield(EventParamExtrXML,'RMSmedianFilterTime')
+                    % Use specified filter order, converted to samples from time
+                    RMSmedianFilterOrder = round(str2double(EventParamExtrXML.RMSmedianFilterTime)*fs{ModeIdx});
+
+                    if isnan(RMSmedianFilterOrder)
+                        % str2double sets the value to NaN when it can't make it a number
+                        warning('RMSmedianFilterTime is not a number. Default of 120 seconds will be used.');
+                        RMSmedianFilterOrder = 120*fs{ModeIdx};
+                    end
+
+                    if (RMSmedianFilterOrder<=0)
+                        warning('RMSmedianFilterTime must be positive. Default of 120 seconds will be used.');
+                        RMSmedianFilterOrder = 120*fs{ModeIdx};
+                    end
+                else
+                    % Use default filter time
+                    RMSmedianFilterOrder = 120*fs{ModeIdx};
+                end
+                % Ensure that the median filter order is odd
+                if mod(RMSmedianFilterOrder,2) == 0
+                    RMSmedianFilterOrder = RMSmedianFilterOrder + 1;
+                end
+
+                % Scaling term for threshold
+                if isfield(EventParamExtrXML,'RingThresholdScale')
+                    % Use specified scaling term
+                    RingThresholdScale = str2double(EventParamExtrXML.RingThresholdScale);
+
+                    if isnan(RingThresholdScale)
+                        % str2double sets the value to NaN when it can't make it a number
+                        warning('RingThresholdScale is not a number. Default of 3 will be used.');
+                        RingThresholdScale = 3;
+                    end
+
+                    if RingThresholdScale < 0
+                        warning('RingThresholdScale cannot be negative. Default of 3 will be used.');
+                        RingThresholdScale = 3;
+                    end
+                else
+                    % Use default scaling term
+                    RingThresholdScale = 3;
+                end
+                
+                % Minimum analysis window length
+                if isfield(EventParamExtrXML,'MinAnalysisLength')
+                    % Use specified value
+                    MinAnalysisLength = str2double(EventParamExtrXML.MinAnalysisLength)*fs{ModeIdx};
+
+                    if isnan(RingThresholdScale)
+                        % str2double sets the value to NaN when it can't make it a number
+                        error('MinAnalysisLength is not a number.');
+                    end
+
+                    if RingThresholdScale < 0
+                        error('MinAnalysisLength cannot be negative.');
+                    end
+                else
+                    % Use default value (no adjustment to shorter window)
+                    MinAnalysisLength = AnalysisLength;
+                end
+
+
+                EventDetector = struct('RingThresholdScale',RingThresholdScale,...
+                    'RMSlength',RMSlength,'RMSmedianFilterOrder',RMSmedianFilterOrder,...
+                    'MinAnalysisLength',MinAnalysisLength);
+            else
+                EventDetector = struct([]);
+            end
         end
         ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,'DampRatioThreshold',DampRatioThreshold,...
             'AnalysisLength',AnalysisLength,'RetConTrackingStatus',RetConTrackingStatus,'MaxRetConLength',MaxRetConLength,...
-            'DesiredModes',DesiredModes,'ResultPathFinal',ResultPathFinal,'FOdetectorPara',FOdetector,'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters);%
+            'DesiredModes',DesiredModes,'ResultPathFinal',ResultPathFinal,'FOdetectorPara',FOdetector,'EventDetectorPara',EventDetector,...
+            'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters);
     end
 end

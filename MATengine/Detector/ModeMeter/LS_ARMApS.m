@@ -31,7 +31,7 @@
 %         in stage 1 and then updated in stage 2. 
 % yhat = reconstructed version of input signal y based on identified model
 
-function [ModeEst, Mtrack] = LS_ARMApS(y,Parameters,DesiredModes,fs,Mtrack,FOfreq)
+function [ModeEst, Mtrack] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
@@ -59,7 +59,9 @@ end
 
 Z = [Y S];
 
-theta = pinv(Z)*ybar;   % Estimate of reduced parameter vector
+Wp5 = diag(sqrt(w(L+1:W)));
+
+theta = pinv(Wp5*Z)*Wp5*ybar;   % Estimate of reduced parameter vector
 a = [1; theta(1:L)];   % AR coefficients
 
 e = [zeros(L,1); ybar-Z*theta];    % Estimates of process noise (see eq. (3.22))
@@ -87,8 +89,10 @@ if nb > 0
     end
     
     Z = [Y E S];
+    
+    Wp5 = diag(sqrt(w(L+1:W)));
 
-    theta = pinv(Z)*ybar;   % Estimate of reduced parameter vector
+    theta = pinv(Wp5*Z)*Wp5*ybar;   % Estimate of full parameter vector
     a = [1; theta(1:na)];   % AR coefficients
 end
 

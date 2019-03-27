@@ -11,6 +11,10 @@ using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using BAWGUI.ReadConfigXml;
+using VoltageStability.Models;
+using VoltageStability.ViewModels;
+using ModeMeter.Models;
+using ModeMeter.ViewModels;
 using BAWGUI.CoordinateMapping.ViewModels;
 using BAWGUI.CoordinateMapping.Models;
 
@@ -199,21 +203,20 @@ namespace BAWGUI.ViewModels
                 SettingsVM.Run = e.SelectedRun;
                 if (File.Exists(e.SelectedRun.Model.ConfigFilePath))
                 {
+                {
                     try
                     {
                         var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
                         //clean up the signal manager
                         _signalMgr.cleanUp();
                         //read input data files and generate all the signal objects from the data files and put them in the signal manager.
-                        var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos);
-                        //if (readingDataSourceSuccess)
-                        //{
+                        var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos, config.DataConfigure.ReaderProperty.ExampleTime);
                         //pass signal manager into settings.
                         SettingsVM.SignalMgr = _signalMgr;
-                        //read config files
-                        SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
                         if (readingDataSourceSuccess)
                         {
+                            //read config files
+                            SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
                             SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
                             SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                             SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
@@ -225,6 +228,31 @@ namespace BAWGUI.ViewModels
                             {
                                 e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
                             }
+
+                            //read voltage stability settings from config file.
+                            var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
+                            //add voltage stability detectors to te detector list in the settings.
+                            if (vsDetectors.Count > 0)
+                            {
+                                SettingsVM.DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible;
+                                foreach (var detector in vsDetectors)
+                                {
+                                    SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
+                                }
+                            }
+                            var modeMeters = new ModeMeterReader(e.SelectedRun.Model.ConfigFilePath).GetDetectors();
+                            if (modeMeters.Count > 0)
+                            {
+                                foreach (var mm in modeMeters)
+                                {
+                                    SettingsVM.DetectorConfigure.DetectorList.Add(new SmallSignalStabilityToolViewModel(mm, _signalMgr));
+                                }
+                                ModeMeterXmlWriter.CheckMMDirsStatus(e.SelectedRun.Model, modeMeters);
+                            }
+                        }
+                        else
+                        {
+                            SettingsVM.DataConfigure.ReaderProperty = new ReaderProperties(config.DataConfigure.ReaderProperty, _signalMgr);
                         }
                         var signalSiteMappingConfig = new SignalMappingPlotConfigReader(e.SelectedRun.Model.ConfigFilePath);
                         _signalMgr.DistinctMappingSignal();
@@ -239,6 +267,8 @@ namespace BAWGUI.ViewModels
                 {
                     MessageBox.Show("No Config.xml file found in the task folder.", "Error!", MessageBoxButtons.OK);
                 }
+                //need to read signal stability results
+
                 RunMatlabVM.Project = e.Model;
                 RunMatlabVM.Run = e.SelectedRun;
                 ResultsVM.Project = e.Model;
@@ -247,6 +277,30 @@ namespace BAWGUI.ViewModels
         }
         public CoordinatesTableViewModel CoordsTableVM { get; set; }
         public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
+        //private void _checkMMDirsStatus(AWRunViewModel task, List<SmallSignalStabilityTool> modeMeters)
+        //{
+        //    var eventPath = task.Model.EventPath;
+        //    var mm = eventPath + "\\MM";
+        //    if (!Directory.Exists(mm))
+        //    {
+        //        Directory.CreateDirectory(mm);
+        //        System.Windows.Forms.MessageBox.Show("Modemeter event subfolder MM was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+        //    }
+        //    foreach (var meter in modeMeters)
+        //    {
+        //        var meterDir = mm + "\\" + meter.ModeMeterName;
+        //        if (!Directory.Exists(meterDir))
+        //        {
+        //            Directory.CreateDirectory(meterDir);
+        //            System.Windows.Forms.MessageBox.Show("Subfolder for mode meter " + meter.ModeMeterName + " was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+        //        }
+        //    }
+        //}
+
+        private void _checkMMDirsStatus(AWRunViewModel task)
+        {
+        }
+
         //private void _projectControlVM_RunSelected(object sender, AWRunViewModel e)
         //{
         //    throw new NotImplementedException();
@@ -256,14 +310,21 @@ namespace BAWGUI.ViewModels
         {
             CurrentView = _signalMgr;
             var info = (InputFileInfoViewModel)obj;
-            try
-            {
-                _signalMgr.GetRawSignalData(info);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error retrieving data for viewing from example file. " + ex.Message, "Error!", MessageBoxButtons.OK);
-            }
+            //if ((info.FileType == Core.Models.DataFileType.piDatabase) && (SettingsVM.DataConfigure.ReaderProperty.Model != null))
+            //{
+
+            //}
+            //else
+            //{
+                try
+                {
+                    _signalMgr.GetRawSignalData(info, SettingsVM.DataConfigure.ReaderProperty.ExampleTime);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error retrieving data for viewing from example file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                }
+            //}
         }
         public ICommand InspectSignalByTimeRange { get; set; }
         private void _inpsectAllSignalsByTimeRange(object obj)

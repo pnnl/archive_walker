@@ -1,6 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows.Forms
-Imports PDAT_Reader
 Imports System.IO
 Imports System.Windows.Input
 Imports System.Windows
@@ -10,6 +9,10 @@ Imports BAWGUI.Utilities
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.Core.Models
+Imports VoltageStability.ViewModels
+Imports ModeMeter.ViewModels
+Imports VoltageStability.Models
+Imports ModeMeter.Models
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -32,7 +35,7 @@ Namespace ViewModels
 
             '_openConfigFile = New DelegateCommand(AddressOf openConfigXMLFile, AddressOf CanExecute)
             _browseInputFileDir = New DelegateCommand(AddressOf _browseInputFileFolder, AddressOf CanExecute)
-            '_fileTypeChanged = New DelegateCommand(AddressOf _buildInputFileFolderTree, AddressOf CanExecute)
+            _fileTypeChanged = New DelegateCommand(AddressOf _cleanInputFileInfo, AddressOf CanExecute)
             _dqfilterSelected = New DelegateCommand(AddressOf _dqfilterSelection, AddressOf CanExecute)
             _customizationSelected = New DelegateCommand(AddressOf _customizationStepSelection, AddressOf CanExecute)
             _selectedSignalChanged = New DelegateCommand(AddressOf _signalSelected, AddressOf CanExecute)
@@ -80,6 +83,8 @@ Namespace ViewModels
             _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox = New DelegateCommand(AddressOf _setCurrentPointOnWavePowerCalFilterInput, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
+            _addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
+            _deleteDataWriterDetector = New DelegateCommand(AddressOf _deleteADataWriterDetector, AddressOf CanExecute)
 
             '_inputFileDirTree = New ObservableCollection(Of Folder)
             _signalMgr = SignalManager.Instance
@@ -106,6 +111,7 @@ Namespace ViewModels
             _dummySignature.OldTypeAbbreviation = _dummySignature.TypeAbbreviation
             _dummySignature.OldUnit = _dummySignature.Unit
         End Sub
+
         'Private _pmuSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
         'Public Property PMUSignalDictionary As Dictionary(Of String, List(Of SignalSignatures))
         '    Get
@@ -765,7 +771,20 @@ Namespace ViewModels
             openFileDialog.RestoreDirectory = True
             openFileDialog.FileName = ""
             openFileDialog.DefaultExt = ".pdat"
-            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|All files (*.*)|*.*"
+            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            If obj.FileType = DataFileType.csv Then
+                openFileDialog.DefaultExt = ".csv"
+                openFileDialog.Filter = "JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            ElseIf obj.FileType = DataFileType.PI Then
+                openFileDialog.DefaultExt = ".xml"
+                openFileDialog.Filter = "PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            ElseIf obj.FileType = DataFileType.powHQ Then
+                openFileDialog.DefaultExt = ".mat"
+                openFileDialog.Filter = "HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            ElseIf obj.FileType = DataFileType.OpenHistorian Then
+                openFileDialog.DefaultExt = ".xml"
+                openFileDialog.Filter = "openHistorian Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            End If
             If _lastInputFolderLocation Is Nothing Then
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory
             Else
@@ -812,68 +831,82 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _parseExampleFile(obj As InputFileInfoViewModel)
-            If (_checkDataFileMatch(obj)) Then
+            If (obj.Model.CheckDataFileMatch()) Then
                 Dim dirs = New List(Of String)
+                Dim dirMnDict = New Dictionary(Of String, List(Of String))
                 For Each info In DataConfigure.ReaderProperty.InputFileInfos
-                    dirs.Add(info.FileDirectory)
+                    If Not dirs.Contains(info.FileDirectory) Then
+                        dirs.Add(info.FileDirectory)
+                    End If
+                    If Not dirMnDict.ContainsKey(info.FileDirectory) Then
+                        dirMnDict(info.FileDirectory) = New List(Of String)
+                    End If
+                    If Not dirMnDict(info.FileDirectory).Contains(info.Mnemonic) Then
+                        dirMnDict(info.FileDirectory).Add(info.Mnemonic)
+                    Else
+                        Forms.MessageBox.Show("Duplicate file source not allowed:" + Environment.NewLine + info.FileDirectory + Environment.NewLine + info.Mnemonic, "Warning!", MessageBoxButtons.OK)
+                        Exit Sub
+                    End If
                 Next
                 For Each group In _signalMgr.GroupedRawSignalsByType
-                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If Not dirs.Contains(dir) Then
                         _signalMgr.GroupedRawSignalsByType.Remove(group)
                         Exit For
+                    Else
+                        If Not dirMnDict(dir).Contains(mnic) Then
+                            _signalMgr.GroupedRawSignalsByType.Remove(group)
+                            Exit For
+                        End If
                     End If
                 Next
                 For Each group In _signalMgr.ReGroupedRawSignalsByType
-                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If Not dirs.Contains(dir) Then
                         _signalMgr.ReGroupedRawSignalsByType.Remove(group)
                         Exit For
+                    Else
+                        If Not dirMnDict(dir).Contains(mnic) Then
+                            _signalMgr.ReGroupedRawSignalsByType.Remove(group)
+                            Exit For
+                        End If
                     End If
                 Next
                 For Each group In _signalMgr.GroupedRawSignalsByPMU
-                    If Not dirs.Contains(group.SignalSignature.SignalName.Split(",")(0)) Then
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If Not dirs.Contains(dir) Then
                         _signalMgr.GroupedRawSignalsByPMU.Remove(group)
                         Exit For
+                    Else
+                        If Not dirMnDict(dir).Contains(mnic) Then
+                            _signalMgr.GroupedRawSignalsByPMU.Remove(group)
+                            Exit For
+                        End If
                     End If
                 Next
+                ' this for each loop is trying to avoid read the example file and load everything again when user accidentally clicked the read file button
+                ' it also avoid load the same multiple times
+                ' however, since the database preset.xml file do not change and the preset could be changed
+                ' even we read the same file, we want a different preset, so we reload everything, till I find a way to compare to previous mnemonic
                 For Each group In _signalMgr.GroupedRawSignalsByType
-                    If obj.FileDirectory = group.SignalSignature.SignalName.Split(",")(0) Then
+                    Dim frags = group.SignalSignature.SignalName.Split(",")
+                    Dim dir = frags(0).Trim
+                    Dim mnic = frags(1).Trim
+                    If obj.FileDirectory = dir And obj.Mnemonic = mnic Then
                         Exit Sub
                     End If
                 Next
                 Dim exampleFile = obj.ExampleFile
                 If File.Exists(exampleFile) Then
-                    'Dim filetype As DataFileType
-                    'Try
-                    '    filetype = [Enum].Parse(GetType(DataFileType), Path.GetExtension(exampleFile).Substring(1))
-                    'Catch ex As Exception
-                    '    Forms.MessageBox.Show("Data file type: " & filetype.ToString & " not recognized. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
-                    'Dim filename = ""
-                    'Try
-                    '    filename = Path.GetFileNameWithoutExtension(exampleFile)
-                    'Catch ex As ArgumentException
-                    '    Forms.MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
-                    'Try
-                    '    obj.Mnemonic = filename.Substring(0, filename.Length - 16)
-                    'Catch ex As Exception
-                    '    Forms.MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
-                    'Try
-                    '    Dim fullPath = Path.GetDirectoryName(exampleFile)
-                    '    Dim oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf("\"))
-                    '    Dim twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf("\"))
-                    '    obj.FileDirectory = twoLevelUp
-                    'Catch ex As Exception
-                    '    Forms.MessageBox.Show("Error extracting file directory from selected file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                    '    Exit Sub
-                    'End Try
-                    If obj.FileType IsNot Nothing Then
+                    If obj.FileType IsNot Nothing And DataConfigure.ReaderProperty IsNot Nothing Then
                         Try
-                            _signalMgr.AddRawSignalsFromADir(obj)
+                            _signalMgr.AddRawSignalsFromADir(obj, DataConfigure.ReaderProperty.ExampleTime)
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error reading selected data file. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                             Exit Sub
@@ -887,6 +920,25 @@ Namespace ViewModels
                         ProcessConfigure = New ProcessConfig(config.ProcessConfigure, _signalMgr)
                         PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
                         DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
+
+                        'read voltage stability settings from config file.
+                        Dim vsDetectors = New VoltageStabilityDetectorGroupReader(Run.Model.ConfigFilePath).GetDetector
+                        'add voltage stability detectors to te detector list in the settings.
+                        If vsDetectors.Count > 0 Then
+                            DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible
+                            For Each detector In vsDetectors
+                                DetectorConfigure.DetectorList.Add(New VoltageStabilityDetectorViewModel(detector, _signalMgr))
+                            Next
+                        End If
+                        Dim modeMeters = New ModeMeterReader(Run.Model.ConfigFilePath).GetDetectors
+                        If modeMeters.Count > 0 Then
+                            For Each mm In modeMeters
+                                DetectorConfigure.DetectorList.Add(New SmallSignalStabilityToolViewModel(mm, _signalMgr))
+                            Next
+                            ModeMeterXmlWriter.CheckMMDirsStatus(Run.Model, modeMeters)
+                        End If
+
+
                     Catch ex As Exception
                         Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
@@ -902,16 +954,23 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
-            Dim tp = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower
-            If obj.FileType.ToString.ToLower = tp Then
-                Return True
-            ElseIf obj.FileType = DataFileType.powHQ AndAlso tp = "mat" Then
-                Return True
-            Else
-                Return False
-            End If
-        End Function
+        'Private Function _checkDataFileMatch(obj As InputFileInfoViewModel) As Boolean
+        '    Dim tp = ""
+        '    Try
+        '        tp = Path.GetExtension(obj.ExampleFile).Substring(1).ToLower()
+        '    Catch
+
+        '    End Try
+        '    If obj.FileType.ToString.ToLower = tp Then
+        '        Return True
+        '    ElseIf obj.FileType = DataFileType.powHQ AndAlso tp = "mat" Then
+        '        Return True
+        '    ElseIf obj.FileType = DataFileType.PI AndAlso tp = "xml" Then
+        '        Return True
+        '    Else
+        '        Return False
+        '    End If
+        'End Function
 
         Private _updateExampleFile As ICommand
         Public Property UpdateExampleFile As ICommand
@@ -929,7 +988,9 @@ Namespace ViewModels
             End If
             If File.Exists(Run.Model.ConfigFilePath) Then
                 Dim writer = New ConfigFileWriter(Me, Run.Model)
-                writer.UpdateExampleFileAddress(exampleFilePath)
+                writer.WriteReaderProperties(Run.Model.ConfigFilePath, DataConfigure.ReaderProperty)
+                'writer.UpdateExampleFileAddress(exampleFilePath)
+                'writer.WriteXmlConfigFile(Run.Model.ConfigFilePath)
             Else
                 Forms.MessageBox.Show("Task does not exist yet.", "Error!", MessageBoxButtons.OK)
             End If
@@ -1082,7 +1143,34 @@ Namespace ViewModels
                 _fileTypeChanged = value
             End Set
         End Property
-
+        Private Sub _cleanInputFileInfo(obj As InputFileInfoViewModel)
+            obj.ExampleFile = ""
+            obj.FileDirectory = ""
+            obj.Mnemonic = ""
+            DataConfigure.ReaderProperty.CheckHasDBDataSource()
+            'If obj.FileType = DataFileType.PI Then
+            '    DataConfigure.ReaderProperty.ModeName = ModeType.Archive
+            '    DataConfigure.ReaderProperty.CanChooseMode = False
+            'Else
+            'DataConfigure.ReaderProperty.CanChooseMode = True
+            '    For Each info In DataConfigure.ReaderProperty.InputFileInfos
+            '        If info.FileType = DataFileType.PI Then
+            '            DataConfigure.ReaderProperty.CanChooseMode = False
+            '            Exit For
+            '        End If
+            '    Next
+            'End If
+        End Sub
+        'Private _canChooseMode As Boolean
+        'Public Property CanChooseMode As Boolean
+        '    Get
+        '        Return _canChooseMode
+        '    End Get
+        '    Set(ByVal value As Boolean)
+        '        _canChooseMode = value
+        '        OnPropertyChanged()
+        '    End Set
+        'End Property
         Private _configFileName As String
         Public Property ConfigFileName As String
             Get
@@ -1296,6 +1384,21 @@ Namespace ViewModels
                             Forms.MessageBox.Show("Please choose a way to specify sampling rate for Multirate!", "Error!", MessageBoxButtons.OK)
                             _addLog("Error selecting signal(s) for Multirate! No sampling rate specified!")
                         End If
+                    ElseIf TypeOf _currentSelectedStep Is VoltageStabilityDetectorViewModel Then
+                        'If obj.SignalList.Count > 0 Then
+                        '    Throw New Exception("Only single signal selection is allowed.")
+                        'End If
+                        Try
+                            _currentSelectedStep.ChangeASignal(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing voltage stability detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
+                    ElseIf TypeOf _currentSelectedStep Is SmallSignalStabilityToolViewModel Then
+                        Try
+                            _currentSelectedStep.ChangeSignalSelection(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing mode meter signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try
                             _changeSignalSelection(obj)
@@ -1596,7 +1699,7 @@ Namespace ViewModels
                     End If
                 End If
             End If
-                If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
+            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
@@ -4418,8 +4521,9 @@ Namespace ViewModels
         Private Sub _addAFileSource(obj As Object)
             Dim newFileSource = New InputFileInfoViewModel()
             newFileSource.IsExpanded = True
-            SignalMgr.FileInfo.Add(newFileSource)
+            'SignalMgr.FileInfo.Add(newFileSource)
             DataConfigure.ReaderProperty.InputFileInfos.Add(newFileSource)
+            SignalMgr.FileInfo = DataConfigure.ReaderProperty.InputFileInfos
         End Sub
         Private _deleteThisFileSource As ICommand
         Public Property DeleteThisFileSource As ICommand
@@ -4436,41 +4540,61 @@ Namespace ViewModels
             If result = DialogResult.OK Then
                 'if the file info to be deleted exist in the signal manager, it is a good file info
                 'if it does not exist, it is a bad file info that only exist in the reader property, then look through reader property to deleted it.
-                Dim fileDeleted = False
-                For Each source In SignalMgr.FileInfo
+                'Dim fileDeleted = False
+                For Each source In DataConfigure.ReaderProperty.InputFileInfos
                     If obj Is source Then
-                        fileDeleted = True
+                        'fileDeleted = True
                         For Each group In _signalMgr.GroupedRawSignalsByType
-                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            Dim frags = group.SignalSignature.SignalName.Split(",")
+                            Dim dir = frags(0).Trim
+                            Dim mnic = frags(1).Trim
+                            If dir = obj.FileDirectory AndAlso mnic = obj.Mnemonic Then
                                 _signalMgr.GroupedRawSignalsByType.Remove(group)
                                 Exit For
                             End If
                         Next
+
                         For Each group In _signalMgr.ReGroupedRawSignalsByType
-                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            Dim frags = group.SignalSignature.SignalName.Split(",")
+                            Dim dir = frags(0).Trim
+                            Dim mnic = frags(1).Trim
+                            If dir = obj.FileDirectory AndAlso mnic = obj.Mnemonic Then
                                 _signalMgr.ReGroupedRawSignalsByType.Remove(group)
                                 Exit For
                             End If
                         Next
                         For Each group In _signalMgr.GroupedRawSignalsByPMU
-                            If group.SignalSignature.SignalName.Split(",")(0) = obj.FileDirectory Then
+                            Dim frags = group.SignalSignature.SignalName.Split(",")
+                            Dim dir = frags(0).Trim
+                            Dim mnic = frags(1).Trim
+                            If dir = obj.FileDirectory AndAlso mnic = obj.Mnemonic Then
                                 _signalMgr.GroupedRawSignalsByPMU.Remove(group)
                                 Exit For
                             End If
                         Next
-                        SignalMgr.FileInfo.Remove(obj)
                         DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
+                        'SignalMgr.FileInfo = DataConfigure.ReaderProperty.InputFileInfos
                         Exit For
                     End If
                 Next
-                If Not fileDeleted Then
-                    For Each source In DataConfigure.ReaderProperty.InputFileInfos
-                        If obj Is source Then
-                            DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
-                            Exit For
-                        End If
-                    Next
-                End If
+                'If Not fileDeleted Then
+                '    For Each source In DataConfigure.ReaderProperty.InputFileInfos
+                '        If obj Is source Then
+                '            DataConfigure.ReaderProperty.InputFileInfos.Remove(obj)
+                '            Exit For
+                '        End If
+                '    Next
+                'End If
+                DataConfigure.ReaderProperty.CheckHasDBDataSource()
+                'If obj.FileType = DataFileType.PI Then
+                '    DataConfigure.ReaderProperty.CanChooseMode = True
+                '    For Each info In DataConfigure.ReaderProperty.InputFileInfos
+                '        If info.FileType = DataFileType.PI Then
+                '            DataConfigure.ReaderProperty.CanChooseMode = False
+                '            Exit For
+                '        End If
+                '    Next
+                'End If
                 'If _configData IsNot Nothing Then
                 '    _readDataConfigStages(_configData)
                 '    _readProcessConfig(_configData)
@@ -4550,6 +4674,10 @@ Namespace ViewModels
                         '_groupAllPostProcessConfigOutputSignal()
                         _deSelectAllDetectors()
                     End If
+                    If _oldTabIndex = 5 And _currentTabIndex <> 5 Then
+                        '_groupAllPostProcessConfigOutputSignal()
+                        _deSelectAllDetectors()
+                    End If
 
                     If (_currentTabIndex <= 1 AndAlso _oldTabIndex >= 2) OrElse (_currentTabIndex >= 2 AndAlso _oldTabIndex <= 1) Then
                         _reverseSignalPassedThroughNameTypeUnit()
@@ -4570,7 +4698,7 @@ Namespace ViewModels
                         If _oldTabIndex = 2 Then
                             _reGroupRawSignalByType()
                         End If
-                    ElseIf _currentTabIndex = 4 Then
+                    ElseIf _currentTabIndex = 4 OrElse _currentTabIndex = 5 Then
                         Dim allDataConfigOutputSignals = _getAllDataConfigOutput()
                         _signalMgr.AllDataConfigOutputGroupedByType = _signalMgr.SortSignalByType(allDataConfigOutputSignals)
                         _signalMgr.AllDataConfigOutputGroupedByPMU = _signalMgr.SortSignalByPMU(allDataConfigOutputSignals)
@@ -4600,13 +4728,17 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-
+        ''' <summary>
+        ''' if signal type has been changed in the prosessing tab, need to re-group them by type
+        ''' </summary>
         Private Sub _reGroupRawSignalByType()
             SignalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             For Each info In SignalMgr.FileInfo
-                Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
-                b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
-                SignalMgr.ReGroupedRawSignalsByType.Add(b)
+                If info.TaggedSignals.Count > 0 Then
+                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
+                    SignalMgr.ReGroupedRawSignalsByType.Add(b)
+                End If
             Next
             'For Each info In DataConfigure.ReaderProperty.InputFileInfos
             '    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))

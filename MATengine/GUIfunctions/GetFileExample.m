@@ -25,14 +25,25 @@
 
 function PMU = GetFileExample(InputFile,FileType,MetaOnly)
 
-if FileType == 1
-    [PMU,~,fs] = pdatReadnCreateStruct(InputFile,0,[]);
-elseif FileType == 2
-    [PMU,~,fs] = JSIS_CSV_2_Mat(InputFile,0);
-elseif FileType == 3
-    [PMU,~,fs] = POWreadHQ(InputFile,0);
-else
-    error(['FileType = ' num2str(FileType) ' is not a supported value.']);
+try
+    Unsupported = 0;
+    if FileType == 1
+        [PMU,~,fs] = pdatReadnCreateStruct(InputFile,0,[]);
+    elseif FileType == 2
+        [PMU,~,fs] = JSIS_CSV_2_Mat(InputFile,0);
+    elseif FileType == 3
+        [PMU,~,fs] = POWreadHQ(InputFile,0);
+    else
+        Unsupported = 1;
+        error(['FileType = ' num2str(FileType) ' is not a supported value.']);
+    end
+catch e
+    if Unsupported == 1
+        % Repeat error so that the message is captured by the GUI
+        throw(MException('Engine:Error',['FileType = ' num2str(FileType) ' is not a supported value.']));
+    else
+        throw(MException('Engine:Error','Attempt to read the file failed. It may be corrupt or the wrong type. Error message: \n%s',e.message));
+    end
 end
 
 if MetaOnly == 1

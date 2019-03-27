@@ -44,7 +44,11 @@ namespace BAWGUI.Core.Models
         [Description("JSIS CSV")]
         csv,
         [Description("HQ Point on Wave")]
-        powHQ
+        powHQ,
+        [Description("PI Database")]
+        PI,
+        [Description("openHistorian")]
+        OpenHistorian
     }
 
     public enum ModeType

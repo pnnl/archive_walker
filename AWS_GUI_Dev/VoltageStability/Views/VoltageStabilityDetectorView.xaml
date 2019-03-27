@@ -1,0 +1,122 @@
+﻿<UserControl x:Class="VoltageStability.Views.VoltageStabilityDetectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VoltageStability.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Grid Margin="2">
+            <Expander IsExpanded="{Binding IsExpanded}">
+                <Expander.Header>
+                    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
+                        <TextBlock VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                                    <Binding/>
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
+                            <Image Width="16" Height="16" Source="/VoltageStability;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                        </Button>
+                    </DockPanel>
+                </Expander.Header>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Auto" MaxHeight="350">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="6*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical" Grid.Column="0" Margin="2">
+                            <GroupBox Header="Methods">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <!--<Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>-->
+                                    <StackPanel Grid.Row="0" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsDeMarcoMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="DeMarco" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Analysis Length (sec):" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding DeMarcoAnalysisLength}" Margin="2,0" Width="100" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsMitsubishiMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Mitsubishi" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Analysis Length (sec):" Margin="2,0" VerticalAlignment="Center" />
+                                        <TextBox Text="{Binding MitsubishiAnalysisLength}" Margin="2,0" Width="100" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsQuantaMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Quanta" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="3" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsChowMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="RPI" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Analysis Length (sec):" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding RPIAnalysisLength}" Margin="2,0" Width="100" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="4" Margin="2,1" Orientation="Horizontal" Height="24">
+                                        <CheckBox IsChecked="{Binding IsTellegenMethod}" Margin="2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Tellegen" Margin="10,0" Width="80" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                            <StackPanel Orientation="Horizontal" Margin="2,15">
+                                <TextBlock Text="Combine events closer than "/>
+                                <TextBox Text="{Binding EventMergeWindow}" Width="80"/>
+                                <TextBlock Text=" seconds apart."/>
+                            </StackPanel>
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Sites}" Grid.Column="1" Margin="2">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:SiteView Margin="2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <StackPanel Orientation="Vertical" Margin="2" Grid.Column="2">
+                            <Button Content="Add Site" Margin="2" Command="{Binding AddSite}"/>
+                            <Button Content="Add Voltage Bus" Margin="2" Command="{Binding AddVoltageBus}"/>
+                            <Button Content="Add Branch" Margin="2" Command="{Binding AddBranch}"/>
+                            <Button Content="Add Shunt" Margin="2" Command="{Binding AddShunt}"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Expander>
+            <!--<Button Grid.Column="1" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
+                <Image Width="16" Height="16" Source="/BAWGUI.Settings;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+            </Button>-->
+        </Grid>
+    </Border>
+</UserControl>

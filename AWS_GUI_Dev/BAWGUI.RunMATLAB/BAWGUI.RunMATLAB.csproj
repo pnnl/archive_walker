@@ -94,7 +94,6 @@
   <ItemGroup>
     <Compile Include="Converters\EnabledIfRunningOrPausedConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\InverseBooleanVisibilityConverter.cs" />
     <Compile Include="ViewModels\AWRunViewModel.cs" />
     <Compile Include="ViewModels\MatLabEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -143,6 +142,14 @@
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModeMeter.MATLABRunResults\ModeMeter.MATLABRunResults.csproj">
+      <Project>{3b62f41c-e552-4f55-962a-b8f54c425390}</Project>
+      <Name>ModeMeter.MATLABRunResults</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability.MATLABRunResults\VoltageStability.MATLABRunResults.csproj">
+      <Project>{ECC13D01-5571-4325-8772-70E51982DAAE}</Project>
+      <Name>VoltageStability.MATLABRunResults</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

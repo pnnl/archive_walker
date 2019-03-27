@@ -117,6 +117,12 @@
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Core.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Shell.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -275,6 +281,14 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
+      <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>
+      <Name>ModeMeter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
+      <Name>VoltageStability</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MapService\MapService.csproj">
       <Project>{908167fb-4c0e-4285-a6ee-0ef81a164929}</Project>
       <Name>MapService</Name>
@@ -365,4 +379,8 @@
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Debug XCOPY /Y /S /F "$(SolutionDir)..\MATengine\matlabDLLs" "$(TargetDir)matlabDLLs\"
+if $(ConfigurationName) == Release XCOPY /Y /S /F "$(SolutionDir)..\MATengine\matlabDLLs" "$(TargetDir)..\matlabDLLs\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -11,7 +11,7 @@
         <ResourceDictionary>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
-            <converters:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
+            <coreConverter:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
             <converters:EnabledIfRunningOrPausedConverter x:Key="EnabledIfRunningOrPausedConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>

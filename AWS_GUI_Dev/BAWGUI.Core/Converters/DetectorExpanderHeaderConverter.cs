@@ -48,5 +48,28 @@ namespace BAWGUI.Core.Converters
             return null;
         }
     }
+    public class DataWriterExpanderHeaderConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] != null)
+            {
+                var firstString = "";
+                if (values[1].GetType() == typeof(ObservableCollection<DetectorBase>))
+                {
+                    var detectorList = (ObservableCollection<DetectorBase>)values[1];
+                    var thisDetector = (DetectorBase)values[0];
+                    firstString = (detectorList.IndexOf(thisDetector) + 1).ToString();
+                }
+                return "Data Writer " + firstString;
+            }
+            else
+                return "No Data Writer Selected Yet!";
+        }
 
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
 }

@@ -13,6 +13,7 @@ namespace BAWGUI.MATLABRunResults.Models
             Stat = new List<int>();
             Flag = new List<bool>();
             TimeStampNumber = new List<double>();
+            MATLABTimeStampNumber = new List<double>();
         }
         public string PMUname { get; set; }
         public List<string> SignalNames { get; set; }
@@ -27,5 +28,6 @@ namespace BAWGUI.MATLABRunResults.Models
         public int SignalLength { get; set; }
         public int SignalCount { get; set; }
         public List<double> TimeStampNumber { get; set; }
+        public List<double> MATLABTimeStampNumber { get; set; }
     }
 }

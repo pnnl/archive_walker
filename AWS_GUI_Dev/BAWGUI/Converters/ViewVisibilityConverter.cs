@@ -14,7 +14,7 @@ namespace BAWGUI.Converters
 {
     public class ViewVisibilityConverter : IValueConverter
     {
-        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is SettingsViewModel)
             {
@@ -26,7 +26,7 @@ namespace BAWGUI.Converters
             }
         }
 
-        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return DependencyProperty.UnsetValue;
         }

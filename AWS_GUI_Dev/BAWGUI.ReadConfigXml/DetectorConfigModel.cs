@@ -65,6 +65,14 @@ namespace BAWGUI.ReadConfigXml
                     DetectorList.Add(new RingdownDetectorModel(item));
                 }
             }
+            items = _xElement.Element("Configuration").Elements("DataWriter");
+            if (items != null)
+            {
+                foreach (var item in items)
+                {
+                    DetectorList.Add(new DataWriterDetectorModel(item));
+                }
+            }
             var alarms = _xElement.Element("Configuration").Element("Alarming");
             if (alarms != null)
             {
