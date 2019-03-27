@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using BAWGUI.Core;
+using BAWGUI.RunMATLAB.ViewModels;
 using ModeMeter.ViewModels;
 
 namespace ModeMeter.Models
@@ -37,6 +38,25 @@ namespace ModeMeter.Models
             configFile.Save(_configFilePath);
         }
 
+        public static void CheckMMDirsStatus(AWRun model, List<SmallSignalStabilityTool> modeMeters)
+        {
+            var eventPath = model.EventPath;
+            var mm = eventPath + "\\MM";
+            if (!Directory.Exists(mm))
+            {
+                Directory.CreateDirectory(mm);
+                throw new Exception("Modemeter event subfolder MM was just created since it didn't exist.");
+            }
+            foreach (var meter in modeMeters)
+            {
+                var meterDir = mm + "\\" + meter.ModeMeterName;
+                if (!Directory.Exists(meterDir))
+                {
+                    Directory.CreateDirectory(meterDir);
+                    throw new Exception("Subfolder for mode meter " + meter.ModeMeterName + " was just created since it didn't exist.");
+                }
+            }
+        }
         private void _writeAMode(XElement mmElement, ModeViewModel mode)
         {
             var modeElement = new XElement("Mode");

@@ -208,11 +208,11 @@ namespace BAWGUI.ViewModels
                         //clean up the signal manager
                         _signalMgr.cleanUp();
                         //read input data files and generate all the signal objects from the data files and put them in the signal manager.
-                        var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos, config.DataConfigure.ReaderProperty.DateTimeStart);
+                        var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos, config.DataConfigure.ReaderProperty.ExampleTime);
+                        //pass signal manager into settings.
+                        SettingsVM.SignalMgr = _signalMgr;
                         if (readingDataSourceSuccess)
                         {
-                            //pass signal manager into settings.
-                            SettingsVM.SignalMgr = _signalMgr;
                             //read config files
                             SettingsVM.DataConfigure = new DataConfig(config.DataConfigure, _signalMgr);
                             SettingsVM.ProcessConfigure = new ProcessConfig(config.ProcessConfigure, _signalMgr);
@@ -226,27 +226,31 @@ namespace BAWGUI.ViewModels
                             {
                                 e.SelectedRun.Model.DataFileDirectories.Add(info.FileDirectory);
                             }
-                        }
 
-                        //read voltage stability settings from config file.
-                        var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
-                        //add voltage stability detectors to te detector list in the settings.
-                        if (vsDetectors.Count > 0)
-                        {
-                            SettingsVM.DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible;
-                            foreach (var detector in vsDetectors)
+                            //read voltage stability settings from config file.
+                            var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
+                            //add voltage stability detectors to te detector list in the settings.
+                            if (vsDetectors.Count > 0)
                             {
-                                SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
+                                SettingsVM.DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible;
+                                foreach (var detector in vsDetectors)
+                                {
+                                    SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
+                                }
+                            }
+                            var modeMeters = new ModeMeterReader(e.SelectedRun.Model.ConfigFilePath).GetDetectors();
+                            if (modeMeters.Count > 0)
+                            {
+                                foreach (var mm in modeMeters)
+                                {
+                                    SettingsVM.DetectorConfigure.DetectorList.Add(new SmallSignalStabilityToolViewModel(mm, _signalMgr));
+                                }
+                                ModeMeterXmlWriter.CheckMMDirsStatus(e.SelectedRun.Model, modeMeters);
                             }
                         }
-                        var modeMeters = new ModeMeterReader(e.SelectedRun.Model.ConfigFilePath).GetDetectors();
-                        if (modeMeters.Count > 0)
+                        else
                         {
-                            foreach (var mm in modeMeters)
-                            {
-                                SettingsVM.DetectorConfigure.DetectorList.Add(new SmallSignalStabilityToolViewModel(mm, _signalMgr));
-                            }
-                            _checkMMDirsStatus(e.SelectedRun, modeMeters);
+                            SettingsVM.DataConfigure.ReaderProperty = new ReaderProperties(config.DataConfigure.ReaderProperty, _signalMgr);
                         }
                     }
                     catch (Exception ex)
@@ -263,25 +267,25 @@ namespace BAWGUI.ViewModels
             }
         }
 
-        private void _checkMMDirsStatus(AWRunViewModel task, List<SmallSignalStabilityTool> modeMeters)
-        {
-            var eventPath = task.Model.EventPath;
-            var mm = eventPath + "\\MM";
-            if (!Directory.Exists(mm))
-            {
-                Directory.CreateDirectory(mm);
-                System.Windows.Forms.MessageBox.Show("Modemeter event subfolder MM was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
-            }
-            foreach (var meter in modeMeters)
-            {
-                var meterDir = mm + "\\" + meter.ModeMeterName;
-                if (!Directory.Exists(meterDir))
-                {
-                    Directory.CreateDirectory(meterDir);
-                    System.Windows.Forms.MessageBox.Show("Subfolder for mode meter " + meter.ModeMeterName + " was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
-                }
-            }
-        }
+        //private void _checkMMDirsStatus(AWRunViewModel task, List<SmallSignalStabilityTool> modeMeters)
+        //{
+        //    var eventPath = task.Model.EventPath;
+        //    var mm = eventPath + "\\MM";
+        //    if (!Directory.Exists(mm))
+        //    {
+        //        Directory.CreateDirectory(mm);
+        //        System.Windows.Forms.MessageBox.Show("Modemeter event subfolder MM was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+        //    }
+        //    foreach (var meter in modeMeters)
+        //    {
+        //        var meterDir = mm + "\\" + meter.ModeMeterName;
+        //        if (!Directory.Exists(meterDir))
+        //        {
+        //            Directory.CreateDirectory(meterDir);
+        //            System.Windows.Forms.MessageBox.Show("Subfolder for mode meter " + meter.ModeMeterName + " was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+        //        }
+        //    }
+        //}
 
         private void _checkMMDirsStatus(AWRunViewModel task)
         {
@@ -304,7 +308,7 @@ namespace BAWGUI.ViewModels
             //{
                 try
                 {
-                    _signalMgr.GetRawSignalData(info, SettingsVM.DataConfigure.ReaderProperty.DateTimeStart);
+                    _signalMgr.GetRawSignalData(info, SettingsVM.DataConfigure.ReaderProperty.ExampleTime);
                 }
                 catch (Exception ex)
                 {
