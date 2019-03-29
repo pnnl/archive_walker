@@ -44,6 +44,7 @@ namespace BAWGUI.Results.ViewModels
                 var oc = new OccurrenceViewModel(ocur);
                 _occurrences.Add(oc);
                 _filteredOccurrences.Add(oc);
+                oc.SelectedChannelChanged += _selectedChannelChanged;
             }
             //_selectedOccurrence = new OccurrenceViewModel();
             _selectedOccurrence = FilteredOccurrences.FirstOrDefault();
@@ -289,6 +290,14 @@ namespace BAWGUI.Results.ViewModels
         public virtual void OnSelectedOccurrenceChanged()
         {
             SelectedOccurrenceChanged?.Invoke(this, EventArgs.Empty);
+        }
+        public event EventHandler SelectedChannelChanged;
+        //public virtual void OnSelectedChannelChanged()
+        //{
+        //}
+        private void _selectedChannelChanged(object sender, EventArgs e)
+        {
+            SelectedChannelChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

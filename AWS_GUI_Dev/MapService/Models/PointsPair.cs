@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using BAWGUI.Utilities;
 using GMap.NET;
 using GMap.NET.WindowsPresentation;
@@ -13,7 +14,7 @@ namespace MapService.Models
 {
     public class PointsPair
     {
-        public PointsPair(CartesianPoint pointLatLng1, CartesianPoint pointLatLng2)
+        public PointsPair(CartesianPoint pointLatLng1, CartesianPoint pointLatLng2, SolidColorBrush c, string tag)
         {
             Point1 = pointLatLng1;
             Point2 = pointLatLng2;
@@ -62,6 +63,8 @@ namespace MapService.Models
                 Curve2.Add(new CartesianPoint(xx2[index], yy2[index]));
             }
             SelectedCurve = new List<CartesianPoint>();
+            Color = c;
+            Tag = tag;
         }
         //private PointLatLng _point1;
         public CartesianPoint Point1 { get; set; }
@@ -87,5 +90,7 @@ namespace MapService.Models
         public List<CartesianPoint> Curve2 { get; set; }
         public List<CartesianPoint> SelectedCurve { get; set; }
         public CartesianPoint SelectedCenter { get; set; }
+        public SolidColorBrush Color { get; set; }
+        public string Tag { get; set; }
     }
 }

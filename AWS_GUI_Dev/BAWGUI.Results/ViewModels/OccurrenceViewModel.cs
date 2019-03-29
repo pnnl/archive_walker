@@ -159,9 +159,18 @@ namespace BAWGUI.Results.ViewModels
             get { return _selectedChannel; }
             set
             {
-                _selectedChannel = value;
-                OnPropertyChanged();
+                if (_selectedChannel != value)
+                {
+                    _selectedChannel = value;
+                    OnPropertyChanged();
+                    OnSelectedChannelChanged(value.Name);
+                }
             }
+        }
+        public event EventHandler SelectedChannelChanged;
+        public virtual void OnSelectedChannelChanged(string name)
+        {
+            SelectedChannelChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

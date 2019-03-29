@@ -5,11 +5,13 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using MapService.Models;
+using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace MapService.ViewModels
@@ -41,24 +43,45 @@ namespace MapService.ViewModels
         private void _updateGmap()
         {
             var pointPairs = new List<PointsPair>();
+            double minColor = 0d, maxColor = 0d, colorRange = 0d;
+            var numberOfSigs = Signals.Count();
+            if (numberOfSigs > 0)
+            {
+                minColor = Signals.Select(x => x.Intensity).Min();
+                maxColor = Signals.Select(x => x.Intensity).Max();
+                colorRange = maxColor - minColor;
+            }
+            var colors = OxyPalettes.Rainbow(numberOfSigs + 1).Colors;
+            SolidColorBrush color = null;
             foreach (var signal in Signals)
             {
                 if (!double.IsNaN(signal.Intensity))
                 {
+                    if (colorRange != 0d)
+                    {
+                        var percentage = (int)Math.Round((signal.Intensity - minColor) / colorRange * numberOfSigs);
+                        color = new SolidColorBrush(Color.FromArgb(colors[percentage].A, colors[percentage].R, colors[percentage].G, colors[percentage].B));
+                    }
+                    else
+                    {
+                        color = Brushes.Navy;
+                    }
                     if (signal.Signal.MapPlotType == SignalMapPlotType.Dot)
                     {
                         //_addDotToMap();
                         var point = signal.Signal.Locations.FirstOrDefault();
-                        if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Latitude, out double lg))
+                        if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Longitude, out double lg))
                         {
                             var mkr = new GMapMarker(new PointLatLng(la, lg));
                             mkr.Shape = new Ellipse
                             {
-                                Width = 15,
-                                Height = 15,
-                                Stroke = System.Windows.Media.Brushes.Navy,
-                                Fill = System.Windows.Media.Brushes.Navy
+                                Width = 10,
+                                Height = 10,
+                                Stroke = color,
+                                Fill = color,
+                                ToolTip = signal.Signal.SignalName
                             };
+                            mkr.Tag = signal.Signal.SignalName;
                             Gmap.Markers.Add(mkr);
                         }
                     }
@@ -75,7 +98,7 @@ namespace MapService.ViewModels
                         }
                         for (int index = 0; index < points.Count - 1; index++)
                         {
-                            pointPairs.Add(new PointsPair(points[index], points[index + 1]));
+                            pointPairs.Add(new PointsPair(points[index], points[index + 1], color, signal.Signal.SignalName));
                         }
                     }
                     if (signal.Signal.MapPlotType == SignalMapPlotType.Area)
@@ -91,7 +114,10 @@ namespace MapService.ViewModels
                             }
                         }
                         var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
-                        //var path = mkr.CreatePath(points2, true);
+                        var areaColor = color.Clone();
+                        areaColor.Opacity = 0.2;
+                        mkr.Shape = new Path() { Stroke = color, StrokeThickness = 2, ToolTip = signal.Signal.SignalName, Fill = areaColor };
+                        mkr.Tag = signal.Signal.SignalName;
                         Gmap.Markers.Add(mkr);
                         //_addPolygonToMap();
                     }
@@ -278,7 +304,10 @@ namespace MapService.ViewModels
                 {
                     newCurve.Add(new PointLatLng(p.Y, p.X));
                 }
-                curveList.Add(new GMapRoute(newCurve));
+                var newRoute = new GMapRoute(newCurve);
+                newRoute.Shape = new Path() { Stroke = pair.Color, StrokeThickness = 2, ToolTip = pair.Tag };
+                newRoute.Tag = pair.Tag;
+                curveList.Add(newRoute);
             }
             return curveList;
         }
@@ -374,5 +403,42 @@ namespace MapService.ViewModels
             //GMapPolygon polygon = new GMapPolygon(points);
             //Gmap.Markers.Add(polygon);
         }
+
+        //private OxyPalettes _rbColors = OxyPalettes.Rainbow(100);
+        //private OxyColor _mapFrequencyToColor(float frequency)
+        //{
+        //    //OxyColor color;
+        //    var colorCount = FilteredResults.Count;
+        //    var minFreq = FilteredResults.Select(x => x.TypicalFrequency).Min() - 0.1;
+        //    var maxFreq = FilteredResults.Select(x => x.TypicalFrequency).Max() + 0.1;
+        //    var percentage = (frequency - minFreq) / (maxFreq - minFreq);
+
+        //    //blue-green rgb gradient
+        //    return OxyColor.FromRgb(0, Convert.ToByte(255 * percentage), Convert.ToByte(255 * (1 - percentage)));
+
+        //    //blue-purple-red gradient
+        //    //return OxyColor.FromRgb(Convert.ToByte(255 * percentage), 0, Convert.ToByte(255 * (1 - percentage)));
+
+        //    //blue-white-red gradient
+        //    //if (percentage < 0.5)
+        //    //{
+        //    //    return OxyColor.FromRgb(Convert.ToByte(255 * percentage), Convert.ToByte(255 * percentage), 255);
+        //    //}
+        //    //else
+        //    //{
+        //    //    return OxyColor.FromRgb(255, Convert.ToByte(255 * (1 - percentage)), Convert.ToByte(255 * (1 - percentage)));
+        //    //}
+
+        //    //blue-white-green gradient
+        //    //if (percentage < 0.5)
+        //    //{
+        //    //    return OxyColor.FromRgb(Convert.ToByte(255 * percentage), Convert.ToByte(255 * percentage), 255);
+        //    //}
+        //    //else
+        //    //{
+        //    //    return OxyColor.FromRgb(Convert.ToByte(255 * (1 - percentage)), 255, Convert.ToByte(255 * (1 - percentage)));
+        //    //}
+        //}
+
     }
 }

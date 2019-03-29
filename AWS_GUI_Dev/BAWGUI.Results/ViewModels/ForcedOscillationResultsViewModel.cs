@@ -20,6 +20,10 @@ using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
 using MapService.ViewModels;
 using BAWGUI.SignalManagement.ViewModels;
+using System.Windows.Shapes;
+using System.Windows.Media;
+using System.Globalization;
+using System.Windows.Media.Animation;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -95,6 +99,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     var mm = new ForcedOscillationResultViewModel(model);
                     mm.SelectedOccurrenceChanged += _selectedOccurrenceChanged;
+                    mm.SelectedChannelChanged += _selectedChannelChanged;
                     _results.Add(mm);
                     _filteredResults.Add(mm);
 
@@ -113,6 +118,7 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
             }
         }
+
         private string _selectedStartTime;
         public string SelectedStartTime
         {
@@ -260,7 +266,21 @@ namespace BAWGUI.Results.ViewModels
                 _updateFOplotAndMapAfterSelectionChange();
             }
         }
-
+        private void _selectedChannelChanged(object sender, EventArgs e)
+        {
+            foreach (var mkr in ResultMapVM.Gmap.Markers)
+            {
+                if (mkr.Tag.ToString() == SelectedOscillationEvent.SelectedOccurrence.SelectedChannel.Name)
+                {
+                    //var mkrColor = mkr.Shape.Stroke;
+                    //var geometryString = mkr.Shape.ToString(CultureInfo.InvariantCulture);
+                    //mkr.Shape = new Path() { Stroke = new SolidColorBrush(Colors.Black), StrokeThickness = 2, ToolTip = mkr.Tag };
+                    //mkr.Shape.Focus();
+                    //AnimationClock myClock = myAnimation.CreateClock();
+                    //mkr.Shape.ApplyAnimationClock(mkr.Shape.Stroke, );
+                }
+            }
+        }
         private void _updateFOplotAndMapAfterSelectionChange()
         {
             ResultMapVM.ClearMarkers();
@@ -312,7 +332,7 @@ namespace BAWGUI.Results.ViewModels
                 //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
             }
             else
-            {
+            {// change all plots to normal size since nothing is selected in table.
                 foreach (var item in FOPlotModel.Series)
                 {
                     if (item is LineSeries)
