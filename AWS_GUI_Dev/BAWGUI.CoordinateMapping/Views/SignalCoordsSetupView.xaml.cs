@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BAWGUI.Utilities;
 
+/// <summary>
+/// This Defines the tab in settings where signals are set up with site
+/// </summary>
 namespace BAWGUI.CoordinateMapping.Views
 {
     /// <summary>

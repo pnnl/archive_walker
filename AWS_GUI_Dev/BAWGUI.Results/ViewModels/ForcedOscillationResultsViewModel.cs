@@ -42,7 +42,7 @@ namespace BAWGUI.Results.ViewModels
             _models = new List<DatedForcedOscillationEvent>();
             _foPlotModel = new PlotModel();
             _selectedOscillationEvent = new ForcedOscillationResultViewModel();
-            _selectedOccurrence = new OccurrenceViewModel();
+            //_selectedOccurrence = new OccurrenceViewModel();
             _configFilePath = "";
             _run = new AWRunViewModel();
             _signalMgr = SignalManager.Instance;
@@ -52,6 +52,7 @@ namespace BAWGUI.Results.ViewModels
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             _mapPlottingRule = new List<string>(new string[]{ "SNR", "Amplitude", "Coherence" });
+            _selectedPlottingRule = "SNR";
         }
         private AWRunViewModel _run;
         public AWRunViewModel Run
@@ -92,8 +93,10 @@ namespace BAWGUI.Results.ViewModels
                 _filteredResults.Clear();
                 foreach (var model in value)
                 {
-                    _results.Add(new ForcedOscillationResultViewModel(model));
-                    _filteredResults.Add(new ForcedOscillationResultViewModel(model));
+                    var mm = new ForcedOscillationResultViewModel(model);
+                    mm.SelectedOccurrenceChanged += _selectedOccurrenceChanged;
+                    _results.Add(mm);
+                    _filteredResults.Add(mm);
 
 
                     ////flattened occurrence with events
@@ -106,6 +109,7 @@ namespace BAWGUI.Results.ViewModels
                 //_filteredResults.OrderBy(x => x.TypicalFrequency).OrderBy(y => y.Alarm);
                 //_filteredResults = new ObservableCollection<ForcedOscillationResultViewModel>(_filteredResults.OrderByDescending(x => x.OverallStartTime).OrderByDescending(y => y.Alarm));
                 // We shouldn't need this thanks to the ObservableCollection.
+                //SelectedOscillationEvent = FilteredResults.FirstOrDefault();
                 OnPropertyChanged();
             }
         }
@@ -194,6 +198,8 @@ namespace BAWGUI.Results.ViewModels
             if (FilteredResults.Count() != 0)
             {
                 _drawFOPlot();
+                _updateSelectionsInTables(SelectedPlottingRule);
+                _updateFOplotAndMapAfterSelectionChange();
             }
             //else
             //{
@@ -207,88 +213,181 @@ namespace BAWGUI.Results.ViewModels
             get { return _selectedOscillationEvent; }
             set
             {
-                _selectedOscillationEvent = value;
-                OnPropertyChanged();
-                if (_selectedOscillationEvent != null)
+                if (_selectedOscillationEvent != value)
                 {
-                    bool ocurFound = false;
-                    foreach (var ocur in _selectedOscillationEvent.FilteredOccurrences)
+                    //save the previous value of selected event and its selected occurrence
+                    //once the GUI updates, the selected occurrence is set to null due to the change of the itemssource of the datagrid
+                    //this way we can set the selected occurrence back to its original value.
+                    OccurrenceViewModel oldSelectedOccurrence = null;
+                    ForcedOscillationResultViewModel oldSelectedOscillationEvent = null;
+                    if (_selectedOscillationEvent != null)
                     {
-                        if (ocur == _selectedOccurrence)
+                        oldSelectedOccurrence = _selectedOscillationEvent.SelectedOccurrence;
+                        oldSelectedOscillationEvent = _selectedOscillationEvent;
+                    }
+                    _selectedOscillationEvent = value;
+                    _updateFOplotAndMapAfterSelectionChange();
+                    OnPropertyChanged();
+                    if (oldSelectedOscillationEvent != null)
+                    {
+                        oldSelectedOscillationEvent.SelectedOccurrence = oldSelectedOccurrence;
+                    }
+                }
+                //if (_selectedOscillationEvent != null)
+                //{
+                //    bool ocurFound = false;
+                //    foreach (var ocur in _selectedOscillationEvent.FilteredOccurrences)
+                //    {
+                //        if (ocur == _selectedOccurrence)
+                //        {
+                //            ocurFound = true;
+                //            break;
+                //        }
+                //    }
+                //    if (!ocurFound)
+                //    {
+                //        SelectedOccurrence = _selectedOscillationEvent.FilteredOccurrences.First();
+                //    }
+                //}
+            }
+        }
+        private void _selectedOccurrenceChanged(object sender, EventArgs e)
+        {
+            //when the oscillation event that raise the selected occurrence changed event is not the SelectedOscillationEvent, we don't need to update the plots
+            var orig = sender as ForcedOscillationResultViewModel;
+            if (SelectedOscillationEvent == orig)
+            {
+                _updateFOplotAndMapAfterSelectionChange();
+            }
+        }
+
+        private void _updateFOplotAndMapAfterSelectionChange()
+        {
+            ResultMapVM.ClearMarkers();
+            if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null)
+            {
+                foreach (var item in FOPlotModel.Series)
+                {
+                    if (item is LineSeries)
+                    {
+                        var it = item as LineSeries;
+                        if (it.StrokeThickness == 10)
                         {
-                            ocurFound = true;
-                            break;
+                            it.StrokeThickness = 5;
+                        }
+                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.Start)) && it.Points[0].Y == SelectedOscillationEvent.SelectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.End)))
+                        {
+                            it.StrokeThickness = 10;
+                            FOPlotModel.InvalidatePlot(true);
                         }
                     }
-                    if (!ocurFound)
+                }
+                var signalList = new List<SignalIntensityViewModel>();
+                foreach (var channel in SelectedOscillationEvent.SelectedOccurrence.Channels)
+                {
+                    var signal = _signalMgr.SearchForSignalInTaggedSignals(channel.PMU, channel.Name);
+                    if (signal != null)
                     {
-                        SelectedOccurrence = _selectedOscillationEvent.FilteredOccurrences.First();
+                        switch (SelectedPlottingRule)
+                        {
+                            case "SNR":
+                                signalList.Add(new SignalIntensityViewModel(signal, channel.SNR));
+                                break;
+                            case "Amplitude":
+                                signalList.Add(new SignalIntensityViewModel(signal, channel.Amplitude));
+                                break;
+                            case "Coherence":
+                                signalList.Add(new SignalIntensityViewModel(signal, channel.Coherence));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                ////ResultMapVM.Signals = signalList;
+                ResultMapVM.UpdateResultMap(signalList);
+                //TODO: update map here
+                //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
+                //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
+                //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
+            }
+            else
+            {
+                foreach (var item in FOPlotModel.Series)
+                {
+                    if (item is LineSeries)
+                    {
+                        var it = item as LineSeries;
+                        if (it.StrokeThickness == 10)
+                        {
+                            it.StrokeThickness = 5;
+                        }
                     }
                 }
             }
         }
 
-        private OccurrenceViewModel _selectedOccurrence;
-        public OccurrenceViewModel SelectedOccurrence
-        {
-            get { return _selectedOccurrence; }
-            set
-            {
-                if (_selectedOccurrence != value)
-                {
-                    _selectedOccurrence = value;
-                    OnPropertyChanged();
-                    ResultMapVM.ClearMarkers();
-                    if (_selectedOccurrence != null)
-                    {
-                        foreach (var item in FOPlotModel.Series)
-                        {
-                            if (item is LineSeries)
-                            {
-                                var it = item as LineSeries;
-                                if (it.StrokeThickness == 10)
-                                {
-                                    it.StrokeThickness = 5;
-                                }
-                                if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
-                                {
-                                    it.StrokeThickness = 10;
-                                    FOPlotModel.InvalidatePlot(true);
-                                }
-                            }
-                        }
-                        var signalList = new List<SignalIntensityViewModel>();
-                        foreach (var channel in _selectedOccurrence.Channels)
-                        {
-                            var signal = _signalMgr.SearchForSignalInTaggedSignals(channel.PMU, channel.Name);
-                            if (signal != null)
-                            {
-                                switch (SelectedPlottingRule)
-                                {
-                                    case "SNR":
-                                        signalList.Add(new SignalIntensityViewModel(signal, channel.SNR));
-                                        break;
-                                    case "Amplitude":
-                                        signalList.Add(new SignalIntensityViewModel(signal, channel.Amplitude));
-                                        break;
-                                    case "Coherence":
-                                        signalList.Add(new SignalIntensityViewModel(signal, channel.Coherence));
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-                        ////ResultMapVM.Signals = signalList;
-                        ResultMapVM.UpdateResultMap(signalList);
-                        //TODO: update map here
-                        //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
-                        //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
-                        //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
-                    }
-                }
-            }
-        }
+        //private OccurrenceViewModel _selectedOccurrence;
+        //public OccurrenceViewModel SelectedOccurrence
+        //{
+        //    get { return _selectedOccurrence; }
+        //    set
+        //    {
+        //        if (_selectedOccurrence != value)
+        //        {
+        //            _selectedOccurrence = value;
+        //            OnPropertyChanged();
+        //            ResultMapVM.ClearMarkers();
+        //            if (_selectedOccurrence != null)
+        //            {
+        //                foreach (var item in FOPlotModel.Series)
+        //                {
+        //                    if (item is LineSeries)
+        //                    {
+        //                        var it = item as LineSeries;
+        //                        if (it.StrokeThickness == 10)
+        //                        {
+        //                            it.StrokeThickness = 5;
+        //                        }
+        //                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
+        //                        {
+        //                            it.StrokeThickness = 10;
+        //                            FOPlotModel.InvalidatePlot(true);
+        //                        }
+        //                    }
+        //                }
+        //                var signalList = new List<SignalIntensityViewModel>();
+        //                foreach (var channel in _selectedOccurrence.Channels)
+        //                {
+        //                    var signal = _signalMgr.SearchForSignalInTaggedSignals(channel.PMU, channel.Name);
+        //                    if (signal != null)
+        //                    {
+        //                        switch (SelectedPlottingRule)
+        //                        {
+        //                            case "SNR":
+        //                                signalList.Add(new SignalIntensityViewModel(signal, channel.SNR));
+        //                                break;
+        //                            case "Amplitude":
+        //                                signalList.Add(new SignalIntensityViewModel(signal, channel.Amplitude));
+        //                                break;
+        //                            case "Coherence":
+        //                                signalList.Add(new SignalIntensityViewModel(signal, channel.Coherence));
+        //                                break;
+        //                            default:
+        //                                break;
+        //                        }
+        //                    }
+        //                }
+        //                ////ResultMapVM.Signals = signalList;
+        //                ResultMapVM.UpdateResultMap(signalList);
+        //                //TODO: update map here
+        //                //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
+        //                //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
+        //                //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
+        //            }
+        //        }
+        //    }
+        //}
 
         public List<string> _mapPlottingRule { get; private set; }
         public List<string> MapPlottingRule { get { return _mapPlottingRule; } }
@@ -299,9 +398,71 @@ namespace BAWGUI.Results.ViewModels
             set
             {
                 _selectedPlottingRule = value;
+                _updateSelectionsInTables(value);
                 OnPropertyChanged();
             }
         }
+
+        private void _updateSelectionsInTables(string rule)
+        {
+            switch (rule)
+            {
+                case "SNR":
+                    if (SelectedOscillationEvent != null)
+                    {//if an event is selected in the table
+                        if (float.IsNaN(SelectedOscillationEvent.MaxSNR))
+                        {//the selected event has to have MaxSNR, or the selection will be set to null
+                            SelectedOscillationEvent = FilteredResults.Where(x => !float.IsNaN(x.MaxSNR)).FirstOrDefault();
+                        }
+                        if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && float.IsNaN(SelectedOscillationEvent.SelectedOccurrence.MaxSNR))
+                        {//if both an event and an occurrence are selected, the selected occurrence have to have MaxSNR, or selection will be set to null
+                            SelectedOscillationEvent.SelectedOccurrence = SelectedOscillationEvent.FilteredOccurrences.Where(x => !float.IsNaN(x.MaxSNR)).FirstOrDefault();
+                        }
+                        if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedChannel != null && float.IsNaN(SelectedOscillationEvent.SelectedOccurrence.SelectedChannel.SNR))
+                        {//if an event, an occurrence and a channel are selected, the selected channel have to have SNR, or it will be set to null
+                            SelectedOscillationEvent.SelectedOccurrence.SelectedChannel = SelectedOscillationEvent.SelectedOccurrence.Channels.Where(x => !float.IsNaN(x.SNR)).FirstOrDefault();
+                        }
+                    }
+                    break;
+                case "Amplitude":
+                    if (SelectedOscillationEvent != null)
+                    {//if an event is selected in the table
+                        if (float.IsNaN(SelectedOscillationEvent.MaxAmplitude))
+                        {//the selected event has to have MaxAmplitude, or the selection will be set to null
+                            SelectedOscillationEvent = FilteredResults.Where(x => !float.IsNaN(x.MaxAmplitude)).FirstOrDefault();
+                        }
+                        if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && float.IsNaN(SelectedOscillationEvent.SelectedOccurrence.MaxAmplitude))
+                        {//if both an event and an occurrence are selected, the selected occurrence have to have MaxAmplitude, or selection will be set to null
+                            SelectedOscillationEvent.SelectedOccurrence = SelectedOscillationEvent.FilteredOccurrences.Where(x => !float.IsNaN(x.MaxAmplitude)).FirstOrDefault();
+                        }
+                        if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedChannel != null && float.IsNaN(SelectedOscillationEvent.SelectedOccurrence.SelectedChannel.Amplitude))
+                        {//if an event, an occurrence and a channel are selected, the selected channel have to have Amplitude, or it will be set to null
+                            SelectedOscillationEvent.SelectedOccurrence.SelectedChannel = SelectedOscillationEvent.SelectedOccurrence.Channels.Where(x => !float.IsNaN(x.Amplitude)).FirstOrDefault();
+                        }
+                    }
+                    break;
+                case "Coherence":
+                    if (SelectedOscillationEvent != null)
+                    {//if an event is selected in the table
+                        if (float.IsNaN(SelectedOscillationEvent.MaxCoherence))
+                        {//the selected event has to have MaxCoherence, or the selection will be set to null
+                            SelectedOscillationEvent = FilteredResults.Where(x => !float.IsNaN(x.MaxCoherence)).FirstOrDefault();
+                        }
+                        if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && float.IsNaN(SelectedOscillationEvent.SelectedOccurrence.MaxCoherence))
+                        {//if both an event and an occurrence are selected, the selected occurrence have to have MaxCoherence, or selection will be set to null
+                            SelectedOscillationEvent.SelectedOccurrence = SelectedOscillationEvent.FilteredOccurrences.Where(x => !float.IsNaN(x.MaxCoherence)).FirstOrDefault();
+                        }
+                        if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedChannel != null && float.IsNaN(SelectedOscillationEvent.SelectedOccurrence.SelectedChannel.Coherence))
+                        {//if an event, an occurrence and a channel are selected, the selected channel have to have Coherence, or it will be set to null
+                            SelectedOscillationEvent.SelectedOccurrence.SelectedChannel = SelectedOscillationEvent.SelectedOccurrence.Channels.Where(x => !float.IsNaN(x.Coherence)).FirstOrDefault();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private OccurrenceTableWindow _occurrenceTableWin;
         public ICommand ShowOccurrenceWindow { get; set; }
         private void _showOccurrenceWindow(object obj)
@@ -458,7 +619,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     //var newSeries = new LineSeries { Title = fo.Label };
                     var newSeries = new LineSeries() { LineStyle= LineStyle.Solid, Color = eventColor, StrokeThickness = 5};
-                    if (ocur == SelectedOccurrence)
+                    if (SelectedOscillationEvent != null && ocur == SelectedOscillationEvent.SelectedOccurrence)
                     {
                         newSeries.StrokeThickness = 10;
                     }
@@ -551,7 +712,7 @@ namespace BAWGUI.Results.ViewModels
                     {
                         ocurFound = true;
                         SelectedOscillationEvent = fo;
-                        SelectedOccurrence = ocur;
+                        fo.SelectedOccurrence = ocur;
                         break;
                     }
                 }

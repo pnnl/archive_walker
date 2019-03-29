@@ -160,6 +160,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             {
                 var reader = new SiteCoordinatesReader();
                 reader.ReadCoordsFile(path, SiteCoords);
+                MapVM.Annotations.Clear();
                 foreach (var item in SiteCoords)
                 {
                     item.CheckStatusChanged += _modifyMapAnnotation;

@@ -43,46 +43,58 @@ namespace MapService.ViewModels
             var pointPairs = new List<PointsPair>();
             foreach (var signal in Signals)
             {
-                if (signal.Signal.MapPlotType == SignalMapPlotType.Dot)
+                if (!double.IsNaN(signal.Intensity))
                 {
-                    //_addDotToMap();
-                    var point = signal.Signal.Locations.FirstOrDefault();
-                    var mkr = new GMapMarker(new PointLatLng(double.Parse(point.Latitude), double.Parse(point.Longitude)));
-                    mkr.Shape = new Ellipse
+                    if (signal.Signal.MapPlotType == SignalMapPlotType.Dot)
                     {
-                        Width = 15,
-                        Height = 15,
-                        Stroke = System.Windows.Media.Brushes.Navy,
-                        Fill = System.Windows.Media.Brushes.Navy
-                    };
-                    Gmap.Markers.Add(mkr);
-                }
-                if (signal.Signal.MapPlotType == SignalMapPlotType.Line)
-                {
-                    //collect all point pairs here a list of tuples, maybe?
-                    List<CartesianPoint> points = new List<CartesianPoint>();
-                    for (int index = 0; index < signal.Signal.Locations.Count; index++)
-                    {
-                        points.Add(new CartesianPoint(double.Parse(signal.Signal.Locations[index].Longitude), double.Parse(signal.Signal.Locations[index].Latitude)));
+                        //_addDotToMap();
+                        var point = signal.Signal.Locations.FirstOrDefault();
+                        if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Latitude, out double lg))
+                        {
+                            var mkr = new GMapMarker(new PointLatLng(la, lg));
+                            mkr.Shape = new Ellipse
+                            {
+                                Width = 15,
+                                Height = 15,
+                                Stroke = System.Windows.Media.Brushes.Navy,
+                                Fill = System.Windows.Media.Brushes.Navy
+                            };
+                            Gmap.Markers.Add(mkr);
+                        }
                     }
-                    for (int index = 0; index < points.Count - 1; index++)
+                    if (signal.Signal.MapPlotType == SignalMapPlotType.Line)
                     {
-                        pointPairs.Add(new PointsPair(points[index], points[index + 1]));
+                        //collect all point pairs here a list of tuples, maybe?
+                        List<CartesianPoint> points = new List<CartesianPoint>();
+                        for (int index = 0; index < signal.Signal.Locations.Count; index++)
+                        {
+                            if (double.TryParse(signal.Signal.Locations[index].Longitude, out double lg) && double.TryParse(signal.Signal.Locations[index].Latitude, out double la))
+                            {
+                                points.Add(new CartesianPoint(lg, la));
+                            }
+                        }
+                        for (int index = 0; index < points.Count - 1; index++)
+                        {
+                            pointPairs.Add(new PointsPair(points[index], points[index + 1]));
+                        }
                     }
-                }
-                if (signal.Signal.MapPlotType == SignalMapPlotType.Area)
-                {
-                    var points = new List<PointLatLng>();
-                    var points2 = new List<Point>();
-                    foreach (var pnt in signal.Signal.Locations)
+                    if (signal.Signal.MapPlotType == SignalMapPlotType.Area)
                     {
-                        points.Add(new PointLatLng(double.Parse(pnt.Latitude), double.Parse(pnt.Longitude)));
-                        points2.Add(new Point(double.Parse(pnt.Latitude), double.Parse(pnt.Longitude)));
+                        var points = new List<PointLatLng>();
+                        var points2 = new List<Point>();
+                        foreach (var pnt in signal.Signal.Locations)
+                        {
+                            if (double.TryParse(pnt.Latitude, out double la) && double.TryParse(pnt.Longitude, out double lg))
+                            {
+                                points.Add(new PointLatLng(la, lg));
+                                points2.Add(new Point(la, lg));
+                            }
+                        }
+                        var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
+                        //var path = mkr.CreatePath(points2, true);
+                        Gmap.Markers.Add(mkr);
+                        //_addPolygonToMap();
                     }
-                    var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
-                    //var path = mkr.CreatePath(points2, true);
-                    Gmap.Markers.Add(mkr);
-                    //_addPolygonToMap();
                 }
             }
             if (pointPairs.Count != 0)

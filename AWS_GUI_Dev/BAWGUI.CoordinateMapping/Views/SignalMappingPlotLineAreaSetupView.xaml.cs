@@ -14,6 +14,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+/// <summary>
+/// Define each signal's site choice when the type is line or area
+/// </summary>
 namespace BAWGUI.CoordinateMapping.Views
 {
     /// <summary>

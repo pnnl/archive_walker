@@ -1244,9 +1244,22 @@ namespace BAWGUI.RunMATLAB.ViewModels
             IsMatlabEngineRunning = true;
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             Run.IsTaskRunning = true;
+            // save a copy of the OBAT preset file
+            var bckOBATFile = Path.GetDirectoryName(oBATPresetFilePath) + "backup." + Path.GetExtension(oBATPresetFilePath);
+            File.Copy(oBATPresetFilePath, bckOBATFile);
             var updateStatus = _matlabEngine.UpdateOBATpreset(newPresetName, detectorName, configFilePath, oBATPresetFilePath);
             //need to show the returned string updateSuccess here as a message.
             MessageBox.Show(updateStatus.ToString(), "Done", MessageBoxButtons.OK);
+            if (updateStatus.ToString() == "Success") //if success
+            {
+                //delete the copied OBAT prest file.
+                File.Delete(bckOBATFile);
+            }
+            else
+            {
+                //copy the copied OBAT file back to it's original PATH
+                File.Copy(bckOBATFile, oBATPresetFilePath);
+            }
             Run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
             IsMatlabEngineRunning = false;

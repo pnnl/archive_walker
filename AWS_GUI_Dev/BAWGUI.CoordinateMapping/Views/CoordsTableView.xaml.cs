@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+/// <summary>
+/// This defines the whole page of Coordinates, where the table and the main map is, where you can set up the table and find site coordinates or the reverse.
+/// </summary>
 namespace BAWGUI.CoordinateMapping.Views
 {
     /// <summary>

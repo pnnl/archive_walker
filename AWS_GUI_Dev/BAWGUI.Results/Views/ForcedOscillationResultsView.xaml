@@ -47,11 +47,11 @@
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0">
                     <Label Content="Occurrences:" DockPanel.Dock="Top"/>
-                    <views:OccurrenceTableView/>
+                    <views:OccurrenceTableView DataContext="{Binding SelectedOscillationEvent}"/>
                 </DockPanel>
                 <DockPanel Grid.Row="1">
                     <Label Content="Channels:" DockPanel.Dock="Top"/>
-                    <views:FOChannelTableView/>
+                    <views:FOChannelTableView DataContext="{Binding SelectedOscillationEvent.SelectedOccurrence}"/>
                 </DockPanel>
             </Grid>
         </Grid>

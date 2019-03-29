@@ -203,7 +203,6 @@ namespace BAWGUI.ViewModels
                 SettingsVM.Run = e.SelectedRun;
                 if (File.Exists(e.SelectedRun.Model.ConfigFilePath))
                 {
-                {
                     try
                     {
                         var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);

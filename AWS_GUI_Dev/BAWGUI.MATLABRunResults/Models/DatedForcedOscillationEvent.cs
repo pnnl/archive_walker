@@ -23,8 +23,9 @@ namespace BAWGUI.MATLABRunResults.Models
             _filteredOccurrences.Clear();
             foreach (var ocur in foevent.Occurrence)
             {
-                _occurrences.Add(new DatedOccurrence(_date, ocur));
-                _filteredOccurrences.Add(new DatedOccurrence(_date, ocur));
+                var doc = new DatedOccurrence(_date, ocur);
+                _occurrences.Add(doc);
+                _filteredOccurrences.Add(doc);
             }
         }
         private string _date;

@@ -143,6 +143,7 @@ namespace BAWGUI.Results.Models
                     singleOcur = singleOcur.OrderBy(x=>x.Start).ToList();
                 }
                 aEvent.Occurrences = singleOcur;
+                aEvent.FilteredOccurrences = aEvent.Occurrences;
                 var ocurOrderedByEndTime = singleOcur.OrderBy(x => x.End).ToList();
                 aEvent.OverallEndTime = ocurOrderedByEndTime.LastOrDefault().End;
                 _forcedOscillationCombinedList.Add(aEvent);
