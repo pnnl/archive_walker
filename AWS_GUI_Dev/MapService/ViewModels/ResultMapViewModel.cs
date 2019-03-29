@@ -43,20 +43,24 @@ namespace MapService.ViewModels
         private void _updateGmap()
         {
             var pointPairs = new List<PointsPair>();
+
+            var signalToBePloted = Signals.Where(x => !double.IsNaN(x.Intensity)).ToList();
+
             double minColor = 0d, maxColor = 0d, colorRange = 0d;
-            var numberOfSigs = Signals.Count();
+            List<OxyColor> colors = null;
+            var numberOfSigs = signalToBePloted.Count();
             if (numberOfSigs > 0)
             {
-                minColor = Signals.Select(x => x.Intensity).Min();
-                maxColor = Signals.Select(x => x.Intensity).Max();
+                minColor = signalToBePloted.Select(x => x.Intensity).Min();
+                maxColor = signalToBePloted.Select(x => x.Intensity).Max();
                 colorRange = maxColor - minColor;
+                colors = OxyPalettes.Rainbow(numberOfSigs + 1).Colors.ToList();
             }
-            var colors = OxyPalettes.Rainbow(numberOfSigs + 1).Colors;
             SolidColorBrush color = null;
-            foreach (var signal in Signals)
+            foreach (var signal in signalToBePloted)
             {
-                if (!double.IsNaN(signal.Intensity))
-                {
+                //if (!double.IsNaN(signal.Intensity))
+                //{
                     if (colorRange != 0d)
                     {
                         var percentage = (int)Math.Round((signal.Intensity - minColor) / colorRange * numberOfSigs);
@@ -121,7 +125,7 @@ namespace MapService.ViewModels
                         Gmap.Markers.Add(mkr);
                         //_addPolygonToMap();
                     }
-                }
+                //}
             }
             if (pointPairs.Count != 0)
             {

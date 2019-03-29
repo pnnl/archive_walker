@@ -21,9 +21,9 @@
         <TabItem Header="Wind Ramps">
             <views:WindRampResultsView DataContext="{Binding WindRampResultsViewModel}"/>
         </TabItem>
-        <TabItem Header="Voltage Stability">
+        <!--<TabItem Header="Voltage Stability">
             <vsViews:VoltageStabilityResultsView DataContext="{Binding VoltageStabilityResultsViewModel}"/>
-        </TabItem>
+        </TabItem>-->
         <TabItem Header="Mode Meter">
             <mmViews:ModeMeterResultsView DataContext="{Binding ModeMeterResultsVM}"/>
         </TabItem>

@@ -419,6 +419,7 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedPlottingRule = value;
                 _updateSelectionsInTables(value);
+                _updateFOplotAndMapAfterSelectionChange();
                 OnPropertyChanged();
             }
         }
