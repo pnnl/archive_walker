@@ -29,7 +29,11 @@ time_end = datestr(EndTime,'dd-mmm-yyyy HH:MM:SS');
 
 %% Read the PI presets and Choose a preset
 [PMU,Server] = ReadPIpresets(PresetFile);
-Server = Server{strcmp({PMU.PMU_Name},preset)};
+PresetIdx = find(strcmp({PMU.PMU_Name},preset));
+if isempty(PresetIdx)
+    error(['Preset ' preset ' was not found in ' PresetFile]);
+end
+Server = Server{PresetIdx};
 PMU = PMU(strcmp({PMU.PMU_Name},preset));
 
 %% Get the PIData of all signals

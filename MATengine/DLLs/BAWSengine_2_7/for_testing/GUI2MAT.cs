@@ -1,6 +1,6 @@
 /*
-* MATLAB Compiler: 6.4 (R2017a)
-* Date: Fri Mar 22 09:55:45 2019
+* MATLAB Compiler: 6.6 (R2018a)
+* Date: Fri Mar 29 09:27:54 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_tes

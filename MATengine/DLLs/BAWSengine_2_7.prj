@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="4291995801" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="1498269181" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.22</param.version>
+    <param.version>2.23</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -15,11 +15,7 @@
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
-    <param.target.install.notes>You must have Python 2.7, 3.4, or 3.5 on your machine to install this package. Go to the directory to which setup.py and your package have been written. Then execute:
-
-        python setup.py install [options]
-
-For details, see the readme.txt distributed with this package.</param.target.install.notes>
+    <param.target.install.notes />
     <param.intermediate>${PROJECT_ROOT}\BAWSengine_2_7\for_testing</param.intermediate>
     <param.files.only>${PROJECT_ROOT}\BAWSengine_2_7\for_redistribution_files_only</param.files.only>
     <param.output>${PROJECT_ROOT}\BAWSengine_2_7\for_redistribution</param.output>
@@ -51,6 +47,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     <param.net.tsa.metadata />
     <param.net.tsa.metadata.assembly>C:\Users\foll154\Documents\MATLAB</param.net.tsa.metadata.assembly>
     <param.net.saved.interface />
+    <param.cpp.api>option.cpp.all</param.cpp.api>
     <unset>
       <param.icon />
       <param.icons />
@@ -64,6 +61,8 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <param.installpath.string />
       <param.installpath.combo />
       <param.logo />
+      <param.install.notes />
+      <param.target.install.notes />
       <param.intermediate />
       <param.files.only />
       <param.output />
@@ -94,6 +93,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <param.net.tsa.metadata />
       <param.net.tsa.metadata.assembly />
       <param.net.saved.interface />
+      <param.cpp.api />
     </unset>
     <fileset.exports>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
@@ -131,9 +131,8 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     </fileset.classes>
     <fileset.resources />
     <fileset.depfun>
+      <file>${MATLAB_ROOT}\examples\matlab\data.csv</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ConvertHistorianStructToPMU.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadHistorian.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadPIpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\ChangeNameTypeUnit.m</file>
@@ -279,12 +278,12 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     <build-deliverables>
       <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="BAWSengine.dll" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\BAWSengine.dll</file>
       <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="BAWSengine_overview.html" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\BAWSengine_overview.html</file>
-      <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="readme.txt" optional="true">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\readme.txt</file>
       <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="BAWSengineNative.dll" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\BAWSengineNative.dll</file>
+      <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="readme.txt" optional="true">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\readme.txt</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2017A</root>
+      <root>C:\Program Files\MATLAB\R2018A</root>
       <toolboxes>
         <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />

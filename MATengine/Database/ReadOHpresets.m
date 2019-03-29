@@ -1,4 +1,4 @@
-function [Preset,Server,Instance,GEPPort,SystemXML,ID] = ReadOHpresets(XMLFileIn)
+function PresetInfo = ReadOHpresets(XMLFileIn)
 
 %Get the file handle
 fHandle = fopen(XMLFileIn,'rt');
@@ -137,49 +137,8 @@ for idx = 1:length(FN)
     end
 end
 
+PresetInfo = X(1).Presets.Preset;
 
-% Convert to our structure (meta only)
-MT = cell(1,length(X.Presets.Preset));
-Preset = MT;
-Server = MT;
-Instance = MT;
-GEPPort = MT;
-SystemXML = MT;
-ID = MT;
-for idx = 1:length(X.Presets.Preset)
-    Preset{idx} = X.Presets.Preset(idx).name;
-    
-    NumSigs = length(X.Presets.Preset(idx).Signal);
-    SigID = '';
-    for SigIdx = 1:NumSigs
-        SigID = [SigID ',' X.Presets.Preset(idx).Signal(SigIdx).ID];
-        
-        if isempty(Server{idx})
-            Server{idx} = X.Presets.Preset(idx).Signal(SigIdx).Server;
-        elseif ~strcmp(Server{idx}, X.Presets.Preset(idx).Signal(SigIdx).Server)
-            error('All signals within a preset must be from the same server');
-        end
-        
-        if isempty(Instance{idx})
-            Instance{idx} = X.Presets.Preset(idx).Signal(SigIdx).Instance;
-        elseif ~strcmp(Instance{idx}, X.Presets.Preset(idx).Signal(SigIdx).Instance)
-            error('All signals within a preset must be from the same server');
-        end
-        
-        if isempty(GEPPort{idx})
-            GEPPort{idx} = X.Presets.Preset(idx).Signal(SigIdx).GEPPort;
-        elseif ~strcmp(GEPPort{idx}, X.Presets.Preset(idx).Signal(SigIdx).GEPPort)
-            error('All signals within a preset must be from the same server');
-        end
-        
-        if isempty(SystemXML{idx})
-            SystemXML{idx} = X.Presets.Preset(idx).Signal(SigIdx).SystemXML;
-        elseif ~strcmp(SystemXML{idx}, X.Presets.Preset(idx).Signal(SigIdx).SystemXML)
-            error('All signals within a preset must be from the same server');
-        end
-    end
-    ID{idx} = SigID(2:end);
-end
 end
 
 
