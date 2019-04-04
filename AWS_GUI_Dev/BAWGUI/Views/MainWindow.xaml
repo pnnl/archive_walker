@@ -93,14 +93,14 @@
                             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
-                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter1}}" Command="{Binding MainViewSelected}" CommandParameter="Results">
+                <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter2}}" Command="{Binding MainViewSelected}" CommandParameter="Settings">
+                    <RadioButton.Style>
+                        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                    </RadioButton.Style>
+                </RadioButton>
+                <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter1}}" Command="{Binding MainViewSelected}" CommandParameter="Results">
                         <RadioButton.Style>
                             <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
-                        </RadioButton.Style>
-                    </RadioButton>
-                    <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter2}}" Command="{Binding MainViewSelected}" CommandParameter="Settings">
-                        <RadioButton.Style>
-                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                         </RadioButton.Style>
                     </RadioButton>
                     <RadioButton Content="Signal Inspection" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter3}}" Command="{Binding MainViewSelected}" CommandParameter="SignalInspection">

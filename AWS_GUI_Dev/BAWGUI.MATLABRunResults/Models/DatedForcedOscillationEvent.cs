@@ -28,6 +28,11 @@ namespace BAWGUI.MATLABRunResults.Models
                 _filteredOccurrences.Add(doc);
             }
         }
+
+        public DatedForcedOscillationEvent()
+        {
+        }
+
         private string _date;
         public string Date
         {

@@ -656,7 +656,7 @@ Namespace ViewModels
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             '''''''''''Write signal mapping plot settings''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-            If _svm.SignalMgr.UniqueMappingSignals.Count <> 0 Then
+            If _svm.SignalMgr.UniqueMappingSignals IsNot Nothing AndAlso _svm.SignalMgr.UniqueMappingSignals.Count <> 0 Then
                 Dim writer = New SignalMappingPlotConfigWriter()
                 _configData.Add(writer.WriteConfigToXMLFormat(_svm.SignalMgr.UniqueMappingSignals))
             End If

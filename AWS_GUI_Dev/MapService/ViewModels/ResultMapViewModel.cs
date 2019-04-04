@@ -79,8 +79,8 @@ namespace MapService.ViewModels
                             var mkr = new GMapMarker(new PointLatLng(la, lg));
                             mkr.Shape = new Ellipse
                             {
-                                Width = 10,
-                                Height = 10,
+                                Width = 15,
+                                Height = 15,
                                 Stroke = color,
                                 Fill = color,
                                 ToolTip = signal.Signal.SignalName

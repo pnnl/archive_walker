@@ -51,7 +51,7 @@ namespace BAWGUI.Results.ViewModels
         }
         public ForcedOscillationResultViewModel()
         {
-
+            _model = new DatedForcedOscillationEvent();
         }
         private readonly DatedForcedOscillationEvent _model;
         public DatedForcedOscillationEvent Model

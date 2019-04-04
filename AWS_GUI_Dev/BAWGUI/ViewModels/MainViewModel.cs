@@ -29,7 +29,7 @@ namespace BAWGUI.ViewModels
             _resultsVM = new ResultsViewModel();
             _projectControlVM = new ProjectsControlViewModel();
             CoordsTableVM = new CoordinatesTableViewModel();
-            _currentView = _resultsVM;
+            _currentView = _settingsVM;
             MainViewSelected = new RelayCommand(_switchView);
             _projectControlVM.RunSelected += _onRunSelected;
             _signalMgr = SignalManager.Instance;
