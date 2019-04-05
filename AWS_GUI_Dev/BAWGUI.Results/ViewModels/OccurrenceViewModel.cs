@@ -163,12 +163,12 @@ namespace BAWGUI.Results.ViewModels
                 {
                     _selectedChannel = value;
                     OnPropertyChanged();
-                    OnSelectedChannelChanged(value.Name);
+                    OnSelectedChannelChanged();
                 }
             }
         }
         public event EventHandler SelectedChannelChanged;
-        public virtual void OnSelectedChannelChanged(string name)
+        public virtual void OnSelectedChannelChanged()
         {
             SelectedChannelChanged?.Invoke(this, EventArgs.Empty);
         }

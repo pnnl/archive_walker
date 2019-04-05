@@ -6,18 +6,26 @@
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
              xmlns:viewscore="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              xmlns:map="clr-namespace:MapService.Views;assembly=MapService"
+             xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <coreConverter:OxyColorToGradientBrushConverter x:Key="OxyColorToGradientBrushConverter"/>            
+        </ResourceDictionary>
+    </UserControl.Resources>
     <DockPanel>
         <viewscore:TimeFilterView DockPanel.Dock="Top"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="4*"/>
+                    <RowDefinition Height="5"/>
                     <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
                 <TabControl Grid.Row="0" Margin="0,0,22,0">
@@ -37,31 +45,34 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <map:MapView DataContext="{Binding ResultMapVM}" Grid.Column="0" Margin="2"/>
-                                <Rectangle Width="20" Height="200" Grid.Column="1" Margin="2">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush>
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
+                                <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding ResultMapVM.MaxColor, StringFormat=Max:&#x0a;{0:e1}}" Margin="2" TextAlignment="Center"/>
+                                    <Rectangle Width="20" Height="200" Grid.Column="1" Margin="2" Fill="{Binding ResultMapVM.RBColors, Converter={StaticResource OxyColorToGradientBrushConverter}}"/>
+                                    <TextBlock Text="{Binding ResultMapVM.MinColor, StringFormat=Min:&#x0a;{0:e1}}" Margin="2" TextAlignment="Center"/>
+                                </StackPanel>
                             </Grid>
                         </Grid>
                     </TabItem>
                 </TabControl>
-                <DockPanel Grid.Row="1">
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch"/>
+                <DockPanel Grid.Row="2">
                     <Label Content="Events:" DockPanel.Dock="Top"/>
                     <views:FOEventTableView/>
                 </DockPanel>
             </Grid>
-            <Grid Grid.Column="1" Margin="2,0,0,0">
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+            <Grid Grid.Column="2" Margin="2,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="6*"/>
+                    <RowDefinition Height="5"/>
                     <RowDefinition Height="4*"/>
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0">
                     <Label Content="Occurrences:" DockPanel.Dock="Top"/>
                     <views:OccurrenceTableView DataContext="{Binding SelectedOscillationEvent}"/>
                 </DockPanel>
-                <DockPanel Grid.Row="1">
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch"/>
+                <DockPanel Grid.Row="2">
                     <Label Content="Channels:" DockPanel.Dock="Top"/>
                     <views:FOChannelTableView DataContext="{Binding SelectedOscillationEvent.SelectedOccurrence}"/>
                 </DockPanel>

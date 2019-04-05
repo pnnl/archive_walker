@@ -20,6 +20,7 @@ namespace MapService.ViewModels
     {
         public ResultMapViewModel()
         {
+            _rbcolors = new List<OxyColor>();
             _curveDesignOption = CurveDesignOptions.Option1;
             _setupMap();
         }
@@ -40,21 +41,59 @@ namespace MapService.ViewModels
 
         public int MaxZoom { get; set; } = 8;
         public int MinZoom { get; set; } = 0;
+        private List<OxyColor> _rbcolors;
+        public List<OxyColor> RBColors
+        {
+            get { return _rbcolors; }
+            set
+            {
+                _rbcolors = value;
+                OnPropertyChanged();
+            }
+        }
+        private double _maxColor = 0d;
+        public double MaxColor
+        {
+            get { return _maxColor; }
+            set
+            {
+                _maxColor = value;
+                OnPropertyChanged();
+            }
+        }
+        private double _minColor = 0d;
+        public double MinColor
+        {
+            get { return _minColor; }
+            set
+            {
+                _minColor = value;
+                OnPropertyChanged();
+            }
+        }
         private void _updateGmap()
         {
             var pointPairs = new List<PointsPair>();
 
             var signalToBePloted = Signals.Where(x => !double.IsNaN(x.Intensity)).ToList();
 
-            double minColor = 0d, maxColor = 0d, colorRange = 0d;
-            List<OxyColor> colors = null;
+            double colorRange = 0d;
+            //List<OxyColor> RBColors = null;
             var numberOfSigs = signalToBePloted.Count();
             if (numberOfSigs > 0)
             {
-                minColor = signalToBePloted.Select(x => x.Intensity).Min();
-                maxColor = signalToBePloted.Select(x => x.Intensity).Max();
-                colorRange = maxColor - minColor;
-                colors = OxyPalettes.Rainbow(numberOfSigs + 1).Colors.ToList();
+                MinColor = signalToBePloted.Select(x => x.Intensity).Min();
+                MaxColor = signalToBePloted.Select(x => x.Intensity).Max();
+                colorRange = MaxColor - MinColor;
+            }
+            if (numberOfSigs > 1)
+            {
+                RBColors = OxyPalettes.Rainbow(numberOfSigs).Colors.ToList();
+            }
+            else
+            {
+                RBColors = new List<OxyColor>() { OxyColors.Navy };
+                //RBColors.Add(OxyColors.Navy);
             }
             SolidColorBrush color = null;
             foreach (var signal in signalToBePloted)
@@ -63,16 +102,15 @@ namespace MapService.ViewModels
                 //{
                 if (colorRange != 0d)
                 {
-                    var percentage = (int)Math.Round((signal.Intensity - minColor) / colorRange * numberOfSigs);
-                    color = new SolidColorBrush(Color.FromArgb(colors[percentage].A, colors[percentage].R, colors[percentage].G, colors[percentage].B));
+                    var percentage = (int)Math.Round((signal.Intensity - MinColor) / colorRange * (numberOfSigs - 1));
+                    color = new SolidColorBrush(Color.FromArgb(RBColors[percentage].A, RBColors[percentage].R, RBColors[percentage].G, RBColors[percentage].B));
                 }
                 else
                 {
-                    color = Brushes.Navy;
+                    color = new SolidColorBrush(Color.FromArgb(RBColors[0].A, RBColors[0].R, RBColors[0].G, RBColors[0].B));
                 }
                 if (signal.Signal.MapPlotType == SignalMapPlotType.Dot)
                 {
-                    //_addDotToMap();
                     var point = signal.Signal.Locations.FirstOrDefault();
                     if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Longitude, out double lg))
                     {
