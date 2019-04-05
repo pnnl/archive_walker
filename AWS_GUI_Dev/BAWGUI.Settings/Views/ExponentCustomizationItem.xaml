@@ -23,7 +23,7 @@
             <TextBlock Grid.Column="0" FontStyle="{Binding Path=Value[0].PMUName, Converter={StaticResource ValueIfEmptyConverter}, ConverterParameter=Italic}" Text="{Binding Path=Value[0].PMUName, Converter={StaticResource ValueIfEmptyConverter}, ConverterParameter='Select a PMU'}"  />
             <TextBlock Grid.Column="1" Text="{Binding Path=Value[0].SignalName, Converter={StaticResource ValueIfEmptyConverter}, ConverterParameter='Select a signal'}" />
             <TextBlock Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Exponent, StringFormat=^ {0}      \= }"/>
-            <TextBox Grid.Column="3" Text="{Binding Path=Key.SignalName}" Margin="0,0"/>
+            <TextBox Grid.Column="3" Text="{Binding Path=Key.SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0"/>
         </Grid>
     </Border>
 </UserControl>

@@ -218,7 +218,7 @@ Namespace ViewModels
                 _postProcessConfigStepDeSelected = value
             End Set
         End Property
-        Private Sub _deSelectAllPostProcessConfigSteps()
+        Public Sub DeSelectAllPostProcessConfigSteps()
             If _currentSelectedStep IsNot Nothing Then
 
                 If Not _currentSelectedStep.CheckStepIsComplete() Then
@@ -683,7 +683,7 @@ Namespace ViewModels
                     If obj Is CurrentSelectedStep Then
                         CurrentSelectedStep = Nothing
                     Else
-                        _deSelectAllPostProcessConfigSteps()
+                        DeSelectAllPostProcessConfigSteps()
                     End If
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     PostProcessConfigure.CollectionOfSteps = steps

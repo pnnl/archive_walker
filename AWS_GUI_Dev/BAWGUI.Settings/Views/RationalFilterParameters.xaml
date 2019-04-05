@@ -69,7 +69,7 @@
             </Label.Content>
         </Label>
         <!--<Image Grid.Row="0" Grid.Column="2" Source="/BAWGUI.Settings;component/MyResources/numerator.png" Width="60" Height="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-        <TextBox Grid.Row="0" Grid.Column="3" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Numerator}" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="0" Grid.Column="3" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Numerator, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
         <!--<Image Grid.Row="1" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
             <Image.Style>
                 <Style TargetType="Image">
@@ -122,6 +122,6 @@
             </Label.Content>
         </Label>
         <!--<Image Grid.Row="1" Grid.Column="2" Source="/BAWGUI.Settings;component/MyResources/denominator.png" Width="60" Height="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-        <TextBox Grid.Row="1" Grid.Column="3" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Denominator}" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="3" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Denominator, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

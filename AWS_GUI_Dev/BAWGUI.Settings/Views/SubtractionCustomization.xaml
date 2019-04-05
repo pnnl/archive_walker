@@ -29,14 +29,14 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-            <xtlkt:WatermarkTextBox Name="MDPMU" ToolTip="Signal 1" Watermark="Select PMU name" Text="{Binding Minuend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Minuend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <xtlkt:WatermarkTextBox Name="MDPMU" ToolTip="Signal 1" Watermark="Select PMU name" Text="{Binding Minuend.PMUName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Minuend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotKeyboardFocus">
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Minuend}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </xtlkt:WatermarkTextBox>
-            <xtlkt:WatermarkTextBox Name="Minuend" ToolTip="Signal 1" Watermark="Select signal name" Text="{Binding Minuend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Minuend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <xtlkt:WatermarkTextBox Name="Minuend" ToolTip="Signal 1" Watermark="Select signal name" Text="{Binding Minuend.SignalName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostKeyboardFocus="MinuendOrDividentTextBoxLostFocus" GotKeyboardFocus="MinuendOrDividentTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Minuend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotKeyboardFocus">
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Minuend}"/>
@@ -46,14 +46,14 @@
         </StackPanel>
         <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
             <StackPanel Orientation="Horizontal">
-                <xtlkt:WatermarkTextBox Name="SDPMU" ToolTip="Signal 2" Watermark="Select PMU name" Text="{Binding Subtrahend.PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Subtrahend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <xtlkt:WatermarkTextBox Name="SDPMU" ToolTip="Signal 2" Watermark="Select PMU name" Text="{Binding Subtrahend.PMUName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Subtrahend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">
                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Subtrahend}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </xtlkt:WatermarkTextBox>
-                <xtlkt:WatermarkTextBox Name="Subtrahend" ToolTip="Signal 2" Watermark="Select signal name" Text="{Binding Subtrahend.SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Subtrahend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <xtlkt:WatermarkTextBox Name="Subtrahend" ToolTip="Signal 2" Watermark="Select signal name" Text="{Binding Subtrahend.SignalName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0" LostFocus="SubtrahendOrDivisorTextBoxLostFocus" GotKeyboardFocus="SubtrahendOrDivisorTextBoxGotKeyboardFocus" IsReadOnly="True" BorderBrush="{Binding Subtrahend.IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotKeyboardFocus">
                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextbox}" CommandParameter="{Binding Subtrahend}"/>
@@ -64,8 +64,8 @@
         </Grid>
         <Separator Grid.Row="2" Grid.Column="1" Width="305" HorizontalAlignment="Left"></Separator>
         <StackPanel Orientation="Horizontal" Margin="0,2,2,2" Grid.Row="3" Grid.Column="1">
-            <xtlkt:WatermarkTextBox ToolTip="PMU name" Watermark="Enter PMU name" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"></xtlkt:WatermarkTextBox>
-            <xtlkt:WatermarkTextBox ToolTip="Signal name" Watermark="Enter signal name" Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0"/>
+            <xtlkt:WatermarkTextBox ToolTip="PMU name" Watermark="Enter PMU name" Text="{Binding CustPMUname, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"></xtlkt:WatermarkTextBox>
+            <xtlkt:WatermarkTextBox ToolTip="Signal name" Watermark="Enter signal name" Text="{Binding OutputChannels[0].SignalName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="5,0,0,0"/>
         </StackPanel>
         <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" FontSize="36" Grid.Row="1" Grid.Column="0" Text="-" VerticalAlignment="Bottom"></TextBlock>
         <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" FontSize="24" Grid.Row="3" Grid.Column="0" Text="=" VerticalAlignment="Center"></TextBlock>

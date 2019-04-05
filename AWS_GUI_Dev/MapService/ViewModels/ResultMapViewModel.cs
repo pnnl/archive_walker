@@ -61,70 +61,84 @@ namespace MapService.ViewModels
             {
                 //if (!double.IsNaN(signal.Intensity))
                 //{
-                    if (colorRange != 0d)
+                if (colorRange != 0d)
+                {
+                    var percentage = (int)Math.Round((signal.Intensity - minColor) / colorRange * numberOfSigs);
+                    color = new SolidColorBrush(Color.FromArgb(colors[percentage].A, colors[percentage].R, colors[percentage].G, colors[percentage].B));
+                }
+                else
+                {
+                    color = Brushes.Navy;
+                }
+                if (signal.Signal.MapPlotType == SignalMapPlotType.Dot)
+                {
+                    //_addDotToMap();
+                    var point = signal.Signal.Locations.FirstOrDefault();
+                    if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Longitude, out double lg))
                     {
-                        var percentage = (int)Math.Round((signal.Intensity - minColor) / colorRange * numberOfSigs);
-                        color = new SolidColorBrush(Color.FromArgb(colors[percentage].A, colors[percentage].R, colors[percentage].G, colors[percentage].B));
+                        var mkr = new GMapMarker(new PointLatLng(la, lg));
+                        mkr.Shape = new Ellipse
+                        {
+                            Width = 15,
+                            Height = 15,
+                            Stroke = color,
+                            Fill = color,
+                            ToolTip = signal.Signal.SignalName
+                        };
+                        mkr.Tag = signal.Signal.SignalName;
+                        Gmap.Markers.Add(mkr);
+                    }
+                }
+                if (signal.Signal.MapPlotType == SignalMapPlotType.Line)
+                {
+                    //collect all point pairs here if there's only 2 points in the line
+                    //if there's more than 2 points, draw straight line.
+                    List<CartesianPoint> points = new List<CartesianPoint>();
+                    var newLine = new List<PointLatLng>();
+                    for (int index = 0; index < signal.Signal.Locations.Count; index++)
+                    {
+                        if (double.TryParse(signal.Signal.Locations[index].Longitude, out double lg) && double.TryParse(signal.Signal.Locations[index].Latitude, out double la))
+                        {
+                            points.Add(new CartesianPoint(lg, la));
+                            newLine.Add(new PointLatLng(la, lg));
+                        }
+                    }
+                    if (points.Count > 2)
+                    {
+                        var newRoute = new GMapRoute(newLine);
+                        newRoute.Shape = new Path() { Stroke = color, StrokeThickness = 2, ToolTip = signal.Signal.SignalName };
+                        newRoute.Tag = signal.Signal.SignalName;
+                        Gmap.Markers.Add(newRoute);
+                    }
+                    else if (points.Count == 2)
+                    {
+                        pointPairs.Add(new PointsPair(points[0], points[1], color, signal.Signal.SignalName));
                     }
                     else
                     {
-                        color = Brushes.Navy;
+                        throw new Exception("A signal line should have at least 2 points/locations specified.");
                     }
-                    if (signal.Signal.MapPlotType == SignalMapPlotType.Dot)
+                }
+                if (signal.Signal.MapPlotType == SignalMapPlotType.Area)
+                {
+                    var points = new List<PointLatLng>();
+                    var points2 = new List<Point>();
+                    foreach (var pnt in signal.Signal.Locations)
                     {
-                        //_addDotToMap();
-                        var point = signal.Signal.Locations.FirstOrDefault();
-                        if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Longitude, out double lg))
+                        if (double.TryParse(pnt.Latitude, out double la) && double.TryParse(pnt.Longitude, out double lg))
                         {
-                            var mkr = new GMapMarker(new PointLatLng(la, lg));
-                            mkr.Shape = new Ellipse
-                            {
-                                Width = 15,
-                                Height = 15,
-                                Stroke = color,
-                                Fill = color,
-                                ToolTip = signal.Signal.SignalName
-                            };
-                            mkr.Tag = signal.Signal.SignalName;
-                            Gmap.Markers.Add(mkr);
+                            points.Add(new PointLatLng(la, lg));
+                            points2.Add(new Point(la, lg));
                         }
                     }
-                    if (signal.Signal.MapPlotType == SignalMapPlotType.Line)
-                    {
-                        //collect all point pairs here a list of tuples, maybe?
-                        List<CartesianPoint> points = new List<CartesianPoint>();
-                        for (int index = 0; index < signal.Signal.Locations.Count; index++)
-                        {
-                            if (double.TryParse(signal.Signal.Locations[index].Longitude, out double lg) && double.TryParse(signal.Signal.Locations[index].Latitude, out double la))
-                            {
-                                points.Add(new CartesianPoint(lg, la));
-                            }
-                        }
-                        for (int index = 0; index < points.Count - 1; index++)
-                        {
-                            pointPairs.Add(new PointsPair(points[index], points[index + 1], color, signal.Signal.SignalName));
-                        }
-                    }
-                    if (signal.Signal.MapPlotType == SignalMapPlotType.Area)
-                    {
-                        var points = new List<PointLatLng>();
-                        var points2 = new List<Point>();
-                        foreach (var pnt in signal.Signal.Locations)
-                        {
-                            if (double.TryParse(pnt.Latitude, out double la) && double.TryParse(pnt.Longitude, out double lg))
-                            {
-                                points.Add(new PointLatLng(la, lg));
-                                points2.Add(new Point(la, lg));
-                            }
-                        }
-                        var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
-                        var areaColor = color.Clone();
-                        areaColor.Opacity = 0.2;
-                        mkr.Shape = new Path() { Stroke = color, StrokeThickness = 2, ToolTip = signal.Signal.SignalName, Fill = areaColor };
-                        mkr.Tag = signal.Signal.SignalName;
-                        Gmap.Markers.Add(mkr);
-                        //_addPolygonToMap();
-                    }
+                    var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
+                    var areaColor = color.Clone();
+                    areaColor.Opacity = 0.2;
+                    mkr.Shape = new Path() { Stroke = color, StrokeThickness = 2, ToolTip = signal.Signal.SignalName, Fill = areaColor };
+                    mkr.Tag = signal.Signal.SignalName;
+                    Gmap.Markers.Add(mkr);
+                    //_addPolygonToMap();
+                }
                 //}
             }
             if (pointPairs.Count != 0)

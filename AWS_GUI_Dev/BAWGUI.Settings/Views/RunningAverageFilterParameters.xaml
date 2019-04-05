@@ -41,6 +41,6 @@
             </Image.Style>
         </Image>-->
         <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="Averaging Window (seconds):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding WindowLength}" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding WindowLength, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

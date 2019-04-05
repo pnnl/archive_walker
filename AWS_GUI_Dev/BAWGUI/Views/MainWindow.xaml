@@ -112,7 +112,7 @@
                     <Button ToolTip="Save Config File" Width="22" Height="22" Margin="2" Command="{Binding ProjectControlVM.SaveConfigFile}" CommandParameter="{Binding}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter}}">
                         <Image Source="/BAWGUI;component/MyResources/Save24.png"/>
                 </Button>
-                <Button ToolTip="Save Coordinates File" Width="22" Height="22" Margin="2" Command="{Binding CoordsTableVM.SaveCoordinatesFiile}" CommandParameter="{Binding ProjectControlVM.ResultsStoragePath}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter2}}">
+                <Button ToolTip="Save Coordinates File to Project Folder" Width="22" Height="22" Margin="2" Command="{Binding CoordsTableVM.SaveCoordinatesFiile}" CommandParameter="{Binding ProjectControlVM.ResultsStoragePath}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter2}}">
                     <Image Source="/BAWGUI;component/MyResources/Save24.png"/>
                 </Button>
             </StackPanel>

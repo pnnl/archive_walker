@@ -29,21 +29,21 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <xtlkt:WatermarkTextBox Focusable="True" Name="PMU" Width="100" Text="{Binding Value[0].PMUName}" Margin="30,0,0,0" Height="25" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <xtlkt:WatermarkTextBox Focusable="True" Name="PMU" Width="100" Text="{Binding Value[0].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="30,0,0,0" Height="25" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </xtlkt:WatermarkTextBox>
-                            <xtlkt:WatermarkTextBox Focusable="True" Name="Channel" Width="150" Text="{Binding Value[0].SignalName}" Margin="2,0,0,0" Height="25" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <xtlkt:WatermarkTextBox Focusable="True" Name="Channel" Width="150" Text="{Binding Value[0].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="2,0,0,0" Height="25" IsReadOnly="True" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </xtlkt:WatermarkTextBox>
-                            <xtlkt:WatermarkTextBox Focusable="True" Name="CustName" Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Height="25" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" Text="{Binding Key.SignalName}" Margin="70,0,0,0" Visibility="{Binding DataContext.UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=1}}">
+                            <xtlkt:WatermarkTextBox Focusable="True" Name="CustName" Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Height="25" GotFocus="TextBoxGotFocus" LostFocus="TextBoxLostFocus" Text="{Binding Key.SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="70,0,0,0" Visibility="{Binding DataContext.UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=1}}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>

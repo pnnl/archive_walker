@@ -205,7 +205,7 @@
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter1}}" Margin="0,5,0,0">
                                                     <Label Content="Example File:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding ExampleFile}" Margin="2" VerticalAlignment="Center" MinWidth="100" MaxWidth="600" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                                                    <TextBox Text="{Binding ExampleFile, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="100" MaxWidth="600" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
                                                         <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>
@@ -215,14 +215,14 @@
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter2}}" Margin="0,5,0,0">
                                                     <Label Content="File Directory:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding FileDirectory}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
+                                                    <TextBox Text="{Binding FileDirectory, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
                                                     <!--<Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
                                                         <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>-->
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter3}}" Margin="0,5,0,0">
                                                     <Label Content="{Binding FileType, Converter={StaticResource FileTypeToLabelConverter}}" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="{Binding FileType, Converter={StaticResource FileTypeToBooleanConverter}}"/>
+                                                    <TextBox Text="{Binding Mnemonic, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="{Binding FileType, Converter={StaticResource FileTypeToBooleanConverter}}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>

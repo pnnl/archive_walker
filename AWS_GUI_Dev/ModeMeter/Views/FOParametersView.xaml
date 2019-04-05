@@ -39,20 +39,20 @@
         <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Type:" HorizontalAlignment="Left"/>
         <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource DetectorWindowTypeValues}}" Text="{Binding WindowType, Converter={StaticResource EnumToStringConverter9}}" HorizontalAlignment="Left"/>
         <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Interval (Hz):" HorizontalAlignment="Left"/>
-        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyInterval}" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyInterval, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Length (seconds):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowLength}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowLength, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Window Overlap (seconds):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlap}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlap, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
         <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Median Filter Width (Hz):" HorizontalAlignment="Left"/>
-        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MedianFilterFrequencyWidth}" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MedianFilterFrequencyWidth, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
         <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Probability of False Detection:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding Pfa}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding Pfa, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
         <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum Frequency (Hz):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMin}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMin, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
         <Label Grid.Row="7" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum Frequency (Hz):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="7" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMax}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
         <Label Grid.Row="8" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Tolerance (Hz):" HorizontalAlignment="Left"/>
-        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="8" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyTolerance}" HorizontalAlignment="Left"/>
+        <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="8" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyTolerance, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>

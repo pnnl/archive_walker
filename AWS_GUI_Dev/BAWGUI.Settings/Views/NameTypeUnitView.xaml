@@ -107,7 +107,7 @@
                                                         </Image.Style>
                                                     </Image>-->
                                         <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="210" VerticalAlignment="Center" Content="New Signal Name" HorizontalAlignment="Left" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}"/>
-                                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewChannel}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="0,1" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}" HorizontalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewChannel, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" HorizontalContentAlignment="Left" Margin="0,1" IsEnabled="{Binding InputChannels.Count, Converter={StaticResource NewChannelVisibilityConverter}}" HorizontalAlignment="Center"/>
                                         <!--<Image Grid.Row="4" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
                                                         <Image.Style>
                                                             <Style TargetType="Image">

@@ -38,7 +38,7 @@
             </Grid.ColumnDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" Margin="30,1,0,1" Content="Active Power:" Width="120"/>
-            <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="0" Grid.Column="1" Margin="0,1" Text="{Binding ActivePower.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
+            <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="0" Grid.Column="1" Margin="0,1" Text="{Binding ActivePower.SignalName, UpdateSourceTrigger=PropertyChanged}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus" >
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
@@ -53,7 +53,7 @@
                 </i:Interaction.Triggers>
             </xtlkt:WatermarkTextBox>
             <Label Grid.Row="1" Grid.Column="0" Margin="30,1,0,1" Content="Reactive Power:" Width="120"/>
-            <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="1" Grid.Column="1" Margin="0,1" Text="{Binding ReactivePower.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
+            <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="1" Grid.Column="1" Margin="0,1" Text="{Binding ReactivePower.SignalName, UpdateSourceTrigger=PropertyChanged}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus" >
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
@@ -68,7 +68,7 @@
                 </i:Interaction.Triggers>
             </xtlkt:WatermarkTextBox>
             <Label Grid.Row="2" Grid.Column="0" Margin="30,1,0,1" Content="Current Magnitude:" Width="120"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Text="{Binding CurrentMagnitude.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
+            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Text="{Binding CurrentMagnitude.SignalName, UpdateSourceTrigger=PropertyChanged}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus" >
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">
@@ -83,7 +83,7 @@
                 </i:Interaction.Triggers>
             </TextBox>
             <Label Grid.Row="3" Grid.Column="0" Margin="30,1,0,1" Content="Current Angle:" Width="120"/>
-            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Text="{Binding CurrentAngle.SignalName}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
+            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Text="{Binding CurrentAngle.SignalName, UpdateSourceTrigger=PropertyChanged}" Width="250" GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus" IsReadOnly="True">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus" >
                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SignalSelectedToChange}">

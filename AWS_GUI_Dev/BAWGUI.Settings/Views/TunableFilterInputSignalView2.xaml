@@ -29,7 +29,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Label Content="Phase A Voltage: " Grid.Column="0" Grid.Row="0" Margin="2,1"/>
-        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="0" Watermark="Phase A Voltage PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PAVPMU" GotFocus="PAVPMU_GotFocus" LostFocus="PAVPMU_LostFocus" Text="{Binding POWInputSignals.PhaseAVoltage.PMUName}">
+        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="0" Watermark="Phase A Voltage PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PAVPMU" GotFocus="PAVPMU_GotFocus" LostFocus="PAVPMU_LostFocus" Text="{Binding POWInputSignals.PhaseAVoltage.PMUName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -43,7 +43,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
-        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="0" Watermark="Phase A Voltage Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PAVChannel" GotFocus="PAVChannel_GotFocus" LostFocus="PAVChannel_LostFocus" Text="{Binding POWInputSignals.PhaseAVoltage.SignalName}">
+        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="0" Watermark="Phase A Voltage Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PAVChannel" GotFocus="PAVChannel_GotFocus" LostFocus="PAVChannel_LostFocus" Text="{Binding POWInputSignals.PhaseAVoltage.SignalName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -58,7 +58,7 @@
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
         <Label Content="Phase B Voltage: " Grid.Column="0" Grid.Row="1" Margin="2,1"/>
-        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="1" Watermark="Phase B Voltage PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PBVPMU" GotFocus="PBVPMU_GotFocus" LostFocus="PBVPMU_LostFocus" Text="{Binding POWInputSignals.PhaseBVoltage.PMUName}">
+        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="1" Watermark="Phase B Voltage PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PBVPMU" GotFocus="PBVPMU_GotFocus" LostFocus="PBVPMU_LostFocus" Text="{Binding POWInputSignals.PhaseBVoltage.PMUName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -72,7 +72,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
-        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="1" Watermark="Phase B Voltage Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PBVChannel" GotFocus="PBVChannel_GotFocus" LostFocus="PBVChannel_LostFocus" Text="{Binding POWInputSignals.PhaseBVoltage.SignalName}">
+        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="1" Watermark="Phase B Voltage Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PBVChannel" GotFocus="PBVChannel_GotFocus" LostFocus="PBVChannel_LostFocus" Text="{Binding POWInputSignals.PhaseBVoltage.SignalName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -87,7 +87,7 @@
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
         <Label Content="Phase C Voltage: " Grid.Column="0" Grid.Row="2" Margin="2,1"/>
-        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="2" Watermark="Phase C Voltage PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PCVPMU" GotFocus="PCVPMU_GotFocus" LostFocus="PCVPMU_LostFocus" Text="{Binding POWInputSignals.PhaseCVoltage.PMUName}">
+        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="2" Watermark="Phase C Voltage PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PCVPMU" GotFocus="PCVPMU_GotFocus" LostFocus="PCVPMU_LostFocus" Text="{Binding POWInputSignals.PhaseCVoltage.PMUName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -101,7 +101,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
-        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="2" Watermark="Phase C Voltage Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PCVChannel" GotFocus="PCVChannel_GotFocus" LostFocus="PCVChannel_LostFocus" Text="{Binding POWInputSignals.PhaseCVoltage.SignalName}">
+        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="2" Watermark="Phase C Voltage Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PCVChannel" GotFocus="PCVChannel_GotFocus" LostFocus="PCVChannel_LostFocus" Text="{Binding POWInputSignals.PhaseCVoltage.SignalName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -116,7 +116,7 @@
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
         <Label Content="Phase A Current: " Grid.Column="0" Grid.Row="3" Margin="2,1"/>
-        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="3" Watermark="Phase A Current PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PAIPMU" GotFocus="PAIPMU_GotFocus" LostFocus="PAIPMU_LostFocus" Text="{Binding POWInputSignals.PhaseACurrent.PMUName}">
+        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="3" Watermark="Phase A Current PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PAIPMU" GotFocus="PAIPMU_GotFocus" LostFocus="PAIPMU_LostFocus" Text="{Binding POWInputSignals.PhaseACurrent.PMUName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -130,7 +130,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
-        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="3" Watermark="Phase A Current Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PAIChannel" GotFocus="PAIChannel_GotFocus" LostFocus="PAIChannel_LostFocus" Text="{Binding POWInputSignals.PhaseACurrent.SignalName}">
+        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="3" Watermark="Phase A Current Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PAIChannel" GotFocus="PAIChannel_GotFocus" LostFocus="PAIChannel_LostFocus" Text="{Binding POWInputSignals.PhaseACurrent.SignalName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -145,7 +145,7 @@
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
         <Label Content="Phase B Current: " Grid.Column="0" Grid.Row="4" Margin="2,1"/>
-        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="4" Watermark="Phase B Current PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PBIPMU" GotFocus="PBIPMU_GotFocus" LostFocus="PBIPMU_LostFocus" Text="{Binding POWInputSignals.PhaseBCurrent.PMUName}">
+        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="4" Watermark="Phase B Current PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PBIPMU" GotFocus="PBIPMU_GotFocus" LostFocus="PBIPMU_LostFocus" Text="{Binding POWInputSignals.PhaseBCurrent.PMUName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -159,7 +159,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
-        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="4" Watermark="Phase B Current Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PBIChannel" GotFocus="PBIChannel_GotFocus" LostFocus="PBIChannel_LostFocus" Text="{Binding POWInputSignals.PhaseBCurrent.SignalName}">
+        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="4" Watermark="Phase B Current Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PBIChannel" GotFocus="PBIChannel_GotFocus" LostFocus="PBIChannel_LostFocus" Text="{Binding POWInputSignals.PhaseBCurrent.SignalName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -174,7 +174,7 @@
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
         <Label Content="Phase C Current: " Grid.Column="0" Grid.Row="5" Margin="2,1"/>
-        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="5" Watermark="Phase C Current PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PCIPMU" GotFocus="PCIPMU_GotFocus" LostFocus="PCIPMU_LostFocus" Text="{Binding POWInputSignals.PhaseCCurrent.PMUName}">
+        <xtlkt:WatermarkTextBox Grid.Column="1" Grid.Row="5" Watermark="Phase C Current PMU" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="130" Name="PCIPMU" GotFocus="PCIPMU_GotFocus" LostFocus="PCIPMU_LostFocus" Text="{Binding POWInputSignals.PhaseCCurrent.PMUName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
@@ -188,7 +188,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </xtlkt:WatermarkTextBox>
-        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="5" Watermark="Phase C Current Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PCIChannel" GotFocus="PCIChannel_GotFocus" LostFocus="PCIChannel_LostFocus" Text="{Binding POWInputSignals.PhaseCCurrent.SignalName}">
+        <xtlkt:WatermarkTextBox Grid.Column="2" Grid.Row="5" Watermark="Phase C Current Channel" IsReadOnly="True" VerticalAlignment="Center" Margin="2,1" Width="150" Name="PCIChannel" GotFocus="PCIChannel_GotFocus" LostFocus="PCIChannel_LostFocus" Text="{Binding POWInputSignals.PhaseCCurrent.SignalName, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">

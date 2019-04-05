@@ -50,7 +50,7 @@
                         </Grid.ColumnDefinitions>
                         <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
                         <Label Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Max Duration (seconds):" HorizontalAlignment="Left"/>
-                        <TextBox Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding MaxDuration}" HorizontalAlignment="Left"/>
+                        <TextBox Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding MaxDuration, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                     </Grid>
                 </ScrollViewer>
             </Expander>

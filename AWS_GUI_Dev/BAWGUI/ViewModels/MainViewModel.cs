@@ -150,22 +150,68 @@ namespace BAWGUI.ViewModels
         {
             if ((string)obj == "Settings")
             {
+                if (CurrentView == _signalMgr)
+                {
+                    _signalMgr.DeSelectAllPlots(null);
+                }
                 CurrentView = SettingsVM;
             }
             else if((string)obj == "Results")
             {
+                if (CurrentView == _settingsVM)
+                {
+                    _deselectSettingsVMStep(_settingsVM);
+                }
+                if (CurrentView == _signalMgr)
+                {
+                    _signalMgr.DeSelectAllPlots(null);
+                }
                 CurrentView = ResultsVM;
             }
             else if((string)obj == "Coordinates")
             {
+                if (CurrentView == _settingsVM)
+                {
+                    _deselectSettingsVMStep(_settingsVM);
+                }
+                if (CurrentView == _signalMgr)
+                {
+                    _signalMgr.DeSelectAllPlots(null);
+                }
                 CurrentView = CoordsTableVM;
                 //CoordsTableVM.MapVM.GMap.InvalidateVisual();
             }
             else
             {
+                if (CurrentView == _settingsVM)
+                {
+                    _deselectSettingsVMStep(_settingsVM);
+                }
                 CurrentView = _signalMgr;
             }
         }
+
+        private void _deselectSettingsVMStep(SettingsViewModel settingsVM)
+        {
+            var tIndex = settingsVM.CurrentTabIndex;
+            if (tIndex == 1)
+            {
+                settingsVM.DeSelectAllDataConfigSteps();
+            }
+            else if (tIndex == 2)
+            {
+                settingsVM.DeSelectAllProcessConfigSteps();
+            }
+            else if (tIndex == 3)
+            {
+                settingsVM.DeSelectAllPostProcessConfigSteps();
+            }
+            else if (tIndex == 4 || tIndex == 5)
+            {
+                settingsVM.DeSelectAllDetectors();
+            }
+        }
+
         private ProjectsControlViewModel _projectControlVM;
         public ProjectsControlViewModel ProjectControlVM
         {
@@ -220,6 +266,10 @@ namespace BAWGUI.ViewModels
                             SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr);
                             SettingsVM.DetectorConfigure = new DetectorConfig(config.DetectorConfigure, _signalMgr);
                             var cti = SettingsVM.CurrentTabIndex;
+                            if (cti < 2)
+                            {
+                                SettingsVM.ReverseSignalPassedThroughNameTypeUnit();
+                            }
                             SettingsVM.CurrentTabIndex = cti;
                             SettingsVM.CurrentSelectedStep = null;
                             e.SelectedRun.Model.DataFileDirectories = new List<string>();

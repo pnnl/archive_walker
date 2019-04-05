@@ -265,7 +265,7 @@ Namespace ViewModels
                     For Each signal In obj.OutputChannels
                         signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
                     Next
-                    _deSelectAllProcessConfigSteps()
+                    DeSelectAllProcessConfigSteps()
                     _addLog("Unwrap step " & obj.StepCounter & " is deleted!")
                 Catch ex As Exception
                     MessageBox.Show("Error deleting a unwrap step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
@@ -377,7 +377,7 @@ Namespace ViewModels
                     For Each signal In obj.OutputChannels
                         signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
                     Next
-                    _deSelectAllProcessConfigSteps()
+                    DeSelectAllProcessConfigSteps()
                     _addLog("Interpolate step " & obj.StepCounter & " is deleted!")
                 Catch ex As Exception
                     MessageBox.Show("Error deleting an interpolate step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
@@ -451,7 +451,7 @@ Namespace ViewModels
             Dim result = MessageBox.Show("Delete step " & obj.StepCounter.ToString & " in Process Configuration: " & obj.Name & " ?", "Warning!", MessageBoxButtons.OKCancel)
             If result = DialogResult.OK Then
                 Try
-                    ProcessConfigure.CollectionOfSteps.Remove((obj))
+                    ProcessConfigure.CollectionOfSteps.Remove(obj)
                     Dim steps = New ObservableCollection(Of Object)(ProcessConfigure.CollectionOfSteps)
                     For Each aStep In steps
                         If aStep.StepCounter > obj.StepCounter Then
@@ -482,7 +482,7 @@ Namespace ViewModels
                         Next
                         ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
                     End If
-                    If TypeOf obj Is TunableFilter Then
+                    If TypeOf obj Is TunableFilter AndAlso Not DirectCast(obj, TunableFilter).UseCustomPMU Then
                         For Each signal In obj.OutputChannels
                             signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
                         Next
@@ -564,7 +564,7 @@ Namespace ViewModels
                     For Each signal In obj.OutputChannels
                         signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
                     Next
-                    _deSelectAllProcessConfigSteps()
+                    DeSelectAllProcessConfigSteps()
                     _addLog("Wrap step " & obj.StepCounter & " is deleted!")
                 Catch ex As Exception
                     MessageBox.Show("Error deleting a wrap step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
@@ -616,7 +616,7 @@ Namespace ViewModels
                         End If
                     Next
                     ProcessConfigure.NameTypeUnitElement.NameTypeUnitPMUList = newTypeUnits
-                    _deSelectAllProcessConfigSteps()
+                    DeSelectAllProcessConfigSteps()
                     If NameTypeUnitStatusFlag Then
                         'TODO: NameTypeUnit approach one, obsolete
                     Else
@@ -841,7 +841,7 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _reverseSignalPassedThroughNameTypeUnit()
+        Public Sub ReverseSignalPassedThroughNameTypeUnit()
             If NameTypeUnitStatusFlag Then
                 'TODO: NameTypeUnit approach 1 that is obsolete where all signal in this system will be changed
             Else
@@ -952,7 +952,7 @@ Namespace ViewModels
                 _processConfigStepDeSelected = value
             End Set
         End Property
-        Private Sub _deSelectAllProcessConfigSteps()
+        Public Sub DeSelectAllProcessConfigSteps()
             If CurrentSelectedStep IsNot Nothing Then
                 If Not CurrentSelectedStep.CheckStepIsComplete() Then
                     'here need to check if the currentSelectedStep is complete, if not, cannot switch

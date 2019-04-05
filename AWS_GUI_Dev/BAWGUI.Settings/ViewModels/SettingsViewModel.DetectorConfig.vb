@@ -153,7 +153,7 @@ Namespace ViewModels
                 _detectorConfigStepDeSelected = value
             End Set
         End Property
-        Private Sub _deSelectAllDetectors()
+        Public Sub DeSelectAllDetectors()
             _aDetectorStepDeSelected()
             If CurrentSelectedStep IsNot Nothing Then
                 If TypeOf CurrentSelectedStep Is DetectorBase Then
@@ -202,9 +202,9 @@ Namespace ViewModels
                     CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                 End If
             End If
-                ' if detector is already selected, then the selection is not changed, nothing needs to be done.
-                ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
-                If Not detector.IsStepSelected Then
+            ' if detector is already selected, then the selection is not changed, nothing needs to be done.
+            ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
+            If Not detector.IsStepSelected Then
                 _aDetectorStepDeSelected()
                 'If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso CurrentSelectedStep.InputChannels.Count = 0 Then
                 '    'Forms.MessageBox.Show("Detectors have to have input signals!", "Error!", MessageBoxButtons.OK)
@@ -337,7 +337,7 @@ Namespace ViewModels
                     If obj Is CurrentSelectedStep Then
                         CurrentSelectedStep = Nothing
                     Else
-                        _deSelectAllDetectors()
+                        DeSelectAllDetectors()
                     End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
@@ -410,7 +410,7 @@ Namespace ViewModels
                     If obj Is CurrentSelectedStep Then
                         CurrentSelectedStep = Nothing
                     Else
-                        _deSelectAllDetectors()
+                        DeSelectAllDetectors()
                     End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)

@@ -40,7 +40,7 @@ Namespace ViewModels
             _customizationSelected = New DelegateCommand(AddressOf _customizationStepSelection, AddressOf CanExecute)
             _selectedSignalChanged = New DelegateCommand(AddressOf _signalSelected, AddressOf CanExecute)
             _dataConfigStepSelected = New DelegateCommand(AddressOf _stepSelectedToEdit, AddressOf CanExecute)
-            _dataConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllDataConfigSteps, AddressOf CanExecute)
+            _dataConfigStepDeSelected = New DelegateCommand(AddressOf DeSelectAllDataConfigSteps, AddressOf CanExecute)
             _setCurrentFocusedTextbox = New DelegateCommand(AddressOf _currentFocusedTextBoxChanged, AddressOf CanExecute)
             _setCurrentFocusedTextboxUnarySteps = New DelegateCommand(AddressOf _currentFocusedTextBoxForUnaryStepsChanged, AddressOf CanExecute)
             '_selectedOutputSignalChanged = New DelegateCommand(AddressOf _outputSignalSelectionChanged, AddressOf CanExecute)
@@ -64,14 +64,14 @@ Namespace ViewModels
             _deleteTunableFilterOrMultirate = New DelegateCommand(AddressOf _deleteATunableFilterOrMultirate, AddressOf CanExecute)
             _multirateParameterChoice = New DelegateCommand(AddressOf _chooseParameterForMultirate, AddressOf CanExecute)
             _processConfigStepSelected = New DelegateCommand(AddressOf _processStepSelectedToEdit, AddressOf CanExecute)
-            _processConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllProcessConfigSteps, AddressOf CanExecute)
+            _processConfigStepDeSelected = New DelegateCommand(AddressOf DeSelectAllProcessConfigSteps, AddressOf CanExecute)
             _deleteNameTypeUnit = New DelegateCommand(AddressOf _deleteANameTypeUnit, AddressOf CanExecute)
             _addNameTypeUnit = New DelegateCommand(AddressOf _addANameTypeUnit, AddressOf CanExecute)
             _postProcessConfigStepSelected = New DelegateCommand(AddressOf _postProcessConfigureStepSelected, AddressOf CanExecute)
-            _postProcessConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllPostProcessConfigSteps, AddressOf CanExecute)
+            _postProcessConfigStepDeSelected = New DelegateCommand(AddressOf DeSelectAllPostProcessConfigSteps, AddressOf CanExecute)
             _deletePostProcessStep = New DelegateCommand(AddressOf _deleteAPostProcessStep, AddressOf CanExecute)
             _detectorSelectedToAdd = New DelegateCommand(AddressOf _addSelectedDetector, AddressOf CanExecute)
-            _detectorConfigStepDeSelected = New DelegateCommand(AddressOf _deSelectAllDetectors, AddressOf CanExecute)
+            _detectorConfigStepDeSelected = New DelegateCommand(AddressOf DeSelectAllDetectors, AddressOf CanExecute)
             _detectorSelected = New DelegateCommand(AddressOf _selectedADetector, AddressOf CanExecute)
             _deleteDetector = New DelegateCommand(AddressOf _deleteADetector, AddressOf CanExecute)
             _alarmingDetectorSelectedToAdd = New DelegateCommand(AddressOf _addSelectedAlarmingDetector, AddressOf CanExecute)
@@ -2666,6 +2666,10 @@ Namespace ViewModels
                             newOutput.PassedThroughProcessor += 1
                         End If
                         newOutput.IsCustomSignal = True
+                        If DirectCast(_currentSelectedStep, TunableFilter).Type = TunableFilterType.FrequencyDerivation Then
+                            newOutput.TypeAbbreviation = "F"
+                            newOutput.Unit = "Hz"
+                        End If
                         newOutput.OldUnit = newOutput.Unit
                         newOutput.OldSignalName = newOutput.SignalName
                         newOutput.OldTypeAbbreviation = newOutput.TypeAbbreviation
@@ -4301,7 +4305,7 @@ Namespace ViewModels
         ''' <summary>
         ''' When user click outside the step list and none of the steps should be selected, then we need to uncheck all checkboxes
         ''' </summary>
-        Private Sub _deSelectAllDataConfigSteps()
+        Public Sub DeSelectAllDataConfigSteps()
             If _currentSelectedStep IsNot Nothing Then
 
                 If Not _currentSelectedStep.CheckStepIsComplete() Then
@@ -4424,7 +4428,7 @@ Namespace ViewModels
                     If obj Is CurrentSelectedStep Then
                         CurrentSelectedStep = Nothing
                     Else
-                        _deSelectAllDataConfigSteps()
+                        DeSelectAllDataConfigSteps()
                     End If
                     CurrentSelectedStep = Nothing
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
@@ -4660,27 +4664,27 @@ Namespace ViewModels
                 Try
                     If _oldTabIndex = 1 And _currentTabIndex <> 1 Then
                         '_groupAllDataConfigOutputSignal()
-                        _deSelectAllDataConfigSteps()
+                        DeSelectAllDataConfigSteps()
                     End If
                     If _oldTabIndex = 2 And _currentTabIndex <> 2 Then
                         '_groupAllProcessConfigOutputSignal()
-                        _deSelectAllProcessConfigSteps()
+                        DeSelectAllProcessConfigSteps()
                     End If
                     If _oldTabIndex = 3 And _currentTabIndex <> 3 Then
                         '_groupAllPostProcessConfigOutputSignal()
-                        _deSelectAllPostProcessConfigSteps()
+                        DeSelectAllPostProcessConfigSteps()
                     End If
                     If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
                         '_groupAllPostProcessConfigOutputSignal()
-                        _deSelectAllDetectors()
+                        DeSelectAllDetectors()
                     End If
                     If _oldTabIndex = 5 And _currentTabIndex <> 5 Then
                         '_groupAllPostProcessConfigOutputSignal()
-                        _deSelectAllDetectors()
+                        DeSelectAllDetectors()
                     End If
 
-                    If (_currentTabIndex <= 1 AndAlso _oldTabIndex >= 2) OrElse (_currentTabIndex >= 2 AndAlso _oldTabIndex <= 1) Then
-                        _reverseSignalPassedThroughNameTypeUnit()
+                    If (_currentTabIndex < 2 AndAlso _oldTabIndex >= 2) OrElse (_currentTabIndex >= 2 AndAlso _oldTabIndex < 2) Then
+                        ReverseSignalPassedThroughNameTypeUnit()
                         _reGroupRawSignalByType()
                     End If
 

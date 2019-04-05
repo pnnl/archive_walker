@@ -54,7 +54,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             UpdatePlot = new RelayCommand(_updatePlot);
             PlotSelected = new RelayCommand(_plotSelectedToEdit);
             DeleteAPlot = new RelayCommand(_deleteAPlot);
-            AllPlotsDeSelected = new RelayCommand(_deSelectAllPlots);
+            AllPlotsDeSelected = new RelayCommand(DeSelectAllPlots);
 
             _inspectionAnalysisParams = new InspectionAnalysisParametersViewModel();
             SpectralInspection = new RelayCommand(_spectralInspection);
@@ -2899,7 +2899,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             }
         }
         public ICommand AllPlotsDeSelected { set; get; }
-        private void _deSelectAllPlots(object obj)
+        public void DeSelectAllPlots(object obj)
         {
             if (SelectedSignalPlotPanel != null)
             {
