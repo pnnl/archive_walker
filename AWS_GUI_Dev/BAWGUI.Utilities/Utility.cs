@@ -129,7 +129,7 @@ namespace BAWGUI.Utilities
                 for (var index = 1; index <= numberList.Count - 1; index++)
                 {
                     var difference = numberList[index] - numberList[index - 1];
-                    var multiplesOf2PI = (Math.Abs(difference) + Math.PI) / (2 * Math.PI);
+                    var multiplesOf2PI = Math.Floor((Math.Abs(difference) + Math.PI) / (2 * Math.PI));
                     if (difference >= Math.PI)
                         numberList[index] = numberList[index] - 2 * Math.PI * multiplesOf2PI;
                     else if (difference <= -Math.PI)
