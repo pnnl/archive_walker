@@ -88,7 +88,7 @@ namespace MapService.ViewModels
             }
             if (numberOfSigs > 1)
             {
-                RBColors = OxyPalettes.Rainbow(numberOfSigs).Colors.ToList();
+                RBColors = OxyPalettes.Jet(numberOfSigs).Colors.ToList();
             }
             else
             {
@@ -144,7 +144,7 @@ namespace MapService.ViewModels
                     if (points.Count > 2)
                     {
                         var newRoute = new GMapRoute(newLine);
-                        newRoute.Shape = new Path() { Stroke = color, StrokeThickness = 2, ToolTip = signal.Signal.SignalName };
+                        newRoute.Shape = new Path() { Stroke = color, StrokeThickness = 4, ToolTip = signal.Signal.SignalName };
                         newRoute.Tag = signal.Signal.SignalName;
                         Gmap.Markers.Add(newRoute);
                     }
@@ -361,7 +361,7 @@ namespace MapService.ViewModels
                     newCurve.Add(new PointLatLng(p.Y, p.X));
                 }
                 var newRoute = new GMapRoute(newCurve);
-                newRoute.Shape = new Path() { Stroke = pair.Color, StrokeThickness = 2, ToolTip = pair.Tag };
+                newRoute.Shape = new Path() { Stroke = pair.Color, StrokeThickness = 4, ToolTip = pair.Tag };
                 newRoute.Tag = pair.Tag;
                 curveList.Add(newRoute);
             }

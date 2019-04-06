@@ -66,7 +66,11 @@ namespace MapService.ViewModels
             {
                 Gmap.Manager.Mode = AccessMode.ServerAndCache;
             }
+#if DEBUG
             Gmap.CacheLocation = "..\\MapCache";
+#else
+            Gmap.CacheLocation = "\\MapCache";
+#endif
             Gmap.MouseMove += GMap_MouseMove;
             Gmap.MouseLeftButtonDown += GMap_MouseLeftButtonDown;
 
