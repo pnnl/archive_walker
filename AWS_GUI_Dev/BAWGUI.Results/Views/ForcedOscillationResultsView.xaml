@@ -46,9 +46,11 @@
                                 </Grid.ColumnDefinitions>
                                 <map:MapView DataContext="{Binding ResultMapVM}" Grid.Column="0" Margin="2"/>
                                 <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding ResultMapVM.MaxColor, StringFormat=Max:&#x0a;{0:e1}}" Margin="2" TextAlignment="Center"/>
+                                    <!--<TextBlock Text="{Binding ResultMapVM.MaxColor, StringFormat=Max:&#x0a;{0:e1}}" Margin="2" TextAlignment="Center"/>-->
+                                    <TextBlock Text="Max" Margin="2" TextAlignment="Center"/>
                                     <Rectangle Width="20" Height="200" Grid.Column="1" Margin="2" Fill="{Binding ResultMapVM.RBColors, Converter={StaticResource OxyColorToGradientBrushConverter}}"/>
-                                    <TextBlock Text="{Binding ResultMapVM.MinColor, StringFormat=Min:&#x0a;{0:e1}}" Margin="2" TextAlignment="Center"/>
+                                    <!--<TextBlock Text="{Binding ResultMapVM.MinColor, StringFormat=Min:&#x0a;{0:e1}}" Margin="2" TextAlignment="Center"/>-->
+                                    <TextBlock Text="Min" Margin="2" TextAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </Grid>
