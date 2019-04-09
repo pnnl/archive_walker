@@ -7,17 +7,32 @@ time_end = datestr(EndTime,'yyyy-mm-dd HH:MM:SS');
 
 %% Read the PI presets
 
-[PresetList,Server,Instance,GEPPort,SystemXML,ID] = ReadOHpresets(PresetFile);
+PresetInfo = ReadOHpresets(PresetFile);
 
 %% Choose a preset
 
 % Reduce to just the selected preset
-KeepIdx = strcmp(PresetList,preset);
-Server = Server{KeepIdx};
-Instance = Instance{KeepIdx};
-GEPPort = GEPPort{KeepIdx};
-SystemXML = SystemXML{KeepIdx};
-ID = ID{KeepIdx};
+KeepIdx = strcmp({PresetInfo.name},preset);
+PresetInfo = PresetInfo(KeepIdx);
+
+if isempty(PresetInfo)
+    error(['Preset ' preset ' not found in ' PresetFile]);
+end
+
+Server = PresetInfo.Signal(1).Server;
+Instance = PresetInfo.Signal(1).Instance;
+IDtemp = {PresetInfo.Signal.ID};
+if length(IDtemp) > 1
+    ID = cell(1,2*length(IDtemp)-1);
+    ID(1:2:end) = IDtemp;
+    ID(2:2:end) = {','};
+    ID = [ID{:}];
+else
+    ID = IDtemp{1};
+end
+
+PMUlist = {PresetInfo.Signal.PMU};
+fsList = str2double({PresetInfo.Signal.fs});
 
 %% Load GetHistorianData from C# dll.
 % Note that The ability to unload an assembly is not available in MATLAB,
@@ -41,56 +56,114 @@ catch
     error(['Adding ReadHistorian.dll unsuccessful. Ensure ' dllpath ' is valid.']);
 end
 
-%% Setup rules to query data from OpenHistorian
-Configuration                 = struct;
-% "historianServer": Historian server host IP or DNS name. Can be optionally suffixed with port number, e.g.: historian:38402.
-% "instanceName":    Instance name of the historian, e.g. PPA
-% "GEPPort":         Historian Getaway Port Number, e.g. 6175
-% "startTime":       Start time of desired data range in GMT
-% "stopTime":        End time of desired data range in GMT
-% "measurementIDs":  Comma separated list of measurement ID values; set to null ('') to retrieve values for all measurements
-% "datacsv":         filename of a csv storing Historian data; set to null ('') to skip it
-% "SystemXML":       a defaul xml file in OpenHistorian software folder contains all the details of active measurements
+%%
 
-Configuration.historianServer = Server;
-Configuration.instanceName    = Instance;
-Configuration.GEPPort         = GEPPort;
-Configuration.startTime       = time_start;
-Configuration.stopTime        = time_end;
-Configuration.measurementIDs  = ID;
-Configuration.datacsv         = '';
-Configuration.SystemXML       = SystemXML;
+datacsv = '.\datalist.csv';
+GetHistorian.GetHistorianMeasurement.Main_CSV(datacsv,Server,Instance,time_start,time_end,ID);
+DataTable = readtable(datacsv,'Delimiter',',','Format','%d %s %f');
+delete datalist.csv
 
 %%
 
-DataStruct = ReadHistorian(Configuration);
+IDtemp = str2double(IDtemp);
 
-fs = unique([DataStruct.FramesPerSecond]);
-if length(fs) > 1
-    error('All signals in a preset must have the same reporting rate.');
-end
-
-% Determine the offset between the requested and retrieved times in hours
+PMUu = unique(PMUlist);
+PMUuPreset = strcat(PMUu,['_' preset]);
+MT = cell(1,length(PMUuPreset));
+PMU = struct('PMU_Name',PMUuPreset,'Signal_Name',MT,'Signal_Type',MT,'Signal_Unit',MT,'Signal_Time',MT,'Data',MT);
+PMUtemp = struct('Data',MT,'Time',MT,'fs',MT);
 time_offset = [];
-for idx = 1:length(DataStruct)
-    if isempty(DataStruct(idx).TimeSeries)
-        % The time series is empty for this signal, so skip to the next one
-        continue
-    end
+for PMUidx = 1:length(PMU)
+    SigIdx = find(strcmp(PMUu{PMUidx},PMUlist));
     
-    time_offset = round((datenum(DataStruct(idx).TimeSeries{1,1}{1}) - StartTime)*24);
-    break
-end
-if isempty(time_offset)
-    error('No data was returned.');
+    PMU(PMUidx).Signal_Name = {PresetInfo.Signal(SigIdx).Signal_Name};
+    PMU(PMUidx).Signal_Type = {PresetInfo.Signal(SigIdx).Signal_Type};
+    PMU(PMUidx).Signal_Unit = {PresetInfo.Signal(SigIdx).Signal_Unit};
+    
+    PMUtemp(PMUidx).fs = fsList(SigIdx);
+    
+    PMUtemp(PMUidx).Data = cell(1,length(SigIdx));
+    PMUtemp(PMUidx).Time = cell(1,length(SigIdx));
+    for k = 1:length(SigIdx)
+        ThisSigIdx = SigIdx(k);
+        
+        ThisDataTable = DataTable(DataTable.PointID == IDtemp(ThisSigIdx),:);
+        
+        if size(ThisDataTable,1) < 2
+            % No data was loaded
+            
+            PMUtemp(PMUidx).Data{k} = [];
+            PMUtemp(PMUidx).Time{k} = NaN;
+            
+            continue;
+        end
+        
+        % One extra sample is always retrieved, so remove it
+        ThisDataTable(end,:) = [];
+        
+        PMUtemp(PMUidx).Data{k} = ThisDataTable.Value;
+        
+        PMUtemp(PMUidx).Time{k} = datenum(ThisDataTable.Time,'yyyy-mm-dd HH:MM:SS.FFF');
+        
+        if isempty(time_offset)
+            time_offset = round((PMUtemp(PMUidx).Time{k}(1) - StartTime)*24);
+        end
+    end
 end
 
-PMU = ConvertHistorianStructToPMU(DataStruct,StartTime,EndTime,fs,time_offset,preset);
 
-tPMU = PMU(1).Signal_Time.Signal_datenum;
+fs = unique([PMUtemp.fs]);
+if length(fs) > 1
+    error('All signals in a preset must have the same sampling rate');
+end
+tPMU = StartTime + (0:1/fs:FileLength)'/86400;
+tPMU = tPMU(1:end-1);
+N = length(tPMU);
+
+for PMUidx = 1:length(PMU)
+    for idx = 1:length(PMU(PMUidx).Signal_Name)
+        if N == length(PMUtemp(PMUidx).Data{idx})
+            % Has the right number of samples, skip to the next one
+            continue;
+        elseif isempty(PMUtemp(PMUidx).Data{idx})
+            % Signal was not returned from PI database (data is missing), so
+            % set the signal to a vector of NaNs and skip to next signal
+            PMUtemp(PMUidx).Data{idx} = NaN(N,1);
+            continue;
+        end
+
+        % Wrong number of samples - need to identify missing with NaN
+        try
+            % Identify missing samples at the beginning
+            NumNanToAdd = near(PMUtemp(PMUidx).Time{idx}(1),tPMU)-1;
+            PMUtemp(PMUidx).Time{idx} = [tPMU(1:NumNanToAdd); PMUtemp(PMUidx).Time{idx}];
+            PMUtemp(PMUidx).Data{idx} = [NaN(NumNanToAdd,1); PMUtemp(PMUidx).Data{idx}];
+
+            % Look for jumps larger than 1.5 times the sampling interval
+            JumpIdx = find(diff(PMUtemp(PMUidx).Time{idx})*86400 > 1.5*1/fs);
+            while ~isempty(JumpIdx)
+                NewIdx = near(PMUtemp(PMUidx).Time{idx}(JumpIdx(1)+1),tPMU);
+
+                PMUtemp(PMUidx).Time{idx} = [PMUtemp(PMUidx).Time{idx}(1:JumpIdx(1)); tPMU(JumpIdx(1)+1:NewIdx-1); PMUtemp(PMUidx).Time{idx}(JumpIdx(1)+1:end)];
+                PMUtemp(PMUidx).Data{idx} = [PMUtemp(PMUidx).Data{idx}(1:JumpIdx(1)); NaN(length(JumpIdx(1)+1:NewIdx-1),1); PMUtemp(PMUidx).Data{idx}(JumpIdx(1)+1:end)];
+
+                JumpIdx = find(diff(PMUtemp(PMUidx).Time{idx})*86400 > 1.5*1/fs);
+            end
+
+            % Identify missing samples at the end
+            NumNanToAdd = N - near(PMUtemp(PMUidx).Time{idx}(end),tPMU);
+            PMUtemp(PMUidx).Time{idx} = [PMUtemp(PMUidx).Time{idx}; tPMU(end-NumNanToAdd+1:end)];
+            PMUtemp(PMUidx).Data{idx} = [PMUtemp(PMUidx).Data{idx}; NaN(NumNanToAdd,1)];
+        catch
+            % Attempt to identify missing data failed, so set entire signal to
+            % NaN
+            warning(['Attempt to set missing data in ' PMU(PMUidx).Signal_Name{idx} ' to NaN failed. Setting all values to NaN.']);
+            PMUtemp(PMUidx).Data{idx} = NaN(N,1);
+        end
+    end
+end
 
 %% Build final PMU structure
-
 time_offsetSign = sign(time_offset);
 time_offset = time(caldays(0) + hours(abs(time_offset)));
 time_offset.Format = 'hh:mm';
@@ -98,9 +171,18 @@ time_offset = char(time_offset);
 if time_offsetSign == -1
     time_offset = ['-' time_offset];
 end
-for idx = 1:length(PMU)
-    PMU(idx).File_Name = PresetFile;
-    PMU(idx).Stat = zeros(size(PMU(idx).Data,1),1);
-    PMU(idx).Flag = false(size(PMU(idx).Data,1),size(PMU(idx).Data,2),Num_Flags);
-    PMU(idx).Time_Zone = time_offset;
+
+for PMUidx = 1:length(PMU)
+    PMU(PMUidx).Signal_Time.Time_String = cellstr(datestr(tPMU,'yyyy-mm-dd HH:MM:SS.FFF'));
+    PMU(PMUidx).Signal_Time.Signal_datenum = tPMU;
+    PMU(PMUidx).Signal_Time.datetime = datetime(tPMU,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
+    PMU(PMUidx).Data = zeros(length(PMUtemp(PMUidx).Data{1}),length(PMUtemp(PMUidx).Data));
+    for idx = 1:length(PMUtemp(PMUidx).Data)
+        PMU(PMUidx).Data(:,idx) = PMUtemp(PMUidx).Data{idx};
+    end
+
+    PMU(PMUidx).File_Name = PresetFile;
+    PMU(PMUidx).Stat = zeros(size(PMU(PMUidx).Data,1),1);
+    PMU(PMUidx).Flag = false(size(PMU(PMUidx).Data,1),size(PMU(PMUidx).Data,2),Num_Flags);
+    PMU(PMUidx).Time_Zone = time_offset;
 end
