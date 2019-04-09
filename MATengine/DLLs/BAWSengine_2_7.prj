@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="1498269181" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="3681089207" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.23</param.version>
+    <param.version>2.24</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -47,7 +47,6 @@
     <param.net.tsa.metadata />
     <param.net.tsa.metadata.assembly>C:\Users\foll154\Documents\MATLAB</param.net.tsa.metadata.assembly>
     <param.net.saved.interface />
-    <param.cpp.api>option.cpp.all</param.cpp.api>
     <unset>
       <param.icon />
       <param.icons />
@@ -61,7 +60,6 @@
       <param.installpath.string />
       <param.installpath.combo />
       <param.logo />
-      <param.install.notes />
       <param.target.install.notes />
       <param.intermediate />
       <param.files.only />
@@ -93,7 +91,6 @@
       <param.net.tsa.metadata />
       <param.net.tsa.metadata.assembly />
       <param.net.saved.interface />
-      <param.cpp.api />
     </unset>
     <fileset.exports>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
@@ -131,7 +128,6 @@
     </fileset.classes>
     <fileset.resources />
     <fileset.depfun>
-      <file>${MATLAB_ROOT}\examples\matlab\data.csv</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadPIpresets.m</file>
@@ -162,7 +158,6 @@
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMA.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMApS.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\RunRetCon.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
@@ -273,17 +268,18 @@
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\GenerateWindAppReport.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindAppCatAndRank.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindApplication.m</file>
+      <file>C:\Users\foll154\Documents\DTSA\ISONE cases\TestCasesLibrary_LoadData2Matlab\TestCasesLibrary_LoadData2Matlab\LS_ARMApS.m</file>
     </fileset.depfun>
     <fileset.package />
     <build-deliverables>
       <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="BAWSengine.dll" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\BAWSengine.dll</file>
       <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="BAWSengine_overview.html" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\BAWSengine_overview.html</file>
-      <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="BAWSengineNative.dll" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\BAWSengineNative.dll</file>
       <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="readme.txt" optional="true">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\BAWSengine_2_7\for_testing" name="BAWSengineNative.dll" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_testing\BAWSengineNative.dll</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2018A</root>
+      <root>C:\Program Files\MATLAB\R2017A</root>
       <toolboxes>
         <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />

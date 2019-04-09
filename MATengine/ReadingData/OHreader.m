@@ -15,6 +15,10 @@ PresetInfo = ReadOHpresets(PresetFile);
 KeepIdx = strcmp({PresetInfo.name},preset);
 PresetInfo = PresetInfo(KeepIdx);
 
+if isempty(PresetInfo)
+    error(['Preset ' preset ' not found in ' PresetFile]);
+end
+
 Server = PresetInfo.Signal(1).Server;
 Instance = PresetInfo.Signal(1).Instance;
 IDtemp = {PresetInfo.Signal.ID};
@@ -24,7 +28,7 @@ if length(IDtemp) > 1
     ID(2:2:end) = {','};
     ID = [ID{:}];
 else
-    ID = IDtemp;
+    ID = IDtemp{1};
 end
 
 PMUlist = {PresetInfo.Signal.PMU};
@@ -64,12 +68,13 @@ delete datalist.csv
 IDtemp = str2double(IDtemp);
 
 PMUu = unique(PMUlist);
-MT = cell(1,length(PMUu));
-PMU = struct('PMU_Name',PMUu,'Signal_Name',MT,'Signal_Type',MT,'Signal_Unit',MT,'Signal_Time',MT,'Data',MT);
+PMUuPreset = strcat(PMUu,['_' preset]);
+MT = cell(1,length(PMUuPreset));
+PMU = struct('PMU_Name',PMUuPreset,'Signal_Name',MT,'Signal_Type',MT,'Signal_Unit',MT,'Signal_Time',MT,'Data',MT);
 PMUtemp = struct('Data',MT,'Time',MT,'fs',MT);
 time_offset = [];
 for PMUidx = 1:length(PMU)
-    SigIdx = find(strcmp(PMU(PMUidx).PMU_Name,PMUlist));
+    SigIdx = find(strcmp(PMUu{PMUidx},PMUlist));
     
     PMU(PMUidx).Signal_Name = {PresetInfo.Signal(SigIdx).Signal_Name};
     PMU(PMUidx).Signal_Type = {PresetInfo.Signal(SigIdx).Signal_Type};
@@ -82,7 +87,7 @@ for PMUidx = 1:length(PMU)
     for k = 1:length(SigIdx)
         ThisSigIdx = SigIdx(k);
         
-        ThisDataTable = DataTable(DataTable.ID == IDtemp(ThisSigIdx),:);
+        ThisDataTable = DataTable(DataTable.PointID == IDtemp(ThisSigIdx),:);
         
         if size(ThisDataTable,1) < 2
             % No data was loaded

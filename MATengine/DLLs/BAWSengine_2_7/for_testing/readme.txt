@@ -1,24 +1,32 @@
-BAWSengine MATLAB .NET Assembly (.NET Component)
+MATLAB .NET Assembly (.NET Component)
+
 
 1. Prerequisites for Deployment 
 
-Verify that version 9.4 (R2018a) of the MATLAB Runtime is installed.   
-If not, you can run the MATLAB Runtime installer.
-To find its location, enter
+. Verify the MATLAB Runtime is installed and ensure you
+  have installed version 9.2 (R2017a).   
+
+. If the MATLAB Runtime is not installed, do the following:
+  (1) enter
   
-    >>mcrinstaller
+      >>mcrinstaller
       
-at the MATLAB prompt.
-NOTE: You will need administrator rights to run the MATLAB Runtime installer. 
+      at MATLAB prompt. The MCRINSTALLER command displays the 
+      location of the MATLAB Runtime installer.
 
-Alternatively, download and install the Windows version of the MATLAB Runtime for R2018a 
-from the following link on the MathWorks website:
+  (2) run the MATLAB Runtime installer.
 
-    http://www.mathworks.com/products/compiler/mcr/index.html
+Or download the Windows 64-bit version of the MATLAB Runtime for R2017a 
+from the MathWorks Web site by navigating to
+
+   http://www.mathworks.com/products/compiler/mcr/index.html
    
+
 For more information about the MATLAB Runtime and the MATLAB Runtime installer, see 
 Package and Distribute in the MATLAB Compiler SDK documentation  
-in the MathWorks Documentation Center.
+in the MathWorks Documentation Center.  
+      
+NOTE: You will need administrator rights to run MCRInstaller.
 
 2. Files to Deploy and Package
 
@@ -27,10 +35,11 @@ in the MathWorks Documentation Center.
 -BAWSengineNative.dll
    -contains the generated component using native API.
 -This readme file
-    Note: if end users are unable to download the MATLAB Runtime using the
-    instructions in the previous section, include it when building your 
-    component by clicking the "Runtime included in package" link in the
-    Deployment Tool.
+
+. If the target machine does not have the version 9.2 of the MATLAB Runtime installed, 
+  and the end users are unable to download the MATLAB Runtime using the above link, 
+  include MCRInstaller.exe.
+
 
 
 Auto-generated Documentation Templates:
@@ -38,7 +47,7 @@ Auto-generated Documentation Templates:
 MWArray.xml - This file contains the code comments for the MWArray data conversion 
               classes and their methods. This file can be found in either the component 
               distrib directory or in
-              <mcr_root>*\toolbox\dotnetbuilder\bin\win64\v4.0
+              <mcr_root>*\toolbox\dotnetbuilder\bin\win64\v2.0
 
 BAWSengine_overview.html - HTML overview documentation file for the generated component. 
                            It contains the requirements for accessing the component and 
@@ -49,6 +58,8 @@ BAWSengine.xml - This file contains the code comments for the BAWSengine compone
                            this file can be combined with either or both of the previous 
                            files to generate online documentation for the BAWSengine 
                            component.
+
+                 
 
 
 3. Resources
@@ -65,11 +76,13 @@ Examples of .NET Web Applications  Web Deployment in the MATLAB
 
 4. Definitions
 
-For information on deployment terminology, go to
-http://www.mathworks.com/help and select MATLAB Compiler >
-Getting Started > About Application Deployment >
-Deployment Product Terms in the MathWorks Documentation
+For information on deployment terminology, go to 
+http://www.mathworks.com/help. Select MATLAB Compiler >   
+Getting Started > About Application Deployment > 
+Deployment Product Terms in the MathWorks Documentation 
 Center.
+
+
 
 * NOTE: <mcr_root> is the directory where the MATLAB Runtime is installed on the target 
         machine.
