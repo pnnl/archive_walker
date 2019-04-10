@@ -42,7 +42,7 @@ catch e
         % Repeat error so that the message is captured by the GUI
         throw(MException('Engine:Error',['FileType = ' num2str(FileType) ' is not a supported value.']));
     else
-        throw(MException('Engine:Error','Attempt to read the file failed. It may be corrupt or the wrong type. Error message: \n%s',e.message));
+        throw(MException('Engine:Error','Attempt to read the file failed. It may be corrupt or the wrong format. Error message: \n%s',e.message));
     end
 end
 

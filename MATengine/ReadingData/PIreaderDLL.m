@@ -29,7 +29,11 @@ time_end = datestr(EndTime,'dd-mmm-yyyy HH:MM:SS');
 
 %% Read the PI presets and Choose a preset
 [PMU,Server] = ReadPIpresets(PresetFile);
-Server = Server{strcmp({PMU.PMU_Name},preset)};
+PresetIdx = find(strcmp({PMU.PMU_Name},preset));
+if isempty(PresetIdx)
+    error(['Preset ' preset ' was not found in ' PresetFile]);
+end
+Server = Server{PresetIdx};
 PMU = PMU(strcmp({PMU.PMU_Name},preset));
 
 %% Get the PIData of all signals
@@ -40,7 +44,7 @@ end
 % Use OpenPI to query data from server
 interval = 0;   % No interpolation of points
 OpenPI.Model.GetPIPoints(tagnames, time_start, time_end, interval);
-ALLDataTable = readtable('Data.csv','Delimiter',',','Format','%d %f %f'); delete('Data.csv');
+ALLDataTable = readtable('Data.csv','Delimiter',',','Format','%d %f %f','TreatAsEmpty','System.__ComObject'); delete('Data.csv');
 
 %% Setup Tag Names
 v = cell(1,length(PMU.Signal_Name));

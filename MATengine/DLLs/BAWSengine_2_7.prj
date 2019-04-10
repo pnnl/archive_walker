@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="4291995801" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="3681089207" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.22</param.version>
+    <param.version>2.24</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -15,11 +15,7 @@
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
-    <param.target.install.notes>You must have Python 2.7, 3.4, or 3.5 on your machine to install this package. Go to the directory to which setup.py and your package have been written. Then execute:
-
-        python setup.py install [options]
-
-For details, see the readme.txt distributed with this package.</param.target.install.notes>
+    <param.target.install.notes />
     <param.intermediate>${PROJECT_ROOT}\BAWSengine_2_7\for_testing</param.intermediate>
     <param.files.only>${PROJECT_ROOT}\BAWSengine_2_7\for_redistribution_files_only</param.files.only>
     <param.output>${PROJECT_ROOT}\BAWSengine_2_7\for_redistribution</param.output>
@@ -64,6 +60,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <param.installpath.string />
       <param.installpath.combo />
       <param.logo />
+      <param.target.install.notes />
       <param.intermediate />
       <param.files.only />
       <param.output />
@@ -132,8 +129,6 @@ For details, see the readme.txt distributed with this package.</param.target.ins
     <fileset.resources />
     <fileset.depfun>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ConvertHistorianStructToPMU.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadHistorian.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadPIpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\ChangeNameTypeUnit.m</file>
@@ -163,7 +158,6 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMA.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMApS.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\RunRetCon.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
@@ -274,6 +268,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\GenerateWindAppReport.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindAppCatAndRank.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindApplication.m</file>
+      <file>C:\Users\foll154\Documents\DTSA\ISONE cases\TestCasesLibrary_LoadData2Matlab\TestCasesLibrary_LoadData2Matlab\LS_ARMApS.m</file>
     </fileset.depfun>
     <fileset.package />
     <build-deliverables>

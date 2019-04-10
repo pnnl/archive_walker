@@ -49,7 +49,7 @@ for MMidx = 1:length(MMfolders)
     end
     
     fs = round((length(t)-1)/minutes(t(end)-t(1)));
-    EventSepSamp = EventSepMinutes*fs;
+    EventSepSamp = EventSepMinutes*60*fs;
     
     KeepIdx = (StartTimeDT <= t) & (t <= EndTimeDT);
     MM = MM(KeepIdx,:);
