@@ -2939,7 +2939,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     }
                     else if (info.FileType == DataFileType.OpenHistorian)
                     {
-                        _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "OpenHistorian");
+                        _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "openHistorian");
                     }
                 }
                 catch (Exception ex)
