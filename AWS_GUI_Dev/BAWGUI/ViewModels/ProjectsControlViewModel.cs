@@ -121,20 +121,31 @@ namespace BAWGUI.RunMATLAB.ViewModels
             get { return _resultsStoragePath; }
             set
             {
-                _resultsStoragePath = value;
-                BAWGUI.Properties.Settings.Default.ResultStoragePath = value;
-                BAWGUI.Properties.Settings.Default.Save();
-                try
+                if (_resultsStoragePath != value)
                 {
-                    _generateProjectTree(_resultsStoragePath);
+                    _resultsStoragePath = value;
+                    BAWGUI.Properties.Settings.Default.ResultStoragePath = value;
+                    BAWGUI.Properties.Settings.Default.Save();
+                    //CoordinateMapping.Properties.Settings.Default.LocationCoordinatesFilePath = value + "\\SiteCoordinatesConfig.xml";
+                    //CoordinateMapping.Properties.Settings.Default.Save();
+                    try
+                    {
+                        _generateProjectTree(_resultsStoragePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
+                    }
+                    OnPropertyChanged();
+                    OnResultsStoragePathChanged(value);
                 }
-                catch (Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
-                }
-                OnPropertyChanged();
             }
         }
+        protected virtual void OnResultsStoragePathChanged(string e)
+        {
+            ResultsStoragePathChanged?.Invoke(this, e);
+        }
+        public event EventHandler<string> ResultsStoragePathChanged;
         public ICommand BrowseResultsStorage { get; set; }
         private void _browseResultsStorage(object obj)
         {

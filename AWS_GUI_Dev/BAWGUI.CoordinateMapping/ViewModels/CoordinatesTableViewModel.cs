@@ -127,6 +127,21 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             }
         }
         private string _locationCoordinatesFilePath;
+        public string LocationCoordinatesFilePath
+        {
+            get { return _locationCoordinatesFilePath; }
+            set
+            {
+                if (_locationCoordinatesFilePath != value && File.Exists(value))
+                {
+                    _locationCoordinatesFilePath = value;
+                    Properties.Settings.Default.LocationCoordinatesFilePath = value;
+                    Properties.Settings.Default.Save();
+                    _readLocationCoordsFile(value);
+                    OnPropertyChanged();
+                }
+            }
+        }
         public ICommand LoadCoordinates { get; set; }
         private void _openCoordsFile(object obj)
         {

@@ -40,7 +40,14 @@ namespace BAWGUI.ViewModels
             InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
             InspectSignalByTimeRange = new RelayCommand(_inpsectAllSignalsByTimeRange);
             SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
+            _projectControlVM.ResultsStoragePathChanged += _projectControlVM_ResultsStoragePathChanged;
         }
+
+        private void _projectControlVM_ResultsStoragePathChanged(object sender, string e)
+        {
+            CoordsTableVM.LocationCoordinatesFilePath = e + "\\SiteCoordinatesConfig.xml";
+        }
+
         //private void _settingsVM_SaveNewTasl(ref SettingsViewModel svm)
         //{
         //    throw new NotImplementedException();
