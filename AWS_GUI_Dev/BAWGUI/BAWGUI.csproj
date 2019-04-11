@@ -107,6 +107,9 @@
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>archive_walker_gray_final_KT6_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GMap.NET.Core, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -377,6 +380,9 @@
     <Resource Include="..\BAWGUI.Resources\Images\bigMarkerGreen.png">
       <Link>MyResources\bigMarkerGreen.png</Link>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="archive_walker_gray_final_KT6_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

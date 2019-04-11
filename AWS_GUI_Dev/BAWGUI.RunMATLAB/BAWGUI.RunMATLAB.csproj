@@ -68,13 +68,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BAWSengine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MATengine\DLLs\BAWSengine_2_7\for_redistribution_files_only\BAWSengine.dll</HintPath>
+    <Reference Include="BAWSengine">
+      <HintPath>..\..\MATengine\DLLs\BAWSengine_R2018a\for_redistribution_files_only\BAWSengine.dll</HintPath>
     </Reference>
-    <Reference Include="MWArray, Version=2.17.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
+    <Reference Include="MWArray, Version=2.18.1.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\MATLAB\MATLAB Runtime\v92\toolbox\dotnetbuilder\bin\win64\v4.0\MWArray.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\MATLAB\MATLAB Runtime\v94\toolbox\dotnetbuilder\bin\win64\v4.0\MWArray.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
