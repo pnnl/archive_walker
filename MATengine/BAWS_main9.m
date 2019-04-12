@@ -386,6 +386,16 @@ while(~min(done))
         Unpause = false;
     end
     
+    % Store the sparse PMU structure for the previous file
+    % Make sure the last focus file time is available first
+    if (~isempty(DataInfo.LastFocusFileTime)) && (strcmp(RunMode,'Normal'))
+        SparsePath = [InitializationPath '\SparsePMU\' datestr(DataInfo.LastFocusFileTime,'yyyy')];
+        if exist(SparsePath,'dir') == 0
+            mkdir(SparsePath);
+        end
+        save([SparsePath '\SparsePMU_' datestr(DataInfo.LastFocusFileTime,'yyyymmdd')],'SparsePMU');
+    end
+    
     
     % Check if the RunFlag file exists
     if (exist([ControlPath '\RunFlag.txt'],'file') == 0) && (~isempty(ControlPath))
@@ -444,16 +454,6 @@ while(~min(done))
     
     % If running in normal mode:
     if strcmp(RunMode,'Normal')
-        % Store the sparse PMU structure for the previous file
-        % Make sure the last focus file time is available first
-        if ~isempty(DataInfo.LastFocusFileTime)
-            SparsePath = [InitializationPath '\SparsePMU\' datestr(DataInfo.LastFocusFileTime,'yyyy')];
-            if exist(SparsePath,'dir') == 0
-                mkdir(SparsePath);
-            end
-            save([SparsePath '\SparsePMU_' datestr(DataInfo.LastFocusFileTime,'yyyymmdd')],'SparsePMU');
-        end
-        
         % If the last focus file time is available
         %   AND
         % If the day of the last focus file is different than the day of the

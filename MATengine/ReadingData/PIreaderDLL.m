@@ -44,7 +44,7 @@ end
 % Use OpenPI to query data from server
 interval = 0;   % No interpolation of points
 OpenPI.Model.GetPIPoints(tagnames, time_start, time_end, interval);
-ALLDataTable = readtable('Data.csv','Delimiter',',','Format','%d %f %f','TreatAsEmpty','System.__ComObject'); delete('Data.csv');
+ALLDataTable = readtable('.\Data.csv','Delimiter',',','Format','%d %f %f','TreatAsEmpty','System.__ComObject'); delete('Data.csv');
 
 %% Setup Tag Names
 v = cell(1,length(PMU.Signal_Name));
