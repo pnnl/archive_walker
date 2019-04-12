@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3681089207" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="3788048305" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
@@ -158,6 +158,7 @@
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMA.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMApS.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\RunRetCon.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
@@ -268,7 +269,6 @@
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\GenerateWindAppReport.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindAppCatAndRank.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindApplication.m</file>
-      <file>C:\Users\foll154\Documents\DTSA\ISONE cases\TestCasesLibrary_LoadData2Matlab\TestCasesLibrary_LoadData2Matlab\LS_ARMApS.m</file>
     </fileset.depfun>
     <fileset.package />
     <build-deliverables>
