@@ -25,9 +25,11 @@ namespace ModeMeter.ViewModels
             _setupMMViewModel();
         }
 
-        public SmallSignalStabilityToolViewModel(SmallSignalStabilityTool model, SignalManager signalMgr) : this(signalMgr)
+        public SmallSignalStabilityToolViewModel(SmallSignalStabilityTool model, SignalManager signalMgr) : this()
         {
             this._model = model;
+            _signalMgr = signalMgr;
+            _setupMMViewModel();
         }
 
         public SmallSignalStabilityToolViewModel()
