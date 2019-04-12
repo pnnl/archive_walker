@@ -157,4 +157,7 @@
   <data name="bigMarkerGreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\bawgui.resources\images\bigmarkergreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Archive_Walker_Gray_Final" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\bawgui.resources\images\archive_walker_gray_final.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

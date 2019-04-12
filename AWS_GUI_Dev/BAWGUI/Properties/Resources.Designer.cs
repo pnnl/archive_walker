@@ -73,6 +73,16 @@ namespace BAWGUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Archive_Walker_Gray_Final {
+            get {
+                object obj = ResourceManager.GetObject("Archive_Walker_Gray_Final", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bigMarkerGreen {
             get {
                 object obj = ResourceManager.GetObject("bigMarkerGreen", resourceCulture);

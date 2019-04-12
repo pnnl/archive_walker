@@ -7,7 +7,7 @@
     <ProjectGuid>{F1AAAAD2-4AEF-420F-B02B-89BC926FDB81}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>BAWGUI</RootNamespace>
-    <AssemblyName>BAWGUI</AssemblyName>
+    <AssemblyName>ArchiveWalker</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -383,6 +383,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="archive_walker_gray_final_KT6_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\Archive_Walker_Gray_Final.jpg">
+      <Link>MyResources\Archive_Walker_Gray_Final.jpg</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

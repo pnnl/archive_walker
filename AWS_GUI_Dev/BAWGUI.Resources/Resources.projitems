@@ -38,6 +38,7 @@
     <None Include="$(MSBuildThisFileDirectory)Images\resume.PNG" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Images\Archive_Walker_Gray_Final.jpg" />
     <Content Include="$(MSBuildThisFileDirectory)Images\archive_walker_gray_final_KT6_icon.ico" />
     <Content Include="$(MSBuildThisFileDirectory)Images\bigMarkerGreen.png" />
     <Content Include="$(MSBuildThisFileDirectory)Images\denominator.PNG" />
