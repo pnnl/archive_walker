@@ -1206,11 +1206,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 parameters["LogScale", 1] = inspectionAnalysisParams.LogScale.ToString().ToUpper();
                 if (inspectionAnalysisParams.FreqMin != null)
                 {
-                    parameters["FreqMin", 1] = (int)inspectionAnalysisParams.FreqMin;
+                    parameters["FreqMin", 1] = (double)inspectionAnalysisParams.FreqMin;
                 }
                 if (inspectionAnalysisParams.FreqMax != null)
                 {
-                    parameters["FreqMax", 1] = (int)inspectionAnalysisParams.FreqMax;
+                    parameters["FreqMax", 1] = (double)inspectionAnalysisParams.FreqMax;
                 }
                 parameters["fs", 1] = signals[0].SamplingRate;
 

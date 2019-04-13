@@ -434,6 +434,31 @@ namespace BAWGUI.ReadConfigXml
             else
                 return false;
         }
+        public List<string> GetPresets(string filename)
+        {
+            var newPresets = new List<string>();
+            var doc = XDocument.Load(filename);
+            var presets = doc.Element("Presets");
+            if (presets != null)
+            {
+                var pts = presets.Elements("Preset");
+                if (pts != null)
+                {
+                    foreach (var item in pts)
+                    {
+                        if (item.HasAttributes)
+                        {
+                            var nm = item.Attribute("name");
+                            if (nm != null)
+                            {
+                                newPresets.Add(nm.Value.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            return newPresets;
+        }
     }
 
     //public enum DataFileType

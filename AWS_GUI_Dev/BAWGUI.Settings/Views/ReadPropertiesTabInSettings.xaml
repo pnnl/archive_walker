@@ -21,10 +21,13 @@
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters:FileTypeToLabelConverter x:Key="FileTypeToLabelConverter"/>
-            <converters:FileTypeToRowNumberConverter1 x:Key="FileTypeToRowNumberConverter1"/>
+            <!--<converters:FileTypeToRowNumberConverter1 x:Key="FileTypeToRowNumberConverter1"/>
             <converters:FileTypeToRowNumberConverter2 x:Key="FileTypeToRowNumberConverter2"/>
-            <converters:FileTypeToRowNumberConverter3 x:Key="FileTypeToRowNumberConverter3"/>
+            <converters:FileTypeToRowNumberConverter3 x:Key="FileTypeToRowNumberConverter3"/>-->
             <converters:FileTypeToBooleanConverter x:Key="FileTypeToBooleanConverter"/>
+            <converters:FileTypeToBackgroundConverter x:Key="FileTypeToBackgroundConverter"/>
+            <converters:FileTypeToVisibilityConverter x:Key="FileTypeToVisibilityConverter"/>
+            <converters:FileTypeToVisibilityInverseConverter x:Key="FileTypeToVisibilityInverseConverter"/>
             <coreConverter:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
             <!--<converters:InputFileTypesToAvailableModeConverter x:Key="InputFileTypesToAvailableModeConverter"/>-->
             <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="ModeValues">
@@ -203,7 +206,7 @@
                                                         </i:Interaction.Triggers>
                                                     </ComboBox>
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter1}}" Margin="0,5,0,0">
+                                                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
                                                     <Label Content="Example File:" Margin="2" Width="100"/>
                                                     <TextBox Text="{Binding ExampleFile, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="100" MaxWidth="600" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
@@ -213,16 +216,17 @@
                                                     <Button Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.InspectRawSignal}" Margin="2" ToolTip="Inspect input signals from this example file" Height="25" CommandParameter="{Binding}" Content="Inspect Signals" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}"/>
                                                     <!--<Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.UpdateExampleFile}" CommandParameter="{Binding ExampleFile}" Margin="2" ToolTip="Update example file in Config.xml file" Height="25" Content="Update Example File" IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1, Mode=FindAncestor}, Path=DataContext.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}"/>-->
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter2}}" Margin="0,5,0,0">
+                                                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5,0,0">
                                                     <Label Content="File Directory:" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding FileDirectory, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True"/>
+                                                    <TextBox Text="{Binding FileDirectory, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="True" Background="WhiteSmoke"/>
                                                     <!--<Button Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.BrowseInputFileDir}" Margin="2" ToolTip="Browse Input Data Directory" Width="25" Height="25" CommandParameter="{Binding}">
                                                         <Image Source="/BAWGUI.Settings;component/MyResources/open.gif" Stretch="Uniform"/>
                                                     </Button>-->
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Grid.Row="{Binding FileType, Converter={StaticResource FileTypeToRowNumberConverter3}}" Margin="0,5,0,0">
+                                                <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5,0,0">
                                                     <Label Content="{Binding FileType, Converter={StaticResource FileTypeToLabelConverter}}" Margin="2" Width="100"/>
-                                                    <TextBox Text="{Binding Mnemonic, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="{Binding FileType, Converter={StaticResource FileTypeToBooleanConverter}}"/>
+                                                    <TextBox Text="{Binding Mnemonic, UpdateSourceTrigger=PropertyChanged}" Margin="2" VerticalAlignment="Center" MinWidth="200" IsReadOnly="{Binding FileType, Converter={StaticResource FileTypeToBooleanConverter}}" Background="{Binding FileType, Converter={StaticResource FileTypeToBackgroundConverter}}" Visibility="{Binding FileType, Converter={StaticResource FileTypeToVisibilityConverter}}"/>
+                                                    <ComboBox ItemsSource="{Binding PresetList}" SelectedItem="{Binding Mnemonic}" Margin="2" VerticalAlignment="Center" MinWidth="200" Visibility="{Binding FileType, Converter={StaticResource FileTypeToVisibilityInverseConverter}}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Expander>

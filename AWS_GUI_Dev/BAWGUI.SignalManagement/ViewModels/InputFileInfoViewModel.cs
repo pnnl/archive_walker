@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.ReadConfigXml;
@@ -74,30 +75,6 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     if (File.Exists(value) && Model.CheckDataFileMatch())
                     {
-                        //try
-                        //{
-                        //var ftyp = Path.GetExtension(value).Substring(1);
-                        //switch (ftyp.ToLower())
-                        //{
-                        //    case "pdat":
-                        //        FileType = DataFileType.pdat;
-                        //        break;
-                        //    case "csv":
-                        //        FileType = DataFileType.csv;
-                        //        break;
-                        //    case "mat":
-                        //        FileType = DataFileType.powHQ;
-                        //        break;
-                        //    default:
-                        //        MessageBox.Show("Data file type " + ftyp + " not recognized.", "Error!", MessageBoxButtons.OK);
-                        //    break;
-                        //}
-                        //FileType = (DataFileType)Enum.Parse(typeof(DataFileType), );
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                        //}
                         var filename = "";
                         try
                         {
@@ -114,6 +91,11 @@ namespace BAWGUI.SignalManagement.ViewModels
                             try
                             {
                                 FileDirectory = Path.GetDirectoryName(value);
+                                var type = Path.GetExtension(value);
+                                if (type == ".xml")
+                                {
+                                    PresetList = _model.GetPresets(value);
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -159,7 +141,38 @@ namespace BAWGUI.SignalManagement.ViewModels
         public ObservableCollection<SignalSignatureViewModel> TaggedSignals { get; internal set; }
         public int SamplingRate { get; internal set; }
         public bool IsExpanded { get; set; }
-
-
+        private List<string> _presetList;
+        public List<string> PresetList
+        {
+            set { _presetList = value;
+                OnPropertyChanged();
+            }
+            get { return _presetList; }
+        }
+        //public List<string> GetPresets(string filename)
+        //{
+        //    var newPresets = new List<string>();
+        //    var doc = XDocument.Load(filename);
+        //    var presets = doc.Element("Presets");
+        //    if (presets != null)
+        //    {
+        //        var pts = presets.Elements("Preset");
+        //        if (pts != null)
+        //        {
+        //            foreach (var item in pts)
+        //            {
+        //                if (item.HasAttributes)
+        //                {
+        //                    var nm = item.Attribute("name");
+        //                    if (nm != null)
+        //                    {
+        //                        newPresets.Add(nm.Value.ToString());
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return newPresets;
+        //}
     }
 }

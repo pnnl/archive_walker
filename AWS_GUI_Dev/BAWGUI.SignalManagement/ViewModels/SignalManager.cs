@@ -190,6 +190,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         try
                         {
+                            aFileInfo.PresetList = item.GetPresets(item.ExampleFile);
                             _readDBExampleFile(aFileInfo, starttime, "PI");
                         }
                         catch (Exception ex)
@@ -201,6 +202,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         try
                         {
+                            aFileInfo.PresetList = item.GetPresets(item.ExampleFile);
                             _readDBExampleFile(aFileInfo, starttime, "openHistorian");
                         }
                         catch (Exception ex)
@@ -267,6 +269,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     try
                     {
+                        model.PresetList = model.Model.GetPresets(model.ExampleFile);
                         _readDBExampleFile(model, starttime, "PI");
                     }
                     catch (Exception ex)
@@ -278,6 +281,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 {
                     try
                     {
+                        model.PresetList = model.Model.GetPresets(model.ExampleFile);
                         _readDBExampleFile(model, starttime, "openHistorian");
                     }
                     catch (Exception ex)
