@@ -150,7 +150,7 @@
             <xcdg:Column Title="Max Amplitude" FieldName="MaxAmplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
             <xcdg:Column Title="Max SNR" FieldName="MaxSNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
             <xcdg:Column Title="Max Coherence" FieldName="MaxCoherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
-            <xcdg:Column Title="Number Of Occurrences" FieldName="NumberOfOccurrences" ReadOnly="True" Width="*"/>
+            <xcdg:Column Title="Number Of Occurrences" FieldName="NumberOfOccurrences" ReadOnly="True" Width="140"/>
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>
         <!--views:OccurrenceTablePopup-->

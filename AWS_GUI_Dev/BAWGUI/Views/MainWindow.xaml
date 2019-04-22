@@ -54,69 +54,55 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!--<StackPanel Orientation="Horizontal">-->
         <Expander ExpandDirection="Right" Grid.Column="0">
             <Expander.Header>
-                <TextBlock Text="BAWGUI Projects">
+                <TextBlock Text="BPA Archive Walker Projects">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="-90"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
             </Expander.Header>
-            <!--<Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <runv:RunNormalRunView DataContext="{Binding RunMatlabVM}" Grid.Row="0"/>-->
             <localv:ProjectsBrowserView DataContext="{Binding ProjectControlVM}"/>
-            <!--</Grid>-->
         </Expander>
-        <Grid Grid.Column="1">
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+        <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!--<Grid Grid.Row="0">-->
-                <!--<Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Column="0">
-                    <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter1}}" Command="{Binding MainViewSelected}" CommandParameter="Results">
-                </Grid.ColumnDefinitions>-->
-                <StackPanel Orientation="Horizontal" Grid.Row="0">
-                    <RadioButton Content="Coordinates" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Coordinates">
-                        <RadioButton.Style>
-                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
-                        </RadioButton.Style>
-                    </RadioButton>
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <RadioButton Content="Coordinates" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Coordinates">
+                    <RadioButton.Style>
+                        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                    </RadioButton.Style>
+                </RadioButton>
                 <RadioButton Content="Settings" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter2}}" Command="{Binding MainViewSelected}" CommandParameter="Settings">
                     <RadioButton.Style>
                         <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                     </RadioButton.Style>
                 </RadioButton>
                 <RadioButton Content="Results" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter1}}" Command="{Binding MainViewSelected}" CommandParameter="Results">
-                        <RadioButton.Style>
-                            <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
-                        </RadioButton.Style>
-                    </RadioButton>
-                    <RadioButton Content="Signal Inspection" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter3}}" Command="{Binding MainViewSelected}" CommandParameter="SignalInspection">
-                        <RadioButton.Style>
-                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
-                        </RadioButton.Style>
-                    </RadioButton>
+                    <RadioButton.Style>
+                        <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                    </RadioButton.Style>
+                </RadioButton>
+                <RadioButton Content="Signal Inspection" Margin="2" GroupName="ViewChoice" IsChecked="{Binding CurrentView, Converter={StaticResource RadioButtonViewConverter3}}" Command="{Binding MainViewSelected}" CommandParameter="SignalInspection">
+                    <RadioButton.Style>
+                        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                    </RadioButton.Style>
+                </RadioButton>
                 <!--<RadioButton Content="Run Control" Margin="2" GroupName="ViewChoice" Command="{Binding MainViewSelected}" CommandParameter="Run"/>-->
-                    <Button ToolTip="Save Config File" Width="22" Height="22" Margin="2" Command="{Binding ProjectControlVM.SaveConfigFile}" CommandParameter="{Binding}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter}}">
-                        <Image Source="/ArchiveWalker;component/MyResources/Save24.png"/>
+                <Button ToolTip="Save Config File" Width="22" Height="22" Margin="2" Command="{Binding ProjectControlVM.SaveConfigFile}" CommandParameter="{Binding}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter}}">
+                    <Image Source="/ArchiveWalker;component/MyResources/Save24.png"/>
                 </Button>
                 <Button ToolTip="Save Coordinates File to Project Folder" Width="22" Height="22" Margin="2" Command="{Binding CoordsTableVM.SaveCoordinatesFiile}" CommandParameter="{Binding ProjectControlVM.ResultsStoragePath}" Visibility="{Binding CurrentView, Converter={StaticResource ViewVisibilityConverter2}}">
                     <Image Source="/ArchiveWalker;component/MyResources/Save24.png"/>
                 </Button>
             </StackPanel>
-            <!--</Grid>-->
             <ContentPresenter Content="{Binding CurrentView}" Grid.Row="1"/>
         </Grid>
         <!--<DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1">
