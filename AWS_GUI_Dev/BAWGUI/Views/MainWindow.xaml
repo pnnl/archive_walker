@@ -15,6 +15,8 @@
         xmlns:sgnlmngrview="clr-namespace:BAWGUI.SignalManagement.Views;assembly=BAWGUI.SignalManagement"
         xmlns:mapcoordv="clr-namespace:BAWGUI.CoordinateMapping.Views;assembly=BAWGUI.CoordinateMapping"
         xmlns:mapcoordmv="clr-namespace:BAWGUI.CoordinateMapping.ViewModels;assembly=BAWGUI.CoordinateMapping"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:behaviors="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
         mc:Ignorable="d"
         Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized"
         Name="myMainWindow">
@@ -59,6 +61,9 @@
         </Grid.ColumnDefinitions>
         <!--<StackPanel Orientation="Horizontal">-->
         <Expander ExpandDirection="Right" Grid.Column="0">
+            <i:Interaction.Behaviors>
+                <behaviors:GridColumnWidthReseterBehaviour TargetGridColumnIndex="0"></behaviors:GridColumnWidthReseterBehaviour>
+            </i:Interaction.Behaviors>
             <Expander.Header>
                 <TextBlock Text="BPA Archive Walker Projects">
                     <TextBlock.LayoutTransform>

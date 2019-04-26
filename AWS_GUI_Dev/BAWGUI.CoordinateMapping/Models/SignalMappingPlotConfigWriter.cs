@@ -35,7 +35,7 @@ namespace BAWGUI.CoordinateMapping.Models
 
         private XElement _writeMappingSignalConfigToXMLFormat()
         {
-            var config = new XElement("SignalMappingPlotConfig");
+            var config = new XElement("SignalMappingPlotConfig", string.Empty);
             foreach (var signal in _mappingSignalsToBeWritten)
             {
                 var sgnl = new XElement("Signal", new XElement("PMU", signal.PMUName),
@@ -44,13 +44,30 @@ namespace BAWGUI.CoordinateMapping.Models
                 var sites = new XElement("Sites");
                 foreach (var lctn in signal.Locations)
                 {
-                    var site = new XElement("Site", new XElement("Name", lctn.Name),
-                                                    new XElement("Latitude", lctn.Latitude),
-                                                    new XElement("Longitude", lctn.Longitude));
-                    sites.Add(site);
+                    if (string.IsNullOrEmpty(lctn.Name) || string.IsNullOrEmpty(lctn.Latitude) || string.IsNullOrEmpty(lctn.Longitude))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        var site = new XElement("Site", new XElement("Name", lctn.Name),
+                                                        new XElement("Latitude", lctn.Latitude),
+                                                        new XElement("Longitude", lctn.Longitude));
+                        sites.Add(site);
+                    }
                 }
-                sgnl.Add(sites);
-                config.Add(sgnl);
+                if (sites.HasElements)
+                {
+                    sgnl.Add(sites);
+                }
+                else
+                {
+                    continue;
+                }
+                if (sgnl.HasElements)
+                {
+                    config.Add(sgnl);
+                }
             }
             return config;
         }
