@@ -1,6 +1,6 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
   <configuration build-checksum="1725833936" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD" name="ArchiveWalkerRTD" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\RealTimeGUI\RealTimeGUI\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
-    <param.appname>RealTimeGUI</param.appname>
+    <param.appname>ArchiveWalkerRTD</param.appname>
     <param.icon>${PROJECT_ROOT}\ArchiveWalkerRTD_resources\icon.ico</param.icon>
     <param.icons>
       <file>${PROJECT_ROOT}\ArchiveWalkerRTD_resources\icon_48.png</file>
@@ -8,7 +8,7 @@
       <file>${PROJECT_ROOT}\ArchiveWalkerRTD_resources\icon_24.png</file>
       <file>${PROJECT_ROOT}\ArchiveWalkerRTD_resources\icon_16.png</file>
     </param.icons>
-    <param.version>1.3</param.version>
+    <param.version>1.0</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -16,7 +16,7 @@
     <param.description />
     <param.screenshot>C:\Users\foll154\Documents\BPAoscillationApp\Logo\rearchive_walker\Archive_Walker_RTD_Final.jpg</param.screenshot>
     <param.guid />
-    <param.installpath.string>\RealTimeGUI\</param.installpath.string>
+    <param.installpath.string>\ArchiveWalkerRTD\</param.installpath.string>
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
@@ -43,6 +43,7 @@
     <param.example />
     <param.help.text />
     <unset>
+      <param.version />
       <param.authnamewatermark />
       <param.email />
       <param.company />
@@ -88,7 +89,7 @@
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m</file>
     </fileset.depfun>
     <build-deliverables>
-      <file location="${PROJECT_ROOT}\ArchiveWalkerRTD\for_testing" name="RealTimeGUI.exe" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD\for_testing\RealTimeGUI.exe</file>
+      <file location="${PROJECT_ROOT}\ArchiveWalkerRTD\for_testing" name="ArchiveWalkerRTD.exe" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD\for_testing\ArchiveWalkerRTD.exe</file>
       <file location="${PROJECT_ROOT}\ArchiveWalkerRTD\for_testing" name="splash.png" optional="false">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD\for_testing\splash.png</file>
       <file location="${PROJECT_ROOT}\ArchiveWalkerRTD\for_testing" name="readme.txt" optional="true">C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD\for_testing\readme.txt</file>
     </build-deliverables>
