@@ -188,8 +188,9 @@ else
     Lon = {};
     for idx = 1:length(MapConfig)
         if strcmp(MapConfig{idx}.Type,'Dot')
-            if sum(strcmp(MapConfig{idx}.PMU,PMUtoInclude) & strcmp(MapConfig{idx}.SignalName,SIGtoInclude)) == 1
-                KeepIdx = [KeepIdx idx];
+            MatchIdx = find(strcmp(MapConfig{idx}.PMU,PMUtoInclude) & strcmp(MapConfig{idx}.SignalName,SIGtoInclude));
+            if ~isempty(MatchIdx)
+                KeepIdx = [KeepIdx MatchIdx];
                 Lat = [Lat MapConfig{idx}.Sites.Site.Latitude];
                 Lon = [Lon MapConfig{idx}.Sites.Site.Longitude];
             end
