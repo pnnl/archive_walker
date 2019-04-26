@@ -15,8 +15,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="20,2" Grid.Row="0">
+            <Label Content="Add A New Preset?" Margin="2" Width="200" Height="25" VerticalAlignment="Center"/>
+            <CheckBox VerticalAlignment="Center" IsChecked="{Binding CanAddNewPreset}" Margin="2"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="20,2" Grid.Row="1">
             <Label Content="New Preset:" Margin="2,20,2,2" Width="200" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding NewPresetName}" Margin="2,20,2,2" Width="300" Height="25" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding NewPresetName}" Margin="2,20,2,2" Width="300" Height="25" VerticalAlignment="Center" IsEnabled="{Binding CanAddNewPreset}"/>
         </StackPanel>
         <!--<StackPanel Orientation="Horizontal" Margin="20,2" Grid.Row="1">
             <Label Content="Detector:" Margin="2" Width="200" HorizontalAlignment="Left"/>
@@ -29,16 +33,12 @@
                 <Image Source="/BAWGUI.Results;component/MyResources/open.gif" Stretch="Uniform"/>
             </Button>
         </StackPanel>-->
-        <StackPanel Orientation="Horizontal" Margin="20,2" Grid.Row="1">
+        <StackPanel Orientation="Horizontal" Margin="20,2" Grid.Row="2">
             <Label Content="OBAT Preset File:" Margin="2" Width="200" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding OBATPresetFilePath}" Margin="2" Width="300" Height="25" VerticalAlignment="Center"/>
             <Button Width="25" Height="25" Margin="2" ToolTip="Browse to the OBAT Preset file to be updated" Command="{Binding SelectOBATPresetFile}">
                 <Image Source="/BAWGUI.Results;component/MyResources/open.gif" Stretch="Uniform"/>
             </Button>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="20,2" Grid.Row="2">
-            <Label Content="Add A New Preset?" Margin="2" Width="200" Height="25" VerticalAlignment="Center"/>
-            <CheckBox VerticalAlignment="Center" IsChecked="{Binding CanAddNewPreset}" Margin="2"/>
         </StackPanel>
         <Grid Grid.Row="4" Margin="2">
             <Grid.ColumnDefinitions>

@@ -70,6 +70,7 @@ namespace BAWGUI.Results.ViewModels
             SelectOBATPresetFile = new RelayCommand(_selectOBATPresetFile);
             UpdateOBATpreset = new RelayCommand(_updateOBATpreset);
             _engine = RunMATLAB.ViewModels.MatLabEngine.Instance;
+            _canAddNewPreset = true;
         }
         private RunMATLAB.ViewModels.MatLabEngine _engine;
         public RunMATLAB.ViewModels.MatLabEngine Engine
@@ -138,10 +139,24 @@ namespace BAWGUI.Results.ViewModels
         public ICommand UpdateOBATpreset { get; set; }
         private void _updateOBATpreset(object obj)
         {
-            //close the popup first
-            UpdateOBATPresetCancelled?.Invoke(this, EventArgs.Empty);
-            //call engine to do the update
-            _engine.UpdateOBATPreset(NewPresetName, DetectorName, ConfigFilePath, OBATPresetFilePath);
+            if (File.Exists(OBATPresetFilePath))
+            {
+                //close the popup first
+                UpdateOBATPresetCancelled?.Invoke(this, EventArgs.Empty);
+                //call engine to do the update
+                try
+                {
+                    _engine.UpdateOBATPreset(NewPresetName, DetectorName, ConfigFilePath, OBATPresetFilePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error updating preset xml file. " + ex.Message, "Error!", MessageBoxButtons.OK);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please specify a valid preset xml file.", "Error!", MessageBoxButtons.OK);
+            }
         }
         private bool _canAddNewPreset;
         public bool CanAddNewPreset
@@ -152,10 +167,16 @@ namespace BAWGUI.Results.ViewModels
                 _canAddNewPreset = value;
                 if (value)
                 {
+                    NewPresetName = _newPresetNameBackup;
+                }
+                else
+                {
+                    _newPresetNameBackup = NewPresetName;
                     NewPresetName = "";
                 }
                 OnPropertyChanged();
             }
         }
+        private string _newPresetNameBackup = "";
     }
 }

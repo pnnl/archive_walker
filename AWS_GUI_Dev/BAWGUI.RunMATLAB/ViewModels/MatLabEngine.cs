@@ -1245,9 +1245,37 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
             Run.IsTaskRunning = true;
             // save a copy of the OBAT preset file
-            var bckOBATFile = Path.GetDirectoryName(oBATPresetFilePath) + "backup." + Path.GetExtension(oBATPresetFilePath);
-            File.Copy(oBATPresetFilePath, bckOBATFile);
-            var updateStatus = _matlabEngine.UpdateOBATpreset(newPresetName, detectorName, configFilePath, oBATPresetFilePath);
+            var bckOBATFile = Path.GetDirectoryName(oBATPresetFilePath) + "\\backup." + Path.GetExtension(oBATPresetFilePath);
+            //var number = 1;
+            //while (File.Exists(bckOBATFile))
+            //{
+            //    bckOBATFile = Path.GetDirectoryName(oBATPresetFilePath) + "\\backup" + number.ToString() + "." + Path.GetExtension(oBATPresetFilePath);
+            //    number++;
+            //}
+            try
+            {
+                File.Copy(oBATPresetFilePath, bckOBATFile, true);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            var updateStatus = "";
+            try
+            {
+                updateStatus = _matlabEngine.UpdateOBATpreset(newPresetName, detectorName, configFilePath, oBATPresetFilePath).ToString();
+            }
+            catch (Exception ex)
+            {
+                //copy the copied OBAT file back to it's original PATH
+                File.Copy(bckOBATFile, oBATPresetFilePath, true);
+                //delete the copied OBAT prest file.
+                File.Delete(bckOBATFile);
+                Run.IsTaskRunning = false;
+                Mouse.OverrideCursor = null;
+                IsMatlabEngineRunning = false;
+                throw ex;
+            }
             //need to show the returned string updateSuccess here as a message.
             MessageBox.Show(updateStatus.ToString(), "Done", MessageBoxButtons.OK);
             if (updateStatus.ToString() == "Success") //if success
@@ -1258,7 +1286,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             else
             {
                 //copy the copied OBAT file back to it's original PATH
-                File.Copy(bckOBATFile, oBATPresetFilePath);
+                File.Copy(bckOBATFile, oBATPresetFilePath, true);
+                //delete the copied OBAT prest file.
+                File.Delete(bckOBATFile);
             }
             Run.IsTaskRunning = false;
             Mouse.OverrideCursor = null;
