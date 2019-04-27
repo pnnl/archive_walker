@@ -12,6 +12,7 @@ namespace BAWGUI.Utilities
     public class GridColumnWidthReseterBehaviour : Behavior<Expander>
     {
         private Grid _parentGrid;
+        private double _oldWidth;
         //public int TargetGridRowIndex { get; set; }
         public int TargetGridColumnIndex { get; set; }
         protected override void OnAttached()
@@ -38,13 +39,30 @@ namespace BAWGUI.Utilities
         void AssociatedObject_Collapsed(object sender, System.Windows.RoutedEventArgs e)
         {
             //_parentGrid.RowDefinitions[TargetGridRowIndex].Height = GridLength.Auto;
+            _oldWidth = _parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width.Value;
             _parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width = GridLength.Auto;
         }
 
         void AssociatedObject_Expanded(object sender, System.Windows.RoutedEventArgs e)
         {
             //_parentGrid.RowDefinitions[TargetGridRowIndex].Height = GridLength.Auto;
-            _parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width = GridLength.Auto;
+            //_parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width = GridLength.Auto;
+            var currentWidth = _parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width.Value;
+            if (currentWidth <= 1d)
+            {
+                if (_oldWidth <= 1d)
+                {
+                    _parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width = GridLength.Auto;
+                }
+                else
+                {
+                    _parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width = new GridLength(_oldWidth, GridUnitType.Pixel);
+                }
+            }
+            else
+            {
+                _parentGrid.ColumnDefinitions[TargetGridColumnIndex].Width = new GridLength(currentWidth, GridUnitType.Pixel);
+            }
         }
     }
 }

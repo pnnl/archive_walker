@@ -83,7 +83,7 @@
                 <!--<Separator/>-->
                 <local:ProjectTreeView/>
             </StackPanel>
-            <Image Source="/ArchiveWalker;component/MyResources/Archive_Walker_Gray_Final.jpg" Grid.Row="4" Width="150" Height="150" Margin="2" HorizontalAlignment="Center"/>
+            <Image Source="/ArchiveWalker;component/MyResources/Archive_Walker_Gray_Final.jpg" Grid.Row="4" Width="150" Height="150" Margin="2" HorizontalAlignment="Left"/>
         </Grid>
     </ScrollViewer>
 
