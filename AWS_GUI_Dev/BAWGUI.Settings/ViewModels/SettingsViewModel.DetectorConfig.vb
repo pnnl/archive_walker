@@ -1,8 +1,11 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.IO
 Imports System.Windows
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
+Imports ModeMeter.ViewModels
+Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -30,7 +33,7 @@ Namespace ViewModels
         End Property
         Private Sub _addSelectedDetector(obj As String)
             _aDetectorStepDeSelected()
-            Dim newDetector As Object
+            Dim newDetector As DetectorBase
             Select Case obj
                 'Case "Out-of-Range"
                 '    newDetector = New OutOfRangeGeneralDetector
@@ -46,16 +49,52 @@ Namespace ViewModels
                 Case "Spectral Coherence Forced Oscillation Detector"
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
+                Case "Voltage Stability"
+                    If _isVoltageStabilityDetectorExist(DetectorConfigure.DetectorList) Then
+                        Forms.MessageBox.Show("Only one Voltage Stability detector can be added!", "Error!", MessageBoxButtons.OK)
+                        Exit Sub
+                    Else
+                        newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
+                        DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
+                    End If
+                    'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
+                Case "Mode Meter Tool"
+                    If Not _isModeMeterResultFolderExists() Then
+                        _generateModeMeterResultFolder()
+                    End If
+                    newDetector = New SmallSignalStabilityToolViewModel(_signalMgr)
+                    DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
-            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            If TypeOf (newDetector) Is VoltageStabilityDetectorViewModel OrElse TypeOf (newDetector) Is SmallSignalStabilityToolViewModel Then
+            Else
+                newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+                newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+                _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            End If
+
             DetectorConfigure.DetectorList.Add(newDetector)
             _selectedADetector(newDetector)
         End Sub
+
+        Private Sub _generateModeMeterResultFolder()
+        End Sub
+
+        Private Function _isModeMeterResultFolderExists() As Boolean
+            Return Directory.Exists(Run.Model.EventPath & "\MM")
+        End Function
+
+        Private Function _isVoltageStabilityDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
+            For Each dt In detectorList
+                If TypeOf dt Is VoltageStabilityDetectorViewModel Then
+                    Return True
+                End If
+            Next
+            Return False
+        End Function
+
         Private _alarmingDetectorSelectedToAdd As ICommand
         Public Property AlarmingDetectorSelectedToAdd As ICommand
             Get
@@ -114,7 +153,7 @@ Namespace ViewModels
                 _detectorConfigStepDeSelected = value
             End Set
         End Property
-        Private Sub _deSelectAllDetectors()
+        Public Sub DeSelectAllDetectors()
             _aDetectorStepDeSelected()
             If CurrentSelectedStep IsNot Nothing Then
                 If TypeOf CurrentSelectedStep Is DetectorBase Then
@@ -130,6 +169,7 @@ Namespace ViewModels
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.AllPostProcessOutputGroupedByPMU, False)
 
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByDetectorInput, False)
+                _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedSignalByDataWriterDetectorInput, False)
 
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByPMU, False)
                 _changeCheckStatusAllParentsOfGroupedSignal(_signalMgr.GroupedRawSignalsByType, False)
@@ -151,6 +191,17 @@ Namespace ViewModels
             End Set
         End Property
         Private Sub _selectedADetector(detector As Object)
+            If detector IsNot CurrentSelectedStep AndAlso CurrentSelectedStep IsNot Nothing Then
+                If Not CurrentSelectedStep.CheckStepIsComplete() Then
+                    'here need to check if the currentSelectedStep is complete, if not, cannot switch
+                    Forms.MessageBox.Show("Missing field(s) in this step, please double check!", "Error!", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+                'here do all the stuff that is needed such as sort signals to make sure the step is set up.
+                If TypeOf CurrentSelectedStep IsNot AlarmingDetectorBase Then
+                    CurrentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                End If
+            End If
             ' if detector is already selected, then the selection is not changed, nothing needs to be done.
             ' however, if detector is not selected, which means a new selection, we need to find the old selection, unselect it and all it's input signal
             If Not detector.IsStepSelected Then
@@ -161,6 +212,16 @@ Namespace ViewModels
                 Try
                     Dim selectedFound = False
                     For Each dt In DetectorConfigure.DetectorList
+                        If dt.IsStepSelected Then
+                            dt.IsStepSelected = False
+                            For Each signal In dt.InputChannels
+                                signal.IsChecked = False
+                            Next
+                            selectedFound = True
+                            Exit For
+                        End If
+                    Next
+                    For Each dt In DetectorConfigure.DataWriterDetectorList
                         If dt.IsStepSelected Then
                             dt.IsStepSelected = False
                             For Each signal In dt.InputChannels
@@ -258,7 +319,7 @@ Namespace ViewModels
                         If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False
                             For Each dtr In DetectorConfigure.DetectorList
-                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Then
+                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Or TypeOf dtr Is VoltageStabilityDetectorViewModel Then
                                     updateResultInterval = True
                                     Exit For
                                 End If
@@ -273,7 +334,11 @@ Namespace ViewModels
                         DetectorConfigure.AlarmingList = newlist
                         _addLog("Alarming detector " & obj.Name & " is deleted from alarming!")
                     End If
-                    _deSelectAllDetectors()
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        DeSelectAllDetectors()
+                    End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
                 End Try
@@ -292,14 +357,69 @@ Namespace ViewModels
         End Property
 
         Private Sub _aDetectorStepDeSelected()
-            If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso CurrentSelectedStep.InputChannels.Count = 0 Then
+            If CurrentSelectedStep IsNot Nothing AndAlso TypeOf (CurrentSelectedStep) Is DetectorBase AndAlso Not CurrentSelectedStep.CheckStepIsComplete Then
                 Forms.MessageBox.Show("Detectors have to have input signals!", "Error!", MessageBoxButtons.OK)
             End If
         End Sub
 
 #End Region
 
-
+#Region "Data writer detector tab controls"
+        Private _addDataWriterDetector As ICommand
+        Public Property AddDataWriterDetector As ICommand
+            Get
+                Return _addDataWriterDetector
+            End Get
+            Set(value As ICommand)
+                _addDataWriterDetector = value
+            End Set
+        End Property
+        Private Sub _addADataWriterDetector(obj As Object)
+            _aDetectorStepDeSelected()
+            Dim newDetector = New DataWriterDetectorViewModel
+            newDetector.IsExpanded = True
+            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalMgr.GroupedSignalByDataWriterDetectorInput.Count + 1).ToString & " " & newDetector.Name
+            _signalMgr.GroupedSignalByDataWriterDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+            DetectorConfigure.DataWriterDetectorList.Add(newDetector)
+            _selectedADetector(newDetector)
+        End Sub
+        Private _deleteDataWriterDetector As ICommand
+        Public Property DeleteDataWriterDetector As ICommand
+            Get
+                Return _deleteDataWriterDetector
+            End Get
+            Set(ByVal value As ICommand)
+                _deleteDataWriterDetector = value
+            End Set
+        End Property
+        Private Sub _deleteADataWriterDetector(obj As Object)
+            If CurrentSelectedStep IsNot obj Then
+                _aDetectorStepDeSelected()
+            End If
+            Dim result = Forms.MessageBox.Show("Delete this data writer?", "Warning!", MessageBoxButtons.OKCancel)
+            If result = DialogResult.OK Then
+                Try
+                    Dim newlist = New ObservableCollection(Of DetectorBase)(DetectorConfigure.DataWriterDetectorList)
+                    newlist.Remove(obj)
+                    DetectorConfigure.DataWriterDetectorList = newlist
+                    _addLog("Detector " & obj.Name & " is deleted!")
+                    _signalMgr.GroupedSignalByDataWriterDetectorInput.Remove(obj.ThisStepInputsAsSignalHerachyByType)
+                    For index = 1 To _signalMgr.GroupedSignalByDataWriterDetectorInput.Count
+                        _signalMgr.GroupedSignalByDataWriterDetectorInput(index - 1).SignalSignature.SignalName = "Detector " & index.ToString & " " & DetectorConfigure.DataWriterDetectorList(index - 1).Name
+                    Next
+                    If obj Is CurrentSelectedStep Then
+                        CurrentSelectedStep = Nothing
+                    Else
+                        DeSelectAllDetectors()
+                    End If
+                Catch ex As Exception
+                    Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
+                End Try
+            Else
+                Exit Sub
+            End If
+        End Sub
+#End Region
     End Class
 
 End Namespace

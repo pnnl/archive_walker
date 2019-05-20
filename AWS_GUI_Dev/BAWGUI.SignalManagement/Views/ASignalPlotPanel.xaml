@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="BAWGUI.SignalManagement.Views.ASignalPlotPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:BAWGUI.SignalManagement.Views"
+             xmlns:oxy="http://oxyplot.org/wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <coreconverters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreconverters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+            <coreconverters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsPlotSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PlotSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PlotSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Expander IsEnabled="{Binding IsPlotSelected}" HorizontalContentAlignment="Stretch">
+            <Expander.Header>
+                <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
+                    <!--<TextBlock VerticalAlignment="Center" Text="{Binding  Converter={StaticResource ExpanderHeaderConverter}}"/>-->
+                    <Button DockPanel.Dock="Right" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="0,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteAPlot}" CommandParameter="{Binding}">
+                        <Image Width="16" Height="16" Source="/BAWGUI.SignalManagement;component/MyResources/RemoveCommand_16x.png" />
+                    </Button>
+                </DockPanel>
+            </Expander.Header>
+            <TabControl TabStripPlacement="Bottom">
+                <TabItem Header="Original">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="9*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <oxy:PlotView Model="{Binding SignalViewPlotModel}" MinHeight="300" MinWidth="400"  Grid.Column="0" Name="signalPlot" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=2}}">
+                            <oxy:PlotView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.SpectralInspection, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Spectral Inspection" CommandParameter="{Binding}"/>
+                                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.ExportData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Export Data" CommandParameter="{Binding}"/>
+                                </ContextMenu>
+                            </oxy:PlotView.ContextMenu>
+                        </oxy:PlotView>
+                        <ListBox Grid.Column="1" ItemsSource="{Binding Legends}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="White" BorderThickness="0" Height="{Binding Path=ActualHeight, ElementName=signalPlot}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" Foreground="{Binding Color, Converter={StaticResource ColorToBrushConverter}}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Spectral Inspection" Visibility="{Binding AddATab, Converter={StaticResource BooleanVisibilityConverter}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="9*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <oxy:PlotView Model="{Binding SpectralInspectionPlotModel}" MinHeight="300" MinWidth="400"  Grid.Column="0" Name="SpectralInspectionPlot">
+                            <!--<oxy:PlotView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.SpectralInspection, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Spectral Inspection" CommandParameter="{Binding Signals}"/>
+                                </ContextMenu>
+                            </oxy:PlotView.ContextMenu>-->
+                        </oxy:PlotView>
+                        <ListBox Grid.Column="1" ItemsSource="{Binding Legends}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="White" BorderThickness="0" Height="{Binding Path=ActualHeight, ElementName=signalPlot}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" Foreground="{Binding Color, Converter={StaticResource ColorToBrushConverter}}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <!--<local:SignalPlot/>-->
+        </Expander>
+    </Border>
+</UserControl>

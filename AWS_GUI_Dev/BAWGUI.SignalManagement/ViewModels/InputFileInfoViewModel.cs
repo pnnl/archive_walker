@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.ReadConfigXml;
@@ -47,11 +48,11 @@ namespace BAWGUI.SignalManagement.ViewModels
         public DataFileType? FileType
         {
             get {
-                var a = Enum.Parse(typeof(DataFileType), _model.FileType);
-                return (DataFileType)a; }
+                //var a = Enum.Parse(typeof(DataFileType), _model.FileType);
+                return _model.FileType; }
             set
             {
-                _model.FileType = value.ToString();
+                _model.FileType = (DataFileType)value;
                 OnPropertyChanged();
             }
         }
@@ -70,52 +71,68 @@ namespace BAWGUI.SignalManagement.ViewModels
             set
             {
                 _model.ExampleFile = value;
-                if (File.Exists(value))
+                if (!string.IsNullOrEmpty(value))
                 {
-                    try
+                    if (File.Exists(value) && Model.CheckDataFileMatch())
                     {
-                        FileType = (DataFileType)Enum.Parse(typeof(DataFileType), Path.GetExtension(value).Substring(1));
+                        var filename = "";
+                        try
+                        {
+                            filename = Path.GetFileNameWithoutExtension(value);
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                        if (FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian)
+                        {
+                            Mnemonic = "";
+                            //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.
+                            try
+                            {
+                                FileDirectory = Path.GetDirectoryName(value);
+                                var type = Path.GetExtension(value);
+                                if (type == ".xml")
+                                {
+                                    PresetList = _model.GetPresets(value);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Mnemonic = filename.Substring(0, filename.Length - 16);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            }
+                            //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.
+                            try
+                            {
+                                var fullPath = Path.GetDirectoryName(value);
+                                var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
+                                var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
+                                FileDirectory = twoLevelUp;
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            }
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show("Data file type not recognized. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                    var filename = "";
-                    try
-                    {
-                        filename = Path.GetFileNameWithoutExtension(value);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                    try
-                    {
-                        Mnemonic = filename.Substring(0, filename.Length - 16);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                    //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.
-                    try
-                    {
-                        var fullPath = Path.GetDirectoryName(value);
-                        var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
-                        var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
-                        FileDirectory = twoLevelUp;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                }
-                else
-                {
-                    // MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
-                    MessageBox.Show("The example file  " + Path.GetFileName(value) + "  could not be found in the directory  " + Path.GetDirectoryName(value) + ".\n" 
-                                    + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
+                        // MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
+                        MessageBox.Show("The example file  " + Path.GetFileName(value) + "  could not be found in the directory  " + Path.GetDirectoryName(value) + ".\n"
+                                        + "Please go to the 'Data Source' tab, update the location of the example file, and click the 'Read File' button.", "Warning!", MessageBoxButtons.OK);
 
+                    }
                 }
                 OnPropertyChanged();
             }
@@ -124,5 +141,38 @@ namespace BAWGUI.SignalManagement.ViewModels
         public ObservableCollection<SignalSignatureViewModel> TaggedSignals { get; internal set; }
         public int SamplingRate { get; internal set; }
         public bool IsExpanded { get; set; }
+        private List<string> _presetList;
+        public List<string> PresetList
+        {
+            set { _presetList = value;
+                OnPropertyChanged();
+            }
+            get { return _presetList; }
+        }
+        //public List<string> GetPresets(string filename)
+        //{
+        //    var newPresets = new List<string>();
+        //    var doc = XDocument.Load(filename);
+        //    var presets = doc.Element("Presets");
+        //    if (presets != null)
+        //    {
+        //        var pts = presets.Elements("Preset");
+        //        if (pts != null)
+        //        {
+        //            foreach (var item in pts)
+        //            {
+        //                if (item.HasAttributes)
+        //                {
+        //                    var nm = item.Attribute("name");
+        //                    if (nm != null)
+        //                    {
+        //                        newPresets.Add(nm.Value.ToString());
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return newPresets;
+        //}
     }
 }

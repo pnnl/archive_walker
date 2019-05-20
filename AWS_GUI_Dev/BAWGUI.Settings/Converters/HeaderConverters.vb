@@ -61,6 +61,24 @@ Namespace Converters
         End Function
     End Class
 
+    Public Class DetectorExpanderHeaderConverter3
+        Implements IMultiValueConverter
+
+        Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+            Dim str = ""
+            If values(0) IsNot Nothing AndAlso TypeOf values(0) Is DataWriterDetectorViewModel Then
+                str = (values(1).IndexOf(values(0)) + 1).ToString & " - " & values(0).Name
+            Else
+                str = "No Data Writer Selected Yet!"
+            End If
+            Return str
+        End Function
+
+        Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+
     Public Class TunableFilterExpanderHeaderConverter
         Implements IMultiValueConverter
 
@@ -73,8 +91,14 @@ Namespace Converters
                         Return "Step " & number.ToString & " - High-Pass Filter"
                     Case TunableFilterType.LowPass
                         Return "Step " & number.ToString & " - Low-Pass Filter"
-                    Case Else
+                    Case TunableFilterType.Rational
                         Return "Step " & number.ToString & " - Rational Filter"
+                    Case TunableFilterType.FrequencyDerivation
+                        Return "Step " & number.ToString & " - Frequency Derivation"
+                    Case TunableFilterType.RunningAverage
+                        Return "Step " & number.ToString & " - RunningAverage"
+                    Case Else
+                        Return "Step " & number.ToString & " - Point on Wave Power Calculation Filter"
                 End Select
             Else
                 Return ""

@@ -27,15 +27,15 @@
         </xcdg:DataGridCollectionViewSource.ItemProperties>
     </xcdg:DataGridCollectionViewSource>-->
     <!--<StackPanel Orientation="Vertical">-->
-    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="DataGridControl_SelectionChanged" NavigationBehavior="RowOnly">
-        <i:Interaction.Triggers>
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" NavigationBehavior="RowOnly">
+        <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>
             </i:EventTrigger>
-            <!--<i:EventTrigger EventName="MouseLeftButtonDown">
+            --><!--<i:EventTrigger EventName="MouseLeftButtonDown">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrencePopup}"/>
-            </i:EventTrigger>-->
-        </i:Interaction.Triggers>
+            </i:EventTrigger>--><!--
+        </i:Interaction.Triggers>-->
         <xcdg:DataGridControl.Resources>
             <Style TargetType="{x:Type xcdg:DataCell}">
                 <!--<Setter Property="CurrentBackground" Value="Blue"/>-->
@@ -61,7 +61,39 @@
             <Style TargetType="{x:Type xcdg:DataRow}">
                 <Setter Property="SelectionBackground" Value="LightGreen"/>
                 <Setter Property="InactiveSelectionBackground" Value="LightGreen"/>
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2, Mode=FindAncestor}, Path=DataContext.SelectedPlottingRule}" Value="Coherence"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.MaxCoherence}" Value="NaN"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="LightGray"/>
+                        <!--<Setter Property="FontWeight" Value="ExtraBold"/>-->
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2, Mode=FindAncestor}, Path=DataContext.SelectedPlottingRule}" Value="SNR"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.MaxSNR}" Value="NaN"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="LightGray"/>
+                        <!--<Setter Property="FontWeight" Value="ExtraBold"/>-->
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2, Mode=FindAncestor}, Path=DataContext.SelectedPlottingRule}" Value="Amplitude"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.MaxAmplitude}" Value="NaN"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="LightGray"/>
+                        <!--<Setter Property="FontWeight" Value="ExtraBold"/>-->
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                </Style.Triggers>
             </Style>
+            <!--<Style TargetType="{x:Type xcdg:DataRow}">
+                <Setter Property="IsEnabled" Value="False"/>
+            </Style>-->
         </xcdg:DataGridControl.Resources>
         <xcdg:DataGridControl.View>
             <xcdg:TableflowView UseDefaultHeadersFooters="False">
@@ -118,7 +150,7 @@
             <xcdg:Column Title="Max Amplitude" FieldName="MaxAmplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
             <xcdg:Column Title="Max SNR" FieldName="MaxSNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
             <xcdg:Column Title="Max Coherence" FieldName="MaxCoherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
-            <xcdg:Column Title="Number Of Occurrences" FieldName="NumberOfOccurrences" ReadOnly="True" Width="*"/>
+            <xcdg:Column Title="Number Of Occurrences" FieldName="NumberOfOccurrences" ReadOnly="True" Width="140"/>
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>
         <!--views:OccurrenceTablePopup-->

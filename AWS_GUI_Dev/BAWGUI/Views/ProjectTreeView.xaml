@@ -15,7 +15,7 @@
         <ResourceDictionary>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
-            <converters:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
+            <coreConverter:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
             <converters:EnabledIfRunningOrPausedConverter x:Key="EnabledIfRunningOrPausedConverter"/>
             <converters2:BooleanBackgroundConverter x:Key="BooleanBackgroundConverter"/>
         </ResourceDictionary>
@@ -47,12 +47,12 @@
                                     <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.AddRun, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Add Task..." CommandParameter="{Binding}" ToolTip="Add a new task in this project">
                                         <!--<MenuItem Command="{Binding AddRun}" Header="Add Task..." CommandParameter="{Binding}" ToolTip="Add a new task in this project">-->
                                         <MenuItem.Icon>
-                                            <Image Source="/BAWGUI;component/MyResources/Add_16x.png"/>
+                                            <Image Source="/ArchiveWalker;component/MyResources/Add_16x.png"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.DeleteProject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Delete Project" CommandParameter="{Binding}" ToolTip="Delete this project">
                                         <MenuItem.Icon>
-                                            <Image Source="/BAWGUI;component/MyResources/delete.bmp"/>
+                                            <Image Source="/ArchiveWalker;component/MyResources/delete.bmp"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <!--<MenuItem Command="{Binding RunCommands.ResumeArchiveWalkerNormal}" Header="Resume Run" CommandParameter="{Binding Model}" IsEnabled="{Binding RunCommands.Engine.IsNormalRunPaused}" ToolTip="Continue Archive Walker normal run" Visibility="{Binding RunCommands.Engine.IsNormalRunPaused, Converter={StaticResource BooleanVisibilityConverter}}">
@@ -83,7 +83,7 @@
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/BAWGUI;component/MyResources/Run_16x.png" Visibility="{Binding IsTaskRunning, Converter={StaticResource BooleanVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ConverterParameter=IsTaskRunning}"/>
+                                    <Image Source="/ArchiveWalker;component/MyResources/Run_16x.png" Visibility="{Binding IsTaskRunning, Converter={StaticResource BooleanVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ConverterParameter=IsTaskRunning}"/>
                                     <!--<TextBlock Text="{Binding AWRunName}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}, AncestorLevel=2}}" Name="myRun" Background="{Binding IsSelected, Converter={StaticResource BooleanBackgroundConverter}}">-->
                                     <TextBlock Text="{Binding AWRunName}" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}, AncestorLevel=2}}" Name="myRun">
                                         <!--<TextBlock.ContextMenu>

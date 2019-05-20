@@ -30,7 +30,7 @@
             </Image.Style>
         </Image>-->
         <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="Passband Ripple (dB):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PassRipple}" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PassRipple, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
         <!--<Image Grid.Row="1" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
             <Image.Style>
                 <Style TargetType="Image">
@@ -43,7 +43,7 @@
             </Image.Style>
         </Image>-->
         <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="Stopband Ripple (dB):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding StopRipple}" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding StopRipple, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
         <!--<Image Grid.Row="2" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
             <Image.Style>
                 <Style TargetType="Image">
@@ -56,7 +56,7 @@
             </Image.Style>
         </Image>-->
         <Label Grid.Row="2" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="Passband Cutoff Frequency (Hz):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="2" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PassCutoff}" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="2" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PassCutoff, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
         <!--<Image Grid.Row="3" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
             <Image.Style>
                 <Style TargetType="Image">
@@ -69,6 +69,6 @@
             </Image.Style>
         </Image>-->
         <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" Content="Stopband Cutoff Frequency (Hz):" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="3" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding StopCutoff}" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="3" Grid.Column="2" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding StopCutoff, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

@@ -16,10 +16,43 @@
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
         </DataTemplate>
     </UserControl.Resources>
-    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding SelectedOccurrence.Channels}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel, UpdateSourceTrigger=PropertyChanged}" AutoCreateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" NavigationBehavior="RowOnly">
         <xcdg:DataGridControl.Resources>
             <Style TargetType="{x:Type xcdg:ColumnManagerCell}" >
                 <Setter Property="ToolTip" Value="Hold SHIFT key to sort multiple columns" />
+            </Style>
+            <Style TargetType="{x:Type xcdg:DataRow}">
+                <Setter Property="SelectionBackground" Value="LightGreen"/>
+                <Setter Property="InactiveSelectionBackground" Value="LightGreen"/>
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2, Mode=FindAncestor}, Path=DataContext.SelectedPlottingRule}" Value="Coherence"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.Coherence}" Value="NaN"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="LightGray"/>
+                        <!--<Setter Property="FontWeight" Value="ExtraBold"/>-->
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2, Mode=FindAncestor}, Path=DataContext.SelectedPlottingRule}" Value="SNR"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.SNR}" Value="NaN"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="LightGray"/>
+                        <!--<Setter Property="FontWeight" Value="ExtraBold"/>-->
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2, Mode=FindAncestor}, Path=DataContext.SelectedPlottingRule}" Value="Amplitude"/>
+                            <Condition Binding="{Binding RelativeSource={RelativeSource self}, Path=DataContext.Amplitude}" Value="NaN"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Foreground" Value="LightGray"/>
+                        <!--<Setter Property="FontWeight" Value="ExtraBold"/>-->
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                </Style.Triggers>
             </Style>
         </xcdg:DataGridControl.Resources>
         <xcdg:DataGridControl.View>
@@ -31,6 +64,9 @@
                         </DockPanel>
                     </DataTemplate>
                 </xcdg:TableflowView.FixedHeaders>
+                <xcdg:TableflowView.Theme>
+                    <xcdg:Windows8Theme />
+                </xcdg:TableflowView.Theme>
             </xcdg:TableflowView>
         </xcdg:DataGridControl.View>
         <xcdg:DataGridControl.Columns>
@@ -41,7 +77,9 @@
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
+            <xcdg:Column Title="PMU" FieldName="PMU" ReadOnly="True" Width="70"/>
             <xcdg:Column Title="Name" FieldName="Name" ReadOnly="True" Width="250"/>
+            <xcdg:Column Title="Unit" FieldName="Unit" ReadOnly="True" Width="40"/>
             <xcdg:Column Title="Amplitude" FieldName="Amplitude" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
             <xcdg:Column Title="SNR" FieldName="SNR" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="60"/>
             <xcdg:Column Title="Coherence" FieldName="Coherence" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>

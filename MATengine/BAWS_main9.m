@@ -65,8 +65,12 @@
 %   AdditionalOutputRerun - Cell array containing the AdditionalOutput
 %       output of the RunDetection function for each time the function was
 %       called. Only used in rerun mode; set to {} in normal mode.
+%   RetrievePMU - a structure array matching the configuration of the PMU
+%       structures used within the tool. Only used in rerun mode when
+%       RerunDetector == 'RetrieveMode'; set to [] in normal mode and rerun
+%       mode when RerunDetector specifies a detector.
 
-function [DetectionResultsRerun, AdditionalOutputRerun] = BAWS_main9(varargin)
+function [DetectionResultsRerun, AdditionalOutputRerun, RetrievePMU] = BAWS_main9(varargin)
 
 % Collect file paths
 %
@@ -118,7 +122,7 @@ if (nargin == 5) && (~Unpause)
     end
     
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
-        BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
+        BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
         ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
 %     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],WindAppXML);
@@ -139,6 +143,14 @@ if (nargin == 5) && (~Unpause)
     PMUbyFile = cell(1,length(FileInfo));
 elseif ~Unpause
     RunMode = 'Rerun';
+    
+    S = dir(fullfile([ControlPath '\Progress*']));
+    if length(S) == 1
+        delete(fullfile(S.folder,S.name))
+    end
+    if exist(ControlPath,'dir') == 7
+        csvwrite([ControlPath '\Progress_0.csv'],[]);
+    end
     
     % Configuration file tied to results
     ConfigFile = varargin{5};
@@ -168,11 +180,11 @@ elseif ~Unpause
         error(['Configuration file ' ConfigFile ' does not exist.']);
     end
     
-    [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);    
+    [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,OmitFromSparse,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);    
 %     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],[]);
     
     % Error check on RerunDetector entry
-    if sum(strcmp(RerunDetector,[{'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
+    if sum(strcmp(RerunDetector,[{'RetrieveMode', 'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
         error([RerunDetector ' is not a valid detector name.']);
     end
     
@@ -207,8 +219,7 @@ elseif ~Unpause
                 AdditionalOutputRerun = {};
                 return
             end
-        else
-            strcmp(RerunDetector,'Thevenin')
+        elseif strcmp(RerunDetector,'Thevenin')
             % Load the SparsePMU corresponding to the Thevenin application.
             if isfield(DetectorXML,'Thevenin')
                 SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Thevenin');
@@ -271,20 +282,20 @@ elseif ~Unpause
     % FinalAngles, AdditionalOutputCondos
     load(StarterInitializationFile);
     %
-    RerunStartTime = datestr(RerunStartTimeDTadj,'mm/dd/yyyy HH:MM:SS');
+    RerunStartTimeAdj = datestr(RerunStartTimeDTadj,'mm/dd/yyyy HH:MM:SS');
 
     % Adjust ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode 
     % to select archive mode and the start and end times given by
     % RerunStartTime and RerunEndTime
     Mode.Name = 'Archive';
-    Mode.Params.DateTimeStart = RerunStartTime;
+    Mode.Params.DateTimeStart = RerunStartTimeAdj;
     Mode.Params.DateTimeEnd = RerunEndTime;
     ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode = Mode;
 
     % Get everything set up based on the configuration structure stored in
     % the initialization file.
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
-        BlockDetectors,FileDetectors,NumDQandCustomStages,NumPostProcessCustomStages,...
+        BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
         ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
     
@@ -322,16 +333,17 @@ elseif ~Unpause
         tt = PMUbyFile{FileIdx}(1).Signal_Time.Signal_datenum;
         % Shift to the specified start time minus the length of the file
         % tt = datenum(RerunStartTime) + (tt - tt(1)) - ((tt(end)-tt(1)) + (tt(2)-tt(1)));
-        tt = datenum(RerunStartTime) + (tt-tt(end)-tt(2)+tt(1));
+        tt = datenum(RerunStartTimeAdj) + (tt-tt(end)-tt(2)+tt(1));
         % Convert to string
         ttStr = cellstr(datestr(tt,'mm/dd/yy HH:MM:SS.FFF'));
         for pmuIdx = 1:length(PMUbyFile{FileIdx})
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.Signal_datenum = tt;
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.Time_String = ttStr;
+            PMUbyFile{FileIdx}(pmuIdx).Signal_Time.datetime = datetime(tt,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
         end
     end
     
-    clear RerunStartTime RerunEndTime RerunStartTimeDT RerunDetector InitializationPathUser IDX StarterInitializationFile Mode
+    clear RerunStartTimeAdj RerunStartTimeDT InitializationPathUser IDX StarterInitializationFile Mode
 end
 
 FlagBitInput = 1; %Bit used to indicate flagged input data to be processed
@@ -344,6 +356,7 @@ NumFlagsProcessor = 4; % Number of bits used to indicate processed data that has
 % returned either way.
 DetectionResultsRerun = {};
 AdditionalOutputRerun = {};
+RetrievePMU = [];
 
 LastShortcutOverEmpty = 0;
 
@@ -361,7 +374,7 @@ while(~min(done))
             warning(['Attempt to unpause failed because ' ControlPath '\PauseData.mat could not be loaded.']);
             return
         end
-        [~,~,~,DetectorXML,~,~,~,~,~,~,~,~,~,~,~] = InitializeBAWS(ConfigAll,EventPath);
+        [~,~,~,DetectorXML,~,~,~,~,~,~,~,~,~,~,~,~] = InitializeBAWS(ConfigAll,EventPath);
         try
             delete([ControlPath '\PauseData.mat'])
         catch
@@ -373,11 +386,26 @@ while(~min(done))
         Unpause = false;
     end
     
+    % Store the sparse PMU structure for the previous file
+    % Make sure the last focus file time is available first
+    if (~isempty(DataInfo.LastFocusFileTime)) && (strcmp(RunMode,'Normal'))
+        SparsePath = [InitializationPath '\SparsePMU\' datestr(DataInfo.LastFocusFileTime,'yyyy')];
+        if exist(SparsePath,'dir') == 0
+            mkdir(SparsePath);
+        end
+        save([SparsePath '\SparsePMU_' datestr(DataInfo.LastFocusFileTime,'yyyymmdd')],'SparsePMU');
+    end
+    
     
     % Check if the RunFlag file exists
     if (exist([ControlPath '\RunFlag.txt'],'file') == 0) && (~isempty(ControlPath))
         % The RunFlag file does not exist, so processing is to
         % pause/terminate
+        
+        S = dir(fullfile([ControlPath '\Progress*']));
+        if length(S) == 1
+            delete(fullfile(S.folder,S.name))
+        end
         
         % Check if the PauseFlag file exists
         if exist([ControlPath '\PauseFlag.txt'],'file') ~= 0
@@ -404,7 +432,7 @@ while(~min(done))
         SkippedFiles = zeros(1,length(FileInfo));
         FocusFileTime = zeros(1,length(FileInfo));
         for FileIdx = 1:length(FileInfo)
-            [focusFile{FileIdx},done(FileIdx),SkippedFiles(FileIdx),FocusFileTime(FileIdx),DataInfo] = getFocusFiles(FileInfo(FileIdx),FileDirectory{FileIdx},DataInfo,FileLength);
+            [focusFile{FileIdx},done(FileIdx),SkippedFiles(FileIdx),FocusFileTime(FileIdx),DataInfo,FileLength] = getFocusFiles(FileInfo(FileIdx),FileDirectory{FileIdx},DataInfo,FileLength,ResultUpdateInterval);
             FileInfo(FileIdx).lastFocusFile = focusFile{FileIdx};
         end
         %
@@ -426,16 +454,6 @@ while(~min(done))
     
     % If running in normal mode:
     if strcmp(RunMode,'Normal')
-        % Store the sparse PMU structure for the previous file
-        % Make sure the last focus file time is available first
-        if ~isempty(DataInfo.LastFocusFileTime)
-            SparsePath = [InitializationPath '\SparsePMU\' datestr(DataInfo.LastFocusFileTime,'yyyy')];
-            if exist(SparsePath,'dir') == 0
-                mkdir(SparsePath);
-            end
-            save([SparsePath '\SparsePMU_' datestr(DataInfo.LastFocusFileTime,'yyyymmdd')],'SparsePMU');
-        end
-        
         % If the last focus file time is available
         %   AND
         % If the day of the last focus file is different than the day of the
@@ -481,7 +499,7 @@ while(~min(done))
     end
     
     for FileIdx = 1:(SkippedFiles+1)
-        [PMU,PMUbyFile,DataInfo,FileInfo,FileLength] = LoadFocusFiles(FileIdx,SkippedFiles,FileInfo,PMUbyFile,idx,DataInfo,focusFile,FileLength,Num_Flags);
+        [PMU,PMUbyFile,DataInfo,FileInfo,FileLength] = LoadFocusFiles(FileIdx,SkippedFiles,FileInfo,PMUbyFile,idx,DataInfo,focusFile,FileLength,Num_Flags,FileDirectory);
         
         if isempty(PMU)
             % Files from each directory have not yet been successfully
@@ -632,6 +650,7 @@ while(~min(done))
         if (LastShortcutOverEmpty == 1) && (ShortcutOverEmpty == 0) && ~isempty(SecondsToConcat) && ~isnan(SecondsToConcat)
             for PMUidx = 1:length(PMUconcat)
                 PMUconcat(PMUidx).Signal_Time.Time_String = cellstr(datestr(PMUconcat(PMUidx).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'));
+                PMUconcat(PMUidx).Signal_Time.datetime = datetime(PMUconcat(PMUidx).Signal_Time.Signal_datenum,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
             end
         end
         LastShortcutOverEmpty = ShortcutOverEmpty;
@@ -656,6 +675,14 @@ while(~min(done))
                 FileProgress = 100;
             end
             disp(['Progress through files: ' num2str(FileProgress) '%']);
+            
+            S = dir(fullfile([ControlPath '\Progress*']));
+            if length(S) == 1
+                delete(fullfile(S.folder,S.name))
+            end
+            if (FileProgress < 100) && (exist(ControlPath,'dir') == 7)
+                csvwrite([ControlPath '\Progress_' num2str(FileProgress) '.csv'],[]);
+            end
         end
         
         % Apply data quality filters and signal customizations
@@ -696,6 +723,18 @@ while(~min(done))
         % Num_Flags is hard coded as 4 to account for the 2 processor flags
         % and the 2 customization flags.
         PMU = DQandCustomization(PMU,PostProcessCustXML,NumPostProcessCustomStages,4);
+        
+        if strcmp(RunMode,'Rerun')
+            if strcmp(RerunDetector,'RetrieveMode')
+                RetrievePMU = ConcatenatePMU(RetrievePMU,PMU);
+                if RetrievePMU(1).Signal_Time.Signal_datenum(end) >= datenum(ConfigAll.Config.DataConfig.Configuration.ReaderProperties.Mode.Params.DateTimeEnd)                    
+                    return
+                else
+                    continue
+                end
+            end
+        end
+        
 %         PMU = GetOutputSignalsRev(PMU,ConfigSignalSelection);
         
         % *********
@@ -714,7 +753,7 @@ while(~min(done))
 
             EventList = WindApplication(PMU,WindAppXML,EventList,DetectorXML,FileLength);
             
-            SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,FileDetectors);
+            SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,setdiff(FileDetectors,OmitFromSparse));
         elseif ~isempty(FirstWindowStartTime)
             % Running in rerun mode with forced oscillation detectors
             
@@ -730,6 +769,7 @@ while(~min(done))
                 PMU(TrimIdx).Flag = PMU(TrimIdx).Flag(KeepIdx,:,:);
                 PMU(TrimIdx).Signal_Time.Signal_datenum = PMU(TrimIdx).Signal_Time.Signal_datenum(KeepIdx);
                 PMU(TrimIdx).Signal_Time.Time_String = PMU(TrimIdx).Signal_Time.Time_String(KeepIdx);
+                PMU(TrimIdx).Signal_Time.datetime = PMU(TrimIdx).Signal_Time.datetime(KeepIdx);
             end
             
             % Only need to do this once, so set WindowStartTime to empty so
@@ -768,7 +808,7 @@ while(~min(done))
                     if strcmp(RunMode,'Normal')
                         EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,AlarmingParams,BlockDetectors,EventList);
                         
-                        SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,BlockDetectors);
+                        SparsePMU = AddToSparsePMU(SparsePMU,AdditionalOutput,DetectorXML,setdiff(BlockDetectors,OmitFromSparse));
                     else
                         % Rerun mode 
                         

@@ -12,6 +12,9 @@ using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
+using MapService.ViewModels;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -38,13 +41,17 @@ namespace BAWGUI.Results.ViewModels
             _filteredOccurrences.Clear();
             foreach (var ocur in model.Occurrences)
             {
-                _occurrences.Add(new OccurrenceViewModel(ocur));
-                _filteredOccurrences.Add(new OccurrenceViewModel(ocur));
+                var oc = new OccurrenceViewModel(ocur);
+                _occurrences.Add(oc);
+                _filteredOccurrences.Add(oc);
+                oc.SelectedChannelChanged += _selectedChannelChanged;
             }
+            //_selectedOccurrence = new OccurrenceViewModel();
+            _selectedOccurrence = FilteredOccurrences.FirstOrDefault();
         }
         public ForcedOscillationResultViewModel()
         {
-
+            _model = new DatedForcedOscillationEvent();
         }
         private readonly DatedForcedOscillationEvent _model;
         public DatedForcedOscillationEvent Model
@@ -58,6 +65,12 @@ namespace BAWGUI.Results.ViewModels
             get { return _occurrences; }
             set
             {
+                //_model.Occurrences = value;
+                _model.Occurrences.Clear();
+                foreach (var ocr in value)
+                {
+                    _model.Occurrences.Add(ocr.Model);
+                }
                 _occurrences = value;
             }
         }
@@ -68,12 +81,18 @@ namespace BAWGUI.Results.ViewModels
             get { return _filteredOccurrences; }
             set
             {
-                _filteredOccurrences = value;
-                _model.FilteredOccurrences = new List<DatedOccurrence>();
-                foreach (var ocur in value)
+                _model.FilteredOccurrences.Clear();
+                foreach (var ocr in value)
                 {
-                    _model.FilteredOccurrences.Add(ocur.Model);
+                    _model.FilteredOccurrences.Add(ocr.Model);
                 }
+                _filteredOccurrences = value;
+                //_model.FilteredOccurrences = new List<DatedOccurrence>();
+                //foreach (var ocur in value)
+                //{
+                //    _model.FilteredOccurrences.Add(ocur.Model);
+                //}
+                //SelectedOccurrence = FilteredOccurrences.FirstOrDefault();
                 OnPropertyChanged();
             }
         }
@@ -238,6 +257,47 @@ namespace BAWGUI.Results.ViewModels
         public string GetLastEndOfFilteredOccurrences()
         {
             return _filteredOccurrences.OrderBy(x => x.End).LastOrDefault().End;
+        }
+        private OccurrenceViewModel _selectedOccurrence;
+        public OccurrenceViewModel SelectedOccurrence
+        {
+            get { return _selectedOccurrence; }
+            set
+            {
+                if (_selectedOccurrence != value)
+                {
+                    //save a reference to the previous selected occurrence and channel, 
+                    //once the GUI update, the selected channel will be set to null due to change of itemssource of the datagrid
+                    //this way, we can set it back to the value it had
+                    OccurrenceViewModel oldSelectedOccurrence = null;
+                    FOOccurrenceChannelViewModel oldSelectedChannel = null;
+                    if (_selectedOccurrence != null)
+                    {
+                        oldSelectedChannel = _selectedOccurrence.SelectedChannel;
+                        oldSelectedOccurrence = _selectedOccurrence;
+                    }
+                    _selectedOccurrence = value;
+                    OnPropertyChanged();
+                    OnSelectedOccurrenceChanged();
+                    if (oldSelectedOccurrence != null)
+                    {
+                        oldSelectedOccurrence.SelectedChannel = oldSelectedChannel;
+                    }
+                }
+            }
+        }
+        public event EventHandler SelectedOccurrenceChanged;
+        public virtual void OnSelectedOccurrenceChanged()
+        {
+            SelectedOccurrenceChanged?.Invoke(this, EventArgs.Empty);
+        }
+        public event EventHandler SelectedChannelChanged;
+        //public virtual void OnSelectedChannelChanged()
+        //{
+        //}
+        private void _selectedChannelChanged(object sender, EventArgs e)
+        {
+            SelectedChannelChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

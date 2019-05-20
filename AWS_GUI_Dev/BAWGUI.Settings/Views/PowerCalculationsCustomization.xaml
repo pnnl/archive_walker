@@ -24,14 +24,14 @@
                 <StackPanel Orientation="Vertical">
                     <TextBlock Margin="30,2,0,2" Text="Voltage Phasor: "/>
                     <StackPanel Orientation="Horizontal">
-                        <xtlkt:WatermarkTextBox Name="VphasorPMU" Width="150" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of voltage phasor signal" Watermark="Enter Voltage Phasor PMU">
+                        <xtlkt:WatermarkTextBox Name="VphasorPMU" Width="150" Text="{Binding Path=Value[0].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of voltage phasor signal" Watermark="Enter Voltage Phasor PMU">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="VphasorChannel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of voltage phasor signal" Watermark="Enter Voltage Phasor Signal">
+                        <xtlkt:WatermarkTextBox Name="VphasorChannel" Width="150" Text="{Binding Path=Value[0].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of voltage phasor signal" Watermark="Enter Voltage Phasor Signal">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
@@ -41,14 +41,14 @@
                     </StackPanel>
                     <TextBlock Margin="30,2,2,2" Text="Current Phasor: "/>
                     <StackPanel Orientation="Horizontal">
-                        <xtlkt:WatermarkTextBox Name="IphasorPMU" Width="150" Text="{Binding Path=Value[1].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of current phasor signal" Watermark="Enter Current Phasor PMU">
+                        <xtlkt:WatermarkTextBox Name="IphasorPMU" Width="150" Text="{Binding Path=Value[1].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of current phasor signal" Watermark="Enter Current Phasor PMU">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="IphasorChannel" Width="150" Text="{Binding Path=Value[1].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of current phasor signal" Watermark="Enter Current Phasor Signal">
+                        <xtlkt:WatermarkTextBox Name="IphasorChannel" Width="150" Text="{Binding Path=Value[1].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of current phasor signal" Watermark="Enter Current Phasor Signal">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
@@ -65,28 +65,28 @@
                         <TextBlock Margin="255,2,2,2" Text="Voltage Angle: "/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <xtlkt:WatermarkTextBox Name="VmagPMU" Width="150" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of voltage magnitude signal" Watermark="Enter Voltage Magnitude PMU">
+                        <xtlkt:WatermarkTextBox Name="VmagPMU" Width="150" Text="{Binding Path=Value[0].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of voltage magnitude signal" Watermark="Enter Voltage Magnitude PMU">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="VmagChannel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of voltage magnitude signal" Watermark="Enter Voltage Magnitude Signal">
+                        <xtlkt:WatermarkTextBox Name="VmagChannel" Width="150" Text="{Binding Path=Value[0].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="VmagPhasorTextBoxGotFocus" LostKeyboardFocus="VmagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of voltage magnitude signal" Watermark="Enter Voltage Magnitude Signal">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[0]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="VangPMU" Width="150" Text="{Binding Path=Value[1].PMUName}" Margin="45,0,0,0" IsReadOnly="True" GotKeyboardFocus="VangTextBoxGotFocus" LostKeyboardFocus="VangTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of voltage angle signal" Watermark="Enter Voltage Angle PMU">
+                        <xtlkt:WatermarkTextBox Name="VangPMU" Width="150" Text="{Binding Path=Value[1].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="45,0,0,0" IsReadOnly="True" GotKeyboardFocus="VangTextBoxGotFocus" LostKeyboardFocus="VangTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of voltage angle signal" Watermark="Enter Voltage Angle PMU">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="VangChannel" Width="150" Text="{Binding Path=Value[1].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="VangTextBoxGotFocus" LostKeyboardFocus="VangTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of voltage angle signal" Watermark="Enter Voltage Angle Signal">
+                        <xtlkt:WatermarkTextBox Name="VangChannel" Width="150" Text="{Binding Path=Value[1].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="VangTextBoxGotFocus" LostKeyboardFocus="VangTextBoxLostFocus" BorderBrush="{Binding Path=Value[1].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of voltage angle signal" Watermark="Enter Voltage Angle Signal">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[1]}"/>
@@ -99,28 +99,28 @@
                         <TextBlock Margin="255,2,2,2" Text="Current Angle: "/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <xtlkt:WatermarkTextBox Name="ImagPMU" Width="150" Text="{Binding Path=Value[2].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[2].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of current magnitude signal" Watermark="Enter Current Magnitude PMU">
+                        <xtlkt:WatermarkTextBox Name="ImagPMU" Width="150" Text="{Binding Path=Value[2].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="30,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[2].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of current magnitude signal" Watermark="Enter Current Magnitude PMU">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[2]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="ImagChannel" Width="150" Text="{Binding Path=Value[2].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[2].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of current magnitude signal" Watermark="Enter Current Magnitude Signal">
+                        <xtlkt:WatermarkTextBox Name="ImagChannel" Width="150" Text="{Binding Path=Value[2].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="ImagPhasorTextBoxGotFocus" LostKeyboardFocus="ImagPhasorTextBoxLostFocus" BorderBrush="{Binding Path=Value[2].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of current magnitude signal" Watermark="Enter Current Magnitude Signal">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[2]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="IangPMU" Width="150" Text="{Binding Path=Value[3].PMUName}" Margin="45,0,0,0" IsReadOnly="True" GotKeyboardFocus="IangTextBoxGotFocus" LostKeyboardFocus="IangTextBoxLostFocus" BorderBrush="{Binding Path=Value[3].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of current angle signal" Watermark="Enter Current Angle PMU">
+                        <xtlkt:WatermarkTextBox Name="IangPMU" Width="150" Text="{Binding Path=Value[3].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="45,0,0,0" IsReadOnly="True" GotKeyboardFocus="IangTextBoxGotFocus" LostKeyboardFocus="IangTextBoxLostFocus" BorderBrush="{Binding Path=Value[3].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="PMU name of current angle signal" Watermark="Enter Current Angle PMU">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[3]}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </xtlkt:WatermarkTextBox>
-                        <xtlkt:WatermarkTextBox Name="IangChannel" Width="150" Text="{Binding Path=Value[3].SignalName}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="IangTextBoxGotFocus" LostKeyboardFocus="IangTextBoxLostFocus" BorderBrush="{Binding Path=Value[3].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of current angle signal" Watermark="Enter Current Angle Signal">
+                        <xtlkt:WatermarkTextBox Name="IangChannel" Width="150" Text="{Binding Path=Value[3].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="20,0,0,0" IsReadOnly="True" GotKeyboardFocus="IangTextBoxGotFocus" LostKeyboardFocus="IangTextBoxLostFocus" BorderBrush="{Binding Path=Value[3].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="Channel name of current angle signal" Watermark="Enter Current Angle Signal">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotKeyboardFocus">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.PowerPhasorTextBoxGotFocus}" CommandParameter="{Binding Path=Value[3]}"/>
@@ -165,7 +165,7 @@
                 </Image.Style>
             </Image>-->
             <Label Margin="0,0,0,0" Width="Auto" VerticalAlignment="Center" Content="Custom PMU: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" Width="150" Height="22" Text="{Binding CustPMUname}" Margin="0,0,20,0"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" Width="150" Height="22" Text="{Binding CustPMUname, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,20,0"/>
             <!--<Image Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="0,5,0,0" HorizontalAlignment="Right">
                 <Image.Style>
                     <Style TargetType="Image">
@@ -178,7 +178,7 @@
                 </Image.Style>
             </Image>-->
             <Label Margin="2,2,2,2" Content="Custom Signal: "/>
-            <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" Width="150" Height="22" Text="{Binding OutputInputMappingPair[0].Key.SignalName}" Margin="0,0,20,0"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" Width="150" Height="22" Text="{Binding OutputInputMappingPair[0].Key.SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,20,0"/>
         </StackPanel>
         <ContentControl Content="{Binding OutputInputMappingPair[0]}">
             <ContentControl.Style>

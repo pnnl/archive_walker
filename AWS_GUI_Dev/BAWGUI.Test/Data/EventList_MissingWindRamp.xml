@@ -1,0 +1,1575 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Events>
+  <ForcedOscillation>
+    <ID>739690.53818826389</ID>
+    <OverallStart>02/01/17 20:44:00.000</OverallStart>
+    <OverallEnd>02/16/17 23:59:59.983</OverallEnd>
+    <Occurrence>
+      <OccurrenceID>742120.72578534717</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 01:14:00.000</Start>
+      <End>02/15/17 01:29:59.983</End>
+      <Persistence>360</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.3237e-05</Amplitude>
+        <SNR>-48.2825</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.0618e-05</Amplitude>
+        <SNR>-49.6825</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.0568e-05</Amplitude>
+        <SNR>-44.8816</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.0304e-05</Amplitude>
+        <SNR>-44.8703</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742123.74394740746</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 01:40:00.000</Start>
+      <End>02/15/17 02:52:59.983</End>
+      <Persistence>3780</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.6023e-05</Amplitude>
+        <SNR>-46.1757</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.3632e-05</Amplitude>
+        <SNR>-47.372</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>3.258e-05</Amplitude>
+        <SNR>-40.4977</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>3.2596e-05</Amplitude>
+        <SNR>-40.3109</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.1491e-05</Amplitude>
+        <SNR>-47.5494</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742138.80224135413</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 03:04:00.000</Start>
+      <End>02/15/17 03:29:59.983</End>
+      <Persistence>960</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.3571e-05</Amplitude>
+        <SNR>-48.5219</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.4937e-05</Amplitude>
+        <SNR>-46.9494</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>1.8002e-05</Amplitude>
+        <SNR>-45.6918</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.6344e-05</Amplitude>
+        <SNR>-46.6139</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.3671e-06</Amplitude>
+        <SNR>-56.4787</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742143.82232148154</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 03:33:00.000</Start>
+      <End>02/15/17 04:18:59.983</End>
+      <Persistence>2160</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>9.1249e-06</Amplitude>
+        <SNR>-52.4247</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.383e-05</Amplitude>
+        <SNR>-47.9736</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.4949e-05</Amplitude>
+        <SNR>-43.9491</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.4188e-05</Amplitude>
+        <SNR>-44.1254</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>9.8984e-06</Amplitude>
+        <SNR>-49.9934</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742148.85614872689</OccurrenceID>
+      <Frequency>1.4284</Frequency>
+      <Start>02/15/17 04:22:00.000</Start>
+      <End>02/15/17 04:50:59.983</End>
+      <Persistence>1140</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.8165e-05</Amplitude>
+        <SNR>-46.7996</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.8839e-05</Amplitude>
+        <SNR>-45.6309</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.0944e-05</Amplitude>
+        <SNR>-45.6936</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.0392e-05</Amplitude>
+        <SNR>-45.8771</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.2056e-05</Amplitude>
+        <SNR>-48.0221</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742155.89067689818</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 05:11:00.000</Start>
+      <End>02/15/17 05:20:59.983</End>
+      <Persistence>0</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.7783e-06</Amplitude>
+        <SNR>-56.6457</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>5.1374e-06</Amplitude>
+        <SNR>-56.8904</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>1.5233e-05</Amplitude>
+        <SNR>-48.5783</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.4583e-05</Amplitude>
+        <SNR>-48.8651</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742165.95755523152</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 06:48:00.000</Start>
+      <End>02/15/17 06:57:59.983</End>
+      <Persistence>0</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>9.2388e-06</Amplitude>
+        <SNR>-51.4185</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>1.7987e-05</Amplitude>
+        <SNR>-46.6843</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.3895e-05</Amplitude>
+        <SNR>-48.8771</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>8.2548e-06</Amplitude>
+        <SNR>-51.3219</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742166.96667688654</OccurrenceID>
+      <Frequency>1.4296</Frequency>
+      <Start>02/15/17 07:01:00.000</Start>
+      <End>02/15/17 07:51:59.983</End>
+      <Persistence>2460</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.3904e-05</Amplitude>
+        <SNR>-49.2968</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.3473e-05</Amplitude>
+        <SNR>-48.7937</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.3865e-05</Amplitude>
+        <SNR>-44.8278</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.2993e-05</Amplitude>
+        <SNR>-45.0855</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>8.4183e-06</Amplitude>
+        <SNR>-51.8997</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742173.00316722225</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 07:53:00.000</Start>
+      <End>02/15/17 12:32:59.983</End>
+      <Persistence>16200</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.3524e-05</Amplitude>
+        <SNR>-43.7893</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.9841e-05</Amplitude>
+        <SNR>-43.6732</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>4.2541e-05</Amplitude>
+        <SNR>-39.7267</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>3.5041e-05</Amplitude>
+        <SNR>-41.1177</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.9373e-05</Amplitude>
+        <SNR>-44.3192</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742223.20181831019</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 12:40:00.000</Start>
+      <End>02/15/17 13:16:59.983</End>
+      <Persistence>1620</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.185e-05</Amplitude>
+        <SNR>-44.0384</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.9695e-05</Amplitude>
+        <SNR>-44.2966</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.9736e-05</Amplitude>
+        <SNR>-40.8934</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.553e-05</Amplitude>
+        <SNR>-42.1562</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.5598e-05</Amplitude>
+        <SNR>-45.3405</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742230.22848015046</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 13:18:00.000</Start>
+      <End>02/15/17 13:27:59.983</End>
+      <Persistence>0</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>9.4254e-06</Amplitude>
+        <SNR>-52.3138</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.2535e-05</Amplitude>
+        <SNR>-49.0975</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>1.7046e-05</Amplitude>
+        <SNR>-47.4209</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.466e-05</Amplitude>
+        <SNR>-48.7003</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.1088e-06</Amplitude>
+        <SNR>-57.6616</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742236.24511825235</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 13:42:00.000</Start>
+      <End>02/15/17 14:07:59.983</End>
+      <Persistence>960</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.3313e-05</Amplitude>
+        <SNR>-49.1723</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.1276e-05</Amplitude>
+        <SNR>-50.0447</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.7627e-05</Amplitude>
+        <SNR>-42.8344</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.3829e-05</Amplitude>
+        <SNR>-44.1478</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.1255e-05</Amplitude>
+        <SNR>-48.8349</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742246.26904953702</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 14:16:00.000</Start>
+      <End>02/15/17 14:53:59.983</End>
+      <Persistence>1680</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.475e-05</Amplitude>
+        <SNR>-48.1045</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.5916e-05</Amplitude>
+        <SNR>-46.5692</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.9024e-05</Amplitude>
+        <SNR>-42.4372</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.6348e-05</Amplitude>
+        <SNR>-43.1961</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>9.1867e-06</Amplitude>
+        <SNR>-50.4916</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742278.38962593745</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 17:10:00.000</Start>
+      <End>02/15/17 17:26:59.983</End>
+      <Persistence>420</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.3223e-05</Amplitude>
+        <SNR>-50.8039</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.1267e-05</Amplitude>
+        <SNR>-50.109</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>1.9168e-05</Amplitude>
+        <SNR>-46.8859</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.6987e-05</Amplitude>
+        <SNR>-47.7028</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.9836e-06</Amplitude>
+        <SNR>-60.315</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742281.40076252318</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 17:31:00.000</Start>
+      <End>02/15/17 19:29:59.983</End>
+      <Persistence>6840</Persistence>
+      <AlarmFlag>1</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.8241e-05</Amplitude>
+        <SNR>-46.1765</SNR>
+        <Coherence>0.27449</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.5704e-05</Amplitude>
+        <SNR>-47.8145</SNR>
+        <Coherence>0.60366</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>3.7499e-05</Amplitude>
+        <SNR>-40.2543</SNR>
+        <Coherence>0.14707</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>3.1443e-05</Amplitude>
+        <SNR>-41.8816</SNR>
+        <Coherence>0.17711</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.2467e-05</Amplitude>
+        <SNR>-48.8029</SNR>
+        <Coherence>0.62914</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742304.49211600691</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 19:38:00.000</Start>
+      <End>02/15/17 20:29:59.983</End>
+      <Persistence>2520</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.2999e-05</Amplitude>
+        <SNR>-44.2749</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>2.0209e-05</Amplitude>
+        <SNR>-44.7805</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.3926e-05</Amplitude>
+        <SNR>-44.5172</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.4431e-05</Amplitude>
+        <SNR>-43.6611</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.5003e-05</Amplitude>
+        <SNR>-47.5779</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742318.53020310181</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 20:32:00.000</Start>
+      <End>02/15/17 22:43:59.983</End>
+      <Persistence>7320</Persistence>
+      <AlarmFlag>1</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.511e-05</Amplitude>
+        <SNR>-43.2973</SNR>
+        <Coherence>0.34006</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>2.698e-05</Amplitude>
+        <SNR>-41.1052</SNR>
+        <Coherence>0.49896</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.7907e-05</Amplitude>
+        <SNR>-42.472</SNR>
+        <Coherence>0.6146</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.5678e-05</Amplitude>
+        <SNR>-43.0044</SNR>
+        <Coherence>0.72672</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.7837e-05</Amplitude>
+        <SNR>-43.4091</SNR>
+        <Coherence>0.41269</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742337.63505268516</OccurrenceID>
+      <Frequency>1.4275</Frequency>
+      <Start>02/15/17 23:03:00.000</Start>
+      <End>02/15/17 23:21:59.983</End>
+      <Persistence>540</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.0679e-05</Amplitude>
+        <SNR>-50.3731</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.744e-05</Amplitude>
+        <SNR>-45.7213</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>2.4499e-05</Amplitude>
+        <SNR>-43.773</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.5474e-05</Amplitude>
+        <SNR>-43.2488</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.2145e-05</Amplitude>
+        <SNR>-47.9963</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742344.65100677079</OccurrenceID>
+      <Frequency>1.4283</Frequency>
+      <Start>02/15/17 23:26:00.000</Start>
+      <End>02/15/17 23:43:59.983</End>
+      <Persistence>480</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.1767e-05</Amplitude>
+        <SNR>-49.7418</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>1.8276e-05</Amplitude>
+        <SNR>-45.3853</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>1.8295e-05</Amplitude>
+        <SNR>-46.0876</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.0285e-05</Amplitude>
+        <SNR>-45.1145</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>1.6117e-05</Amplitude>
+        <SNR>-45.6308</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742349.65855574072</OccurrenceID>
+      <Frequency>1.4212</Frequency>
+      <Start>02/15/17 23:45:40.000</Start>
+      <End>02/15/17 23:46:59.983</End>
+      <Persistence>0</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.30113</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.33284</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.29489</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.27809</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.3022</Coherence>
+      </Channel>
+    </Occurrence>
+  </ForcedOscillation>
+
+  <ForcedOscillation>
+    <ID>739692.54093646992</ID>
+    <OverallStart>02/01/17 20:48:00.000</OverallStart>
+    <OverallEnd>02/16/17 23:29:59.983</OverallEnd>
+    <Occurrence>
+      <OccurrenceID>742110.69497697917</OccurrenceID>
+      <Frequency>0.8175</Frequency>
+      <Start>02/15/17 00:38:40.000</Start>
+      <End>02/15/17 00:39:59.983</End>
+      <Persistence>0</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.62438</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.48693</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.29395</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.28317</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.58678</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742204.14736325236</OccurrenceID>
+      <Frequency>0.83498</Frequency>
+      <Start>02/15/17 11:21:00.000</Start>
+      <End>02/15/17 11:42:59.983</End>
+      <Persistence>720</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.1548e-05</Amplitude>
+        <SNR>-36.3472</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>5.3165e-05</Amplitude>
+        <SNR>-35.3586</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>4.8876e-05</Amplitude>
+        <SNR>-37.2359</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.0461e-05</Amplitude>
+        <SNR>-36.8199</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.3787e-05</Amplitude>
+        <SNR>-36.2729</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742206.16481408570</OccurrenceID>
+      <Frequency>0.835</Frequency>
+      <Start>02/15/17 11:46:00.000</Start>
+      <End>02/15/17 11:56:59.983</End>
+      <Persistence>60</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.1631e-05</Amplitude>
+        <SNR>-37.0798</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>4.4615e-05</Amplitude>
+        <SNR>-37.7206</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>5.0251e-05</Amplitude>
+        <SNR>-37.6827</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.099e-05</Amplitude>
+        <SNR>-37.4474</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>3.1661e-05</Amplitude>
+        <SNR>-39.6813</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742209.17311004631</OccurrenceID>
+      <Frequency>0.835</Frequency>
+      <Start>02/15/17 11:58:00.000</Start>
+      <End>02/15/17 12:08:59.983</End>
+      <Persistence>60</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.869e-05</Amplitude>
+        <SNR>-36.9036</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>4.056e-05</Amplitude>
+        <SNR>-37.6824</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>3.3671e-05</Amplitude>
+        <SNR>-40.4326</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>3.4169e-05</Amplitude>
+        <SNR>-40.184</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>2.7716e-05</Amplitude>
+        <SNR>-40.3657</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742218.19437848381</OccurrenceID>
+      <Frequency>0.82161</Frequency>
+      <Start>02/15/17 12:27:00.000</Start>
+      <End>02/15/17 12:43:59.983</End>
+      <Persistence>300</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.0905e-05</Amplitude>
+        <SNR>-36.2069</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>5.0905e-05</Amplitude>
+        <SNR>-35.8782</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>5.0905e-05</Amplitude>
+        <SNR>-36.2069</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>5.0905e-05</Amplitude>
+        <SNR>-36.2069</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.0905e-05</Amplitude>
+        <SNR>-36.2069</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.0905e-05</Amplitude>
+        <SNR>-36.2069</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742242.26176434034</OccurrenceID>
+      <Frequency>0.83</Frequency>
+      <Start>02/15/17 14:14:40.000</Start>
+      <End>02/15/17 14:15:59.983</End>
+      <Persistence>0</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.59582</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.61697</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.41879</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.39214</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>0.54987</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742259.33309500001</OccurrenceID>
+      <Frequency>0.81992</Frequency>
+      <Start>02/15/17 15:51:00.000</Start>
+      <End>02/15/17 16:03:59.983</End>
+      <Persistence>300</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>9.4481e-05</Amplitude>
+        <SNR>-31.9235</SNR>
+        <Coherence>0.5434</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>8.4588e-05</Amplitude>
+        <SNR>-32.1881</SNR>
+        <Coherence>0.51302</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>7.5633e-05</Amplitude>
+        <SNR>-34.3511</SNR>
+        <Coherence>0.59854</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>8.1252e-05</Amplitude>
+        <SNR>-33.6953</SNR>
+        <Coherence>0.59688</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>6.4781e-05</Amplitude>
+        <SNR>-33.8201</SNR>
+        <Coherence>0.367</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742265.34874791664</OccurrenceID>
+      <Frequency>0.82333</Frequency>
+      <Start>02/15/17 16:11:00.000</Start>
+      <End>02/15/17 16:22:59.983</End>
+      <Persistence>120</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.1511e-05</Amplitude>
+        <SNR>-39.0147</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>9.2045e-05</Amplitude>
+        <SNR>-31.4321</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>7.4491e-05</Amplitude>
+        <SNR>-34.0926</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>7.9235e-05</Amplitude>
+        <SNR>-33.4328</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>7.4169e-05</Amplitude>
+        <SNR>-32.4357</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742272.37379570596</OccurrenceID>
+      <Frequency>0.82333</Frequency>
+      <Start>02/15/17 16:47:00.000</Start>
+      <End>02/15/17 16:56:59.983</End>
+      <Persistence>0</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>6.5199e-05</Amplitude>
+        <SNR>-36.0063</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>7.4565e-05</Amplitude>
+        <SNR>-34.1364</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>8.2077e-05</Amplitude>
+        <SNR>-34.2392</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>8.9951e-05</Amplitude>
+        <SNR>-33.3853</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.1228e-05</Amplitude>
+        <SNR>-36.5547</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742293.44814407406</OccurrenceID>
+      <Frequency>0.84</Frequency>
+      <Start>02/15/17 18:34:00.000</Start>
+      <End>02/15/17 18:47:59.983</End>
+      <Persistence>240</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>8.8226e-05</Amplitude>
+        <SNR>-33.5296</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>7.6714e-05</Amplitude>
+        <SNR>-34.1993</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>8.1268e-05</Amplitude>
+        <SNR>-34.45</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>8.4638e-05</Amplitude>
+        <SNR>-34.0257</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.1159e-05</Amplitude>
+        <SNR>-36.8158</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742312.51621627319</OccurrenceID>
+      <Frequency>0.825</Frequency>
+      <Start>02/15/17 20:12:00.000</Start>
+      <End>02/15/17 20:26:59.983</End>
+      <Persistence>300</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.6788e-05</Amplitude>
+        <SNR>-36.4583</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>5.7492e-05</Amplitude>
+        <SNR>-35.7103</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>5.6351e-05</Amplitude>
+        <SNR>-37.0425</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.9712e-05</Amplitude>
+        <SNR>-36.3893</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.8683e-05</Amplitude>
+        <SNR>-35.9729</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742317.52758028940</OccurrenceID>
+      <Frequency>0.825</Frequency>
+      <Start>02/15/17 20:29:00.000</Start>
+      <End>02/15/17 20:39:59.983</End>
+      <Persistence>60</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.3945e-05</Amplitude>
+        <SNR>-37.3074</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>5.4629e-05</Amplitude>
+        <SNR>-36.3299</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>4.7824e-05</Amplitude>
+        <SNR>-38.1778</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.1921e-05</Amplitude>
+        <SNR>-37.3514</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.6504e-05</Amplitude>
+        <SNR>-36.6665</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742328.56483729172</OccurrenceID>
+      <Frequency>0.81853</Frequency>
+      <Start>02/15/17 21:22:00.000</Start>
+      <End>02/15/17 21:57:59.983</End>
+      <Persistence>1560</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.3648e-05</Amplitude>
+        <SNR>-36.2363</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>4.8921e-05</Amplitude>
+        <SNR>-36.1323</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>5.4741e-05</Amplitude>
+        <SNR>-36.1259</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.4341e-05</Amplitude>
+        <SNR>-36.0364</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.2695e-05</Amplitude>
+        <SNR>-36.7383</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+    <Occurrence>
+      <OccurrenceID>742346.65293837967</OccurrenceID>
+      <Frequency>0.82917</Frequency>
+      <Start>02/15/17 23:29:00.000</Start>
+      <End>02/15/17 23:45:59.983</End>
+      <Persistence>420</Persistence>
+      <AlarmFlag>0</AlarmFlag>
+      <Channel>
+        <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.7833e-05</Amplitude>
+        <SNR>-35.8041</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+        <Amplitude>5.5833e-05</Amplitude>
+        <SNR>-35.5052</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+        <Amplitude>5.1627e-05</Amplitude>
+        <SNR>-37.0769</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GARR 500  B1 SA .B500EAST_____1VP.ANG</Name>
+        <Amplitude>NaN</Amplitude>
+        <SNR>NaN</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+        <Amplitude>5.2891e-05</Amplitude>
+        <SNR>-36.7369</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+      <Channel>
+        <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+        <Amplitude>4.4913e-05</Amplitude>
+        <SNR>-36.6255</SNR>
+        <Coherence>NaN</Coherence>
+      </Channel>
+    </Occurrence>
+  </ForcedOscillation>
+  
+  <Ringdown>
+    <ID>742305.49751844909</ID>
+    <Start>02/15/17 19:54:01.341</Start>
+    <End>02/15/17 19:54:12.533</End>
+    <Channel>
+      <PMU>MALN 500  B2 SA </PMU>
+      <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+    </Channel>
+  </Ringdown>
+  <Ringdown>
+    <ID>742295.44900449074</ID>
+    <Start>02/15/17 18:44:23.175</Start>
+    <End>02/15/17 18:44:37.350</End>
+    <Channel>
+      <PMU>ALSN 500 B1 SA  </PMU>
+      <Name>ALSN 500 B1 SA  .B500NORTH____1VP.ANG</Name>
+    </Channel>
+    <Channel>
+      <PMU>BGED 500  B1 SA </PMU>
+      <Name>BGED 500  B1 SA .B500WEST_____1VP.ANG</Name>
+    </Channel>
+    <Channel>
+      <PMU>CHJO 500 B1 SA  </PMU>
+      <Name>CHJO 500 B1 SA  .B500EAST_____1VP.ANG</Name>
+    </Channel>
+    <Channel>
+      <PMU>GCFI 500 B2 SA  </PMU>
+      <Name>GCFI 500 B2 SA  .B500NORTH____1VP.ANG</Name>
+    </Channel>
+    <Channel>
+      <PMU>MALN 500  B2 SA </PMU>
+      <Name>MALN 500  B2 SA .B500NORTH____1VP.ANG</Name>
+    </Channel>
+  </Ringdown>
+  <OutOfRangeFrequency>
+    <ID>742350.65959902783</ID>
+    <Start>02/15/17 23:47:23.600</Start>
+    <End>02/15/17 23:51:15.567</End>
+    <Channel>
+      <PMU>ALSN 500 B1 SA  </PMU>
+      <Name>ALSN 500 B1 SA  .frq</Name>
+    </Channel>
+    <Channel>
+      <PMU>BGED 500  B1 SA </PMU>
+      <Name>BGED 500  B1 SA .frq</Name>
+    </Channel>
+    <Channel>
+      <PMU>CHJO 500 B1 SA  </PMU>
+      <Name>CHJO 500 B1 SA  .frq</Name>
+    </Channel>
+    <Channel>
+      <PMU>GARR 500  B1 SA </PMU>
+      <Name>GARR 500  B1 SA .frq</Name>
+    </Channel>
+    <Channel>
+      <PMU>GCFI 500 B2 SA  </PMU>
+      <Name>GCFI 500 B2 SA  .frq</Name>
+    </Channel>
+    <Channel>
+      <PMU>MALN 500  B2 SA </PMU>
+      <Name>MALN 500  B2 SA .frq</Name>
+    </Channel>
+  </OutOfRangeFrequency>
+
+</Events>

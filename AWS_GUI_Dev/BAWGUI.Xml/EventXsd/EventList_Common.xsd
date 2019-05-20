@@ -9,6 +9,7 @@
       <xs:element name="WindRamp" type="WindRampType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Ringdown" type="RingdownType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="OutOfRangeGeneral" type="OutOfRangeFrequencyType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Thevenin" type="TheveninType" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
 
@@ -46,6 +47,8 @@
                   <xs:element name="Amplitude" type="xs:float" />
                   <xs:element name="SNR" type="xs:float" />
                   <xs:element name="Coherence" type="xs:float" />
+                  <xs:element name="PMU" type="xs:string" />
+                  <xs:element name="Unit" type="xs:string" />
                 </xs:sequence>
               </xs:complexType>
             </xs:element>
@@ -82,6 +85,21 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="PMU" type="xs:string" />
+            <xs:element name="Name" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="TheveninType">
+    <xs:sequence>
+      <xs:element name="ID" type="xs:decimal" />
+      <xs:element name="Start" type="xs:string" />
+      <xs:element name="End" type="xs:string" />
+      <xs:element maxOccurs="unbounded" name="Sub">
+        <xs:complexType>
+          <xs:sequence>
             <xs:element name="Name" type="xs:string" />
           </xs:sequence>
         </xs:complexType>

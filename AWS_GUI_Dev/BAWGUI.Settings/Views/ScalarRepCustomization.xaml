@@ -30,7 +30,7 @@
                 </Image.Style>
             </Image>-->
             <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="Custom PMU:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <xtlkt:WatermarkTextBox Watermark="Enter Custom PMU" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter Custom PMU" Text="{Binding CustPMUname, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -45,7 +45,7 @@
                 </Image.Style>
             </Image>-->
             <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="Custom Signal:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <xtlkt:WatermarkTextBox Watermark="Enter Custom Signal Name" Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter Custom Signal Name" Text="{Binding OutputChannels[0].SignalName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -60,7 +60,7 @@
                 </Image.Style>
             </Image>-->
             <Label Margin="0,2" Width="120" VerticalAlignment="Center" Content="Scalar:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <xtlkt:WatermarkTextBox Watermark="Enter A Scalar" Text="{Binding Scalar}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter A Scalar" Text="{Binding Scalar, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">

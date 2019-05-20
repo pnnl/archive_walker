@@ -8,13 +8,13 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    <Grid>
+    <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <!--<RowDefinition Height="*"/>-->
+            --><!--<RowDefinition Height="*"/>--><!--
             <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions>-->
         <!--<StackPanel Orientation="Horizontal" Grid.Row="0" Margin="2">
             <Label Content="Config File:" />
             <TextBox Text="{Binding ConfigFileName}" MinWidth="100" Margin="2"/>
@@ -31,10 +31,10 @@
                 <Image Source="/BAWGUI.Settings;component/MyResources/delete.bmp" Stretch="None"/>
             </Button>
         </StackPanel>-->
-        <local:TabControlForSettingsWindow Grid.Row="1"/>
+        <local:TabControlForSettingsWindow/>
         <!--<StackPanel Orientation="Vertical" Margin="2" Grid.Row="2">
             <Label Content="Log Messages:"/>
             <ListBox ItemsSource="{Binding Logs}" Margin="2" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" MaxHeight="100"/>
         </StackPanel>-->
-    </Grid>
+    <!--</Grid>-->
 </UserControl>

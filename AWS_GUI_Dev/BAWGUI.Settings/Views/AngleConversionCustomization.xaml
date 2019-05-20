@@ -27,7 +27,7 @@
                 </Image.Style>
             </Image>-->
             <Label Grid.Column="1" Margin="0,2" Width="Auto" VerticalAlignment="Center" Content="Custom PMU: " HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please enter custom PMU name" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please enter custom PMU name" Text="{Binding CustPMUname, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="0"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Margin="30,2,2,2" Text="Input PMU:"/>
@@ -39,30 +39,25 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <xtlkt:WatermarkTextBox Name="PMU" Watermark="Select PMU" ToolTip="Please select PMU" Width="150" Text="{Binding Path=Value[0].PMUName}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <xtlkt:WatermarkTextBox Name="PMU" Watermark="Select PMU" ToolTip="Please select PMU" Width="150" Text="{Binding Path=Value[0].PMUName, UpdateSourceTrigger=PropertyChanged}" Margin="30,0,0,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </xtlkt:WatermarkTextBox>
-                            <xtlkt:WatermarkTextBox Name="Channel" Watermark="Select Channel" ToolTip="Please select channel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="2,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <xtlkt:WatermarkTextBox Name="Channel" Watermark="Select Channel" ToolTip="Please select channel" Width="150" Text="{Binding Path=Value[0].SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="2,0" IsReadOnly="True" GotFocus="ExpTextBoxGotFocus" LostFocus="ExpTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="GotFocus">
                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </xtlkt:WatermarkTextBox>
-                            <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName}" Margin="60,0"/>
+                            <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="60,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <!--<i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseLeftButtonUp">
-                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.TextboxesLostFocus}" CommandParameter="{Binding ElementName=Steps, Path=DataContext}"/>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>-->
     </StackPanel>
 </UserControl>

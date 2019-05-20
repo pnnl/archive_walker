@@ -130,6 +130,7 @@ else
         dataVal = zeros(nData,config.pmu{ind}.numPhsrs*2 + config.pmu{ind}.numAnlgs + config.pmu{ind}.numDigs +2);
         PMU(ind).Signal_Time.Time_String = t_str;
         PMU(ind).Signal_Time.Signal_datenum = t;
+        PMU(ind).Signal_Time.datetime = datetime(t,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
         
         PMU(ind).File_Name = pdatFile;   % file name
         

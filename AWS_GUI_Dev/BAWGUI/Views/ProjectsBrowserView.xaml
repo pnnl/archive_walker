@@ -12,24 +12,25 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-            <converters:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
+            <coreConverter:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
             <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters:EnabledIfRunningOrPausedConverter x:Key="EnabledIfRunningOrPausedConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxWidth="240" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}" CanContentScroll="True">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Please Select Results Storage Directory" VerticalAlignment="Center" Margin="2,0" FontWeight="Black" TextWrapping="WrapWithOverflow" HorizontalAlignment="Left"/>
-            <TextBox Grid.Row="1" Text="{Binding ResultsStoragePath}" MinWidth="100" Margin="2,5,2,2" Height="50" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" MaxWidth="236" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="1" Text="{Binding ResultsStoragePath}" Margin="2,5,2,2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
             <!--<StackPanel Orientation="Vertical" Grid.Row="1">-->
             <Button Grid.Row="2" Command="{Binding BrowseResultsStorage}" Width="25" Height="25" HorizontalAlignment="Left" ToolTip="Open results file folder" Margin="2,5,2,0" VerticalAlignment="Top">
-                <Image Source="/BAWGUI;component/MyResources/open.gif"/>
+                <Image Source="/ArchiveWalker;component/MyResources/open.gif"/>
             </Button>
             <!--</StackPanel>-->
             <StackPanel Orientation="Vertical" Grid.Row="3" Margin="2,0">
@@ -37,16 +38,16 @@
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <!--<Button Margin="2" Command="{Binding RunCommands.RunArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}" ToolTip="Start Archive Walker normal run">-->
                     <Button Margin="2" Command="{Binding RunCommands.RunArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding CanRun, Mode=OneWay}" ToolTip="Start Archive Walker normal run">
-                            <Image Source="/BAWGUI;component/MyResources/Run_16x.png"/>
+                            <Image Source="/ArchiveWalker;component/MyResources/Run_16x.png"/>
                     </Button>
                     <Button Margin="2" Command="{Binding RunCommands.PauseArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning}" ToolTip="Pause Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource InverseBooleanVisibilityConverter}}">
-                        <Image Source="/BAWGUI;component/MyResources/pause.PNG"/>
+                        <Image Source="/ArchiveWalker;component/MyResources/pause.PNG"/>
                     </Button>
                     <Button Margin="2" Command="{Binding RunCommands.ResumeArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding SelectedRun.IsNormalRunPaused}" ToolTip="Continue Archive Walker normal run" Visibility="{Binding SelectedRun.IsNormalRunPaused, Converter={StaticResource BooleanVisibilityConverter}, ConverterParameter=ResumeArchiveWalkerNormal}">
-                        <Image Source="/BAWGUI;component/MyResources/resume.PNG"/>
+                        <Image Source="/ArchiveWalker;component/MyResources/resume.PNG"/>
                     </Button>
                     <Button Margin="2"  Command="{Binding RunCommands.StopArchiveWalkerNormal}" CommandParameter="{Binding SelectedRun}" ToolTip="Stop Archive Walker normal run">
-                        <Image Source="/BAWGUI;component/MyResources/stop.PNG"/>
+                        <Image Source="/ArchiveWalker;component/MyResources/stop.PNG"/>
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource EnabledIfRunningOrPausedConverter}">
                                 <Binding Path="RunCommands.Engine.IsMatlabEngineRunning"/>
@@ -55,7 +56,7 @@
                         </Button.IsEnabled>
                     </Button>
                     <Button Margin="2" Command="{Binding DeleteRun}" CommandParameter="{Binding SelectedRun}" IsEnabled="{Binding RunCommands.Engine.IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">
-                        <Image Source="/BAWGUI;component/MyResources/delete.bmp"/>
+                        <Image Source="/ArchiveWalker;component/MyResources/delete.bmp"/>
                     </Button>
                     <!--<Menu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                 <MenuItem >
@@ -82,6 +83,7 @@
                 <!--<Separator/>-->
                 <local:ProjectTreeView/>
             </StackPanel>
+            <Image Source="/ArchiveWalker;component/MyResources/Archive_Walker_Gray_Final.jpg" Grid.Row="4" Width="150" Height="150" Margin="2" HorizontalAlignment="Left"/>
         </Grid>
     </ScrollViewer>
 

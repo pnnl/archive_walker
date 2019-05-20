@@ -104,6 +104,9 @@ namespace BAWGUI.ReadConfigXml
                         case "AngleConversion":
                             CollectionOfSteps.Add(new AngleConversionCustModel(item));
                             break;
+                        case "ReplicateSignal":
+                            CollectionOfSteps.Add(new SignalReplicationCustModel(item));
+                            break;
                         default:
                             throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
                     }

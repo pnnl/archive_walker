@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using BAWGUI.Core;
+using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace JSISCSVWriter
         public string Type { get; set; }
         public string Unit { get; set; }
         public int SamplingRate { get; set; }
-        public List<double> TimeStampInSeconds { get; set; }
+        //public List<double> TimeStampInSeconds { get; set; }
+        public List<double> TimeStampNumber { get; set; }
         private List<double> _data;
         public List<double> Data
         {

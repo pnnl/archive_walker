@@ -104,13 +104,13 @@
                             <Label Grid.Row="3" Grid.Column="1" Margin="0,2" Width="180" VerticalAlignment="Center" Content="Astop" HorizontalAlignment="Left"/>
                             <TextBox Grid.Row="3" Grid.Column="2" Margin="0,2" Width="120" VerticalAlignment="Center" Text="{Binding Astop}" HorizontalAlignment="Left"/>-->
                             <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum Ramp Size:" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ValMin}" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ValMin, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                             <Label Grid.Row="1" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum Ramp Size:" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ValMax}" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ValMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                             <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Minimum Ramp Duration (seconds):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding TimeMin}" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding TimeMin, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                             <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Maximum Ramp Duration (seconds):" HorizontalAlignment="Left"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding TimeMax}" HorizontalAlignment="Left"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding TimeMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                         </Grid>
                         <!--</StackPanel>-->
                     </Grid>

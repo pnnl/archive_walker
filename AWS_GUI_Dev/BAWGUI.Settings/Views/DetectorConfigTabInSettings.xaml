@@ -5,15 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
+             xmlns:vsmodel="clr-namespace:VoltageStability.Models;assembly=VoltageStability"
+             xmlns:vsviewmodel="clr-namespace:VoltageStability.ViewModels;assembly=VoltageStability"
              xmlns:views="clr-namespace:BAWGUI.Settings"
+             xmlns:vsviews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:mmviewmodel="clr-namespace:ModeMeter.ViewModels;assembly=ModeMeter"
+             xmlns:mmviews="clr-namespace:ModeMeter.Views;assembly=ModeMeter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <converters2:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -75,13 +81,16 @@
                             <DataTemplate DataType="{x:Type vm:OutOfRangeFrequencyDetector}">
                                 <views:OutOfRangeFrequencyView/>
                             </DataTemplate>
-                            <!--<DataTemplate DataType="{x:Type model:OutOfRangeGeneralDetector}">
-                                <views:OutOfRangeGeneralView/>
-                            </DataTemplate>-->
+                            <DataTemplate DataType="{x:Type vsviewmodel:VoltageStabilityDetectorViewModel}">
+                                <vsviews:VoltageStabilityDetectorView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type mmviewmodel:SmallSignalStabilityToolViewModel}">
+                                <mmviews:SmallSignalStabilityToolView/>
+                            </DataTemplate>
                         </ItemsControl.Resources>
                     </ItemsControl>
                     <StackPanel Grid.Row="2" Visibility="{Binding DetectorConfigure.ResultUpdateIntervalVisibility}" Margin="2" Orientation="Horizontal">
-                        <Label Content="Forced Oscillation Update Interval (seconds)" FontWeight="Bold" FontSize="18" Grid.Row="4"  Margin="0,20,0,0" Width="400">
+                        <Label Content="Update Interval (seconds)" FontWeight="Bold" FontSize="18" Grid.Row="4"  Margin="0,20,0,0" Width="400">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
                                     <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigStepDeSelected}"/>-->

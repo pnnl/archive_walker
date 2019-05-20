@@ -69,11 +69,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BAWSengine">
-      <HintPath>..\libs\BAWSengine.dll</HintPath>
+      <HintPath>..\..\MATengine\DLLs\BAWSengine_R2018a\for_redistribution_files_only\BAWSengine.dll</HintPath>
     </Reference>
-    <Reference Include="MWArray, Version=2.17.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
+    <Reference Include="MWArray, Version=2.18.1.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\MATLAB\MATLAB Runtime\v92\toolbox\dotnetbuilder\bin\win64\v4.0\MWArray.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\MATLAB\MATLAB Runtime\v94\toolbox\dotnetbuilder\bin\win64\v4.0\MWArray.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -93,7 +93,6 @@
   <ItemGroup>
     <Compile Include="Converters\EnabledIfRunningOrPausedConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\InverseBooleanVisibilityConverter.cs" />
     <Compile Include="ViewModels\AWRunViewModel.cs" />
     <Compile Include="ViewModels\MatLabEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -103,11 +102,18 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\RunMATLABViewModel.cs" />
+    <Compile Include="Views\ReRunProgressView.xaml.cs">
+      <DependentUpon>ReRunProgressView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RunNormalRunView.xaml.cs">
       <DependentUpon>RunNormalRunView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ReRunProgressView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RunNormalRunView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,12 +135,20 @@
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj">
-      <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
+      <Project>{967b98de-8ed1-4f8a-9c26-c3c9255f8eb8}</Project>
       <Name>BAWGUI.MATLABRunResults</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{b9b8c18b-9958-4b16-abe5-f075aaf346fb}</Project>
       <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModeMeter.MATLABRunResults\ModeMeter.MATLABRunResults.csproj">
+      <Project>{3b62f41c-e552-4f55-962a-b8f54c425390}</Project>
+      <Name>ModeMeter.MATLABRunResults</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability.MATLABRunResults\VoltageStability.MATLABRunResults.csproj">
+      <Project>{ECC13D01-5571-4325-8772-70E51982DAAE}</Project>
+      <Name>VoltageStability.MATLABRunResults</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,51 @@
+﻿<Window x:Class="ModeMeter.Views.GenerateMMReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModeMeter.Views"
+             xmlns:viewscore="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
+             mc:Ignorable="d" 
+             Title="Generate Report Popup" Height="300" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <viewscore:TimeFilterView Height="30" Margin="2" Grid.Row="0"/>
+        <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="1">
+            <Label Content="Report Type:" Margin="2" VerticalAlignment="Center"/>
+            <RadioButton Content="Graphical" Margin="20,2" GroupName="ReportType" VerticalAlignment="Center" IsChecked="{Binding ReportTypeIsGraphic}"/>
+            <RadioButton Content="Tabular" Margin="2" GroupName="ReportType" VerticalAlignment="Center" IsChecked="{Binding ReportTypeIsTabular}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5,2" Grid.Row="2">
+            <TextBlock Margin="2" VerticalAlignment="Center"> Find Periods with Damping Below: </TextBlock>
+            <TextBox Text="{Binding DampThresh}" Margin="2" Grid.Row="2" Width="100" VerticalAlignment="Center"/>
+            <TextBlock Margin="2" VerticalAlignment="Center"> % </TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5,2" Grid.Row="3">
+            <TextBlock Margin="2" VerticalAlignment="Center"> Minimum Event Separation: </TextBlock>
+            <TextBox Text="{Binding EventSepMinutes}" Margin="2" Grid.Row="2" Width="100" VerticalAlignment="Center"/>
+            <TextBlock Margin="2" VerticalAlignment="Center"> minutes. </TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="4">
+            <Label Content="Report Path: " Margin="2" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding ReportPath}" Margin="2" VerticalAlignment="Center" Width="500"/>
+            <Button Margin="2" Command="{Binding FindReportPath}" Width="23" Height="23">
+                <Image Source="/ModeMeter;component/MyResources/open.gif"/>
+            </Button>
+        </StackPanel>
+        <Grid Margin="5,2" Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+            <Button Command="{Binding CancelReport}" Content="Cancel" Width="50" Grid.Column="0"/>
+            <Button Command="{Binding GenerateReport}" Content="OK" Width="50" Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</Window>

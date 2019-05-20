@@ -1,16 +1,20 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows
+Imports System.Windows.Forms
+Imports System.Windows.Input
 Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
+Imports Microsoft.WindowsAPICodePack.Dialogs
 
 Namespace ViewModels
     Public Class DetectorConfig
         Inherits ViewModelBase
         Public Sub New()
             _detectorList = New ObservableCollection(Of DetectorBase)
+            _dataWriterDetectorList = New ObservableCollection(Of DetectorBase)
             _alarmingList = New ObservableCollection(Of AlarmingDetectorBase)
             _model = New DetectorConfigModel()
             _resultUpdateIntervalVisibility = Visibility.Collapsed
@@ -18,16 +22,20 @@ Namespace ViewModels
                                                           "Spectral Coherence Forced Oscillation Detector",
                                                           "Ringdown Detector",
                                                           "Out-of-Range Detector",
-                                                          "Wind Ramp Detector"}
+                                                          "Wind Ramp Detector",'"Voltage Stability",
+                                                          "Mode Meter Tool"}
             _alarmingDetectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}
+            '_addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
+            _signalsMgr = SignalManager.Instance
+            _browseSavePath = New DelegateCommand(AddressOf _openSavePath, AddressOf CanExecute)
         End Sub
-
         Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfigModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detectorConfigure
             Dim newDetectorList = New ObservableCollection(Of DetectorBase)
+            Dim newDataWriterDetectorList = New ObservableCollection(Of DetectorBase)
             For Each detector In _model.DetectorList
                 Select Case detector.Name
                     Case "Out-Of-Range Detector"
@@ -42,11 +50,14 @@ Namespace ViewModels
                     Case "Spectral Coherence Forced Oscillation Detector"
                         newDetectorList.Add(New SpectralCoherenceDetector(detector, signalsMgr))
                         ResultUpdateIntervalVisibility = Visibility.Visible
+                    Case "Data Writer"
+                        newDataWriterDetectorList.Add(New DataWriterDetectorViewModel(detector, signalsMgr))
                     Case Else
                         Throw New Exception("Unknown element found in DetectorConfig in config file.")
                 End Select
             Next
             DetectorList = newDetectorList
+            DataWriterDetectorList = newDataWriterDetectorList
             Dim newAlarmingList = New ObservableCollection(Of AlarmingDetectorBase)
             For Each alarm In _model.AlarmingList
                 Select Case alarm.Name
@@ -62,8 +73,9 @@ Namespace ViewModels
 
             Next
             AlarmingList = newAlarmingList
+            _signalsMgr = signalsMgr
         End Sub
-
+        Private _signalsMgr As SignalManager
         Private _model As DetectorConfigModel
         Public Property Model As DetectorConfigModel
             Get
@@ -101,6 +113,16 @@ Namespace ViewModels
             End Get
             Set(ByVal value As ObservableCollection(Of DetectorBase))
                 _detectorList = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _dataWriterDetectorList As ObservableCollection(Of DetectorBase)
+        Public Property DataWriterDetectorList As ObservableCollection(Of DetectorBase)
+            Get
+                Return _dataWriterDetectorList
+            End Get
+            Set(ByVal value As ObservableCollection(Of DetectorBase))
+                _dataWriterDetectorList = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -144,6 +166,67 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        'Private _addDataWriterDetector As ICommand
+        'Public Property AddDataWriterDetector As ICommand
+        '    Get
+        '        Return _addDataWriterDetector
+        '    End Get
+        '    Set(value As ICommand)
+        '        _addDataWriterDetector = value
+        '    End Set
+        'End Property
+        'Private Sub _addADataWriterDetector(obj As Object)
+        '    Dim newDetector = New DataWriterDetectorViewModel
+        '    newDetector.IsExpanded = True
+        '    newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalsMgr.GroupedSignalByDataWriterDetectorInput.Count + 1).ToString & " " & newDetector.Name
+        '    _signalsMgr.GroupedSignalByDataWriterDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+        '    DataWriterDetectorList.Add(newDetector)
+        'End Sub
+        Private _lastSavePath As String
+        Private _browseSavePath As ICommand
+        Public Property BrowseSavePath As ICommand
+            Get
+                Return _browseSavePath
+            End Get
+            Set(ByVal value As ICommand)
+                _browseSavePath = value
+            End Set
+        End Property
+        Private Sub _openSavePath(obj As Object)
+            'Dim openDirectoryDialog As New FolderBrowserDialog()
+            'openDirectoryDialog.Description = "Select the Save Path"
+            'If _lastSavePath Is Nothing Then
+            '    openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+            'Else
+            '    openDirectoryDialog.SelectedPath = _lastSavePath
+            'End If
+            'openDirectoryDialog.ShowNewFolderButton = True
+            'If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+            '    _lastSavePath = openDirectoryDialog.SelectedPath
+            '    obj.SavePath = openDirectoryDialog.SelectedPath
+            'End If
+            Dim openDirectoryDialog As New CommonOpenFileDialog
+            openDirectoryDialog.Title = "Select the Save Path"
+            openDirectoryDialog.IsFolderPicker = True
+            If _lastSavePath Is Nothing Then
+                openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
+            Else
+                openDirectoryDialog.InitialDirectory = _lastSavePath
+            End If
+            openDirectoryDialog.AddToMostRecentlyUsedList = True
+            openDirectoryDialog.AllowNonFileSystemItems = False
+            openDirectoryDialog.DefaultDirectory = Environment.CurrentDirectory
+            openDirectoryDialog.EnsureFileExists = True
+            openDirectoryDialog.EnsurePathExists = True
+            openDirectoryDialog.EnsureReadOnly = False
+            openDirectoryDialog.EnsureValidNames = True
+            openDirectoryDialog.Multiselect = False
+            openDirectoryDialog.ShowPlacesList = True
+            If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
+                _lastSavePath = openDirectoryDialog.FileName
+                obj.SavePath = openDirectoryDialog.FileName
+            End If
+        End Sub
     End Class
 
     Public Class PeriodogramDetector
@@ -173,6 +256,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
@@ -180,6 +266,10 @@ Namespace ViewModels
             End Try
             signalsMgr.GroupedSignalByDetectorInput.Add(ThisStepInputsAsSignalHerachyByType)
         End Sub
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
 
         Private _model As PeriodogramDetectorModel
         Public Property Model As PeriodogramDetectorModel
@@ -339,6 +429,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
@@ -492,6 +585,10 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
     End Class
 
     Public Class RingdownDetector
@@ -515,6 +612,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
@@ -577,8 +677,14 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-    End Class
 
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
+    End Class
+    ''' <summary>
+    ''' This class is not used anymore, as the outofrangeFrequencydetector is kept as the more general one.
+    ''' </summary>
     Public Class OutOfRangeGeneralDetector
         Inherits DetectorBase
         Public Sub New()
@@ -631,8 +737,14 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-    End Class
 
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
+    End Class
+    ''' <summary>
+    ''' This detector is considered the more general one and used in the GUI as the out-of-range general detector.
+    ''' </summary>
     Public Class OutOfRangeFrequencyDetector
         Inherits DetectorBase
         Public Sub New()
@@ -651,6 +763,9 @@ Namespace ViewModels
             Catch ex As Exception
                 Throw New Exception("Error finding signal in step: " & Name)
             End Try
+            For Each signal In InputChannels
+                signalsMgr.MappingSignals.Add(signal)
+            Next
             Try
                 ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
             Catch ex As Exception
@@ -797,6 +912,10 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
     End Class
 
     Public Class WindRampDetector
@@ -956,6 +1075,109 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
+    End Class
+
+    Public Class DataWriterDetectorViewModel
+        Inherits DetectorBase
+        Public Sub New()
+            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+            _model = New DataWriterDetectorModel()
+            IsExpanded = False
+            '_browseSavePath = New DelegateCommand(AddressOf _openSavePath, AddressOf CanExecute)
+        End Sub
+        Public Sub New(detector As DataWriterDetectorModel, signalsMgr As SignalManager)
+            Me.New
+            Me._model = detector
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDataWriterDetectorInput.Count + 1).ToString & " " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & Name)
+            End Try
+            Try
+                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error sorting output signals by PMU in step: " & Name)
+            End Try
+            signalsMgr.GroupedSignalByDataWriterDetectorInput.Add(ThisStepInputsAsSignalHerachyByType)
+        End Sub
+        Private _model As DataWriterDetectorModel
+        Public Property Model As DataWriterDetectorModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As DataWriterDetectorModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Overrides ReadOnly Property Name As String
+            Get
+                Return "Data Writer"
+            End Get
+        End Property
+        Private _savePath As String
+        Public Property SavePath As String
+            Get
+                Return _model.SavePath
+            End Get
+            Set(ByVal value As String)
+                _model.SavePath = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _separatePMUs As Boolean
+        Public Property SeparatePMUs As Boolean
+            Get
+                Return _model.SeparatePMUs
+            End Get
+            Set(ByVal value As Boolean)
+                _model.SeparatePMUs = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _mnemonic As String
+        Public Property Mnemonic As String
+            Get
+                Return _model.Mnemonic
+            End Get
+            Set(ByVal value As String)
+                _model.Mnemonic = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return InputChannels.Count > 0
+        End Function
+        'Private _lastSavePath As String
+        'Private _browseSavePath As ICommand
+        'Public Property BrowseSavePath As ICommand
+        '    Get
+        '        Return _browseSavePath
+        '    End Get
+        '    Set(ByVal value As ICommand)
+        '        _browseSavePath = value
+        '    End Set
+        'End Property
+        'Private Sub _openSavePath(obj As Object)
+        '    Dim openDirectoryDialog As New FolderBrowserDialog()
+        '    openDirectoryDialog.Description = "Select the save path"
+        '    If _lastSavePath Is Nothing Then
+        '        openDirectoryDialog.SelectedPath = Environment.CurrentDirectory
+        '    Else
+        '        openDirectoryDialog.SelectedPath = _lastSavePath
+        '    End If
+        '    openDirectoryDialog.ShowNewFolderButton = True
+        '    If (openDirectoryDialog.ShowDialog = DialogResult.OK) Then
+        '        _lastSavePath = openDirectoryDialog.SelectedPath
+        '        SavePath = openDirectoryDialog.SelectedPath
+        '    End If
+        'End Sub
     End Class
 
     'Public Enum DetectorModeType
@@ -996,6 +1218,11 @@ Namespace ViewModels
             Me.New
             Me._model = detector
         End Sub
+
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
+
         Private _model As AlarmingSpectralCoherenceModel
         Public Property Model As AlarmingSpectralCoherenceModel
             Get
@@ -1074,6 +1301,9 @@ Namespace ViewModels
             Me.New
             Me._model = detector
         End Sub
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
         Private _model As AlarmingPeriodogramModel
         Public Property Model As AlarmingPeriodogramModel
             Get
@@ -1152,6 +1382,9 @@ Namespace ViewModels
             Me.New
             Me._model = detector
         End Sub
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
         Private _model As AlarmingRingdownModel
         Public Property Model As AlarmingRingdownModel
             Get

@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ModeMeter</RootNamespace>
+    <AssemblyName>ModeMeter</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Core.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Shell.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot">
+      <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2.0.0.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.2.0.0-unstable0956\lib\net45\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\EnumToStringConverters.cs" />
+    <Compile Include="Converters\MethodExpanderHeaderConverter.cs" />
+    <Compile Include="Converters\RetroactiveContinuityStatusVisibilityConverter.cs" />
+    <Compile Include="Models\ModeMeterXmlWriter.cs" />
+    <Compile Include="Models\ModeSettings.cs" />
+    <Compile Include="Models\ModeMeterReader.cs" />
+    <Compile Include="Models\SmallSignalStabilityTool.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\GenerateReportViewModel.cs" />
+    <Compile Include="ViewModels\MMRerunPlotModel.cs" />
+    <Compile Include="ViewModels\ModeMeterResultsViewModel.cs" />
+    <Compile Include="ViewModels\ModeViewModel.cs" />
+    <Compile Include="ViewModels\SmallSignalStabilityToolViewModel.cs" />
+    <Compile Include="Views\DesiredModeAttributesView.xaml.cs">
+      <DependentUpon>DesiredModeAttributesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventDetectionParametersView.xaml.cs">
+      <DependentUpon>EventDetectionParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FOParametersView.xaml.cs">
+      <DependentUpon>FOParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GenerateMMReportView.xaml.cs">
+      <DependentUpon>GenerateMMReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LSARMAView.xaml.cs">
+      <DependentUpon>LSARMAView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MethodsView.xaml.cs">
+      <DependentUpon>MethodsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MMReRunPlots.xaml.cs">
+      <DependentUpon>MMReRunPlots.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModeAnalysisParametersView.xaml.cs">
+      <DependentUpon>ModeAnalysisParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModeMeterResultsView.xaml.cs">
+      <DependentUpon>ModeMeterResultsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModeSignalSelectionView.xaml.cs">
+      <DependentUpon>ModeSignalSelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModeView.xaml.cs">
+      <DependentUpon>ModeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SmallSignalStabilityToolView.xaml.cs">
+      <DependentUpon>SmallSignalStabilityToolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SparseEventPlot.xaml.cs">
+      <DependentUpon>SparseEventPlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SparsePlotView.xaml.cs">
+      <DependentUpon>SparsePlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\YWARMASView.xaml.cs">
+      <DependentUpon>YWARMASView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\YWARMAView.xaml.cs">
+      <DependentUpon>YWARMAView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
+      <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
+      <Name>BAWGUI.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.MATLABRunResults\BAWGUI.MATLABRunResults.csproj">
+      <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
+      <Name>BAWGUI.MATLABRunResults</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.ReadConfigXml\BAWGUI.ReadConfigXml.csproj">
+      <Project>{45B27EC1-0A7D-4B08-A11E-04001E70F316}</Project>
+      <Name>BAWGUI.ReadConfigXml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
+      <Project>{BF338BCB-0788-4DE9-8D78-5DB5142FBF27}</Project>
+      <Name>BAWGUI.RunMATLAB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
+      <Project>{E0ACA34C-2C13-4E98-944D-A419BDD2D116}</Project>
+      <Name>BAWGUI.SignalManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
+      <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
+      <Name>BAWGUI.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModeMeter.MATLABRunResults\ModeMeter.MATLABRunResults.csproj">
+      <Project>{3B62F41C-E552-4F55-962A-B8F54C425390}</Project>
+      <Name>ModeMeter.MATLABRunResults</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\DesiredModeAttributesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventDetectionParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FOParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GenerateMMReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LSARMAView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MethodsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MMReRunPlots.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModeAnalysisParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModeMeterResultsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ModeSignalSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SmallSignalStabilityToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SparseEventPlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SparsePlotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\YWARMASView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\YWARMAView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\RemoveCommand_16x.png">
+      <Link>MyResources\RemoveCommand_16x.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\AddCommand.png">
+      <Link>MyResources\AddCommand.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\open.gif">
+      <Link>MyResources\open.gif</Link>
+    </Resource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

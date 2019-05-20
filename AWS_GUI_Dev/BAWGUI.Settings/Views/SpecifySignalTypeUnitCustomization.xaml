@@ -35,7 +35,7 @@
             </Image>-->
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Input PMU:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
             <!--<TextBox Text="{Binding InputChannels[0].PMUName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>-->
-            <xtlkt:WatermarkTextBox Name="PMUnameBox" Watermark="Input PMU name" ToolTip="Please select a signal from right hand panel" Text="{Binding InputChannels[0].PMUName}" VerticalAlignment="Center"  Width="150" Margin="8" HorizontalAlignment="Right" IsReadOnly="True" BorderBrush="{Binding Path=InputChannels[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" GotKeyboardFocus="WatermarkTextBox_GotKeyboardFocus" LostKeyboardFocus="WatermarkTextBox_LostKeyboardFocus" HorizontalContentAlignment="Right"/>
+            <xtlkt:WatermarkTextBox Name="PMUnameBox" Watermark="Input PMU name" ToolTip="Please select a signal from right hand panel" Text="{Binding InputChannels[0].PMUName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"  Width="150" Margin="8" HorizontalAlignment="Right" IsReadOnly="True" BorderBrush="{Binding Path=InputChannels[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" GotKeyboardFocus="WatermarkTextBox_GotKeyboardFocus" LostKeyboardFocus="WatermarkTextBox_LostKeyboardFocus" HorizontalContentAlignment="Right"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -51,7 +51,7 @@
             </Image>-->
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Input Signal:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
             <!--<TextBox Text="{Binding InputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8" IsReadOnly="True"/>-->
-            <xtlkt:WatermarkTextBox Name="SignalNameBox" Watermark="Input Signal Name" ToolTip="Please select a signal from right hand panel" Text="{Binding InputChannels[0].SignalName}" VerticalAlignment="Center" Width="150" HorizontalAlignment="Right" Margin="8" IsReadOnly="True" BorderBrush="{Binding Path=InputChannels[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" GotKeyboardFocus="WatermarkTextBox_GotKeyboardFocus" LostKeyboardFocus="WatermarkTextBox_LostKeyboardFocus" HorizontalContentAlignment="Right"/>
+            <xtlkt:WatermarkTextBox Name="SignalNameBox" Watermark="Input Signal Name" ToolTip="Please select a signal from right hand panel" Text="{Binding InputChannels[0].SignalName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Width="150" HorizontalAlignment="Right" Margin="8" IsReadOnly="True" BorderBrush="{Binding Path=InputChannels[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" GotKeyboardFocus="WatermarkTextBox_GotKeyboardFocus" LostKeyboardFocus="WatermarkTextBox_LostKeyboardFocus" HorizontalContentAlignment="Right"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -66,7 +66,7 @@
                 </Image.Style>
             </Image>-->
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Custom PMU:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <xtlkt:WatermarkTextBox Watermark="Enter Custom PMU" ToolTip="Please enter custom PMU name" Text="{Binding CustPMUname}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter Custom PMU" ToolTip="Please enter custom PMU name" Text="{Binding CustPMUname, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Grid.Column="0" Source="../Resources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">
@@ -81,7 +81,7 @@
                 </Image.Style>
             </Image>-->
             <Label Grid.Column="1" Margin="0,2" Width="120" VerticalAlignment="Center" Content="Custom Signal:" HorizontalAlignment="Left" ToolTip="{Binding ToolTip}"/>
-            <xtlkt:WatermarkTextBox Watermark="Enter Custom Signal Name" ToolTip="Please enter custom signal name" Text="{Binding OutputChannels[0].SignalName}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
+            <xtlkt:WatermarkTextBox Watermark="Enter Custom Signal Name" ToolTip="Please enter custom signal name" Text="{Binding OutputChannels[0].SignalName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="150" HorizontalContentAlignment="Right" Margin="8"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <!--<Image Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" IsEnabled="{Binding IsRequired}" Margin="2,12,0,0" HorizontalAlignment="Right">

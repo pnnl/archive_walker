@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="PointOnWavePowerCalFilterparameters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <!--<RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>-->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Active Power Name:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Pname, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+        <Label Grid.Row="1" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Reactive Power Name:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Qname, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+        <Label Grid.Row="2" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Frequency Name:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Fname, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Window for RMS Calculation(seconds):" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding WindowLength, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Voltage Transducer Phase Shift (degrees):" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PhaseShiftV, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="Current Transducer Phase Shift (degrees):" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding PhaseShiftI, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+        <!--<Label Grid.Row="5" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="VA:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseAVoltage.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
+        <Label Grid.Row="6" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="VB:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseBVoltage.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
+        <Label Grid.Row="7" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="VC:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseCVoltage.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
+        <Label Grid.Row="8" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="IA:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="8" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseACurrent.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
+        <Label Grid.Row="9" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="IB:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="9" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseBCurrent.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>
+        <Label Grid.Row="10" Grid.Column="0" Margin="0,2" Width="230" VerticalAlignment="Center" Content="IC:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="10" Grid.Column="1" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding POWInputSignals.PhaseCCurrent.SignalName}" HorizontalAlignment="Center" IsReadOnly="True"/>-->
+    </Grid>
+</UserControl>

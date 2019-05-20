@@ -8,7 +8,7 @@ function [DetectionResults, AdditionalOutput] = RingdownDetector(PMUstruct,Param
 % stored in cell arrays. Also returns a time vector t with units of seconds
 % and the sampling rate fs.
 try
-    [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString] = ExtractData(PMUstruct,Parameters);
+    [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString, TimeDT] = ExtractData(PMUstruct,Parameters);
 catch
     warning('Input data for the ringdown detector could not be used.');
     DetectionResults = struct([]);
@@ -42,6 +42,7 @@ AdditionalOutput(1).DataChannel = DataChannel;
 AdditionalOutput(1).DataType = DataType;
 AdditionalOutput(1).DataUnit = DataUnit;
 AdditionalOutput(1).TimeString = TimeString;
+AdditionalOutput(1).TimeDT = TimeDT;
 
 % Only active power, frequency, and OTHER signal types are acceptable. If a
 % channel has any other type, it is discarded from analysis.

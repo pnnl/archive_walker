@@ -203,6 +203,10 @@ Namespace ViewModels
                             stepCounter += 1
                             Dim a = New AngleConversionCust(stp, stepCounter, signalsMgr)
                             allSteps.Add(a)
+                        Case "Duplicate Signals"
+                            stepCounter += 1
+                            Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
                         Case Else
                             Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
                     End Select
@@ -223,7 +227,6 @@ Namespace ViewModels
                 OnPropertyChanged("ReaderProperty")
             End Set
         End Property
-
         'Private _collectionOfSteps As ObservableCollection(Of Object)
         'Public Overloads Property CollectionOfSteps As ObservableCollection(Of Object)
         '    Get
@@ -354,11 +357,13 @@ Namespace ViewModels
             'RealTimeModeVisibility = Visibility.Collapsed
             'HybridModeVisibility = Visibility.Collapsed
             _model = New ReadConfigXml.ReaderPropertiesModel
+            _hasDBDataSource = False
             '_dateTimeStart = "01/01/0001 00:00:00"
             '_dateTimeEnd = "01/01/0001 00:00:00"
             '_selectedStartTime = "01/01/0001 00:00:00"
             '_selectedEndTime = "01/01/0001 00:00:00"
             '_selectedTimeZone = TimeZoneInfo.Utc
+            '_canChooseMode = True
 
             _inputFileInfos = New ObservableCollection(Of InputFileInfoViewModel)
         End Sub
@@ -369,19 +374,21 @@ Namespace ViewModels
             'look for input file info in signal manager first, 
             'If exist Then, the file info Is sound And can be added To the reader Property To be displayed
             'if cannot be found, then, the file info is bad, add the file info only to the reader property to be displayed
-            For Each info In _model.InputFileInfos
-                Dim infoFound = False
-                For Each existingInfo In signalsMgr.FileInfo
-                    If info.ExampleFile = existingInfo.ExampleFile Then
-                        _inputFileInfos.Add(existingInfo)
-                        infoFound = True
-                        Exit For
-                    End If
-                Next
-                If Not infoFound Then
-                    _inputFileInfos.Add(New InputFileInfoViewModel(info))
-                End If
-            Next
+            'For Each info In _model.InputFileInfos
+            '    Dim infoFound = False
+            '    For Each existingInfo In signalsMgr.FileInfo
+            '        If info.ExampleFile = existingInfo.ExampleFile AndAlso info.Mnemonic = existingInfo.Mnemonic Then
+            '            _inputFileInfos.Add(existingInfo)
+            '            infoFound = True
+            '            Exit For
+            '        End If
+            '    Next
+            '    If Not infoFound Then
+            '        _inputFileInfos.Add(New InputFileInfoViewModel(info))
+            '    End If
+            'Next
+            _inputFileInfos = signalsMgr.FileInfo
+            CheckHasDBDataSource()
         End Sub
 
         Private _inputFileInfos As ObservableCollection(Of InputFileInfoViewModel)
@@ -394,49 +401,54 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
-        'Private _fileDirectory As String
-        'Public Property FileDirectory As String
+        Private _hasDBDataSource As Boolean
+        Public Property HasDBDataSource As Boolean
+            Get
+                Return _hasDBDataSource
+            End Get
+            Set(ByVal value As Boolean)
+                _hasDBDataSource = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Sub CheckHasDBDataSource()
+            HasDBDataSource = False
+            For Each info In InputFileInfos
+                If info.FileType = DataFileType.PI OrElse info.FileType = DataFileType.OpenHistorian Then
+                    HasDBDataSource = True
+                    Exit For
+                End If
+            Next
+        End Sub
+        Private _exampleTime As String
+        Public Property ExampleTime As String
+            Get
+                Return _model.ExampleTime
+            End Get
+            Set(ByVal value As String)
+                _model.ExampleTime = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        'Private _canChooseMode As Boolean
+        'Public Property CanChooseMode As Boolean
         '    Get
-        '        Return _fileDirectory
+        '        Return GetCanChooseMode()
         '    End Get
-        '    Set(ByVal value As String)
-        '        _fileDirectory = value
-        '        OnPropertyChanged("FileDirectory")
+        '    Set(ByVal value As Boolean)
+        '        _canChooseMode = value
+        '        OnPropertyChanged()
         '    End Set
         'End Property
 
-        'Private _fileType As DataFileType
-        'Public Property FileType As DataFileType
-        '    Get
-        '        Return _fileType
-        '    End Get
-        '    Set(ByVal value As DataFileType)
-        '        _fileType = value
-        '        OnPropertyChanged("FileType")
-        '    End Set
-        'End Property
-
-        'Private _mnemonic As String
-        'Public Property Mnemonic As String
-        '    Get
-        '        Return _mnemonic
-        '    End Get
-        '    Set(ByVal value As String)
-        '        _mnemonic = value
-        '        OnPropertyChanged("Mnemonic")
-        '    End Set
-        'End Property
-
-        'Private _mode As Dictionary(Of ModeType, Dictionary(Of String, String))
-        'Public Property Mode As Dictionary(Of ModeType, Dictionary(Of String, String))
-        '    Get
-        '        Return _mode
-        '    End Get
-        '    Set(ByVal value As Dictionary(Of ModeType, Dictionary(Of String, String)))
-        '        _mode = value
-        '        OnPropertyChanged("Mode")
-        '    End Set
-        'End Property
+        'Public Function GetCanChooseMode() As Boolean
+        '    'For Each info In InputFileInfos
+        '    '    If info.FileType = DataFileType.PI Then
+        '    '        Return False
+        '    '    End If
+        '    'Next
+        '    Return True
+        'End Function
 
         Private _modeName As ModeType
         Public Property ModeName As ModeType
@@ -683,7 +695,16 @@ Namespace ViewModels
             End Set
         End Property
 
-
+        Private _utcoffset As String
+        Public Property UTCoffset As String
+            Get
+                Return _model.UTCoffset
+            End Get
+            Set(ByVal value As String)
+                _model.UTCoffset = value
+                OnPropertyChanged()
+            End Set
+        End Property
         'Private _modeParams As ObservableCollection(Of ParameterValuePair)
         'Public Property ModeParams As ObservableCollection(Of ParameterValuePair)
         '    Get
@@ -1703,7 +1724,7 @@ Namespace ViewModels
             If _timeSourcePMU IsNot Nothing Then
                 output.SamplingRate = _timeSourcePMU.SamplingRate
             Else
-                Throw New Exception("PMU for time source is required for Scalar Repetition Customization.")
+                MessageBox.Show(_model.TimeSourcePMU + " is not found, valid PMU for time source is required for Scalar Repetition Customization.", "Warning!", MessageBoxButtons.OK)
             End If
             output.OldUnit = output.Unit
             output.OldTypeAbbreviation = output.TypeAbbreviation
@@ -1723,7 +1744,7 @@ Namespace ViewModels
             Try
                 ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
             Catch ex As Exception
-                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+                MessageBox.Show("Error when sort signals by PMU in step: " & Name, "Warning!", MessageBoxButtons.OK)
             End Try
             If postProcess Then
                 signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
@@ -1732,7 +1753,7 @@ Namespace ViewModels
             End If
         End Sub
         Public Overrides Function CheckStepIsComplete() As Boolean
-            Return True
+            Return TimeSourcePMU IsNot Nothing
         End Function
         Public ReadOnly Property Name As String
             Get
@@ -2267,7 +2288,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & stepCounter.ToString & " ," & Name & ".")
@@ -2277,7 +2298,7 @@ Namespace ViewModels
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
@@ -2376,7 +2397,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & stepCounter.ToString & " ," & Name & ".")
@@ -2386,7 +2407,7 @@ Namespace ViewModels
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
@@ -2472,7 +2493,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & stepCounter.ToString & " ," & Name & ".")
@@ -2482,7 +2503,7 @@ Namespace ViewModels
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
@@ -2566,7 +2587,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & stepCounter.ToString & " ," & Name & ".")
@@ -2576,7 +2597,7 @@ Namespace ViewModels
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
@@ -2660,7 +2681,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & stepCounter.ToString & " ," & Name & ".")
@@ -2670,7 +2691,7 @@ Namespace ViewModels
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
@@ -2755,7 +2776,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & stepCounter.ToString & " ," & Name & ".")
@@ -2765,7 +2786,7 @@ Namespace ViewModels
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
@@ -2849,7 +2870,7 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.PMUElementList
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     If InputChannels.Contains(input) Then
                         Throw New Exception("Duplicate input signal found in step: " & stepCounter.ToString & " ," & Name & ".")
@@ -2859,7 +2880,7 @@ Namespace ViewModels
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.SignalName & " in PMU " & signal.PMUName & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
@@ -3362,14 +3383,14 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.ToConverts
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMU, signal.Channel)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     InputChannels.Add(input)
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
                     input.TypeAbbreviation = "C"
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMU & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 If signal.SignalName Is Nothing Then
                     signal.SignalName = input.SignalName
@@ -3518,14 +3539,14 @@ Namespace ViewModels
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
             For Each signal In _model.ToConverts
-                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMU, signal.Channel)
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
                 If input IsNot Nothing Then
                     InputChannels.Add(input)
                 Else
                     input = New SignalSignatureViewModel("SignalNotFound")
                     input.IsValid = False
                     input.TypeAbbreviation = "C"
-                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMU & " not found!")
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
                 End If
                 If signal.SignalName Is Nothing Then
                     signal.SignalName = input.SignalName
@@ -3601,6 +3622,88 @@ Namespace ViewModels
             End Set
         End Property
     End Class
+    Public Class SignalReplicationCust
+        Inherits Customization
+        Public Sub New()
+            MyBase.New
+            _model = New SignalReplicationCustModel
+        End Sub
+        Private signalsMgr As SignalManager
 
+        Public Sub New(stp As SignalReplicationCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
+            MyBase.New(stp)
+            Me._model = stp
+            Me.StepCounter = stepCounter
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+            For Each signal In _model.ToRep
+                Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
+                If input IsNot Nothing Then
+                    InputChannels.Add(input)
+                Else
+                    input = New SignalSignatureViewModel("SignalNotFound")
+                    input.IsValid = False
+                    input.TypeAbbreviation = "C"
+                    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
+                End If
+                Dim output = New SignalSignatureViewModel(signal.Channel, CustPMUname, input.TypeAbbreviation)
+                output.SamplingRate = input.SamplingRate
+                output.IsCustomSignal = True
+                output.Unit = input.Unit
+                output.OldSignalName = output.SignalName
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldUnit = output.Unit
+                OutputChannels.Add(output)
+                Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
+                newPair.Value.Add(input)
+                OutputInputMappingPair.Add(newPair)
+            Next
+
+
+            Try
+                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+        End Sub
+        Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
+        Private _model As SignalReplicationCustModel
+        Public Property Model As SignalReplicationCustModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As SignalReplicationCustModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            If String.IsNullOrEmpty(CustPMUname) Then
+                'Throw New Exception("Please fill in custom PMU name.")
+                Return False
+            Else
+                Return True
+            End If
+        End Function
+    End Class
 #End Region
 End Namespace

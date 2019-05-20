@@ -11,7 +11,7 @@ namespace BAWGUI.MATLABRunResults.Models
         public SparseResults(MWStructArray rslts)
         {
             _results = rslts;
-            _sparseDetectorList = new List<SparseDetector>();
+            var sparseDetectorList = new List<SparseDetector>();
             //_dataPMU = new List<string>();
             //_dataChannel = new List<string>();
             for (int index = 1; index <= rslts.NumberOfElements; index++)
@@ -19,11 +19,16 @@ namespace BAWGUI.MATLABRunResults.Models
                 //Console.WriteLine("element: " + index.ToString());
                 MWNumericArray arr = (MWNumericArray)rslts["DataMin", index];
                 int[] dimEach = arr.Dimensions;
+                if (dimEach[0] == 0)
+                {
+                    throw new Exception("Sparse Run returned no Data. Please check you time duration selected.");
+                }
                 if (dimEach.Length != 2)
                 {
                     throw new Exception(String.Format("DataMin of element {0} matrix dimension out of range in sparse rerun.", index));
                 }
-                var dataMin = ((double[])(arr.ToVector(MWArrayComponent.Real))).ToList();
+                var v = arr.ToVector(MWArrayComponent.Real);
+                var dataMin = ((double[])v).ToList();
                 arr = (MWNumericArray)rslts["DataMax", index];
                 dimEach = arr.Dimensions;
                 if (dimEach.Length != 2)
@@ -39,7 +44,8 @@ namespace BAWGUI.MATLABRunResults.Models
                 {
                     var tt =Utility.MatlabDateNumToDotNetDateTime(item);
                     timeStamps.Add(tt);
-                    timeStampNumbers.Add(tt.ToOADate());
+                    timeStampNumbers.Add(item - 693960.0); // convert from matlab 0 day which is January 0, 0000 to microsoft 0 day which is midnight, 31 December 1899, by substracting the number of days in between them: 365 * 1900 - 1900 / 4 - 19 + 4, leap years are every 4 years, but not every 100 years and again, every 400 years.
+                    //timeStampNumbers.Add(tt.ToOADate());
                 }
                 var dataPMU = new List<string>();
                 foreach (char[,] item in ((MWCellArray)rslts["DataPMU", index]).ToArray())
@@ -97,8 +103,9 @@ namespace BAWGUI.MATLABRunResults.Models
                     newSparseSignal.Maximum = dataMax.GetRange(signalCount * dimEach[0], dimEach[0]);
                     detector.SparseSignals.Add(newSparseSignal);
                 }
-                _sparseDetectorList.Add(detector);
+                sparseDetectorList.Add(detector);
             }
+            _sparseDetectorList = sparseDetectorList;
         }
         public int NumberOfDetectors
         {

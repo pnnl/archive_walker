@@ -21,15 +21,8 @@
 %   3. modifed the code after DataInfo doesn't have a list of files that should be processed in the archive mode
 %
 %%
-function [focusFile,done,SkippedFiles,FocusFileTime,DataInfo] = getFocusFiles(FileInfo,FileDirectory,DataInfo,FileLength)
+function [focusFile,done,SkippedFiles,FocusFileTime,DataInfo,FileLength] = getFocusFiles(FileInfo,FileDirectory,DataInfo,FileLength,ResultUpdateInterval)
 done = 0; % used as a flag to identify the prcessing should be ended
-
-% file type
-if(strcmpi(FileInfo.FileType,'pdat'))
-    fileType = 1;
-elseif(strcmpi(FileInfo.FileType,'csv'))
-    fileType = 2;
-end
 
 if(isempty(FileInfo.lastFocusFile))
     % no last focus file, this is at the beginning of processing
@@ -37,6 +30,10 @@ if(isempty(FileInfo.lastFocusFile))
 else
     % tPMU is from the last processed focus file
     InitialFocusFileTime = ceil(FileInfo.tPMU(end)*24*3600)/24/3600; 
+    
+%     while InitialFocusFileTime > datenum(datetime('now','TimeZone','UTC'))-110.6478
+%         pause(10);
+%     end
 end
 
 % Check focus file time: time to quit?, time to transition to real-time
@@ -44,7 +41,7 @@ end
 %
 % If in Hybrid mode, update the end time based on the current system time
 if(strcmp(DataInfo.mode, 'Hybrid'))
-    DataInfo.DateTimeEnd = datestr(datetime('now','TimeZone',DataInfo.TimeZone)-DataInfo.RealTimeRange/60/24,'yyyy-mm-dd HH:MM:SS');
+    DataInfo.DateTimeEnd = datestr(datetime('now','TimeZone','UTC')+DataInfo.UTCoffset-DataInfo.RealTimeRange/60/60/24,'yyyy-mm-dd HH:MM:SS');
 end
 DateTimeEnd = datenum(DataInfo.DateTimeEnd);
 % If statement will evaluate to false if DateTimeEnd is empty (real-time
@@ -61,15 +58,84 @@ if(InitialFocusFileTime > DateTimeEnd)
     end
 end
 
+% file type
+if(strcmpi(FileInfo.FileType,'pdat'))
+    fileType = 1;
+elseif(strcmpi(FileInfo.FileType,'csv'))
+    fileType = 2;
+elseif(strcmpi(FileInfo.FileType,'powHQ'))
+    fileType = 3;
+elseif(strcmpi(FileInfo.FileType,'PI'))
+    SkippedFiles = 0;
+    FocusFileTime = InitialFocusFileTime;
+    focusFile = FocusFileTime;
+    FileLength = ResultUpdateInterval;
+    DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PresetFileInit);
+    
+    % Data from FocusFileTime to (FocusFileTime+FileLength) will be read.
+    %
+    % If FocusFileTime is in the future, throw an error to avoid being
+    % essentially stuck in matlab during a very long wait. 
+    %
+    % If FocusFileTime+FileLength is in the future, pause until that time
+    % is reached so that all data will be available.
+    %
+    % Only applicable in Real-Time and Hybrid modes (UTCoffset field not set
+    % in Archive mode)
+    if isfield(DataInfo,'UTCoffset')
+        % Current time in data's time zone
+        CurrentTime = datenum(datetime('now','TimeZone','UTC')+DataInfo.UTCoffset);
+        
+        if FocusFileTime > CurrentTime
+            error('Requested data should not be in the future.');
+        elseif (FocusFileTime + FileLength/(60*60*24)) > CurrentTime
+            % CurrentTime is (FocusFileTime+FileLength-CurrentTime) into
+            % the future. Pause for this amount of time so that all
+            % requested data will be available.
+%             disp(['Pausing for ' num2str((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60) ' seconds']);
+            pause((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60);
+        end
+    end
+    
+    return
+elseif(strcmpi(FileInfo.FileType,'OpenHistorian'))
+    SkippedFiles = 0;
+    FocusFileTime = InitialFocusFileTime;
+    focusFile = FocusFileTime;
+    FileLength = ResultUpdateInterval;  
+    DataInfo.PresetFile = fullfile(FileDirectory, DataInfo.PresetFileInit);
+    
+    % Data from FocusFileTime to (FocusFileTime+FileLength) will be read.
+    %
+    % If FocusFileTime is in the future, throw an error to avoid being
+    % essentially stuck in matlab during a very long wait. 
+    %
+    % If FocusFileTime+FileLength is in the future, pause until that time
+    % is reached so that all data will be available.
+    %
+    % Only applicable in Real-Time and Hybrid modes (UTCoffset field not set
+    % in Archive mode)
+    if isfield(DataInfo,'UTCoffset')
+        % Current time in data's time zone
+        CurrentTime = datenum(datetime('now','TimeZone','UTC')+DataInfo.UTCoffset);
+        
+        if FocusFileTime > CurrentTime
+            error('Requested data should not be in the future.');
+        elseif (FocusFileTime + FileLength/(60*60*24)) > CurrentTime
+            % CurrentTime is (FocusFileTime+FileLength-CurrentTime) into
+            % the future. Pause for this amount of time so that all
+            % requested data will be available.
+%             disp(['Pausing for ' num2str((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60) ' seconds']);
+            pause((FocusFileTime + FileLength/(60*60*24) - CurrentTime)*24*60*60);
+        end
+    end
+    
+    return
+end
+
      
 % find the name and folder of the focus file
-if(fileType == 1)
-    % pdat files
-    [focusFileFolder,focusFile] = getPdatFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
-elseif(fileType == 2)
-    % csv files
-    [focusFileFolder,focusFile] = getCSVFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime);
-end
+[focusFileFolder,focusFile] = getFileFolder(FileDirectory,FileInfo.FileMnemonic,InitialFocusFileTime,fileType);
 
 checking = 1;
 NoFutureCount = 0;
@@ -144,6 +210,8 @@ while(checking == 1)
                     files1 = dir([focusFileFolder,'*.pdat']);
                 elseif(fileType == 2)
                     files1 = dir([focusFileFolder,'*.csv']);
+                elseif(fileType == 3)
+                    files1 = dir([focusFileFolder,'*.mat']);
                 end
                 if(~isempty(files1))
                     files1 = {files1.name};
@@ -168,6 +236,8 @@ while(checking == 1)
                     files2 = dir([nextFileFolder,'*.pdat']);
                 elseif(fileType == 2)
                     files2 = dir([nextFileFolder,'*.csv']);
+                elseif(fileType == 3)
+                    files2 = dir([nextFileFolder,'*.mat']);
                 end
                 if(~isempty(files2))
                     files2 = {files2.name};

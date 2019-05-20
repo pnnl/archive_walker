@@ -26,6 +26,7 @@ namespace BAWGUI.Results.ViewModels
             {
                 _channels.Add(new FOOccurrenceChannelViewModel(ch));
             }
+            _selectedChannel = _channels.FirstOrDefault();
         }
         public OccurrenceViewModel()
         {
@@ -152,5 +153,24 @@ namespace BAWGUI.Results.ViewModels
             get { return _channels; }
         }
         public int trackerKey { get; set; }
+        private FOOccurrenceChannelViewModel _selectedChannel;
+        public FOOccurrenceChannelViewModel SelectedChannel
+        {
+            get { return _selectedChannel; }
+            set
+            {
+                if (_selectedChannel != value)
+                {
+                    _selectedChannel = value;
+                    OnPropertyChanged();
+                    OnSelectedChannelChanged();
+                }
+            }
+        }
+        public event EventHandler SelectedChannelChanged;
+        public virtual void OnSelectedChannelChanged()
+        {
+            SelectedChannelChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

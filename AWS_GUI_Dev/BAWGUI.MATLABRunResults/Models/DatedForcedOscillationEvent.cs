@@ -23,10 +23,16 @@ namespace BAWGUI.MATLABRunResults.Models
             _filteredOccurrences.Clear();
             foreach (var ocur in foevent.Occurrence)
             {
-                _occurrences.Add(new DatedOccurrence(_date, ocur));
-                _filteredOccurrences.Add(new DatedOccurrence(_date, ocur));
+                var doc = new DatedOccurrence(_date, ocur);
+                _occurrences.Add(doc);
+                _filteredOccurrences.Add(doc);
             }
         }
+
+        public DatedForcedOscillationEvent()
+        {
+        }
+
         private string _date;
         public string Date
         {
@@ -89,19 +95,58 @@ namespace BAWGUI.MATLABRunResults.Models
         }
         public float MaxPersistence
         {
-            get { return _filteredOccurrences.Select(x => x.Persistence).Max(); }
+            get
+            {
+                if (_filteredOccurrences != null && _filteredOccurrences.Count() > 0)
+                {
+                    return _filteredOccurrences.Select(x => x.Persistence).Max();
+                }
+                else {
+                    return float.NaN;
+                }
+            }
         }
         public float MaxAmplitude
         {
-            get { return _filteredOccurrences.Select(x => x.MaxAmplitude).Max(); }
+            get
+            {
+                if (_filteredOccurrences != null && _filteredOccurrences.Count() > 0)
+                {
+                    return _filteredOccurrences.Select(x => x.MaxAmplitude).Max();
+                }
+                else
+                {
+                    return float.NaN;
+                }
+            }
         }
         public float MaxSNR
         {
-            get { return _filteredOccurrences.Select(x => x.MaxSNR).Max(); }
+            get
+            {
+                if (_filteredOccurrences != null && _filteredOccurrences.Count() > 0)
+                {
+                    return _filteredOccurrences.Select(x => x.MaxSNR).Max();
+                }
+                else
+                {
+                    return float.NaN;
+                }
+            }
         }
         public float MaxCoherence
         {
-            get { return _filteredOccurrences.Select(x => x.MaxCoherence).Max(); }
+            get
+            {
+                if (_filteredOccurrences != null && _filteredOccurrences.Count() > 0)
+                {
+                    return _filteredOccurrences.Select(x => x.MaxCoherence).Max();
+                }
+                else
+                {
+                    return float.NaN;
+                }
+            }
         }
         //public int NumberOfCoherences
         //{

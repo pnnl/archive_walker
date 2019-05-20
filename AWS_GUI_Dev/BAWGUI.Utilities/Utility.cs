@@ -11,8 +11,15 @@ namespace BAWGUI.Utilities
     {
         public static DateTime MatlabDateNumToDotNetDateTime(double item)
         {
+            //datetime object do not have microseconds resolution, so the number of ticks has to be manually calculated and added to the datetime object
+            //there are 10 ticks per microsecond            
             System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            System.DateTime bbb = dtDateTime.AddSeconds((item - 367) * 86400);
+            double milisec = item * 1000.0;
+            double diff = (milisec - 367000.0) * 86400.0;
+            System.DateTime bbb = dtDateTime.AddMilliseconds(diff);
+            double remainigTicks = (diff - Math.Floor(diff)) * 10000; //there are 10000 ticks per millisecond
+            long rt = (long)Math.Round(remainigTicks);
+            System.DateTime ccc = bbb.AddTicks(rt);
             return bbb;
         }
 
@@ -21,12 +28,18 @@ namespace BAWGUI.Utilities
             return (item - 367) * 86400;
         }
 
-        public static string SecondsToDateTimeString(double item)
+        public static string MATLABSecondsToDateTimeString(double item)
         {
             System.DateTime dtDateTime = new DateTime(0001, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             var bbb = dtDateTime.AddSeconds(item);
             return bbb.ToString("yyyyMMdd_HHmmss");
         }
+        //public static string DotNetDaysToDateTimeString(double item)
+        //{
+        //    System.DateTime dtDateTime = new DateTime(1899, 12, 30, 0, 0, 0, 0, System.DateTimeKind.Utc);
+        //    var bbb = dtDateTime.AddDays(item);
+        //    return bbb.ToString("yyyyMMdd_HHmmss");
+        //}
         //public static Color HighlightColor = Colors.Cornsilk;
         public static System.Windows.Media.SolidColorBrush HighlightColor = new System.Windows.Media.SolidColorBrush(Colors.Cornsilk);
 
@@ -44,6 +57,7 @@ namespace BAWGUI.Utilities
         public static List<string> SaturatedColors = new List<string>{  "Blue",
                                                                         "Orange",
                                                                         "Black",
+                                                                        "Green",
                                                                         "Purple",
                                                                         "Cyan",
                                                                         "Maroon",
@@ -57,7 +71,6 @@ namespace BAWGUI.Utilities
                                                                         "Turquoise",
                                                                         "Mint",
                                                                         "Red",
-                                                                        "Green",
                                                                         "Yellow",
                                                                         "RoyalBlue",
                                                                         "LimeGreen"
@@ -102,6 +115,32 @@ namespace BAWGUI.Utilities
             {
                 yield return array[index, i];
             }
+        }
+        /// <summary>
+        /// function to correct the radian phase angles  by adding ±2π when absolute jumps between consecutive elements are greater than or equal to π radians
+        /// it mimics the unwrap function in matlab but much less powerful http://www.mathworks.com/help/matlab/ref/unwrap.html 
+        /// </summary>
+        /// <param name="numberList">A list of numbers that need to be unwrapped</param>
+        /// <returns>Unwrapped list of numbers</returns>
+        public static  List<double> UnWrap(List<double> numberList)
+        {
+            try
+            {
+                for (var index = 1; index <= numberList.Count - 1; index++)
+                {
+                    var difference = numberList[index] - numberList[index - 1];
+                    var multiplesOf2PI = Math.Floor((Math.Abs(difference) + Math.PI) / (2 * Math.PI));
+                    if (difference >= Math.PI)
+                        numberList[index] = numberList[index] - 2 * Math.PI * multiplesOf2PI;
+                    else if (difference <= -Math.PI)
+                        numberList[index] = numberList[index] + 2 * Math.PI * multiplesOf2PI;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("unWrap error! " + ex.Message);
+            }
+            return numberList;
         }
     }
 }

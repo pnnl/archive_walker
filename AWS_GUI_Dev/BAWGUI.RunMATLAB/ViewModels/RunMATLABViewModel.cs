@@ -66,38 +66,46 @@ namespace BAWGUI.RunMATLAB.ViewModels
             set
             {
                 _run = value;
+                Engine.Run = _run;
                 OnPropertyChanged();
             }
         }
         public ICommand RunArchiveWalkerNormal { get; set; }
         private void _runAWNormal(object obj)
         {
-            Run = (AWRunViewModel)obj;
-            if (File.Exists(_run.Model.ConfigFilePath))
+            if (obj != null)
             {
-                //var controlPath = RunPath + "ControlRun\\";
-                //var controlPath = _run.ControlRunPath;
-                if (_run.Model.ControlRunPath != null && !Directory.Exists(_run.Model.ControlRunPath))
+                Run = (AWRunViewModel)obj;
+                if (File.Exists(_run.Model.ConfigFilePath))
                 {
-                    System.IO.Directory.CreateDirectory(_run.Model.ControlRunPath);
+                    //var controlPath = RunPath + "ControlRun\\";
+                    //var controlPath = _run.ControlRunPath;
+                    if (_run.Model.ControlRunPath != null && !Directory.Exists(_run.Model.ControlRunPath))
+                    {
+                        System.IO.Directory.CreateDirectory(_run.Model.ControlRunPath);
+                    }
+                    else
+                    {
+                        System.IO.Directory.CreateDirectory(_run.Model.RunPath + "\\ControlRun\\");
+                    }
+                    try
+                    {
+                        //Engine.RunSelected += Engine_RunSelected;
+                        Engine.RuNormalModeByBackgroundWorker(_run);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
                 }
                 else
                 {
-                    System.IO.Directory.CreateDirectory(_run.Model.RunPath + "\\ControlRun\\");
-                }
-                try
-                {
-                    //Engine.RunSelected += Engine_RunSelected;
-                    Engine.RuNormalModeByBackgroundWorker(_run);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+                    MessageBox.Show("Config file does not exist. Please specify a valid config file.", "Error!", MessageBoxButtons.OK);
                 }
             }
             else
             {
-                MessageBox.Show("Config file does not exist. Please specify a valid config file.", "Error!", MessageBoxButtons.OK);
+                MessageBox.Show("No run is selected!", "Error!", MessageBoxButtons.OK);
             }
         }
 
@@ -148,11 +156,25 @@ namespace BAWGUI.RunMATLAB.ViewModels
         }
         private void _resumeArchiveWalkerNormal(object obj)
         {
-            Run = (AWRunViewModel)obj;
-            var pauseFlag = _run.Model.ControlRunPath + "PauseFlag.txt";
-            File.Delete(pauseFlag);
-            _runAWNormal(obj);
-            //_engine.IsNormalRunPaused = false;
+            if (obj != null)
+            {
+                Run = (AWRunViewModel)obj;
+                var pauseFlag = _run.Model.ControlRunPath + "PauseFlag.txt";
+                try
+                {
+                    File.Delete(pauseFlag);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error pause normal run, deleting PauseFlag.txt Failed! Original error: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                }
+                _runAWNormal(obj);
+                //_engine.IsNormalRunPaused = false;
+            }
+            else
+            {
+                MessageBox.Show("No run is selected!", "Error!", MessageBoxButtons.OK);
+            }
         }
 
         public AWProject Project { get; set; }

@@ -1,4 +1,4 @@
-function [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString] = ExtractData(PMUstruct,Parameters)
+function [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString, TimeDT] = ExtractData(PMUstruct,Parameters)
 
 % Throughout, warnings are placed before identical errors so that the user
 % sees them (this function is placed inside a try-catch block in every
@@ -112,8 +112,10 @@ end
 % first one to get the time stamps as strings
 if ~isempty(PMUstructIdxList)
     TimeString = PMUstruct(PMUstructIdxList(1)).Signal_Time.Time_String;
+    TimeDT = PMUstruct(PMUstructIdxList(1)).Signal_Time.datetime;
 else
     TimeString = {};
+    TimeDT = [];
 end
 
 % Get the sampling rate. Try for each PMU that was included until it is

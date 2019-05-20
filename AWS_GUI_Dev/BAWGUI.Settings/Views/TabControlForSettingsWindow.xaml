@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:mapcoordv="clr-namespace:BAWGUI.CoordinateMapping.Views;assembly=BAWGUI.CoordinateMapping"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
     <TabControl TabStripPlacement="Top" SelectedIndex="{Binding CurrentTabIndex}">
@@ -21,6 +22,12 @@
         </TabItem>
         <TabItem Header="Detection">
             <local:DetectorConfigTabInSettings/>
+        </TabItem>
+        <TabItem Header="Data Writer">
+            <local:DataWriterDetectorTab/>
+        </TabItem>
+        <TabItem Header="Signal Coordinates Setup" DataContext="{Binding RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType=Window}, Path=DataContext.SignalCoordsMappingVM}">
+            <mapcoordv:SignalCoordsSetupView/>
         </TabItem>
     </TabControl>
 </UserControl>

@@ -1,0 +1,1242 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>openHistorian.Core</name>
+    </assembly>
+    <members>
+        <member name="M:openHistorian.Data.PeriodicScanner.#ctor(System.Int32)">
+            <summary>
+            Creates a periodic scanner
+            </summary>
+            <param name="samplesPerSecond"></param>
+        </member>
+        <member name="M:openHistorian.Data.PeriodicScanner.RoundDownToNearestSample(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            Rounds the provided timestamp down to the nearest valid time sample.
+            </summary>
+            <param name="startTime">the timestamp in ticks</param>
+            <param name="samplesPerDay">the number of samples per day.</param>
+            <param name="interval">the interval in ticks</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.PeriodicScanner.RoundUpToNearestSample(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            Rounds the provided timestamp up to the nearest valid time sample.
+            </summary>
+            <param name="startTime">the timestamp in ticks</param>
+            <param name="samplesPerDay">the number of samples per day.</param>
+            <param name="interval">the interval in ticks</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.PeriodicScanner.FactorNumber(System.Int32)">
+            <summary>
+            Gets all of the factors for the <see cref="!:number"/>.
+            </summary>
+            <param name="number">must be greater than or equal to 1</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.PeriodicScanner.CalculateDownSampleRates(System.Int32)">
+            <summary>
+            Populates <see cref="F:openHistorian.Data.PeriodicScanner.m_downSampleRates"/> and <see cref="F:openHistorian.Data.PeriodicScanner.m_downSampleTicks"/> with all of the necessary valid downsample rates
+            </summary>
+            <param name="samplesPerSecond">Must be greater than or equal to 1</param>
+        </member>
+        <member name="T:openHistorian.Data.Query.GetDataFillAdapterMethods">
+            <summary>
+            Queries a historian database for a set of signals. 
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetDataFillAdapterMethods.GetFillAdapter(openHistorian.Data.Query.PointStream)">
+            <summary>
+            Gets concentrated frames from the provided stream
+            </summary>
+            <param name="stream">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="T:openHistorian.Data.Query.PointStream">
+            <summary>
+            A helper way to read data from a stream.
+            </summary>
+        </member>
+        <member name="T:openHistorian.Data.Query.GetPointStreamExtensionMethods">
+            <summary>
+            Queries a historian database for a set of signals. 
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetPointStreamExtensionMethods.GetPointStream(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.DateTime,System.DateTime)">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetPointStreamExtensionMethods.GetPointStream(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},GSF.Snap.Filters.SeekFilterBase{openHistorian.Snap.HistorianKey},System.UInt64[])">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetPointStreamExtensionMethods.GetPointStream(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.DateTime,System.DateTime,System.UInt64[])">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetPointStreamExtensionMethods.GetPointStream(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},GSF.Snap.Filters.SeekFilterBase{openHistorian.Snap.HistorianKey},GSF.Snap.Filters.MatchFilterBase{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue})">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <param name="timestamps">the timestamps to query for</param>
+            <param name="points">the points to query</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetPointStreamExtensionMethods.GetPointStream(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},GSF.Snap.Services.Reader.SortedTreeEngineReaderOptions,GSF.Snap.Filters.SeekFilterBase{openHistorian.Snap.HistorianKey},GSF.Snap.Filters.MatchFilterBase{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue})">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <param name="timestamps">the timestamps to query for</param>
+            <param name="points">the points to query</param>
+            <param name="options">A list of query options</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetPointStreamExtensionMethods.GetPointStream(GSF.Snap.TreeStream{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue})">
+            <summary>
+            Gets concentrated frames from the provided stream
+            </summary>
+            <param name="stream">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="T:openHistorian.Data.Query.GetFrameReaderMethods">
+            <summary>
+            Queries a historian database for a set of signals. 
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameReaderMethods.GetFrameReader(openHistorian.Data.Query.PointStream)">
+            <summary>
+            Gets concentrated frames from the provided stream
+            </summary>
+            <param name="stream">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="T:openHistorian.Data.Query.GetFrameMethods">
+            <summary>
+            Queries a historian database for a set of signals. 
+            </summary>
+            <summary>
+            Queries a historian database for a set of signals. 
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.GetFrames(GSF.Snap.TreeStream{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue})">
+            <summary>
+            Gets concentrated frames from the provided stream
+            </summary>
+            <param name="stream">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.GetFrames(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.DateTime,System.DateTime)">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.GetFrames(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},GSF.Snap.Filters.SeekFilterBase{openHistorian.Snap.HistorianKey},System.UInt64[])">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.GetFrames(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.DateTime,System.DateTime,System.UInt64[])">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.GetFrames(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},GSF.Snap.Filters.SeekFilterBase{openHistorian.Snap.HistorianKey},GSF.Snap.Filters.MatchFilterBase{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue})">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <param name="timestamps">the timestamps to query for</param>
+            <param name="points">the points to query</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.GetFrames(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},GSF.Snap.Services.Reader.SortedTreeEngineReaderOptions,GSF.Snap.Filters.SeekFilterBase{openHistorian.Snap.HistorianKey},GSF.Snap.Filters.MatchFilterBase{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue})">
+            <summary>
+            Gets frames from the historian as individual frames.
+            </summary>
+            <param name="database">the database to use</param>
+            <param name="timestamps">the timestamps to query for</param>
+            <param name="points">the points to query</param>
+            <param name="options">A list of query options</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.RoundToTolerance(System.Collections.Generic.SortedList{System.DateTime,openHistorian.Data.Query.FrameData},System.Int32)">
+            <summary>
+            Rounds the frame to the nearest level of specified tolerance.
+            </summary>
+            <param name="origional">the frame to round</param>
+            <param name="toleranceMilliseconds">the timespan in milliseconds.</param>
+            <returns>A new frame that is rounded.</returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetFrameMethods.RoundToTolerance(System.Collections.Generic.SortedList{System.DateTime,openHistorian.Data.Query.FrameData},System.TimeSpan)">
+            <summary>
+            Rounds the frame to the nearest level of specified tolerance.
+            </summary>
+            <param name="origional">the frame to round</param>
+            <param name="tolerance">the timespan to round on.</param>
+            <returns>A new frame that is rounded.</returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetName(System.Int32)">
+            <summary>
+            Gets the name for the field to find.
+            </summary>
+            <returns>
+            The name of the field or the empty string (""), if there is no value to return.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetDataTypeName(System.Int32)">
+            <summary>
+            Gets the data type information for the specified field.
+            </summary>
+            <returns>
+            The data type information for the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetFieldType(System.Int32)">
+            <summary>
+            Gets the <see cref="T:System.Type"/> information corresponding to the type of <see cref="T:System.Object"/> that would be returned from <see cref="M:System.Data.IDataRecord.GetValue(System.Int32)"/>.
+            </summary>
+            <returns>
+            The <see cref="T:System.Type"/> information corresponding to the type of <see cref="T:System.Object"/> that would be returned from <see cref="M:System.Data.IDataRecord.GetValue(System.Int32)"/>.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetValue(System.Int32)">
+            <summary>
+            Return the value of the specified field.
+            </summary>
+            <returns>
+            The <see cref="T:System.Object"/> which will contain the field value upon return.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetValues(System.Object[])">
+            <summary>
+            Populates an array of objects with the column values of the current record.
+            </summary>
+            <returns>
+            The number of instances of <see cref="T:System.Object"/> in the array.
+            </returns>
+            <param name="values">An array of <see cref="T:System.Object"/> to copy the attribute fields into. </param><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetOrdinal(System.String)">
+            <summary>
+            Return the index of the named field.
+            </summary>
+            <returns>
+            The index of the named field.
+            </returns>
+            <param name="name">The name of the field to find. </param><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetBoolean(System.Int32)">
+            <summary>
+            Gets the value of the specified column as a Boolean.
+            </summary>
+            <returns>
+            The value of the column.
+            </returns>
+            <param name="i">The zero-based column ordinal. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetByte(System.Int32)">
+            <summary>
+            Gets the 8-bit unsigned integer value of the specified column.
+            </summary>
+            <returns>
+            The 8-bit unsigned integer value of the specified column.
+            </returns>
+            <param name="i">The zero-based column ordinal. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetBytes(System.Int32,System.Int64,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Reads a stream of bytes from the specified column offset into the buffer as an array, starting at the given buffer offset.
+            </summary>
+            <returns>
+            The actual number of bytes read.
+            </returns>
+            <param name="i">The zero-based column ordinal. </param><param name="fieldOffset">The index within the field from which to start the read operation. </param><param name="buffer">The buffer into which to read the stream of bytes. </param><param name="bufferoffset">The index for <paramref name="buffer"/> to start the read operation. </param><param name="length">The number of bytes to read. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetChar(System.Int32)">
+            <summary>
+            Gets the character value of the specified column.
+            </summary>
+            <returns>
+            The character value of the specified column.
+            </returns>
+            <param name="i">The zero-based column ordinal. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetChars(System.Int32,System.Int64,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Reads a stream of characters from the specified column offset into the buffer as an array, starting at the given buffer offset.
+            </summary>
+            <returns>
+            The actual number of characters read.
+            </returns>
+            <param name="i">The zero-based column ordinal. </param><param name="fieldoffset">The index within the row from which to start the read operation. </param><param name="buffer">The buffer into which to read the stream of bytes. </param><param name="bufferoffset">The index for <paramref name="buffer"/> to start the read operation. </param><param name="length">The number of bytes to read. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetGuid(System.Int32)">
+            <summary>
+            Returns the GUID value of the specified field.
+            </summary>
+            <returns>
+            The GUID value of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetInt16(System.Int32)">
+            <summary>
+            Gets the 16-bit signed integer value of the specified field.
+            </summary>
+            <returns>
+            The 16-bit signed integer value of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetInt32(System.Int32)">
+            <summary>
+            Gets the 32-bit signed integer value of the specified field.
+            </summary>
+            <returns>
+            The 32-bit signed integer value of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetInt64(System.Int32)">
+            <summary>
+            Gets the 64-bit signed integer value of the specified field.
+            </summary>
+            <returns>
+            The 64-bit signed integer value of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetFloat(System.Int32)">
+            <summary>
+            Gets the single-precision floating point number of the specified field.
+            </summary>
+            <returns>
+            The single-precision floating point number of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetDouble(System.Int32)">
+            <summary>
+            Gets the double-precision floating point number of the specified field.
+            </summary>
+            <returns>
+            The double-precision floating point number of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetString(System.Int32)">
+            <summary>
+            Gets the string value of the specified field.
+            </summary>
+            <returns>
+            The string value of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetDecimal(System.Int32)">
+            <summary>
+            Gets the fixed-position numeric value of the specified field.
+            </summary>
+            <returns>
+            The fixed-position numeric value of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetDateTime(System.Int32)">
+            <summary>
+            Gets the date and time data value of the specified field.
+            </summary>
+            <returns>
+            The date and time data value of the specified field.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetData(System.Int32)">
+            <summary>
+            Returns an <see cref="T:System.Data.IDataReader"/> for the specified column ordinal.
+            </summary>
+            <returns>
+            The <see cref="T:System.Data.IDataReader"/> for the specified column ordinal.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.IsDBNull(System.Int32)">
+            <summary>
+            Return whether the specified field is set to null.
+            </summary>
+            <returns>
+            true if the specified field is set to null; otherwise, false.
+            </returns>
+            <param name="i">The index of the field to find. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="P:openHistorian.Data.Query.HistorianDataPointReader.System#Data#IDataRecord#Item(System.Int32)">
+            <summary>
+            Gets the column located at the specified index.
+            </summary>
+            <returns>
+            The column located at the specified index as an <see cref="T:System.Object"/>.
+            </returns>
+            <param name="i">The zero-based index of the column to get. </param><exception cref="T:System.IndexOutOfRangeException">The index passed was outside the range of 0 through <see cref="P:System.Data.IDataRecord.FieldCount"/>. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="P:openHistorian.Data.Query.HistorianDataPointReader.System#Data#IDataRecord#Item(System.String)">
+            <summary>
+            Gets the column with the specified name.
+            </summary>
+            <returns>
+            The column with the specified name as an <see cref="T:System.Object"/>.
+            </returns>
+            <param name="name">The name of the column to find. </param><exception cref="T:System.IndexOutOfRangeException">No column with the specified name was found. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.Close">
+            <summary>
+            Closes the <see cref="T:System.Data.IDataReader"/> Object.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.GetSchemaTable">
+            <summary>
+            Returns a <see cref="T:System.Data.DataTable"/> that describes the column metadata of the <see cref="T:System.Data.IDataReader"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> that describes the column metadata.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:System.Data.IDataReader"/> is closed. </exception><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.NextResult">
+            <summary>
+            Advances the data reader to the next result, when reading the results of batch SQL statements.
+            </summary>
+            <returns>
+            true if there are more rows; otherwise, false.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:openHistorian.Data.Query.HistorianDataPointReader.Read">
+            <summary>
+            Advances the <see cref="T:System.Data.IDataReader"/> to the next record.
+            </summary>
+            <returns>
+            true if there are more rows; otherwise, false.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:openHistorian.Data.Query.HistorianDataPointReader.Depth">
+            <summary>
+            Gets a value indicating the depth of nesting for the current row.
+            </summary>
+            <returns>
+            The level of nesting.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:openHistorian.Data.Query.HistorianDataPointReader.IsClosed">
+            <summary>
+            Gets a value indicating whether the data reader is closed.
+            </summary>
+            <returns>
+            true if the data reader is closed; otherwise, false.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:openHistorian.Data.Query.HistorianDataPointReader.RecordsAffected">
+            <summary>
+            Gets the number of rows changed, inserted, or deleted by execution of the SQL statement.
+            </summary>
+            <returns>
+            The number of rows changed, inserted, or deleted; 0 if no rows were affected or the statement failed; and -1 for SELECT statements.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:openHistorian.Data.Query.GetRawSignalMethods">
+            <summary>
+            Queries a historian database for a set of signals. 
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetRawSignalMethods.GetRawSignals(GSF.Snap.Services.ClientDatabaseBase{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.DateTime,System.DateTime,System.Collections.Generic.IEnumerable{System.UInt64})">
+            <summary>
+            Queries the provided signals within a the provided time window [Inclusive]
+            </summary>
+            <param name="database"></param>
+            <param name="startTime">the lower bound of the time</param>
+            <param name="endTime">the upper bound of the time. [Inclusive]</param>
+            <param name="signals">an IEnumerable of all of the signals to query as part of the results set.</param>
+            <returns></returns>
+        </member>
+        <member name="T:openHistorian.Data.Query.GetSignalMethods">
+            <summary>
+            Queries a historian database for a set of signals. 
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.GetSignals(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.UInt64)">
+            <summary>
+            Queries all of the signals at the given time.
+            </summary>
+            <param name="database"></param>
+            <param name="time">the time to query</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.GetSignals(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.UInt64,System.UInt64)">
+            <summary>
+            Queries all of the signals within a the provided time window [Inclusive]
+            </summary>
+            <param name="database"></param>
+            <param name="startTime">the lower bound of the time</param>
+            <param name="endTime">the upper bound of the time. [Inclusive]</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.GetSignals(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.UInt64,System.UInt64,System.Collections.Generic.IEnumerable{System.UInt64})">
+            <summary>
+            Queries the provided signals within a the provided time window [Inclusive]
+            </summary>
+            <param name="database"></param>
+            <param name="startTime">the lower bound of the time</param>
+            <param name="endTime">the upper bound of the time. [Inclusive]</param>
+            <param name="signals">an IEnumerable of all of the signals to query as part of the results set.</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.GetSignals(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.UInt64,System.UInt64,System.Collections.Generic.IEnumerable{System.UInt64},openHistorian.Data.Types.TypeBase)">
+            <summary>
+            Queries the provided signals within a the provided time window [Inclusive]
+            This method will strong type the signals, but all signals must be of the same type for this to work.
+            </summary>
+            <param name="database"></param>
+            <param name="startTime">the lower bound of the time</param>
+            <param name="endTime">the upper bound of the time. [Inclusive]</param>
+            <param name="signals">an IEnumerable of all of the signals to query as part of the results set.</param>
+            <param name="conversion">a single conversion method to use for all signals</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.GetSignals(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},System.UInt64,System.UInt64,System.Collections.Generic.IEnumerable{openHistorian.Data.Query.ISignalWithType})">
+            <summary>
+            Queries the provided signals within a the provided time window [Inclusive].
+            With this method, the signals will be strong typed and therefore can be converted.
+            </summary>
+            <param name="database"></param>
+            <param name="startTime">the lower bound of the time</param>
+            <param name="endTime">the upper bound of the time. [Inclusive]</param>
+            <param name="signals">an IEnumerable of all of the signals to query as part of the results set.</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.GetSignals(GSF.Snap.IDatabaseReader{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue},GSF.Snap.Filters.SeekFilterBase{openHistorian.Snap.HistorianKey},System.Collections.Generic.IEnumerable{openHistorian.Data.Query.ISignalWithType},GSF.Snap.Services.Reader.SortedTreeEngineReaderOptions)">
+            <summary>
+            Queries the provided signals within a the time described by the <see cref="!:QueryFilterTimestamp"/>.
+            With this method, the signals will be strong typed and therefore can be converted.
+            </summary>
+            <param name="database"></param>
+            <param name="timestamps">a <see cref="!:QueryFilterTimestamp"/> that describes how a signal will be parsed</param>
+            <param name="signals">an IEnumerable of all of the signals to query as part of the results set.</param>
+            <param name="readerOptions">The options that will be used when querying this data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.AddSignal(System.Collections.Generic.Dictionary{System.UInt64,openHistorian.Data.Query.SignalDataBase},System.UInt64,System.UInt64,System.UInt64)">
+            <summary>
+            Adds the following signal to the dictionary. If the signal is
+            not part of the dictionary, it is added automatically.
+            </summary>
+            <param name="results"></param>
+            <param name="time"></param>
+            <param name="point"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:openHistorian.Data.Query.GetSignalMethods.AddSignalIfExists(System.Collections.Generic.Dictionary{System.UInt64,openHistorian.Data.Query.SignalDataBase},System.UInt64,System.UInt64,System.UInt64)">
+            <summary>
+            Adds the provided signal to the dictionary unless the signal is not
+            already part of the dictionary.
+            </summary>
+            <param name="results"></param>
+            <param name="time"></param>
+            <param name="point"></param>
+            <param name="value"></param>
+        </member>
+        <member name="T:openHistorian.Data.Query.ISignalWithType">
+            <summary>
+            An interface that allows the results of DatabaseMethods.ExecuteQuery
+            to be strong typed.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.ISignalWithType.HistorianId">
+            <summary>
+            The Id value of the historian point.
+            Null means that the point is not in the historian
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.ISignalWithType.Functions">
+            <summary>
+            A set of functions that will properly convert the value type
+            from its native format
+            </summary>
+        </member>
+        <member name="T:openHistorian.Data.Query.SignalData">
+            <summary>
+            Contains a series of Times and Values for an individual signal.
+            If using this class, you must specify a <see cref="T:openHistorian.Data.Types.TypeBase"/>. 
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalData.Method">
+            <summary>
+            Provides the type conversion method for the base class to use
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalData.Count">
+            <summary>
+            Gets the number of values that are in the signal
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalData.AddDataRaw(System.UInt64,System.UInt64)">
+            <summary>
+            Adds a value to the signal in its raw 64-bit format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the 64-bit value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalData.GetDataRaw(System.Int32,System.UInt64@,System.UInt64@)">
+            <summary>
+            Gets a value from the signal with the provided index in its
+            raw 64-bit format.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the raw 64-bit value</param>
+        </member>
+        <member name="T:openHistorian.Data.Query.SignalDataBase">
+            <summary>
+            Contains a series of Times and Values for an individual signal.
+            Abstract versions of this class should attempt to store the value
+            in its most appropriate format to reduce the amount of conversion
+            that must occur.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalDataBase.IsComplete">
+            <summary>
+            Gets if this signal has been processed and can no longer be added to.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.Completed">
+            <summary>
+            Flags this signal as complete which locks down the ability to add 
+            additional points to it.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalDataBase.Method">
+            <summary>
+            Provides the type conversion method for the base class to use
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalDataBase.Count">
+            <summary>
+            Gets the number of values that are in the signal
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.AddDataRaw(System.UInt64,System.UInt64)">
+            <summary>
+            Adds a value to the signal in its raw 64-bit format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the 64-bit value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.GetDataRaw(System.Int32,System.UInt64@,System.UInt64@)">
+            <summary>
+            Gets a value from the signal with the provided index in its
+            raw 64-bit format.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the raw 64-bit value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.GetData(System.Int32,System.UInt64@,System.Double@)">
+            <summary>
+            Gets a value from the signal with the provided index and automatically 
+            converts it to a <see cref="T:System.Double"/>.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the converted value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.GetData(System.Int32,System.UInt64@,System.Single@)">
+            <summary>
+            Gets a value from the signal with the provided index and automatically 
+            converts it to a <see cref="T:System.Single"/>.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the converted value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.GetData(System.Int32,System.UInt64@,System.Int64@)">
+            <summary>
+            Gets a value from the signal with the provided index and automatically 
+            converts it to a <see cref="T:System.Int64"/>.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the converted value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.GetData(System.Int32,System.UInt64@,System.UInt64@)">
+            <summary>
+            Gets a value from the signal with the provided index and automatically 
+            converts it to a <see cref="T:System.UInt64"/>.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the converted value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.AddData(System.UInt64,System.Double)">
+            <summary>
+            Adds a value to the signal and converts it from a <see cref="T:System.Double"/>
+            into its native format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the value to convert</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.AddData(System.UInt64,System.Single)">
+            <summary>
+            Adds a value to the signal and converts it from a <see cref="T:System.Single"/>
+            into its native format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the value to convert</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.AddData(System.UInt64,System.UInt64)">
+            <summary>
+            Adds a value to the signal and converts it from a <see cref="T:System.UInt64"/>
+            into its native format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the value to convert</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataBase.AddData(System.UInt64,System.Int64)">
+            <summary>
+            Adds a value to the signal and converts it from a <see cref="T:System.Int64"/>
+            into its native format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the value to convert</param>
+        </member>
+        <member name="T:openHistorian.Data.Query.SignalDataSingle">
+            <summary>
+            Contains a series of Times and Values for an individual signal.
+            This class will store the value as a <see cref="T:System.Single"/>.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalDataSingle.Method">
+            <summary>
+            Provides the type conversion method for the base class to use
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalDataSingle.Count">
+            <summary>
+            Gets the number of values that are in the signal
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataSingle.AddData(System.UInt64,System.Single)">
+            <summary>
+            Adds a value to the signal and converts it from a <see cref="T:System.Single"/>
+            into its native format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the value to convert</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataSingle.GetData(System.Int32,System.UInt64@,System.Single@)">
+            <summary>
+            Gets a value from the signal with the provided index and automatically 
+            converts it to a <see cref="T:System.Single"/>.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the converted value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataSingle.AddDataRaw(System.UInt64,System.UInt64)">
+            <summary>
+            Adds a value to the signal in its raw 64-bit format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the 64-bit value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataSingle.GetDataRaw(System.Int32,System.UInt64@,System.UInt64@)">
+            <summary>
+            Gets a value from the signal with the provided index in its
+            raw 64-bit format.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the raw 64-bit value</param>
+        </member>
+        <member name="T:openHistorian.Data.Query.SignalDataUnknown">
+            <summary>
+            This type of signal only supports reading and writing data via 
+            its raw type. Type conversions are not supported since its origional
+            type is unknown.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalDataUnknown.Method">
+            <summary>
+            Provides the type conversion method for the base class to use
+            </summary>
+        </member>
+        <member name="P:openHistorian.Data.Query.SignalDataUnknown.Count">
+            <summary>
+            Gets the number of values that are in the signal
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataUnknown.AddDataRaw(System.UInt64,System.UInt64)">
+            <summary>
+            Adds a value to the signal in its raw 64-bit format.
+            </summary>
+            <param name="time">the time value to consider</param>
+            <param name="value">the 64-bit value</param>
+        </member>
+        <member name="M:openHistorian.Data.Query.SignalDataUnknown.GetDataRaw(System.Int32,System.UInt64@,System.UInt64@)">
+            <summary>
+            Gets a value from the signal with the provided index in its
+            raw 64-bit format.
+            </summary>
+            <param name="index">The zero based index of the position</param>
+            <param name="time">an output field for the time</param>
+            <param name="value">an output field for the raw 64-bit value</param>
+        </member>
+        <member name="T:openHistorian.Data.HistorianFrame">
+            <summary>
+            Represents a single data concentrated frame
+            </summary>
+        </member>
+        <member name="T:openHistorian.Data.Types.TypeBase">
+            <summary>
+            This base class supports proper conversion of 
+            each primitive type into a native format.
+            The native format is specified.
+            If not overloading individual properties, boxing will
+            occur each time that value is called.
+            </summary>
+        </member>
+        <member name="T:openHistorian.Data.Types.TypeDouble">
+            <summary>
+            Method for converting data to and from a <see cref="T:System.Double"/>.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Types.TypeDouble.#ctor">
+            <summary>
+            Must use the static instance
+            </summary>
+        </member>
+        <member name="T:openHistorian.Data.Types.TypeSingle">
+            <summary>
+            Method for converting data to and from a <see cref="T:System.Single"/>.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Data.Types.TypeSingle.#ctor">
+            <summary>
+            Must use the static instance
+            </summary>
+        </member>
+        <member name="T:openHistorian.Net.HistorianIArchive">
+            <summary>
+            An <see cref="T:GSF.Historian.IArchive"/> wrapper around a SortedTreeStore.
+            </summary>
+            <remarks>
+            This class implements the 1.0 historian <see cref="T:GSF.Historian.IArchive"/> to automatically bring in historian providers (e.g., web services).
+            </remarks>
+        </member>
+        <member name="T:openHistorian.Net.HistorianServer">
+            <summary>
+            Represents a historian server instance that can be used to read and write time-series data.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Net.HistorianServer.#ctor">
+            <summary>
+            Creates a new <see cref="T:openHistorian.Net.HistorianServer"/>
+            </summary>
+        </member>
+        <member name="M:openHistorian.Net.HistorianServer.#ctor(System.Nullable{System.Int32})">
+            <summary>
+            Creates a new <see cref="T:openHistorian.Net.HistorianServer"/> instance.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServer.Host">
+            <summary>
+            Gets the underlying host ending for the historian.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Net.HistorianServer.AddDatabase(openHistorian.Net.HistorianServerDatabaseConfig)">
+            <summary>
+            Adds the supplied database to this server.
+            </summary>
+            <param name="database"></param>
+        </member>
+        <member name="M:openHistorian.Net.HistorianServer.RemoveDatabase(System.String)">
+            <summary>
+            Removes the supplied database from the historian.
+            </summary>
+            <param name="database"></param>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServer.Item(System.String)">
+            <summary>
+            Accesses <see cref="T:GSF.Snap.Services.SnapServerDatabaseBase"/> for given <paramref name="databaseName"/>.
+            </summary>
+            <param name="databaseName">Name of database instance to access.</param>
+            <returns><see cref="T:GSF.Snap.Services.SnapServerDatabaseBase"/> for given <paramref name="databaseName"/>.</returns>
+        </member>
+        <member name="T:openHistorian.Net.HistorianServerDatabaseConfig">
+            <summary>
+            Creates a configuration for the database to utilize.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Net.HistorianServerDatabaseConfig.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Gets a database config.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.DirectoryMethod">
+            <summary>
+            Specify how archive files will be written into the final directory.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.TargetFileSize">
+            <summary>
+            The desired size of archive files
+            </summary>
+            <remarks>Must be between 100MB and 1TB</remarks>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.DiskFlushInterval">
+            <summary>
+            The number of milliseconds before data is automatically flushed to the disk.
+            </summary>
+            <remarks>
+            Must be between 1,000 ms and 60,000 ms.
+            </remarks>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.CacheFlushInterval">
+            <summary>
+            The number of milliseconds before data is taken from it's cache and put in the
+            memory file.
+            </summary>
+            <remarks>
+            Must be between 1 and 1,000
+            </remarks>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.StagingCount">
+            <summary>
+            The number of stages to progress through before writing the final file.
+            </summary>
+            <remarks>
+            This defaults to 3 stages which allows files up to 10 hours of data to be combined
+            into a single archive file. If <see cref="P:openHistorian.Net.HistorianServerDatabaseConfig.TargetFileSize"/> is large and files of this
+            size are not being created, increase this to 4. 
+            
+            Valid settings are 3 or 4.
+            </remarks>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.DatabaseName">
+            <summary>
+            The name associated with the database.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.ImportAttachedPathsAtStartup">
+            <summary>
+            Determines whether the historian should import attached paths at startup.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.ImportPaths">
+            <summary>
+            Gets all of the paths that are known by this historian.
+            A path can be a file name or a folder.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Net.HistorianServerDatabaseConfig.FinalWritePaths">
+            <summary>
+            The list of directories where final files can be placed written. 
+            If nothing is specified, the main directory is used.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Net.HistorianServerDatabaseConfig.ToServerDatabaseSettings">
+            <summary>
+            Creates a <see cref="T:GSF.Snap.Services.ServerDatabaseSettings"/> configuration that can be used for <see cref="T:GSF.Snap.Services.SnapServerDatabase`2"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:openHistorian.Net.HistorianClient">
+            <summary>
+            Connects to a socket based remote historian database collection.
+            </summary>
+        </member>
+        <member name="T:openHistorian.OldHistorianReader">
+            <summary>
+            Version 1.0 openHistorian optimized file reader.
+            </summary>
+        </member>
+        <member name="T:openHistorian.OldHistorianReader.DataPoint">
+            <summary>
+            openHistorian 1.0 Data Point.
+            </summary>
+        </member>
+        <member name="M:openHistorian.OldHistorianReader.Finalize">
+            <summary>
+            Releases the unmanaged resources before the <see cref="T:openHistorian.OldHistorianReader"/> object is reclaimed by <see cref="T:System.GC"/>.
+            </summary>
+        </member>
+        <member name="P:openHistorian.OldHistorianReader.StartTime">
+            <summary>
+            Gets start time of the data in archive as serialized in the header data.
+            </summary>
+        </member>
+        <member name="P:openHistorian.OldHistorianReader.EndTime">
+            <summary>
+            Gets the end time of the data in the archive as serialized in the header data.
+            </summary>
+        </member>
+        <member name="P:openHistorian.OldHistorianReader.PointsReceived">
+            <summary>
+            Gets points received by archive as serialized in header data.
+            </summary>
+        </member>
+        <member name="P:openHistorian.OldHistorianReader.PointsArchived">
+            <summary>
+            Gets points received by archive as serialized in header data.
+            </summary>
+        </member>
+        <member name="P:openHistorian.OldHistorianReader.DataBlockSize">
+            <summary>
+            Gets data-block size as serialized in header data.
+            </summary>
+        </member>
+        <member name="P:openHistorian.OldHistorianReader.DataBlockCount">
+            <summary>
+            Gets data-block count as serialized in header data.
+            </summary>
+        </member>
+        <member name="M:openHistorian.OldHistorianReader.Dispose">
+            <summary>
+            Releases all the resources used by the <see cref="T:openHistorian.OldHistorianReader"/> object.
+            </summary>
+        </member>
+        <member name="M:openHistorian.OldHistorianReader.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the <see cref="T:openHistorian.OldHistorianReader"/> object and optionally releases the managed resources.
+            </summary>
+            <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        </member>
+        <member name="M:openHistorian.OldHistorianReader.Open(System.String)">
+            <summary>
+            Opens the historian archive file.
+            </summary>
+            <param name="fileName">File name of historian archive to open.</param>
+        </member>
+        <member name="M:openHistorian.OldHistorianReader.Read">
+            <summary>
+            Reads points from openHistorian 1.0 archive file in native order.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:openHistorian.Queues.HistorianInputQueue">
+            <summary>
+            Serves as a local queue for getting data into a remote historian. 
+            This queue will isolate the input from the volitality of a 
+            remote historian. Data is also kept in this buffer until it has been committed
+            to the disk subsystem. 
+            </summary>
+        </member>
+        <member name="P:openHistorian.Queues.HistorianInputQueue.Size">
+            <summary>
+            Gets queue size.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Queues.HistorianInputQueue.Enqueue(GSF.Snap.TreeStream{openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue})">
+            <summary>
+            Provides a thread safe way to enqueue points. 
+            While points are streaming all other writes are blocked. Therefore,
+            this point stream should be high speed.
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:openHistorian.Queues.HistorianInputQueue.Enqueue(openHistorian.Snap.HistorianKey,openHistorian.Snap.HistorianValue)">
+            <summary>
+            Adds point data to the queue.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.Definitions.HistorianFileEncodingDefinition.TypeGuid">
+            <summary>
+            A unique identifier for this compression method.
+            </summary>
+        </member>
+        <member name="T:openHistorian.Snap.HistorianKey">
+            <summary>
+            The standard key used for the historian.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.HistorianKey.EntryNumber">
+            <summary>
+            The number of the entry. This allows for duplicate values to be stored using the same Timestamp and PointID.
+            </summary>
+            <remarks>
+            When writing data, this property is managed by the historian engine. Do not change this value in your code.
+            </remarks>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianKey.SetMin">
+            <summary>
+            Sets all of the values in this class to their minimum value
+            </summary>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianKey.SetMax">
+            <summary>
+            Sets all of the values in this class to their maximum value
+            </summary>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianKey.Clear">
+            <summary>
+            Sets the key to the default values.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianKey.CompareTo(openHistorian.Snap.HistorianKey)">
+            <summary>
+            Compares the current instance to <see cref="!:other"/>.
+            </summary>
+            <param name="other">the key to compare to</param>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianKey.Clone">
+            <summary>
+            Creates a clone of the HistorianKey
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:openHistorian.Snap.HistorianKey.TimestampAsDate">
+            <summary>
+            Conveniently type cast the Timestamp as <see cref="T:System.DateTime"/>.
+            </summary>
+            <remarks>
+            Assignments expected to be in UTC.
+            </remarks>
+        </member>
+        <member name="P:openHistorian.Snap.HistorianKey.MillisecondTimestamp">
+            <summary>
+            Gets or sets timestamp restricted to millisecond resolution.
+            </summary>
+        </member>
+        <member name="T:openHistorian.Snap.HistorianValue">
+            <summary>
+            The standard value used in the OpenHistorian.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.HistorianValue.Value1">
+            <summary>
+            Value 1 should be where the first 64 bits of the field is stored. For 32 bit values, use this field only.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.HistorianValue.Value2">
+            <summary>
+            Should only be used if value cannot be entirely stored in Value1. Compression penalty occurs when using this field.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.HistorianValue.Value3">
+            <summary>
+            Should contain any kind of digital data such as Quality. Compression penalty occurs when used for any other type of field.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianValue.Clear">
+            <summary>
+            Sets the value to the default values.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianValue.Clone">
+            <summary>
+            Clones this instance of the class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianValue.ToStruct">
+            <summary>
+            Creates a struct from this data.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:openHistorian.Snap.HistorianValue.AsSingle">
+            <summary>
+            Type casts the <see cref="F:openHistorian.Snap.HistorianValue.Value1"/> as a single.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Snap.HistorianValue.AsString">
+            <summary>
+            Type casts <see cref="F:openHistorian.Snap.HistorianValue.Value1"/> and <see cref="F:openHistorian.Snap.HistorianValue.Value2"/> into a 16 character string.
+            </summary>
+        </member>
+        <member name="T:openHistorian.Snap.HistorianValueStruct">
+            <summary>
+            A struct that represents the standard historian value.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.HistorianValueStruct.Value1">
+            <summary>
+            Value 1 should be where the first 64 bits of the field is stored. For 32 bit values, use this field only.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.HistorianValueStruct.Value2">
+            <summary>
+            Should only be used if value cannot be entirely stored in Value1. Compression penalty occurs when using this field.
+            </summary>
+        </member>
+        <member name="F:openHistorian.Snap.HistorianValueStruct.Value3">
+            <summary>
+            Should contain any kind of digital data such as Quality. Compression penalty occurs when used for any other type of field.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Snap.HistorianValueStruct.AsSingle">
+            <summary>
+            Type casts the <see cref="F:openHistorian.Snap.HistorianValueStruct.Value1"/> as a single.
+            </summary>
+        </member>
+        <member name="P:openHistorian.Snap.HistorianValueStruct.AsString">
+            <summary>
+            Type casts <see cref="F:openHistorian.Snap.HistorianValueStruct.Value1"/> and <see cref="F:openHistorian.Snap.HistorianValueStruct.Value2"/> into a 16 character string.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Snap.HistorianValueStruct.ToClass">
+            <summary>
+            Creates a class instance from this value.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:openHistorian.Snap.SortedPointBuffer">
+            <summary>
+            Represents a sorted point buffer that can properly handle or remove duplicates.
+            </summary>
+        </member>
+        <member name="M:openHistorian.Snap.SortedPointBuffer.#ctor(System.Int32,System.Boolean)">
+            <summary>
+            Creates a new <see cref="T:openHistorian.Snap.SortedPointBuffer"/>.
+            </summary>
+            <param name="capacity">The maximum number of items that can be stored in the buffer.</param>
+            <param name="removeDuplicates">Flag that specifies if buffer should remove duplicate key values upon reading.</param>
+        </member>
+        <member name="T:openHistorian.Utility.ConvertArchiveFile">
+            <summary>
+            openHistorian 1.0 Archive Conversion Functions.
+            </summary>
+        </member>
+    </members>
+</doc>

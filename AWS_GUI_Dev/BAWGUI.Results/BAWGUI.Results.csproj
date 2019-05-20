@@ -69,6 +69,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GMap.NET.WindowsPresentation, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef" />
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -104,23 +105,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-    </Reference>
     <Reference Include="Xceed.Wpf.DataGrid, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +122,7 @@
     <Compile Include="ViewModels\FOOccurrenceChannelViewModel.cs" />
     <Compile Include="ViewModels\DateStruct.cs" />
     <Compile Include="ViewModels\ForcedOscillationResultViewModel.cs" />
+    <Compile Include="ViewModels\OBATPresetUpdateViewModel.cs" />
     <Compile Include="ViewModels\OccurrenceViewModel.cs" />
     <Compile Include="ViewModels\OORChannelViewModel.cs" />
     <Compile Include="ViewModels\OORReRunPlotViewModel.cs" />
@@ -210,6 +197,9 @@
     </Compile>
     <Compile Include="Views\RingdownResultsView.xaml.cs">
       <DependentUpon>RingdownResultsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UpdateOBATPresetPopup.xaml.cs">
+      <DependentUpon>UpdateOBATPresetPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindRampEventTable.xaml.cs">
       <DependentUpon>WindRampEventTable.xaml</DependentUpon>
@@ -332,6 +322,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\UpdateOBATPresetPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\WindRampEventTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -380,6 +374,10 @@
       <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
       <Name>BAWGUI.RunMATLAB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
+      <Project>{E0ACA34C-2C13-4E98-944D-A419BDD2D116}</Project>
+      <Name>BAWGUI.SignalManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Utilities\BAWGUI.Utilities.csproj">
       <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
       <Name>BAWGUI.Utilities</Name>
@@ -391,6 +389,18 @@
     <ProjectReference Include="..\JSISCSVWriter\JSISCSVWriter.csproj">
       <Project>{2c6141d9-cf7e-48a4-9479-7bd67340a370}</Project>
       <Name>JSISCSVWriter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
+      <Project>{f28598d8-9c9f-42c9-b828-4d1bd86bb751}</Project>
+      <Name>ModeMeter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
+      <Name>VoltageStability</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MapService\MapService.csproj">
+      <Project>{908167FB-4C0E-4285-A6EE-0EF81A164929}</Project>
+      <Name>MapService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -4,20 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
+             xmlns:vsViews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
+             xmlns:mmViews="clr-namespace:ModeMeter.Views;assembly=ModeMeter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
     <TabControl SelectedIndex="{Binding CurrentTabIndex}">
         <TabItem Header="Forced Oscillations">
-            <views:ForcedOscillationResultsView DataContext="{Binding ForcedOscillationResultsViewModel}" />
+            <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <views:ForcedOscillationResultsView DataContext="{Binding ForcedOscillationResultsViewModel}"/>
+            </ScrollViewer>
         </TabItem>
         <TabItem Header="Out of Range Events">
-            <views:OutOfRangeResultsView DataContext="{Binding OutOfRangeResultsViewModel}"/>
+            <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <views:OutOfRangeResultsView DataContext="{Binding OutOfRangeResultsViewModel}"/>
+            </ScrollViewer>
         </TabItem>
         <TabItem Header="Ringdowns">
-            <views:RingdownResultsView DataContext="{Binding RingdownResultsViewModel}"/>
+            <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <views:RingdownResultsView DataContext="{Binding RingdownResultsViewModel}"/>
+            </ScrollViewer>
         </TabItem>
         <TabItem Header="Wind Ramps">
-            <views:WindRampResultsView DataContext="{Binding WindRampResultsViewModel}"/>
+            <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <views:WindRampResultsView DataContext="{Binding WindRampResultsViewModel}"/>
+            </ScrollViewer>
+        </TabItem>
+        <!--<TabItem Header="Voltage Stability">
+            <vsViews:VoltageStabilityResultsView DataContext="{Binding VoltageStabilityResultsViewModel}"/>
+        </TabItem>-->
+        <TabItem Header="Mode Meter">
+            <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <mmViews:ModeMeterResultsView DataContext="{Binding ModeMeterResultsVM}"/>
+            </ScrollViewer>
         </TabItem>
     </TabControl>
 </UserControl>

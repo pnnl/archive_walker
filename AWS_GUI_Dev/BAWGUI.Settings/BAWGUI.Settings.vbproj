@@ -99,8 +99,11 @@
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PDAT_Reader">
-      <HintPath>..\libs\PDAT_Reader.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Core.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Shell.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -199,6 +202,12 @@
     <Compile Include="Views\DataConfigStagesTabInSettings.xaml.vb">
       <DependentUpon>DataConfigStagesTabInSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DataWriterDetectorTab.xaml.vb">
+      <DependentUpon>DataWriterDetectorTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DataWriterDetectorView.xaml.vb">
+      <DependentUpon>DataWriterDetectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DetectorConfigTabInSettings.xaml.vb">
       <DependentUpon>DetectorConfigTabInSettings.xaml</DependentUpon>
     </Compile>
@@ -280,6 +289,9 @@
     <Compile Include="Views\PMUOnlyFilterListBox.xaml.vb">
       <DependentUpon>PMUOnlyFilterListBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PointOnWavePowerCalFilterparameters.xaml.vb">
+      <DependentUpon>PointOnWavePowerCalFilterparameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PostProcessingConfigTabInSettings.xaml.vb">
       <DependentUpon>PostProcessingConfigTabInSettings.xaml</DependentUpon>
     </Compile>
@@ -301,6 +313,9 @@
     <Compile Include="Views\RingdownView.xaml.vb">
       <DependentUpon>RingdownView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\RunningAverageFilterParameters.xaml.vb">
+      <DependentUpon>RunningAverageFilterParameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ScalarRepCustomization.xaml.vb">
       <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
     </Compile>
@@ -309,6 +324,9 @@
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalReplicationCustomization.xaml.vb">
+      <DependentUpon>SignalReplicationCustomization.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignalSelectionPanel.xaml.vb">
       <DependentUpon>SignalSelectionPanel.xaml</DependentUpon>
@@ -327,6 +345,12 @@
     </Compile>
     <Compile Include="Views\TabControlForSettingsWindow.xaml.vb">
       <DependentUpon>TabControlForSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TunableFilterInputSignalView1.xaml.vb">
+      <DependentUpon>TunableFilterInputSignalView1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TunableFilterInputSignalView2.xaml.vb">
+      <DependentUpon>TunableFilterInputSignalView2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TunableFilterView.xaml.vb">
       <DependentUpon>TunableFilterView.xaml</DependentUpon>
@@ -353,6 +377,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -400,6 +425,14 @@
     <Page Include="Views\DataConfigStagesTabInSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DataWriterDetectorTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DataWriterDetectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DetectorConfigTabInSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -509,6 +542,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\PointOnWavePowerCalFilterparameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PostProcessingConfigTabInSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -537,6 +574,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\RunningAverageFilterParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ScalarRepCustomization.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -548,6 +589,10 @@
     <Page Include="Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SignalReplicationCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalSelectionPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -572,6 +617,14 @@
     <Page Include="Views\TabControlForSettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TunableFilterInputSignalView1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TunableFilterInputSignalView2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TunableFilterView.xaml">
       <SubType>Designer</SubType>
@@ -598,6 +651,10 @@
     <Service Include="{94E38DFF-614B-4CBD-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.CoordinateMapping\BAWGUI.CoordinateMapping.csproj">
+      <Project>{65931574-76af-4900-86c9-458ded20ce5d}</Project>
+      <Name>BAWGUI.CoordinateMapping</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
@@ -625,6 +682,14 @@
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
+      <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>
+      <Name>ModeMeter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6f2a8bd2-ee3e-465b-9b64-362a35846f4d}</Project>
+      <Name>VoltageStability</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

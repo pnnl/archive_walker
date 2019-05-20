@@ -3,6 +3,7 @@ using BAWGUI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -120,6 +121,9 @@ namespace BAWGUI.ReadConfigXml
                             case "AngleConversion":
                                 CollectionOfSteps.Add(new AngleConversionCustModel(item));
                                 break;
+                            case "ReplicateSignal":
+                                CollectionOfSteps.Add(new SignalReplicationCustModel(item));
+                                break;
                             default:
                                 throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
                         }
@@ -148,6 +152,7 @@ namespace BAWGUI.ReadConfigXml
             //DateTimeEnd = "01/01/0001 00:00:00";
             DateTimeStart = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             DateTimeEnd = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            ExampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss");
         }
         public ReaderPropertiesModel(XElement xElement)
         {
@@ -174,7 +179,7 @@ namespace BAWGUI.ReadConfigXml
                     }
                     catch (Exception ex)
                     {
-                        throw ex;
+                        throw new Exception("Data Source Error.\nException message: " + ex.Message + "\nInner exception message: " + ex.InnerException.Message);
                     }
                     if (a != null)
                     {
@@ -182,28 +187,99 @@ namespace BAWGUI.ReadConfigXml
                     }
                 }
             }
+            var exampleTime = xElement.Element("ExampleTime");
+            if (exampleTime != null)
+            {
+                ExampleTime = exampleTime.Value;
+            }
+            try
+            {
+                DateTime.ParseExact(ExampleTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                ExampleTime = DateTime.Today.ToString("MM/dd/yyyy HH:mm:ss");
+            }
             var mode = xElement.Element("Mode");
             //var modeName = mode.Element("Name").Value;
             ModeName = (ModeType)Enum.Parse(typeof(ModeType), mode.Element("Name").Value);
             switch (ModeName)
             {
                 case ModeType.Archive:
-                    DateTimeStart = mode.Element("Params").Element("DateTimeStart").Value.Substring(0,19);
-                    DateTimeEnd = mode.Element("Params").Element("DateTimeEnd").Value.Substring(0, 19);
+                    var input = mode.Element("Params").Element("DateTimeStart");
+                    if (input != null)
+                    {
+                        DateTimeStart = input.Value.Substring(0, 19);
+                    }
+                    input = mode.Element("Params").Element("DateTimeEnd");
+                    if (input != null)
+                    {
+                        DateTimeEnd = input.Value.Substring(0, 19);
+                    }
                     break;
                 case ModeType.RealTime:
-                    NoFutureWait = mode.Element("Params").Element("NoFutureWait").Value;
-                    MaxNoFutureCount = mode.Element("Params").Element("MaxNoFutureCount").Value;
-                    FutureWait = mode.Element("Params").Element("FutureWait").Value;
-                    MaxFutureCount = mode.Element("Params").Element("MaxFutureCount").Value;
+                    input = mode.Element("Params").Element("NoFutureWait");
+                    if(input != null)
+                    {
+                        NoFutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxNoFutureCount");
+                    if (input != null)
+                    {
+                        MaxNoFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("FutureWait");
+                    if (true)
+                    {
+                        FutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxFutureCount");
+                    if (input != null)
+                    {
+                        MaxFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("UTCoffset");
+                    if (input != null)
+                    {
+                        UTCoffset = input.Value;
+                    }
                     break;
                 case ModeType.Hybrid:
-                    DateTimeStart = mode.Element("Params").Element("DateTimeStart").Value;
-                    NoFutureWait = mode.Element("Params").Element("NoFutureWait").Value;
-                    MaxNoFutureCount = mode.Element("Params").Element("MaxNoFutureCount").Value;
-                    FutureWait = mode.Element("Params").Element("FutureWait").Value;
-                    MaxFutureCount = mode.Element("Params").Element("MaxFutureCount").Value;
-                    RealTimeRange = mode.Element("Params").Element("RealTimeRange").Value;
+                    input = mode.Element("Params").Element("DateTimeStart");
+                    if (input != null)
+                    {
+                        DateTimeStart = input.Value.Substring(0, 19);
+                    }
+                    input = mode.Element("Params").Element("NoFutureWait");
+                    if (input != null)
+                    {
+                        NoFutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxNoFutureCount");
+                    if (input != null)
+                    {
+                        MaxNoFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("FutureWait");
+                    if (true)
+                    {
+                        FutureWait = input.Value;
+                    }
+                    input = mode.Element("Params").Element("MaxFutureCount");
+                    if (input != null)
+                    {
+                        MaxFutureCount = input.Value;
+                    }
+                    input = mode.Element("Params").Element("UTCoffset");
+                    if (input != null)
+                    {
+                        UTCoffset = input.Value;
+                    }
+                    input = mode.Element("Params").Element("RealTimeRange");
+                    if (input != null)
+                    {
+                        RealTimeRange = input.Value;
+                    }
                     break;
                 default:
                     throw new Exception("Mode type not recognized.");
@@ -219,6 +295,8 @@ namespace BAWGUI.ReadConfigXml
         public string FutureWait { get; set; }
         public string MaxFutureCount { get; set; }
         public string RealTimeRange { get; set; }
+        public string UTCoffset { get; set; }
+        public string ExampleTime { get; set; }
     }
 
     public class InputFileInfoModel
@@ -226,12 +304,49 @@ namespace BAWGUI.ReadConfigXml
         public InputFileInfoModel()
         {
             FileDirectory = "";
-            FileType = "pdat";
+            FileType = DataFileType.pdat;
             Mnemonic = "";
             _exampleFile = "";
         }
         public string FileDirectory { get; set; }
-        public string FileType { get; set; }
+        private DataFileType _fileType;
+        public DataFileType FileType
+        {
+            get { return _fileType; }
+            set
+            {
+                _fileType = value;
+                if (File.Exists(ExampleFile) && CheckDataFileMatch())
+                {
+                    if (value == DataFileType.PI || value == DataFileType.OpenHistorian)
+                    {
+                        try
+                        {
+                            FileDirectory = Path.GetDirectoryName(ExampleFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var fullPath = Path.GetDirectoryName(ExampleFile);
+                            var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
+                            var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
+                            FileDirectory = twoLevelUp;
+                        }
+                        catch (Exception ex)
+                        {
+
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
+                    }
+                }
+            }
+        }
         public string Mnemonic { get; set; }
         private string _exampleFile;
         public string ExampleFile
@@ -240,7 +355,7 @@ namespace BAWGUI.ReadConfigXml
             set
             {
                 _exampleFile = value;
-                if (File.Exists(value))
+                if (File.Exists(value) && CheckDataFileMatch())
                 {
                     //try
                     //{
@@ -267,17 +382,31 @@ namespace BAWGUI.ReadConfigXml
                     //{
                     //    MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                     //}
-                    try
+                    if (FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian)
                     {
-                        var fullPath = Path.GetDirectoryName(value);
-                        var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
-                        var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
-                        FileDirectory = twoLevelUp;
+                        try
+                        {
+                            FileDirectory = Path.GetDirectoryName(value);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
+                        try
+                        {
+                            var fullPath = Path.GetDirectoryName(value);
+                            var oneLevelUp = fullPath.Substring(0, fullPath.LastIndexOf(@"\"));
+                            var twoLevelUp = oneLevelUp.Substring(0, oneLevelUp.LastIndexOf(@"\"));
+                            FileDirectory = twoLevelUp;
+                        }
+                        catch (Exception ex)
+                        {
 
-                        MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                            MessageBox.Show("Error extracting file directory from selected file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        }
                     }
                 }
                 //else
@@ -285,6 +414,50 @@ namespace BAWGUI.ReadConfigXml
                 //    MessageBox.Show("Example input data file does not exist!", "Warning!", MessageBoxButtons.OK);
                 //}
             }
+        }
+        public bool CheckDataFileMatch()
+        {
+            var tp = "";
+            try
+            {
+                tp = Path.GetExtension(ExampleFile).Substring(1).ToLower();
+            }
+            catch
+            {
+            }
+            if (FileType.ToString().ToLower() == tp)
+                return true;
+            else if (FileType == DataFileType.powHQ && tp == "mat")
+                return true;
+            else if ((FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian) && tp == "xml")
+                return true;
+            else
+                return false;
+        }
+        public List<string> GetPresets(string filename)
+        {
+            var newPresets = new List<string>();
+            var doc = XDocument.Load(filename);
+            var presets = doc.Element("Presets");
+            if (presets != null)
+            {
+                var pts = presets.Elements("Preset");
+                if (pts != null)
+                {
+                    foreach (var item in pts)
+                    {
+                        if (item.HasAttributes)
+                        {
+                            var nm = item.Attribute("name");
+                            if (nm != null)
+                            {
+                                newPresets.Add(nm.Value.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            return newPresets;
         }
     }
 
@@ -328,7 +501,17 @@ namespace BAWGUI.ReadConfigXml
     //    public string SignalName { get; set; }
     //}
 
-    public class PMUElementForUnaryCustModel
+    public class ToReplicate
+    {
+        public string PMUName { get; set; }
+        public string Channel { get; set; }
+    }
+    public class ToConvert : ToReplicate
+    {
+        public string NewUnit { get; set; }
+        public string SignalName { get; set; }
+    }
+    public class PMUElementForUnaryCustModel : ToReplicate
     {
         public PMUElementForUnaryCustModel()
         {
@@ -337,12 +520,9 @@ namespace BAWGUI.ReadConfigXml
         public PMUElementForUnaryCustModel(string pmu, string signalName, string custSignalName)
         {
             PMUName = pmu;
-            SignalName = signalName;
+            Channel = signalName;
             CustSignalName = custSignalName;
         }
-
-        public string PMUName { get; set; }
-        public string SignalName { get; set; }
         public string CustSignalName { get; set; }
     }
 
@@ -391,6 +571,8 @@ namespace BAWGUI.ReadConfigXml
             {
                 var newList = new List<SignalSignatures>();
                 var inputs = item.Elements("PMU");
+                if (inputs != null)
+                {
                     foreach (var aInput in inputs)
                     {
                         var pmuName = aInput.Element("Name").Value;
@@ -401,16 +583,21 @@ namespace BAWGUI.ReadConfigXml
                             {
                                 var channelName = channel.Element("Name").Value;
                                 var newElement = new SignalSignatures(pmuName, channelName);
-                            newList.Add(newElement);
+                                newList.Add(newElement);
                             }
                         }
                         else
                         {
                             var newElement = new SignalSignatures();
                             newElement.PMUName = pmuName;
-                        newList.Add(newElement);
+                            newList.Add(newElement);
                         }
                     }
+                }
+                else
+                {
+                    throw new Exception("No PMU element found!");
+                }
                 return newList;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
 using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Results.Models;
 using BAWGUI.Results.Views;
@@ -10,6 +11,7 @@ using OxyPlot.Axes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,7 +21,7 @@ using System.Windows.Input;
 
 namespace BAWGUI.Results.ViewModels
 {
-    public class OutOfRangeResultsViewModel:ViewModelBase
+    public class OutOfRangeResultsViewModel : ViewModelBase
     {
         public OutOfRangeResultsViewModel()
         {
@@ -198,16 +200,13 @@ namespace BAWGUI.Results.ViewModels
                         {
                             if (axis.IsVertical())
                             {
-                                if (axis.IsVertical())
-                                {
-                                    yaxisMin = axis.Minimum;
-                                    yaxisMax = axis.Maximum;
-                                }
-                                if (axis.IsHorizontal())
-                                {
-                                    xaxisMin = axis.ActualMinimum;
-                                    xaxisMax = axis.ActualMaximum;
-                                }
+                                yaxisMin = axis.Minimum;
+                                yaxisMax = axis.Maximum;
+                            }
+                            if (axis.IsHorizontal())
+                            {
+                                xaxisMin = axis.ActualMinimum;
+                                xaxisMax = axis.ActualMaximum;
                             }
                         }
                         var lineAnnotation = new OxyPlot.Annotations.LineAnnotation()
@@ -286,6 +285,9 @@ namespace BAWGUI.Results.ViewModels
                     }
                     catch (Exception ex)
                     {
+                        Run.IsTaskRunning = false;
+                        Mouse.OverrideCursor = null;
+                        _engine.IsMatlabEngineRunning = false;
                         System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK);
                     }
                 }
@@ -331,7 +333,8 @@ namespace BAWGUI.Results.ViewModels
                     }
                     else
                     {
-                        startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                        //startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
+                        startTime = Convert.ToDateTime(SelectedStartTime);
                     }
                     endTime = detector.SparseSignals.Max(x => x.TimeStamps.LastOrDefault());
                 }
@@ -538,6 +541,7 @@ namespace BAWGUI.Results.ViewModels
                     aDetector.IsByROC = detector.OORSignals.Any(x => x.IsByROC);
                 }
                 var allSignalsPlot = new ViewResolvingPlotModel() { PlotAreaBackground = OxyColors.WhiteSmoke };
+                var legends = new ObservableCollection<Legend>();
 
                 OxyPlot.Axes.DateTimeAxis timeXAxis = new OxyPlot.Axes.DateTimeAxis()
                 {
@@ -566,6 +570,7 @@ namespace BAWGUI.Results.ViewModels
                     IsPanEnabled = true
                 };
                 allSignalsPlot.Axes.Add(yAxis);
+                var signalCounter = 0;
                 foreach (var oor in detector.OORSignals)
                 {
                     var signalSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
@@ -575,6 +580,10 @@ namespace BAWGUI.Results.ViewModels
                     }
                     signalSeries.Title = oor.SignalName;
                     signalSeries.TrackerKey = oor.Label;
+                    var c = string.Format("#{0:x6}", Color.FromName(Utility.SaturatedColors[signalCounter % 20]).ToArgb());
+                    signalSeries.Color = OxyColor.Parse(c);
+                    legends.Add(new Legend(oor.SignalName, signalSeries.Color));
+                    signalCounter++;
                     //signalSeries.MouseDown += OORReRunSeries_MouseDown;
                     allSignalsPlot.Series.Add(signalSeries);
                     if (oor.IsByDuration || oor.IsByROC)
@@ -610,6 +619,7 @@ namespace BAWGUI.Results.ViewModels
                 allSignalsPlot.LegendPadding = 0.0;
                 allSignalsPlot.LegendSymbolMargin = 0.0;
                 allSignalsPlot.LegendMargin = 0;
+                allSignalsPlot.IsLegendVisible = false;
 
                 var currentArea = allSignalsPlot.LegendArea;
                 var currentPlotWithAxis = allSignalsPlot.PlotAndAxisArea;
@@ -617,6 +627,7 @@ namespace BAWGUI.Results.ViewModels
                 var currentMargins = allSignalsPlot.PlotMargins;
                 allSignalsPlot.PlotMargins = new OxyThickness(70, currentMargins.Top, 5, currentMargins.Bottom);
                 aDetector.OORReRunAllSignalsPlotModel = allSignalsPlot;
+                aDetector.OORreRunPlotLegend = legends;
                 aDetector.SelectedSignalPlotModel = aDetector.ThumbnailPlots.FirstOrDefault();
                 oorPlots.Add(aDetector);
             }
@@ -895,7 +906,7 @@ namespace BAWGUI.Results.ViewModels
         {
             if (ReRunResult.Any())
             {
-                var exportResult = new ResultsExportingViewModel(ReRunResult);
+                var exportResult = new ResultsExportingViewModel(ReRunResult, Run);
                 exportResult.ExportDataCancelled += _cancelExportData;
                 _exportResultsPopup = new ExportResultsPopup
                 {

@@ -1,6 +1,7 @@
 ﻿Imports System.Globalization
 Imports System.Windows
 Imports System.Windows.Data
+Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 
 Namespace Converters
@@ -59,7 +60,7 @@ Namespace Converters
                                            "All Initial Input Channels by PMU",
                                            "Output from Data Quality and Customization by Signal Type",
                                            "Output from Data Quality and Customization by PMU",
-                                           "Input to MultiRate steps",
+                                           "Input to MultiRate and Filtering steps",
                                            "Output Channels by Step"}.ToList
                 'SelectedSelectionMethod = "All Initial Input Channels by Signal Type"
                     Case 3
@@ -81,6 +82,17 @@ Namespace Converters
                                            "Output from Signal Processing by PMU",
                                            "Output from Post-Processing Customization by Signal Type",
                                            "Output from Post-Processing Customization by PMU",
+                                           "Input Channels by Step"}.ToList
+                    Case 5
+                        value1 = {"All Initial Input Channels by Signal Type",
+                                           "All Initial Input Channels by PMU",
+                                           "Output from Data Quality and Customization by Signal Type",
+                                           "Output from Data Quality and Customization by PMU",
+                                           "Output from Signal Processing by Signal Type",
+                                           "Output from Signal Processing by PMU",
+                                           "Output from Post-Processing Customization by Signal Type",
+                                           "Output from Post-Processing Customization by PMU",
+                                           "Input to Detectors by Step",
                                            "Input Channels by Step"}.ToList
                 End Select
             End If
@@ -155,4 +167,109 @@ Namespace Converters
             Return DependencyProperty.UnsetValue
         End Function
     End Class
+
+    Public Class FileTypeToLabelConverter
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+                Return "Preset:"
+            Else
+                Return "Mnemonic:"
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToRowNumberConverter1
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+                Return 2
+            Else
+                Return 1
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToRowNumberConverter2
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+                Return 3
+            Else
+                Return 2
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToRowNumberConverter3
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+                Return 1
+            Else
+                Return 3
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToBooleanConverter
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+                Return False
+            Else
+                Return True
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    Public Class FileTypeToBackgroundConverter
+        Implements IValueConverter
+
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+                Return "White"
+            Else
+                Return "WhiteSmoke"
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
+    'Public Class InputFileTypesToAvailableModeConverter
+    '    Implements IValueConverter
+
+    '    Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+    '        For Each info In value
+
+    '        Next
+    '        Return True
+    '    End Function
+
+    '    Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+    '        Return DependencyProperty.UnsetValue
+    '    End Function
+    'End Class
 End Namespace

@@ -13,6 +13,11 @@ using BAWGUI.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.Settings.ViewModels;
+using VoltageStability.Models;
+using VoltageStability.ViewModels;
+using ModeMeter.ViewModels;
+using ModeMeter.Models;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BAWGUI.RunMATLAB.ViewModels
 {
@@ -116,38 +121,59 @@ namespace BAWGUI.RunMATLAB.ViewModels
             get { return _resultsStoragePath; }
             set
             {
-                _resultsStoragePath = value;
-                BAWGUI.Properties.Settings.Default.ResultStoragePath = value;
-                BAWGUI.Properties.Settings.Default.Save();
-                try
+                if (_resultsStoragePath != value)
                 {
-                    _generateProjectTree(_resultsStoragePath);
+                    _resultsStoragePath = value;
+                    BAWGUI.Properties.Settings.Default.ResultStoragePath = value;
+                    BAWGUI.Properties.Settings.Default.Save();
+                    //CoordinateMapping.Properties.Settings.Default.LocationCoordinatesFilePath = value + "\\SiteCoordinatesConfig.xml";
+                    //CoordinateMapping.Properties.Settings.Default.Save();
+                    try
+                    {
+                        _generateProjectTree(_resultsStoragePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
+                    }
+                    OnPropertyChanged();
+                    OnResultsStoragePathChanged(value);
                 }
-                catch (Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
-                }
-                OnPropertyChanged();
             }
         }
+        protected virtual void OnResultsStoragePathChanged(string e)
+        {
+            ResultsStoragePathChanged?.Invoke(this, e);
+        }
+        public event EventHandler<string> ResultsStoragePathChanged;
         public ICommand BrowseResultsStorage { get; set; }
         private void _browseResultsStorage(object obj)
         {
-            using (var fbd = new FolderBrowserDialog())
+            using (var fbd = new CommonOpenFileDialog())
             {
-                fbd.SelectedPath = ResultsStoragePath;
-                DialogResult result = fbd.ShowDialog();
+                fbd.InitialDirectory = ResultsStoragePath;
+                fbd.IsFolderPicker = true;
+                fbd.AddToMostRecentlyUsedList = true;
+                fbd.AllowNonFileSystemItems = false;
+                fbd.DefaultDirectory = ResultsStoragePath;
+                fbd.EnsureFileExists = true;
+                fbd.EnsurePathExists = true;
+                fbd.EnsureReadOnly = false;
+                fbd.EnsureValidNames = true;
+                fbd.Multiselect = false;
+                fbd.ShowPlacesList = true;
+                CommonFileDialogResult result = fbd.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                if (result == CommonFileDialogResult.Ok && !string.IsNullOrWhiteSpace(fbd.FileName))
                 {
-                    ResultsStoragePath = fbd.SelectedPath;
+                    ResultsStoragePath = fbd.FileName;
                     try
                     {
                         _generateProjectTree(ResultsStoragePath);
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.Forms.MessageBox.Show("Error reading project folder.", "Error!", MessageBoxButtons.OK);
+                        System.Windows.Forms.MessageBox.Show("Error reading project folder. Original error: " + ex.Message, "Error!", MessageBoxButtons.OK);
                     }
                     //string[] files = Directory.GetFiles(ResultsStoragePath);
                 }
@@ -289,8 +315,18 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand SaveConfigFile { get; set; }
         private void _saveConfigFile(object obj)
         {
-            var mvm = (MainViewModel)obj;
-            var settingNeedsToBeSaved = mvm.SettingsVM;
+            SettingsViewModel settingNeedsToBeSaved = null;
+            if (obj is MainViewModel)
+            {
+                var mvm = (MainViewModel)obj;
+                settingNeedsToBeSaved = mvm.SettingsVM;
+            }
+            else if (obj is SettingsViewModel)
+            {
+                settingNeedsToBeSaved = (SettingsViewModel)obj;
+            }
+            //var mvm = (MainViewModel)obj;
+            //var settingNeedsToBeSaved = mvm.SettingsVM;
             var isTaskRan = false;
             if (_selectedRun != null)
             {
@@ -317,6 +353,38 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
+                var detectorList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is VoltageStabilityDetectorViewModel).Select(x=>(VoltageStabilityDetectorViewModel)x).ToList();
+                if (detectorList.Count > 0)
+                {
+                    var MMDir = _generatedNewRun.Model.EventPath + "\\MM\\";
+                    if (!Directory.Exists(MMDir))
+                    {
+                        Directory.CreateDirectory(MMDir);
+                    }
+                    var vsWriter = new VoltageStabilityDetectorGroupWriter();
+                    try
+                    {
+                        vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
+                }
+                var modeMeterList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is SmallSignalStabilityToolViewModel).Select(x => (SmallSignalStabilityToolViewModel)x).ToList();
+                if (modeMeterList.Count > 0)
+                {
+                    var mmWriter = new ModeMeterXmlWriter();
+                    try
+                    {
+                        mmWriter.WriteXmlCofigFile(_generatedNewRun.Model, modeMeterList);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                    }
+                }
+                if (SelectedRun != null)
                 //if matlab engine is running, only save the new config file, but not switch selected run so it won't trigger possible matlab engine to read pdat file in the newly selected run
                 if (IsMatlabEngineRunning)
                 {
@@ -340,7 +408,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //{
         //    WriteSettingsConfigFile?.Invoke(this, e);
         //}
-
+        public void CreateNewTask(ref SettingsViewModel svm)
+        {
+            _saveConfigFile(svm);
+        }
         private bool _findRunGeneratedFile(string runPath)
         {
             foreach (var file in Directory.GetFiles(runPath))
@@ -576,9 +647,58 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
         private void _onOneOfTheRunSelected(object sender, AWRunViewModel e)
         {
+            _checktaskdirintegrity(e);
             SelectedRun = e;
             OnProjectSelected(this);
         }
+        /// <summary>
+        /// in the situation where user created a task folder outside the GUI without create any of the subfolders,
+        /// this function will create all necessary subfolders except the ones for mode meter usage
+        /// </summary>
+        private void _checktaskdirintegrity(AWRunViewModel task)
+        {
+            var taskDir = task.Model.RunPath;
+            var runName = task.Model.RunName;
+            var controlRunPath = taskDir + "\\ControlRun\\";
+            if (!Directory.Exists(controlRunPath))
+            {
+                Directory.CreateDirectory(controlRunPath);
+                task.Model.ControlRunPath = controlRunPath;
+                System.Windows.Forms.MessageBox.Show("ControlRun subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var controlReRunPath = taskDir + "\\ControlRerun\\";
+            if (!Directory.Exists(controlReRunPath))
+            {
+                Directory.CreateDirectory(controlReRunPath);
+                task.Model.ControlRerunPath = controlReRunPath;
+                System.Windows.Forms.MessageBox.Show("ControlReRun subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var eventPath = taskDir + "\\Event";
+            if (!Directory.Exists(eventPath))
+            {
+                Directory.CreateDirectory(eventPath);
+                task.Model.EventPath = eventPath;
+                System.Windows.Forms.MessageBox.Show("Event subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var initPath = taskDir + "\\Init";
+            if (!Directory.Exists(initPath))
+            {
+                Directory.CreateDirectory(initPath);
+                task.Model.InitializationPath = initPath;
+                System.Windows.Forms.MessageBox.Show("Init subfolder was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+            var configFilePath = taskDir + "\\Config.xml";
+            if (!File.Exists(configFilePath))
+            {
+                System.IO.FileStream fs = System.IO.File.Create(configFilePath);
+                fs.Close();
+                var wr = new ConfigFileWriter(new Settings.ViewModels.SettingsViewModel(), task.Model);
+                wr.WriteXmlConfigFile(configFilePath);
+                task.Model.ConfigFilePath = configFilePath;
+                System.Windows.Forms.MessageBox.Show("Config.xml was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
+            }
+        }
+
         public event EventHandler<AWProjectViewModel> ProjectSelected;
         protected virtual void OnProjectSelected(AWProjectViewModel e)
         {
@@ -725,11 +845,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
             newTask.InitializationPath = initPath;
             newTask.RunName = newtaskName;
             newTask.RunPath = taskDir;
-            if (!System.IO.File.Exists(newTask.ConfigFilePath))
+            if (!File.Exists(newTask.ConfigFilePath))
             {
-                System.IO.FileStream fs = System.IO.File.Create(newTask.ConfigFilePath);
+                FileStream fs = File.Create(newTask.ConfigFilePath);
                 fs.Close();
-                var wr = new ConfigFileWriter(new Settings.ViewModels.SettingsViewModel(), newTask);
+                var wr = new ConfigFileWriter(new SettingsViewModel(), newTask);
                 wr.WriteXmlConfigFile(newTask.ConfigFilePath);
             }
             _model.AWRuns.Add(newTask);

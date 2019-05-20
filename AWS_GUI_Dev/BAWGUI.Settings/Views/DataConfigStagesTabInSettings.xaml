@@ -53,6 +53,9 @@
             <DataTemplate x:Key="AngleConversionCustomization">
                 <local:AngleConversionCustomization/>
             </DataTemplate>
+            <DataTemplate x:Key="SignalReplicationCustomization">
+                <local:SignalReplicationCustomization/>
+            </DataTemplate>
             <DataTemplate x:Key="StatusFlagDQFilterView">
                 <local:StatusFlagDQFilterView/>
             </DataTemplate>
@@ -375,6 +378,9 @@
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Name}" Value="Angle Conversion">
                                                                 <Setter Property="ContentTemplate" Value="{StaticResource AngleConversionCustomization}"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Name}" Value="Duplicate Signals">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource SignalReplicationCustomization}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>

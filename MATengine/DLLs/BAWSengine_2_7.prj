@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="635664880" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="3788048305" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_2_7" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_2_7\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.15</param.version>
+    <param.version>2.24</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -15,11 +15,7 @@
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
-    <param.target.install.notes>You must have Python 2.7, 3.4, or 3.5 on your machine to install this package. Go to the directory to which setup.py and your package have been written. Then execute:
-
-        python setup.py install [options]
-
-For details, see the readme.txt distributed with this package.</param.target.install.notes>
+    <param.target.install.notes />
     <param.intermediate>${PROJECT_ROOT}\BAWSengine_2_7\for_testing</param.intermediate>
     <param.files.only>${PROJECT_ROOT}\BAWSengine_2_7\for_redistribution_files_only</param.files.only>
     <param.output>${PROJECT_ROOT}\BAWSengine_2_7\for_redistribution</param.output>
@@ -64,6 +60,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <param.installpath.string />
       <param.installpath.combo />
       <param.logo />
+      <param.target.install.notes />
       <param.intermediate />
       <param.files.only />
       <param.output />
@@ -96,30 +93,44 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <param.net.saved.interface />
     </unset>
     <fileset.exports>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetPDATexample.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleDB.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m</file>
     </fileset.exports>
     <fileset.classes>
       <entity.package name="">
         <entity.class name="GUI2MAT">
-          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetPDATexample.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleDB.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
           <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
+          <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m</file>
         </entity.class>
       </entity.package>
     </fileset.classes>
     <fileset.resources />
     <fileset.depfun>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadPIpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\ChangeNameTypeUnit.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DataProcessor.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPfilterStep.m</file>
@@ -127,17 +138,22 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPMultiRate.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPUnwrap.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPWrap.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\FrequencyDerivationFilt.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\HighPassFilt.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\LowPassFilt.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\MedianFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\POWpowerFilt.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RationalFilt.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RunningAveFilt.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\interpo.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\MultiRate.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\UnwrapAngle.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\WrapAngle.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ConcatenatePMU.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\CreatePMUsegment.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DataWriterDetector.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ExtractData.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\EventDetectionForModeMeter.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ExtractModeMeterParams.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
@@ -146,6 +162,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\RunRetCon.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteMMreportGraphical.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteOperatingConditionsAndModeValues.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\YW_ARMA.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\YW_ARMApS.m</file>
@@ -200,6 +217,7 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\PowCalcMagAng.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\PowCalcPhasor.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\PrefixCustomization.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\ReplicateSignalCustomization.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\ScalarRep.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\SpecTypeUnitCustomization.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\SubtractionCustomization.m</file>
@@ -227,16 +245,20 @@ For details, see the readme.txt distributed with this package.</param.target.ins
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\WriteEventListXML.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\fun_xmlread_comments.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\InitializeBAWS.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\InspectionAnalyses\InspectionSpectral.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\near.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getCSVFileFolder.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getFileFolder.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getFocusFiles.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\GetHQdata.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getNextFutureDayFolder.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\GetOutputSignals.m</file>
-      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getPdatFileFolder.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getPdatFileTime.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\JSIS_CSV_2_Mat.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\LoadFocusFiles.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\OHreader.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\pdatReadnCreateStruct.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\PIreaderDLL.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\POWreadHQ.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\readConfigFrameRev.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\SetNameAndUnit_PDAT.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Rerun\AddMissingToSparsePMU.m</file>

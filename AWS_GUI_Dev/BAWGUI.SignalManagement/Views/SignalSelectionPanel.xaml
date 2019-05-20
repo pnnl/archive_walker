@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="BAWGUI.SignalManagement.Views.SignalSelectionPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.SignalManagement.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Select A Signal to View Plot:" Margin="2" Grid.Row="0"/>
+        <ComboBox ItemsSource="{Binding DataviewGroupMethods}" Text="{Binding SelectedDataViewingGroupMethod}" Margin="2" Grid.Row="1"/>
+        <TreeView Grid.Row="2" Margin="2">
+            <TreeView.Style>
+                <Style TargetType="{x:Type TreeView}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedDataViewingGroupMethod}" Value="View Signal by Type">
+                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalsWithDataByType}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedDataViewingGroupMethod}" Value="View Signal by PMU">
+                            <Setter Property="ItemsSource" Value="{Binding GroupedSignalsWithDataByPMU}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.Style>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
+                    <StackPanel Orientation="Horizontal" Margin="0">
+                        <CheckBox IsChecked="{Binding SignalSignature.IsChecked}" Margin="2,0,5,0" CommandParameter="{Binding}" Command="{Binding Path=DataContext.UpdatePlot, RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"/>
+                        <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <!--<TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding Selected}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>-->
+        </TreeView>
+    </Grid>
+</UserControl>

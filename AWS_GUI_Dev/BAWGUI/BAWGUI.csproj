@@ -7,7 +7,7 @@
     <ProjectGuid>{F1AAAAD2-4AEF-420F-B02B-89BC926FDB81}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>BAWGUI</RootNamespace>
-    <AssemblyName>BAWGUI</AssemblyName>
+    <AssemblyName>ArchiveWalker</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -107,11 +107,26 @@
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>archive_walker_gray_final_KT6_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GMap.NET.Core, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\GMap.NET.Windows.1.8.5\lib\net40\GMap.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsPresentation, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef" />
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Core.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.3, Culture=neutral, PublicKeyToken=8985beaab7ea3f04, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft-WindowsAPICodePack-Shell.1.1.3.3\lib\net452\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -157,6 +172,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanBackgroundConverter.cs" />
+    <Compile Include="Converters\RadioButtonViewConverter.cs" />
     <Compile Include="Converters\ViewVisibilityConverter.cs" />
     <Compile Include="ViewModels\AddProjectViewModel.cs" />
     <Compile Include="ViewModels\AddTaskViewModel.cs" />
@@ -232,6 +248,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.CoordinateMapping\BAWGUI.CoordinateMapping.csproj">
+      <Project>{65931574-76AF-4900-86C9-458DED20CE5D}</Project>
+      <Name>BAWGUI.CoordinateMapping</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
@@ -264,6 +284,18 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
+      <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>
+      <Name>ModeMeter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
+      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
+      <Name>VoltageStability</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MapService\MapService.csproj">
+      <Project>{908167fb-4c0e-4285-a6ee-0ef81a164929}</Project>
+      <Name>MapService</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\pause.PNG">
@@ -282,7 +314,12 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Resource Include="..\BAWGUI.Resources\Images\zoom+.png">
+      <Link>MyResources\zoom+.png</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\zoom-.png">
+      <Link>MyResources\zoom-.png</Link>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\delete.bmp">
@@ -328,5 +365,33 @@
       <Link>MyResources\open.gif</Link>
     </Resource>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\select_all.bmp">
+      <Link>MyResources\select_all.bmp</Link>
+    </Resource>
+    <Resource Include="..\BAWGUI.Resources\Images\unselect_all.bmp">
+      <Link>MyResources\unselect_all.bmp</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\bigMarkerGreen.png">
+      <Link>MyResources\bigMarkerGreen.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="archive_walker_gray_final_KT6_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\BAWGUI.Resources\Images\Archive_Walker_Gray_Final.jpg">
+      <Link>MyResources\Archive_Walker_Gray_Final.jpg</Link>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Debug XCOPY /Y /S /F "$(SolutionDir)..\MATengine\matlabDLLs" "$(TargetDir)matlabDLLs\"
+if $(ConfigurationName) == Release XCOPY /Y /S /F "$(SolutionDir)..\MATengine\matlabDLLs" "$(TargetDir)..\matlabDLLs\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
