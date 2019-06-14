@@ -1,6 +1,6 @@
 /*
 * MATLAB Compiler: 6.6 (R2018a)
-* Date: Fri Apr 26 15:37:45 2019
+* Date: Fri Jun 14 09:24:07 2019
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_
@@ -18,7 +18,9 @@
 * sitory\MATengine\GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationAp
 * p\AWrepository\MATengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAosci
 * llationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m,C:\Users\foll154\Docum
-* ents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m}"
+* ents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m}""-a""C:\User
+* s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\EventDataMover\ExportEvents
+* .m"
 */
 using System;
 using System.Reflection;

@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3691227421" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="736254146" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.24</param.version>
+    <param.version>2.25</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -129,7 +129,9 @@
         </entity.class>
       </entity.package>
     </fileset.classes>
-    <fileset.resources />
+    <fileset.resources>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\EventDataMover\ExportEvents.m</file>
+    </fileset.resources>
     <fileset.depfun>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
