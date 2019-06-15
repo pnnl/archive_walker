@@ -193,6 +193,9 @@
     <Compile Include="Views\AngleConversionCustomization.xaml.vb">
       <DependentUpon>AngleConversionCustomization.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AutoEventExportView.xaml.vb">
+      <DependentUpon>AutoEventExportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ChannelsListView.xaml.vb">
       <DependentUpon>ChannelsListView.xaml</DependentUpon>
     </Compile>
@@ -413,6 +416,10 @@
     <Page Include="Views\AngleConversionCustomization.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AutoEventExportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChannelsListView.xaml">
       <Generator>MSBuild:Compile</Generator>

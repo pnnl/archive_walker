@@ -6,11 +6,18 @@
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
+             xmlns:converter="clr-namespace:BAWGUI.Settings.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converter:DataWriterDetectorCountVisibilityConverter x:Key="DataWriterDetectorCountVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
@@ -22,7 +29,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" LastChildFill="True" Margin="0,0,7,0">
                         <Button  DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,14,2,0" Command="{Binding AddDataWriterDetector}" CommandParameter="{Binding}">
@@ -43,7 +50,16 @@
                             </DataTemplate>
                         </ItemsControl.Resources>
                     </ItemsControl>
-                    <Border Grid.Row="5" Margin="2">
+                    <Border Grid.Row="2" Margin="2">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <TextBlock></TextBlock>
+                    </Border>
+                    <local:AutoEventExportView Visibility="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.DetectorConfigure.DataWriterDetectorList.Count, Converter={StaticResource DataWriterDetectorCountVisibilityConverter}}" Margin="2" Grid.Row="3" DataContext="{Binding DetectorConfigure.AutoEventExporter}"/>
+                    <Border Grid.Row="4" Margin="2">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
                                 <i:InvokeCommandAction Command="{Binding DetectorConfigStepDeSelected}"/>
@@ -54,7 +70,8 @@
                 </Grid>
             </ScrollViewer>
         </Border>
-        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="2">
             <Grid Margin="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
