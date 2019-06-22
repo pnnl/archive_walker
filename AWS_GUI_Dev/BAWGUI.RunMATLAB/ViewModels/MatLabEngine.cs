@@ -568,12 +568,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     dir.Delete();
                 }
+                worker.CancelAsync();
+                worker2.CancelAsync();
                 //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
                 //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
                 //System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
                 //fs.Close();
                 //File.Delete(runFlag);
                 while (worker.IsBusy)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(500);
+                }
+                while (worker2.IsBusy)
                 {
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(500);
@@ -709,6 +716,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     dir.Delete();
                 }
+                worker.CancelAsync();
                 worker2.CancelAsync();
                 //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
                 //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
@@ -716,6 +724,11 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 //fs.Close();
                 //File.Delete(runFlag);
                 while (worker.IsBusy)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(500);
+                }
+                while (worker2.IsBusy)
                 {
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(500);
