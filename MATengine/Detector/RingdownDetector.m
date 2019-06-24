@@ -43,6 +43,7 @@ AdditionalOutput(1).DataType = DataType;
 AdditionalOutput(1).DataUnit = DataUnit;
 AdditionalOutput(1).TimeString = TimeString;
 AdditionalOutput(1).TimeDT = TimeDT;
+AdditionalOutput(1).fs = fs;
 
 % Only active power, frequency, and OTHER signal types are acceptable. If a
 % channel has any other type, it is discarded from analysis.

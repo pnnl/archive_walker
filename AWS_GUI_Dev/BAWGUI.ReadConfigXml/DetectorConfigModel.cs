@@ -95,10 +95,20 @@ namespace BAWGUI.ReadConfigXml
                     }
                 }
             }
+            par = _xElement.Element("Configuration").Element("AutoEventExport");
+            if (par != null)
+            {
+                AutoEventExporter = new AutoEventExportModel(par);
+            }
+            else
+            {
+                AutoEventExporter = new AutoEventExportModel();
+            }
         }
         public string EventPath { get; set; }
         public string ResultUpdateInterval { get; set; }
         public List<object> DetectorList { get; set; }
         public List<object> AlarmingList { get; set; }
+        public AutoEventExportModel AutoEventExporter { get; set; }
     }
 }

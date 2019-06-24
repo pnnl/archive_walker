@@ -404,7 +404,29 @@ Namespace ViewModels
             Else
                 detectorConfig.<Configuration>.FirstOrDefault.Add(<ResultUpdateInterval></ResultUpdateInterval>)
             End If
-
+            If _svm.DetectorConfigure.AutoEventExporter IsNot Nothing Then
+                Dim element = <AutoEventExport></AutoEventExport>
+                If _svm.DetectorConfigure.AutoEventExporter.Flag Then
+                    element.Add(<Flag><%= 1 %></Flag>)
+                Else
+                    element.Add(<Flag><%= 0 %></Flag>)
+                End If
+                If Not String.IsNullOrEmpty(_svm.DetectorConfigure.AutoEventExporter.SurroundingMinutes) Then
+                    element.Add(<SurroundingMinutes><%= _svm.DetectorConfigure.AutoEventExporter.SurroundingMinutes %></SurroundingMinutes>)
+                End If
+                If _svm.DetectorConfigure.AutoEventExporter.DeletePastFlag Then
+                    element.Add(<DeletePastFlag><%= 1 %></DeletePastFlag>)
+                Else
+                    element.Add(<DeletePastFlag><%= 0 %></DeletePastFlag>)
+                End If
+                If Not String.IsNullOrEmpty(_svm.DetectorConfigure.AutoEventExporter.DeletePastDays) Then
+                    element.Add(<DeletePastDays><%= _svm.DetectorConfigure.AutoEventExporter.DeletePastDays %></DeletePastDays>)
+                End If
+                If Not String.IsNullOrEmpty(_svm.DetectorConfigure.AutoEventExporter.ExportPath) Then
+                    element.Add(<ExportPath><%= _svm.DetectorConfigure.AutoEventExporter.ExportPath %></ExportPath>)
+                End If
+                detectorConfig.<Configuration>.LastOrDefault.Add(element)
+            End If
             For Each detector In _svm.DetectorConfigure.DetectorList
                 Dim element As XElement
                 Select Case detector.GetType

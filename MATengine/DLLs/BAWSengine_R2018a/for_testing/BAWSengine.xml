@@ -9,44 +9,44 @@
             The GUI2MAT class provides a CLS compliant, MWArray interface to the MATLAB
             functions contained in the files:
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-            FileExample.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\GetFile
+            Example.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-            FileExampleDB.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\GetFile
+            ExampleDB.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-            SparseData.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\GetSpar
+            seData.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ins
-            pectionAnalysis.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\Inspect
+            ionAnalysis.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
-            dMMdata.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\ReadMMd
+            ata.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unForcedOscillation.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunFo
+            rcedOscillation.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unOutOfRange.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunOu
+            tOfRange.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unRingdown.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunRi
+            ngdown.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unThevenin.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunTh
+            evenin.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ret
-            rieveData.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\Retriev
+            eData.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
-            NormalMode.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RunNorm
+            alMode.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Upd
-            ateOBATpreset.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\UpdateO
+            BATpreset.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Wri
-            teMMreport.m
+            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\WriteMM
+            report.m
             </summary>
             <remarks>
             @Version 4.0

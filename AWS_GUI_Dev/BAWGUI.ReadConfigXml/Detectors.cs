@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using BAWGUI.Core;
+using BAWGUI.Core.Models;
+using Microsoft.VisualBasic;
 
 namespace BAWGUI.ReadConfigXml
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
-    using BAWGUI.Core;
-    using BAWGUI.Core.Models;
-    using Microsoft.VisualBasic;
-
     public class PeriodogramDetectorModel
     {
         public PeriodogramDetectorModel()
@@ -1469,5 +1463,64 @@ namespace BAWGUI.ReadConfigXml
         public bool SeparatePMUs { get; set; }
         public string Mnemonic { get; set; }
         public List<SignalSignatures> PMUElementList { get; set; }
+    }
+    public class AutoEventExportModel
+    {
+        private XElement _item;
+        public AutoEventExportModel()
+        {
+            Flag = false;
+            DeletePastFlag = false;
+            SurroundingMinutes = "0";
+            DeletePastDays = "2";
+        }
+        public AutoEventExportModel(XElement item)
+        {
+            this._item = item;
+            var par = _item.Element("Flag");
+            if (par != null)
+            {
+                if (par.Value == "0")
+                {
+                    Flag = false;
+                }
+                else
+                {
+                    Flag = true;
+                }
+            }
+            par = _item.Element("SurroundingMinutes");
+            if (par != null)
+            {
+                SurroundingMinutes = par.Value;
+            }
+            par = _item.Element("DeletePastFlag");
+            if (par != null)
+            {
+                if (par.Value == "0")
+                {
+                    DeletePastFlag = false;
+                }
+                else
+                {
+                    DeletePastFlag = true;
+                }
+            }
+            par = _item.Element("DeletePastDays");
+            if (par != null)
+            {
+                DeletePastDays = par.Value;
+            }
+            par = _item.Element("ExportPath");
+            if (par != null)
+            {
+                ExportPath = par.Value;
+            }
+        }
+        public bool Flag { get; set; }
+        public string SurroundingMinutes { get; set; }
+        public bool DeletePastFlag { get; set; }
+        public string DeletePastDays { get; set; }
+        public string ExportPath { get; set; }
     }
 }

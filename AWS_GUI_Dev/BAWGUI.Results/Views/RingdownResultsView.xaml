@@ -30,8 +30,9 @@
         <!--<ScrollViewer Grid.Row="1">-->
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
@@ -58,8 +59,9 @@
                     <ScrollViewer Grid.Row="2">
                         <views:RDReRunPlot/>
                     </ScrollViewer>
-                </Grid>
-                <Grid Grid.Column="1">
+            </Grid>
+            <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+            <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>

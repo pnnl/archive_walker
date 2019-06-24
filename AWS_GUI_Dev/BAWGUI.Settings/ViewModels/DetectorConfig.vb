@@ -30,6 +30,7 @@ Namespace ViewModels
             '_addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
             _signalsMgr = SignalManager.Instance
             _browseSavePath = New DelegateCommand(AddressOf _openSavePath, AddressOf CanExecute)
+            _autoEventExporter = New AutoEventExportViewModel
         End Sub
         Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfigModel, signalsMgr As SignalManager)
             Me.New
@@ -74,6 +75,7 @@ Namespace ViewModels
             Next
             AlarmingList = newAlarmingList
             _signalsMgr = signalsMgr
+            AutoEventExporter = New AutoEventExportViewModel(_model.AutoEventExporter)
         End Sub
         Private _signalsMgr As SignalManager
         Private _model As DetectorConfigModel
@@ -227,6 +229,16 @@ Namespace ViewModels
                 obj.SavePath = openDirectoryDialog.FileName
             End If
         End Sub
+        Private _autoEventExporter As AutoEventExportViewModel
+        Public Property AutoEventExporter As AutoEventExportViewModel
+            Get
+                Return _autoEventExporter
+            End Get
+            Set(ByVal value As AutoEventExportViewModel)
+                _autoEventExporter = value
+                OnPropertyChanged()
+            End Set
+        End Property
     End Class
 
     Public Class PeriodogramDetector
@@ -1178,6 +1190,101 @@ Namespace ViewModels
         '        SavePath = openDirectoryDialog.SelectedPath
         '    End If
         'End Sub
+    End Class
+
+    Public Class AutoEventExportViewModel
+        Inherits ViewModelBase
+        Public Sub New()
+            _model = New AutoEventExportModel
+            _browseExportPath = New DelegateCommand(AddressOf _browseEventExportPath, AddressOf CanExecute)
+        End Sub
+
+        Public Sub New(autoEventExporter As AutoEventExportModel)
+            Me.New
+            _model = autoEventExporter
+        End Sub
+
+        Private _model As AutoEventExportModel
+        Public Property Flag As Boolean
+            Get
+                Return _model.Flag
+            End Get
+            Set(ByVal value As Boolean)
+                _model.Flag = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property SurroundingMinutes As String
+            Get
+                Return _model.SurroundingMinutes
+            End Get
+            Set(ByVal value As String)
+                _model.SurroundingMinutes = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property DeletePastFlag As Boolean
+            Get
+                Return _model.DeletePastFlag
+            End Get
+            Set(ByVal value As Boolean)
+                _model.DeletePastFlag = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property DeletePastDays As String
+            Get
+                Return _model.DeletePastDays
+            End Get
+            Set(ByVal value As String)
+                _model.DeletePastDays = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property ExportPath As String
+            Get
+                Return _model.ExportPath
+            End Get
+            Set(ByVal value As String)
+                _model.ExportPath = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _browseExportPath As ICommand
+        Public Property BrowseExportPath As ICommand
+            Get
+                Return _browseExportPath
+            End Get
+            Set(ByVal value As ICommand)
+                _browseExportPath = value
+            End Set
+        End Property
+        Private _lastSavePath As String
+        Private autoEventExporter As AutoEventExportModel
+
+        Private Sub _browseEventExportPath(obj As Object)
+            Dim openDirectoryDialog As New CommonOpenFileDialog
+            openDirectoryDialog.Title = "Select the Event Export Path"
+            openDirectoryDialog.IsFolderPicker = True
+            If _lastSavePath Is Nothing Then
+                openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
+            Else
+                openDirectoryDialog.InitialDirectory = _lastSavePath
+            End If
+            openDirectoryDialog.AddToMostRecentlyUsedList = True
+            openDirectoryDialog.AllowNonFileSystemItems = False
+            openDirectoryDialog.DefaultDirectory = Environment.CurrentDirectory
+            openDirectoryDialog.EnsureFileExists = True
+            openDirectoryDialog.EnsurePathExists = True
+            openDirectoryDialog.EnsureReadOnly = False
+            openDirectoryDialog.EnsureValidNames = True
+            openDirectoryDialog.Multiselect = False
+            openDirectoryDialog.ShowPlacesList = True
+            If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
+                _lastSavePath = openDirectoryDialog.FileName
+                ExportPath = openDirectoryDialog.FileName
+            End If
+        End Sub
     End Class
 
     'Public Enum DetectorModeType

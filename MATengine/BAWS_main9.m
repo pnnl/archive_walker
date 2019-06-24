@@ -124,7 +124,8 @@ if (nargin == 5) && (~Unpause)
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
         BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
-        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
+        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags,...
+        AutoEventExport] = InitializeBAWS(ConfigAll,EventPath);
 %     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],WindAppXML);
     InitialCondosFilter = [];
     InitialCondosMultiRate = [];
@@ -181,7 +182,6 @@ elseif ~Unpause
     end
     
     [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,OmitFromSparse,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);    
-%     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],[]);
     
     % Error check on RerunDetector entry
     if sum(strcmp(RerunDetector,[{'RetrieveMode', 'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
@@ -297,7 +297,11 @@ elseif ~Unpause
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
         BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
-        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
+        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags,...
+        ~] = InitializeBAWS(ConfigAll,EventPath);
+    
+    % Do not try to export events in rerun mode
+    AutoEventExport.Flag = 0;
     
     % Disable all but the desired detector
     DetectorXML = DisableDetectors(DetectorXML,RerunDetector);
@@ -464,6 +468,7 @@ while(~min(done))
         % Generate a wind report
         % Update the event list and store events that are over
         % Reset the sparse PMU structure
+        % Export out-of-range and ringdown events using data output from data writer
         if ~isempty(DataInfo.LastFocusFileTime) && (~strcmp(datestr(FocusFileTime,'yyyymmdd'),datestr(DataInfo.LastFocusFileTime,'yyyymmdd')) || min(done))
             % If the wind app is configured, generate a report
             if isfield(WindAppXML,'PMU')
@@ -484,6 +489,9 @@ while(~min(done))
 
             % Reset the sparse PMU structure
             SparsePMU = struct();
+            
+            % Export out-of-range and ringdown events using data output from data writer
+            ExportEvents(AutoEventExport,EventPath,DataInfo.LastFocusFileTime,done);
         end
         WriteEventListXML(EventList,[EventPath '\EventList_Current.XML'],0);
     end
@@ -574,7 +582,7 @@ while(~min(done))
                 'AdditionalOutputCondos','InitialCondosFilter','InitialCondosMultiRate','FinalAngles','ConfigAll','FileLength');
             
             % Add NaNs to SparsePMU for event detectors
-            SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(FileInfo(1).tPMU(end),'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,FileDetectors);
+            SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(FileInfo(1).tPMU(end),'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,setdiff(FileDetectors,OmitFromSparse));
             
             % If necessary, handle steps that are specific to detectors
             % that operate on an interval, rather than file-by-file
@@ -599,7 +607,7 @@ while(~min(done))
 
                         % Add NaNs to SparsePMU for FO detectors - each time they would
                         % have been implemented using ResultUpdateInterval
-                        SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(PMUsegment(1).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,BlockDetectors);
+                        SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(PMUsegment(1).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,setdiff(BlockDetectors,OmitFromSparse));
                     else
                         break
                     end

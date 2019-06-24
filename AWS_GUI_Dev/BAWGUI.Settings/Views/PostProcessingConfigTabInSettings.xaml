@@ -58,6 +58,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
@@ -207,7 +208,8 @@
                 </Grid>
             </ScrollViewer>
         </Border>
-        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="2">
             <Grid Margin="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
