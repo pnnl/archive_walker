@@ -582,7 +582,7 @@ while(~min(done))
                 'AdditionalOutputCondos','InitialCondosFilter','InitialCondosMultiRate','FinalAngles','ConfigAll','FileLength');
             
             % Add NaNs to SparsePMU for event detectors
-            SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(FileInfo(1).tPMU(end),'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,FileDetectors);
+            SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(FileInfo(1).tPMU(end),'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,setdiff(FileDetectors,OmitFromSparse));
             
             % If necessary, handle steps that are specific to detectors
             % that operate on an interval, rather than file-by-file
@@ -607,7 +607,7 @@ while(~min(done))
 
                         % Add NaNs to SparsePMU for FO detectors - each time they would
                         % have been implemented using ResultUpdateInterval
-                        SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(PMUsegment(1).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,BlockDetectors);
+                        SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(PMUsegment(1).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,setdiff(BlockDetectors,OmitFromSparse));
                     else
                         break
                     end
