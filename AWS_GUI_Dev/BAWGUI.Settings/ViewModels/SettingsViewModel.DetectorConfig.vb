@@ -334,11 +334,11 @@ Namespace ViewModels
                         DetectorConfigure.AlarmingList = newlist
                         _addLog("Alarming detector " & obj.Name & " is deleted from alarming!")
                     End If
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    Else
-                        DeSelectAllDetectors()
-                    End If
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'Else
+                    DeSelectAllDetectors()
+                    'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
                 End Try
@@ -407,11 +407,11 @@ Namespace ViewModels
                     For index = 1 To _signalMgr.GroupedSignalByDataWriterDetectorInput.Count
                         _signalMgr.GroupedSignalByDataWriterDetectorInput(index - 1).SignalSignature.SignalName = "Detector " & index.ToString & " " & DetectorConfigure.DataWriterDetectorList(index - 1).Name
                     Next
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    Else
-                        DeSelectAllDetectors()
-                    End If
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'Else
+                    DeSelectAllDetectors()
+                    'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
                 End Try

@@ -680,14 +680,14 @@ Namespace ViewModels
                             stp.ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stp.StepCounter.ToString & "-" & stp.Name
                         End If
                     Next
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    Else
-                        DeSelectAllPostProcessConfigSteps()
-                    End If
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'Else
+                    DeSelectAllPostProcessConfigSteps()
+                    'End If
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     PostProcessConfigure.CollectionOfSteps = steps
-                    SignalSelectionTreeViewVisibility = "Visible"
+                    'SignalSelectionTreeViewVisibility = "Visible"
                 Catch ex As Exception
                     MessageBox.Show("Error deleting step " & obj.StepCounter.ToString & " in Post Process Configuration, " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
                 End Try

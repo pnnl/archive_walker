@@ -4425,15 +4425,15 @@ Namespace ViewModels
                             signal.PassedThroughDQFilter = signal.PassedThroughDQFilter - 1
                         Next
                     End If
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    Else
-                        DeSelectAllDataConfigSteps()
-                    End If
-                    CurrentSelectedStep = Nothing
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'Else
+                    DeSelectAllDataConfigSteps()
+                    'End If
+                    'CurrentSelectedStep = Nothing
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     DataConfigure.CollectionOfSteps = steps
-                    SignalSelectionTreeViewVisibility = "Visible"
+                    'SignalSelectionTreeViewVisibility = "Visible"
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting step " & obj.StepCounter.ToString & " in Data Configuration, " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
                 End Try
