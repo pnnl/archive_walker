@@ -42,7 +42,7 @@ namespace MapService.ViewModels
                 OnPropertyChanged();
             }
         }
-        public int MaxZoom { get; set; } = 8;
+        public int MaxZoom { get; set; } = 20;
         public int MinZoom { get; set; } = 0;
         public void SetUpGMap()
         {
@@ -315,7 +315,7 @@ namespace MapService.ViewModels
 
                     if (res == DialogResult.Yes)
                     {
-                        TilePrefetcher tileFetcher = new TilePrefetcher();
+                        GMap.NET.WindowsPresentation.TilePrefetcher tileFetcher = new GMap.NET.WindowsPresentation.TilePrefetcher();
                         //tileFetcher.Owner = this;
                         tileFetcher.ShowCompleteMessage = true;
                         tileFetcher.Start(area, i, Gmap.MapProvider, 100);
