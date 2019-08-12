@@ -18,6 +18,7 @@ using VoltageStability.MATLABRunResults.Models;
 using ModeMeter.MATLABRunResults.Models;
 using System.Collections.ObjectModel;
 using BAWGUI.Core.ViewModels;
+using System.Globalization;
 
 //[assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
@@ -894,7 +895,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ReadExampleFileResults GetDBFileExample(string starttime, string preset, string filename, string dbtype)
         {
             var FileReadingResults = new ReadExampleFileResults();
-            var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
+            var start = "";
+            MessageBox.Show("The time string is: " + starttime);
+            try
+            {
+                start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Time string convert to datetime object failed.");
+            }
 
             if (IsMatlabEngineRunning)
             {
