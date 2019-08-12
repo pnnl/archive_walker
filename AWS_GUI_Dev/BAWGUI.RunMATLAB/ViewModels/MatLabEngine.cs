@@ -222,8 +222,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show(ex.Message);
             }
 
-            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             var runFlag = controlPath + "RunFlag.txt";
             if (!System.IO.File.Exists(runFlag))
             {
@@ -258,8 +258,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    {
         //        Thread.CurrentThread.Name = "RDReRunThread";
         //    }
-        //    start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-        //    end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+        //    start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+        //    end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
         //    var runFlag = controlPath + "RunFlag.txt";
         //    if (!System.IO.File.Exists(runFlag))
         //    {
@@ -276,8 +276,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
         public List<SparseDetector> GetSparseData(string start, string end, AWRunViewModel run, string detector)
         {
-            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             if (IsMatlabEngineRunning)
             {
                 PauseMatlabNormalRun();
@@ -675,8 +675,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show(ex.Message);
             }
 
-            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             var runFlag = controlPath + "RunFlag.txt";
             if (!System.IO.File.Exists(runFlag))
             {
@@ -816,8 +816,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 MessageBox.Show(ex.Message);
             }
-            //start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            //end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            //start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            //end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             var runFlag = controlPath + "RunFlag.txt";
             if (!System.IO.File.Exists(runFlag))
             {
@@ -1397,7 +1397,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             worker = new BackgroundWorker();
             try
             {
-                var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
+                var start = Convert.ToDateTime(starttime, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
                 worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrieveDBDataMode);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;

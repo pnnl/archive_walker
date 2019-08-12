@@ -9,6 +9,7 @@ using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -114,8 +115,8 @@ namespace VoltageStability.ViewModels
             {
                 _selectedStartTime = value;
                 OnPropertyChanged();
-                var startTime = Convert.ToDateTime(value);
-                var endTime = Convert.ToDateTime(_selectedEndTime);
+                var startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     _filterTableByTime();
@@ -137,8 +138,8 @@ namespace VoltageStability.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    var startTime = Convert.ToDateTime(_selectedStartTime);
-                    var endTime = Convert.ToDateTime(value);
+                    var startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    var endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
                     if (startTime <= endTime)
                     {
                         _filterTableByTime();
@@ -153,12 +154,12 @@ namespace VoltageStability.ViewModels
         private void _filterTableByTime()
         {
             ObservableCollection<VoltageStabilityEventViewModel> newResults = new ObservableCollection<VoltageStabilityEventViewModel>();
-            DateTime startT = DateTime.Parse(_selectedStartTime);
-            DateTime endT = DateTime.Parse(_selectedEndTime);
+            DateTime startT = DateTime.Parse(_selectedStartTime, CultureInfo.InvariantCulture);
+            DateTime endT = DateTime.Parse(_selectedEndTime, CultureInfo.InvariantCulture);
             foreach (var evnt in _results)
             {
-                DateTime st = DateTime.Parse(evnt.StartTime);
-                DateTime ed = DateTime.Parse(evnt.EndTime);
+                DateTime st = DateTime.Parse(evnt.StartTime, CultureInfo.InvariantCulture);
+                DateTime ed = DateTime.Parse(evnt.EndTime, CultureInfo.InvariantCulture);
                 if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0)
                 {
                     newResults.Add(evnt);
@@ -297,8 +298,8 @@ namespace VoltageStability.ViewModels
         {
             if (File.Exists(_run.Model.ConfigFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try
@@ -716,8 +717,8 @@ namespace VoltageStability.ViewModels
             }
             if (File.Exists(_run.Model.ConfigFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -158,8 +159,8 @@ namespace ModeMeter.ViewModels
         public ICommand GenerateReport { get; set; }
         private void _saveReport(object obj)
         {
-            var start = Convert.ToDateTime(SelectedStartTime).ToString("yyyy-MM-dd HH:mm:ss");
-            var end = Convert.ToDateTime(SelectedEndTime).ToString("yyyy-MM-dd HH:mm:ss");
+            var start = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture).ToString("yyyy-MM-dd HH:mm:ss");
+            var end = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture).ToString("yyyy-MM-dd HH:mm:ss");
             try
             {
                 _engine.GenerateMMreport(start, end, _run.Model.EventPath, _reportType, DampThresh, EventSepMinutes, ReportPath);

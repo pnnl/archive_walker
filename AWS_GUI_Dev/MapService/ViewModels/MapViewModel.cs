@@ -69,7 +69,7 @@ namespace MapService.ViewModels
 #if DEBUG
             Gmap.CacheLocation = "..\\MapCache";
 #else
-            Gmap.CacheLocation = "\\MapCache";
+            Gmap.CacheLocation = ".\\MapCache";
 #endif
             Gmap.MouseMove += GMap_MouseMove;
             Gmap.MouseLeftButtonDown += GMap_MouseLeftButtonDown;

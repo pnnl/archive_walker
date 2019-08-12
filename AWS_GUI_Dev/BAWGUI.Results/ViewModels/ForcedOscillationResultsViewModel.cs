@@ -127,8 +127,26 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedStartTime = value;
                 OnPropertyChanged();
-                var startTime = Convert.ToDateTime(value);
-                var endTime = Convert.ToDateTime(_selectedEndTime);
+                //var startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                //var endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
+                var startTime = DateTime.Now;
+                var endTime = DateTime.Now;
+                try
+                {
+                    startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedStartTime, startTime Convert;");
+                }
+                try
+                {
+                    endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedStartTime, endTime Convert;");
+                }
                 if (startTime <= endTime)
                 {
                     _filterTableByTime();
@@ -150,8 +168,26 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    var startTime = Convert.ToDateTime(_selectedStartTime);
-                    var endTime = Convert.ToDateTime(value);
+                    //var startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    //var endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                    var startTime = DateTime.Now;
+                    var endTime = DateTime.Now;
+                    try
+                    {
+                        startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedEndTime, startTime Convert;");
+                    }
+                    try
+                    {
+                        endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedEndTime, endTime Convert;");
+                    }
                     if (startTime <= endTime)
                     {
                         _filterTableByTime();
@@ -167,19 +203,19 @@ namespace BAWGUI.Results.ViewModels
         private void _filterTableByTime()
         {
             ObservableCollection<ForcedOscillationResultViewModel> newResults = new ObservableCollection<ForcedOscillationResultViewModel>();
-            DateTime startT = DateTime.Parse(_selectedStartTime);
-            DateTime endT = DateTime.Parse(_selectedEndTime);
+            DateTime startT = DateTime.Parse(_selectedStartTime, CultureInfo.InvariantCulture);
+            DateTime endT = DateTime.Parse(_selectedEndTime, CultureInfo.InvariantCulture);
             foreach (var evnt in _results)
             {
-                DateTime st = DateTime.Parse(evnt.OverallStartTime);
-                DateTime ed = DateTime.Parse(evnt.OverallEndTime);
+                DateTime st = DateTime.Parse(evnt.OverallStartTime, CultureInfo.InvariantCulture);
+                DateTime ed = DateTime.Parse(evnt.OverallEndTime, CultureInfo.InvariantCulture);
                 if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0)
                 {
                     ObservableCollection<OccurrenceViewModel> newOcurs = new ObservableCollection<OccurrenceViewModel>();
                     foreach (var ocur in evnt.Occurrences)
                     {
-                        DateTime ocurst = DateTime.Parse(ocur.Start);
-                        DateTime ocured = DateTime.Parse(ocur.End);
+                        DateTime ocurst = DateTime.Parse(ocur.Start, CultureInfo.InvariantCulture);
+                        DateTime ocured = DateTime.Parse(ocur.End, CultureInfo.InvariantCulture);
                         if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
                         {
                             newOcurs.Add(ocur);
@@ -192,8 +228,8 @@ namespace BAWGUI.Results.ViewModels
                     }
 
                     ////flattened occurence with events
-                    //DateTime ocurst = DateTime.Parse(evnt.Occurrence.Start);
-                    //DateTime ocured = DateTime.Parse(evnt.Occurrence.End);
+                    //DateTime ocurst = DateTime.Parse(evnt.Occurrence.Start, CultureInfo.InvariantCulture);
+                    //DateTime ocured = DateTime.Parse(evnt.Occurrence.End, CultureInfo.InvariantCulture);
                     //if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
                     //{
                     //    newResults.Add(evnt);
@@ -324,7 +360,7 @@ namespace BAWGUI.Results.ViewModels
                         {
                             it.StrokeThickness = 5;
                         }
-                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.Start)) && it.Points[0].Y == SelectedOscillationEvent.SelectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.End)))
+                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.Start, CultureInfo.InvariantCulture)) && it.Points[0].Y == SelectedOscillationEvent.SelectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.End)))
                         {
                             it.StrokeThickness = 10;
                             FOPlotModel.InvalidatePlot(true);
@@ -398,7 +434,7 @@ namespace BAWGUI.Results.ViewModels
         //                        {
         //                            it.StrokeThickness = 5;
         //                        }
-        //                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
+        //                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start, CultureInfo.InvariantCulture)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
         //                        {
         //                            it.StrokeThickness = 10;
         //                            FOPlotModel.InvalidatePlot(true);
@@ -600,10 +636,10 @@ namespace BAWGUI.Results.ViewModels
             var endTime = new DateTime();
             if (FilteredResults.Count > 0)
             {
-                startTime = Convert.ToDateTime(FilteredResults.Min(x => x.GetFirstStartOfFilteredOccurrences()));
-                endTime = Convert.ToDateTime(FilteredResults.Max(x => x.GetLastEndOfFilteredOccurrences()));
+                startTime = Convert.ToDateTime(FilteredResults.Min(x => x.GetFirstStartOfFilteredOccurrences()), CultureInfo.InvariantCulture);
+                endTime = Convert.ToDateTime(FilteredResults.Max(x => x.GetLastEndOfFilteredOccurrences()), CultureInfo.InvariantCulture);
             }
-            var time = Convert.ToDateTime(endTime) - Convert.ToDateTime(startTime);
+            var time = Convert.ToDateTime(endTime, CultureInfo.InvariantCulture) - Convert.ToDateTime(startTime, CultureInfo.InvariantCulture);
             if(time < TimeSpan.FromHours(24))
             {
                 xAxisFormatString = "HH:mm";
@@ -673,8 +709,8 @@ namespace BAWGUI.Results.ViewModels
                     {
                         newSeries.StrokeThickness = 10;
                     }
-                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
-                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
+                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency));
+                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency));
                     a.Series.Add(newSeries);
                     newSeries.TrackerKey = trackerKey.ToString();
                     ocur.trackerKey = trackerKey;
@@ -682,8 +718,8 @@ namespace BAWGUI.Results.ViewModels
                     newSeries.MouseDown += foEvent_MouseDown;
                     if (ocur.Alarm == "YES")
                     {
-                        var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency, 4, 0);
-                        var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency, 4, 0);
+                        var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
+                        var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
                         //aPoint.Size = 5;
                         //aPoint.Tag = "Alarm";
                         alarmSeries.Points.Add(startPoint);

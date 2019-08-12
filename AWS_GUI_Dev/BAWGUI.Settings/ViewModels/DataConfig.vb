@@ -610,7 +610,7 @@ Namespace ViewModels
         'Private Sub _convertStartTimeToUTCTime()
         '    'Dim TimeZone As TimeZoneInfo = DirectCast(SelectedTimeZone, TimeZoneInfo)
         '    If ConvertedStartTime IsNot Nothing Then
-        '        Dim localTimeStart = DateTime.Parse(ConvertedStartTime)
+        '        Dim localTimeStart = DateTime.Parse(ConvertedStartTime, CultureInfo.InvariantCulture)
         '        Dim newDateTimeStart = TimeZoneInfo.ConvertTimeToUtc(localTimeStart, SelectedTimeZone)
         '        If newDateTimeStart.ToString <> DateTimeStart Then
         '            DateTimeStart = newDateTimeStart
@@ -620,7 +620,7 @@ Namespace ViewModels
 
         'Private Sub _convertEndTimeToUTCTime()
         '    If ConvertedEndTime IsNot Nothing Then
-        '        Dim localTimeEnd = DateTime.Parse(ConvertedEndTime)
+        '        Dim localTimeEnd = DateTime.Parse(ConvertedEndTime, CultureInfo.InvariantCulture)
         '        Dim newDateTimeEnd = TimeZoneInfo.ConvertTimeToUtc(localTimeEnd, SelectedTimeZone)
         '        If newDateTimeEnd.ToString <> DateTimeEnd Then
         '            DateTimeEnd = newDateTimeEnd

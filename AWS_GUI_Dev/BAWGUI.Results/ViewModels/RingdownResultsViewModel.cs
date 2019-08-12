@@ -21,6 +21,7 @@ using BAWGUI.Results.Views;
 using System.Windows.Forms;
 using BAWGUI.Core.Models;
 using System.Drawing;
+using System.Globalization;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -90,8 +91,8 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedStartTime = value;
                 OnPropertyChanged();
-                var startTime = Convert.ToDateTime(value);
-                var endTime = Convert.ToDateTime(_selectedEndTime);
+                var startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     _filterTableByTime();
@@ -113,8 +114,8 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    var startTime = Convert.ToDateTime(_selectedStartTime);
-                    var endTime = Convert.ToDateTime(value);
+                    var startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    var endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
                     if (startTime <= endTime)
                     {
                         _filterTableByTime();
@@ -130,12 +131,12 @@ namespace BAWGUI.Results.ViewModels
         private void _filterTableByTime()
         {
             ObservableCollection<RingdownEventViewModel> newResults = new ObservableCollection<RingdownEventViewModel>();
-            DateTime startT = DateTime.Parse(_selectedStartTime);
-            DateTime endT = DateTime.Parse(_selectedEndTime);
+            DateTime startT = DateTime.Parse(_selectedStartTime, CultureInfo.InvariantCulture);
+            DateTime endT = DateTime.Parse(_selectedEndTime, CultureInfo.InvariantCulture);
             foreach (var evnt in _results)
             {
-                DateTime st = DateTime.Parse(evnt.StartTime);
-                DateTime ed = DateTime.Parse(evnt.EndTime);
+                DateTime st = DateTime.Parse(evnt.StartTime, CultureInfo.InvariantCulture);
+                DateTime ed = DateTime.Parse(evnt.EndTime, CultureInfo.InvariantCulture);
                 if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0)
                 {
                     newResults.Add(evnt);
@@ -380,8 +381,8 @@ namespace BAWGUI.Results.ViewModels
                     //{
                     //    newSeries.StrokeThickness = 10;
                     //}
-                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
-                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
+                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency));
+                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency));
                     a.Series.Add(newSeries);
                     //newSeries.TrackerKey = trackerKey.ToString();
                     //ocur.trackerKey = trackerKey;
@@ -389,8 +390,8 @@ namespace BAWGUI.Results.ViewModels
                     //newSeries.MouseDown += foEvent_MouseDown;
                     //if (ocur.Alarm == "YES")
                     //{
-                    //    var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency, 4, 0);
-                    //    var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency, 4, 0);
+                    //    var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
+                    //    var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
                     //    alarmSeries.Points.Add(startPoint);
                     //    alarmSeries.Points.Add(endPoint);
                     //}
@@ -499,8 +500,8 @@ namespace BAWGUI.Results.ViewModels
         {
             if (File.Exists(_configFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try
@@ -551,8 +552,8 @@ namespace BAWGUI.Results.ViewModels
             //start rerun in background
             if (File.Exists(ConfigFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try
@@ -725,16 +726,16 @@ namespace BAWGUI.Results.ViewModels
                     //{
                     //    newSeries.StrokeThickness = 10;
                     //}
-                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
-                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
+                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency));
+                    //newSeries.Points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency));
                     allSignalsPlot.Series.Add(newSeries);
                     //ocur.trackerKey = trackerKey;
                     //trackerKey++;
                     //newSeries.MouseDown += foEvent_MouseDown;
                     //if (ocur.Alarm == "YES")
                     //{
-                    //    var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency, 4, 0);
-                    //    var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency, 4, 0);
+                    //    var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
+                    //    var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
                     //    alarmSeries.Points.Add(startPoint);
                     //    alarmSeries.Points.Add(endPoint);
                     //}

@@ -1,4 +1,6 @@
-﻿Namespace CSVDataReader
+﻿Imports System.Globalization
+
+Namespace CSVDataReader
     Public Class CSVReader
         Public Sub New(fileName As String)
             Dim fr As FileIO.TextFieldParser = New FileIO.TextFieldParser(fileName)
@@ -18,8 +20,8 @@
                 Dim t2 = Convert.ToDouble(time2)
                 SamplingRate = Math.Round((1 / (t2 - t1)) / 10) * 10
             Catch ex As Exception
-                Dim t1 = DateTime.Parse(time1)
-                Dim t2 = DateTime.Parse(time2)
+                Dim t1 = DateTime.Parse(time1, CultureInfo.InvariantCulture)
+                Dim t2 = DateTime.Parse(time2, CultureInfo.InvariantCulture)
                 Dim dif = t2.Subtract(t1).TotalSeconds
                 SamplingRate = Math.Round((1 / dif) / 10) * 10
             End Try
