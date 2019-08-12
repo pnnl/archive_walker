@@ -1058,8 +1058,8 @@ Namespace ViewModels
         '            Dim t2 = Convert.ToDouble(time2)
         '            fileInfo.SamplingRate = Math.Round((1 / (t2 - t1)) / 10) * 10.ToString
         '        Catch ex As Exception
-        '            Dim t1 = DateTime.Parse(time1)
-        '            Dim t2 = DateTime.Parse(time2)
+        '            Dim t1 = DateTime.Parse(time1, CultureInfo.InvariantCulture)
+        '            Dim t2 = DateTime.Parse(time2, CultureInfo.InvariantCulture)
         '            Dim dif = t2.Subtract(t1).TotalSeconds
         '            fileInfo.SamplingRate = Math.Round((1 / dif) / 10) * 10.ToString
         '        End Try

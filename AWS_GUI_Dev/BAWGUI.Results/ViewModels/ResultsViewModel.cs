@@ -141,6 +141,7 @@ namespace BAWGUI.Results.ViewModels
         //public void LoadResults(List<string> filenames, string startDate, string endDate)
         public void LoadResults(List<string> filenames, List<string> dates)
         {
+            //MessageBox.Show("In results viewmodel, LoadResults, 1st line of function");
             try
             {
                 _getAvailableDates(dates);
@@ -164,24 +165,68 @@ namespace BAWGUI.Results.ViewModels
             //Else
             //    endDate = dates.LastOrDefault
             //End If
-            this._resultsModel.LoadResults(filenames, dates);
-            var startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture);
+            try
+            {
+                this._resultsModel.LoadResults(filenames, dates);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, this._resultsModel.LoadResults(filenames, dates);");
+            }
+            var startTime = DateTime.Now;
+            try
+            {
+                startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), \"yyMMdd\", CultureInfo.InvariantCulture);");
+            }
             //var endTime = startTime.AddDays(1).AddSeconds(-1);
-            var startTimeStr = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-            var endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            var startTimeStr = "";
+            var endTimeStr = "";
+            try
+            {
+                startTimeStr = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, startTimeStr = startTime.ToString(\"MM / dd / yyyy HH: mm:ss\");");
+            }
+            try
+            {
+                endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString(\"MM / dd / yyyy HH: mm:ss\");");
+            }
+            //MessageBox.Show("In results viewmodel, LoadResults, starting forced oscillation");
             _forcedOscillationResultsViewModel.FOPlotModel = new OxyPlot.PlotModel();
             _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
+            //MessageBox.Show("In results viewmodel, LoadResults, before _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;");
             _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;
+            //MessageBox.Show("In results viewmodel, LoadResults, before _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;");
             _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;
             var findStartTimeHasEvents = startTime;
             if (_forcedOscillationResultsViewModel.Models.Count() != 0)
             {
+                //MessageBox.Show("In results viewmodel, LoadResults, in if;");
                 while (_forcedOscillationResultsViewModel.FilteredResults.Count() == 0)
                 {
+                    //MessageBox.Show("In results viewmodel, LoadResults, in while;");
                     findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
-                    _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                    try
+                    {
+                        _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("In results viewmodel, LoadResults, tostring error: _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString(\"MM / dd / yyyy HH: mm:ss\");");
+                    }
                 }
             }
+            MessageBox.Show("In results viewmodel, LoadResults, starting ring down");
             _ringdownResultsViewModel.SparsePlotModels = new ObservableCollection<SparsePlot>();
             _ringdownResultsViewModel.RdReRunPlotModels = new ObservableCollection<RDreRunPlot>();
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
@@ -197,6 +242,7 @@ namespace BAWGUI.Results.ViewModels
                     _ringdownResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
+            MessageBox.Show("In results viewmodel, LoadResults, starting out of range");
             _outOfRangeResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             _outOfRangeResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
             _outOfRangeResultsViewModel.Models = _resultsModel.OutOfRangeEvents;
@@ -554,6 +600,7 @@ namespace BAWGUI.Results.ViewModels
                 dates.Sort();
                 try
                 {
+                    //MessageBox.Show("starting load results");
                     LoadResults(files, dates);
                 }
                 catch (Exception ex)
