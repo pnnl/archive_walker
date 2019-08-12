@@ -226,7 +226,7 @@ namespace BAWGUI.Results.ViewModels
                     }
                 }
             }
-            MessageBox.Show("In results viewmodel, LoadResults, starting ring down");
+            //MessageBox.Show("In results viewmodel, LoadResults, starting ring down");
             _ringdownResultsViewModel.SparsePlotModels = new ObservableCollection<SparsePlot>();
             _ringdownResultsViewModel.RdReRunPlotModels = new ObservableCollection<RDreRunPlot>();
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
@@ -242,7 +242,7 @@ namespace BAWGUI.Results.ViewModels
                     _ringdownResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
-            MessageBox.Show("In results viewmodel, LoadResults, starting out of range");
+            //MessageBox.Show("In results viewmodel, LoadResults, starting out of range");
             _outOfRangeResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             _outOfRangeResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
             _outOfRangeResultsViewModel.Models = _resultsModel.OutOfRangeEvents;
