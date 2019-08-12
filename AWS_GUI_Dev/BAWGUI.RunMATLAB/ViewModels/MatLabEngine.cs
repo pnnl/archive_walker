@@ -899,7 +899,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             MessageBox.Show("The time string is: " + starttime);
             try
             {
-                start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
+                start = Convert.ToDateTime(starttime, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             }
             catch (Exception)
             {
