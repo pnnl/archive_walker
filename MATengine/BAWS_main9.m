@@ -578,6 +578,11 @@ while(~min(done))
             hhmmss = datestr(FileInfo(1).tPMU(1),'HHMMSS');
             InitializationFilePath = [InitializationPath '\' yyyymmdd(1:4) '\' yyyymmdd(3:8) '\'];
             InitializationFile = [InitializationFilePath 'Initialization_' yyyymmdd '_' hhmmss '.mat'];
+            % If the directory for the files hasn't been established
+            % yet, add it.
+            if exist(InitializationFilePath,'dir') == 0
+                mkdir(InitializationFilePath);
+            end
             save(InitializationFile,...
                 'AdditionalOutputCondos','InitialCondosFilter','InitialCondosMultiRate','FinalAngles','ConfigAll','FileLength');
             
