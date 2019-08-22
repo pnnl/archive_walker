@@ -140,6 +140,7 @@ namespace ModeMeter.ViewModels
             //}
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Title = "Select file to save generated mode meter report";
+            saveFileDialog1.RestoreDirectory = true;
             if (_reportType == "Graphical")
             {
                 saveFileDialog1.Filter = "Word files (*.doc)|*.doc|All files (*.*)|*.*";

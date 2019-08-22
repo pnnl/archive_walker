@@ -210,6 +210,7 @@ Namespace ViewModels
             Dim openDirectoryDialog As New CommonOpenFileDialog
             openDirectoryDialog.Title = "Select the Save Path"
             openDirectoryDialog.IsFolderPicker = True
+            openDirectoryDialog.RestoreDirectory = True
             If _lastSavePath Is Nothing Then
                 openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
             Else
@@ -224,6 +225,7 @@ Namespace ViewModels
             openDirectoryDialog.EnsureValidNames = True
             openDirectoryDialog.Multiselect = False
             openDirectoryDialog.ShowPlacesList = True
+            openDirectoryDialog.RestoreDirectory = True
             If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
                 _lastSavePath = openDirectoryDialog.FileName
                 obj.SavePath = openDirectoryDialog.FileName
@@ -1266,6 +1268,7 @@ Namespace ViewModels
             Dim openDirectoryDialog As New CommonOpenFileDialog
             openDirectoryDialog.Title = "Select the Event Export Path"
             openDirectoryDialog.IsFolderPicker = True
+            openDirectoryDialog.RestoreDirectory = True
             If _lastSavePath Is Nothing Then
                 openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
             Else
@@ -1280,6 +1283,7 @@ Namespace ViewModels
             openDirectoryDialog.EnsureValidNames = True
             openDirectoryDialog.Multiselect = False
             openDirectoryDialog.ShowPlacesList = True
+            openDirectoryDialog.RestoreDirectory = True
             If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
                 _lastSavePath = openDirectoryDialog.FileName
                 ExportPath = openDirectoryDialog.FileName

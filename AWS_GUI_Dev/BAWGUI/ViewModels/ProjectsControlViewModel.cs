@@ -162,6 +162,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 fbd.EnsureValidNames = true;
                 fbd.Multiselect = false;
                 fbd.ShowPlacesList = true;
+                fbd.RestoreDirectory = true;
                 CommonFileDialogResult result = fbd.ShowDialog();
 
                 if (result == CommonFileDialogResult.Ok && !string.IsNullOrWhiteSpace(fbd.FileName))

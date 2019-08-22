@@ -117,6 +117,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             openFileDialog.Multiselect = false;
             openFileDialog.Title = "Please select a .xml configure file";
             openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
+            openFileDialog.RestoreDirectory = true;
             if (string.IsNullOrEmpty(_initialConfigFilePath))
             {
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory;

@@ -3100,6 +3100,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             saveFileDialog1.Title = "Export Result Data File";
+            saveFileDialog1.RestoreDirectory = true;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
