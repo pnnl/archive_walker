@@ -896,7 +896,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             var FileReadingResults = new ReadExampleFileResults();
             var start = "";
-            MessageBox.Show("The time string is: " + starttime);
+            //MessageBox.Show("The time string is: " + starttime);
             try
             {
                 start = Convert.ToDateTime(starttime, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");

@@ -42,7 +42,7 @@ namespace MapService.ViewModels
                 OnPropertyChanged();
             }
         }
-        public int MaxZoom { get; set; } = 20;
+        public int MaxZoom { get; set; } = 8;
         public int MinZoom { get; set; } = 0;
         public void SetUpGMap()
         {
