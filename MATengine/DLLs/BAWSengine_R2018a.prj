@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="736254146" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="1342070554" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>2.28</param.version>
+    <param.version>2.29</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -133,6 +133,7 @@
     <fileset.depfun>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOpenPDCpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadPIpresets.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\ChangeNameTypeUnit.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DataProcessor.m</file>
@@ -260,6 +261,7 @@
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\JSIS_CSV_2_Mat.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\LoadFocusFiles.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\OHreader.m</file>
+      <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\openPDCreader.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\pdatReadnCreateStruct.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\PIreaderDLL.m</file>
       <file>C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\POWreadHQ.m</file>

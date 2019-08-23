@@ -34,6 +34,8 @@ try
         [PMU,~,fs] = PIreaderDLL(StartTime,0,FileLength,preset,PresetFile);
     elseif strcmp(DBtype,'OpenHistorian')
         [PMU,~,fs] = OHreader(StartTime,0,FileLength,preset,PresetFile);
+    elseif strcmp(DBtype,'openPDC')
+        [PMU,~,fs] = openPDCreader(StartTime,0,FileLength,preset,PresetFile);
     else
         Unsupported = 1;
         error(['FileType = ' num2str(FileType) ' is not a supported value.']);

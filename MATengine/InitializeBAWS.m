@@ -206,10 +206,7 @@ for idx = 1:length(FileInfo)
     FileInfo(idx).FileType = DataXML.ReaderProperties.FilePath{idx}.FileType;
 end
 
-if(strcmpi(FileInfo(1).FileType,'PI'))
-    [~,name,ext] = fileparts(DataXML.ReaderProperties.FilePath{1}.ExampleFile); 
-    DataInfo.PresetFileInit = [name ext];
-elseif(strcmpi(FileInfo(1).FileType,'OpenHistorian'))
+if(strcmpi(FileInfo(1).FileType,'PI')) || (strcmpi(FileInfo(1).FileType,'OpenHistorian')) || (strcmpi(FileInfo(1).FileType,'OpenPDC'))
     [~,name,ext] = fileparts(DataXML.ReaderProperties.FilePath{1}.ExampleFile); 
     DataInfo.PresetFileInit = [name ext];
 end

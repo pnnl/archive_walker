@@ -19,7 +19,7 @@ else
             
             % If a database is being used, the pause doesn't need to be as
             % long.
-            if strcmpi(FileInfo(idx3).FileType, 'OpenHistorian') || strcmpi(FileInfo(idx3).FileType, 'PI')
+            if strcmpi(FileInfo(idx3).FileType, 'OpenHistorian') || strcmpi(FileInfo(idx3).FileType, 'openPDC') || strcmpi(FileInfo(idx3).FileType, 'PI')
                 PauseDuration = 1;
             else
                 PauseDuration = 10;
@@ -46,6 +46,8 @@ else
                 [PMUbyFileTemp,tPMU] = PIreaderDLL(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
             elseif(strcmpi(FileInfo(idx3).FileType, 'OpenHistorian'))
                 [PMUbyFileTemp,tPMU] = OHreader(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
+            elseif(strcmpi(FileInfo(idx3).FileType, 'openPDC'))
+                [PMUbyFileTemp,tPMU] = openPDCreader(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
             end
             
             FailToRead = 0;
