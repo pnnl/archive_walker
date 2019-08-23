@@ -145,6 +145,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         public ICommand LoadCoordinates { get; set; }
         private void _openCoordsFile(object obj)
         {
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.RestoreDirectory = true;
             openFileDialog.FileName = "";
@@ -158,7 +159,6 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             {
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory;
             }
-            openFileDialog.RestoreDirectory = true;
             openFileDialog.Title = "Please select a location coordinates file";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -167,6 +167,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 Properties.Settings.Default.Save();
                 _readLocationCoordsFile(_locationCoordinatesFilePath);
             }
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
         }
 
         private void _readLocationCoordsFile(string path)

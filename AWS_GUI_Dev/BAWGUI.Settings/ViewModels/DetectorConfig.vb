@@ -225,7 +225,6 @@ Namespace ViewModels
             openDirectoryDialog.EnsureValidNames = True
             openDirectoryDialog.Multiselect = False
             openDirectoryDialog.ShowPlacesList = True
-            openDirectoryDialog.RestoreDirectory = True
             If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
                 _lastSavePath = openDirectoryDialog.FileName
                 obj.SavePath = openDirectoryDialog.FileName
@@ -1283,7 +1282,6 @@ Namespace ViewModels
             openDirectoryDialog.EnsureValidNames = True
             openDirectoryDialog.Multiselect = False
             openDirectoryDialog.ShowPlacesList = True
-            openDirectoryDialog.RestoreDirectory = True
             If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
                 _lastSavePath = openDirectoryDialog.FileName
                 ExportPath = openDirectoryDialog.FileName

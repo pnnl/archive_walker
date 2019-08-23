@@ -149,6 +149,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand BrowseResultsStorage { get; set; }
         private void _browseResultsStorage(object obj)
         {
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
             using (var fbd = new CommonOpenFileDialog())
             {
                 fbd.InitialDirectory = ResultsStoragePath;
@@ -179,6 +180,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     //string[] files = Directory.GetFiles(ResultsStoragePath);
                 }
             }
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
         }
 
         private void _generateProjectTree(string ResultsStoragePath)
