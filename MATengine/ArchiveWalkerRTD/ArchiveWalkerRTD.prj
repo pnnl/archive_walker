@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="1725833936" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD" name="ArchiveWalkerRTD" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\RealTimeGUI\RealTimeGUI\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="1725833936" file="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD.prj" location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD" name="ArchiveWalkerRTD" preferred-package-location="C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ArchiveWalkerRTD\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>ArchiveWalkerRTD</param.appname>
     <param.icon>${PROJECT_ROOT}\ArchiveWalkerRTD_resources\icon.ico</param.icon>
     <param.icons>
@@ -29,8 +29,8 @@
     <param.user.defined.mcr.options />
     <param.target.type>subtarget.standalone</param.target.type>
     <param.support.packages />
-    <param.web.mcr>true</param.web.mcr>
-    <param.package.mcr>false</param.package.mcr>
+    <param.web.mcr>false</param.web.mcr>
+    <param.package.mcr>true</param.package.mcr>
     <param.no.mcr>false</param.no.mcr>
     <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
     <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
@@ -62,8 +62,6 @@
       <param.user.defined.mcr.options />
       <param.target.type />
       <param.support.packages />
-      <param.web.mcr />
-      <param.package.mcr />
       <param.no.mcr />
       <param.web.mcr.name />
       <param.package.mcr.name />
