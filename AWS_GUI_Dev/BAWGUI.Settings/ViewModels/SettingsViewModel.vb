@@ -784,6 +784,9 @@ Namespace ViewModels
             ElseIf obj.FileType = DataFileType.OpenHistorian Then
                 openFileDialog.DefaultExt = ".xml"
                 openFileDialog.Filter = "openHistorian Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            ElseIf obj.FileType = DataFileType.OpenPDC Then
+                openFileDialog.DefaultExt = ".xml"
+                openFileDialog.Filter = "openPDC Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
             End If
             If _lastInputFolderLocation Is Nothing Then
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory

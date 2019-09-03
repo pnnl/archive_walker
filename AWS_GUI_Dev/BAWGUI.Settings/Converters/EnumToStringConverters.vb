@@ -18,6 +18,8 @@ Namespace Converters
                     Return "PI Database"
                 Case DataFileType.OpenHistorian
                     Return "openHistorian"
+                Case DataFileType.OpenPDC
+                    Return "openPDC"
                 Case Else
                     Throw New Exception("Data file type not valid!")
             End Select
@@ -35,6 +37,8 @@ Namespace Converters
                     Return DataFileType.PI
                 Case "openHistorian"
                     Return DataFileType.OpenHistorian
+                Case "openPDC"
+                    Return DataFileType.OpenPDC
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

@@ -318,7 +318,7 @@ namespace BAWGUI.ReadConfigXml
                 _fileType = value;
                 if (File.Exists(ExampleFile) && CheckDataFileMatch())
                 {
-                    if (value == DataFileType.PI || value == DataFileType.OpenHistorian)
+                    if (value == DataFileType.PI || value == DataFileType.OpenHistorian || value == DataFileType.OpenPDC)
                     {
                         try
                         {
@@ -382,7 +382,7 @@ namespace BAWGUI.ReadConfigXml
                     //{
                     //    MessageBox.Show("Error extracting Mnemonic from selected data file. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                     //}
-                    if (FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian)
+                    if (FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian || FileType == DataFileType.OpenPDC)
                     {
                         try
                         {
@@ -429,7 +429,7 @@ namespace BAWGUI.ReadConfigXml
                 return true;
             else if (FileType == DataFileType.powHQ && tp == "mat")
                 return true;
-            else if ((FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian) && tp == "xml")
+            else if ((FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian || FileType == DataFileType.OpenPDC) && tp == "xml")
                 return true;
             else
                 return false;

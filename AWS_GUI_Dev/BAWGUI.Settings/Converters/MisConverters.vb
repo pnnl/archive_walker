@@ -172,7 +172,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return "Preset:"
             Else
                 Return "Mnemonic:"
@@ -187,7 +187,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return 2
             Else
                 Return 1
@@ -202,7 +202,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return 3
             Else
                 Return 2
@@ -217,7 +217,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return 1
             Else
                 Return 3
@@ -232,7 +232,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return False
             Else
                 Return True
@@ -247,7 +247,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return "White"
             Else
                 Return "WhiteSmoke"

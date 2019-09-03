@@ -210,6 +210,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                             MissingExampleFile.Add("\nError reading openHistorian database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
+                    else if (item.FileType == DataFileType.OpenPDC)
+                    {
+                        try
+                        {
+                            aFileInfo.PresetList = item.GetPresets(item.ExampleFile);
+                            _readDBExampleFile(aFileInfo, starttime, "openPDC");
+                        }
+                        catch (Exception ex)
+                        {
+                            MissingExampleFile.Add("\nError reading openPDC database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                        }
+                    }
                     //FileInfo.Add(aFileInfo);
                 }
             }
@@ -283,6 +295,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         model.PresetList = model.Model.GetPresets(model.ExampleFile);
                         _readDBExampleFile(model, starttime, "openHistorian");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading openHistorian database. " + ex.Message);
+                    }
+                }
+                else if (model.Model.FileType == DataFileType.OpenPDC)
+                {
+                    try
+                    {
+                        model.PresetList = model.Model.GetPresets(model.ExampleFile);
+                        _readDBExampleFile(model, starttime, "openPDC");
                     }
                     catch (Exception ex)
                     {
@@ -2944,6 +2968,10 @@ namespace BAWGUI.SignalManagement.ViewModels
                     else if (info.FileType == DataFileType.OpenHistorian)
                     {
                         _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "openHistorian");
+                    }
+                    else if (info.FileType == DataFileType.OpenPDC)
+                    {
+                        _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "openPDC");
                     }
                 }
                 catch (Exception ex)

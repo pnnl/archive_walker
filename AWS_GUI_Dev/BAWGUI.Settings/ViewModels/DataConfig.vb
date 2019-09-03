@@ -414,7 +414,7 @@ Namespace ViewModels
         Public Sub CheckHasDBDataSource()
             HasDBDataSource = False
             For Each info In InputFileInfos
-                If info.FileType = DataFileType.PI OrElse info.FileType = DataFileType.OpenHistorian Then
+                If info.FileType = DataFileType.PI OrElse info.FileType = DataFileType.OpenHistorian OrElse info.FileType = DataFileType.OpenPDC Then
                     HasDBDataSource = True
                     Exit For
                 End If

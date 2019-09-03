@@ -48,7 +48,9 @@ namespace BAWGUI.Core.Models
         [Description("PI Database")]
         PI,
         [Description("openHistorian")]
-        OpenHistorian
+        OpenHistorian,
+        [Description("openPDC")]
+        OpenPDC
     }
 
     public enum ModeType
