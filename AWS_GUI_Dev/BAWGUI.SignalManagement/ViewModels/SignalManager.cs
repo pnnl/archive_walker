@@ -310,7 +310,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Error reading openHistorian database. " + ex.Message);
+                        throw new Exception("Error reading openPDC database. " + ex.Message);
                     }
                 }
                 //FileInfo.Add(model);

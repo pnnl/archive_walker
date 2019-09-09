@@ -921,6 +921,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "OpenHistorian"));
                 }
+                else if (dbtype == "openPDC")
+                {
+                    FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "openPDC"));
+                }
                 else { }            
             }
             catch (Exception ex)
@@ -1445,6 +1449,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 else if (dbtype == "openHistorian")
                 {
                     FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "OpenHistorian"));
+                }
+                else if (dbtype == "openPDC")
+                {
+                    FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "openPDC"));
                 }
             }
             catch (Exception ex)
