@@ -41,8 +41,6 @@ if (~isempty(Estart)) && (~isempty(Eend))
     KeepIdx = (Estart <= TimeDT) & (TimeDT <= Eend);
     Data = Data(KeepIdx,:);
     t = t(KeepIdx);
-    TimeString = TimeString(KeepIdx);
-    TimeDT = TimeDT(KeepIdx);
 end
 
 % Get the indices for channels of data to be included in each folder. Each
@@ -69,6 +67,9 @@ else
 end
 
 
+% Convert data types to JSIS-CSV format
+DataType = ConvertDataTypes(DataType);
+DataUnit(strcmp(DataType,'OTHER')) = {'O'};
 
 TS = erase(TimeString{1},{'-',' ',':'});    % Puts the timestamp in the form yyyymmddHHMMSS.FFF
 for idx = 1:length(FolderIdx)
@@ -191,4 +192,83 @@ end
 ExtractedParameters = struct('SavePath',SavePath,...
     'SeparatePMUs',SeparatePMUs,'Mnemonic',Mnemonic,...
     'NoTimeSubfolders',NoTimeSubfolders,'Estart',Estart,'Eend',Eend);
+end
+
+
+
+% function to convert signal types to JSIS-CSV format
+function [DataTypes,flag] = ConvertDataTypes(DataTypes)
+
+flag = zeros(1,length(DataTypes));
+% VMP to VPM
+k = find(strcmp(DataTypes,'VMP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'VPM';
+        flag(k(i)) = 1;
+    end    
+end
+
+% VAP to VPA
+k = find(strcmp(DataTypes,'VAP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'VPA';
+        flag(k(i)) = 1;
+    end
+end
+
+% IMP to IPM
+k = find(strcmp(DataTypes,'IMP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'IPM';
+        flag(k(i)) = 1;
+    end
+end
+
+% IAP to IPA
+k = find(strcmp(DataTypes,'IAP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'IPA';
+        flag(k(i)) = 1;
+    end
+end
+
+% F, no change
+k = find(strcmp(DataTypes,'F'));
+if(~isempty(k))
+    for i = 1:length(k)
+        % no need to change the signal type
+        flag(k(i)) = 1;
+    end
+end
+
+% P, no change
+k = find(strcmp(DataTypes,'P'));
+if(~isempty(k))
+    for i = 1:length(k)
+        % no need to change the signal type
+        flag(k(i)) = 1;
+    end
+end
+
+% Q, no change
+k = find(strcmp(DataTypes,'Q'));
+if(~isempty(k))
+    for i = 1:length(k)
+        % no need to change the signal type
+        flag(k(i)) = 1;
+    end
+end
+
+% set anything else to OTHER
+k = find(flag == 0);
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'OTHER';
+    end
+end
+
 end
