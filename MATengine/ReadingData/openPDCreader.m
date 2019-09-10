@@ -47,7 +47,7 @@ if isdeployed
 else
     % The function is being called from a Matlab session, so the path must
     % be specified.
-    dllpath  = 'C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\matlabDLLs\openPDC\ReadPDC.dll'; % Full pathname is required
+    dllpath  = 'C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\matlabDLLs\openPDC\ReadPDC.dll'; % Full pathname is required
 end
 try
     asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
@@ -133,6 +133,12 @@ for PMUidx = 1:length(PMU)
 
         % Wrong number of samples - need to identify missing with NaN
         try
+            % Remove any duplicate time stamps
+            [~,uidx] = unique(PMUtemp(PMUidx).Time{idx});
+            DupIdx = setdiff(1:length(PMUtemp(PMUidx).Time{idx}),uidx);
+            PMUtemp(PMUidx).Time{idx}(DupIdx) = [];
+            PMUtemp(PMUidx).Data{idx}(DupIdx) = [];
+            
             % Identify missing samples at the beginning
             NumNanToAdd = near(PMUtemp(PMUidx).Time{idx}(1),tPMU)-1;
             PMUtemp(PMUidx).Time{idx} = [tPMU(1:NumNanToAdd); PMUtemp(PMUidx).Time{idx}];
