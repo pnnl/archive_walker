@@ -58,6 +58,16 @@ else
     FirstCall = false;
 end
 
+if isfield(Parameters,'CalcDEF')
+    if strcmp(Parameters.CalcDEF,'TRUE')
+        CalcDEF = true;
+    else
+        CalcDEF = false;
+    end
+else
+    CalcDEF = false;
+end
+
 for ModeIdx = 1:NumMode
     ModeEstimateCalcIdx = 1;
     ExtractedParameters = ExtractedParametersAll{ModeIdx};
