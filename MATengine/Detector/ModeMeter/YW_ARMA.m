@@ -95,6 +95,12 @@ if length(sPolesTemp) > 1
     else
         % Last estimate not available, use specified frequency instead
         SelectIdx = near(sPolesFreqTemp,DesiredModes(3));
+        
+        % In case they are equally distant (only happens when a junk mode
+        % meter is set up, but prevents crashing)
+        if isempty(SelectIdx)
+            SelectIdx = 1;
+        end
     end
 
     ModeEst = sPolesTemp(SelectIdx);
