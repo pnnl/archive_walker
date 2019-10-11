@@ -93,6 +93,16 @@ FrequencyMax = ExtractedParameters.FrequencyMax;
 FrequencyTolerance = ExtractedParameters.FrequencyTolerance;
 CalcDEF = ExtractedParameters.CalcDEF;
 
+if CalcDEF
+    NumDEFpaths = size(Parameters.DEF.PathDescription,2);
+else
+    try
+        NumDEFpaths = size(Parameters.DEF.PathDescription,2);
+    catch
+        NumDEFpaths = 1;
+    end
+end
+
 %% Based on the specified parameters, initialize useful variables
 
 % Window for test statistic periodogram
@@ -126,7 +136,7 @@ if strcmp(Mode,'MultiChannel')
     DetectionResults.Frequency = NaN;
     DetectionResults.Amplitude = NaN*ones(1,length(DataChannel));
     DetectionResults.SNR = NaN*ones(1,length(DataChannel));
-    DetectionResults.DEF = NaN;
+    DetectionResults.DEF = NaN(NumDEFpaths,1);
     AdditionalOutput.SignalPSD = NaN*ones(LengthFreqInterest,length(DataChannel));
     AdditionalOutput.AmbientNoiseSpectrum = NaN*ones(LengthFreqInterest,length(DataChannel));
     AdditionalOutput.TestStatistic = NaN*ones(LengthFreqInterest,1);
@@ -202,8 +212,14 @@ if strcmp(Mode,'MultiChannel')
     DetectionResults.Amplitude(:,SelectedDataTypeInd) = Amplitude_est;
     DetectionResults.SNR = NaN*ones(length(Frequency_est),length(DataChannel));
     DetectionResults.SNR(:,SelectedDataTypeInd) = SNR_est;
-    if CalcDEF & ~isnan(Frequency_est)
-        DetectionResults.DEF = CalculateDEF(PMUstruct,Parameters.DEF,Frequency_est);
+    if CalcDEF
+        if ~isnan(Frequency_est)
+            DetectionResults.DEF = CalculateDEF(PMUstruct,Parameters.DEF,Frequency_est);
+        else
+            DetectionResults.DEF = NaN(NumDEFpaths,length(Frequency_est));
+        end
+    else
+        DetectionResults.DEF = NaN(NumDEFpaths,length(Frequency_est));
     end
     AdditionalOutput.SignalPSD(:,SelectedDataTypeInd) = SignalPSD;
     AdditionalOutput.AmbientNoiseSpectrum(:,SelectedDataTypeInd) = AmbientNoisePSD;
@@ -227,8 +243,14 @@ else %analyses signal for single channel mode
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).Amplitude = Amplitude_est;
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).SNR = NaN*ones(length(Frequency_est),1);
         DetectionResults(SelectedDataTypeInd(ChannelIdx)).SNR = SNR_est;
-        if CalcDEF & ~isnan(Frequency_est)
-            DetectionResults(SelectedDataTypeInd(ChannelIdx)).DEF = CalculateDEF(PMUstruct,Parameters.DEF,Frequency_est);
+        if CalcDEF
+            if ~isnan(Frequency_est)
+                DetectionResults(SelectedDataTypeInd(ChannelIdx)).DEF = CalculateDEF(PMUstruct,Parameters.DEF,Frequency_est);
+            else
+                DetectionResults(SelectedDataTypeInd(ChannelIdx)).DEF = NaN(NumDEFpaths,length(Frequency_est));
+            end
+        else
+            DetectionResults(SelectedDataTypeInd(ChannelIdx)).DEF = NaN(NumDEFpaths,length(Frequency_est));
         end
         AdditionalOutput(:,SelectedDataTypeInd(ChannelIdx)).SignalPSD = SignalPSD(:,ChannelIdx);
         AdditionalOutput(:,SelectedDataTypeInd(ChannelIdx)).AmbientNoiseSpectrum = AmbientNoisePSD(:,ChannelIdx);

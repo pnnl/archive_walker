@@ -22,7 +22,7 @@ try
     [Data, DataPMU, DataChannel, DataType, DataUnit, t, fs, TimeString, TimeDT] = ExtractData(PMU,Parameters);
 catch
     warning('Input data for the DEF calculator could not be used.');
-    DEF = NaN(NumF,length(Parameters.PathIdx));
+    DEF = NaN(length(Parameters.PathIdx),NumF);
     return
 end
 N = size(Data,1);

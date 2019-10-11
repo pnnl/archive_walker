@@ -86,6 +86,17 @@ for ThisField = AllFields
                         fprintf(fHandle,'\t\t</Channel>\n');
                     end
                 end
+                
+                % Add DEF information
+                if isfield(EventList.(ThisField{1})(idx),'DEF')
+                    for pIdx = 1:size(EventList.(ThisField{1})(idx).DEF,1)
+                        fprintf(fHandle,'\t\t<Path>\n');
+                        fprintf(fHandle,['\t\t\t<From>' EventList.(ThisField{1})(idx).PathDescription{1,pIdx} '</From>\n']);
+                        fprintf(fHandle,['\t\t\t<To>' EventList.(ThisField{1})(idx).PathDescription{2,pIdx} '</To>\n']);
+                        fprintf(fHandle,['\t\t\t<DEF>' num2str(EventList.(ThisField{1})(idx).DEF(pIdx,idx2)) '</DEF>\n']);
+                        fprintf(fHandle,'\t\t</Path>\n');
+                    end
+                end
 
                 fprintf(fHandle,'\t</Occurrence>\n');
             end

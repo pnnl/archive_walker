@@ -359,83 +359,87 @@ end
 DisableDEF = false;
 if isfield(DetectorXML,'EnergyFlow')
     if isfield(DetectorXML.EnergyFlow,'Paths')
-        Paths = DetectorXML.EnergyFlow.Paths.Path;
+        if ~isempty(DetectorXML.EnergyFlow.Paths)
+            Paths = DetectorXML.EnergyFlow.Paths.Path;
 
-        NumPaths = length(Paths);
-        % Handle special case where only one path is specified so that
-        % formatting is always consistent.
-        if NumPaths == 1
-            Paths = {Paths};
-        end
-        
-        % Iterate through the specified paths and build a signal list
-        % that matches those from other detectors
-        SigList = {};
-        PathFrom = {};
-        PathTo = {};
-        for p = 1:NumPaths
-            PathFrom{p} = Paths{p}.From;
-            PathTo{p} = Paths{p}.To;
-            for SigType = {'VM','VA','P','Q'}
-                ThisPMU = Paths{p}.(SigType{1}).PMU;
-                SigList{end+1}.Name = ThisPMU.Name;
-                SigList{end}.Channel.Name = ThisPMU.Channel.Name;
+            NumPaths = length(Paths);
+            % Handle special case where only one path is specified so that
+            % formatting is always consistent.
+            if NumPaths == 1
+                Paths = {Paths};
             end
-        end
-        DetectorXML.EnergyFlow.PMU = SigList;
-        
-        PathFor = strcat(PathFrom,PathTo);
-        PathRev = strcat(PathTo,PathFrom);
-        PathSign = NaN(1,length(PathFrom));
-        PathDescription = {};
-        PathIdx = {};
-        ToEval = 1:NumPaths;
-        while(~isempty(ToEval))
-            p = ToEval(1);
-            if length(ToEval) > 1
-                ToEval = ToEval(2:end);
-            else
-                ToEval = [];
+
+            % Iterate through the specified paths and build a signal list
+            % that matches those from other detectors
+            SigList = {};
+            PathFrom = {};
+            PathTo = {};
+            for p = 1:NumPaths
+                PathFrom{p} = Paths{p}.From;
+                PathTo{p} = Paths{p}.To;
+                for SigType = {'VM','VA','P','Q'}
+                    ThisPMU = Paths{p}.(SigType{1}).PMU;
+                    SigList{end+1}.Name = ThisPMU.Name;
+                    SigList{end}.Channel.Name = ThisPMU.Channel.Name;
+                end
             end
-            
-            PathDescription = [PathDescription {PathFrom{p}; PathTo{p}}];
-            PathIdx{end+1} = p;
-            
-            % Find instances where later paths are the same 
-            pMatch = find(strcmp(PathFor{p},PathFor(ToEval)));
-            PathSign([p ToEval(pMatch)]) = 1;
-            PathIdx{end} = [PathIdx{end} ToEval(pMatch)];
-            ToEval(pMatch) = [];
-            % Find instances where later reverse paths are the same
-            pMatch = find(strcmp(PathFor{p},PathRev(ToEval)));
-            PathSign(ToEval(pMatch)) = -1;
-            PathIdx{end} = [PathIdx{end} ToEval(pMatch)];
-            ToEval(pMatch) = [];
-        end
-        
-        DetectorXML.EnergyFlow.PathSign = PathSign;
-        DetectorXML.EnergyFlow.PathDescription = PathDescription;
-        DetectorXML.EnergyFlow.PathIdx = PathIdx;
-        
-        % Add the signal list to the Periodogram, Spectral Coherence, and Mode Meter detectors
-        for Det = {'Periodogram','SpectralCoherence','ModeMeter'}
-            if isfield(DetectorXML,Det{1})
-                if length(DetectorXML.(Det{1})) == 1
-                    DetectorXML.(Det{1}).DEF.PMU = SigList;
-                    DetectorXML.(Det{1}).DEF.params = DetectorXML.EnergyFlow.Parameters;
-                    DetectorXML.(Det{1}).DEF.PathSign = DetectorXML.EnergyFlow.PathSign;
-                    DetectorXML.(Det{1}).DEF.PathDescription = DetectorXML.EnergyFlow.PathDescription;
-                    DetectorXML.(Det{1}).DEF.PathIdx = DetectorXML.EnergyFlow.PathIdx;
+            DetectorXML.EnergyFlow.PMU = SigList;
+
+            PathFor = strcat(PathFrom,PathTo);
+            PathRev = strcat(PathTo,PathFrom);
+            PathSign = NaN(1,length(PathFrom));
+            PathDescription = {};
+            PathIdx = {};
+            ToEval = 1:NumPaths;
+            while(~isempty(ToEval))
+                p = ToEval(1);
+                if length(ToEval) > 1
+                    ToEval = ToEval(2:end);
                 else
-                    for DetIdx = 1:length(DetectorXML.(Det{1}))
-                        DetectorXML.(Det{1}){DetIdx}.DEF.PMU = SigList;
-                        DetectorXML.(Det{1}){DetIdx}.DEF.params = DetectorXML.EnergyFlow.Parameters;
-                        DetectorXML.(Det{1}){DetIdx}.DEF.PathSign = DetectorXML.EnergyFlow.PathSign;
-                        DetectorXML.(Det{1}){DetIdx}.DEF.PathDescription = DetectorXML.EnergyFlow.PathDescription;
-                        DetectorXML.(Det{1}){DetIdx}.DEF.PathIdx = DetectorXML.EnergyFlow.PathIdx;
+                    ToEval = [];
+                end
+
+                PathDescription = [PathDescription {PathFrom{p}; PathTo{p}}];
+                PathIdx{end+1} = p;
+
+                % Find instances where later paths are the same 
+                pMatch = find(strcmp(PathFor{p},PathFor(ToEval)));
+                PathSign([p ToEval(pMatch)]) = 1;
+                PathIdx{end} = [PathIdx{end} ToEval(pMatch)];
+                ToEval(pMatch) = [];
+                % Find instances where later reverse paths are the same
+                pMatch = find(strcmp(PathFor{p},PathRev(ToEval)));
+                PathSign(ToEval(pMatch)) = -1;
+                PathIdx{end} = [PathIdx{end} ToEval(pMatch)];
+                ToEval(pMatch) = [];
+            end
+
+            DetectorXML.EnergyFlow.PathSign = PathSign;
+            DetectorXML.EnergyFlow.PathDescription = PathDescription;
+            DetectorXML.EnergyFlow.PathIdx = PathIdx;
+
+            % Add the signal list to the Periodogram, Spectral Coherence, and Mode Meter detectors
+            for Det = {'Periodogram','SpectralCoherence','ModeMeter'}
+                if isfield(DetectorXML,Det{1})
+                    if length(DetectorXML.(Det{1})) == 1
+                        DetectorXML.(Det{1}).DEF.PMU = SigList;
+                        DetectorXML.(Det{1}).DEF.params = DetectorXML.EnergyFlow.Parameters;
+                        DetectorXML.(Det{1}).DEF.PathSign = DetectorXML.EnergyFlow.PathSign;
+                        DetectorXML.(Det{1}).DEF.PathDescription = DetectorXML.EnergyFlow.PathDescription;
+                        DetectorXML.(Det{1}).DEF.PathIdx = DetectorXML.EnergyFlow.PathIdx;
+                    else
+                        for DetIdx = 1:length(DetectorXML.(Det{1}))
+                            DetectorXML.(Det{1}){DetIdx}.DEF.PMU = SigList;
+                            DetectorXML.(Det{1}){DetIdx}.DEF.params = DetectorXML.EnergyFlow.Parameters;
+                            DetectorXML.(Det{1}){DetIdx}.DEF.PathSign = DetectorXML.EnergyFlow.PathSign;
+                            DetectorXML.(Det{1}){DetIdx}.DEF.PathDescription = DetectorXML.EnergyFlow.PathDescription;
+                            DetectorXML.(Det{1}){DetIdx}.DEF.PathIdx = DetectorXML.EnergyFlow.PathIdx;
+                        end
                     end
                 end
             end
+        else
+            DisableDEF = true;
         end
     else
         DisableDEF = true;

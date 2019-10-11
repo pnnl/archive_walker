@@ -28,9 +28,9 @@ for EventIdx = OngoingIdx
     % For each field with an entry for each occurrence:
     %   Keep all but the final occurrence in OverEventList
     %   Keep only the final occurrence in EventList
-    for FN = setdiff(fieldnames(OverEventList.(EventType)(end)),{'ID','OverallStart','OverallEnd'}).'
-        OverEventList.(EventType)(end).(FN{1}) = OverEventList.(EventType)(end).(FN{1})(1:end-1);
-        EventList.(EventType)(EventIdx).(FN{1}) = EventList.(EventType)(EventIdx).(FN{1})(end);
+    for FN = setdiff(fieldnames(OverEventList.(EventType)(end)),{'ID','OverallStart','OverallEnd','PathDescription'}).'
+        OverEventList.(EventType)(end).(FN{1}) = OverEventList.(EventType)(end).(FN{1})(:,1:end-1);
+        EventList.(EventType)(EventIdx).(FN{1}) = EventList.(EventType)(EventIdx).(FN{1})(:,end);
     end
 end
 
