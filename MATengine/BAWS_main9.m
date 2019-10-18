@@ -126,7 +126,6 @@ if (nargin == 5) && (~Unpause)
         NumProcessingStages,DataInfo,FileInfo,...
         ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags,...
         AutoEventExport] = InitializeBAWS(ConfigAll,EventPath);
-%     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],WindAppXML);
     InitialCondosFilter = [];
     InitialCondosMultiRate = [];
     FinalAngles = [];
@@ -748,8 +747,6 @@ while(~min(done))
             end
         end
         
-%         PMU = GetOutputSignalsRev(PMU,ConfigSignalSelection);
-        
         % *********
         % Detection
         % *********
@@ -794,6 +791,11 @@ while(~min(done))
         % ResultUpdateInterval seconds at each step.
 
         if ~isempty(SecondsToConcat) && ~isnan(SecondsToConcat)
+            % Go through the current PMU structure and keep only the
+            % signals that are needed for the block detectors. This
+            % prevents concatenating a bunch of signals that aren't needed
+            PMU = ReduceSignals(PMU,DetectorXML,BlockDetectors);
+            
             % PMUconcat holds enough data in memory to apply the FO
             % detection algorithms (SecondsToConcat).
             % Add the current PMU to PMUconcat.
