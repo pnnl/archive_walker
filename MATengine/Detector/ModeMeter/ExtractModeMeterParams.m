@@ -89,28 +89,32 @@ if isfield(Parameters,'Mode')
                 MethodName{1}{MethodIdx} = ExtrctParamXML{MethodIdx}.Name;
                 switch ExtrctParamXML{MethodIdx}.Name
                     case 'LS_ARMA'
+                        FunctionName = 'LS_ARMA';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha);
+                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName);
                     case 'YW_ARMA'
+                        FunctionName = 'YW_ARMA';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L);
+                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L,'FunctionName',FunctionName);
                     case 'YW_ARMApS'
+                        FunctionName = 'YW_ARMA';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         LFO = str2double(ExtrctParamXML{MethodIdx}.LFO);
                         FOdetectorParaFlag =1;
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L,'LFO',LFO);
+                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L,'LFO',LFO,'FunctionName',FunctionName);
                     case 'LS_ARMApS'
+                        FunctionName = 'LS_ARMA';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
                         FOdetectorParaFlag =1;
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha);
+                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName);
                     otherwise
                         error([ExtrctParamXML{MethodIdx}.AlgName ' is not a valid mode-meter algorithm. Select LS-ARMA, YW-ARMA, LS-ARMA+S or YW-ARMA+S.']);
                 end

@@ -13,9 +13,7 @@
 
 function [DetectionResults, AdditionalOutput] = ModeMeterDetector(PMUstruct,Parameters,PastAdditionalOutput)
 
-%#function LS_ARMA
 %#function LS_ARMApS
-%#function YW_ARMA
 %#function YW_ARMApS
 
 NumMode = length(Parameters.Mode); % gives number of modes of interest
@@ -144,7 +142,7 @@ for ModeIdx = 1:NumMode
             
             for MethodIdx = 1:NumMethods(ModeIdx)
                 [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
-                    = eval([ExtractedParameters.MethodName{MethodIdx}...
+                    = eval([ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}.FunctionName...
                     '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
                 DampingRatio = -real(Mode)/abs(Mode);
                 Frequency = abs(imag(Mode))/2/pi;
