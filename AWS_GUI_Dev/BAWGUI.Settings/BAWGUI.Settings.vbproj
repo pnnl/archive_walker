@@ -92,9 +92,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataReaderBase">
-      <HintPath>..\libs\DataReaderBase.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -689,6 +686,10 @@
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DissipationEnergyFlow\DissipationEnergyFlow.csproj">
+      <Project>{548b4b31-7a6a-416e-9b4f-345bd69b1c8f}</Project>
+      <Name>DissipationEnergyFlow</Name>
     </ProjectReference>
     <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
       <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>

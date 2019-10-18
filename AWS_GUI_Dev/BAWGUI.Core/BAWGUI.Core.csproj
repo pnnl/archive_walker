@@ -55,6 +55,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -96,6 +97,7 @@
     <Compile Include="Models\AWRun.cs" />
     <Compile Include="Models\EnumDefinitions.cs" />
     <Compile Include="Models\IDetector.cs" />
+    <Compile Include="Models\InputFileInfoModel.cs" />
     <Compile Include="Models\InspectionAnalysisParameters.cs" />
     <Compile Include="Models\ISignal.cs" />
     <Compile Include="Models\Legend.cs" />

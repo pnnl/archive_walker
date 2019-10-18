@@ -36,6 +36,18 @@ namespace ModeMeter.Models
                 mmDetector.ResultPath = path.Value;
             }
             mmDetector.ModeMeterName = mmDetector.ResultPath.Substring(mmDetector.ResultPath.LastIndexOf("\\") + 1);
+            var ef = mm.Element("CalcDEF");
+            if (ef != null)
+            {
+                if (ef.Value.ToUpper() == "TRUE")
+                {
+                    mmDetector.CalcDEF = true;
+                }
+                else
+                {
+                    mmDetector.CalcDEF = false;
+                }
+            }
             var baseliningSigs = mm.Element("BaseliningSignals");
             if (baseliningSigs != null)
             {
@@ -211,6 +223,18 @@ namespace ModeMeter.Models
             if (par != null)
             {
                 parameters.FrequencyTolerance = par.Value;
+            }
+            par = foDetectorParams.Element("CalcDEF");
+            if (par != null)
+            {
+                if (par.Value.ToUpper() == "TRUE")
+                {
+                    parameters.CalcDEF = true;
+                }
+                else
+                {
+                    parameters.CalcDEF = false;
+                }
             }
             return parameters;
         }

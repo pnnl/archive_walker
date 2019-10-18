@@ -143,10 +143,17 @@ namespace MapService.ViewModels
                     }
                     if (points.Count > 2)
                     {
+                        //to plot them straight
                         var newRoute = new GMapRoute(newLine);
                         newRoute.Shape = new Path() { Stroke = color, StrokeThickness = 4, ToolTip = signal.Signal.SignalName };
                         newRoute.Tag = signal.Signal.SignalName;
                         Gmap.Markers.Add(newRoute);
+
+                        //to plot them as curves
+                        //for (int i = 0; i < points.Count - 1; i++)
+                        //{
+                        //    pointPairs.Add(new PointsPair(points[i], points[i+1], color, signal.Signal.SignalName));
+                        //}
                     }
                     else if (points.Count == 2)
                     {

@@ -68,7 +68,7 @@ namespace ModeMeter.ViewModels
         }
         public override string Name
         {
-            get { return "Mode Meter Tool"; }
+            get { return _model.Name; }
         }
         public string ModeMeterName
         {
@@ -76,6 +76,15 @@ namespace ModeMeter.ViewModels
             set
             {
                 _model.ModeMeterName = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool CalcDEF
+        {
+            get { return _model.CalcDEF; }
+            set
+            {
+                _model.CalcDEF = value;
                 OnPropertyChanged();
             }
         }

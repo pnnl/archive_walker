@@ -138,7 +138,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
             <!--<ContentControl Grid.Column="1" Content="{Binding}">
                 <ContentControl.Style>
                     <Style TargetType="ContentControl">

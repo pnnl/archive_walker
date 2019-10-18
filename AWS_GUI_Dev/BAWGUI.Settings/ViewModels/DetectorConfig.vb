@@ -8,6 +8,8 @@ Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
 Imports Microsoft.WindowsAPICodePack.Dialogs
+Imports DissipationEnergyFlow
+Imports DissipationEnergyFlow.ViewModels
 
 Namespace ViewModels
     Public Class DetectorConfig
@@ -23,7 +25,8 @@ Namespace ViewModels
                                                           "Ringdown Detector",
                                                           "Out-of-Range Detector",
                                                           "Wind Ramp Detector",'"Voltage Stability",
-                                                          "Mode Meter Tool"}
+                                                          "Mode Meter Tool",
+                                                          "Dissipation Energy Flow Detector"}
             _alarmingDetectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}
@@ -53,6 +56,8 @@ Namespace ViewModels
                         ResultUpdateIntervalVisibility = Visibility.Visible
                     Case "Data Writer"
                         newDataWriterDetectorList.Add(New DataWriterDetectorViewModel(detector, signalsMgr))
+                    Case "Dissipation Energy Flow Detector"
+                        newDetectorList.Add(New DEFDetectorViewModel(detector, signalsMgr))
                     Case Else
                         Throw New Exception("Unknown element found in DetectorConfig in config file.")
                 End Select
@@ -296,7 +301,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Periodogram Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _mode As DetectorModeType
@@ -411,6 +416,15 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        Public Property CalcDEF As Boolean
+            Get
+                Return _model.CalcDEF
+            End Get
+            Set(ByVal value As Boolean)
+                _model.CalcDEF = value
+                OnPropertyChanged()
+            End Set
+        End Property
     End Class
 
     Public Class SpectralCoherenceDetector
@@ -464,7 +478,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Spectral Coherence Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _mode As DetectorModeType
@@ -598,6 +612,15 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        Public Property CalcDEF As Boolean
+            Get
+                Return _model.CalcDEF
+            End Get
+            Set(ByVal value As Boolean)
+                _model.CalcDEF = value
+                OnPropertyChanged()
+            End Set
+        End Property
 
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return InputChannels.Count > 0
@@ -647,7 +670,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Ringdown Detector"
+                Return _model.Name
             End Get
         End Property
         Private _rmsLength As String
@@ -698,63 +721,63 @@ Namespace ViewModels
     ''' <summary>
     ''' This class is not used anymore, as the outofrangeFrequencydetector is kept as the more general one.
     ''' </summary>
-    Public Class OutOfRangeGeneralDetector
-        Inherits DetectorBase
-        Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
-            IsExpanded = False
-        End Sub
-        Public Overrides ReadOnly Property Name As String
-            Get
-                Return "Out-Of-Range Detector"
-            End Get
-        End Property
-        Private _max As Double
-        Public Property Max As Double
-            Get
-                Return _max
-            End Get
-            Set(ByVal value As Double)
-                _max = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _min As Double
-        Public Property Min As Double
-            Get
-                Return _min
-            End Get
-            Set(ByVal value As Double)
-                _min = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _duration As String
-        Public Property Duration As String
-            Get
-                Return _duration
-            End Get
-            Set(ByVal value As String)
-                _duration = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _analysisWindow As String
-        Public Property AnalysisWindow As String
-            Get
-                Return _analysisWindow
-            End Get
-            Set(ByVal value As String)
-                _analysisWindow = value
-                OnPropertyChanged()
-            End Set
-        End Property
+    'Public Class OutOfRangeGeneralDetector
+    '    Inherits DetectorBase
+    '    Public Sub New()
+    '        InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+    '        ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+    '        IsExpanded = False
+    '    End Sub
+    '    Public Overrides ReadOnly Property Name As String
+    '        Get
+    '            Return "Out-Of-Range Detector"
+    '        End Get
+    '    End Property
+    '    Private _max As Double
+    '    Public Property Max As Double
+    '        Get
+    '            Return _max
+    '        End Get
+    '        Set(ByVal value As Double)
+    '            _max = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
+    '    Private _min As Double
+    '    Public Property Min As Double
+    '        Get
+    '            Return _min
+    '        End Get
+    '        Set(ByVal value As Double)
+    '            _min = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
+    '    Private _duration As String
+    '    Public Property Duration As String
+    '        Get
+    '            Return _duration
+    '        End Get
+    '        Set(ByVal value As String)
+    '            _duration = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
+    '    Private _analysisWindow As String
+    '    Public Property AnalysisWindow As String
+    '        Get
+    '            Return _analysisWindow
+    '        End Get
+    '        Set(ByVal value As String)
+    '            _analysisWindow = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
 
-        Public Overrides Function CheckStepIsComplete() As Boolean
-            Return InputChannels.Count > 0
-        End Function
-    End Class
+    '    Public Overrides Function CheckStepIsComplete() As Boolean
+    '        Return InputChannels.Count > 0
+    '    End Function
+    'End Class
     ''' <summary>
     ''' This detector is considered the more general one and used in the GUI as the out-of-range general detector.
     ''' </summary>
@@ -799,7 +822,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Out-Of-Range Detector"
+                Return _model.Name
             End Get
         End Property
         Private _type As OutOfRangeFrequencyDetectorType
@@ -977,7 +1000,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Wind Ramp Detector"
+                Return _model.Name
             End Get
         End Property
         ''' <summary>
@@ -1131,7 +1154,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Data Writer"
+                Return _model.Name
             End Get
         End Property
         Private _savePath As String
@@ -1344,7 +1367,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Spectral Coherence Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _coherenceAlarm As String
@@ -1425,7 +1448,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Periodogram Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _snrAlarm As String
@@ -1506,7 +1529,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Ringdown Detector"
+                Return _model.Name
             End Get
         End Property
         Private _maxDuration As String

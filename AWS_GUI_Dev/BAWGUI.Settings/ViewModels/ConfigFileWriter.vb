@@ -510,6 +510,7 @@ Namespace ViewModels
                         If Not String.IsNullOrEmpty(dt.FrequencyTolerance) Then
                             element.Add(<FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>)
                         End If
+                        element.Add(<CalcDEF><%= dt.CalcDEF.ToString.ToUpper %></CalcDEF>)
                     Case GetType(RingdownDetector)
                         Dim dt = DirectCast(detector, RingdownDetector)
                         'element = <Ringdown>
@@ -590,6 +591,7 @@ Namespace ViewModels
                         If Not String.IsNullOrEmpty(dt.FrequencyTolerance) Then
                             element.Add(<FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>)
                         End If
+                        element.Add(<CalcDEF><%= dt.CalcDEF.ToString.ToUpper %></CalcDEF>)
 
                         '    <Mode><%= dt.Mode.ToString %></Mode>
                         '    <AnalysisLength><%= dt.AnalysisLength %></AnalysisLength>

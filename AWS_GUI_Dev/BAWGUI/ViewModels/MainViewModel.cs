@@ -1,21 +1,18 @@
 ﻿using System;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Results.ViewModels;
-using BAWGUI.Settings;
 using BAWGUI.Settings.ViewModels;
 using System.Windows.Input;
 using System.IO;
-using BAWGUI.Core;
 using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using BAWGUI.ReadConfigXml;
 using VoltageStability.Models;
 using VoltageStability.ViewModels;
+using BAWGUI.CoordinateMapping.ViewModels;
 using ModeMeter.Models;
 using ModeMeter.ViewModels;
-using BAWGUI.CoordinateMapping.ViewModels;
 using BAWGUI.CoordinateMapping.Models;
 
 namespace BAWGUI.ViewModels
@@ -39,7 +36,8 @@ namespace BAWGUI.ViewModels
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
             InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
             InspectSignalByTimeRange = new RelayCommand(_inpsectAllSignalsByTimeRange);
-            SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
+            SiteMappingVM = new SiteMappingViewModel();
+            SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
             _projectControlVM.ResultsStoragePathChanged += _projectControlVM_ResultsStoragePathChanged;
         }
 
@@ -312,7 +310,7 @@ namespace BAWGUI.ViewModels
                         }
                         var signalSiteMappingConfig = new SignalMappingPlotConfigReader(e.SelectedRun.Model.ConfigFilePath);
                         _signalMgr.DistinctMappingSignal();
-                        SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, signalSiteMappingConfig.GetSignalCoordsMappingModel());
+                        SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, signalSiteMappingConfig.GetSignalCoordsMappingModel());
                     }
                     catch (Exception ex)
                     {
@@ -332,7 +330,8 @@ namespace BAWGUI.ViewModels
             }
         }
         public CoordinatesTableViewModel CoordsTableVM { get; set; }
-        public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
+        public SiteMappingViewModel SiteMappingVM { get; set; }
+        //public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
         //private void _checkMMDirsStatus(AWRunViewModel task, List<SmallSignalStabilityTool> modeMeters)
         //{
         //    var eventPath = task.Model.EventPath;

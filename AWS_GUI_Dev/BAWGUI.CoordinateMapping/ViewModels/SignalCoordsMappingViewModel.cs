@@ -20,7 +20,11 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         //private SignalManager _signalMgr;
         public SignalManager SignalMgr { get; set; }
         private List<SignalCoordsMappingModel> _models;
-        public SignalCoordsMappingViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords, SignalManager signalMgr)
+
+        public SignalCoordsMappingViewModel()
+        {
+        }
+        public SignalCoordsMappingViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords, SignalManager signalMgr) : this()
         {
             this.AvailableSites = siteCoords;
             SignalMgr = signalMgr;
@@ -94,6 +98,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 MessageBox.Show(siteNotFoundMessage + "\n" + siteRenamedMessage, "Warnings", MessageBoxButtons.OK);
             }
         }
+        
         private SiteCoordinatesViewModel _findSite(string Lat, string Lng)
         {
             foreach (var site in AvailableSites)

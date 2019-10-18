@@ -75,6 +75,13 @@
       <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DissipationEnergyFlow\DissipationEnergyFlow.csproj">
+      <Project>{548B4B31-7A6A-416E-9B4F-345BD69B1C8F}</Project>
+      <Name>DissipationEnergyFlow</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

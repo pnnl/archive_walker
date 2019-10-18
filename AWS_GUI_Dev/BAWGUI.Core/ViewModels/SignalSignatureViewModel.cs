@@ -81,7 +81,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private string _typeAbbreviation;
+        //private string _typeAbbreviation;
         public string TypeAbbreviation
         {
             get
@@ -147,7 +147,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private int _samplingRate;
+        //private int _samplingRate;
         public int SamplingRate
         {
             get
@@ -161,7 +161,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private int _passedThroughDQFilter;
+        //private int _passedThroughDQFilter;
         public int PassedThroughDQFilter
         {
             get
@@ -175,7 +175,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private int _passedThroughProcessor;
+        //private int _passedThroughProcessor;
         public int PassedThroughProcessor
         {
             get
@@ -222,19 +222,19 @@ namespace BAWGUI.Core
                 return false;
             }
             return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
-            if (x is null && y is null)
-            {
-                return true;
-            }
-            else if (x is null ^ y is null)
-            {
-                return false;
-            }
-            else
-            {
+            //if (x is null && y is null)
+            //{
+            //    return true;
+            //}
+            //else if (x is null ^ y is null)
+            //{
+            //    return false;
+            //}
+            //else
+            //{
 
-                return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
-            }
+            //    return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
+            //}
         }
         public static bool operator !=(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
@@ -244,17 +244,17 @@ namespace BAWGUI.Core
             //    return y != null;
             //}
             //return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
-            if (x is null && y is null)
-            {
-                return false;
-            }else if(x is null ^ y is null)
-            {
-                return true;
-            }
-            else
-            {
-                return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
-            }
+            //if (x is null && y is null)
+            //{
+            //    return false;
+            //}else if(x is null ^ y is null)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
+            //}
         }
 
         public bool IsSignalInformationComplete()
@@ -262,7 +262,7 @@ namespace BAWGUI.Core
             return !string.IsNullOrEmpty(PMUName) && !string.IsNullOrEmpty(SignalName) && !string.IsNullOrEmpty(TypeAbbreviation) && !string.IsNullOrEmpty(Unit) && (SamplingRate > 0);
         }
 
-        private string _oldSignalName;
+        //private string _oldSignalName;
         public string OldSignalName
         {
             get
@@ -276,7 +276,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private string _oldUnit;
+        //private string _oldUnit;
         public string OldUnit
         {
             get
@@ -290,7 +290,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private string _oldTypeAbbreviation;
+        //private string _oldTypeAbbreviation;
         public string OldTypeAbbreviation
         {
             get
@@ -303,7 +303,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private List<double> _data;
+        //private List<double> _data;
         public List<double> Data
         {
             get { return _model.Data; }
@@ -313,7 +313,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private List<double> _timeStampNumber;
+        //private List<double> _timeStampNumber;
         public List<double> TimeStampNumber
         {
             get { return _model.TimeStampNumber; }
@@ -323,7 +323,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private List<double> _matlabTimeStampNumber;
+        //private List<double> _matlabTimeStampNumber;
         public List<double> MATLABTimeStampNumber
         {
             get { return _model.MATLABTimeStampNumber; }

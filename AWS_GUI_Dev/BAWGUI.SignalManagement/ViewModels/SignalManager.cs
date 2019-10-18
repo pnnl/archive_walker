@@ -1,23 +1,18 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.Core.ViewModels;
-using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.MATLABRunResults.Models;
-using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using JSISCSVWriter;
 using OxyPlot;
 using OxyPlot.Axes;
-using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 

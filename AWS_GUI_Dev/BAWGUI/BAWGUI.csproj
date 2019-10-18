@@ -267,7 +267,7 @@
       <Name>BAWGUI.RunMATLAB</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Settings\BAWGUI.Settings.vbproj">
-      <Project>{0edc5fef-a2e3-4d51-8079-fc5499c08ebc}</Project>
+      <Project>{0EDC5FEF-A2E3-4D51-8079-FC5499C08EBC}</Project>
       <Name>BAWGUI.Settings</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">

@@ -333,7 +333,7 @@ namespace BAWGUI.ReadConfigXml
         public string StopCutoff { get; set; }
         public bool RemoveAve { get; set; }
         public string WindowLength { get; set; }
-        public new string Name
+        public string Name
         {
             get { return "Filter"; }
         }
