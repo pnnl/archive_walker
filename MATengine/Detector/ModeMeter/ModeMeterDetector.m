@@ -39,7 +39,7 @@ try
     end
 catch
     warning('Input data for the mode-meter could not be used.');
-    DetectionResults = struct('FOfreq',cell(1,length(Parameters.Mode)),'LowDampedMode',[],'ChannelName',[],'MethodName',[]);%'MpathRemainder',[],'Name',Parameters.Name
+    DetectionResults = struct([]);
     AdditionalOutput = struct('ModeTrack',[],'OperatingValues',[], 'OperatingNames',[], 'OperatingUnits',[],...
         'Data',[],'DataPMU',[],'DataChannel',[],'DataType',[],'DataUnit',[],'TimeString',[],...
         'ModeOriginal',[],'ModeHistory',[],'ModeFreqHistory',[],'ModeDRHistory',[],'MethodName',[],'ChannelName',[]);
@@ -139,12 +139,15 @@ for ModeIdx = 1:NumMode
             end
         else
             % Forced oscillation detection
-            if ~isempty(ExtractedParameters.FOdetectorPara)
-                % Run FO detection algorithm
-                DetectionResults(ModeIdx).FOfreq{ChanIdx} = ...
-                    FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx});
+            if isempty(ExtractedParameters.FOdetectorPara)
+                % Forced oscillation detection was not desired
+                FOfreq = [];
+                TimeLoc = [];
             else
-                DetectionResults(ModeIdx).FOfreq{ChanIdx} = [];
+                % Run FO detection algorithm
+                FOfreq = FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx});
+                
+                TimeLoc = RunTimeLocalization(Data{ModeIdx}(:,ChanIdx),FOfreq,Parameters,fs{ModeIdx});
             end
             
             % High-energy event detection
@@ -161,7 +164,7 @@ for ModeIdx = 1:NumMode
             for MethodIdx = 1:NumMethods(ModeIdx)
                 [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
                     = eval([ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}.FunctionName...
-                    '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
+                    '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},FOfreq,TimeLoc)']);
                 DampingRatio = -real(Mode)/abs(Mode);
                 Frequency = abs(imag(Mode))/2/pi;
                 if isnan(DampingRatio)

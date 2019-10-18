@@ -1,6 +1,12 @@
 function TimeLoc = RunTimeLocalization(Data,Freq,Parameters,fs)
 
 NumF = length(Freq);
+
+if NumF == 0
+    TimeLoc = [];
+    return
+end
+
 N = size(Data,1);
 
 Mrat = Freq/fs;

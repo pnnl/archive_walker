@@ -31,7 +31,7 @@
 %         in stage 1 and then updated in stage 2. 
 % yhat = reconstructed version of input signal y based on identified model
 
-function [ModeEst, Mtrack] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq)
+function [ModeEst, Mtrack] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
@@ -39,6 +39,7 @@ na = Parameters{1}.na;
 nb = Parameters{1}.nb;
 n_alpha = Parameters{1}.n_alpha;
 W = length(y);  % Estimation segment length
+TimeLoc(isnan(FOfreq),:) = [];
 FOfreq(isnan(FOfreq)) = [];
 P = length(FOfreq);
 %% Stage 1
@@ -52,9 +53,18 @@ Y = -toeplitz(y(L:W-1),y(L:-1:1));   % Data matrix (see eq. (2.50))
 % Note that k_i has been replaced with i. This will impact the phase
 % estimates!
 S = zeros(W-L,2*P);
+eps = TimeLoc(:,1);
+eta = TimeLoc(:,2);
 for p = 1:P
-    S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W));
-    S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W));
+    % The psi term is used to incorporate the starting and ending samples
+    % of each sinusoid. Each psi is the corresponding column of Psi in
+    % eq. (3.20)
+    psi = zeros(1,W);
+    psi(eps(p):eta(p)) = 1;
+    psi = psi(L+1:W);
+    
+    S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
+    S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
 end
 
 Z = [Y S];
@@ -84,8 +94,15 @@ if nb > 0
     % estimates!
     S = zeros(W-L,2*P);
     for p = 1:P
-        S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W));
-        S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W));
+        % The psi term is used to incorporate the starting and ending samples
+        % of each sinusoid. Each psi is the corresponding column of Psi in
+        % eq. (3.20)
+        psi = zeros(1,W);
+        psi(eps(p):eta(p)) = 1;
+        psi = psi(L+1:W);
+        
+        S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
+        S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
     end
     
     Z = [Y E S];

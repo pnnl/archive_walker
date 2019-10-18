@@ -28,14 +28,16 @@
 % rhat = column one is estimated autocorrelation of y. Column two is 
 %        reconstructed autocorrelation of y based on identified model
 
-function [ModeEst, Mtrack] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq)
+function [ModeEst, Mtrack] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
 na = Parameters{1}.na;
 nb = Parameters{1}.nb;
 
+TimeLoc(isnan(FOfreq),:) = [];
 FOfreq(isnan(FOfreq)) = [];
+
 if isempty(FOfreq)
     L = Parameters{1}.L;
 else
@@ -54,10 +56,14 @@ rbar = r(nb+1+IdxAdj:nb+L+IdxAdj);  % "data" vector (see eq. (3.58))
 
 R = toeplitz(r(nb+IdxAdj:nb+L-1+IdxAdj),r(nb+IdxAdj:-1:nb-na+1+IdxAdj));    % ACF matrix (see eq. (3.59))
 
+m = diff(TimeLoc,1,2) + 1;  % Durations of each sinusoid in FO
 SM = zeros(L,2*P);  % S matrix (see eq. (3.60)) .* M matrix (see eq. (3.61))
 for p = 1:P
-    SM(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(nb+1:nb+L)');
-    SM(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(nb+1:nb+L)');
+    Mcol = (m(p)-nb-1:-1:m(p)-nb-L)'; % Corresponding column of M matrix
+    Mcol(Mcol < 0) = 0;         % If lag value large enough, sinusoidal portion dies out (see eq. (3.43))
+    
+    SM(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(nb+1:nb+L)').*Mcol;
+    SM(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(nb+1:nb+L)').*Mcol;
 end
 
 theta = pinv([-R SM])*rbar;

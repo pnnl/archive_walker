@@ -77,13 +77,8 @@ for DetectorType = DetectorTypes
                 case 'Thevenin'
                     FieldName = ['Thevenin_' num2str(DetectorIndex)];
                     FunctionName = 'UpdateTheveninEvents';
-                case 'ModeMeter'
-                    continue;
-%                     FieldName = 'ModeMeter';
-%                     FunctionName = 'UpdateModeMeterEvents';
-%                     AlarmParams.ModeMeter{1} = [];
                 otherwise
-                    % DataWriter, for example
+                    % DataWriter and ModeMeter, for example
                     continue;
             end
             

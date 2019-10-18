@@ -29,7 +29,5 @@ for EventType = fieldnames(EventList).'
             EventList = UpdateWindAppOverEvents(EventList,EventPath,EventType);
         case 'Thevenin'
             EventList = UpdateTheveninOverEvents(EventList,EventPath,DetectorXML,EventType,DetectorIndex,TimeStamp);
-        case 'Modemeter'
-            EventList = UpdateModeMeterOverEvents(EventList,EventPath,DetectorXML,EventType,DetectorIndex,TimeStamp,AdditionalOutput);
     end
 end

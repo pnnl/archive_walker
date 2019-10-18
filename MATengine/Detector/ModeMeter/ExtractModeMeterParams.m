@@ -30,7 +30,7 @@ if isfield(Parameters,'Mode')
             % Use specified value
             AnalysisLength = str2double(TempXML.AnalysisLength)*fs{ModeIdx};
         else
-            % Use default value of 10 minutes
+            % Use default value of 20 minutes
             AnalysisLength = 20*60*fs{ModeIdx};
         end
         if isfield(TempXML,'DampRatioThreshold')
@@ -119,156 +119,31 @@ if isfield(Parameters,'Mode')
                         error([ExtrctParamXML{MethodIdx}.AlgName ' is not a valid mode-meter algorithm. Select LS-ARMA, YW-ARMA, LS-ARMA+S or YW-ARMA+S.']);
                 end
             end
-            %FO detection parameters
+            
             if FOdetectorParaFlag ==1 && isfield(TempXML,'FOdetectorParam')
-                FOParamExtrXML = TempXML.FOdetectorParam;
-                FOdetector = struct('WindowType',[], 'FrequencyInterval',[],'ZeroPadding',[],...
-                    'WindowLength',[],'WindowOverlap',[],'MedianFilterFrequencyWidth',[],...
-                    'FrequencyTolerance',[],'MedianFilterOrder',[],'Pfa',[],'FrequencyMin',[],'FrequencyMax',[]);
-                FOdetector.FrequencyMin = 0;
-                FOdetector.FrequencyMax = fs{ModeIdx}/2;
-                if isfield(FOParamExtrXML,'WindowType')
-                    % Use specified window
-                    FOdetector.WindowType = FOParamExtrXML.WindowType;
-                else
-                    % Use default window
-                    FOdetector.WindowType = 'hann';
-                end
+                % Use the same parameter extractor that the main
+                % periodogram detector uses
+                % Set te analysis length for the detector equal to the
+                % length of the mode meter analysis window
+                TempXML.FOdetectorParam.AnalysisLength = num2str(round(AnalysisLength/fs{ModeIdx}));
+                FOdetector = ExtractFOdetectionParamsPer(TempXML.FOdetectorParam,fs{ModeIdx});
                 
-                % Zero padded length of the test statistic periodogram, Daniell-Welch
-                % periodogram, and GMSC. If omitted, no zero padding is implemented.
-                if isfield(FOParamExtrXML,'FrequencyInterval')
-                    % Use specified zero padding
-                    FOdetector.FrequencyInterval = str2double(FOParamExtrXML.FrequencyInterval);
-                    FOdetector.ZeroPadding = round(fs{ModeIdx}/FOParamExtrXML.FrequencyInterval);
+                if isfield(TempXML,'FOtimeLocParam')
+                    % Retrieve time localization parameters
+                    TimeLocParams = ExtractFOtimeLocParameters(TempXML.FOtimeLocParam,fs{ModeIdx});
                 else
-                    % Use default zero padding (none for the test statistic periodogram)
-                    FOdetector.ZeroPadding = AnalysisLength;
-                    FOdetector.FrequencyInterval = fs{ModeIdx}/FOdetector.ZeroPadding;
-                end
-                
-                % Length of the sections for the Daniell-Welch periodogram and GMSC. If
-                % omitted, default is 1/3 of K (AnalyisLength).
-                if isfield(FOParamExtrXML,'WindowLength')
-                    % Use specified window length
-                    FOdetector.WindowLength = str2double(FOParamExtrXML.WindowLength)*fs{ModeIdx};
-                else
-                    % Use default window length
-                    FOdetector.WindowLength = floor(AnalysisLength/3);
-                end
-                
-                % Amount of overlap between sections for the Daniell-Welch periodogram and
-                % GMSC. If omitted, default is half of WindowLength
-                if isfield(FOParamExtrXML,'WindowOverlap')
-                    % Use specified window overlap
-                    FOdetector.WindowOverlap = str2double(FOParamExtrXML.WindowOverlap)*fs{ModeIdx};
-                else
-                    % Use default window overlap
-                    FOdetector.WindowOverlap = floor(FOdetector.WindowLength/2);
-                end
-                
-                % Order for the median filter used in the Daniell-Welch periodogram. If
-                % omitted, the default is the smallest odd integer greater than or equal to
-                % three times the main lobe width of the applied window. If an even number,
-                % a number less than 3, or a non-integer is specified, the smallest odd
-                % integer greater than or equal to 3 and the specified value will be used.
-                if isfield(FOParamExtrXML,'MedianFilterFrequencyWidth')
-                    % Use specified median filter order
-                    FOdetector.MedianFilterFrequencyWidth = str2double(FOParamExtrXML.MedianFilterFrequencyWidth);
-                    
-                    % Round to ensure that an integer is selected
-                    FOdetector.MedianFilterOrder = round(FOParamExtrXML.MedianFilterFrequencyWidth/FOParamExtrXML.FrequencyInterval);
-                    
-                    % If the median filter is less than 3, set it to 3
-                    if FOdetector.MedianFilterOrder < 3
-                        FOdetector.MedianFilterOrder = 3;
-                    end
-                else
-                    % Use default median filter order.
-                    % The term inside ceil() is 3 times the main lobe width in radians per
-                    % sample times the amount of zero padding divided by 2 times pi. The
-                    % result is 3 times the main lobe width in bins. The full expressions
-                    % are included in the comments, but the expressions have been reduced
-                    % to avoid numerical errors when multiplying and dividing by pi.
-                    switch FOdetector.WindowType
-                        case 'rectwin'
-                            FOdetector.MedianFilterOrder = ceil(6*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 4*pi/WindowLength * K0/(2*pi));
-                        case 'bartlett'
-                            FOdetector.MedianFilterOrder = ceil(12*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 8*pi/WindowLength * K0/(2*pi));
-                        case 'hann'
-                            FOdetector.MedianFilterOrder = ceil(12*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 8*pi/WindowLength * K0/(2*pi));
-                        case 'hamming'
-                            FOdetector.MedianFilterOrder = ceil(12*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 8*pi/WindowLength * K0/(2*pi));
-                        case 'blackman'
-                            FOdetector.MedianFilterOrder = ceil(18*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 12*pi/WindowLength * K0/(2*pi));
-                    end
-                end
-                % If the median filter order is even, add one to make it odd.
-                if mod(FOdetector.MedianFilterOrder,2) == 0
-                    FOdetector.MedianFilterOrder = FOdetector.MedianFilterOrder + 1;
-                end
-                
-                
-                % Probability of false alarm. With zero padding it becomes a maximum
-                if isfield(FOParamExtrXML,'Pfa')
-                    % Use specified probability of false alarm
-                    FOdetector.Pfa = str2num(FOParamExtrXML.Pfa);
-                else
-                    % Use default probability of false alarm
-                    FOdetector.Pfa = 0.01;
-                end
-                
-                % Minimum frequency to be considered. If omitted, the default is zero, but
-                % in many cases this will cause excessive false alarms.
-                if isfield(FOParamExtrXML,'FrequencyMin')
-                    % Use specified minimum frequency
-                    FOdetector.FrequencyMin = str2num(FOParamExtrXML.FrequencyMin);
-                else
-                    % Use default minimum frequency
-                    FOdetector.FrequencyMin = 0;
-                end
-                 if isfield(FOParamExtrXML,'FrequencyMax')
-                    % Use specified minimum frequency
-                    FOdetector.FrequencyMax = str2num(FOParamExtrXML.FrequencyMax);
-                    if FOdetector.FrequencyMax>fs{ModeIdx}/2
-                        FOdetector.FrequencyMax = fs{ModeIdx}/2;
-                        warning('Maximum frequency for forced oscillation detection exceeds folding frequency of the signal, so changing maximum frequency to the folding frequency of the signal.');
-                    end
-                else
-                    % Use default minimum frequency
-                    FOdetector.FrequencyMax = fs{ModeIdx}/2;
-                end
-                
-                % Tolerance used to refine the frequency estimate. If omitted, the default
-                % is the greater of 1) the main lobe width of the test statistic
-                % periodogram's window and 2) half of FrequencyMin.
-                if isfield(FOParamExtrXML,'FrequencyTolerance')
-                    % Use specified frequency tolerance
-                    FOdetector.FrequencyTolerance = str2num(FOParamExtrXML.FrequencyTolerance);
-                else
-                    % Use default frequency tolerance: the sampling rate (samples/second)
-                    % times the main lobe width (radians/sample) times the cycle-radians
-                    % ratio (cycles/(2pi radians)). The result is the main lobe width
-                    % in Hz. The full expression is included in the comments, but a reduced
-                    % expression is used to avoid numerical errors introduced by
-                    % multiplying and dividing by pi.
-                    switch FOdetector.WindowType
-                        case 'rectwin'
-                            FOdetector.FrequencyTolerance = 2*fs{ModeIdx}/AnalysisLength; % fs * 4*pi/AnalysisLength / (2*pi);
-                        case 'bartlett'
-                            FOdetector.FrequencyTolerance = 4*fs{ModeIdx}/AnalysisLength; % fs * 8*pi/AnalysisLength / (2*pi);
-                        case 'hann'
-                            FOdetector.FrequencyTolerance = 4*fs{ModeIdx}/AnalysisLength; % fs * 8*pi/AnalysisLength / (2*pi);
-                        case 'hamming'
-                            FOdetector.FrequencyTolerance = 4*fs{ModeIdx}/AnalysisLength; % fs * 8*pi/AnalysisLength / (2*pi);
-                        case 'blackman'
-                            FOdetector.FrequencyTolerance = 6*fs{ModeIdx}/AnalysisLength; % fs * 12*pi/AnalysisLength / (2*pi);
-                    end
-                    % Round to nearest 100th of a Hz
-                    FOdetector.FrequencyTolerance = round(FOdetector.FrequencyTolerance,2);
+                    % Pass an empty structure to return parameters with
+                    % time localization disabled.
+                    TimeLocParams = ExtractFOtimeLocParameters(struct(),fs{ModeIdx});
                 end
             else
-                FOdetector = struct([]);
+                % FO detector is not desired. Setting the configuration
+                % variable to empty ensures that the FO detector is
+                % disabled in ModeMeterDetector
+                FOdetector = [];
+                % No need for time localization. Pass an empty structure to
+                % return parameters with time localization disabled.
+                TimeLocParams = ExtractFOtimeLocParameters(struct(),fs{ModeIdx});
             end
             
             % Event detection parameters
@@ -359,10 +234,18 @@ if isfield(Parameters,'Mode')
             else
                 EventDetector = struct([]);
             end
+        else
+            % Proper informatio was not passed. Return empty parameter
+            % structures. This might cause errors later, so issue a warning.
+            warning('The configuration file is not properly formatted for a mode meter.');
+            FOdetector = [];
+            MethodName = [];
+            AlgSpecificParameters = [];
+            TimeLocParams = ExtractFOtimeLocParameters(struct(),fs);
         end
         ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,'DampRatioThreshold',DampRatioThreshold,...
             'AnalysisLength',AnalysisLength,'RetConTrackingStatus',RetConTrackingStatus,'MaxRetConLength',MaxRetConLength,...
             'DesiredModes',DesiredModes,'ResultPathFinal',ResultPathFinal,'FOdetectorPara',FOdetector,'EventDetectorPara',EventDetector,...
-            'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters);
+            'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters,'TimeLocParams',TimeLocParams);
     end
 end
