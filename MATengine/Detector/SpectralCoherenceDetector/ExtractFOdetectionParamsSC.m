@@ -145,13 +145,21 @@ else
     end
 end
 
-
+if isfield(Parameters,'CalcDEF')
+    if strcmp(Parameters.CalcDEF,'TRUE')
+        CalcDEF = true;
+    else
+        CalcDEF = false;
+    end
+else
+    CalcDEF = false;
+end
 
 ExtractedParameters = struct('Mode',Mode,'AnalysisLength',AnalysisLength,...
     'Delay',Delay,'NumberDelays',NumberDelays,'ThresholdScale',ThresholdScale,...
     'WindowType',WindowType,'ZeroPadding',ZeroPadding,...
     'WindowLength',WindowLength,'WindowOverlap',WindowOverlap,...    
     'FrequencyMin',FrequencyMin,'FrequencyMax',FrequencyMax,...
-    'FrequencyTolerance',FrequencyTolerance);
+    'FrequencyTolerance',FrequencyTolerance,'CalcDEF',CalcDEF);
 
 end

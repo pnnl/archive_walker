@@ -1,6 +1,10 @@
 /*
 * MATLAB Compiler: 6.6 (R2018a)
+<<<<<<< HEAD
 * Date: Thu Oct 10 10:47:32 2019
+=======
+* Date: Fri Oct 11 12:00:54 2019
+>>>>>>> DEF
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
 * s\foll154\OneDrive -
