@@ -14,6 +14,7 @@ using BAWGUI.CoordinateMapping.ViewModels;
 using ModeMeter.Models;
 using ModeMeter.ViewModels;
 using BAWGUI.CoordinateMapping.Models;
+using DissipationEnergyFlow.ViewModels;
 
 namespace BAWGUI.ViewModels
 {
@@ -36,7 +37,8 @@ namespace BAWGUI.ViewModels
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
             InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
             InspectSignalByTimeRange = new RelayCommand(_inpsectAllSignalsByTimeRange);
-            SiteMappingVM = new SiteMappingViewModel();
+            SiteMappingVM = new SiteMappingViewModel(CoordsTableVM.SiteCoords);
+            //SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
             SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
             _projectControlVM.ResultsStoragePathChanged += _projectControlVM_ResultsStoragePathChanged;
         }
@@ -308,9 +310,22 @@ namespace BAWGUI.ViewModels
                         {
                             SettingsVM.DataConfigure.ReaderProperty = new ReaderProperties(config.DataConfigure.ReaderProperty, _signalMgr);
                         }
+                        //set up DEF area and detector signals on map
                         var signalSiteMappingConfig = new SignalMappingPlotConfigReader(e.SelectedRun.Model.ConfigFilePath);
                         _signalMgr.DistinctMappingSignal();
+                        SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
                         SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, signalSiteMappingConfig.GetSignalCoordsMappingModel());
+                        foreach (var dtr in SettingsVM.DetectorConfigure.DetectorList)
+                        {
+                            if (dtr is DEFDetectorViewModel)
+                            {
+                                var thisdtr = dtr as DEFDetectorViewModel;
+                                var areas = new System.Collections.ObjectModel.ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
+                                SiteMappingVM.DEFAreaSiteMappingVM.Areas = new System.Collections.ObjectModel.ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
+                                SiteMappingVM.DEFAreaSiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
+                                break;
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {

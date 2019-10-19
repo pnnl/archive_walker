@@ -23,18 +23,16 @@ namespace BAWGUI.CoordinateMapping.ViewModels
 
         public SignalCoordsMappingViewModel()
         {
+            SetCurrentSelectedSignal = new RelayCommand(_setCurrentSelectedSignal);
+            SiteSelected = new RelayCommand(_siteSelected);
+            SelectedTextboxIndex = -1;
+            ModifySiteSelection = new RelayCommand(_modifySiteSelection);
+            DeleteASite = new RelayCommand(_deleteASite);
         }
         public SignalCoordsMappingViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords, SignalManager signalMgr) : this()
         {
             this.AvailableSites = siteCoords;
             SignalMgr = signalMgr;
-            SetCurrentSelectedSignal = new RelayCommand(_setCurrentSelectedSignal);
-            SiteSelected = new RelayCommand(_siteSelected);
-            //AddFirstSite = new RelayCommand(_add1stSite);
-            //AddSecondSite = new RelayCommand(_add2ndSite);
-            SelectedTextboxIndex = -1;
-            ModifySiteSelection = new RelayCommand(_modifySiteSelection);
-            DeleteASite = new RelayCommand(_deleteASite);
         }
         //renamed sites
         //sites not found
@@ -111,7 +109,16 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             return null;
         }
         public ObservableCollection<SiteCoordinatesViewModel> AvailableSites { get; set; }
-        public SignalSignatureViewModel CurrentSelectedSignal{ get; set; }
+        private SignalSignatureViewModel _currentSelectedSignal;
+        public SignalSignatureViewModel CurrentSelectedSignal
+        {
+            get { return _currentSelectedSignal; }
+            set
+            {
+                _currentSelectedSignal = value;
+                OnPropertyChanged();
+            }
+        }
         /// <summary>
         /// This command is invoked when a signal is clicked in the signal site mapping setting's tab
         /// to handle the currently selected signal and display the sites that this signal associates by checking them

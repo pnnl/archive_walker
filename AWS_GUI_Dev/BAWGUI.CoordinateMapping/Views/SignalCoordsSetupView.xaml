@@ -39,10 +39,25 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <local:SignalSiteSetupView Grid.Row="0" DataContext="{Binding SignalCoordsMappingVM}"/>
-                <local:DEFAreaSiteSetupView Grid.Row="1" DataContext="{Binding DEFAreaSiteMappingVM}"/>
+                <Border Grid.Row="0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding TargetSelected}" CommandParameter="{Binding SignalCoordsMappingVM}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <local:SignalSiteSetupView DataContext="{Binding SignalCoordsMappingVM}"/>
+                </Border>
+                <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="1" CornerRadius="5">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding TargetSelected}" CommandParameter="{Binding DEFAreaSiteMappingVM}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <local:DEFAreaSiteSetupView DataContext="{Binding DEFAreaSiteMappingVM}"/>
+                </Border>
+
             </Grid>
         </ScrollViewer>
-        <local:AvailableSitesView Grid.Column="1" DataContext="{Binding SignalCoordsMappingVM}"/>
+        <local:AvailableSitesView Grid.Column="1"/>
     </Grid>
 </UserControl>

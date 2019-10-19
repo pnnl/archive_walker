@@ -121,6 +121,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\CoordinatesTableViewModel.cs" />
+    <Compile Include="ViewModels\DEFAreaSiteSetupViewModel.cs" />
     <Compile Include="ViewModels\EnergyFlowAreaCoordsMappingViewModel.cs" />
     <Compile Include="ViewModels\SignalCoordsMappingViewModel.cs" />
     <Compile Include="ViewModels\SiteCoordinatesViewModel.cs" />
@@ -130,6 +131,9 @@
     </Compile>
     <Compile Include="Views\CoordsTableView.xaml.cs">
       <DependentUpon>CoordsTableView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DEFAreaSitePlotDotSetupView.xaml.cs">
+      <DependentUpon>DEFAreaSitePlotDotSetupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DEFAreaSiteSetupView.xaml.cs">
       <DependentUpon>DEFAreaSiteSetupView.xaml</DependentUpon>
@@ -212,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CoordsTableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DEFAreaSitePlotDotSetupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

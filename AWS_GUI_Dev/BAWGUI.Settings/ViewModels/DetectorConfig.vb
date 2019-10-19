@@ -10,6 +10,7 @@ Imports BAWGUI.Utilities
 Imports Microsoft.WindowsAPICodePack.Dialogs
 Imports DissipationEnergyFlow
 Imports DissipationEnergyFlow.ViewModels
+Imports BAWGUI.CoordinateMapping.ViewModels
 
 Namespace ViewModels
     Public Class DetectorConfig

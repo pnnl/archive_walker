@@ -23,7 +23,7 @@
                 <local:SignalMappingPlotLineAreaSetupView/>
             </DataTemplate>
             <DataTemplate x:Key="Dot">
-                <local:SignalMappingPlotDotSetupView/>
+                <local:DEFAreaSitePlotDotSetupView/>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -37,7 +37,7 @@
                 <TextBlock Text="Area Name:" Margin="2" Width="300"/>
                 <TextBlock Text="Plot Type:" Margin="2" Width="100"/>
             </StackPanel>
-            <ItemsControl ItemsSource="{Binding SignalMgr.UniqueMappingSignals}" Grid.Row="1" Margin="2">
+            <ItemsControl ItemsSource="{Binding Areas}" Grid.Row="1" Margin="2">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -46,17 +46,17 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                <TextBox Text="{Binding SignalName}" Margin="2" Width="300" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="SignalName">
+                                <TextBox Text="{Binding AreaName}" Margin="2" Width="300" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="SignalName">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedArea}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </TextBox>
-                                <ComboBox ItemsSource="{Binding Source={StaticResource PlotTypeValues}}" Width="100" Text="{Binding MapPlotType, Converter={StaticResource EnumToStringConverter12}}" Margin="2">
+                                <ComboBox ItemsSource="{Binding Source={StaticResource PlotTypeValues}}" Width="100" Text="{Binding Type, Converter={StaticResource EnumToStringConverter12}}" Margin="2">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
-                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedArea}" CommandParameter="{Binding}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </ComboBox>
@@ -65,13 +65,13 @@
                                 <ContentControl.Style>
                                     <Style TargetType="ContentControl">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding MapPlotType}" Value="0">
+                                            <DataTrigger Binding="{Binding Type}" Value="0">
                                                 <Setter Property="ContentTemplate" Value="{StaticResource Dot}"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding MapPlotType}" Value="1">
+                                            <DataTrigger Binding="{Binding Type}" Value="1">
                                                 <Setter Property="ContentTemplate" Value="{StaticResource LineOrArea}"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding MapPlotType}" Value="2">
+                                            <DataTrigger Binding="{Binding Type}" Value="2">
                                                 <Setter Property="ContentTemplate" Value="{StaticResource LineOrArea}"/>
                                             </DataTrigger>
                                         </Style.Triggers>

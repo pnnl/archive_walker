@@ -13,7 +13,19 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <!--<RadioButton IsChecked="{Binding IsSelected}" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SiteSelected}" CommandParameter="{Binding}" GroupName="AvailableSites"/>-->
-                            <CheckBox IsChecked="{Binding IsSelected}" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SiteSelected}" CommandParameter="{Binding}"/>
+                            <!--<CheckBox IsChecked="{Binding IsSelected}" Margin="2" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalCoordsMappingVM.SiteSelected}" CommandParameter="{Binding}">-->
+                                <CheckBox IsChecked="{Binding IsSelected}" Margin="2" CommandParameter="{Binding}">
+                                    <CheckBox.Style>
+                                    <Style TargetType="{x:Type CheckBox}">
+                                        <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.DEFAreaSiteMappingVM.SiteSelected}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.TargetIsSignal}" Value="true">
+                                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalCoordsMappingVM.SiteSelected}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>                                        
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
                             <TextBlock Text="{Binding SiteName}" Margin="2"/>
                         </StackPanel>
                     </DataTemplate>
