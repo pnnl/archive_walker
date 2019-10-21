@@ -1,4 +1,5 @@
-﻿using BAWGUI.Core;
+﻿using BAWGUI.CoordinateMapping.Models;
+using BAWGUI.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,15 +42,15 @@ namespace DissipationEnergyFlow.Models
                             //check to see if this newly read area name is in the DEF model area dictionary
                             //if not, assign this name to the area objct in the path and add this object to the DEF model area dictionary
                             //if yes, re-point the area object in the DEF path to the existing area object in the dictionary
+                            newPath.FromArea = thisAreaName;
                             if (!_detector.Areas.ContainsKey(thisAreaName))
                             {
-                                newPath.FromArea.AreaName = thisAreaName;
-                                _detector.Areas[thisAreaName] = newPath.FromArea;
+                                _detector.Areas[thisAreaName] = new EnergyFlowAreaCoordsMappingModel(thisAreaName);
                             }
-                            else
-                            {
-                                newPath.FromArea = _detector.Areas[thisAreaName];
-                            }
+                            //else
+                            //{
+                            //    newPath.FromArea = _detector.Areas[thisAreaName];
+                            //}
                         }
                         var toArea = pth.Element("To");
                         if (toArea != null)
@@ -58,15 +59,15 @@ namespace DissipationEnergyFlow.Models
                             //check to see if this newly read area name is in the DEF model area dictionary
                             //if not, assign this name to the area objct in the path and add this object to the DEF model area dictionary
                             //if yes, re-point the area object in the DEF path to the existing area object in the dictionary
+                            newPath.ToArea = thisAreaName;
                             if (!_detector.Areas.ContainsKey(thisAreaName))
                             {
-                                newPath.ToArea.AreaName = thisAreaName;
-                                _detector.Areas[thisAreaName] = newPath.ToArea;
+                                _detector.Areas[thisAreaName] = new EnergyFlowAreaCoordsMappingModel(thisAreaName);
                             }
-                            else
-                            {
-                                newPath.ToArea = _detector.Areas[thisAreaName];
-                            }
+                            //else
+                            //{
+                            //    newPath.ToArea = _detector.Areas[thisAreaName];
+                            //}
                         }
                         var vm = pth.Element("VM");
                         if (vm != null)

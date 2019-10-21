@@ -22,9 +22,9 @@ namespace BAWGUI.CoordinateMapping.Views
     /// <summary>
     /// Interaction logic for SignalCoordsSetupView.xaml
     /// </summary>
-    public partial class SignalCoordsSetupView : UserControl
+    public partial class SiteSetupView : UserControl
     {
-        public SignalCoordsSetupView()
+        public SiteSetupView()
         {
             InitializeComponent();
         }

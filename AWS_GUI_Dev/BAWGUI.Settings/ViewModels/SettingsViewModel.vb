@@ -13,6 +13,8 @@ Imports VoltageStability.ViewModels
 Imports ModeMeter.ViewModels
 Imports VoltageStability.Models
 Imports ModeMeter.Models
+Imports DissipationEnergyFlow.ViewModels
+Imports BAWGUI.CoordinateMapping.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -4720,8 +4722,11 @@ Namespace ViewModels
                         End If
                     End If
 
-                    If _currentTabIndex = 5 Then
+                    'tab index 6 is the coordinate setup setting. no signal selection needed, but need to get unique detector signals and DEF areas.
+                    If _currentTabIndex = 6 Then
                         _signalMgr.DistinctMappingSignal()
+                        'find all distinct areas used in DEF detecotr
+                        _updateDEFAreas()
                     End If
                 Catch ex As Exception
                     _addLog(ex.Message)
@@ -4735,6 +4740,42 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Private Sub _updateDEFAreas()
+            For Each dtr In DetectorConfigure.DetectorList
+                If TypeOf (dtr) Is DEFDetectorViewModel Then
+                    Dim detector As DEFDetectorViewModel = dtr
+                    Dim addedNewDictEntry = False
+                    Dim newDEFAreaDict = New Dictionary(Of String, EnergyFlowAreaCoordsMappingViewModel)
+                    For Each pth In detector.Paths
+                        If Not detector.Areas.ContainsKey(pth.FromArea) Then
+                            newDEFAreaDict(pth.FromArea) = New EnergyFlowAreaCoordsMappingViewModel(pth.FromArea)
+                            If Not addedNewDictEntry Then
+                                addedNewDictEntry = True
+                            End If
+                        Else
+                            newDEFAreaDict(pth.FromArea) = detector.Areas(pth.FromArea)
+                        End If
+                        If Not detector.Areas.ContainsKey(pth.ToArea) Then
+                            newDEFAreaDict(pth.ToArea) = New EnergyFlowAreaCoordsMappingViewModel(pth.ToArea)
+                            If Not addedNewDictEntry Then
+                                addedNewDictEntry = True
+                            End If
+                        Else
+                            newDEFAreaDict(pth.FromArea) = detector.Areas(pth.FromArea)
+                        End If
+                    Next
+                    If addedNewDictEntry Or newDEFAreaDict.Count <> detector.Areas.Count Then
+                        detector.Areas = newDEFAreaDict
+                        RaiseEvent DEFAreasChanged()
+                    End If
+                    Exit For
+                End If
+            Next
+        End Sub
+
+        Public Event DEFAreasChanged()
+
         ''' <summary>
         ''' if signal type has been changed in the prosessing tab, need to re-group them by type
         ''' </summary>

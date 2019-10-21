@@ -14,6 +14,12 @@ namespace BAWGUI.CoordinateMapping.Models
         {
             Locations = new List<ConfigSite>();
         }
+
+        public EnergyFlowAreaCoordsMappingModel(string thisAreaName)
+        {
+            AreaName = thisAreaName;
+        }
+
         private string _areaName;
         public string AreaName 
         {

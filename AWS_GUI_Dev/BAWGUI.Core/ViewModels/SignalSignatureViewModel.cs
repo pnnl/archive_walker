@@ -416,6 +416,16 @@ namespace BAWGUI.Core
         {
             _model.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
         }
+        private SiteCoordinatesModel _selectedLocation;
+        public SiteCoordinatesModel SelectedLocation
+        {
+            get { return _selectedLocation; }
+            set
+            {
+                _selectedLocation = value;
+                OnPropertyChanged();
+            }
+        }
 
     }
 }

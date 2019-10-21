@@ -8,10 +8,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <GroupBox Header="Site" Margin="100,2">
-        <TextBox Text="{Binding Locations[0].Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
+        <TextBox Text="{Binding SelectedLocation.Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=2, Mode=FindAncestor}, Path=DataContext.SetCurrentSelectedArea}" CommandParameter="{Binding}"/>
+                    <i:InvokeCommandAction Command="{Binding SelectedLocationChanged}" CommandParameter="{Binding SelectedLocation}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TextBox>

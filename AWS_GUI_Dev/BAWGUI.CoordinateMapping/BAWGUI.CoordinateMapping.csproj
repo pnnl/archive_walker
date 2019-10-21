@@ -103,6 +103,8 @@
     <Compile Include="Converters\MapPlotTypeVisibilityConverter.cs" />
     <Compile Include="Converters\SiteCountVisibilityConverter.cs" />
     <Compile Include="Converters\TextBoxSelectionCommandParameterConverter.cs" />
+    <Compile Include="Models\DEFAreaMappingconfigReader.cs" />
+    <Compile Include="Models\DEFAreaMappingConfigWriter.cs" />
     <Compile Include="Models\EnergyFlowAreaCoordsMappingModel.cs" />
     <Compile Include="Models\SignalCoordsMappingModel.cs" />
     <Compile Include="Models\SignalMappingPlotConfigReader.cs" />
@@ -135,11 +137,14 @@
     <Compile Include="Views\DEFAreaSitePlotDotSetupView.xaml.cs">
       <DependentUpon>DEFAreaSitePlotDotSetupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DEFAreaSitePlotLineAreaSetupView.xaml.cs">
+      <DependentUpon>DEFAreaSitePlotLineAreaSetupView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DEFAreaSiteSetupView.xaml.cs">
       <DependentUpon>DEFAreaSiteSetupView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignalCoordsSetupView.xaml.cs">
-      <DependentUpon>SignalCoordsSetupView.xaml</DependentUpon>
+    <Compile Include="Views\SiteSetupView.xaml.cs">
+      <DependentUpon>SiteSetupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignalMappingPlotDotSetupView.xaml.cs">
       <DependentUpon>SignalMappingPlotDotSetupView.xaml</DependentUpon>
@@ -223,11 +228,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DEFAreaSitePlotLineAreaSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DEFAreaSiteSetupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SignalCoordsSetupView.xaml">
+    <Page Include="Views\SiteSetupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

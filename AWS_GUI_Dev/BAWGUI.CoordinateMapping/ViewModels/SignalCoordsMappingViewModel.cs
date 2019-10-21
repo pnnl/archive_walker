@@ -141,6 +141,10 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                     item.IsSelected = false;
                 }
             }
+            if (SelectedTextboxIndex >= CurrentSelectedSignal.Locations.Count())
+            {
+                SelectedTextboxIndex = -1;
+            }
             //SiteCoordinatesModel checkedItem = null;
             //if ((string)values[1] == "From")
             //{

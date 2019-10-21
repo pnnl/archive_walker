@@ -23,13 +23,20 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         {
             _model = new EnergyFlowAreaCoordsMappingModel();
             _locations = new ObservableCollection<SiteCoordinatesModel>();
+            _locations.Add(CoreUtilities.DummySiteCoordinatesModel);
             DeleteASite = new RelayCommand(_deleteASite);
             AddASite = new RelayCommand(_addASite);
+            SelectedLocationChanged = new RelayCommand(_changeSelectedLocation);
+            _selectedLocation = Locations.FirstOrDefault();
         }
         public EnergyFlowAreaCoordsMappingViewModel(EnergyFlowAreaCoordsMappingModel area) : this()
         {
             _model = area;
             //_locations = new ObservableCollection<SiteCoordinatesModel>(_model.Locations);
+        }
+        public EnergyFlowAreaCoordsMappingViewModel(string areaName) : this()
+        {
+            AreaName = areaName;
         }
         public string AreaName 
         {
@@ -83,6 +90,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                             Locations.Add(keep);
                         }
                     }
+                    SelectedLocation = Locations.FirstOrDefault();
                     OnPropertyChanged();
                 }
             }
@@ -104,6 +112,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             var currentLocation = (SiteCoordinatesModel)values[0];
             var selectedTextboxIndex = (int)values[1];
             Locations.RemoveAt(selectedTextboxIndex);
+            SelectedLocation = Locations.LastOrDefault();
             //foreach (var item in Locations)
             //{
 
@@ -113,7 +122,35 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         private void _addASite(object obj)
         {
             Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+            SelectedLocation = Locations.LastOrDefault();
+            //OnLocationSelectionChanged(EventArgs.Empty);
         }
-
+        private SiteCoordinatesModel _selectedLocation;
+        public SiteCoordinatesModel SelectedLocation 
+        {
+            get { return _selectedLocation; }
+            set
+            {
+                _selectedLocation = value;
+                OnPropertyChanged();
+                OnLocationSelectionChanged(EventArgs.Empty);
+            }
+        }
+        public ICommand SelectedLocationChanged { get; set; }
+        private void _changeSelectedLocation(object obj)
+        {
+            SelectedLocation = (SiteCoordinatesModel)obj;
+            //OnLocationSelectionChanged(EventArgs.Empty);
+        }
+        public event EventHandler LocationSelectionChanged;
+        protected virtual void OnLocationSelectionChanged(EventArgs e)
+        {
+            LocationSelectionChanged?.Invoke(this, e);
+        }
+        public event EventHandler DEFAreaSelected;
+        protected virtual void OnDEFAreaSelected(EventArgs e)
+        {
+            DEFAreaSelected?.Invoke(this, e);
+        }
     }
 }

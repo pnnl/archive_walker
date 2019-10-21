@@ -15,6 +15,7 @@ using ModeMeter.Models;
 using ModeMeter.ViewModels;
 using BAWGUI.CoordinateMapping.Models;
 using DissipationEnergyFlow.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace BAWGUI.ViewModels
 {
@@ -40,7 +41,21 @@ namespace BAWGUI.ViewModels
             SiteMappingVM = new SiteMappingViewModel(CoordsTableVM.SiteCoords);
             //SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
             SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
+            _settingsVM.DEFAreasChanged += _settingsVM_DEFAreasChanged;
             _projectControlVM.ResultsStoragePathChanged += _projectControlVM_ResultsStoragePathChanged;
+        }
+
+        private void _settingsVM_DEFAreasChanged()
+        {
+            foreach (var dtr in SettingsVM.DetectorConfigure.DetectorList)
+            {
+                if (dtr is DEFDetectorViewModel)
+                {
+                    var thisdtr = dtr as DEFDetectorViewModel;
+                    SiteMappingVM.DEFAreaSiteMappingVM.Areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
+                    break;
+                }
+            }
         }
 
         private void _projectControlVM_ResultsStoragePathChanged(object sender, string e)
@@ -315,16 +330,21 @@ namespace BAWGUI.ViewModels
                         _signalMgr.DistinctMappingSignal();
                         SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
                         SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, signalSiteMappingConfig.GetSignalCoordsMappingModel());
+                        var DEFDetectorFound = false;
                         foreach (var dtr in SettingsVM.DetectorConfigure.DetectorList)
                         {
                             if (dtr is DEFDetectorViewModel)
                             {
                                 var thisdtr = dtr as DEFDetectorViewModel;
-                                var areas = new System.Collections.ObjectModel.ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
-                                SiteMappingVM.DEFAreaSiteMappingVM.Areas = new System.Collections.ObjectModel.ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
-                                SiteMappingVM.DEFAreaSiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
+                                //var areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
+                                SiteMappingVM.DEFAreaSiteMappingVM.Areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
+                                DEFDetectorFound = true;
                                 break;
                             }
+                        }
+                        if (!DEFDetectorFound)
+                        {
+                            SiteMappingVM.DEFAreaSiteMappingVM.Areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>();
                         }
                     }
                     catch (Exception ex)

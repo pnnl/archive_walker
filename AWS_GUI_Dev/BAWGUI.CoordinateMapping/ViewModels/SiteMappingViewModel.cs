@@ -15,8 +15,9 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         {
             DEFAreaSiteMappingVM = new DEFAreaSiteSetupViewModel();
             SignalCoordsMappingVM = new SignalCoordsMappingViewModel();
-            AvailableSites = new ObservableCollection<SiteCoordinatesViewModel>();
+            _availableSites = new ObservableCollection<SiteCoordinatesViewModel>();
             TargetSelected = new RelayCommand(_targetSelected);
+            _targetIsSignal = false;
         }
         public SiteMappingViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords) : this()
         {
@@ -26,8 +27,31 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         public DEFAreaSiteSetupViewModel DEFAreaSiteMappingVM { get; set; }
         public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
         //private ObservableCollection<SiteCoordinatesViewModel> _availableSites;
-        public ObservableCollection<SiteCoordinatesViewModel> AvailableSites { get; set; }
-        public bool TargetIsSignal { get; set; }
+        private ObservableCollection<SiteCoordinatesViewModel> _availableSites;
+        public ObservableCollection<SiteCoordinatesViewModel> AvailableSites 
+        {
+            get { return _availableSites; }
+            set
+            {
+                if (_availableSites != value)
+                {
+                    _availableSites = value;
+                    OnPropertyChanged();
+                    DEFAreaSiteMappingVM.AvailableSites = value;
+                    SignalCoordsMappingVM.AvailableSites = value;
+                }
+            }
+        }
+        private bool _targetIsSignal;
+        public bool TargetIsSignal 
+        {
+            get { return _targetIsSignal; }
+            set
+            {
+                _targetIsSignal = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand TargetSelected { get; set; }
         private void _targetSelected(object obj)
         {

@@ -4,6 +4,8 @@ Imports BAWGUI.Core
 Imports BAWGUI.Core.Models
 Imports BAWGUI.Settings.ViewModels
 Imports BAWGUI.SignalManagement.ViewModels
+Imports DissipationEnergyFlow.Models
+Imports DissipationEnergyFlow.ViewModels
 Imports ModeMeter.ViewModels
 Imports VoltageStability.ViewModels
 
@@ -305,10 +307,10 @@ Namespace ViewModels
                     End If
                 ElseIf TypeOf stp Is Multirate Then
                     aStep = <Multirate>
-                                                       <Parameters>
-                                                           <MultiRatePMU><%= stp.MultiRatePMU %></MultiRatePMU>
-                                                       </Parameters>
-                                                   </Multirate>
+                                <Parameters>
+                                    <MultiRatePMU><%= stp.MultiRatePMU %></MultiRatePMU>
+                                </Parameters>
+                            </Multirate>
                     If stp.FilterChoice = 1 Then
                         Dim newR = <NewRate><%= stp.NewRate %></NewRate>
                         aStep.<Parameters>.LastOrDefault.Add(newR)
@@ -367,7 +369,7 @@ Namespace ViewModels
                 End If
                 Dim type = _svm.ProcessConfigure.NameTypeUnitElement.NewType
                 If Not String.IsNullOrEmpty(type) Then
-                    nameTypeUnit.Add(<NewType><%= Type %></NewType>)
+                    nameTypeUnit.Add(<NewType><%= type %></NewType>)
                 End If
             End If
             processConfig.<Configuration>.LastOrDefault.Add(nameTypeUnit)
@@ -427,6 +429,7 @@ Namespace ViewModels
                 End If
                 detectorConfig.<Configuration>.LastOrDefault.Add(element)
             End If
+            Dim DEFAreaConfigWriter As DEFAreaMappingConfigWriter = Nothing
             For Each detector In _svm.DetectorConfigure.DetectorList
                 Dim element As XElement
                 Select Case detector.GetType
@@ -609,6 +612,12 @@ Namespace ViewModels
                         Continue For
                     Case GetType(SmallSignalStabilityToolViewModel)
                         Continue For
+                    Case GetType(DEFDetectorViewModel)
+                        Dim dt = DirectCast(detector, DEFDetectorViewModel)
+                        Dim writer = New DEFWriter(dt.Model)
+                        detectorConfig.<Configuration>.LastOrDefault.Add(writer.WriteConfigToXMLFormat())
+                        DEFAreaConfigWriter = New DEFAreaMappingConfigWriter(dt.Areas)
+                        Continue For
                     Case Else
                         Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
                 End Select
@@ -642,28 +651,28 @@ Namespace ViewModels
                     Case GetType(AlarmingPeriodogram)
                         Dim al = DirectCast(alarm, AlarmingPeriodogram)
                         element = <Periodogram>
-                                                                                                                   <SNRalarm><%= al.SNRalarm %></SNRalarm>
-                                                                                                                   <SNRmin><%= al.SNRmin %></SNRmin>
-                                                                                                                   <TimeMin><%= al.TimeMin %></TimeMin>
-                                                                                                                   <SNRcorner><%= al.SNRcorner %></SNRcorner>
-                                                                                                                   <TimeCorner><%= al.TimeCorner %></TimeCorner>
-                                                                                                               </Periodogram>
+                                      <SNRalarm><%= al.SNRalarm %></SNRalarm>
+                                      <SNRmin><%= al.SNRmin %></SNRmin>
+                                      <TimeMin><%= al.TimeMin %></TimeMin>
+                                      <SNRcorner><%= al.SNRcorner %></SNRcorner>
+                                      <TimeCorner><%= al.TimeCorner %></TimeCorner>
+                                  </Periodogram>
                     Case GetType(AlarmingRingdown)
                         Dim al = DirectCast(alarm, AlarmingRingdown)
                         If Not String.IsNullOrEmpty(al.MaxDuration) Then
                             element = <Ringdown>
-                                                                                                                   <MaxDuration><%= al.MaxDuration %></MaxDuration>
-                                                                                                               </Ringdown>
+                                          <MaxDuration><%= al.MaxDuration %></MaxDuration>
+                                      </Ringdown>
                         End If
                     Case GetType(AlarmingSpectralCoherence)
                         Dim al = DirectCast(alarm, AlarmingSpectralCoherence)
                         element = <SpectralCoherence>
-                                                                                                                   <CoherenceAlarm><%= al.CoherenceAlarm %></CoherenceAlarm>
-                                                                                                                   <CoherenceMin><%= al.CoherenceMin %></CoherenceMin>
-                                                                                                                   <TimeMin><%= al.TimeMin %></TimeMin>
-                                                                                                                   <CoherenceCorner><%= al.CoherenceCorner %></CoherenceCorner>
-                                                                                                                   <TimeCorner><%= al.TimeCorner %></TimeCorner>
-                                                                                                               </SpectralCoherence>
+                                      <CoherenceAlarm><%= al.CoherenceAlarm %></CoherenceAlarm>
+                                      <CoherenceMin><%= al.CoherenceMin %></CoherenceMin>
+                                      <TimeMin><%= al.TimeMin %></TimeMin>
+                                      <CoherenceCorner><%= al.CoherenceCorner %></CoherenceCorner>
+                                      <TimeCorner><%= al.TimeCorner %></TimeCorner>
+                                  </SpectralCoherence>
                     Case Else
                         Throw New Exception("Error! Unrecognized alarming detector type: " & alarm.GetType.ToString & ".")
                 End Select
@@ -674,8 +683,8 @@ Namespace ViewModels
             '''''''''''Write wind application''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             Dim windApplication As XElement = <WindAppConfig>
-                                                                                                                           <Configuration></Configuration>
-                                                                                                                       </WindAppConfig>
+                                                  <Configuration></Configuration>
+                                              </WindAppConfig>
             _configData.Add(windApplication)
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             '''''''''''Write signal mapping plot settings''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -684,6 +693,9 @@ Namespace ViewModels
                 Dim writer = New SignalMappingPlotConfigWriter()
                 _configData.Add(writer.WriteConfigToXMLFormat(_svm.SignalMgr.UniqueMappingSignals))
             End If
+            If DEFAreaConfigWriter IsNot Nothing Then
+                _configData.Add(DEFAreaConfigWriter.WriteConfigToXMLFormat())
+            End If
             _configData.Save(filename)
         End Sub
 
@@ -691,9 +703,9 @@ Namespace ViewModels
             Select Case singleStep.Name
                 Case "Scalar Repetition"
                     aStep = <Customization>
-                                                                                                                           <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                           <Parameters></Parameters>
-                                                                                                                       </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters></Parameters>
+                            </Customization>
 
                     If Not String.IsNullOrEmpty(singleStep.CustPMUname) Then
                         aStep.<Parameters>.FirstOrDefault.Add(<CustPMUname><%= singleStep.CustPMUname %></CustPMUname>)
@@ -715,74 +727,74 @@ Namespace ViewModels
                     End If
                 Case "Addition"
                     aStep = <Customization>
-                                                                                                                                                   <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                   <Parameters>
-                                                                                                                                                       <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                       <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
-                                                                                                                                                   </Parameters>
-                                                                                                                                               </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                    <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
+                                </Parameters>
+                            </Customization>
                     For Each signal In singleStep.InputChannels
                         Dim term As XElement = <term>
-                                                                                                                                                   <PMU><%= signal.PMUName %></PMU>
-                                                                                                                                                   <Channel><%= signal.SignalName %></Channel>
-                                                                                                                                               </term>
+                                                   <PMU><%= signal.PMUName %></PMU>
+                                                   <Channel><%= signal.SignalName %></Channel>
+                                               </term>
                         aStep.<Parameters>.LastOrDefault.Add(term)
                     Next
                 Case "Subtraction"
                     aStep = <Customization>
-                                                                                                                                                       <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                       <Parameters>
-                                                                                                                                                           <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                           <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
-                                                                                                                                                           <minuend>
-                                                                                                                                                               <PMU><%= singleStep.Minuend.PMUName %></PMU>
-                                                                                                                                                               <Channel><%= singleStep.Minuend.SignalName %></Channel>
-                                                                                                                                                           </minuend>
-                                                                                                                                                           <subtrahend>
-                                                                                                                                                               <PMU><%= singleStep.Subtrahend.PMUName %></PMU>
-                                                                                                                                                               <Channel><%= singleStep.Subtrahend.SignalName %></Channel>
-                                                                                                                                                           </subtrahend>
-                                                                                                                                                       </Parameters>
-                                                                                                                                                   </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                    <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
+                                    <minuend>
+                                        <PMU><%= singleStep.Minuend.PMUName %></PMU>
+                                        <Channel><%= singleStep.Minuend.SignalName %></Channel>
+                                    </minuend>
+                                    <subtrahend>
+                                        <PMU><%= singleStep.Subtrahend.PMUName %></PMU>
+                                        <Channel><%= singleStep.Subtrahend.SignalName %></Channel>
+                                    </subtrahend>
+                                </Parameters>
+                            </Customization>
                 Case "Multiplication"
                     aStep = <Customization>
-                                                                                                                                                       <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                       <Parameters>
-                                                                                                                                                           <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                           <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
-                                                                                                                                                       </Parameters>
-                                                                                                                                                   </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                    <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
+                                </Parameters>
+                            </Customization>
                     For Each signal In singleStep.InputChannels
                         Dim factor As XElement = <factor>
-                                                                                                                                                       <PMU><%= signal.PMUName %></PMU>
-                                                                                                                                                       <Channel><%= signal.SignalName %></Channel>
-                                                                                                                                                   </factor>
+                                                     <PMU><%= signal.PMUName %></PMU>
+                                                     <Channel><%= signal.SignalName %></Channel>
+                                                 </factor>
                         aStep.<Parameters>.LastOrDefault.Add(factor)
                     Next
                 Case "Division"
                     aStep = <Customization>
-                                                                                                                                                           <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                           <Parameters>
-                                                                                                                                                               <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                               <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
-                                                                                                                                                               <dividend>
-                                                                                                                                                                   <PMU><%= singleStep.Dividend.PMUName %></PMU>
-                                                                                                                                                                   <Channel><%= singleStep.Dividend.SignalName %></Channel>
-                                                                                                                                                               </dividend>
-                                                                                                                                                               <divisor>
-                                                                                                                                                                   <PMU><%= singleStep.Divisor.PMUName %></PMU>
-                                                                                                                                                                   <Channel><%= singleStep.Divisor.SignalName %></Channel>
-                                                                                                                                                               </divisor>
-                                                                                                                                                           </Parameters>
-                                                                                                                                                       </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                    <SignalName><%= singleStep.OutputChannels(0).SignalName %></SignalName>
+                                    <dividend>
+                                        <PMU><%= singleStep.Dividend.PMUName %></PMU>
+                                        <Channel><%= singleStep.Dividend.SignalName %></Channel>
+                                    </dividend>
+                                    <divisor>
+                                        <PMU><%= singleStep.Divisor.PMUName %></PMU>
+                                        <Channel><%= singleStep.Divisor.SignalName %></Channel>
+                                    </divisor>
+                                </Parameters>
+                            </Customization>
                 Case "Exponential"
                     aStep = <Customization>
-                                                                                                                                                           <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                           <Parameters>
-                                                                                                                                                               <exponent><%= singleStep.Exponent %></exponent>
-                                                                                                                                                               <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                           </Parameters>
-                                                                                                                                                       </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <exponent><%= singleStep.Exponent %></exponent>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                </Parameters>
+                            </Customization>
                     For Each pair In singleStep.OutputInputMappingPair
                         Dim signal As XElement = <signal>
                                                      <PMU><%= pair.Value(0).PMUName %></PMU>
@@ -793,83 +805,83 @@ Namespace ViewModels
                     Next
                 Case "Sign Reversal", "Absolute Value", "Real Component", "Imaginary Component", "Complex Conjugate", "Angle Calculation"
                     aStep = <Customization>
-                                                                                                                                                               <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                               <Parameters>
-                                                                                                                                                                   <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                               </Parameters>
-                                                                                                                                                           </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                </Parameters>
+                            </Customization>
                     For Each pair In singleStep.OutputInputMappingPair
                         Dim signal As XElement = <signal>
-                                                                                                                                                               <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                                                                                                                               <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                                                                                                                               <CustName><%= pair.Key.SignalName %></CustName>
-                                                                                                                                                           </signal>
+                                                     <PMU><%= pair.Value(0).PMUName %></PMU>
+                                                     <Channel><%= pair.Value(0).SignalName %></Channel>
+                                                     <CustName><%= pair.Key.SignalName %></CustName>
+                                                 </signal>
                         aStep.<Parameters>.LastOrDefault.Add(signal)
                     Next
                 Case "Phasor Creation"
                     aStep = <Customization>
-                                                                                                                                                                   <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                   <Parameters>
-                                                                                                                                                                       <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                                   </Parameters>
-                                                                                                                                                               </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                </Parameters>
+                            </Customization>
                     For Each pair In singleStep.OutputInputMappingPair
                         Dim phasor As XElement = <phasor>
-                                                                                                                                                                   <mag>
-                                                                                                                                                                       <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                                                                                                                                       <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                                                                                                                                   </mag>
-                                                                                                                                                                   <ang>
-                                                                                                                                                                       <PMU><%= pair.Value(1).PMUName %></PMU>
-                                                                                                                                                                       <Channel><%= pair.Value(1).SignalName %></Channel>
-                                                                                                                                                                   </ang>
-                                                                                                                                                                   <CustName><%= pair.Key.SignalName %></CustName>
-                                                                                                                                                               </phasor>
+                                                     <mag>
+                                                         <PMU><%= pair.Value(0).PMUName %></PMU>
+                                                         <Channel><%= pair.Value(0).SignalName %></Channel>
+                                                     </mag>
+                                                     <ang>
+                                                         <PMU><%= pair.Value(1).PMUName %></PMU>
+                                                         <Channel><%= pair.Value(1).SignalName %></Channel>
+                                                     </ang>
+                                                     <CustName><%= pair.Key.SignalName %></CustName>
+                                                 </phasor>
                         aStep.<Parameters>.LastOrDefault.Add(phasor)
                     Next
                 Case "Power Calculation"
                     Dim powerDict = _powerTypeDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
                     aStep = <Customization>
-                                                                                                                                                                       <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                       <Parameters>
-                                                                                                                                                                           <PowType><%= powerDict(singleStep.PowType.ToString) %></PowType>
-                                                                                                                                                                           <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
-                                                                                                                                                                       </Parameters>
-                                                                                                                                                                   </Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <PowType><%= powerDict(singleStep.PowType.ToString) %></PowType>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                </Parameters>
+                            </Customization>
                     For Each pair In singleStep.OutputInputMappingPair
                         If pair.Value.Count = 4 Then
                             Dim power As XElement = <power>
-                                                                                                                                                                       <Vmag>
-                                                                                                                                                                           <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                                                                                                                                           <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                                                                                                                                       </Vmag>
-                                                                                                                                                                       <Vang>
-                                                                                                                                                                           <PMU><%= pair.Value(1).PMUName %></PMU>
-                                                                                                                                                                           <Channel><%= pair.Value(1).SignalName %></Channel>
-                                                                                                                                                                       </Vang>
-                                                                                                                                                                       <Imag>
-                                                                                                                                                                           <PMU><%= pair.Value(2).PMUName %></PMU>
-                                                                                                                                                                           <Channel><%= pair.Value(2).SignalName %></Channel>
-                                                                                                                                                                       </Imag>
-                                                                                                                                                                       <Iang>
-                                                                                                                                                                           <PMU><%= pair.Value(3).PMUName %></PMU>
-                                                                                                                                                                           <Channel><%= pair.Value(3).SignalName %></Channel>
-                                                                                                                                                                       </Iang>
-                                                                                                                                                                       <CustName><%= pair.Key.SignalName %></CustName>
-                                                                                                                                                                   </power>
+                                                        <Vmag>
+                                                            <PMU><%= pair.Value(0).PMUName %></PMU>
+                                                            <Channel><%= pair.Value(0).SignalName %></Channel>
+                                                        </Vmag>
+                                                        <Vang>
+                                                            <PMU><%= pair.Value(1).PMUName %></PMU>
+                                                            <Channel><%= pair.Value(1).SignalName %></Channel>
+                                                        </Vang>
+                                                        <Imag>
+                                                            <PMU><%= pair.Value(2).PMUName %></PMU>
+                                                            <Channel><%= pair.Value(2).SignalName %></Channel>
+                                                        </Imag>
+                                                        <Iang>
+                                                            <PMU><%= pair.Value(3).PMUName %></PMU>
+                                                            <Channel><%= pair.Value(3).SignalName %></Channel>
+                                                        </Iang>
+                                                        <CustName><%= pair.Key.SignalName %></CustName>
+                                                    </power>
                             aStep.<Parameters>.LastOrDefault.Add(power)
                         ElseIf pair.Value.Count = 2 Then
                             Dim power As XElement = <power>
-                                                                                                                                                                           <Vphasor>
-                                                                                                                                                                               <PMU><%= pair.Value(0).PMUName %></PMU>
-                                                                                                                                                                               <Channel><%= pair.Value(0).SignalName %></Channel>
-                                                                                                                                                                           </Vphasor>
-                                                                                                                                                                           <Iphasor>
-                                                                                                                                                                               <PMU><%= pair.Value(1).PMUName %></PMU>
-                                                                                                                                                                               <Channel><%= pair.Value(1).SignalName %></Channel>
-                                                                                                                                                                           </Iphasor>
-                                                                                                                                                                           <CustName><%= pair.Key.SignalName %></CustName>
-                                                                                                                                                                       </power>
+                                                        <Vphasor>
+                                                            <PMU><%= pair.Value(0).PMUName %></PMU>
+                                                            <Channel><%= pair.Value(0).SignalName %></Channel>
+                                                        </Vphasor>
+                                                        <Iphasor>
+                                                            <PMU><%= pair.Value(1).PMUName %></PMU>
+                                                            <Channel><%= pair.Value(1).SignalName %></Channel>
+                                                        </Iphasor>
+                                                        <CustName><%= pair.Key.SignalName %></CustName>
+                                                    </power>
                             aStep.<Parameters>.LastOrDefault.Add(power)
                         End If
                     Next
@@ -956,25 +968,25 @@ Namespace ViewModels
                     Next
                 Case "Status Flags"
                     aStep = <Filter>
-                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                               <Parameters></Parameters>
-                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                                <Parameters></Parameters>
+                            </Filter>
                     aStep.<Parameters>.LastOrDefault.Add(New XElement("SetToNaN", "TRUE"))
                     _dqFilterCounter = _dqFilterCounter + 1
                     aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", _dqFilterCounter))
                     For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
                         For Each subgroup In group.SignalList
                             Dim PMU As XElement = <PMU>
-                                                                                                                                                                                                       <Name><%= subgroup.SignalSignature.PMUName %></Name>
-                                                                                                                                                                                                   </PMU>
+                                                      <Name><%= subgroup.SignalSignature.PMUName %></Name>
+                                                  </PMU>
                             aStep.Add(PMU)
                         Next
                     Next
                 Case "Zeros", "Missing"
                     aStep = <Filter>
-                                                                                                                                                                                                       <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                       <Parameters></Parameters>
-                                                                                                                                                                                                   </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                                <Parameters></Parameters>
+                            </Filter>
                     aStep.<Parameters>.LastOrDefault.Add(New XElement("SetToNaN", "TRUE"))
                     _dqFilterCounter = _dqFilterCounter + 1
                     aStep.<Parameters>.LastOrDefault.Add(New XElement("FlagBit", _dqFilterCounter))
@@ -982,8 +994,8 @@ Namespace ViewModels
                     _writePMUElements(aStep, PMUSignalDictionary)
                 Case "Nominal Voltage"
                     aStep = <Filter>
-                                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            </Filter>
                     Dim para = <Parameters></Parameters>
                     If Not String.IsNullOrEmpty(singleStep.NomVoltage) Then
                         para.Add(<NomVoltage><%= singleStep.NomVoltage %></NomVoltage>)
@@ -1002,8 +1014,8 @@ Namespace ViewModels
                     _writePMUElements(aStep, PMUSignalDictionary)
                 Case "Nominal Frequency"
                     aStep = <Filter>
-                                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            </Filter>
                     Dim para = <Parameters></Parameters>
                     If Not String.IsNullOrEmpty(singleStep.FreqMinChan) Then
                         para.Add(<FreqMinChan><%= singleStep.FreqMinChan %></FreqMinChan>)
@@ -1030,8 +1042,8 @@ Namespace ViewModels
                     _writePMUElements(aStep, PMUSignalDictionary)
                 Case "Outliers"
                     aStep = <Filter>
-                                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            </Filter>
                     Dim para = <Parameters></Parameters>
                     If Not String.IsNullOrEmpty(singleStep.StdDevMult) Then
                         para.Add(<StdDevMult><%= singleStep.StdDevMult %></StdDevMult>)
@@ -1044,8 +1056,8 @@ Namespace ViewModels
                     _writePMUElements(aStep, PMUSignalDictionary)
                 Case "Stale Data"
                     aStep = <Filter>
-                                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            </Filter>
                     Dim para = <Parameters></Parameters>
                     If Not String.IsNullOrEmpty(singleStep.StaleThresh) Then
                         para.Add(<StaleThresh><%= singleStep.StaleThresh %></StaleThresh>)
@@ -1063,8 +1075,8 @@ Namespace ViewModels
                     _writePMUElements(aStep, PMUSignalDictionary)
                 Case "Data Frame", "Channel"
                     aStep = <Filter>
-                                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            </Filter>
                     Dim para = <Parameters></Parameters>
                     If Not String.IsNullOrEmpty(singleStep.PercentBadThresh) Then
                         para.Add(<PercentBadThresh><%= singleStep.PercentBadThresh %></PercentBadThresh>)
@@ -1077,8 +1089,8 @@ Namespace ViewModels
                     _writePMUElements(aStep, PMUSignalDictionary)
                 Case "Entire PMU"
                     aStep = <Filter>
-                                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            </Filter>
                     Dim para = <Parameters></Parameters>
                     If Not String.IsNullOrEmpty(singleStep.PercentBadThresh) Then
                         para.Add(<PercentBadThresh><%= singleStep.PercentBadThresh %></PercentBadThresh>)
@@ -1090,15 +1102,15 @@ Namespace ViewModels
                     For Each group In singleStep.ThisStepOutputsAsSignalHierachyByPMU.SignalList
                         For Each subgroup In group.SignalList
                             Dim PMU As XElement = <PMU>
-                                                                                                                                                                                                               <Name><%= subgroup.SignalSignature.PMUName %></Name>
-                                                                                                                                                                                                           </PMU>
+                                                      <Name><%= subgroup.SignalSignature.PMUName %></Name>
+                                                  </PMU>
                             aStep.Add(PMU)
                         Next
                     Next
                 Case "Angle Wrapping"
                     aStep = <Filter>
-                                                                                                                                                                                                               <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
-                                                                                                                                                                                                           </Filter>
+                                <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>
+                            </Filter>
                     Dim para = <Parameters></Parameters>
                     If Not String.IsNullOrEmpty(singleStep.AngleThresh) Then
                         para.Add(<AngleThresh><%= singleStep.AngleThresh %></AngleThresh>)

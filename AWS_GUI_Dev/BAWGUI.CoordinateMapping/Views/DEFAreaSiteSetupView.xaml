@@ -20,7 +20,7 @@
             </ObjectDataProvider>
             <coreconverters:EnumToStringConverter12 x:Key="EnumToStringConverter12"/>
             <DataTemplate x:Key="LineOrArea">
-                <local:SignalMappingPlotLineAreaSetupView/>
+                <local:DEFAreaSitePlotLineAreaSetupView/>
             </DataTemplate>
             <DataTemplate x:Key="Dot">
                 <local:DEFAreaSitePlotDotSetupView/>
@@ -34,7 +34,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="2">
-                <TextBlock Text="Area Name:" Margin="2" Width="300"/>
+                <TextBlock Text="Area Name:" Margin="2" Width="450"/>
                 <TextBlock Text="Plot Type:" Margin="2" Width="100"/>
             </StackPanel>
             <ItemsControl ItemsSource="{Binding Areas}" Grid.Row="1" Margin="2">
@@ -46,7 +46,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                <TextBox Text="{Binding AreaName}" Margin="2" Width="300" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="SignalName">
+                                <TextBox Text="{Binding AreaName}" Margin="2" Width="450" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="SignalName">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="GotFocus">
                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedArea}" CommandParameter="{Binding}"/>

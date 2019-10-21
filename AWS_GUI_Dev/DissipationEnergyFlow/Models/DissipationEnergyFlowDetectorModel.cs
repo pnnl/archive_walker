@@ -29,15 +29,17 @@ namespace DissipationEnergyFlow.Models
     {
         public EnergyFlowPath()
         {
-            FromArea = new EnergyFlowAreaCoordsMappingModel();
-            ToArea = new EnergyFlowAreaCoordsMappingModel();
+            //FromArea = new EnergyFlowAreaCoordsMappingModel();
+            //ToArea = new EnergyFlowAreaCoordsMappingModel();
             VoltageMag = new SignalSignatures();
             VoltageAng = new SignalSignatures();
             ActivePowerP = new SignalSignatures();
             ReactivePowerQ = new SignalSignatures();
         }
-        public EnergyFlowAreaCoordsMappingModel FromArea { get; set; }
-        public EnergyFlowAreaCoordsMappingModel ToArea { get; set; }
+        //public EnergyFlowAreaCoordsMappingModel FromArea { get; set; }
+        //public EnergyFlowAreaCoordsMappingModel ToArea { get; set; }
+        public string FromArea { get; set; }
+        public string ToArea { get; set; }
         public SignalSignatures VoltageMag { get; set; }
         public SignalSignatures VoltageAng { get; set; }
         public SignalSignatures ActivePowerP { get; set; }

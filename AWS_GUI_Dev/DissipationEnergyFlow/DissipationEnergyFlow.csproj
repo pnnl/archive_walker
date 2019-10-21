@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\DEFReader.cs" />
+    <Compile Include="Models\DEFWriter.cs" />
     <Compile Include="Models\DissipationEnergyFlowDetectorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

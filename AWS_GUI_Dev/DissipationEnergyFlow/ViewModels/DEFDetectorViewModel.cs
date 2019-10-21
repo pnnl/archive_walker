@@ -17,6 +17,7 @@ namespace DissipationEnergyFlow.ViewModels
     {
         private SignalManager _signalMgr;
         private DissipationEnergyFlowDetectorModel _model;
+        public DissipationEnergyFlowDetectorModel Model { get { return _model; } }
         public DEFDetectorViewModel()
         {
             InputChannels = new ObservableCollection<SignalSignatureViewModel>();
@@ -45,24 +46,24 @@ namespace DissipationEnergyFlow.ViewModels
                 //here need to check to see if the viewmodel of this DEF area exists in the DEF viewmodel's area dictionary or not
                 //if exist, connect the DEF area VM to this DEF path
                 //if not, create new vm for this DEF area and add this new vm to the dictionary.
-                if (!Areas.ContainsKey(path.FromArea.AreaName))
-                {
-                    aPath.FromArea = new EnergyFlowAreaCoordsMappingViewModel(path.FromArea);
-                    Areas[path.FromArea.AreaName] = aPath.FromArea;
-                }
-                else
-                {
-                    aPath.FromArea = Areas[path.FromArea.AreaName];
-                }
-                if (!Areas.ContainsKey(path.ToArea.AreaName))
-                {
-                    aPath.ToArea = new EnergyFlowAreaCoordsMappingViewModel(path.ToArea);
-                    Areas[path.ToArea.AreaName] = aPath.ToArea;
-                }
-                else
-                {
-                    aPath.ToArea = Areas[path.ToArea.AreaName];
-                }
+                //if (!Areas.ContainsKey(path.FromArea.AreaName))
+                //{
+                //    aPath.FromArea = new EnergyFlowAreaCoordsMappingViewModel(path.FromArea);
+                //    Areas[path.FromArea.AreaName] = aPath.FromArea;
+                //}
+                //else
+                //{
+                //    aPath.FromArea = Areas[path.FromArea.AreaName];
+                //}
+                //if (!Areas.ContainsKey(path.ToArea.AreaName))
+                //{
+                //    aPath.ToArea = new EnergyFlowAreaCoordsMappingViewModel(path.ToArea);
+                //    Areas[path.ToArea.AreaName] = aPath.ToArea;
+                //}
+                //else
+                //{
+                //    aPath.ToArea = Areas[path.ToArea.AreaName];
+                //}
                 Paths.Add(aPath);
             }
         }
@@ -129,8 +130,8 @@ namespace DissipationEnergyFlow.ViewModels
             VoltageAng = new SignalSignatureViewModel();
             ActivePowerP = new SignalSignatureViewModel();
             ReactivePowerQ = new SignalSignatureViewModel();
-            FromArea = new EnergyFlowAreaCoordsMappingViewModel(_model.FromArea);
-            ToArea = new EnergyFlowAreaCoordsMappingViewModel(_model.ToArea);
+            //FromArea = new EnergyFlowAreaCoordsMappingViewModel(_model.FromArea);
+            //ToArea = new EnergyFlowAreaCoordsMappingViewModel(_model.ToArea);
         }
         public EnergyFlowPathViewModel(EnergyFlowPath path) : this()
         {
@@ -150,7 +151,25 @@ namespace DissipationEnergyFlow.ViewModels
         public SignalSignatureViewModel VoltageAng { get; set; }
         public SignalSignatureViewModel ActivePowerP { get; set; }
         public SignalSignatureViewModel ReactivePowerQ { get; set; }
-        public EnergyFlowAreaCoordsMappingViewModel FromArea { get; set; }
-        public EnergyFlowAreaCoordsMappingViewModel ToArea { get; set; }
+        public string FromArea 
+        {
+            get { return _model.FromArea; }
+            set
+            {
+                _model.FromArea = value;
+                OnPropertyChanged();
+            }
+        }
+        public string ToArea
+        {
+            get { return _model.ToArea; }
+            set
+            {
+                _model.ToArea = value;
+                OnPropertyChanged();
+            }
+        }
+        //public EnergyFlowAreaCoordsMappingViewModel FromArea { get; set; }
+        //public EnergyFlowAreaCoordsMappingViewModel ToArea { get; set; }
     }
 }
