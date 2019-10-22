@@ -1,4 +1,5 @@
-﻿using BAWGUI.Core;
+﻿using BAWGUI.CoordinateMapping.Models;
+using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.Core.Utilities;
 using BAWGUI.Utilities;
@@ -22,7 +23,98 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             SiteSelected = new RelayCommand(_siteSelected);
             SelectedTextboxIndex = -1;
             ModifySiteSelection = new RelayCommand(_modifySiteSelection);
+            _defAreaMappingConfig = new List<EnergyFlowAreaCoordsMappingModel>();
+            AvailableSites = new ObservableCollection<SiteCoordinatesViewModel>();
         }
+        public DEFAreaSiteSetupViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords, List<EnergyFlowAreaCoordsMappingModel> dEFAreaMappingConfig) : this()
+        {
+            AvailableSites = siteCoords;
+            _defAreaMappingConfig = dEFAreaMappingConfig;
+        }
+        //public DEFAreaSiteSetupViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords, List<EnergyFlowAreaCoordsMappingModel> dEFAreaMappingConfig, List<string> areas) : this(siteCoords, dEFAreaMappingConfig)
+        //{
+        //    SetupAreaMapping(dEFAreaMappingConfig, areas);
+        //}
+
+        public void SetupAreaMapping(List<string> areas)
+        {
+            var newAreas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>();
+            var areaConfigDict = _defAreaMappingConfig.ToDictionary(x => x.AreaName);
+            var sitesRenamed = new Dictionary<string, string>();
+            var sitesNotFound = new List<string>();
+            foreach (var area in areas)
+            {
+                var newArea = new EnergyFlowAreaCoordsMappingViewModel(area);
+                if (areaConfigDict.ContainsKey(area))
+                {
+                    var thisAreaConfig = areaConfigDict[area];
+                    newArea.Type = thisAreaConfig.Type;
+                    newArea.Locations.Clear();
+                    foreach (var lc in thisAreaConfig.Locations)
+                    {
+                        if (!string.IsNullOrEmpty(lc.Name))
+                        {
+                            var foundSite = _findSite(lc.Latitude, lc.Longitude);
+                            if (foundSite != null)
+                            {
+                                newArea.Locations.Add(foundSite.Model);
+                                if (foundSite.SiteName != lc.Name && !sitesRenamed.ContainsKey(lc.Name))
+                                {
+                                    sitesRenamed[lc.Name] = foundSite.SiteName;
+                                }
+                            }
+                            else
+                            {
+                                newArea.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+                                sitesNotFound.Add(lc.Name);
+                            }
+                        }
+                        else
+                        {
+                            newArea.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+                        }
+                    }
+                }
+                newAreas.Add(newArea);
+            }
+            Areas = newAreas;
+            var siteNotFoundMessage = "";
+            var siteRenamedMessage = "";
+            if (sitesNotFound.Count != 0)
+            {
+                siteNotFoundMessage = string.Format("The following site(s) is(are) not found in the coordinates table:\n {0}", string.Join(",", sitesNotFound));
+            }
+            if (sitesRenamed.Count != 0)
+            {
+                var siteRenamedMessages = new List<string>();
+                foreach (var item in sitesRenamed)
+                {
+                    siteRenamedMessages.Add(string.Format("{0} to {1}", item.Key, item.Value));
+                }
+                siteRenamedMessage = string.Format("\nThe following site(s) is(are) re-named to match the name in the coordinates table:\n{0}", string.Join("\n", siteRenamedMessages));
+            }
+            if (!string.IsNullOrEmpty(siteNotFoundMessage) || !string.IsNullOrEmpty(siteRenamedMessage))
+            {
+                MessageBox.Show(siteNotFoundMessage + "\n" + siteRenamedMessage, "Warnings", MessageBoxButtons.OK);
+            }
+        }
+
+        private SiteCoordinatesViewModel _findSite(string Lat, string Lng)
+        {
+            foreach (var site in AvailableSites)
+            {
+                if (site.Latitude == Lat && site.Longitude == Lng) //instead of equal, we could give a certain percentage to decide if they mean the same location even if the number are not exact the same.
+                {
+                    return site;
+                }
+            }
+            return null;
+        }
+        private ObservableCollection<SiteCoordinatesViewModel> _siteCoords;
+        private List<EnergyFlowAreaCoordsMappingModel> _defAreaMappingConfig;
+
+        private Dictionary<string, EnergyFlowAreaCoordsMappingViewModel> areas;
+
         private ObservableCollection<EnergyFlowAreaCoordsMappingViewModel> _areas;
         public ObservableCollection<EnergyFlowAreaCoordsMappingViewModel> Areas 
         {

@@ -52,7 +52,8 @@ namespace BAWGUI.ViewModels
                 if (dtr is DEFDetectorViewModel)
                 {
                     var thisdtr = dtr as DEFDetectorViewModel;
-                    SiteMappingVM.DEFAreaSiteMappingVM.Areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
+                    SiteMappingVM.DEFAreaSiteMappingVM.SetupAreaMapping(thisdtr.UniqueAreas);
+                    thisdtr.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas;
                     break;
                 }
             }
@@ -326,25 +327,18 @@ namespace BAWGUI.ViewModels
                             SettingsVM.DataConfigure.ReaderProperty = new ReaderProperties(config.DataConfigure.ReaderProperty, _signalMgr);
                         }
                         //set up DEF area and detector signals on map
-                        var signalSiteMappingConfig = new SignalMappingPlotConfigReader(e.SelectedRun.Model.ConfigFilePath);
                         _signalMgr.DistinctMappingSignal();
-                        SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
-                        SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, signalSiteMappingConfig.GetSignalCoordsMappingModel());
-                        var DEFDetectorFound = false;
+                        SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, config.SignalSiteMappingConfig);
+                        SiteMappingVM.DEFAreaSiteMappingVM = new DEFAreaSiteSetupViewModel(CoordsTableVM.SiteCoords, config.DEFAreaMappingConfig);
                         foreach (var dtr in SettingsVM.DetectorConfigure.DetectorList)
                         {
                             if (dtr is DEFDetectorViewModel)
                             {
                                 var thisdtr = dtr as DEFDetectorViewModel;
-                                //var areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
-                                SiteMappingVM.DEFAreaSiteMappingVM.Areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>(thisdtr.Areas.Values);
-                                DEFDetectorFound = true;
+                                SiteMappingVM.DEFAreaSiteMappingVM.SetupAreaMapping(thisdtr.UniqueAreas);
+                                thisdtr.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas;
                                 break;
                             }
-                        }
-                        if (!DEFDetectorFound)
-                        {
-                            SiteMappingVM.DEFAreaSiteMappingVM.Areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>();
                         }
                     }
                     catch (Exception ex)

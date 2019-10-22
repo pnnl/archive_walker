@@ -1,6 +1,8 @@
 ﻿using BAWGUI.CoordinateMapping.Models;
 using BAWGUI.Core;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DissipationEnergyFlow.Models
 {
@@ -9,7 +11,8 @@ namespace DissipationEnergyFlow.Models
         public DissipationEnergyFlowDetectorModel()
         {
             Paths = new List<EnergyFlowPath>();
-            Areas = new Dictionary<string, EnergyFlowAreaCoordsMappingModel>();
+            //Areas = new Dictionary<string, EnergyFlowAreaCoordsMappingModel>();
+            UniqueAreas = new List<string>();
         }
 
         public string Name
@@ -23,7 +26,8 @@ namespace DissipationEnergyFlow.Models
         public int LocLengthStep { get; set; }
         public int LocRes { get; set; }
         public List<EnergyFlowPath> Paths { get; set; }
-        public Dictionary<string, EnergyFlowAreaCoordsMappingModel> Areas { get; set; }
+        //public Dictionary<string, EnergyFlowAreaCoordsMappingModel> Areas { get; set; }
+        public List<string> UniqueAreas { get; set; }
     }
     public class EnergyFlowPath
     {
@@ -38,8 +42,38 @@ namespace DissipationEnergyFlow.Models
         }
         //public EnergyFlowAreaCoordsMappingModel FromArea { get; set; }
         //public EnergyFlowAreaCoordsMappingModel ToArea { get; set; }
-        public string FromArea { get; set; }
-        public string ToArea { get; set; }
+        private string _fromArea;
+        public string FromArea
+        {
+            get { return _fromArea; }
+            set
+            {
+                if (value.All(c => Char.IsLetterOrDigit(c) || c.Equals('_')))
+                {
+                    _fromArea = value;
+                }
+                else
+                {
+                    throw new Exception("Area name can’t use spaces or special characters except underscore.");
+                }
+            }
+        }
+        private string _toArea;
+        public string ToArea
+        {
+            get { return _toArea; }
+            set
+            {
+                if (value.All(c => Char.IsLetterOrDigit(c) || c.Equals('_')))
+                {
+                    _toArea = value;
+                }
+                else
+                {
+                    throw new Exception("Area name can’t use spaces or special characters except underscore.");
+                }
+            }
+        }
         public SignalSignatures VoltageMag { get; set; }
         public SignalSignatures VoltageAng { get; set; }
         public SignalSignatures ActivePowerP { get; set; }

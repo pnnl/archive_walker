@@ -1,4 +1,5 @@
-﻿using BAWGUI.Utilities;
+﻿using BAWGUI.CoordinateMapping.Models;
+using BAWGUI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,9 +24,24 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         {
             AvailableSites = siteCoords;
         }
-
-        public DEFAreaSiteSetupViewModel DEFAreaSiteMappingVM { get; set; }
-        public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
+        private DEFAreaSiteSetupViewModel _defAreaSiteMappingVM;
+        public DEFAreaSiteSetupViewModel DEFAreaSiteMappingVM 
+        { get { return _defAreaSiteMappingVM; }
+            set
+            {
+                _defAreaSiteMappingVM = value;
+                OnPropertyChanged();
+            }
+        }
+        private SignalCoordsMappingViewModel _signalCoordsMappingVM;
+        public SignalCoordsMappingViewModel SignalCoordsMappingVM 
+        { get { return _signalCoordsMappingVM; }
+            set
+            {
+                _signalCoordsMappingVM = value;
+                OnPropertyChanged();
+            }
+        }
         //private ObservableCollection<SiteCoordinatesViewModel> _availableSites;
         private ObservableCollection<SiteCoordinatesViewModel> _availableSites;
         public ObservableCollection<SiteCoordinatesViewModel> AvailableSites 
@@ -43,6 +59,12 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             }
         }
         private bool _targetIsSignal;
+        private ObservableCollection<SiteCoordinatesViewModel> siteCoords;
+        private List<EnergyFlowAreaCoordsMappingModel> dEFAreaMappingConfig;
+        private Dictionary<string, EnergyFlowAreaCoordsMappingViewModel>.ValueCollection values;
+        private ObservableCollection<SiteCoordinatesViewModel> siteCoords1;
+        private List<EnergyFlowAreaCoordsMappingModel> dEFAreaMappingConfig1;
+
         public bool TargetIsSignal 
         {
             get { return _targetIsSignal; }

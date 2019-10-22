@@ -231,6 +231,16 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             }
         }
 
-
+        //public static SiteCoordinatesViewModel FindSite(string Lat, string Lng)
+        //{
+        //    foreach (var site in SiteCoords)
+        //    {
+        //        if (site.Latitude == Lat && site.Longitude == Lng) //instead of equal, we could give a certain percentage to decide if they mean the same location even if the number are not exact the same.
+        //        {
+        //            return site;
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 }

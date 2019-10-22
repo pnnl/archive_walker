@@ -71,6 +71,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.CoordinateMapping\BAWGUI.CoordinateMapping.csproj">
+      <Project>{65931574-76AF-4900-86C9-458DED20CE5D}</Project>
+      <Name>BAWGUI.CoordinateMapping</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
       <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
       <Name>BAWGUI.Core</Name>

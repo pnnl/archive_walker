@@ -25,18 +25,30 @@ namespace DissipationEnergyFlow.Models
             {
                 var aPath = new XElement("Path", new XElement("From", pth.FromArea),
                                                  new XElement("To", pth.ToArea));
-                var vm = new XElement("VM", new XElement("PMU", new XElement("Name", pth.VoltageMag.PMUName),
-                                                                new XElement("Channel", new XElement("Name", pth.VoltageMag.SignalName))));
-                aPath.Add(vm);
-                var va = new XElement("VA", new XElement("PMU", new XElement("Name", pth.VoltageAng.PMUName),
-                                                                new XElement("Channel", new XElement("Name", pth.VoltageAng.SignalName))));
-                aPath.Add(va);
-                var p = new XElement("P", new XElement("PMU", new XElement("Name", pth.ActivePowerP.PMUName),
-                                                                new XElement("Channel", new XElement("Name", pth.ActivePowerP.SignalName))));
-                aPath.Add(p);
-                var q = new XElement("Q", new XElement("PMU", new XElement("Name", pth.ReactivePowerQ.PMUName),
-                                                                new XElement("Channel", new XElement("Name", pth.ReactivePowerQ.SignalName))));
-                aPath.Add(q);
+                if (!string.IsNullOrEmpty(pth.VoltageMag.SignalName) && !string.IsNullOrEmpty(pth.VoltageMag.PMUName))
+                {
+                    var vm = new XElement("VM", new XElement("PMU", new XElement("Name", pth.VoltageMag.PMUName),
+                                                                    new XElement("Channel", new XElement("Name", pth.VoltageMag.SignalName))));
+                    aPath.Add(vm);
+                }
+                if (!string.IsNullOrEmpty(pth.VoltageAng.SignalName) && !string.IsNullOrEmpty(pth.VoltageAng.PMUName))
+                {
+                    var va = new XElement("VA", new XElement("PMU", new XElement("Name", pth.VoltageAng.PMUName),
+                                                                    new XElement("Channel", new XElement("Name", pth.VoltageAng.SignalName))));
+                    aPath.Add(va);
+                }
+                if (!string.IsNullOrEmpty(pth.ActivePowerP.SignalName) && !string.IsNullOrEmpty(pth.ActivePowerP.PMUName))
+                {
+                    var p = new XElement("P", new XElement("PMU", new XElement("Name", pth.ActivePowerP.PMUName),
+                                                                    new XElement("Channel", new XElement("Name", pth.ActivePowerP.SignalName))));
+                    aPath.Add(p);
+                }
+                if (!string.IsNullOrEmpty(pth.ReactivePowerQ.SignalName) && !string.IsNullOrEmpty(pth.ReactivePowerQ.PMUName))
+                {
+                    var q = new XElement("Q", new XElement("PMU", new XElement("Name", pth.ReactivePowerQ.PMUName),
+                                                                    new XElement("Channel", new XElement("Name", pth.ReactivePowerQ.SignalName))));
+                    aPath.Add(q);
+                }
                 paths.Add(aPath);
             }
             ef.Add(paths);

@@ -4745,28 +4745,24 @@ Namespace ViewModels
             For Each dtr In DetectorConfigure.DetectorList
                 If TypeOf (dtr) Is DEFDetectorViewModel Then
                     Dim detector As DEFDetectorViewModel = dtr
-                    Dim addedNewDictEntry = False
-                    Dim newDEFAreaDict = New Dictionary(Of String, EnergyFlowAreaCoordsMappingViewModel)
+                    Dim addedNewArea = False
+                    Dim newAreaList = New List(Of String)
                     For Each pth In detector.Paths
-                        If Not detector.Areas.ContainsKey(pth.FromArea) Then
-                            newDEFAreaDict(pth.FromArea) = New EnergyFlowAreaCoordsMappingViewModel(pth.FromArea)
-                            If Not addedNewDictEntry Then
-                                addedNewDictEntry = True
-                            End If
-                        Else
-                            newDEFAreaDict(pth.FromArea) = detector.Areas(pth.FromArea)
+                        If Not detector.UniqueAreas.Contains(pth.FromArea) And Not addedNewArea Then
+                            addedNewArea = True
                         End If
-                        If Not detector.Areas.ContainsKey(pth.ToArea) Then
-                            newDEFAreaDict(pth.ToArea) = New EnergyFlowAreaCoordsMappingViewModel(pth.ToArea)
-                            If Not addedNewDictEntry Then
-                                addedNewDictEntry = True
-                            End If
-                        Else
-                            newDEFAreaDict(pth.FromArea) = detector.Areas(pth.FromArea)
+                        If Not newAreaList.Contains(pth.FromArea) Then
+                            newAreaList.Add(pth.FromArea)
+                        End If
+                        If Not detector.UniqueAreas.Contains(pth.ToArea) And Not addedNewArea Then
+                            addedNewArea = True
+                        End If
+                        If Not newAreaList.Contains(pth.ToArea) Then
+                            newAreaList.Add(pth.ToArea)
                         End If
                     Next
-                    If addedNewDictEntry Or newDEFAreaDict.Count <> detector.Areas.Count Then
-                        detector.Areas = newDEFAreaDict
+                    If addedNewArea OrElse newAreaList.Count <> detector.UniqueAreas.Count Then
+                        detector.UniqueAreas = newAreaList
                         RaiseEvent DEFAreasChanged()
                     End If
                     Exit For

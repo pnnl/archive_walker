@@ -595,19 +595,6 @@ Namespace ViewModels
                             element.Add(<FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>)
                         End If
                         element.Add(<CalcDEF><%= dt.CalcDEF.ToString.ToUpper %></CalcDEF>)
-
-                        '    <Mode><%= dt.Mode.ToString %></Mode>
-                        '    <AnalysisLength><%= dt.AnalysisLength %></AnalysisLength>
-                        '    <WindowType><%= dt.WindowType.ToString %></WindowType>
-                        '    <FrequencyInterval><%= dt.FrequencyInterval %></FrequencyInterval>
-                        '    <WindowLength><%= dt.WindowLength %></WindowLength>
-                        '    <WindowOverlap><%= dt.WindowOverlap %></WindowOverlap>
-                        '    <MedianFilterFrequencyWidth><%= dt.MedianFilterFrequencyWidth %></MedianFilterFrequencyWidth>
-                        '    <Pfa><%= dt.Pfa %></Pfa>
-                        '    <FrequencyMin><%= dt.FrequencyMin %></FrequencyMin>
-                        '    <FrequencyMax><%= dt.FrequencyMax %></FrequencyMax>
-                        '    <FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>
-                        '</Periodogram>
                     Case GetType(VoltageStabilityDetectorViewModel)
                         Continue For
                     Case GetType(SmallSignalStabilityToolViewModel)
@@ -616,7 +603,7 @@ Namespace ViewModels
                         Dim dt = DirectCast(detector, DEFDetectorViewModel)
                         Dim writer = New DEFWriter(dt.Model)
                         detectorConfig.<Configuration>.LastOrDefault.Add(writer.WriteConfigToXMLFormat())
-                        DEFAreaConfigWriter = New DEFAreaMappingConfigWriter(dt.Areas)
+                        DEFAreaConfigWriter = New DEFAreaMappingConfigWriter(dt.Areas.ToList)
                         Continue For
                     Case Else
                         Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
@@ -687,7 +674,7 @@ Namespace ViewModels
                                               </WindAppConfig>
             _configData.Add(windApplication)
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-            '''''''''''Write signal mapping plot settings''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            '''''''''''Write signal and DEF area mapping plot settings''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             If _svm.SignalMgr.UniqueMappingSignals IsNot Nothing AndAlso _svm.SignalMgr.UniqueMappingSignals.Count <> 0 Then
                 Dim writer = New SignalMappingPlotConfigWriter()

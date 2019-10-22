@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DissipationEnergyFlow.ViewModels
@@ -27,7 +28,8 @@ namespace DissipationEnergyFlow.ViewModels
             AddAPath = new RelayCommand(_addAPath);
             DeleteAPath = new RelayCommand(_deleteAPath);
             Paths = new ObservableCollection<EnergyFlowPathViewModel>();
-            Areas = new Dictionary<string, EnergyFlowAreaCoordsMappingViewModel>();
+            Areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>();
+            UniqueAreas = new List<string>();
         }
         public DEFDetectorViewModel(SignalManager signalMgr) : this()
         {
@@ -118,7 +120,12 @@ namespace DissipationEnergyFlow.ViewModels
         }
 
         public ObservableCollection<EnergyFlowPathViewModel> Paths { get; set; }
-        public Dictionary<string, EnergyFlowAreaCoordsMappingViewModel> Areas { get; set; }
+        public ObservableCollection<EnergyFlowAreaCoordsMappingViewModel> Areas { get; set; }
+        public List<string> UniqueAreas 
+        {
+            get { return _model.UniqueAreas; }
+            set { _model.UniqueAreas = value; }
+        }
     }
 
     public class EnergyFlowPathViewModel : ViewModelBase
@@ -156,7 +163,15 @@ namespace DissipationEnergyFlow.ViewModels
             get { return _model.FromArea; }
             set
             {
-                _model.FromArea = value;
+                try
+                {
+                    _model.FromArea = value;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
                 OnPropertyChanged();
             }
         }
@@ -165,7 +180,15 @@ namespace DissipationEnergyFlow.ViewModels
             get { return _model.ToArea; }
             set
             {
-                _model.ToArea = value;
+                try
+                {
+                    _model.ToArea = value;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
                 OnPropertyChanged();
             }
         }
