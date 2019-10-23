@@ -24,6 +24,8 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Globalization;
 using System.Windows.Media.Animation;
+using BAWGUI.CoordinateMapping.ViewModels;
+using BAWGUI.Core.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -55,8 +57,9 @@ namespace BAWGUI.Results.ViewModels
             //_selectedEndTime = "01/01/0001 00:00:00";
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
-            _mapPlottingRule = new List<string>(new string[]{ "SNR", "Amplitude", "Coherence" });
+            _mapPlottingRule = new List<string>(new string[]{ "SNR", "Amplitude", "Coherence", "DEF" });
             _selectedPlottingRule = "SNR";
+            Areas = new List<EnergyFlowAreaCoordsMappingViewModel>();
         }
         private AWRunViewModel _run;
         public AWRunViewModel Run
@@ -241,8 +244,17 @@ namespace BAWGUI.Results.ViewModels
             {
                 _drawFOPlot();
                 _updateSelectionsInTables(SelectedPlottingRule);
-                _updateFOplotAndMapAfterSelectionChange();
-                _updateMapMarkerAfterChannelSelectionChange();
+                _updateFOMapAfterSelectionChange();
+                if (SelectedPlottingRule == "DEF")
+                {
+                    //draw energy flow on map with currently selected event and occurrance
+                    _drawDEF();
+                }
+                else
+                {
+                    _updateFOplotAfterSelectionChange();
+                    _updateMapMarkerAfterChannelSelectionChange();
+                }
             }
             //else
             //{
@@ -269,7 +281,16 @@ namespace BAWGUI.Results.ViewModels
                         oldSelectedOscillationEvent = _selectedOscillationEvent;
                     }
                     _selectedOscillationEvent = value;
-                    _updateFOplotAndMapAfterSelectionChange();
+                    _updateFOplotAfterSelectionChange();
+                    if (SelectedPlottingRule == "DEF")
+                    {
+                        //draw energy flow with currently selected event and occurence
+                        _drawDEF();
+                    }
+                    else
+                    {
+                        _updateFOMapAfterSelectionChange();
+                    }
                     OnPropertyChanged();
                     if (oldSelectedOscillationEvent != null)
                     {
@@ -300,14 +321,40 @@ namespace BAWGUI.Results.ViewModels
             var orig = sender as ForcedOscillationResultViewModel;
             if (SelectedOscillationEvent == orig)
             {
-                _updateFOplotAndMapAfterSelectionChange();
+                _updateFOplotAfterSelectionChange();
+                if (SelectedPlottingRule == "DEF")
+                {
+                    //draw energy flow with currently selected occurrence and event
+                    _drawDEF();
+                }
+                else
+                {
+                    _updateFOMapAfterSelectionChange();
+                }
             }
         }
+
+        private void _drawDEF()
+        {
+            var entries = new Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>>();
+            foreach (var area in Areas)
+            {
+                var key = area.AreaName;
+                var type = area.Type;
+                var locations = area.Locations;
+                entries[key] = new Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>(type, locations.ToList());
+            }
+
+            if (entries.Count() != 0 && SelectedOscillationEvent.SelectedOccurrence.Model.Paths.Count() != 0)
+            {
+                ResultMapVM.DrawDEF(entries, SelectedOscillationEvent.SelectedOccurrence.Model.Paths);
+            }
+        }
+
         private void _selectedChannelChanged(object sender, EventArgs e)
         {
             _updateMapMarkerAfterChannelSelectionChange();
         }
-
         private void _updateMapMarkerAfterChannelSelectionChange()
         {
             if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedChannel != null)
@@ -345,10 +392,46 @@ namespace BAWGUI.Results.ViewModels
                 }
             }
         }
-
-        private void _updateFOplotAndMapAfterSelectionChange()
+        private void _updateFOMapAfterSelectionChange()
         {
             ResultMapVM.ClearMarkers();
+            if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null)
+            {
+                var signalList = new List<SignalIntensityViewModel>();
+                foreach (var channel in SelectedOscillationEvent.SelectedOccurrence.Channels)
+                {
+                    var signal = _signalMgr.SearchForSignalInTaggedSignals(channel.PMU, channel.Name);
+                    if (signal != null)
+                    {
+                        switch (SelectedPlottingRule)
+                        {
+                            case "SNR":
+                                signalList.Add(new SignalIntensityViewModel(signal, channel.SNR));
+                                break;
+                            case "Amplitude":
+                                signalList.Add(new SignalIntensityViewModel(signal, channel.Amplitude));
+                                break;
+                            case "Coherence":
+                                signalList.Add(new SignalIntensityViewModel(signal, channel.Coherence));
+                                break;
+                            case "DEF":
+
+                            default:
+                                break;
+                        }
+                    }
+                }
+                ////ResultMapVM.Signals = signalList;
+                ResultMapVM.UpdateResultMap(signalList);
+                //TODO: update map here
+                //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
+                //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
+                //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
+            }
+        }
+
+        private void _updateFOplotAfterSelectionChange()
+        {
             if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null)
             {
                 foreach (var item in FOPlotModel.Series)
@@ -367,34 +450,6 @@ namespace BAWGUI.Results.ViewModels
                         }
                     }
                 }
-                var signalList = new List<SignalIntensityViewModel>();
-                foreach (var channel in SelectedOscillationEvent.SelectedOccurrence.Channels)
-                {
-                    var signal = _signalMgr.SearchForSignalInTaggedSignals(channel.PMU, channel.Name);
-                    if (signal != null)
-                    {
-                        switch (SelectedPlottingRule)
-                        {
-                            case "SNR":
-                                signalList.Add(new SignalIntensityViewModel(signal, channel.SNR));
-                                break;
-                            case "Amplitude":
-                                signalList.Add(new SignalIntensityViewModel(signal, channel.Amplitude));
-                                break;
-                            case "Coherence":
-                                signalList.Add(new SignalIntensityViewModel(signal, channel.Coherence));
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-                ////ResultMapVM.Signals = signalList;
-                ResultMapVM.UpdateResultMap(signalList);
-                //TODO: update map here
-                //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
-                //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
-                //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
             }
             else
             {// change all plots to normal size since nothing is selected in table.
@@ -473,7 +528,6 @@ namespace BAWGUI.Results.ViewModels
         //        }
         //    }
         //}
-
         public List<string> _mapPlottingRule { get; private set; }
         public List<string> MapPlottingRule { get { return _mapPlottingRule; } }
         private string _selectedPlottingRule;
@@ -484,11 +538,19 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedPlottingRule = value;
                 _updateSelectionsInTables(value);
-                _updateFOplotAndMapAfterSelectionChange();
+                _updateFOplotAfterSelectionChange();
+                if (value == "DEF")
+                {
+                    //draw energy flow on map with currently selected event and occurrence.
+                    _drawDEF();
+                }
+                else
+                {
+                    _updateFOMapAfterSelectionChange();
+                }
                 OnPropertyChanged();
             }
         }
-
         private void _updateSelectionsInTables(string rule)
         {
             switch (rule)
@@ -544,11 +606,13 @@ namespace BAWGUI.Results.ViewModels
                         }
                     }
                     break;
+                case "DEF":
+                    SelectedOscillationEvent = FilteredResults.FirstOrDefault();
+                    break;
                 default:
                     break;
             }
         }
-
         private OccurrenceTableWindow _occurrenceTableWin;
         public ICommand ShowOccurrenceWindow { get; set; }
         private void _showOccurrenceWindow(object obj)
@@ -874,5 +938,6 @@ namespace BAWGUI.Results.ViewModels
 
         private SignalManager _signalMgr;
         public ResultMapViewModel ResultMapVM { get; set; }
+        public List<EnergyFlowAreaCoordsMappingViewModel> Areas { get; set; }
     }
 }

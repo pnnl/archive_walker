@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <coreconverters:DateTimeStringConverter x:Key="DateTimeStringConverter"/>
         <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
-        <converters:TableValueNANConverter x:Key="TableValueNANConverter"/>
+        <coreconverters:TableValueNANConverter x:Key="TableValueNANConverter"/>
         <DataTemplate x:Key="FloatCellTemplate">
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
         </DataTemplate>

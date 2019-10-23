@@ -1,6 +1,7 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.Utilities;
+using BAWGUI.Xml;
 using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
@@ -373,6 +374,170 @@ namespace MapService.ViewModels
                 curveList.Add(newRoute);
             }
             return curveList;
+        }
+
+        public void DrawDEF(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, List<ForcedOscillationTypeOccurrencePath> paths)
+        {
+            Gmap.Markers.Clear();
+            var drawnArea = new List<string>();
+            var sortedPath = paths.OrderByDescending(x => x.DEF).ToList();
+            var thinkest = sortedPath.FirstOrDefault().DEF;
+            foreach (var pth in sortedPath)
+            {
+                if (!drawnArea.Contains(pth.From))
+                {
+                    drawnArea.Add(pth.From);
+                    var thisArea = entries[pth.From];
+                    if (thisArea.Item1 == SignalMapPlotType.Dot)
+                    {
+                        var point = thisArea.Item2.FirstOrDefault();
+                        if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Longitude, out double lg))
+                        {
+                            var mkr = new GMapMarker(new PointLatLng(la, lg));
+                            mkr.Shape = new Ellipse
+                            {
+                                Width = 15,
+                                Height = 15,
+                                //Stroke = color,
+                                //Fill = color,
+                                ToolTip = pth.From
+                            };
+                            mkr.Tag = pth.From;
+                            Gmap.Markers.Add(mkr);
+                        }
+                    }
+                    if (thisArea.Item1 == SignalMapPlotType.Line)
+                    {
+                        //collect all point pairs here if there's only 2 points in the line
+                        //if there's more than 2 points, draw straight line.
+                        List<CartesianPoint> points = new List<CartesianPoint>();
+                        var newLine = new List<PointLatLng>();
+                        for (int index = 0; index < thisArea.Item2.Count; index++)
+                        {
+                            if (double.TryParse(thisArea.Item2[index].Longitude, out double lg) && double.TryParse(thisArea.Item2[index].Latitude, out double la))
+                            {
+                                //points.Add(new CartesianPoint(lg, la));
+                                newLine.Add(new PointLatLng(la, lg));
+                            }
+                        }
+                        if (points.Count >= 2)
+                        {
+                            //to plot them straight
+                            var newRoute = new GMapRoute(newLine);
+                            newRoute.Shape = new Path() { StrokeThickness = 4, ToolTip = pth.From };
+                            newRoute.Tag = pth.From;
+                            Gmap.Markers.Add(newRoute);
+
+                            //to plot them as curves
+                            //for (int i = 0; i < points.Count - 1; i++)
+                            //{
+                            //    pointPairs.Add(new PointsPair(points[i], points[i+1], color, signal.Signal.SignalName));
+                            //}
+                        }
+                        else
+                        {
+                            throw new Exception("A signal line should have at least 2 points/locations specified.");
+                        }
+                    }
+                    if (thisArea.Item1 == SignalMapPlotType.Area)
+                    {
+                        var points = new List<PointLatLng>();
+                        var points2 = new List<Point>();
+                        foreach (var pnt in thisArea.Item2)
+                        {
+                            if (double.TryParse(pnt.Latitude, out double la) && double.TryParse(pnt.Longitude, out double lg))
+                            {
+                                points.Add(new PointLatLng(la, lg));
+                                points2.Add(new Point(la, lg));
+                            }
+                        }
+                        var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
+                        //var areaColor = color.Clone();
+                        //areaColor.Opacity = 0.2;
+                        mkr.Shape = new Path() { StrokeThickness = 2, ToolTip = pth.From};
+                        mkr.Tag = pth.From;
+                        Gmap.Markers.Add(mkr);
+                        //_addPolygonToMap();
+                    }
+                }
+                if (!drawnArea.Contains(pth.To))
+                {
+                    drawnArea.Add(pth.To);
+                    var thisArea = entries[pth.To];
+                    if (thisArea.Item1 == SignalMapPlotType.Dot)
+                    {
+                        var point = thisArea.Item2.FirstOrDefault();
+                        if (double.TryParse(point.Latitude, out double la) && double.TryParse(point.Longitude, out double lg))
+                        {
+                            var mkr = new GMapMarker(new PointLatLng(la, lg));
+                            mkr.Shape = new Ellipse
+                            {
+                                Width = 15,
+                                Height = 15,
+                                //Stroke = color,
+                                //Fill = color,
+                                ToolTip = pth.To
+                            };
+                            mkr.Tag = pth.To;
+                            Gmap.Markers.Add(mkr);
+                        }
+                    }
+                    if (thisArea.Item1 == SignalMapPlotType.Line)
+                    {
+                        //collect all point pairs here if there's only 2 points in the line
+                        //if there's more than 2 points, draw straight line.
+                        List<CartesianPoint> points = new List<CartesianPoint>();
+                        var newLine = new List<PointLatLng>();
+                        for (int index = 0; index < thisArea.Item2.Count; index++)
+                        {
+                            if (double.TryParse(thisArea.Item2[index].Longitude, out double lg) && double.TryParse(thisArea.Item2[index].Latitude, out double la))
+                            {
+                                //points.Add(new CartesianPoint(lg, la));
+                                newLine.Add(new PointLatLng(la, lg));
+                            }
+                        }
+                        if (points.Count >= 2)
+                        {
+                            //to plot them straight
+                            var newRoute = new GMapRoute(newLine);
+                            newRoute.Shape = new Path() { StrokeThickness = 4, ToolTip = pth.To };
+                            newRoute.Tag = pth.To;
+                            Gmap.Markers.Add(newRoute);
+
+                            //to plot them as curves
+                            //for (int i = 0; i < points.Count - 1; i++)
+                            //{
+                            //    pointPairs.Add(new PointsPair(points[i], points[i+1], color, signal.Signal.SignalName));
+                            //}
+                        }
+                        else
+                        {
+                            throw new Exception("A signal line should have at least 2 points/locations specified.");
+                        }
+                    }
+                    if (thisArea.Item1 == SignalMapPlotType.Area)
+                    {
+                        var points = new List<PointLatLng>();
+                        var points2 = new List<Point>();
+                        foreach (var pnt in thisArea.Item2)
+                        {
+                            if (double.TryParse(pnt.Latitude, out double la) && double.TryParse(pnt.Longitude, out double lg))
+                            {
+                                points.Add(new PointLatLng(la, lg));
+                                points2.Add(new Point(la, lg));
+                            }
+                        }
+                        var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
+                        //var areaColor = color.Clone();
+                        //areaColor.Opacity = 0.2;
+                        mkr.Shape = new Path() { StrokeThickness = 2, ToolTip = pth.To };
+                        mkr.Tag = pth.To;
+                        Gmap.Markers.Add(mkr);
+                        //_addPolygonToMap();
+                    }
+                }
+            }
+            
         }
 
         public void ClearMarkers()

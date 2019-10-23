@@ -138,6 +138,10 @@
       <Project>{B9B8C18B-9958-4B16-ABE5-F075AAF346FB}</Project>
       <Name>BAWGUI.Utilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
+      <Project>{B948A304-8616-4D5F-9563-9805F8A506C2}</Project>
+      <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\BAWGUI.Resources\Images\bigMarkerGreen.png">

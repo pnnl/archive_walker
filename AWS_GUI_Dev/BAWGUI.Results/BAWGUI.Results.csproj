@@ -116,7 +116,6 @@
     <Compile Include="Converters\DataContexTypeConverter.cs" />
     <Compile Include="Converters\DateDictionaryKeyConverter.cs" />
     <Compile Include="Converters\ThumbnailVisibilityConverter.cs" />
-    <Compile Include="Converters\TableValueNANConverter.cs" />
     <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
     <Compile Include="Extensions.cs" />
@@ -366,6 +365,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.CoordinateMapping\BAWGUI.CoordinateMapping.csproj">
+      <Project>{65931574-76AF-4900-86C9-458DED20CE5D}</Project>
+      <Name>BAWGUI.CoordinateMapping</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
@@ -389,6 +392,10 @@
     <ProjectReference Include="..\BAWGUI.Xml\BAWGUI.Xml.csproj">
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DissipationEnergyFlowResults\DissipationEnergyFlowResults.csproj">
+      <Project>{05E7BB06-2633-4C06-8123-77BD9EE80131}</Project>
+      <Name>DissipationEnergyFlowResults</Name>
     </ProjectReference>
     <ProjectReference Include="..\JSISCSVWriter\JSISCSVWriter.csproj">
       <Project>{2c6141d9-cf7e-48a4-9479-7bd67340a370}</Project>

@@ -92,6 +92,7 @@
     <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
     <Compile Include="Converters\SelectionStatusBackgroundConverter.cs" />
     <Compile Include="Converters\TableRowIndexConverter.cs" />
+    <Compile Include="Converters\TableValueNANConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
     <Compile Include="Models\AWProject.cs" />
     <Compile Include="Models\AWRun.cs" />

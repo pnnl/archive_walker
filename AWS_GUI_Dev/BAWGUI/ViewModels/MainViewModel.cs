@@ -16,6 +16,7 @@ using ModeMeter.ViewModels;
 using BAWGUI.CoordinateMapping.Models;
 using DissipationEnergyFlow.ViewModels;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BAWGUI.ViewModels
 {
@@ -54,6 +55,7 @@ namespace BAWGUI.ViewModels
                     var thisdtr = dtr as DEFDetectorViewModel;
                     SiteMappingVM.DEFAreaSiteMappingVM.SetupAreaMapping(thisdtr.UniqueAreas);
                     thisdtr.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas;
+                    ResultsVM.ForcedOscillationResultsViewModel.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas.ToList();
                     break;
                 }
             }
@@ -337,6 +339,7 @@ namespace BAWGUI.ViewModels
                                 var thisdtr = dtr as DEFDetectorViewModel;
                                 SiteMappingVM.DEFAreaSiteMappingVM.SetupAreaMapping(thisdtr.UniqueAreas);
                                 thisdtr.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas;
+                                ResultsVM.ForcedOscillationResultsViewModel.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas.ToList();
                                 break;
                             }
                         }

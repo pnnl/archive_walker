@@ -9,6 +9,7 @@ using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
+using DissipationEnergyFlowResults.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -22,11 +23,21 @@ namespace BAWGUI.Results.ViewModels
         {
             _model = model;
             _channels.Clear();
+            _paths.Clear();
             foreach(var ch in _model.Channels)
             {
                 _channels.Add(new FOOccurrenceChannelViewModel(ch));
             }
             _selectedChannel = _channels.FirstOrDefault();
+            var paths = _model.Paths;
+            if (paths != null)
+            {
+                foreach (var pth in _model.Paths)
+                {
+                    _paths.Add(new FOOccurrencePathViewModel(pth));
+                }
+                _selectedPath = _paths.FirstOrDefault();
+            }
         }
         public OccurrenceViewModel()
         {
@@ -152,6 +163,12 @@ namespace BAWGUI.Results.ViewModels
         {
             get { return _channels; }
         }
+        private List<FOOccurrencePathViewModel> _paths = new List<FOOccurrencePathViewModel>();
+        //private List<ChannelViewModel> _channels;
+        public List<FOOccurrencePathViewModel> Paths
+        {
+            get { return _paths; }
+        }
         public int trackerKey { get; set; }
         private FOOccurrenceChannelViewModel _selectedChannel;
         public FOOccurrenceChannelViewModel SelectedChannel
@@ -164,6 +181,20 @@ namespace BAWGUI.Results.ViewModels
                     _selectedChannel = value;
                     OnPropertyChanged();
                     OnSelectedChannelChanged();
+                }
+            }
+        }
+        private FOOccurrencePathViewModel _selectedPath;
+        public FOOccurrencePathViewModel SelectedPath
+        {
+            get { return _selectedPath; }
+            set
+            {
+                if (_selectedPath != value)
+                {
+                    _selectedPath = value;
+                    OnPropertyChanged();
+                    //OnSelectedChannelChanged();
                 }
             }
         }

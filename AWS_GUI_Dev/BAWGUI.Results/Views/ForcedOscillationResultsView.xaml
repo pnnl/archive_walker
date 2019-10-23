@@ -7,6 +7,7 @@
              xmlns:viewscore="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              xmlns:map="clr-namespace:MapService.Views;assembly=MapService"
              xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:defv="clr-namespace:DissipationEnergyFlowResults.Views;assembly=DissipationEnergyFlowResults"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
     <UserControl.Resources>
@@ -66,6 +67,8 @@
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="4*"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="4*"/>
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0">
                     <Label Content="Occurrences:" DockPanel.Dock="Top"/>
@@ -75,6 +78,11 @@
                 <DockPanel Grid.Row="2">
                     <Label Content="Channels:" DockPanel.Dock="Top"/>
                     <views:FOChannelTableView DataContext="{Binding SelectedOscillationEvent.SelectedOccurrence}"/>
+                </DockPanel>
+                <GridSplitter Grid.Row="3" Height="5" HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+                <DockPanel Grid.Row="4">
+                    <Label Content="Paths:" DockPanel.Dock="Top"/>
+                    <defv:PathsTableView DataContext="{Binding SelectedOscillationEvent.SelectedOccurrence}"/>
                 </DockPanel>
             </Grid>
         </Grid>

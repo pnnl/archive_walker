@@ -12,7 +12,7 @@
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
-        <converters:TableValueNANConverter x:Key="TableValueNANConverter"/>
+        <coreconverters:TableValueNANConverter x:Key="TableValueNANConverter"/>
         <DataTemplate x:Key="FloatCellTemplate">
             <TextBlock Text="{Binding Converter={StaticResource TableValueNANConverter}}"/>
         </DataTemplate>

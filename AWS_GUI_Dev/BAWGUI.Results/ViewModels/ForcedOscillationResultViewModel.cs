@@ -15,6 +15,7 @@ using BAWGUI.MATLABRunResults.Models;
 using MapService.ViewModels;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using DissipationEnergyFlowResults.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -271,9 +272,11 @@ namespace BAWGUI.Results.ViewModels
                     //this way, we can set it back to the value it had
                     OccurrenceViewModel oldSelectedOccurrence = null;
                     FOOccurrenceChannelViewModel oldSelectedChannel = null;
+                    FOOccurrencePathViewModel oldSelectedPath = null;
                     if (_selectedOccurrence != null)
                     {
                         oldSelectedChannel = _selectedOccurrence.SelectedChannel;
+                        oldSelectedPath = _selectedOccurrence.SelectedPath;
                         oldSelectedOccurrence = _selectedOccurrence;
                     }
                     _selectedOccurrence = value;
@@ -282,6 +285,7 @@ namespace BAWGUI.Results.ViewModels
                     if (oldSelectedOccurrence != null)
                     {
                         oldSelectedOccurrence.SelectedChannel = oldSelectedChannel;
+                        oldSelectedOccurrence.SelectedPath = oldSelectedPath;
                     }
                 }
             }

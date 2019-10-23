@@ -72,9 +72,9 @@ namespace BAWGUI.Results.Models
                         ringdownEvents.Add(newrd);
                     }
                 }
-                if (content.OutOfRangeFrequency != null)
+                if (content.OutOfRangeGeneral != null)
                 {
-                    foreach (var oor in content.OutOfRangeFrequency)
+                    foreach (var oor in content.OutOfRangeGeneral)
                     {
                         var newoor = new OutOfRangeEvent(oor, date);
                         outOfRangeEvents.Add(newoor);
