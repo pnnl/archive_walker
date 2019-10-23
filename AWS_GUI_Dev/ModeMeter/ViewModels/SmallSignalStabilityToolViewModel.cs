@@ -65,6 +65,17 @@ namespace ModeMeter.ViewModels
             InputChannels = new ObservableCollection<SignalSignatureViewModel>(BaseliningSignals);
             BaseliningSignalBoxSelected = new RelayCommand(_baseliningSignalBoxSelected);
             ModePMUSignalBoxSelected = new RelayCommand(_modePMUSignalBoxSelected);
+            StepCounter = _signalMgr.GroupedSignalByDetectorInput.Count + 1;
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " + (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString() + " " + Name;
+            try
+            {
+                ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(InputChannels);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error sorting output signals by PMU in step: " + Name);
+            }
+            _signalMgr.GroupedSignalByDetectorInput.Add(ThisStepInputsAsSignalHerachyByType);
         }
         public override string Name
         {

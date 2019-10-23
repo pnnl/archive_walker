@@ -1404,6 +1404,12 @@ Namespace ViewModels
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error changing mode meter signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                         End Try
+                    ElseIf TypeOf _currentSelectedStep Is DEFDetectorViewModel Then
+                        Try
+                            _currentSelectedStep.ChangeSignalSelection(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing dissipation energy flow detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try
                             _changeSignalSelection(obj)

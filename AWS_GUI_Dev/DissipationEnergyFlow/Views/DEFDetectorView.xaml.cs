@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,34 @@ namespace DissipationEnergyFlow.Views
         public DEFDetectorView()
         {
             InitializeComponent();
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var b = sender as TextBox;
+            var stkl = b.Parent as StackPanel;
+            foreach (var item in stkl.Children)
+            {
+                if (item is TextBox)
+                {
+                    var ttbx = item as TextBox;
+                    ttbx.Background = Utility.HighlightColor;
+                }
+            }
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var b = sender as TextBox;
+            var stkl = b.Parent as StackPanel;
+            foreach (var item in stkl.Children)
+            {
+                if (item is TextBox)
+                {
+                    var ttbx = item as TextBox;
+                    ttbx.Background = new SolidColorBrush(Colors.White);
+                }
+            }
         }
     }
 }

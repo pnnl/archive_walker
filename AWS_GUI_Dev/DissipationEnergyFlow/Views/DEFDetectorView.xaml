@@ -6,12 +6,14 @@
              xmlns:local="clr-namespace:DissipationEnergyFlow.Views"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:converters="clr-namespace:DissipationEnergyFlow.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <coreconverters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <coreconverters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters:DEFTextBoxSelectionCPConverter x:Key="DEFTextBoxSelectionCPConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
@@ -89,23 +91,126 @@
                                             </Grid.RowDefinitions>
                                             <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="0">
                                                 <Label Content="Voltage Magnitude:" Margin="2" Width="120"/>
-                                                <TextBox Text="{Binding VoltageMag.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                                                <TextBox Text="{Binding VoltageMag.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                <TextBox Text="{Binding VoltageMag.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageMag"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding VoltageMag.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageMag"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>                                                </TextBox>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="1">
                                                 <Label Content="Voltage Angle:" Margin="2" Width="120"/>
-                                                <TextBox Text="{Binding VoltageAng.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                                                <TextBox Text="{Binding VoltageAng.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                <TextBox Text="{Binding VoltageAng.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageAng"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding VoltageAng.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageAng"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="2">
                                                 <Label Content="Active Power:" Margin="2" Width="120"/>
-                                                <TextBox Text="{Binding ActivePowerP.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                                                <TextBox Text="{Binding ActivePowerP.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                <TextBox Text="{Binding ActivePowerP.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ActivePowerP"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding ActivePowerP.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ActivePowerP"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="3">
                                                 <Label Content="Reactive Power:" Margin="2" Width="120"/>
-                                                <TextBox Text="{Binding ReactivePowerQ.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                                                <TextBox Text="{Binding ReactivePowerQ.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                <TextBox Text="{Binding ReactivePowerQ.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ReactivePowerQ"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding ReactivePowerQ.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ReactivePowerQ"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
                                             </StackPanel>
                                         </Grid>
                                     </Expander>

@@ -73,6 +73,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\DEFTextBoxSelectionCPConverter.cs" />
     <Compile Include="Models\DEFReader.cs" />
     <Compile Include="Models\DEFWriter.cs" />
     <Compile Include="Models\DissipationEnergyFlowDetectorModel.cs" />
