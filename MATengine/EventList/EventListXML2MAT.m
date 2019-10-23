@@ -56,6 +56,13 @@ if isfield(EventListXML,'ForcedOscillation')
         EventListMAT.ForcedOscillation(idx).Amplitude = cell(1,NumOccurrences);
         EventListMAT.ForcedOscillation(idx).SNR = cell(1,NumOccurrences);
         EventListMAT.ForcedOscillation(idx).Coherence = cell(1,NumOccurrences);
+        if isfield(EventListXML.ForcedOscillation{idx}.Occurrence{1},'Path')
+            NumPath = length(EventListXML.ForcedOscillation{idx}.Occurrence{1}.Path);
+            EventListMAT.ForcedOscillation(idx).DEF = zeros(NumPath,NumOccurrences);
+            EventListMAT.ForcedOscillation(idx).PathDescription = cell(2,NumPath);
+        else
+            NumPath = 0;
+        end
         for idx2 = 1:NumOccurrences
             EventListMAT.ForcedOscillation(idx).OccurrenceID{idx2} = EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.OccurrenceID;
             EventListMAT.ForcedOscillation(idx).Frequency(idx2) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Frequency);
@@ -82,6 +89,12 @@ if isfield(EventListXML,'ForcedOscillation')
                 EventListMAT.ForcedOscillation(idx).Amplitude{idx2}(idx3) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Channel{idx3}.Amplitude);
                 EventListMAT.ForcedOscillation(idx).SNR{idx2}(idx3) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Channel{idx3}.SNR);
                 EventListMAT.ForcedOscillation(idx).Coherence{idx2}(idx3) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Channel{idx3}.Coherence);
+            end
+            
+            for pIdx = 1:NumPath
+                EventListMAT.ForcedOscillation(idx).DEF(pIdx,idx2) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Path{pIdx}.DEF);
+                EventListMAT.ForcedOscillation(idx).PathDescription{1,pIdx} = EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Path{pIdx}.From;
+                EventListMAT.ForcedOscillation(idx).PathDescription{2,pIdx} = EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Path{pIdx}.To;
             end
         end
     end

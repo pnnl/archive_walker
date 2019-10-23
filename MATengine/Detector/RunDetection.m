@@ -88,6 +88,12 @@ for DetectorType = DetectorTypes
     % DetectorType on its own is a cell. Adding the {1} accesses the string
     % within the cell.
     
+    % The EnergyFlow 'detector' is not a true detector. It runs inside the
+    % FO detection and mode meter detectors, so skip over it.
+    if strcmp(DetectorType,'EnergyFlow')
+        continue
+    end
+    
     % Check if the current DetectorType was included in the detector's
     % configuration file. If so, run the detector.
     if isfield(DetectorXML,DetectorType{1})

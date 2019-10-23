@@ -9,44 +9,50 @@
             The GUI2MAT class provides a CLS compliant, MWArray interface to the MATLAB
             functions contained in the files:
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\GetFile
-            Example.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.
+            m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\GetFile
-            ExampleDB.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleD
+            B.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\GetSpar
-            seData.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\Inspect
-            ionAnalysis.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnaly
+            sis.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\ReadMMd
-            ata.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunFo
-            rcedOscillation.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOsci
+            llation.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunOu
-            tOfRange.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange
+            .m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunRi
-            ngdown.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RerunTh
-            evenin.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\Retriev
-            eData.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\RunNorm
-            alMode.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\UpdateO
-            BATpreset.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATprese
+            t.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\ArchiveWalker\AWrepository\MATengine\GUIfunctions\WriteMM
-            report.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m
             </summary>
             <remarks>
             @Version 4.0

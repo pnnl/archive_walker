@@ -115,6 +115,8 @@ else
     % Coherence
 end
 
+CalcDEF = ExtractedParameters.CalcDEF;
+
 FrequenciesToAdd = {};
 UpdatedEventList = [];
 RevisitOccurrence = zeros(0,2);
@@ -150,6 +152,11 @@ for DetIdx = 1:length(DetectionResults)
                 EventList(EventIdx).Channel = {DetectionResults(DetIdx).Channel};
                 EventList(EventIdx).PMU = {DetectionResults(DetIdx).PMU};
                 EventList(EventIdx).Unit = {DetectionResults(DetIdx).Unit};
+                
+                if CalcDEF
+                    EventList(EventIdx).DEF = DetectionResults(DetIdx).DEF(:,FreqIdx);
+                    EventList(EventIdx).PathDescription = Params.DEF.PathDescription;
+                end
                 
                 if isfield(DetectionResults(DetIdx),'Amplitude')
                     % Periodogram
@@ -239,6 +246,14 @@ for DetIdx = 1:length(DetectionResults)
                             end
                         end
                     end
+                    
+                    % If the maximum DEF is now larger (or if it is currently listed as NaN), update the values
+                    if CalcDEF
+                        MaxDEF = max(abs(EventList(EventIdx).DEF(:,end)));
+                        if (max(abs(DetectionResults(DetIdx).DEF(:,FreqIdx))) > MaxDEF) || isnan(MaxDEF)
+                            EventList(EventIdx).DEF(:,end) = DetectionResults(DetIdx).DEF(:,FreqIdx);
+                        end
+                    end
                 else
                     % This FO started after the end of the most recent
                     % occurrence, so it is a new occurrence
@@ -255,6 +270,10 @@ for DetIdx = 1:length(DetectionResults)
                     EventList(EventIdx).Channel = [EventList(EventIdx).Channel, {DetectionResults(DetIdx).Channel}];
                     EventList(EventIdx).PMU = [EventList(EventIdx).PMU, {DetectionResults(DetIdx).PMU}];
                     EventList(EventIdx).Unit = [EventList(EventIdx).Unit, {DetectionResults(DetIdx).Unit}];
+                    
+                    if CalcDEF
+                        EventList(EventIdx).DEF = [EventList(EventIdx).DEF, DetectionResults(DetIdx).DEF(:,FreqIdx)];
+                    end
                     
                     if isfield(DetectionResults(DetIdx),'Amplitude')
                         % Periodogram
@@ -286,6 +305,11 @@ for DetIdx = 1:length(DetectionResults)
             EventList(1).Channel = {DetectionResults(DetIdx).Channel};
             EventList(1).PMU = {DetectionResults(DetIdx).PMU};
             EventList(1).Unit = {DetectionResults(DetIdx).Unit};
+            
+            if CalcDEF
+                EventList(1).DEF = DetectionResults(DetIdx).DEF(:,FreqIdx);
+                EventList(1).PathDescription = Params.DEF.PathDescription;
+            end
             
             if isfield(DetectionResults(DetIdx),'Amplitude')
                 % Periodogram
@@ -345,6 +369,12 @@ for idx = 1:size(RevisitOccurrence,1)
         EventList(EventIdx).Persistence(OccurIdx) = max([EventList(EventIdx).Persistence(OccurIdx) EventList(EventIdx).Persistence(OverlapIdx)]);
         % The new alarm flag is an OR of the flags from each occurrence
         EventList(EventIdx).AlarmFlag(OccurIdx) = max([EventList(EventIdx).AlarmFlag(OccurIdx) EventList(EventIdx).AlarmFlag(OverlapIdx)]);
+        % The new DEF is the entry with the largest value
+        if CalcDEF
+            temp = [EventList(EventIdx).DEF(:,OccurIdx) EventList(EventIdx).DEF(:,OverlapIdx)];
+            [~,MaxIdx] = max(max(abs(temp)));
+            EventList(EventIdx).DEF(:,OccurIdx) = temp(:,MaxIdx);
+        end
         
         % Merge all the information related to individual channels - name,
         % amplitude, SNR, coherence
