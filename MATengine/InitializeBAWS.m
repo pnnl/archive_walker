@@ -483,8 +483,3 @@ if isfield(DetectorXML.Alarming,'Ringdown')
 else
     AlarmingParams.Ringdown = ExtractAlarmingParamsRingdown(struct());
 end
-% if isfield(DetectorXML.Alarming,'ModeMeter')
-%     AlarmingParams.ModeMeter = ExtractAlarmingParamsModeMeter(DetectorXML.Alarming.Ringdown);
-% else
-%     AlarmingParams.Modemeter = ExtractAlarmingParamsModeMeter(struct());
-% end

@@ -233,6 +233,6 @@ for k = 1:ResultUpdateInterval
         end
     end
 end
-AdditionalOutput.win = win;
+AdditionalOutput.win = win';
 AdditionalOutput.EventIndicator = EventIndicator;
 AdditionalOutput.Eadditional = Eadditional;

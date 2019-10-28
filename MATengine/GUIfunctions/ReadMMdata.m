@@ -44,11 +44,12 @@ for MMidx = 1:length(MMfolders)
     FreqIdx = contains(VarNames,'Frequency');
     DampIdx = contains(VarNames,'DampingRatio');
     OpIdx = contains(VarNames,'OperatingValue');
+    DEFidx = contains(VarNames,'DEF');
 
     ModeNames = unique(H{2,FreqIdx},'stable');
     ModeIdx = cell(1,length(ModeNames));
     for Midx = 1:length(ModeNames)
-        ModeIdx{Midx} = strcmp(H{2,:},ModeNames{Midx});
+        ModeIdx{Midx} = strcmp(H{2,:},ModeNames{Midx}) & (FreqIdx | DampIdx | OpIdx);
 
         AlgNames = unique(H{4,ModeIdx{Midx}},'stable');
         AlgIdx = cell(1,length(AlgNames));

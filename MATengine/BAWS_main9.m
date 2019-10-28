@@ -549,7 +549,15 @@ while(~min(done))
             MaxHist = 0;
             for idx1 = 1:length(AdditionalOutput)
                 for idx2 = 1:length(AdditionalOutput(idx1).Ringdown)
-                    MaxHist = max([MaxHist length(AdditionalOutput(idx1).Ringdown(idx2).RMShist)/AdditionalOutput(idx1).Ringdown(1).fs]);
+                    try
+                        MaxHist = max([MaxHist length(AdditionalOutput(idx1).Ringdown(idx2).RMShist)/AdditionalOutput(idx1).Ringdown(1).fs]);
+                    catch
+                        % If the data for the ringdown detector could not
+                        % be loaded, the AdditionalOutput is set to empty.
+                        % In this case MaxHist can't be calculated, so do
+                        % not take the shortcut.
+                        MaxHist = Inf;
+                    end
                 end
             end
             if SkippedFiles*FileLength >= MaxHist

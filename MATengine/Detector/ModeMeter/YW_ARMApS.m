@@ -32,21 +32,66 @@ function [ModeEst, Mtrack] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOf
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
-na = Parameters{1}.na;
-nb = Parameters{1}.nb;
+na = Parameters.na;
+nb = Parameters.nb;
+NaNomitLimit = Parameters.NaNomitLimit;
 
 TimeLoc(isnan(FOfreq),:) = [];
 FOfreq(isnan(FOfreq)) = [];
 
 if isempty(FOfreq)
-    L = Parameters{1}.L;
+    L = Parameters.L;
 else
-    L = Parameters{1}.LFO;
+    L = Parameters.LFO;
 end
 P = length(FOfreq);
+
+%% Handle the case where y contains NaN
+
+% If there are NaNs in y, handle them according to the user's input
+nanLoc = isnan(y);
+if sum(nanLoc) > 0
+    if sum(nanLoc) < NaNomitLimit
+        % There are few enough NaNs that they can be omitted
+        % Using the window, remove any samples that are NaN
+        w(nanLoc) = 0;
+        % For the window to work, y(nanLoc)*0 must equal 0, but nan*0 =
+        % nan. So, replace the NaNs in y with an arbitrary value.
+        y(nanLoc) = 0;
+    else
+        % There are too many NaNs in the input signal - return NaN for the mode
+        % estimate
+        ModeEst = NaN; 
+        Mtrack{length(Mtrack)+1} = NaN;
+        return
+    end
+end
+
+%% Remove leading and trailing values that are to be removed by windowing
+KeepIdx = find(w,1):find(w,1,'last');
+if length(KeepIdx) <= 2*nb+2*L
+    % Too much of the analysis window is to be removed, so return NaN for the
+    % mode estimate
+    ModeEst = NaN; 
+    Mtrack{length(Mtrack)+1} = NaN;
+    return
+else
+    % Remove samples at beginning and end that are to be windowed out
+    % anyway
+    w = w(KeepIdx);
+    y = y(KeepIdx);
+    % Adjust the forced oscillation start and end times to account for the
+    % samples that were removed from the beginning
+    TimeLoc = TimeLoc - KeepIdx(1) + 1;
+    % Shouldn't be possible in the time localization code, but just in case
+    % make sure that the TimeLoc values aren't outside of the range between
+    % 1 and the new length of the analysis window
+    TimeLoc(TimeLoc < 1) = 1;
+    TimeLoc(TimeLoc > length(y)) = length(y);
+end
+
 %% Estimate autocorrelation of y
 r = xcorrWin(y,w,nb+L);
-r = r';
 
 IdxAdj = nb+L+1;    % Amount added to each index given in the dissertation to match Matlab
 

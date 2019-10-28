@@ -33,17 +33,6 @@ if isfield(Parameters,'Mode')
             % Use default value of 20 minutes
             AnalysisLength = 20*60*fs{ModeIdx};
         end
-        if isfield(TempXML,'DampRatioThreshold')
-            % Use specified limit
-            DampRatioThreshold = str2num(TempXML.DampRatioThreshold);
-            if DampRatioThreshold>100
-                DampRatioThreshold = 100;
-                warning('Damping ratio detection threshold input cannot exceed 100%, so setting the threshold to 100%.');
-            end
-        else
-            % Use default (disable)
-            DampRatioThreshold = .05;
-        end
         %Parameter for implementing retroactice continuity
         if isfield(TempXML,'RetConTracking')
             % User specified value
@@ -83,38 +72,43 @@ if isfield(Parameters,'Mode')
                 % indexing can be used in the following for loop.
                 ExtrctParamXML = {ExtrctParamXML};
             end
-            %             MethodName = cell(1,NumMethods);
-            %             AlgSpecificParameters = cell(1,NumMethods);
+            
+            MethodName = cell(1,NumMethods);
+            AlgorithmSpecificParameters = cell(1,NumMethods);
             for MethodIdx = 1:NumMethods
-                MethodName{1}{MethodIdx} = ExtrctParamXML{MethodIdx}.Name;
+                MethodName{MethodIdx} = ExtrctParamXML{MethodIdx}.Name;
                 switch ExtrctParamXML{MethodIdx}.Name
                     case 'LS_ARMA'
-                        FunctionName = 'LS_ARMA';
+                        FunctionName = 'LS_ARMApS';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName);
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
                     case 'YW_ARMA'
-                        FunctionName = 'YW_ARMA';
+                        FunctionName = 'YW_ARMApS';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L,'FunctionName',FunctionName);
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'L',L,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
                     case 'YW_ARMApS'
-                        FunctionName = 'YW_ARMA';
+                        FunctionName = 'YW_ARMApS';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         LFO = str2double(ExtrctParamXML{MethodIdx}.LFO);
-                        FOdetectorParaFlag =1;
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L,'LFO',LFO,'FunctionName',FunctionName);
+                        FOdetectorParaFlag = 1;
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
                     case 'LS_ARMApS'
-                        FunctionName = 'LS_ARMA';
+                        FunctionName = 'LS_ARMApS';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
-                        FOdetectorParaFlag =1;
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName);
+                        FOdetectorParaFlag = 1;
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
                     otherwise
                         error([ExtrctParamXML{MethodIdx}.AlgName ' is not a valid mode-meter algorithm. Select LS-ARMA, YW-ARMA, LS-ARMA+S or YW-ARMA+S.']);
                 end
@@ -157,12 +151,12 @@ if isfield(Parameters,'Mode')
 
                     if isnan(RMSlength)
                         % str2double sets the value to NaN when it can't make it a number
-                        warning('RMSlength is not a number. Default of 15 will be used.');
-                        RMSlength = 15*fs{ModeIdx};
+                        warning('RMSlength is not a number. Default of 8 will be used.');
+                        RMSlength = 8*fs{ModeIdx};
                     end
                 else
                     % Use default length
-                    RMSlength = 15*fs{ModeIdx};
+                    RMSlength = 8*fs{ModeIdx};
                 end
 
                 % Forgetting factor for threshold
@@ -196,41 +190,85 @@ if isfield(Parameters,'Mode')
 
                     if isnan(RingThresholdScale)
                         % str2double sets the value to NaN when it can't make it a number
-                        warning('RingThresholdScale is not a number. Default of 3 will be used.');
-                        RingThresholdScale = 3;
+                        warning('RingThresholdScale is not a number. Default of 5 will be used.');
+                        RingThresholdScale = 5;
                     end
 
                     if RingThresholdScale < 0
-                        warning('RingThresholdScale cannot be negative. Default of 3 will be used.');
-                        RingThresholdScale = 3;
+                        warning('RingThresholdScale cannot be negative. Default of 5 will be used.');
+                        RingThresholdScale = 5;
                     end
                 else
                     % Use default scaling term
-                    RingThresholdScale = 3;
+                    RingThresholdScale = 5;
                 end
                 
                 % Minimum analysis window length
                 if isfield(EventParamExtrXML,'MinAnalysisLength')
                     % Use specified value
-                    MinAnalysisLength = str2double(EventParamExtrXML.MinAnalysisLength)*fs{ModeIdx};
+                    N2 = str2double(EventParamExtrXML.MinAnalysisLength)*fs{ModeIdx};
 
-                    if isnan(RingThresholdScale)
+                    if isnan(N2)
                         % str2double sets the value to NaN when it can't make it a number
                         error('MinAnalysisLength is not a number.');
                     end
 
-                    if RingThresholdScale < 0
+                    if N2 < 0
                         error('MinAnalysisLength cannot be negative.');
                     end
                 else
                     % Use default value (no adjustment to shorter window)
-                    MinAnalysisLength = AnalysisLength;
+                    N2 = AnalysisLength;
                 end
-
+                
+                % Forgetting factor 1
+                if isfield(EventParamExtrXML,'ForgetFactor1')
+                    % Use specified value
+                    if strcmp(EventParamExtrXML.ForgetFactor1, 'TRUE')
+                        % Calculate the forgetting factor based on the
+                        % window length
+                        lam1 = (AnalysisLength-1)/AnalysisLength;
+                    else
+                        % No forgetting
+                        lam1 = 1;
+                    end
+                else
+                    % Use default value (no forgetting factor)
+                    lam1 = 1;
+                end
+                
+                % Forgetting factor 2
+                if isfield(EventParamExtrXML,'ForgetFactor2')
+                    % Use specified value
+                    if strcmp(EventParamExtrXML.ForgetFactor2, 'TRUE')
+                        % Calculate the forgetting factor based on the
+                        % window length
+                        lam2 = (N2-1)/N2;
+                    elseif strcmp(EventParamExtrXML.ForgetFactor2, 'MATCH')
+                        % Match the forgetting factor for window 1
+                        lam2 = lam1;
+                    else
+                        % No forgetting 
+                        lam2 = 1;
+                    end
+                else
+                    % Use default value (no forgetting factor)
+                    lam2 = 1;
+                end
+                
+                % After an event occurs, adjust the window preceeding the
+                % event
+                if isfield(EventParamExtrXML,'PostEventWinAdj')
+                    % Use specified value (DIMINISH, SHORTEN, or FALSE)
+                    PostEventWinAdj = EventParamExtrXML.PostEventWinAdj;
+                else
+                    % Use default value (do ot adjust window)
+                    PostEventWinAdj = 'FALSE';
+                end
 
                 EventDetector = struct('RingThresholdScale',RingThresholdScale,...
                     'RMSlength',RMSlength,'RMSmedianFilterOrder',RMSmedianFilterOrder,...
-                    'MinAnalysisLength',MinAnalysisLength);
+                    'N2',N2,'lam1',lam1,'lam2',lam2,'PostEventWinAdj',PostEventWinAdj);
             else
                 EventDetector = struct([]);
             end
@@ -240,12 +278,17 @@ if isfield(Parameters,'Mode')
             warning('The configuration file is not properly formatted for a mode meter.');
             FOdetector = [];
             MethodName = [];
-            AlgSpecificParameters = [];
+            AlgorithmSpecificParameters = [];
             TimeLocParams = ExtractFOtimeLocParameters(struct(),fs);
         end
-        ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,'DampRatioThreshold',DampRatioThreshold,...
+        ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,...
             'AnalysisLength',AnalysisLength,'RetConTrackingStatus',RetConTrackingStatus,'MaxRetConLength',MaxRetConLength,...
             'DesiredModes',DesiredModes,'ResultPathFinal',ResultPathFinal,'FOdetectorPara',FOdetector,'EventDetectorPara',EventDetector,...
-            'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters,'TimeLocParams',TimeLocParams);
+            'MethodName',[],'AlgorithmSpecificParameters',[],'TimeLocParams',TimeLocParams);
+        % Due to the way Matlab initializes structures, these fields needs to
+        % be added separately because they are comprised of cell arrays. This
+        % keeps ExtractedParameters{ModeIdx} from becoming a struct array
+        ExtractedParameters{ModeIdx}.MethodName = MethodName;
+        ExtractedParameters{ModeIdx}.AlgorithmSpecificParameters = AlgorithmSpecificParameters;
     end
 end

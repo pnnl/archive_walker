@@ -116,97 +116,77 @@ for ModeIdx = 1:NumMode
     end
     
     AdditionalOutput(ModeIdx).fs = fs{ModeIdx};
-    % Only analyze channels with no NaN values
-    KeepIdx = sum(isnan(Data{ModeIdx}))==0;
-    % Indexing the occurrence of events separately for each method and
-    % data channel
     
     for ChanIdx = 1:size(Data{ModeIdx},2)
-        if ~KeepIdx(ChanIdx)
-            for MethodIdx = 1:NumMethods(ModeIdx)
-                Mode=NaN;
-                DampingRatio=NaN;
-                Frequency=NaN;
-                DEF = NaN(1,NumDEFpaths);
-                AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
-                AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
-                AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
-                AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx};DEF];
-                AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
-                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;
-                AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
-                ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
-            end
+        % Forced oscillation detection
+        if isempty(ExtractedParameters.FOdetectorPara) || (sum(isnan(Data{ModeIdx}(:,ChanIdx))) > 0)
+            % Forced oscillation detection was not desired OR there are
+            % NaN values in the input signal which prevent detection
+            % from being run
+            FOfreq = [];
+            TimeLoc = [];
         else
-            % Forced oscillation detection
-            if isempty(ExtractedParameters.FOdetectorPara)
-                % Forced oscillation detection was not desired
-                FOfreq = [];
-                TimeLoc = [];
+            % Run FO detection algorithm
+            FOfreq = FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx});
+
+            TimeLoc = RunTimeLocalization(Data{ModeIdx}(:,ChanIdx),FOfreq,Parameters,fs{ModeIdx});
+        end
+
+        % High-energy event detection
+        if ~isempty(ExtractedParameters.EventDetectorPara)
+            % Run event detection algorithm
+            AdditionalOutput(ModeIdx).EventDet{ChanIdx} = ...
+                EventDetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.EventDetectorPara,Parameters.ResultUpdateInterval,fs{ModeIdx},PastAdditionalOutput(ModeIdx).EventDet{ChanIdx});
+
+            win = AdditionalOutput(ModeIdx).EventDet{ChanIdx}.win;
+        else
+            win = ones(size(Data{ModeIdx}(:,ChanIdx)));
+        end
+
+        for MethodIdx = 1:NumMethods(ModeIdx)
+            [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
+                = eval([ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}.FunctionName...
+                '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}, ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},FOfreq,TimeLoc)']);
+            DampingRatio = -real(Mode)/abs(Mode);
+            Frequency = abs(imag(Mode))/2/pi;
+            if isnan(DampingRatio)
+                Frequency = NaN;
+                DEF = NaN(1,NumDEFpaths);
+            elseif ~isempty(DEFparams)
+                DEF = CalculateDEF(PMUstruct,Parameters.DEF,Frequency);
+                DEF = DEF';
             else
-                % Run FO detection algorithm
-                FOfreq = FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx});
-                
-                TimeLoc = RunTimeLocalization(Data{ModeIdx}(:,ChanIdx),FOfreq,Parameters,fs{ModeIdx});
+                % Good mode estimates, but the DEF is not desired.
+                DEF = NaN(1,NumDEFpaths);
             end
-            
-            % High-energy event detection
-            if ~isempty(ExtractedParameters.EventDetectorPara)
-                % Run event detection algorithm
-                AdditionalOutput(ModeIdx).EventDet{ChanIdx} = ...
-                    EventDetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.EventDetectorPara,Parameters.ResultUpdateInterval,fs{ModeIdx},PastAdditionalOutput(ModeIdx).EventDet{ChanIdx});
-                
-                win = AdditionalOutput(ModeIdx).EventDet{ChanIdx}.win;
-            else
-                win = ones(size(Data{ModeIdx}(:,ChanIdx)));
-            end
-            
-            for MethodIdx = 1:NumMethods(ModeIdx)
-                [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
-                    = eval([ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}.FunctionName...
-                    '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},FOfreq,TimeLoc)']);
-                DampingRatio = -real(Mode)/abs(Mode);
-                Frequency = abs(imag(Mode))/2/pi;
-                if isnan(DampingRatio)
-                    Frequency = NaN;
-                    DEF = NaN(1,NumDEFpaths);
-                elseif ~isempty(DEFparams)
-                    DEF = CalculateDEF(PMUstruct,Parameters.DEF,Frequency);
-                    DEF = DEF';
-                else
-                    % Good mode estimates, but the DEF is not desired.
-                    DEF = NaN(1,NumDEFpaths);
-                end
-                if strcmp(ExtractedParameters.RetConTrackingStatus, 'ON')
-                    [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx},...
-                        AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx},...
-                        AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},ModeRem]...
-                        = RunRetCon(Mode, AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},...
-                        AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx},...
-                        AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}, ExtractedParameters.MaxRetConLength, Parameters.ResultUpdateInterval);
-                    %         If ModeRem is not empty, need to assess .csv for previous days and update
-                    %         the mode estimates
-                    if ~isempty(ModeRem) && ~isempty(PastAdditionalOutput)
-                        ChanIdxUpdated = 0;
-                        for ModeIdxToUndateChanIdx = 1:(ModeIdx-1)
-                            ChanIdxUpdated = ChanIdxUpdated + NumMethods(ModeIdxToUndateChanIdx)*size(Data{ModeIdxToUndateChanIdx},2);
-                        end
-                        UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,TimeStringDN(end),ChanIdxUpdated + ModeEstimateCalcIdx);
+            if strcmp(ExtractedParameters.RetConTrackingStatus, 'ON')
+                [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx},...
+                    AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx},...
+                    AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},ModeRem]...
+                    = RunRetCon(Mode, AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},...
+                    AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx},...
+                    AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}, ExtractedParameters.MaxRetConLength, Parameters.ResultUpdateInterval);
+
+                if ~isempty(ModeRem) && ~isempty(PastAdditionalOutput)
+                    ChanIdxUpdated = 0;
+                    for ModeIdxToUndateChanIdx = 1:(ModeIdx-1)
+                        ChanIdxUpdated = ChanIdxUpdated + NumMethods(ModeIdxToUndateChanIdx)*size(Data{ModeIdxToUndateChanIdx},2);
                     end
-                else
-                    % Reset the tracking cell
-                    AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx} = {};
+                    UpdatePreviousDayModeEst(ModeRem, ExtractedParameters.ResultPathFinal,TimeStringDN(end),ChanIdxUpdated + ModeEstimateCalcIdx);
                 end
-                AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
-                AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
-                AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
-                AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx};DEF];
-                AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
-                AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;
-                AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
-                AdditionalOutput(ModeIdx).ModeOriginal{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeOriginal{ModeEstimateCalcIdx};Mode;];
-                ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
+            else
+                % Reset the tracking cell
+                AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx} = {};
             end
+            AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
+            AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
+            AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
+            AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx};DEF];
+            AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
+            AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;
+            AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
+            AdditionalOutput(ModeIdx).ModeOriginal{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeOriginal{ModeEstimateCalcIdx};Mode;];
+            ModeEstimateCalcIdx = ModeEstimateCalcIdx + 1;
         end
     end
 end

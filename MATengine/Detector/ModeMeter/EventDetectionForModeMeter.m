@@ -5,19 +5,19 @@ RMSlength = Parameters.RMSlength;
 RMSmedianFilterOrder = Parameters.RMSmedianFilterOrder;
 RingThresholdScale = Parameters.RingThresholdScale;
 
-% P is the sum of the window across time
-%
-% Pmax corresponds to w(t)=1 for all t
-Pmax = length(Data);
-% Pmin is specified by the user based on the amount of data needed to get
-% an estimate with acceptable variance
-Pmin = Parameters.MinAnalysisLength;
+lam1 = Parameters.lam1;
+lam2 = Parameters.lam2;
+N2 = Parameters.N2;
+PostEventWinAdj = Parameters.PostEventWinAdj;
 
-deltaP = Pmax/Pmin-1;
+% Analysis length
+N1 = size(Data,1);
 
 %% RMS energy based detector
 
-AdditionalOutput = struct('threshold',[],'RMS',[],'RMShist',[],'FilterConditions',[]);
+ResultUpdateInterval = ResultUpdateInterval*fs;
+
+AdditionalOutput = struct('threshold',[],'RMS',[],'RMShist',[],'FilterConditions',[],'EventIndicator',[]);
 
 Data2 = Data.^2;
 
@@ -26,150 +26,212 @@ if isempty(PastAdditionalOutput)
     % Get initial conditions by filtering data with a constant 
     % value equal to the first sample of Data.
     [~, InitConditions] = filter(ones(1,RMSlength)/RMSlength,1,Data2(1)*ones(ceil(RMSlength/2),1));
+    
+    % Initialize the event indicator 
+    EventIndicator = zeros(1,N1);
 else
     % Initial conditions are available
     InitConditions = PastAdditionalOutput.FilterConditions;
     % Only process the newly available measurements
-    Data2 = Data2(end-ResultUpdateInterval*fs+1:end);
+    Data2 = Data2(end-ResultUpdateInterval+1:end);
+    % Retrieve the event indicator from the previous call
+    EventIndicator = PastAdditionalOutput.EventIndicator;
+    % Update to correspond to the new data
+%     EventIndicator = [EventIndicator(end-ResultUpdateInterval+1:end) zeros(1,ResultUpdateInterval)];
 end
 
 [RMS, AdditionalOutput.FilterConditions] = filter(ones(1,RMSlength)/RMSlength,1,Data2,InitConditions);
 RMS = sqrt(RMS);
-
 
 if isempty(PastAdditionalOutput)
     % PastAdditionalOutput isn't available
 
     % Apply median filter to RMS to establish the threshold
     RMSmed = medfilt1(RMS,RMSmedianFilterOrder,'truncate');
+    % Remove samples at the end to make the median filter causal
+    % It needs to be causal for continuity when new samples are added in
+    % the future.
+    RMSmed = [nan((RMSmedianFilterOrder-1)/2,1); RMSmed(1:end-(RMSmedianFilterOrder-1)/2)];
 
-    % Use NaNs to pad the front end of the history. This makes the
-    % history longer than necessary. Additional samples are removed
-    % in the next line of code.
-    AdditionalOutput.RMShist = [NaN(RMSmedianFilterOrder,1); RMS];
-
-    % Keep only the most recent RMSmedianFilterOrder-1 values
-    AdditionalOutput.RMShist = AdditionalOutput.RMShist(max([1 (length(AdditionalOutput.RMShist)-(RMSmedianFilterOrder-1)+1)]):end);
-    
-    % Calculate the threshold
-    Threshold = RMSmed*RingThresholdScale;
-    
-    DetectionIdx = RMS > Threshold;
+    % Store the RMS for use the next time the function is called
+    AdditionalOutput.RMShist = RMS;
 else
     % PastAdditionalOutput is available
 
     % Add previous RMS values to the front end to make the median
     % filter continuous
-    RMSmed = medfilt1([PastAdditionalOutput.RMShist; RMS],RMSmedianFilterOrder);
-    % Remove extra samples
+    RMSmed = medfilt1([PastAdditionalOutput.RMShist(end-RMSmedianFilterOrder+2:end); RMS],RMSmedianFilterOrder);
+    % Remove extra samples, making the filter causal.
+    % It needs to be causal for continuity when new samples are added in
+    % the future.
     RMSmed = RMSmed((RMSmedianFilterOrder+1)/2:end-(RMSmedianFilterOrder-1)/2);
 
     % Replace the RMS values in PastAdditionalOutput for next time
-    AdditionalOutput.RMShist = [PastAdditionalOutput.RMShist; RMS];
-    % Keep only the most recent RMSmedianFilterOrder-1 values
-    AdditionalOutput.RMShist = AdditionalOutput.RMShist(max([1 (length(AdditionalOutput.RMShist)-(RMSmedianFilterOrder-1)+1)]):end);
-    
-    Threshold = RMSmed*RingThresholdScale;
-    DetectionIdx = RMS > Threshold;
-    
-    
-    
-%     % Add previous test statistic values to the front end
-%     TestStat = [PastAdditionalOutput.TestStat; RMS];
-%     % Remove extra samples
-%     TestStat = TestStat(end-length(Data)+1:end);
-    
-%     % Calculate the threshold
-%     Threshold = RMSmed*RingThresholdScale;
-%     % Add previous threshold to the front end
-%     Threshold = [PastAdditionalOutput.Threshold; Threshold];
-%     % Remove extra samples
-%     Threshold = Threshold(end-length(Data)+1:end);
+    AdditionalOutput.RMShist = [PastAdditionalOutput.RMShist(length(RMS)+1:end); RMS];
 end
-% % Store in AdditionalOutput for use next time
-% AdditionalOutput.TestStat = TestStat;
-% AdditionalOutput.Threshold = Threshold;
 
-% DetectionIdx = TestStat > Threshold;
+RMShist = AdditionalOutput.RMShist;
 
-% Adjust the beginning of detections to account for the filter delay
-if sum(DetectionIdx) > 0
-    % Ringdown was detected
-
-    % Start and end of ringdown (later adjusted for filter delay)
-    Starts = find(diff([0; DetectionIdx]) == 1);
-    Ends = find(diff(DetectionIdx) == -1);
-
-    if length(Starts) > length(Ends)
-        Ends = [Ends; length(DetectionIdx)];
-    end
-    
-    [~,valLocs] = findpeaks(-RMS);
-    
-    BelowMedIdx = find(RMS < (Threshold/RingThresholdScale));
-    
-    for RingIdx = 1:length(Starts)
-        % Find the first 
-        PrevVal = valLocs(find(Starts(RingIdx) > valLocs,1,'last'));
-        PrevMed = BelowMedIdx(find(Starts(RingIdx) > BelowMedIdx,1,'last'));
-        NewStart = min([PrevVal PrevMed]);
-        if isempty(NewStart)
-            Starts(RingIdx) = 1;
-        else
-            Starts(RingIdx) = NewStart;
-        end
-        
-        DetectionIdx(Starts(RingIdx):Ends(RingIdx)) = true;
-    end
-end
+% Calculate the threshold
+Threshold = RMSmed*RingThresholdScale;
+% Perform detection by comparing RMS to Threshold
+DetLgc = RMS > Threshold;
 
 if isempty(PastAdditionalOutput)
+    % PastAdditionalOutput isn't available
+    
+    % Initialize the window
     % Initialize the window with zeros during events
-    win = ones(size(Data));
-    win(DetectionIdx) = 0;
-else
-    win = PastAdditionalOutput.win;
-    for nn = 1:(ResultUpdateInterval*fs)
-        if DetectionIdx(nn)
-            % New sample is part of an event
-            win = [win(2:end); 0];
+    win = lam1.^(N1-1:-1:0);
+    
+    DetIdx = find(DetLgc);
+    
+    % If an event was detected, get the initial EventIndicator setup, then
+    % initialize the window
+    if ~isempty(DetIdx)
+        DetDiff = find(diff(DetIdx)>1);
+        DetIdx = DetIdx([1; DetDiff+1]);
+        DetIdx(DetIdx < 4) = [];    % findpeaks() won't work
+        for ThisDetIdx = DetIdx'
+            % Find the valley in RMS preceeding detection, then back up an
+            % addition two seconds
+            [~,St] = findpeaks(-RMShist(1:ThisDetIdx));
+            St = St(end)-2*fs;
+
+            % The removal window is RMSlength seconds long. Don't shift it by more than
+            % RMSlength/2 seconds. This can happen if the RMS declines for a long time
+            % before the event trigger.
+            if St < ThisDetIdx - RMSlength/2
+                St = ThisDetIdx - RMSlength/2;
+            end
+
+            WinIdx = St + (0:(RMSlength-1));
+            Eadditional = sum(WinIdx > N1);
+            WinIdx(WinIdx > N1) = [];
+
+            EventIndicator(WinIdx) = 1;
+        end
+        
+        win(EventIndicator==1) = 0;
+    else
+        Eadditional = 0;
+    end
+    
+    AdditionalOutput.win = win';
+    AdditionalOutput.EventIndicator = EventIndicator;
+    AdditionalOutput.Eadditional = Eadditional;
+    return
+end
+
+win = PastAdditionalOutput.win';
+Eadditional = PastAdditionalOutput.Eadditional;
+for k = 1:ResultUpdateInterval
+    % Shift the event tracker forward, the new zero will be replaced in
+    % the following block if necessary
+    EventIndicator = [EventIndicator(2:end) 0];
+    
+    if DetLgc(k)
+        % Newest sample is part of an event
+        if EventIndicator(end-1) == 0
+            % The event has not been detected yet
             
-            % No further adjustments to window necessary
+            % Find the valley in RMS preceeding detection.
+            % Only check the RMSlength/2 previous samples so that the window
+            % doesn't get shifted by too much
+            [~,St] = findpeaks(-RMShist(end-ResultUpdateInterval+k-round(RMSlength/2)+1:end-ResultUpdateInterval+k));
+            if isempty(St)
+                % RMS doesn't have valley within RMSlength/2 samples before
+                % crossing the threshold
+                St = 1;
+            else
+                % Back up by 2 seconds to make sure that the transient
+                % is caught
+                St = St(end) - 2*fs;
+
+                % The removal window is RMSlength seconds long. Don't shift it by more than
+                % RMSlength/2 seconds. This can happen if the RMS declines for a long time
+                % before the event trigger.
+                if St < 1
+                    St = 1;
+                end
+            end
+            St = (N1 - round(RMSlength/2)) + St;   % Adjust index because only last RMSlength/2 samples evaluated
+
+            WinIdx = St + (0:(RMSlength-1));
+            Eadditional = sum(WinIdx > N1);
+            WinIdx(WinIdx > N1) = [];
+
+            EventIndicator(WinIdx) = 1;
         else
-            % New sample is not part of an event
+            % The event has already been detected
+            if Eadditional > 0
+                % Continue removing samples for the detected event
+                EventIndicator(end) = 1;
+                Eadditional = Eadditional - 1;
+            end
+        end
+    end
+    
+    if isempty(find(EventIndicator(end-N2+1:end)==1,1))
+        % There is NOT an event in the past N2 samples, use lam1
+        lam = lam1;
+    else
+        % There is an event in the past N2 samples, use lam2
+        lam = lam2;
+    end
+    
+    if EventIndicator(end) == 1
+        % New sample is part of an event
+        win = [lam*win(2:end) 0];
+
+        % Because an event can be detected in past samples, make sure
+        % all event samples are set to zero in the window
+        win(EventIndicator==1) = 0;
+    else
+        % New sample is not part of an event
+
+        % Update window
+        win = [lam*win(2:end) 1];
+
+        % Find the last zero in the window
+        Zidx = find(win==0,1,'last');
+
+        % If a PreEventKill flag is set to 1 AND there are zeros in the 
+        % analysis window:
+        % Reduce the window before the most recent event, either by
+        % diminishing the value of the window before the event or by
+        % shortening the window
+        if strcmp(PostEventWinAdj,'DIMINISH') && ~isempty(Zidx)
+            % Calculate the change in P that will cause the window before
+            % the most recent event to be zero by the time N2 post-event
+            % samples have been added to the analysis window
+            deltaP = sum(win(1:Zidx))/(N2 - (N1-Zidx));
             
-            % This is the amount gained by dropping off the last sample in
-            % the window
-            wGain = 1-win(1);
-            % Add a weight of 1 for the newest sample because it's not an
-            % event
-            win = [win(2:end); 1];
+            if deltaP < 0
+                deltaP = 0;
+            end
 
-            P = sum(win);
+            % Indices of non-event weights
+            NEidx = win(1:Zidx) > 0;
+            % Number of weights before the most recent non-event data
+            Nw = sum(NEidx);
+            % Reduce the weights by deltaP/Nw, for a total reduction in P of deltaP
+            win(NEidx) = win(NEidx) - deltaP/Nw;
 
-            % Find the last zero in the window
-            Zidx = find(win==0,1,'last');
-
-            % If an event is present in the analysis window, reduce P by deltaP.
-            % This is accomplished by reducing weights on all non-event data
-            % before the most recent event.
-            % Only continue if there is an event in the analysis window AND if
-            % decreasing P by deltaP will not violate the Pmin constraint
-            if (~isempty(Zidx)) && (P-deltaP > Pmin)
-                % Indices of non-event weights
-                NEidx = win(1:Zidx) > 0;
-                % Number of weights before the most recent non-event data
-                Nw = sum(NEidx);
-                % Reduce the weights by (deltaP+wGain)/Nw, for a total 
-                % reduction in P of deltaP
-                win(NEidx) = win(NEidx) - (deltaP+wGain)/Nw;
-
-                % If any weights fell below zero, set them equal to zero. This
-                % will reduce the impact on P, but this situation shouldn't
-                % occur.
-                win(win<0) = 0;
+            % If any weights fell below zero, set them equal to zero.
+            win(win<0) = 0;
+        elseif strcmp(PostEventWinAdj,'SHORTEN') && ~isempty(Zidx)
+            % Remove the oldest samples at a rate such that they are all
+            % zero when N2 post-event samples have been added to the
+            % analysis window
+            
+            if sum(win(1:Zidx) > 0) > 0
+                Vidx = find(win(1:Zidx) > 0,1,'last');
+                win(1:round((N1-N2)/N2*(N1-Zidx-(Zidx-Vidx)))) = 0;
             end
         end
     end
 end
-AdditionalOutput.win = win;
+AdditionalOutput.win = win';
+AdditionalOutput.EventIndicator = EventIndicator;
+AdditionalOutput.Eadditional = Eadditional;
