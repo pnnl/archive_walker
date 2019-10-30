@@ -339,7 +339,6 @@ namespace BAWGUI.ViewModels
                                 var thisdtr = dtr as DEFDetectorViewModel;
                                 SiteMappingVM.DEFAreaSiteMappingVM.SetupAreaMapping(thisdtr.UniqueAreas);
                                 thisdtr.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas;
-                                ResultsVM.ForcedOscillationResultsViewModel.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas.ToList();
                                 break;
                             }
                         }
@@ -359,6 +358,10 @@ namespace BAWGUI.ViewModels
                 RunMatlabVM.Run = e.SelectedRun;
                 ResultsVM.Project = e.Model;
                 ResultsVM.Run = e.SelectedRun;
+                if (SiteMappingVM.DEFAreaSiteMappingVM.Areas.Count() != 0)
+                {
+                    ResultsVM.ForcedOscillationResultsViewModel.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas.ToList();
+                }
             }
         }
         public CoordinatesTableViewModel CoordsTableVM { get; set; }

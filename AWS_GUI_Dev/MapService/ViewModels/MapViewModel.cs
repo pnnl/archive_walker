@@ -26,7 +26,7 @@ namespace MapService.ViewModels
             ChangeZoom = new RelayCommand(_changeMapZoom);
             ZoomIn = new RelayCommand(_mapZoomIn);
             ZoomOut = new RelayCommand(_mapZoomOut);
-            IsOfflineMode = true;
+            IsOfflineMode = false;
             //MaxZoom = 7;
             //MinZoom = 0;
             CacheSelectedMapRegion = new RelayCommand(_cacheSelectedMapRegion);
@@ -62,6 +62,7 @@ namespace MapService.ViewModels
             Gmap.ShowCenter = false;
 
             Gmap.MapProvider = GMapProviders.OpenStreetMap;
+            //Gmap.MapProvider = GoogleSatelliteMapProvider.Instance; //satellite view
             if (!IsOfflineMode)
             {
                 Gmap.Manager.Mode = AccessMode.ServerAndCache;

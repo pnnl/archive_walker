@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Converters\DataContexTypeConverter.cs" />
     <Compile Include="Converters\DateDictionaryKeyConverter.cs" />
+    <Compile Include="Converters\MapColorBarVisibilityConverter.cs" />
     <Compile Include="Converters\ThumbnailVisibilityConverter.cs" />
     <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />

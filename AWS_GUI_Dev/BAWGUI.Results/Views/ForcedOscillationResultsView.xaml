@@ -8,11 +8,13 @@
              xmlns:map="clr-namespace:MapService.Views;assembly=MapService"
              xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:defv="clr-namespace:DissipationEnergyFlowResults.Views;assembly=DissipationEnergyFlowResults"
+             xmlns:converters="clr-namespace:BAWGUI.Results.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
     <UserControl.Resources>
         <ResourceDictionary>
-            <coreConverter:OxyColorToGradientBrushConverter x:Key="OxyColorToGradientBrushConverter"/>            
+            <coreConverter:OxyColorToGradientBrushConverter x:Key="OxyColorToGradientBrushConverter"/>
+            <converters:MapColorBarVisibilityConverter x:Key="MapColorBarVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel>
@@ -46,7 +48,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <map:MapView DataContext="{Binding ResultMapVM}" Grid.Column="0" Margin="2"/>
-                                <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Center">
+                                <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Center" Visibility="{Binding SelectedPlottingRule, Converter={StaticResource MapColorBarVisibilityConverter}}">
                                     <TextBlock Text="Max" Margin="2" TextAlignment="Center"/>
                                     <Rectangle Width="20" Height="200" Grid.Column="1" Margin="2" Fill="{Binding ResultMapVM.RBColors, Converter={StaticResource OxyColorToGradientBrushConverter}}"/>
                                     <TextBlock Text="Min" Margin="2" TextAlignment="Center"/>

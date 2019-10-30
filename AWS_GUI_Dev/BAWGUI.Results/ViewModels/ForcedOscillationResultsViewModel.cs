@@ -281,15 +281,18 @@ namespace BAWGUI.Results.ViewModels
                         oldSelectedOscillationEvent = _selectedOscillationEvent;
                     }
                     _selectedOscillationEvent = value;
-                    _updateFOplotAfterSelectionChange();
-                    if (SelectedPlottingRule == "DEF")
+                    if (_selectedOscillationEvent != null)
                     {
-                        //draw energy flow with currently selected event and occurence
-                        _drawDEF();
-                    }
-                    else
-                    {
-                        _updateFOMapAfterSelectionChange();
+                        _updateFOplotAfterSelectionChange();
+                        if (SelectedPlottingRule == "DEF")
+                        {
+                            //draw energy flow with currently selected event and occurence
+                            _drawDEF();
+                        }
+                        else
+                        {
+                            _updateFOMapAfterSelectionChange();
+                        }
                     }
                     OnPropertyChanged();
                     if (oldSelectedOscillationEvent != null)
@@ -353,7 +356,11 @@ namespace BAWGUI.Results.ViewModels
 
         private void _selectedChannelChanged(object sender, EventArgs e)
         {
-            _updateMapMarkerAfterChannelSelectionChange();
+
+            if (SelectedPlottingRule != "DEF")
+            {
+                _updateMapMarkerAfterChannelSelectionChange();
+            }
         }
         private void _updateMapMarkerAfterChannelSelectionChange()
         {

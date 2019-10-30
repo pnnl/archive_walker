@@ -118,6 +118,9 @@
     <Compile Include="Views\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Triangle.xaml.cs">
+      <DependentUpon>Triangle.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -125,6 +128,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\MapView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Triangle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
