@@ -1289,7 +1289,7 @@ Namespace ViewModels
                 _browseExportPath = value
             End Set
         End Property
-        Private _lastSavePath As String
+        'Private _lastSavePath As String
         Private autoEventExporter As AutoEventExportModel
 
         Private Sub _browseEventExportPath(obj As Object)
@@ -1297,10 +1297,10 @@ Namespace ViewModels
             openDirectoryDialog.Title = "Select the Event Export Path"
             openDirectoryDialog.IsFolderPicker = True
             openDirectoryDialog.RestoreDirectory = True
-            If _lastSavePath Is Nothing Then
+            If String.IsNullOrEmpty(ExportPath) Then
                 openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
             Else
-                openDirectoryDialog.InitialDirectory = _lastSavePath
+                openDirectoryDialog.InitialDirectory = ExportPath
             End If
             openDirectoryDialog.AddToMostRecentlyUsedList = True
             openDirectoryDialog.AllowNonFileSystemItems = False
@@ -1312,7 +1312,7 @@ Namespace ViewModels
             openDirectoryDialog.Multiselect = False
             openDirectoryDialog.ShowPlacesList = True
             If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
-                _lastSavePath = openDirectoryDialog.FileName
+                '_lastSavePath = openDirectoryDialog.FileName
                 ExportPath = openDirectoryDialog.FileName
             End If
         End Sub

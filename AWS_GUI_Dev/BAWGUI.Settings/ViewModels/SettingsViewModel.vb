@@ -90,6 +90,7 @@ Namespace ViewModels
 
             '_inputFileDirTree = New ObservableCollection(Of Folder)
             _signalMgr = SignalManager.Instance
+            _signalMgr.cleanUp()
 
             '_allPMUs = New ObservableCollection(Of String)
 

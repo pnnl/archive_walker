@@ -3167,7 +3167,16 @@ namespace BAWGUI.SignalManagement.ViewModels
         /// <summary>
         /// signals that are selected by forced oscillation and voltage magnitude in voltage stability need to be marked on map
         /// </summary>
-        public ObservableCollection<SignalSignatureViewModel> MappingSignals { get; set; }
+        private ObservableCollection<SignalSignatureViewModel> _mappingSignals;
+        public ObservableCollection<SignalSignatureViewModel> MappingSignals 
+        {
+            get { return _mappingSignals; }
+            set 
+            { 
+                _mappingSignals = value;
+                UniqueMappingSignals = new ObservableCollection<SignalSignatureViewModel>(MappingSignals.Distinct());
+            } 
+        }
         private ObservableCollection<SignalSignatureViewModel> _uniqueMappingSignals;
         public ObservableCollection<SignalSignatureViewModel> UniqueMappingSignals
         {

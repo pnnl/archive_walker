@@ -353,7 +353,12 @@ Namespace ViewModels
                     'If obj Is CurrentSelectedStep Then
                     '    CurrentSelectedStep = Nothing
                     'Else
-                    DeSelectAllDetectors()
+                    'DeSelectAllDetectors()
+                    If obj.InputChannels.Count > 0 Then
+                        DeSelectAllDetectors()
+                    Else
+                        CurrentSelectedStep = Nothing
+                    End If
                     'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
@@ -423,10 +428,17 @@ Namespace ViewModels
                     For index = 1 To _signalMgr.GroupedSignalByDataWriterDetectorInput.Count
                         _signalMgr.GroupedSignalByDataWriterDetectorInput(index - 1).SignalSignature.SignalName = "Detector " & index.ToString & " " & DetectorConfigure.DataWriterDetectorList(index - 1).Name
                     Next
+                    If DetectorConfigure.DataWriterDetectorList.Count = 0 Then
+                        DetectorConfigure.AutoEventExporter.Flag = False
+                    End If
                     'If obj Is CurrentSelectedStep Then
                     '    CurrentSelectedStep = Nothing
                     'Else
-                    DeSelectAllDetectors()
+                    If obj.InputChannels.Count > 0 Then
+                        DeSelectAllDetectors()
+                    Else
+                        CurrentSelectedStep = Nothing
+                    End If
                     'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)

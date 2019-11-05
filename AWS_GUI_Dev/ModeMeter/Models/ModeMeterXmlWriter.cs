@@ -29,7 +29,10 @@ namespace ModeMeter.Models
                 mmElement.Add(new XElement("ResultPath", "\\MM\\" + detector.ModeMeterName));
                 mmElement.Add(new XElement("CalcDEF", detector.CalcDEF.ToString().ToUpper()));
                 XElement baseliningSignals = _addBaseliningSignals(detector);
-                mmElement.Add(baseliningSignals);
+                if (baseliningSignals.HasElements)
+                {
+                    mmElement.Add(baseliningSignals);
+                }
                 foreach (var mode in detector.Modes)
                 {
                     _writeAMode(mmElement, mode);

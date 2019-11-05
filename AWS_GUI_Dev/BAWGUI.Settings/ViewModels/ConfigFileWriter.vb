@@ -406,7 +406,7 @@ Namespace ViewModels
             Else
                 detectorConfig.<Configuration>.FirstOrDefault.Add(<ResultUpdateInterval></ResultUpdateInterval>)
             End If
-            If _svm.DetectorConfigure.AutoEventExporter IsNot Nothing Then
+            If _svm.DetectorConfigure.AutoEventExporter IsNot Nothing AndAlso _svm.DetectorConfigure.DataWriterDetectorList.Count > 0 Then
                 Dim element = <AutoEventExport></AutoEventExport>
                 If _svm.DetectorConfigure.AutoEventExporter.Flag Then
                     element.Add(<Flag><%= 1 %></Flag>)
