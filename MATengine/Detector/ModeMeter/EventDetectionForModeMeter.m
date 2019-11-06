@@ -90,29 +90,31 @@ if isempty(PastAdditionalOutput)
     % initialize the window
     if ~isempty(DetIdx)
         DetDiff = find(diff(DetIdx)>1);
-        DetIdx = DetIdx([1; DetDiff+1]);
-        DetIdx(DetIdx < 4) = [];    % findpeaks() won't work
-        for ThisDetIdx = DetIdx'
-            % Find the valley in RMS preceeding detection, then back up an
-            % addition two seconds
-            [~,St] = findpeaks(-RMShist(1:ThisDetIdx));
-            St = St(end)-2*fs;
-
-            % The removal window is RMSlength seconds long. Don't shift it by more than
-            % RMSlength/2 seconds. This can happen if the RMS declines for a long time
-            % before the event trigger.
-            if St < ThisDetIdx - RMSlength/2
-                St = ThisDetIdx - RMSlength/2;
-            end
-
-            WinIdx = St + (0:(RMSlength-1));
-            Eadditional = sum(WinIdx > N1);
-            WinIdx(WinIdx > N1) = [];
-
-            EventIndicator(WinIdx) = 1;
+        
+        % Retrieve indices of the start and end of each event. 
+        GrpSt = DetIdx([1; DetDiff+1]);
+        GrpEn = [DetIdx(DetDiff); DetIdx(end)];
+        
+        % The start is moved forward by RMSlength samples and the end is moved back
+        % RMSlength samples to ensure that the entire event is removed.
+        GrpStExtra = GrpSt - RMSlength + 1;
+        GrpEnExtra = GrpEn + RMSlength;
+        
+        % Make sure that the start and end are within the window.
+        % Additional samples that should be removed are counted with
+        % Eadditional
+        Eadditional = max([max(GrpEnExtra)-N1, 0]);
+        GrpStExtra(GrpStExtra < 1) = 1;
+        GrpEnExtra(GrpEnExtra > N1) = N1;
+        
+        % For each detected event, mark the event
+        for Eidx = 1:length(GrpSt)
+            EventIndicator(GrpStExtra(Eidx):GrpEnExtra(Eidx)) = 2;
+            EventIndicator(GrpSt(Eidx):GrpEn(Eidx)) = 1;
         end
         
-        win(EventIndicator==1) = 0;
+        % Remove the event from the window
+        win(EventIndicator ~= 0) = 0;
     else
         Eadditional = 0;
     end
@@ -126,49 +128,33 @@ end
 win = PastAdditionalOutput.win';
 Eadditional = PastAdditionalOutput.Eadditional;
 for k = 1:ResultUpdateInterval
-    % Shift the event tracker forward, the new zero will be replaced in
-    % the following block if necessary
-    EventIndicator = [EventIndicator(2:end) 0];
-    
     if DetLgc(k)
         % Newest sample is part of an event
+        % Shift the event tracker forward and mark the event
+        EventIndicator = [EventIndicator(2:end) 1];
+        
+        % If this is the first sample where the event has not been detected,
+        % Add the past RMSlength samples to the event to make sure that
+        % it is completely removed
         if EventIndicator(end-1) == 0
-            % The event has not been detected yet
-            
-            % Find the valley in RMS preceeding detection.
-            % Only check the RMSlength/2 previous samples so that the window
-            % doesn't get shifted by too much
-            [~,St] = findpeaks(-RMShist(end-ResultUpdateInterval+k-round(RMSlength/2)+1:end-ResultUpdateInterval+k));
-            if isempty(St)
-                % RMS doesn't have valley within RMSlength/2 samples before
-                % crossing the threshold
-                St = 1;
-            else
-                % Back up by 2 seconds to make sure that the transient
-                % is caught
-                St = St(end) - 2*fs;
-
-                % The removal window is RMSlength seconds long. Don't shift it by more than
-                % RMSlength/2 seconds. This can happen if the RMS declines for a long time
-                % before the event trigger.
-                if St < 1
-                    St = 1;
-                end
-            end
-            St = (N1 - round(RMSlength/2)) + St;   % Adjust index because only last RMSlength/2 samples evaluated
-
-            WinIdx = St + (0:(RMSlength-1));
-            Eadditional = sum(WinIdx > N1);
-            WinIdx(WinIdx > N1) = [];
-
-            EventIndicator(WinIdx) = 1;
-        else
-            % The event has already been detected
-            if Eadditional > 0
-                % Continue removing samples for the detected event
-                EventIndicator(end) = 1;
-                Eadditional = Eadditional - 1;
-            end
+            EventIndicator(end-RMSlength+1:end-1) = 2;
+        end
+    else
+        % Newest sample is NOT part of an event
+        % Shift the event tracker forward and mark the non-event
+        EventIndicator = [EventIndicator(2:end) 0];
+        
+        % If there was an event detected in the previous sample, add an 
+        % additional RMSlength samples to the event to make sure
+        % that it is completely removed
+        if EventIndicator(end-1) == 1
+            Eadditional = RMSlength;
+        end
+        
+        if Eadditional > 0
+            % Continue removing samples for the detected event
+            EventIndicator(end) = 2;
+            Eadditional = Eadditional - 1;
         end
     end
     
@@ -180,13 +166,13 @@ for k = 1:ResultUpdateInterval
         lam = lam2;
     end
     
-    if EventIndicator(end) == 1
+    if EventIndicator(end) ~= 0
         % New sample is part of an event
         win = [lam*win(2:end) 0];
 
         % Because an event can be detected in past samples, make sure
         % all event samples are set to zero in the window
-        win(EventIndicator==1) = 0;
+        win(EventIndicator ~= 0) = 0;
     else
         % New sample is not part of an event
 
