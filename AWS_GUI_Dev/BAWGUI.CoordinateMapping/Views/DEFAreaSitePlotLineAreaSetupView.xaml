@@ -46,7 +46,7 @@
                                                 </MultiBinding>
                                             </i:InvokeCommandAction.CommandParameter>
                                         </i:InvokeCommandAction>-->
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=1,Mode=FindAncestor}, Path=DataContext.SelectedLocationChanged}" CommandParameter="{Binding}"/>
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=1,Mode=FindAncestor}, Path=DataContext.SelectedLocationChanged}" CommandParameter="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>

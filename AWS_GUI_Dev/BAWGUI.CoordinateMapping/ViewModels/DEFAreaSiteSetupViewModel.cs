@@ -21,8 +21,8 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             _areas = new ObservableCollection<EnergyFlowAreaCoordsMappingViewModel>();
             SetCurrentSelectedArea = new RelayCommand(_setCurrentSelectedArea);
             SiteSelected = new RelayCommand(_siteSelected);
-            SelectedTextboxIndex = -1;
-            ModifySiteSelection = new RelayCommand(_modifySiteSelection);
+            //SelectedTextboxIndex = -1;
+            //ModifySiteSelection = new RelayCommand(_modifySiteSelection);
             _defAreaMappingConfig = new List<EnergyFlowAreaCoordsMappingModel>();
             AvailableSites = new ObservableCollection<SiteCoordinatesViewModel>();
         }
@@ -125,16 +125,9 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 foreach (var item in _areas)
                 {
                     item.LocationSelectionChanged += Item_LocationSelectionChanged;
-                    item.DEFAreaSelected += Item_DEFAreaSelected;
                 }
                 OnPropertyChanged();
             }
-        }
-
-        private void Item_DEFAreaSelected(object sender, EventArgs e)
-        {
-            //var thisArea = sender as EnergyFlowAreaCoordsMappingViewModel;
-            CurrentSelectedArea = sender as EnergyFlowAreaCoordsMappingViewModel;
         }
 
         private void Item_LocationSelectionChanged(object sender, EventArgs e)
@@ -162,10 +155,6 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         private void _setCurrentSelectedArea(object obj)
         {
             CurrentSelectedArea = (EnergyFlowAreaCoordsMappingViewModel)obj;
-            if (CurrentSelectedArea.SelectedLocation == null)
-            {
-                CurrentSelectedArea.SelectedLocation = CurrentSelectedArea.Locations.FirstOrDefault();
-            }
             foreach (var item in AvailableSites)
             {
                 if (CurrentSelectedArea.Locations.Contains(item.Model))
@@ -177,12 +166,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                     item.IsSelected = false;
                 }
             }
-            if (SelectedTextboxIndex >= CurrentSelectedArea.Locations.Count())
-            {
-                SelectedTextboxIndex = -1;
-            }
         }
-        public int SelectedTextboxIndex { get; set; }
         public ICommand SiteSelected { get; set; }
         private void _siteSelected(object obj)
         {
@@ -190,30 +174,28 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             SiteCoordinatesModel CurrentCheckedItem = null;
             if (CurrentSelectedArea != null && CurrentSelectedArea.SelectedLocation != null)
             {
-                if (site.IsSelected)
+                if (site.IsSelected) //when a site is checked
                 {
-                    if (CurrentSelectedArea.SelectedLocation != CoreUtilities.DummySiteCoordinatesModel)
+                    if (CurrentSelectedArea.SelectedLocation != CoreUtilities.DummySiteCoordinatesModel) //if current textbox has a site in it
                     {
-                        CurrentCheckedItem = CurrentSelectedArea.SelectedLocation;
+                        CurrentCheckedItem = CurrentSelectedArea.SelectedLocation; // need to remember this old site so we can uncheck it later
                     }
-                    var idx = CurrentSelectedArea.Locations.IndexOf(CurrentSelectedArea.SelectedLocation);
-                    CurrentSelectedArea.Locations[idx] = site.Model;
-                    CurrentSelectedArea.SelectedLocation = site.Model;
-                    if (CurrentSelectedArea.Locations.Contains(CurrentCheckedItem))
+                    CurrentSelectedArea.Locations[CurrentSelectedArea.SelectedLocationIndex] = site.Model; // assign new site value to this textbos
+                    CurrentSelectedArea.SelectedLocation = site.Model; // make selected site of this area point to this newly checked site
+                    if (CurrentSelectedArea.Locations.Contains(CurrentCheckedItem)) // if in this area there are duplicate site, i.e. two textboxes have the same site, we don't need to uncheck it
                     {
                         CurrentCheckedItem = null;
                     }
                 }
-                else
+                else //when a site is unchecked, means user wants to make this textbox empty
                 {
-                    if (CurrentSelectedArea.SelectedLocation != site.Model)
+                    if (CurrentSelectedArea.SelectedLocation == site.Model) // in this situation, the unchecked site is usually the same as the selected location/textbox
                     {
-                        CurrentSelectedArea.SelectedLocation = site.Model;
-                        var idx = CurrentSelectedArea.Locations.IndexOf(site.Model);
-                        CurrentCheckedItem = CurrentSelectedArea.SelectedLocation;
-                        CurrentSelectedArea.Locations[idx] = CoreUtilities.DummySiteCoordinatesModel;
+                        CurrentCheckedItem = CurrentSelectedArea.SelectedLocation;  // need to remember this old site so we can uncheck it later
+                        CurrentSelectedArea.Locations[CurrentSelectedArea.SelectedLocationIndex] = CoreUtilities.DummySiteCoordinatesModel; //set this textbox empty
+                        CurrentSelectedArea.SelectedLocation = CoreUtilities.DummySiteCoordinatesModel; // also make the selected location point to the empty site
                     }
-                    if (CurrentSelectedArea.Locations.Contains(CurrentCheckedItem))
+                    if (CurrentSelectedArea.Locations.Contains(CurrentCheckedItem))  // if in this area there are duplicate site, i.e. two textboxes have the same site, we don't need to uncheck it
                     {
                         CurrentCheckedItem = null;
                     }
@@ -224,7 +206,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 site.IsSelected = false;
                 MessageBox.Show("Please select an area first.", "Warning", MessageBoxButtons.OK);
             }
-            if (CurrentCheckedItem != null)
+            if (CurrentCheckedItem != null) // go through all the available sites and find the old site that need to be unchecked
             {
                 foreach (var item in AvailableSites)
                 {
@@ -314,25 +296,25 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         //        }
         //    }
         //}
-        public ICommand ModifySiteSelection { get; set; }
-        private void _modifySiteSelection(object obj)
-        {
-            var values = (object[])obj;
-            CurrentSelectedArea = (EnergyFlowAreaCoordsMappingViewModel)values[0];
-            var currentLocation = (SiteCoordinatesModel)values[1];
-            SelectedTextboxIndex = (int)values[2];
-            foreach (var item in AvailableSites)
-            {
-                if (currentLocation == item.Model)
-                {
-                    item.IsSelected = true;
-                }
-                else
-                {
-                    item.IsSelected = false;
-                }
-            }
-        }
+        //public ICommand ModifySiteSelection { get; set; }
+        //private void _modifySiteSelection(object obj)
+        //{
+        //    var values = (object[])obj;
+        //    CurrentSelectedArea = (EnergyFlowAreaCoordsMappingViewModel)values[0];
+        //    var currentLocation = (SiteCoordinatesModel)values[1];
+        //    CurrentSelectedArea.SelectedLocationIndex = (int)values[2];
+        //    foreach (var item in AvailableSites)
+        //    {
+        //        if (currentLocation == item.Model)
+        //        {
+        //            item.IsSelected = true;
+        //        }
+        //        else
+        //        {
+        //            item.IsSelected = false;
+        //        }
+        //    }
+        //}
 
     }
 }

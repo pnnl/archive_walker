@@ -52,7 +52,8 @@ namespace DissipationEnergyFlow.Models
                 paths.Add(aPath);
             }
             ef.Add(paths);
-            var paramenters = new XElement("Parameters", new XElement("LocMinLength", _model.LocMinLength),
+            var paramenters = new XElement("Parameters", new XElement("PerformTimeLoc", _model.PerformTimeLoc),
+                                                         new XElement("LocMinLength", _model.LocMinLength),
                                                          new XElement("LocLengthStep", _model.LocLengthStep),
                                                          new XElement("LocRes", _model.LocRes));
             ef.Add(paramenters);

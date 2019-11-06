@@ -14,7 +14,7 @@
                     <TextBox Text="{Binding Name}" Margin="2" Width="150" IsReadOnly="True" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Name="From">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=1,Mode=FindAncestor}, Path=DataContext.SelectedLocationChanged}" CommandParameter="{Binding}"/>
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=1,Mode=FindAncestor}, Path=DataContext.SelectedLocationChanged}" CommandParameter="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>

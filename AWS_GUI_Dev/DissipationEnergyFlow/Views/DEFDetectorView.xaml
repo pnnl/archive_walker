@@ -224,6 +224,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -232,12 +233,14 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Oscillation Start/End Point Estimation" Margin="2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="16" VerticalAlignment="Center"/>
                         <TextBlock Width="20" Grid.Row="1" Grid.Column="0"/>
-                        <Label Content="Minimum Analysis Window Length (seconds):" Margin="2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding LocMinLength}" Margin="2,1" Grid.Row="1" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
-                        <Label Content="Oscillation Length Resolution (seconds):" Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding LocLengthStep}" Margin="2,1" Grid.Row="2" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
-                        <Label Content="Oscillation Start/End Point Resolution (seconds):" Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding LocRes}" Margin="2,1" Grid.Row="3" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
+                        <Label Content="Estimate Start/End Point?" Margin="2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"/>
+                        <CheckBox IsChecked="{Binding PerformTimeLoc}" Margin="2,1" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"/>
+                        <Label Content="Minimum Analysis Window Length (seconds):" Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding LocMinLength}" Margin="2,1" Grid.Row="2" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
+                        <Label Content="Oscillation Length Resolution (seconds):" Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding LocLengthStep}" Margin="2,1" Grid.Row="3" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
+                        <Label Content="Oscillation Start/End Point Resolution (seconds):" Margin="2" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding LocRes}" Margin="2,1" Grid.Row="4" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
                     </Grid>
                 </Grid>
             </ScrollViewer>

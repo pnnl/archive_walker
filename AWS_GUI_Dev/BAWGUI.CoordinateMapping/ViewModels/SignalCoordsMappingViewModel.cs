@@ -25,9 +25,9 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         {
             SetCurrentSelectedSignal = new RelayCommand(_setCurrentSelectedSignal);
             SiteSelected = new RelayCommand(_siteSelected);
-            SelectedTextboxIndex = -1;
+            //SelectedTextboxIndex = -1;
             ModifySiteSelection = new RelayCommand(_modifySiteSelection);
-            DeleteASite = new RelayCommand(_deleteASite);
+            //DeleteASite = new RelayCommand(_deleteASite);
         }
         public SignalCoordsMappingViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords, SignalManager signalMgr) : this()
         {
@@ -74,6 +74,9 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                             sgl.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
                         }
                     }
+                    sgl.SelectedLocation = sgl.Locations.FirstOrDefault();
+                    sgl.SelectedLocationIndex = 0;
+                    sgl.LocationSelectionChanged += Sgl_LocationSelectionChanged;
                 }
             }
             var siteNotFoundMessage = "";
@@ -96,7 +99,26 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 MessageBox.Show(siteNotFoundMessage + "\n" + siteRenamedMessage, "Warnings", MessageBoxButtons.OK);
             }
         }
-        
+
+        private void Sgl_LocationSelectionChanged(object sender, EventArgs e)
+        {
+            CurrentSelectedSignal = sender as SignalSignatureViewModel;
+            if (CurrentSelectedSignal != null && CurrentSelectedSignal.SelectedLocation != null)
+            {
+                foreach (var item in AvailableSites)
+                {
+                    if (CurrentSelectedSignal.SelectedLocation == item.Model)
+                    {
+                        item.IsSelected = true;
+                    }
+                    else
+                    {
+                        item.IsSelected = false;
+                    }
+                }
+            }
+        }
+
         private SiteCoordinatesViewModel _findSite(string Lat, string Lng)
         {
             foreach (var site in AvailableSites)
@@ -126,7 +148,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         public ICommand SetCurrentSelectedSignal { get; set; }
         private void _setCurrentSelectedSignal(object obj)
         {
-            SelectedTextboxIndex = -1;
+            //SelectedTextboxIndex = -1;
             //var values = (object[])obj;
             //CurrentSelectedSignal = (SignalSignatureViewModel)values[0];
             CurrentSelectedSignal = (SignalSignatureViewModel)obj;
@@ -141,37 +163,9 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                     item.IsSelected = false;
                 }
             }
-            if (SelectedTextboxIndex >= CurrentSelectedSignal.Locations.Count())
-            {
-                SelectedTextboxIndex = -1;
-            }
-            //SiteCoordinatesModel checkedItem = null;
-            //if ((string)values[1] == "From")
+            //if (SelectedTextboxIndex >= CurrentSelectedSignal.Locations.Count())
             //{
-            //    IsFromSelected = true;
-            //    if (CurrentSelectedSignal.From != null)
-            //    {
-            //        checkedItem = CurrentSelectedSignal.From;
-            //    }
-            //}
-            //else
-            //{
-            //    IsFromSelected = false;
-            //    if (CurrentSelectedSignal.To != null)
-            //    {
-            //        checkedItem = CurrentSelectedSignal.To;
-            //    }
-            //}
-            //foreach (var item in AvailableSites)
-            //{
-            //    if (checkedItem != null && item.Model == checkedItem)
-            //    {
-            //        item.IsSelected = true;
-            //    }
-            //    else
-            //    {
-            //        item.IsSelected = false;
-            //    }
+            //    SelectedTextboxIndex = -1;
             //}
         }
         public ICommand SiteSelected { get; set; }
@@ -197,102 +191,36 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 {
                     if (site.IsSelected)
                     {
-                        if (SelectedTextboxIndex == -1)
+                        if (CurrentSelectedSignal.SelectedLocation != CoreUtilities.DummySiteCoordinatesModel)
                         {
-                            SelectedTextboxIndex = CurrentSelectedSignal.Locations.IndexOf(CoreUtilities.DummySiteCoordinatesModel);
+                            CurrentCheckedItem = CurrentSelectedSignal.SelectedLocation;
                         }
-                        if (SelectedTextboxIndex == -1)
-                        {
-                            CurrentSelectedSignal.Locations.Add(site.Model);
-                        }
-                        else
-                        {
-                            if (CurrentSelectedSignal.Locations[SelectedTextboxIndex] != CoreUtilities.DummySiteCoordinatesModel)
-                            {
-                                CurrentCheckedItem = CurrentSelectedSignal.Locations[SelectedTextboxIndex];
-                            }
-                            CurrentSelectedSignal.Locations[SelectedTextboxIndex] = site.Model;
-                        }
+                        CurrentSelectedSignal.Locations[CurrentSelectedSignal.SelectedLocationIndex] = site.Model;
+                        CurrentSelectedSignal.SelectedLocation = site.Model;
                         if (CurrentSelectedSignal.Locations.Contains(CurrentCheckedItem))
                         {
                             CurrentCheckedItem = null;
                         }
                     }else
                     {
-                        if (SelectedTextboxIndex == -1 || CurrentSelectedSignal.Locations[SelectedTextboxIndex] != site.Model)
+                        if (CurrentSelectedSignal.SelectedLocation == site.Model)
                         {
-                            SelectedTextboxIndex = CurrentSelectedSignal.Locations.IndexOf(site.Model);
-                        }
-                        if (SelectedTextboxIndex != -1)
-                        {
-                            CurrentCheckedItem = CurrentSelectedSignal.Locations[SelectedTextboxIndex];
-                            CurrentSelectedSignal.Locations[SelectedTextboxIndex] = CoreUtilities.DummySiteCoordinatesModel;
+                            CurrentCheckedItem = CurrentSelectedSignal.SelectedLocation;
+                            CurrentSelectedSignal.Locations[CurrentSelectedSignal.SelectedLocationIndex] = CoreUtilities.DummySiteCoordinatesModel;
+                            CurrentSelectedSignal.SelectedLocation = CoreUtilities.DummySiteCoordinatesModel;
                         }
                         if (CurrentSelectedSignal.Locations.Contains(CurrentCheckedItem))
                         {
                             CurrentCheckedItem = null;
                         }
                     }
-                    //if (CurrentSelectedSignal.Locations.Count == 0)
-                    //{
-                    //    //if (SelectedTextboxIndex == 0)
-                    //    //{
-                    //    //    CurrentSelectedSignal.Locations.Add(site.Model);
-                    //    //}
-                    //    if (SelectedTextboxIndex == 1)
-                    //    {
-                    //        CurrentSelectedSignal.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
-                    //        CurrentSelectedSignal.Locations.Add(site.Model);
-                    //    }
-                    //    else
-                    //    {
-                    //        CurrentSelectedSignal.Locations.Add(site.Model);
-                    //    }
-                    //}
-                    //else if (CurrentSelectedSignal.Locations.Count == 1 && SelectedTextboxIndex == 1)
-                    //{
-                    //    CurrentSelectedSignal.Locations.Add(site.Model);
-                    //}
-                    //else
-                    //{
-
-                    //}
                 }
-                //else
-                //{
-
-                //}
             }
             else
             {
                 site.IsSelected = false;
                 MessageBox.Show("Please select a signal first.", "Warning", MessageBoxButtons.OK);
             }
-            //SiteCoordinatesModel CurrentCheckedItem = null;
-            //if (IsFromSelected)
-            //{
-            //    CurrentCheckedItem = CurrentSelectedSignal.From;
-            //    if (site.IsSelected)
-            //    {
-            //        CurrentSelectedSignal.From = site.Model;
-            //    }
-            //    else
-            //    {
-            //        CurrentSelectedSignal.From = CoreUtilities.DummySiteCoordinatesModel;
-            //    }
-            //}
-            //else
-            //{
-            //    CurrentCheckedItem = CurrentSelectedSignal.To;
-            //    if (site.IsSelected)
-            //    {
-            //        CurrentSelectedSignal.To = site.Model;
-            //    }
-            //    else
-            //    {
-            //        CurrentSelectedSignal.To = CoreUtilities.DummySiteCoordinatesModel;
-            //    }
-            //}
             if (CurrentCheckedItem != null)
             {
                 foreach (var item in AvailableSites)
@@ -300,36 +228,23 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                     if (item.Model == CurrentCheckedItem)
                     {
                         item.IsSelected = false;
+                        break;
                     }
                 }
             }
         }
-        //public bool IsFromSelected { get; set; }
-        public int SelectedTextboxIndex { get; set; }
-        //public ICommand AddFirstSite { get; set; }
-        //private void _add1stSite(object obj)
-        //{
-        //    _setCurrentSelectedSignal(obj);
-        //    SelectedTextboxIndex = 0;
-        //}
-        //public ICommand AddSecondSite { get; set; }
-        //private void _add2ndSite(object obj)
-        //{
-        //    _setCurrentSelectedSignal(obj);
-        //    SelectedTextboxIndex = 1;
-        //}
         public ICommand ModifySiteSelection { get; set; }
         private void _modifySiteSelection(object obj)
         {
             var values = (object[])obj;
             CurrentSelectedSignal = (SignalSignatureViewModel)values[0];
-            var currentLocation = (SiteCoordinatesModel)values[1];
-            SelectedTextboxIndex = (int)values[2];
+            CurrentSelectedSignal.SelectedLocation = (SiteCoordinatesModel)values[1];
+            CurrentSelectedSignal.SelectedLocationIndex = (int)values[2];
             //_setCurrentSelectedSignal(values[0]);
             //SelectedTextboxIndex = CurrentSelectedSignal.Locations.IndexOf((SiteCoordinatesModel)values[0]);
             foreach (var item in AvailableSites)
             {
-                if (currentLocation == item.Model)
+                if (CurrentSelectedSignal.SelectedLocation == item.Model)
                 //if (CurrentSelectedSignal.Locations[SelectedTextboxIndex] == item.Model)
                 {
                     item.IsSelected = true;
@@ -340,11 +255,5 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 }
             }
         }
-        public ICommand DeleteASite { get; set; }
-        private void _deleteASite(object obj)
-        {
-        }
-
-        public ICommand AddASite { get; set; }
     }
 }

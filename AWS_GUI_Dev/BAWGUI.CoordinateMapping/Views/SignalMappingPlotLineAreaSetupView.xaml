@@ -87,11 +87,11 @@
     </UserControl.Resources>
 
     <GroupBox Header="Sites" Margin="100,2">
-        <i:Interaction.Triggers>
+        <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentSelectedSignal}" CommandParameter="{Binding}"/>
             </i:EventTrigger>
-        </i:Interaction.Triggers>
+        </i:Interaction.Triggers>-->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

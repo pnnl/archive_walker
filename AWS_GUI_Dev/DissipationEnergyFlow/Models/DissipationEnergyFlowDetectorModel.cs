@@ -22,6 +22,7 @@ namespace DissipationEnergyFlow.Models
                 return "Dissipation Energy Flow Detector";
             }
         }
+        public bool PerformTimeLoc { get; set; }
         public int LocMinLength { get; set; }
         public int LocLengthStep { get; set; }
         public int LocRes { get; set; }

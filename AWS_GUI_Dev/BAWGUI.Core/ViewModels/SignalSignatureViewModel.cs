@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Linq;
 
 namespace BAWGUI.Core
 {
@@ -29,6 +30,8 @@ namespace BAWGUI.Core
             _model.Unit = "O";
             DeleteASite = new RelayCommand(_deleteASite);
             AddASite = new RelayCommand(_addASite);
+            _selectedLocation = Locations.FirstOrDefault();
+            SelectedLocationIndex = 0;
         }
         public SignalSignatureViewModel(string name) : this()
         {
@@ -386,6 +389,8 @@ namespace BAWGUI.Core
                             Locations.Add(keep);
                         }
                     }
+                    SelectedLocation = Locations.LastOrDefault();
+                    SelectedLocationIndex = Locations.Count - 1;
                     OnPropertyChanged();
                 }
             }
@@ -396,6 +401,8 @@ namespace BAWGUI.Core
             set
             {
                 _model.Locations = value;
+                SelectedLocation = _model.Locations.FirstOrDefault();
+                SelectedLocationIndex = 0;
                 OnPropertyChanged();
             }
         }
@@ -404,17 +411,20 @@ namespace BAWGUI.Core
         {
             var values = (object[])obj;
             var currentLocation = (SiteCoordinatesModel)values[0];
-            var selectedTextboxIndex = (int)values[1];
-            Locations.RemoveAt(selectedTextboxIndex);
-            //foreach (var item in Locations)
-            //{
-
-            //}
+            SelectedLocationIndex = (int)values[1];
+            _model.Locations.RemoveAt(SelectedLocationIndex);
+            if (SelectedLocationIndex >= Locations.Count)
+            {
+                SelectedLocationIndex = Locations.Count - 1;
+            }
+            SelectedLocation = Locations[SelectedLocationIndex];
         }
         public ICommand AddASite { get; set; }
         private void _addASite(object obj)
         {
             _model.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+            SelectedLocation = Locations.LastOrDefault();
+            SelectedLocationIndex = Locations.Count - 1;
         }
         private SiteCoordinatesModel _selectedLocation;
         public SiteCoordinatesModel SelectedLocation
@@ -424,8 +434,14 @@ namespace BAWGUI.Core
             {
                 _selectedLocation = value;
                 OnPropertyChanged();
+                OnLocationSelectionChanged(EventArgs.Empty);
             }
         }
-
+        public int SelectedLocationIndex { get; set; }
+        public event EventHandler LocationSelectionChanged;
+        protected virtual void OnLocationSelectionChanged(EventArgs e)
+        {
+            LocationSelectionChanged?.Invoke(this, e);
+        }
     }
 }

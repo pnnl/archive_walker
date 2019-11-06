@@ -105,12 +105,20 @@ namespace DissipationEnergyFlow.ViewModels
         {
             return true;
         }
+        public bool PerformTimeLoc 
+        {
+            get { return _model.PerformTimeLoc; }
+            set {
+                _model.PerformTimeLoc = value;
+                OnPropertyChanged();
+            } 
+        }
         public int LocMinLength 
         {
-            get { return _model.LocLengthStep; }
+            get { return _model.LocMinLength; }
             set
             {
-                _model.LocLengthStep = value;
+                _model.LocMinLength = value;
                 OnPropertyChanged();
             }
         }

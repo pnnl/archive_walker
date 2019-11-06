@@ -28,6 +28,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             AddASite = new RelayCommand(_addASite);
             SelectedLocationChanged = new RelayCommand(_changeSelectedLocation);
             _selectedLocation = Locations.FirstOrDefault();
+            SelectedLocationIndex = 0;
         }
         public EnergyFlowAreaCoordsMappingViewModel(EnergyFlowAreaCoordsMappingModel area) : this()
         {
@@ -90,7 +91,8 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                             Locations.Add(keep);
                         }
                     }
-                    SelectedLocation = Locations.FirstOrDefault();
+                    SelectedLocation = Locations.LastOrDefault();
+                    SelectedLocationIndex = Locations.Count - 1;
                     OnPropertyChanged();
                 }
             }
@@ -102,6 +104,8 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             set
             {
                 _locations = value;
+                SelectedLocation = _locations.FirstOrDefault();
+                SelectedLocationIndex = 0;
                 OnPropertyChanged();
             }
         }
@@ -110,20 +114,20 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         {
             var values = (object[])obj;
             var currentLocation = (SiteCoordinatesModel)values[0];
-            var selectedTextboxIndex = (int)values[1];
-            Locations.RemoveAt(selectedTextboxIndex);
-            SelectedLocation = Locations.LastOrDefault();
-            //foreach (var item in Locations)
-            //{
-
-            //}
+            SelectedLocationIndex = (int)values[1];
+            Locations.RemoveAt(SelectedLocationIndex);
+            if (SelectedLocationIndex >= Locations.Count)
+            {
+                SelectedLocationIndex = Locations.Count - 1;
+            }
+            SelectedLocation = Locations[SelectedLocationIndex];
         }
         public ICommand AddASite { get; set; }
         private void _addASite(object obj)
         {
             Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
-            SelectedLocation = Locations.LastOrDefault();
-            //OnLocationSelectionChanged(EventArgs.Empty);
+            SelectedLocationIndex = Locations.Count - 1;
+            SelectedLocation = Locations[SelectedLocationIndex];
         }
         private SiteCoordinatesModel _selectedLocation;
         public SiteCoordinatesModel SelectedLocation 
@@ -136,21 +140,17 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 OnLocationSelectionChanged(EventArgs.Empty);
             }
         }
+        public int SelectedLocationIndex { get; set; }
         public ICommand SelectedLocationChanged { get; set; }
         private void _changeSelectedLocation(object obj)
         {
-            SelectedLocation = (SiteCoordinatesModel)obj;
-            //OnLocationSelectionChanged(EventArgs.Empty);
+            SelectedLocationIndex = (int)obj;
+            SelectedLocation = Locations[SelectedLocationIndex];
         }
         public event EventHandler LocationSelectionChanged;
         protected virtual void OnLocationSelectionChanged(EventArgs e)
         {
             LocationSelectionChanged?.Invoke(this, e);
-        }
-        public event EventHandler DEFAreaSelected;
-        protected virtual void OnDEFAreaSelected(EventArgs e)
-        {
-            DEFAreaSelected?.Invoke(this, e);
         }
     }
 }

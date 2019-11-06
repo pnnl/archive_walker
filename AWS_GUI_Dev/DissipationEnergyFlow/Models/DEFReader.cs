@@ -135,6 +135,25 @@ namespace DissipationEnergyFlow.Models
                         throw new Exception("Integer expected. Original error: " + ex.Message);
                     }
                 }
+                par = parameters.Element("PerformTimeLoc");
+                if (par != null)
+                {
+                    try
+                    {
+                        if (par.Value.ToLower() == "true")
+                        {
+                            _detector.PerformTimeLoc = true;
+                        }
+                        else
+                        {
+                            _detector.PerformTimeLoc = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Integer expected. Original error: " + ex.Message);
+                    }
+                }
             }
         }
         private static SignalSignatures _readPathSignal(EnergyFlowPath newPath, XElement el)
