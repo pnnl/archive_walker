@@ -103,6 +103,7 @@ namespace BAWGUI.Results.ViewModels
                     var mm = new ForcedOscillationResultViewModel(model);
                     mm.SelectedOccurrenceChanged += _selectedOccurrenceChanged;
                     mm.SelectedChannelChanged += _selectedChannelChanged;
+                    mm.SelectedPathChanged += _selectedPathChanged;
                     _results.Add(mm);
                     _filteredResults.Add(mm);
 
@@ -362,6 +363,15 @@ namespace BAWGUI.Results.ViewModels
                 _updateMapMarkerAfterChannelSelectionChange();
             }
         }
+
+        private void _selectedPathChanged(object sender, EventArgs e)
+        {
+
+            if (SelectedPlottingRule == "DEF")
+            {
+                _updateMapMarkerAfterPathSelectionChange();
+            }
+        }
         private void _updateMapMarkerAfterChannelSelectionChange()
         {
             if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedChannel != null)
@@ -398,6 +408,43 @@ namespace BAWGUI.Results.ViewModels
                     }
                 }
             }
+        }
+        private void _updateMapMarkerAfterPathSelectionChange()
+        {
+            //if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedPath != null)
+            //{
+            //    foreach (var mkr in ResultMapVM.Gmap.Markers)
+            //    {
+            //        if (mkr.Tag.ToString() == SelectedOscillationEvent.SelectedOccurrence.SelectedPath.Name)
+            //        {
+            //            if (mkr.Shape is Path)
+            //            {
+            //                var shape = mkr.Shape as Path;
+            //                shape.StrokeThickness = 8;
+            //            }
+            //            if (mkr.Shape is Ellipse)
+            //            {
+            //                var shape = mkr.Shape as Ellipse;
+            //                shape.Width = 30;
+            //                shape.Height = 30;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            if (mkr.Shape is Path)
+            //            {
+            //                var shape = mkr.Shape as Path;
+            //                shape.StrokeThickness = 4;
+            //            }
+            //            if (mkr.Shape is Ellipse)
+            //            {
+            //                var shape = mkr.Shape as Ellipse;
+            //                shape.Width = 15;
+            //                shape.Height = 15;
+            //            }
+            //        }
+            //    }
+            //}
         }
         private void _updateFOMapAfterSelectionChange()
         {

@@ -20,15 +20,47 @@ namespace DissipationEnergyFlowResults.ViewModels
         }
         public string From
         {
-            get { return _model.From; }
+            get 
+            {
+                if (_model.DEF >= 0)
+                {
+                    return _model.From;
+                }
+                else
+                {
+                    return _model.To;
+                }
+            }
         }
         public string To
         {
-            get { return _model.To; }
+            get
+            {
+                if (_model.DEF >= 0)
+                {
+                    return _model.To;
+                }
+                else
+                {
+                    return _model.From;
+                }
+            }
         }
         public float DEF
         {
             get { return _model.DEF; }
+        }
+        public float ABSDEF
+        {
+            get { return Math.Abs(_model.DEF); }
+        }
+        public string FromActual
+        {
+            get { return _model.From; }
+        }
+        public string ToActual
+        {
+            get { return _model.To; }
         }
     }
 }

@@ -387,7 +387,7 @@ namespace MapService.ViewModels
             //var thinkest = Math.Abs(sortedPath.FirstOrDefault().DEF);
             var sortedPath = paths.OrderBy(x => Math.Abs(x.DEF)).ToList();
             var thinnest = Math.Abs(sortedPath.FirstOrDefault().DEF);//actual thinnest
-            foreach (var pth in sortedPath)
+            foreach (var pth in paths)
             {
                 if (!drawnArea.Contains(pth.From))
                 {

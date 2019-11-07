@@ -194,7 +194,7 @@ namespace BAWGUI.Results.ViewModels
                 {
                     _selectedPath = value;
                     OnPropertyChanged();
-                    //OnSelectedChannelChanged();
+                    OnSelectedPathChanged();
                 }
             }
         }
@@ -202,6 +202,11 @@ namespace BAWGUI.Results.ViewModels
         public virtual void OnSelectedChannelChanged()
         {
             SelectedChannelChanged?.Invoke(this, EventArgs.Empty);
+        }
+        public event EventHandler SelectedPathChanged;
+        public virtual void OnSelectedPathChanged()
+        {
+            SelectedPathChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -4755,16 +4755,16 @@ Namespace ViewModels
                     Dim addedNewArea = False
                     Dim newAreaList = New List(Of String)
                     For Each pth In detector.Paths
-                        If Not detector.UniqueAreas.Contains(pth.FromArea) And Not addedNewArea Then
+                        If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not detector.UniqueAreas.Contains(pth.FromArea) AndAlso Not addedNewArea Then
                             addedNewArea = True
                         End If
-                        If Not newAreaList.Contains(pth.FromArea) Then
+                        If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not newAreaList.Contains(pth.FromArea) Then
                             newAreaList.Add(pth.FromArea)
                         End If
-                        If Not detector.UniqueAreas.Contains(pth.ToArea) And Not addedNewArea Then
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not detector.UniqueAreas.Contains(pth.ToArea) And Not addedNewArea Then
                             addedNewArea = True
                         End If
-                        If Not newAreaList.Contains(pth.ToArea) Then
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not newAreaList.Contains(pth.ToArea) Then
                             newAreaList.Add(pth.ToArea)
                         End If
                     Next

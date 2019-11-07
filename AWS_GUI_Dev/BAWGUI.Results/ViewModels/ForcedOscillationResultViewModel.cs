@@ -46,6 +46,7 @@ namespace BAWGUI.Results.ViewModels
                 _occurrences.Add(oc);
                 _filteredOccurrences.Add(oc);
                 oc.SelectedChannelChanged += _selectedChannelChanged;
+                oc.SelectedPathChanged += _selectedPathChanged;
             }
             //_selectedOccurrence = new OccurrenceViewModel();
             _selectedOccurrence = FilteredOccurrences.FirstOrDefault();
@@ -296,12 +297,17 @@ namespace BAWGUI.Results.ViewModels
             SelectedOccurrenceChanged?.Invoke(this, EventArgs.Empty);
         }
         public event EventHandler SelectedChannelChanged;
+        public event EventHandler SelectedPathChanged;
         //public virtual void OnSelectedChannelChanged()
         //{
         //}
         private void _selectedChannelChanged(object sender, EventArgs e)
         {
             SelectedChannelChanged?.Invoke(this, EventArgs.Empty);
+        }
+        private void _selectedPathChanged(object sender, EventArgs e)
+        {
+            SelectedPathChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

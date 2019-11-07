@@ -848,13 +848,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
             newTask.InitializationPath = initPath;
             newTask.RunName = newtaskName;
             newTask.RunPath = taskDir;
-            if (!File.Exists(newTask.ConfigFilePath))
-            {
-                FileStream fs = File.Create(newTask.ConfigFilePath);
-                fs.Close();
-                var wr = new ConfigFileWriter(new SettingsViewModel(), newTask);
-                wr.WriteXmlConfigFile(newTask.ConfigFilePath);
-            }
+            //if (!File.Exists(newTask.ConfigFilePath))
+            //{
+            //    FileStream fs = File.Create(newTask.ConfigFilePath);
+            //    fs.Close();
+            //    var wr = new ConfigFileWriter(new SettingsViewModel(), newTask);
+            //    wr.WriteXmlConfigFile(newTask.ConfigFilePath);
+            //}
             _model.AWRuns.Add(newTask);
             var newTaskVieModel = new AWRunViewModel(newTask);
             newTaskVieModel.RunSelected += _onOneOfTheRunSelected;

@@ -43,7 +43,7 @@ namespace DissipationEnergyFlow.Models
                             //if not, assign this name to the area objct in the path and add this object to the DEF model area dictionary
                             //if yes, re-point the area object in the DEF path to the existing area object in the dictionary
                             newPath.FromArea = thisAreaName;
-                            if (!_detector.UniqueAreas.Contains(thisAreaName))
+                            if (!string.IsNullOrEmpty(thisAreaName) && !_detector.UniqueAreas.Contains(thisAreaName))
                             {
                                 _detector.UniqueAreas.Add(thisAreaName);
                             }
@@ -60,7 +60,7 @@ namespace DissipationEnergyFlow.Models
                             //if not, assign this name to the area objct in the path and add this object to the DEF model area dictionary
                             //if yes, re-point the area object in the DEF path to the existing area object in the dictionary
                             newPath.ToArea = thisAreaName;
-                            if (!_detector.UniqueAreas.Contains(thisAreaName))
+                            if (!string.IsNullOrEmpty(thisAreaName) && !_detector.UniqueAreas.Contains(thisAreaName))
                             {
                                 _detector.UniqueAreas.Add(thisAreaName);
                             }

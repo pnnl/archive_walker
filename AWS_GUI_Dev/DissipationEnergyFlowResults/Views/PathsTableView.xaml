@@ -77,8 +77,11 @@
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
             <xcdg:Column Title="From" FieldName="From" ReadOnly="True" Width="100"/>
+            <!--<xcdg:Column Title="FromActual" FieldName="FromActual" ReadOnly="True" Width="100"/>-->
             <xcdg:Column Title="To" FieldName="To" ReadOnly="True" Width="100"/>
-            <xcdg:Column Title="DEF" FieldName="DEF" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+            <!--<xcdg:Column Title="ToActual" FieldName="ToActual" ReadOnly="True" Width="100"/>-->
+            <xcdg:Column Title="DEF" FieldName="ABSDEF" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>
+            <!--<xcdg:Column Title="DEF2" FieldName="DEF" CellContentTemplate="{StaticResource FloatCellTemplate}" ReadOnly="True" Width="100"/>-->
         </xcdg:DataGridControl.Columns>
     </xcdg:DataGridControl>
 </UserControl>
