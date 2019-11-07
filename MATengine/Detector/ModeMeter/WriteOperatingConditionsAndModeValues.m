@@ -56,7 +56,13 @@ else
                     H1 = [H1, ['DEF_' DEFparams.PathDescription{1,PathIdx} '_to_' DEFparams.PathDescription{2,PathIdx}]];
                     H2 = [H2, AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstIdx}];
                     H3 = [H3, DEFparams.PathDescription{1,PathIdx}];
-                    H4 = [H4, DEFparams.PathDescription{2,PathIdx}];
+                    if isempty(DEFparams.PathDescription{2,PathIdx})
+                        % To area was not specified
+                        H4 = [H4, ' '];
+                    else
+                        % To area was specified
+                        H4 = [H4, DEFparams.PathDescription{2,PathIdx}];
+                    end
                 end
             end
         end
