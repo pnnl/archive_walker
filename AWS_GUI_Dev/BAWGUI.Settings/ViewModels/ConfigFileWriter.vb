@@ -24,6 +24,10 @@ Namespace ViewModels
         '    End Set
         'End Property
         Private _saveToRun As AWRun
+        Private _errorMessages As List(Of String)
+        Public Function GetErrorMessages() As List(Of String)
+            Return _errorMessages
+        End Function
         Public Property SaveToRun As AWRun
             Get
                 Return _saveToRun
@@ -37,6 +41,7 @@ Namespace ViewModels
             _svm = svm
             _saveToRun = run
             _powerTypeDictionary = New Dictionary(Of String, String) From {{"Complex", "CP"}, {"Apparent", "S"}, {"Active", "P"}, {"Reactive", "Q"}}
+            _errorMessages = New List(Of String)
         End Sub
 
         'Public Sub ConfigFilewriter(svm As SettingsViewModel)
@@ -679,9 +684,21 @@ Namespace ViewModels
             If _svm.SignalMgr.UniqueMappingSignals IsNot Nothing AndAlso _svm.SignalMgr.UniqueMappingSignals.Count <> 0 Then
                 Dim writer = New SignalMappingPlotConfigWriter()
                 _configData.Add(writer.WriteConfigToXMLFormat(_svm.SignalMgr.UniqueMappingSignals))
+                _errorMessages.AddRange(writer.GetErrorMessages())
+                'Dim errors = writer.GetErrorMessages()
+                'If errors.Count <> 0 Then
+                '    _errorMessages.AddRange(errors)
+                '    'Throw New Exception(String.Join(Environment.NewLine, errors))
+                'End If
             End If
             If DEFAreaConfigWriter IsNot Nothing Then
                 _configData.Add(DEFAreaConfigWriter.WriteConfigToXMLFormat())
+                _errorMessages.AddRange(DEFAreaConfigWriter.GetErrorMessages())
+                'Dim errors = DEFAreaConfigWriter.GetErrorMessages()
+                'If errors.Count <> 0 Then
+                '    _errorMessages.AddRange(errors)
+                '    'Throw New Exception(String.Join(Environment.NewLine, errors))
+                'End If
             End If
             _configData.Save(filename)
         End Sub

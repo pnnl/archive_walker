@@ -1,5 +1,6 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.Core.Models;
+using BAWGUI.Core.Utilities;
 using BAWGUI.Utilities;
 using BAWGUI.Xml;
 using GMap.NET;
@@ -78,6 +79,7 @@ namespace MapService.ViewModels
             var pointPairs = new List<PointsPair>();
 
             var signalToBePloted = Signals.Where(x => !double.IsNaN(x.Intensity)).ToList();
+            signalToBePloted = _cleanUnassignedSites(signalToBePloted);
 
             double colorRange = 0d;
             //List<OxyColor> RBColors = null;
@@ -199,6 +201,26 @@ namespace MapService.ViewModels
                     System.Windows.Forms.MessageBox.Show("Error drawing arcs on map.\n" + ex.Message, "Error!", MessageBoxButtons.OK);
                 }
             }
+        }
+
+        private List<SignalIntensityViewModel> _cleanUnassignedSites(List<SignalIntensityViewModel> signalToBePloted)
+        {
+            var rlt = new List<SignalIntensityViewModel>();
+            foreach (var item in signalToBePloted)
+            {
+                for (int i = item.Signal.Locations.Count - 1; i >= 0; i--)
+                {
+                    if (item.Signal.Locations[i] == CoreUtilities.DummySiteCoordinatesModel)
+                    {
+                        item.Signal.Locations.RemoveAt(i);
+                    }
+                }
+                if (item.Signal.Locations.Count != 0)
+                {
+                    rlt.Add(item);
+                }
+            }
+            return rlt;
         }
 
         private void _drawCurvesOnMap(List<PointsPair> pointPairs)
@@ -383,27 +405,54 @@ namespace MapService.ViewModels
             int areaCount = 0;
             Gmap.Markers.Clear();
             var drawnArea = new List<string>();
+            entries = _cleanDEFUnassignedSites(entries);
             //var sortedPath = paths.OrderByDescending(x => Math.Abs(x.DEF)).ToList();
             //var thinkest = Math.Abs(sortedPath.FirstOrDefault().DEF);
             var sortedPath = paths.OrderBy(x => Math.Abs(x.DEF)).ToList();
             var thinnest = Math.Abs(sortedPath.FirstOrDefault().DEF);//actual thinnest
+            var thickest = Math.Abs(sortedPath.LastOrDefault().DEF);//actual thinnest
             foreach (var pth in paths)
             {
-                if (!drawnArea.Contains(pth.From))
+                if (!drawnArea.Contains(pth.From) && entries.ContainsKey(pth.From))
                 {
                     areaCount = _drawDEFArea(entries, RBColors, areaCount, drawnArea, pth.From);
                 }
-                if (!drawnArea.Contains(pth.To))
+                if (!drawnArea.Contains(pth.To) && entries.ContainsKey(pth.To))
                 {
                     areaCount = _drawDEFArea(entries, RBColors, areaCount, drawnArea, pth.To);
                 }
-                _drawArrow(entries, pth, thinnest);
+                if (entries.ContainsKey(pth.To) && entries.ContainsKey(pth.From))
+                {
+                    _drawArrow(entries, pth, thinnest, thickest);
+                }
             }
             Gmap.InvalidateVisual(false);
             Gmap.UpdateLayout();
         }
 
-        private void _drawArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float scaleAgainst)
+        private Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> _cleanDEFUnassignedSites(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries)
+        {
+            var rlt = new Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>>();
+            foreach (var item in entries)
+            {
+                var key = item.Key;
+                var type = item.Value.Item1;
+                for (int i = item.Value.Item2.Count - 1; i >= 0; i--)
+                {
+                    if (item.Value.Item2[i] == CoreUtilities.DummySiteCoordinatesModel)
+                    {
+                        item.Value.Item2.RemoveAt(i);
+                    }
+                }
+                if (item.Value.Item2.Count != 0)
+                {
+                    rlt[key] = new Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>(type, item.Value.Item2);
+                }
+            }
+            return rlt;
+        }
+
+        private void _drawArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest)
         {
             PointLatLng fromAreaCenter = new PointLatLng();
             PointLatLng toAreaCenter = new PointLatLng();
@@ -427,7 +476,8 @@ namespace MapService.ViewModels
                 arrowHeadLabel = pth.From + "_arrow_head";
             }
             //var relativeEFstrength = (int)(Math.Abs(Math.Log10(Math.Abs(pth.DEF)) / Math.Log10(thinkest)) * 10);
-            var relativeEFstrength = (int)(Math.Abs(Math.Log10(Math.Abs(pth.DEF) / scaleAgainst)) * 2) + 4;
+            //var relativeEFstrength = (int)(Math.Abs(Math.Log10(Math.Abs(pth.DEF) / thinnest)) * 2) + 4;
+            var relativeEFstrength = (int)Math.Round((Math.Abs(pth.DEF) - thinnest) / (thickest - thinnest) * 16, MidpointRounding.AwayFromZero ) + 4;
             var arrowHeadSize = relativeEFstrength * 1.5;
             double upperx = 0d, lowerx = 0d, uppery = 0d, lowery = 0d, slope = 0d;
             var xDiff = fromAreaCenter.Lng - toAreaCenter.Lng;

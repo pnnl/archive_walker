@@ -65,7 +65,8 @@ namespace BAWGUI.ViewModels
         private void _nameOK(object obj)
         {
             OnNameAccepted(_currentProject);
-            OnNameAccepted2();
+            //do I need this?
+            //OnNameAccepted2();
         }
 
         public ICommand CancelNewTask { get; set; }
@@ -76,15 +77,17 @@ namespace BAWGUI.ViewModels
             OnNewTaskCancelled2();
         }
         public event EventHandler<AWProjectViewModel> NameAccepted;
-        public event EventHandler NameAccepted2;
+        //do I need this?
+        //public event EventHandler NameAccepted2;
         protected virtual void OnNameAccepted(AWProjectViewModel currentProject)
         {
             NameAccepted?.Invoke(this, currentProject);
         }
-        protected virtual void OnNameAccepted2()
-        {
-            NameAccepted2?.Invoke(this, EventArgs.Empty);
-        }
+        //do I need this?
+        //protected virtual void OnNameAccepted2()
+        //{
+        //    //NameAccepted2?.Invoke(this, EventArgs.Empty);
+        //}
         //public event Action NameAccepted;
         //protected virtual void OnNameAccepted()
         //{

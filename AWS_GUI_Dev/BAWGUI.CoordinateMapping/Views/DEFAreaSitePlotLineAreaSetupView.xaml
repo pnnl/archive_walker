@@ -50,7 +50,8 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
-                            <Button Command="{Binding DataContext.DeleteASite, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=1}}" Width="20" Height="20" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,  AncestorLevel=1, AncestorType=UserControl}, Path=DataContext.Locations.Count, Converter={StaticResource SiteCountVisibilityConverter}}">
+                            <!--<Button Command="{Binding DataContext.DeleteASite, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=1}}" Width="20" Height="20" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,  AncestorLevel=1, AncestorType=UserControl}, Path=DataContext.Locations.Count, Converter={StaticResource SiteCountVisibilityConverter}}">-->
+                                <Button Command="{Binding DataContext.DeleteASite, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=1}}" Width="20" Height="20">
                                 <Image Source="/BAWGUI.CoordinateMapping;component/MyResources/delete.bmp"/>
                                 <Button.CommandParameter>
                                     <MultiBinding Converter="{StaticResource TextBoxSelectionCommandParameterConverter}">
@@ -58,6 +59,12 @@
                                         <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}" Path="(ItemsControl.AlternationIndex)"/>
                                     </MultiBinding>
                                 </Button.CommandParameter>
+                                <Button.Visibility>
+                                    <MultiBinding Converter="{StaticResource SiteCountVisibilityConverter}">
+                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=UserControl}" Path="DataContext.Type"/>
+                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=UserControl}" Path="DataContext.Locations.Count"/>
+                                    </MultiBinding>
+                                </Button.Visibility>
                             </Button>
                         </StackPanel>
                     </DataTemplate>

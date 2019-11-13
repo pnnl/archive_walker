@@ -1,4 +1,6 @@
 ﻿using BAWGUI.Core;
+using BAWGUI.Core.Models;
+using BAWGUI.Core.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,9 +17,10 @@ namespace BAWGUI.CoordinateMapping.Models
 
         public SignalMappingPlotConfigWriter()
         {
+            _errorMessages = new List<string>();
         }
 
-        public SignalMappingPlotConfigWriter(ObservableCollection<SignalSignatureViewModel> uniqueMappingSignals)
+        public SignalMappingPlotConfigWriter(ObservableCollection<SignalSignatureViewModel> uniqueMappingSignals) : this()
         {
             this._mappingSignalsToBeWritten = uniqueMappingSignals;
         }
@@ -38,24 +41,49 @@ namespace BAWGUI.CoordinateMapping.Models
             var config = new XElement("SignalMappingPlotConfig", string.Empty);
             foreach (var signal in _mappingSignalsToBeWritten)
             {
-                var sgnl = new XElement("Signal", new XElement("PMU", signal.PMUName),
-                                                    new XElement("SignalName", signal.SignalName),
-                                                    new XElement("Type", signal.MapPlotType.ToString()));
+                var type = signal.MapPlotType;
+                var numberOfSites = signal.Locations.Count();
+                bool dummySiteFound = false;
                 var sites = new XElement("Sites");
                 foreach (var lctn in signal.Locations)
                 {
-                    if (string.IsNullOrEmpty(lctn.Name) || string.IsNullOrEmpty(lctn.Latitude) || string.IsNullOrEmpty(lctn.Longitude))
+                    if (lctn == CoreUtilities.DummySiteCoordinatesModel)
                     {
-                        break;
+                        dummySiteFound = true;
+                        _errorMessages.Add(string.Format("Invalid site is setup with signal {1} of PMU {0} and the type is supposed to be {2}. This signal might be drawn incorrectly on the map", signal.PMUName, signal.SignalName, signal.MapPlotType.ToString()));
                     }
                     else
                     {
-                        var site = new XElement("Site", new XElement("Name", lctn.Name),
-                                                        new XElement("Latitude", lctn.Latitude),
-                                                        new XElement("Longitude", lctn.Longitude));
-                        sites.Add(site);
+                        if (string.IsNullOrEmpty(lctn.Name) || string.IsNullOrEmpty(lctn.Latitude) || string.IsNullOrEmpty(lctn.Longitude))
+                        {
+                            _errorMessages.Add(string.Format("Site {0} with latitude {1} and longitude {2} is set up with signal {3} of PMU {4}, which might be drawn incorrectly on the map", lctn.Name, lctn.Latitude, lctn.Longitude, signal.PMUName, signal.SignalName));
+                            continue;
+                        }
+                        else
+                        {
+                            var site = new XElement("Site", new XElement("Name", lctn.Name),
+                                                            new XElement("Latitude", lctn.Latitude),
+                                                            new XElement("Longitude", lctn.Longitude));
+                            sites.Add(site);
+                        }
                     }
                 }
+                var siteCount = sites.Elements("Site").Count();
+                if (dummySiteFound && siteCount == 1)
+                {
+                    _errorMessages.Add(string.Format("The mapping type of signal {0} of PMU {1} has been changed from {2} to Dot", signal.PMUName, signal.SignalName, type.ToString()));
+                    type = SignalMapPlotType.Dot;
+                    dummySiteFound = false;
+                }
+                if (dummySiteFound && siteCount == 2 && type != SignalMapPlotType.Line)
+                {
+                    _errorMessages.Add(string.Format("The mapping type of signal {0} of PMU {1} has been changed from {2} to Line", signal.PMUName, signal.SignalName, type.ToString()));
+                    type = SignalMapPlotType.Line;
+                    dummySiteFound = false;
+                }
+                var sgnl = new XElement("Signal", new XElement("PMU", signal.PMUName),
+                                                    new XElement("SignalName", signal.SignalName),
+                                                    new XElement("Type", type));
                 if (sites.HasElements)
                 {
                     sgnl.Add(sites);
@@ -70,6 +98,11 @@ namespace BAWGUI.CoordinateMapping.Models
                 }
             }
             return config;
+        }
+        private List<string> _errorMessages;
+        public List<string> GetErrorMessages()
+        { 
+            return _errorMessages;
         }
     }
 }

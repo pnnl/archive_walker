@@ -73,7 +73,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                     }
                     if (value == SignalMapPlotType.Area)
                     {
-                        for (int index = Locations.Count; index < 2; index++)
+                        for (int index = Locations.Count; index < 3; index++)
                         {
                             Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
                         }

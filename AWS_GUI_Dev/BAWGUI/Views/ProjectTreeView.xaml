@@ -45,7 +45,6 @@
                             <TextBlock.ContextMenu>
                                 <ContextMenu  DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                     <MenuItem Command="{Binding PlacementTarget.Tag.DataContext.AddRun, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Add Task..." CommandParameter="{Binding}" ToolTip="Add a new task in this project">
-                                        <!--<MenuItem Command="{Binding AddRun}" Header="Add Task..." CommandParameter="{Binding}" ToolTip="Add a new task in this project">-->
                                         <MenuItem.Icon>
                                             <Image Source="/ArchiveWalker;component/MyResources/Add_16x.png"/>
                                         </MenuItem.Icon>

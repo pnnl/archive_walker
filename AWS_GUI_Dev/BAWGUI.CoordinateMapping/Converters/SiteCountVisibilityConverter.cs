@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,23 +10,58 @@ using System.Windows.Data;
 
 namespace BAWGUI.CoordinateMapping.Converters
 {
-    public class SiteCountVisibilityConverter : IValueConverter
+    //public class SiteCountVisibilityConverter : IValueConverter
+    //{
+    //    object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        if ((int)value > 2)
+    //        {
+    //            return Visibility.Visible;
+    //        }
+    //        else
+    //        {
+    //            return Visibility.Collapsed;
+    //        }
+    //    }
+
+    //    object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        return DependencyProperty.UnsetValue;
+    //    }
+    //}
+    public class SiteCountVisibilityConverter : IMultiValueConverter
     {
-        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        object IMultiValueConverter.Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((int)value > 2)
+            SignalMapPlotType type = (SignalMapPlotType)values[0];
+            int count = (int)values[1];
+            if (type == SignalMapPlotType.Area)
             {
-                return Visibility.Visible;
+                if (count > 3)
+                {
+                    return Visibility.Visible;
+                }
+                else
+                {
+                    return Visibility.Collapsed;
+                }
             }
             else
             {
-                return Visibility.Collapsed;
+                if (count > 2)
+                {
+                    return Visibility.Visible;
+                }
+                else
+                {
+                    return Visibility.Collapsed;
+                }
             }
         }
 
-        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        object[] IMultiValueConverter.ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            return DependencyProperty.UnsetValue;
+            return null;
         }
     }
 }
