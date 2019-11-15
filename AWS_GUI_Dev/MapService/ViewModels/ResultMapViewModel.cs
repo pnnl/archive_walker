@@ -425,9 +425,42 @@ namespace MapService.ViewModels
                 {
                     _drawArrow(entries, pth, thinnest, thickest);
                 }
+                else if (entries.ContainsKey(pth.To) && !entries.ContainsKey(pth.From))
+                {
+                    _drawFixedArrow(entries, pth, thinnest, thickest, true);
+                }
+                else if (!entries.ContainsKey(pth.To) && entries.ContainsKey(pth.From))
+                {
+                    _drawFixedArrow(entries, pth, thinnest, thickest, false);
+                }
             }
             Gmap.InvalidateVisual(false);
             Gmap.UpdateLayout();
+        }
+        //when of the area in the path is not defined or not available in the SiteCoordinatesModel dictionary. As from Jim: When displaying DEF on the map, can you make a special case for when the To area is empty? In this case the From area could have a horizontal or vertical arrow pointing to/from it. 
+        private void _drawFixedArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest, bool noFrom)
+        {
+            PointLatLng existingCenter = new PointLatLng();
+            SignalMapPlotType existingCenterType;
+            string pathLabel = "";
+            string arrowHeadLabel = "";
+            if (noFrom)
+            {
+                existingCenter = _getAreaCenter(entries[pth.To].Item2);
+                existingCenterType = entries[pth.To].Item1;
+                if (pth.DEF > 0)
+                {
+                    pathLabel = "Unknown to " + pth.To;
+                    arrowHeadLabel = pth.To + "_arrow_head";
+                }
+            }
+            else
+            {
+                existingCenter = _getAreaCenter(entries[pth.From].Item2);
+                existingCenterType = entries[pth.From].Item1;
+                pathLabel = pth.To + " to " + pth.From;
+                arrowHeadLabel = pth.From + "_arrow_head";
+            }
         }
 
         private Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> _cleanDEFUnassignedSites(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries)

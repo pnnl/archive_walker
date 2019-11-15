@@ -23,6 +23,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
 
         public SignalCoordsMappingViewModel()
         {
+            _models = new List<SignalCoordsMappingModel>();
             SetCurrentSelectedSignal = new RelayCommand(_setCurrentSelectedSignal);
             SiteSelected = new RelayCommand(_siteSelected);
             //SelectedTextboxIndex = -1;
@@ -39,13 +40,18 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         public SignalCoordsMappingViewModel(ObservableCollection<SiteCoordinatesViewModel> siteCoords, SignalManager signalMgr, List<SignalCoordsMappingModel> models) : this(siteCoords, signalMgr)
         {
             _models = models;
+            //SetupSignalMapping();
+        }
+
+        public void SetupSignalMapping()
+        {
             //sites not found
             var sitesNotFound = new List<string>();
             var sitesRenamed = new Dictionary<string, string>();
             foreach (var md in _models)
             {
                 var sgl = SignalMgr.SearchForSignalInTaggedSignals(md.PMUName, md.SignalName);
-                if (signalMgr.UniqueMappingSignals.Contains(sgl))
+                if (SignalMgr.UniqueMappingSignals.Contains(sgl))
                 {
                     sgl.MapPlotType = md.Type;
                     sgl.Model.Locations.Clear();

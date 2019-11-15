@@ -943,8 +943,9 @@ Namespace ViewModels
                             Next
                             ModeMeterXmlWriter.CheckMMDirsStatus(Run.Model, modeMeters)
                         End If
-
-
+                        _signalMgr.DistinctMappingSignal()
+                        'SiteMappingVM.SignalCoordsMappingVM = New SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, config.SignalSiteMappingConfig);
+                        RaiseEvent DEFAreasChanged()
                     Catch ex As Exception
                         Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try

@@ -3191,6 +3191,12 @@ namespace BAWGUI.SignalManagement.ViewModels
         public void DistinctMappingSignal()
         {
             UniqueMappingSignals = new ObservableCollection<SignalSignatureViewModel>(MappingSignals.Distinct());
+            OnUniqueMappingSignalChanged(EventArgs.Empty);
+        }
+        public event EventHandler UniqueMappingSignalChanged;
+        protected virtual void OnUniqueMappingSignalChanged(EventArgs e)
+        {
+            UniqueMappingSignalChanged?.Invoke(this, e);
         }
     }
 }

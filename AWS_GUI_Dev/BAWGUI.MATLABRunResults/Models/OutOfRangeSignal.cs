@@ -22,12 +22,12 @@ namespace BAWGUI.MATLABRunResults.Models
         public string Type { get; set; }
         public string Unit { get; set; }
         public int SamplingRate { get; set; }
-        public List<double> TimeStampInSeconds { get; set; }
+        public List<double> TimeStampInSeconds { get; set; } // as .net number of seconds
         public List<double> Data { get; set; }
 
-        public List<System.DateTime> TimeStamps;
-        public List<double> TimeStampNumber { get; set; }
-        public List<double> MATLABTimeStampNumber;
+        public List<System.DateTime> TimeStamps; // as datetime
+        public List<double> TimeStampNumber { get; set; } //as .net number of days, microsoft 0 day which is midnight, 31 December 1899
+        public List<double> MATLABTimeStampNumber; // as matlab number of days, matlab 0 day which is January 0, 0000
 
         public List<double> DurationMaxMat { get; set; }
         public List<double> DurationMinMat { get; set; }
