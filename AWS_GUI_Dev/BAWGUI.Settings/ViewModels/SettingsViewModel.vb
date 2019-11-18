@@ -4756,12 +4756,21 @@ Namespace ViewModels
                     Dim addedNewArea = False
                     Dim newAreaList = New List(Of String)
                     For Each pth In detector.Paths
-                        If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not detector.UniqueAreas.Contains(pth.FromArea) AndAlso Not addedNewArea Then
-                            addedNewArea = True
+                        If String.IsNullOrEmpty(pth.FromArea) Then
+                            Forms.MessageBox.Show("From Area in the path of Dissipation Energy Flow detector is required. If left empty, will result in MATLAB calculation error.", "Error!", MessageBoxButtons.OK)
+                        Else
+                            If Not detector.UniqueAreas.Contains(pth.FromArea) AndAlso Not addedNewArea Then
+                                addedNewArea = True
+                            End If
+                            If Not newAreaList.Contains(pth.FromArea) Then
+                                newAreaList.Add(pth.FromArea)
+                            End If
                         End If
-                        If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not newAreaList.Contains(pth.FromArea) Then
-                            newAreaList.Add(pth.FromArea)
-                        End If
+                        'If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not newAreaList.Contains(pth.FromArea) Then
+                        '    newAreaList.Add(pth.FromArea)
+                        'Else
+
+                        'End If
                         If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not detector.UniqueAreas.Contains(pth.ToArea) And Not addedNewArea Then
                             addedNewArea = True
                         End If

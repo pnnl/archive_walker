@@ -470,13 +470,11 @@ namespace MapService.ViewModels
                 }
             }
             Gmap.InvalidateVisual(false);
-            Gmap.UpdateLayout();
+            //Gmap.UpdateLayout();
         }
         //when of the area in the path is not defined or not available in the SiteCoordinatesModel dictionary. As from Jim: When displaying DEF on the map, can you make a special case for when the To area is empty? In this case the From area could have a horizontal or vertical arrow pointing to/from it. 
         private void _drawFixedArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest, bool noFrom, Dictionary<string, bool> drawnArea)
         {
-            PointLatLng fromAreaCenter = new PointLatLng();
-            PointLatLng toAreaCenter = new PointLatLng();
             PointLatLng existingCenter = new PointLatLng();
             SignalMapPlotType existingCenterType;
             string pathLabel = "";
@@ -600,16 +598,19 @@ namespace MapService.ViewModels
 
         private void _drawArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest, Dictionary<string, bool> drawnArea)
         {
+            var relativeEFstrength = (int)Math.Round((Math.Abs(pth.DEF) - thinnest) / (thickest - thinnest) * 16, MidpointRounding.AwayFromZero) + 4;
+            var arrowHeadSize = relativeEFstrength * 1.5;
+
             PointLatLng fromAreaCenter = new PointLatLng();
             PointLatLng toAreaCenter = new PointLatLng();
-            SignalMapPlotType toCenterType;
+            //SignalMapPlotType toCenterType;
             string pathLabel = "";
             string arrowHeadLabel = "";
             if (pth.DEF > 0)
             {
                 fromAreaCenter = _getAreaCenter(entries[pth.From].Item2);
                 toAreaCenter = _getAreaCenter(entries[pth.To].Item2);
-                toCenterType = entries[pth.To].Item1;
+                //toCenterType = entries[pth.To].Item1;
                 pathLabel = pth.From + " to " + pth.To;
                 arrowHeadLabel = pth.To + "_arrow_head";
                 drawnArea[pth.To] = false;
@@ -618,21 +619,23 @@ namespace MapService.ViewModels
             {
                 fromAreaCenter = _getAreaCenter(entries[pth.To].Item2);
                 toAreaCenter = _getAreaCenter(entries[pth.From].Item2);
-                toCenterType = entries[pth.From].Item1;
+                //toCenterType = entries[pth.From].Item1;
                 pathLabel = pth.To + " to " + pth.From;
                 arrowHeadLabel = pth.From + "_arrow_head";
                 drawnArea[pth.From] = false;
             }
             //var relativeEFstrength = (int)(Math.Abs(Math.Log10(Math.Abs(pth.DEF)) / Math.Log10(thinkest)) * 10);
             //var relativeEFstrength = (int)(Math.Abs(Math.Log10(Math.Abs(pth.DEF) / thinnest)) * 2) + 4;
-            var relativeEFstrength = (int)Math.Round((Math.Abs(pth.DEF) - thinnest) / (thickest - thinnest) * 16, MidpointRounding.AwayFromZero ) + 4;
-            var arrowHeadSize = relativeEFstrength * 1.5;
             double upperx = 0d, lowerx = 0d, uppery = 0d, lowery = 0d, slope = 0d;
-            var xDiff = fromAreaCenter.Lng - toAreaCenter.Lng;
-            var yDiff = fromAreaCenter.Lat - toAreaCenter.Lat;
+            var tosp = Gmap.FromLatLngToLocal(toAreaCenter);
+            var frsp = Gmap.FromLatLngToLocal(fromAreaCenter);
+            //var xDiff = fromAreaCenter.Lng - toAreaCenter.Lng;
+            //var yDiff = fromAreaCenter.Lat - toAreaCenter.Lat;
+            var xDiff = tosp.X - frsp.X;
+            var yDiff = tosp.Y - frsp.Y;
             if (xDiff != 0)
             {
-                slope = yDiff / xDiff;
+                slope = -(double)yDiff / (double)xDiff; // as y axis in screen coordinate system point to downward, the slope has to be negated to match the cartesian coordiate system.
             }
             else
             {
@@ -647,57 +650,57 @@ namespace MapService.ViewModels
             }
             var upperAngle = Math.Atan(slope) + Math.PI / 5;
             var lowerAngle = Math.Atan(slope) - Math.PI / 5;
-            //Console.WriteLine("angles: arrow body: {2} upper: {0}, lower: {1}", upperAngle * 180 / Math.PI, lowerAngle * 180 / Math.PI, Math.Atan(slope) *180 /Math.PI);
+            //Console.WriteLine("path: {0}", pathLabel);
+            //Console.WriteLine("angles: arrow body: {2} upper: {0}, lower: {1}", upperAngle * 180 / Math.PI, lowerAngle * 180 / Math.PI, Math.Atan(slope) * 180 / Math.PI);
 
-            var sp = Gmap.FromLatLngToLocal(toAreaCenter);
+            var pointsCollection = new PointCollection();
+            //Point markerOffset = new Point(0, 0);
+            var markerOffsetX = Math.Cos(Math.Atan(slope)) * 15;
+            var markerOffsetY = Math.Sin(Math.Atan(slope)) * 15;
+            //if (toCenterType == SignalMapPlotType.Dot)
+            //{
+            //    if (fromAreaCenter.Lng >= toAreaCenter.Lng)
+            //    {
+            //        //from location is in the first or 4th quadrant of to location
+            //        markerOffset = new Point(markerOffsetX, -markerOffsetY);
+            //    }
+            //    else
+            //    {
+            //        //from location is in the 2nd or 3rd quadrant of to location
+            //        markerOffset = new Point(-markerOffsetX, markerOffsetY);
+            //    }
+            //}
             //Console.WriteLine("screen position: x: {0}, y: {1}", sp.X, sp.Y);
             if (fromAreaCenter.Lng >= toAreaCenter.Lng)
             {
-                upperx = sp.X + Math.Cos(upperAngle) * arrowHeadSize;
-                uppery = sp.Y - Math.Sin(upperAngle) * arrowHeadSize;
-                lowerx = sp.X + Math.Cos(lowerAngle) * arrowHeadSize;
-                lowery = sp.Y - Math.Sin(lowerAngle) * arrowHeadSize;
+                upperx = Math.Cos(upperAngle) * arrowHeadSize + markerOffsetX;
+                uppery = -Math.Sin(upperAngle) * arrowHeadSize - markerOffsetY;
+                lowerx = Math.Cos(lowerAngle) * arrowHeadSize + markerOffsetX;
+                lowery = -Math.Sin(lowerAngle) * arrowHeadSize - markerOffsetY;
+                pointsCollection.Add(new Point(markerOffsetX, -markerOffsetY));
             }
             else
             {
-                upperx = sp.X - Math.Cos(upperAngle) * arrowHeadSize;
-                uppery = sp.Y + Math.Sin(upperAngle) * arrowHeadSize;
-                lowerx = sp.X - Math.Cos(lowerAngle) * arrowHeadSize;
-                lowery = sp.Y + Math.Sin(lowerAngle) * arrowHeadSize;
+                upperx = -Math.Cos(upperAngle) * arrowHeadSize - markerOffsetX;
+                uppery = Math.Sin(upperAngle) * arrowHeadSize + markerOffsetY;
+                lowerx = -Math.Cos(lowerAngle) * arrowHeadSize - markerOffsetX;
+                lowery = Math.Sin(lowerAngle) * arrowHeadSize + markerOffsetY;
+                pointsCollection.Add(new Point(-markerOffsetX, markerOffsetY));
             }
+            pointsCollection.Add(new Point(upperx, uppery));
+            pointsCollection.Add(new Point(lowerx, lowery));
             //Console.WriteLine("upper screen position: x: {0}, y: {1}", upperx, uppery);
             //Console.WriteLine("lower screen position: x: {0}, y: {1}", lowerx, lowery);
 
-            var pointsCollection = new PointCollection();
-            //pointsCollection.Add(new Point(sp.X - sp.X, sp.Y - sp.Y));
-            //pointsCollection.Add(new Point(upperx - sp.X, uppery - sp.Y));
-            //pointsCollection.Add(new Point(lowerx - sp.X, lowery - sp.Y));
-            var newOffsetx = (upperx + lowerx) / 2;
-            var newOffsety = (uppery + lowery) / 2;
-            pointsCollection.Add(new Point(sp.X - newOffsetx, sp.Y - newOffsety));
-            pointsCollection.Add(new Point(upperx - newOffsetx, uppery - newOffsety));
-            pointsCollection.Add(new Point(lowerx - newOffsetx, lowery - newOffsety));
+            ////pointsCollection.Add(new Point(sp.X - sp.X, sp.Y - sp.Y));
+            ////pointsCollection.Add(new Point(upperx - sp.X, uppery - sp.Y));
+            ////pointsCollection.Add(new Point(lowerx - sp.X, lowery - sp.Y));
+            //var newOffsetx = (upperx + lowerx) / 2;
+            //var newOffsety = (uppery + lowery) / 2;
+            //pointsCollection.Add(new Point(sp.X - newOffsetx, sp.Y - newOffsety));
+            //pointsCollection.Add(new Point(upperx - newOffsetx, uppery - newOffsety));
+            //pointsCollection.Add(new Point(lowerx - newOffsetx, lowery - newOffsety));
 
-            var markerOffsetX = Math.Cos(Math.Atan(slope)) * 15;
-            var markerOffsetY = Math.Sin(Math.Atan(slope)) * 15;
-            Point markerOffset;
-            if (toCenterType == SignalMapPlotType.Dot)
-            {
-                if (fromAreaCenter.Lng >= toAreaCenter.Lng)
-                {
-                    //from location is in the first or 4th quadrant of to location
-                    markerOffset = new Point(markerOffsetX, -markerOffsetY);
-                }
-                else
-                {
-                    //from location is in the 2nd or 3rd quadrant of to location
-                    markerOffset = new Point(-markerOffsetX, markerOffsetY);
-                }
-            }
-            else
-            {
-                markerOffset = new Point(0, 0);
-            }
 
             var mkr = new GMapMarker(toAreaCenter);
             mkr.Shape = new Polygon
@@ -705,36 +708,61 @@ namespace MapService.ViewModels
                 Stroke = Brushes.Black,
                 Fill = Brushes.Black,
                 Points = pointsCollection,
-                ToolTip = arrowHeadLabel
+                ToolTip = arrowHeadLabel,
             };
             mkr.Tag = arrowHeadLabel;
-            mkr.Offset = markerOffset;
+            //mkr.Offset = markerOffset;
             Gmap.Markers.Add(mkr);
 
-            var upperlatlng = Gmap.FromLocalToLatLng((int)upperx, (int)uppery);
-            var lowerlatlng = Gmap.FromLocalToLatLng((int)lowerx, (int)lowery);
-            var newline = new List<PointLatLng>();
-            newline.Add(fromAreaCenter);
-            newline.Add(toAreaCenter);
-            //newline.Add(_getTriangleCenter(toAreaCenter, upperlatlng, lowerlatlng));
+            //RotateTransform rotation = mkr.Shape.RenderTransform as RotateTransform;
+            //if (rotation != null) // Make sure the transform is actually a RotateTransform
+            //{
+            //    double rotationInDegrees = rotation.Angle;
+            //    // Do something with the rotationInDegrees here, if needed...
+            //}
 
-            var newRoute = new GMapRoute(newline);
-            newRoute.Shape = new Path() { StrokeThickness = relativeEFstrength, ToolTip = pathLabel, Stroke = Brushes.Black, StrokeEndLineCap = PenLineCap.Triangle };
-            newRoute.Tag = pathLabel;
-            newRoute.Offset = markerOffset;
-            Gmap.Markers.Add(newRoute);
-            Gmap.RegenerateShape(newRoute);
-            
-            //var newRoute2 = new GMapRoute(newline);
-            //newRoute2.Shape = new Path() { StrokeThickness = 4, ToolTip = label, Stroke = Brushes.Black, StrokeEndLineCap = PenLineCap.Triangle };
-            //newRoute2.Tag = label;
-            //Gmap.Markers.Add(newRoute2);
 
-        }
+            //var upperlatlng = Gmap.FromLocalToLatLng((int)upperx, (int)uppery);
+            //var lowerlatlng = Gmap.FromLocalToLatLng((int)lowerx, (int)lowery);
+            //var newline = new List<PointLatLng>();
+            //newline.Add(fromAreaCenter);
+            //newline.Add(toAreaCenter);
+            //var newRoute = new GMapRoute(newline);
+            //newRoute.Shape = new Path() { StrokeThickness = relativeEFstrength, ToolTip = pathLabel, Stroke = Brushes.Black, StrokeEndLineCap = PenLineCap.Triangle };
+            //newRoute.Tag = pathLabel;
+            ////newRoute.Offset = markerOffset;
+            //Gmap.Markers.Add(newRoute);
+            ////Gmap.RegenerateShape(newRoute);
 
-        private PointLatLng _getTriangleCenter(PointLatLng a, PointLatLng b, PointLatLng c)
-        {
-            return new PointLatLng((a.Lat + b.Lat + c.Lat) / 3, (a.Lng +b.Lng + c.Lng)/3);
+
+            double x1, x2, y1, y2;
+            x1 = (upperx + lowerx) / 2;
+            y1 = (uppery + lowery) / 2;
+
+            if (fromAreaCenter.Lng >= toAreaCenter.Lng)
+            {
+                x2 = frsp.X - tosp.X - markerOffsetX;
+                y2 = frsp.Y - tosp.Y + markerOffsetY;
+            }
+            else
+            {
+                x2 = frsp.X - tosp.X + markerOffsetX;
+                y2 = frsp.Y - tosp.Y - markerOffsetY;
+            }
+            var mkr2 = new GMapMarker(toAreaCenter);
+            mkr2.Shape = new Line
+            {
+                Stroke = Brushes.Black,
+                Fill = Brushes.Black,
+                ToolTip = pathLabel,
+                X1 = x1,
+                Y1 = y1,
+                X2 = x2,
+                Y2 = y2,
+                StrokeThickness = relativeEFstrength
+            };
+            mkr2.Tag = new Tuple<PointLatLng, PointLatLng>(toAreaCenter, fromAreaCenter);
+            Gmap.Markers.Add(mkr2);
         }
 
         private PointLatLng _getAreaCenter(List<SiteCoordinatesModel> locations)
@@ -762,7 +790,7 @@ namespace MapService.ViewModels
                         Height = 15,
                         Stroke = color,
                         Fill = color,
-                        ToolTip = areaName                        
+                        ToolTip = areaName
                     };
                     mkr.Tag = areaName;
                     Gmap.Markers.Add(mkr);
@@ -799,13 +827,13 @@ namespace MapService.ViewModels
             if (thisArea.Item1 == SignalMapPlotType.Area)
             {
                 var points = new List<PointLatLng>();
-                var points2 = new List<Point>();
+                //var points2 = new List<Point>();
                 foreach (var pnt in thisArea.Item2)
                 {
                     if (double.TryParse(pnt.Latitude, out double la) && double.TryParse(pnt.Longitude, out double lg))
                     {
                         points.Add(new PointLatLng(la, lg));
-                        points2.Add(new Point(la, lg));
+                        //points2.Add(new Point(la, lg));
                     }
                 }
                 var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
@@ -855,20 +883,6 @@ namespace MapService.ViewModels
         /// <summary>
         /// input should be a list of tuples of point pairs?
         /// </summary>
-        private void _addLineToMap()
-        {
-            //query jim's function to get curves first?
-            //Then draw the curves on map
-        }
-
-        private void _addPolygonToMap()
-        {
-        }
-
-        private void _addDotToMap()
-        {
-            //throw new NotImplementedException();
-        }
 
         private void _setupMap()
         {
@@ -882,6 +896,60 @@ namespace MapService.ViewModels
             //Gmap.MapProvider = GoogleSatelliteMapProvider.Instance;
             Gmap.Manager.Mode = AccessMode.ServerAndCache;
             Gmap.CacheLocation = "..\\MapCache";
+            Gmap.OnMapZoomChanged += _onMapZoomChanged;
+            Gmap.IgnoreMarkerOnMouseWheel = true;
+        }
+
+        private void _onMapZoomChanged()
+        {
+            foreach (var marker in Gmap.Markers)
+            {
+                if (marker.Shape is Line && marker.Tag is Tuple<PointLatLng, PointLatLng>)
+                {
+                    var centers = marker.Tag as Tuple<PointLatLng, PointLatLng>;
+                    var toAreaCenter = centers.Item1;
+                    var fromAreaCenter = centers.Item2;
+                    double upperx = 0d, lowerx = 0d, uppery = 0d, lowery = 0d, slope = 0d;
+                    var tosp = Gmap.FromLatLngToLocal(toAreaCenter);
+                    var frsp = Gmap.FromLatLngToLocal(fromAreaCenter);
+                    var xDiff = tosp.X - frsp.X;
+                    var yDiff = tosp.Y - frsp.Y;
+                    if (xDiff != 0)
+                    {
+                        slope = -(double)yDiff / (double)xDiff; // as y axis in screen coordinate system point to downward, the slope has to be negated to match the cartesian coordiate system.
+                    }
+                    else
+                    {
+                        if (yDiff >= 0)
+                        {
+                            slope = double.PositiveInfinity;
+                        }
+                        else
+                        {
+                            slope = double.NegativeInfinity;
+                        }
+                    }
+                    var upperAngle = Math.Atan(slope) + Math.PI / 5;
+                    var lowerAngle = Math.Atan(slope) - Math.PI / 5;
+
+                    var markerOffsetX = Math.Cos(Math.Atan(slope)) * 15;
+                    var markerOffsetY = Math.Sin(Math.Atan(slope)) * 15;
+                    double x2, y2;
+                    if (fromAreaCenter.Lng >= toAreaCenter.Lng)
+                    {
+                        x2 = frsp.X - tosp.X - markerOffsetX;
+                        y2 = frsp.Y - tosp.Y + markerOffsetY;
+                    }
+                    else
+                    {
+                        x2 = frsp.X - tosp.X + markerOffsetX;
+                        y2 = frsp.Y - tosp.Y - markerOffsetY;
+                    }
+                    var thisline = marker.Shape as Line;
+                    thisline.X2 = x2;
+                    thisline.Y2 = y2;
+                }
+            }
         }
 
         private GMapControl _gMap;

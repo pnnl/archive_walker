@@ -7,6 +7,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:converters="clr-namespace:DissipationEnergyFlow.Converters"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -72,9 +73,9 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Label Content="From Area:" Margin="2" Grid.Column="0"/>
-                                                    <TextBox Text="{Binding FromArea, UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="1" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <xtlkt:WatermarkTextBox Watermark="Required" Text="{Binding FromArea, UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="1" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <Label Content="To Area:" Margin="10,2,2,2" Grid.Column="2"/>
-                                                    <TextBox Text="{Binding ToArea, UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="3" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <xtlkt:WatermarkTextBox Watermark="Optional" Text="{Binding ToArea, UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="3" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                                                 </Grid>
                                                 <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.DeleteAPath}" CommandParameter="{Binding}">
                                                     <Image Width="16" Height="16" Source="/DissipationEnergyFlow;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
