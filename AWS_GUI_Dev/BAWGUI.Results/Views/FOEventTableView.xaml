@@ -9,7 +9,7 @@
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <coreconverters:DateTimeStringConverter x:Key="DateTimeStringConverter"/>
         <coreconverters:TableRowIndexConverter x:Key="TableRowIndexConverter"/>
@@ -27,7 +27,7 @@
         </xcdg:DataGridCollectionViewSource.ItemProperties>
     </xcdg:DataGridCollectionViewSource>-->
     <!--<StackPanel Orientation="Vertical">-->
-    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" NavigationBehavior="RowOnly">
+    <xcdg:DataGridControl ReadOnly="True" ItemsSource="{Binding FilteredResults}" AutoCreateColumns="False" SelectedItem="{Binding SelectedOscillationEvent}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" NavigationBehavior="RowOnly" ScrollViewer.CanContentScroll="True">
         <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.ShowOccurrenceWindow}"/>

@@ -609,7 +609,8 @@ Namespace ViewModels
                         Dim writer = New DEFWriter(dt.Model)
                         detectorConfig.<Configuration>.LastOrDefault.Add(writer.WriteConfigToXMLFormat())
                         DEFAreaConfigWriter = New DEFAreaMappingConfigWriter(dt.Areas.ToList)
-                        Continue For
+                        _errorMessages.AddRange(writer.GetErrorMessages())
+                        Continue For 'this continue for is needed so there won't be any inputchannel written to the detector. it actual write the channels to the detector before this one, and that is very wrong.
                     Case Else
                         Throw New Exception("Error! Unrecognized detector type: " & detector.GetType.ToString & ".")
                 End Select

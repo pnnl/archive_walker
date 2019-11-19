@@ -15,6 +15,7 @@ namespace DissipationEnergyFlow.Models
         public DEFWriter(DissipationEnergyFlowDetectorModel detector)
         {
             _model = detector;
+            _errorMessages = new List<string>();
         }
 
         public XElement WriteConfigToXMLFormat()
@@ -23,6 +24,10 @@ namespace DissipationEnergyFlow.Models
             var paths = new XElement("Paths");
             foreach (var pth in _model.Paths)
             {
+                if (string.IsNullOrEmpty(pth.FromArea))
+                {
+                    _errorMessages.Add("A From Area for a path of a DEF detector is missing.");
+                }
                 var aPath = new XElement("Path", new XElement("From", pth.FromArea),
                                                  new XElement("To", pth.ToArea));
                 if (!string.IsNullOrEmpty(pth.VoltageMag.SignalName) && !string.IsNullOrEmpty(pth.VoltageMag.PMUName))
@@ -58,6 +63,11 @@ namespace DissipationEnergyFlow.Models
                                                          new XElement("LocRes", _model.LocRes));
             ef.Add(paramenters);
             return ef;
+        }
+        private List<string> _errorMessages;
+        public List<string> GetErrorMessages()
+        {
+            return _errorMessages;
         }
     }
 }

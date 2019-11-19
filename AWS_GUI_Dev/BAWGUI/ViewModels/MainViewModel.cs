@@ -45,6 +45,14 @@ namespace BAWGUI.ViewModels
             SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
             _settingsVM.DEFAreasChanged += _settingsVM_DEFAreasChanged;
             _projectControlVM.ResultsStoragePathChanged += _projectControlVM_ResultsStoragePathChanged;
+            CoordsTableVM.SiteCoordsDefinitionChanged += _siteCoordsDefinitionChanged;
+        }
+
+        private void _siteCoordsDefinitionChanged(object sender, EventArgs e)
+        {
+            SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
+            SiteMappingVM.SignalCoordsMappingVM.SetupSignalMapping();
+            _settingsVM_DEFAreasChanged();
         }
 
         private void _signalMgr_UniqueMappingSignalChanged(object sender, EventArgs e)

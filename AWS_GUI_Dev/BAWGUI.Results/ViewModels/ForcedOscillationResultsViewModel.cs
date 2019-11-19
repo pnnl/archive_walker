@@ -411,40 +411,66 @@ namespace BAWGUI.Results.ViewModels
         }
         private void _updateMapMarkerAfterPathSelectionChange()
         {
-            //if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedPath != null)
-            //{
-            //    foreach (var mkr in ResultMapVM.Gmap.Markers)
-            //    {
-            //        if (mkr.Tag.ToString() == SelectedOscillationEvent.SelectedOccurrence.SelectedPath.Name)
-            //        {
-            //            if (mkr.Shape is Path)
-            //            {
-            //                var shape = mkr.Shape as Path;
-            //                shape.StrokeThickness = 8;
-            //            }
-            //            if (mkr.Shape is Ellipse)
-            //            {
-            //                var shape = mkr.Shape as Ellipse;
-            //                shape.Width = 30;
-            //                shape.Height = 30;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            if (mkr.Shape is Path)
-            //            {
-            //                var shape = mkr.Shape as Path;
-            //                shape.StrokeThickness = 4;
-            //            }
-            //            if (mkr.Shape is Ellipse)
-            //            {
-            //                var shape = mkr.Shape as Ellipse;
-            //                shape.Width = 15;
-            //                shape.Height = 15;
-            //            }
-            //        }
-            //    }
-            //}
+            if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedPath != null)
+            {
+                var from = SelectedOscillationEvent.SelectedOccurrence.SelectedPath.From;
+                var to = SelectedOscillationEvent.SelectedOccurrence.SelectedPath.To;
+                var possiblePathLabel = "";
+                //var possibleArrowHeadLabel = "";
+                if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                {
+                    possiblePathLabel = from + " to " + to;
+                    //possibleArrowHeadLabel = to + "_arrow_head";
+                }
+                else if (!string.IsNullOrEmpty(from))
+                {
+                    possiblePathLabel = "From " + from;
+                }
+                else if (!string.IsNullOrEmpty(to))
+                {
+                    possiblePathLabel = "To " + to;
+                    //possibleArrowHeadLabel = to + "_arrow_head";
+                }
+                foreach (var mkr in ResultMapVM.Gmap.Markers)
+                {
+                    if (mkr.Shape is Line || mkr.Shape is Polygon)
+                    {
+                        if (mkr.Shape is Line)
+                        {
+                            var thisline = mkr.Shape as Line;
+                            if (thisline.ToolTip.ToString() == possiblePathLabel)
+                            {
+                                thisline.Stroke = Brushes.Blue;
+                                mkr.ZIndex = 2000;
+                            }
+                            else
+                            {
+                                thisline.Stroke = Brushes.Black;
+                                mkr.ZIndex = 500;
+                            }
+                        }
+                        if (mkr.Shape is Polygon)
+                        {
+                            var thisTriangle = mkr.Shape as Polygon;
+                            if (thisTriangle.ToolTip.ToString() == possiblePathLabel)
+                            {
+                                thisTriangle.Stroke = Brushes.Blue;
+                                thisTriangle.Fill = Brushes.Blue;
+                                mkr.ZIndex = 2000;
+                            }
+                            else
+                            {
+                                thisTriangle.Stroke = Brushes.Black;
+                                thisTriangle.Fill = Brushes.Black;
+                                mkr.ZIndex = 500;
+                            }
+                        }
+                    }
+                    else
+                    {
+                    }
+                }
+            }
         }
         private void _updateFOMapAfterSelectionChange()
         {

@@ -33,14 +33,14 @@ namespace BAWGUI.CoordinateMapping.Models
                 var sites = new XElement("Sites");
                 foreach (var sts in ar.Locations)
                 {
-                    if (sts == CoreUtilities.DummySiteCoordinatesModel)
+                    if (type != SignalMapPlotType.Dot && sts == CoreUtilities.DummySiteCoordinatesModel)
                     {
                         dummySiteFound = true;
                         _errorMessages.Add(string.Format("Invalid site is setup with area {0}, of type {1}. This area {0} might be drawn incorrectly on the map", ar.AreaName, ar.Type.ToString()));
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(sts.Name) || string.IsNullOrEmpty(sts.Latitude) || string.IsNullOrEmpty(sts.Longitude))
+                        if (type != SignalMapPlotType.Dot && (string.IsNullOrEmpty(sts.Name) || string.IsNullOrEmpty(sts.Latitude) || string.IsNullOrEmpty(sts.Longitude)))
                         {
                             _errorMessages.Add(string.Format("Site {0} with latitude {1} and longitude {2} is set up with area {3}, which might be drawn incorrectly on the map", sts.Name, sts.Latitude, sts.Longitude, ar.AreaName));
                             continue;

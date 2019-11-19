@@ -54,7 +54,13 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             set {
                 _siteCoords = value;
                 OnPropertyChanged();
+                OnSiteCoordsDefinitionChanged(EventArgs.Empty);
             }
+        }
+        public event EventHandler SiteCoordsDefinitionChanged;
+        protected virtual void OnSiteCoordsDefinitionChanged(EventArgs e)
+        {
+            SiteCoordsDefinitionChanged?.Invoke(this, e);
         }
         public ICommand AddALocation { get; set; }
         private void _addALocation(object obj)
@@ -175,7 +181,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             try
             {
                 var reader = new SiteCoordinatesReader();
-                reader.ReadCoordsFile(path, SiteCoords);
+                SiteCoords = reader.ReadCoordsFile(path);
                 MapVM.Annotations.Clear();
                 foreach (var item in SiteCoords)
                 {

@@ -33,29 +33,36 @@ namespace BAWGUI.CoordinateMapping.Converters
     {
         object IMultiValueConverter.Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            SignalMapPlotType type = (SignalMapPlotType)values[0];
-            int count = (int)values[1];
-            if (type == SignalMapPlotType.Area)
+            if (values.Length == 2 && values[0] != DependencyProperty.UnsetValue && values[1] != DependencyProperty.UnsetValue)
             {
-                if (count > 3)
+                SignalMapPlotType type = (SignalMapPlotType)values[0];
+                int count = (int)values[1];
+                if (type == SignalMapPlotType.Area)
                 {
-                    return Visibility.Visible;
+                    if (count > 3)
+                    {
+                        return Visibility.Visible;
+                    }
+                    else
+                    {
+                        return Visibility.Collapsed;
+                    }
                 }
                 else
                 {
-                    return Visibility.Collapsed;
+                    if (count > 2)
+                    {
+                        return Visibility.Visible;
+                    }
+                    else
+                    {
+                        return Visibility.Collapsed;
+                    }
                 }
             }
             else
             {
-                if (count > 2)
-                {
-                    return Visibility.Visible;
-                }
-                else
-                {
-                    return Visibility.Collapsed;
-                }
+                return Visibility.Collapsed;
             }
         }
 

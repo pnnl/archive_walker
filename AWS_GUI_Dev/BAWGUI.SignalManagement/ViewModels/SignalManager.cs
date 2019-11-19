@@ -1329,7 +1329,8 @@ namespace BAWGUI.SignalManagement.ViewModels
                 newSignalList.Add(signal);
             }
             fileInfo.TaggedSignals = newSignalList;
-            var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
+            //var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
+            var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", " + fileInfo.Mnemonic + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
             newSig.SamplingRate = fileInfo.SamplingRate;
             var a = new SignalTypeHierachy(newSig);
             a.SignalList = SortSignalByPMU(newSignalList);

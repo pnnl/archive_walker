@@ -4690,6 +4690,7 @@ Namespace ViewModels
                     If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
                         '_groupAllPostProcessConfigOutputSignal()
                         DeSelectAllDetectors()
+                        _updateDEFAreas()
                     End If
                     If _oldTabIndex = 5 And _currentTabIndex <> 5 Then
                         '_groupAllPostProcessConfigOutputSignal()
@@ -4734,7 +4735,7 @@ Namespace ViewModels
                     If _currentTabIndex = 6 Then
                         _signalMgr.DistinctMappingSignal()
                         'find all distinct areas used in DEF detecotr
-                        _updateDEFAreas()
+                        '_updateDEFAreas()
                     End If
                 Catch ex As Exception
                     _addLog(ex.Message)
@@ -4796,7 +4797,8 @@ Namespace ViewModels
             SignalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             For Each info In SignalMgr.FileInfo
                 If info.TaggedSignals.Count > 0 Then
-                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    'Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory + ", " + info.Mnemonic + ", Sampling Rate: " + info.SamplingRate.ToString + "/Second"))
                     b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
                     SignalMgr.ReGroupedRawSignalsByType.Add(b)
                 End If

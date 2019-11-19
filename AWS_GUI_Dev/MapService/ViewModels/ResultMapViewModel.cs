@@ -398,21 +398,20 @@ namespace MapService.ViewModels
             }
             return curveList;
         }
-
         public void DrawDEF(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, List<ForcedOscillationTypeOccurrencePath> paths)
         {
-            var RBColors = OxyPalettes.Jet(entries.Count() + 1).Colors.ToList();
-            foreach (var color in RBColors)
-            {
-                if (color.Equals(OxyColors.Red))
-                {
-                    RBColors.Remove(color);
-                    break;
-                }
-            }
+            //var RBColors = OxyPalettes.Jet(entries.Count() + 1).Colors.ToList();
+            //foreach (var color in RBColors)
+            //{
+            //    if (color.Equals(OxyColors.Red))
+            //    {
+            //        RBColors.Remove(color);
+            //        break;
+            //    }
+            //}
             int areaCount = 0;
             Gmap.Markers.Clear();
-            var drawnArea = new Dictionary<string, bool>();
+            var drawnArea = new Dictionary<string, FlowDirections>(); //the fuple contains inflow and outflow information of the area, item 1 is inflow, item 2 is outflow
             entries = _cleanDEFUnassignedSites(entries);
             //var sortedPath = paths.OrderByDescending(x => Math.Abs(x.DEF)).ToList();
             //var thinkest = Math.Abs(sortedPath.FirstOrDefault().DEF);
@@ -423,11 +422,11 @@ namespace MapService.ViewModels
             {
                 if (!drawnArea.ContainsKey(pth.From) && entries.ContainsKey(pth.From))
                 {
-                    areaCount = _drawDEFArea(entries, RBColors, areaCount, drawnArea, pth.From);
+                    areaCount = _drawDEFArea(entries, areaCount, drawnArea, pth.From);
                 }
                 if (!drawnArea.ContainsKey(pth.To) && entries.ContainsKey(pth.To))
                 {
-                    areaCount = _drawDEFArea(entries, RBColors, areaCount, drawnArea, pth.To);
+                    areaCount = _drawDEFArea(entries, areaCount, drawnArea, pth.To);
                 }
                 if (entries.ContainsKey(pth.To) && entries.ContainsKey(pth.From))
                 {
@@ -445,27 +444,75 @@ namespace MapService.ViewModels
             foreach (var mkr in Gmap.Markers)
             {
                 var name = mkr.Tag.ToString();
-                if (drawnArea.ContainsKey(name) && drawnArea[name])
+                if (drawnArea.ContainsKey(name))
                 {
-                    if (entries[name].Item1 == SignalMapPlotType.Dot)
+                    if (drawnArea[name].inflow == true && drawnArea[name].outflow == false)
                     {
-                        var s = mkr.Shape as Ellipse;
-                        s.Stroke = Brushes.Red;
-                        s.Fill = Brushes.Red;
+                        if (entries[name].Item1 == SignalMapPlotType.Dot)
+                        {
+                            var s = mkr.Shape as Ellipse;
+                            s.Stroke = Brushes.Green;
+                            s.Fill = Brushes.Green;
+                        }
+                        if (entries[name].Item1 == SignalMapPlotType.Line)
+                        {
+                            var s = mkr.Shape as Path;
+                            s.Stroke = Brushes.Green;
+                        }
+                        if (entries[name].Item1 == SignalMapPlotType.Area)
+                        {
+                            var s = mkr.Shape as Path;
+                            s.Stroke = Brushes.Green;
+                            var areaColor = Brushes.Green.Clone();
+                            areaColor.Opacity = 0.2;
+                            s.Fill = areaColor;
+                        }
                     }
-                    if (entries[name].Item1 == SignalMapPlotType.Line)
+                    else if (drawnArea[name].inflow == false && drawnArea[name].outflow == true)
                     {
-                        var s = mkr.Shape as Path;
-                        s.Stroke = Brushes.Red;
+                        if (entries[name].Item1 == SignalMapPlotType.Dot)
+                        {
+                            var s = mkr.Shape as Ellipse;
+                            s.Stroke = Brushes.Red;
+                            s.Fill = Brushes.Red;
+                        }
+                        if (entries[name].Item1 == SignalMapPlotType.Line)
+                        {
+                            var s = mkr.Shape as Path;
+                            s.Stroke = Brushes.Red;
+                        }
+                        if (entries[name].Item1 == SignalMapPlotType.Area)
+                        {
+                            var s = mkr.Shape as Path;
+                            s.Stroke = Brushes.Red;
+                            var areaColor = Brushes.Red.Clone();
+                            areaColor.Opacity = 0.2;
+                            s.Fill = areaColor;
+                        }
                     }
-                    if (entries[name].Item1 == SignalMapPlotType.Area)
+                    else
                     {
-                        var s = mkr.Shape as Path;
-                        s.Stroke = Brushes.Red;
-                        var areaColor = Brushes.Red.Clone();
-                        areaColor.Opacity = 0.2;
-                        s.Fill = areaColor;
+                        // has both inflow and outflow, so it should stay blue
                     }
+                    //if (entries[name].Item1 == SignalMapPlotType.Dot)
+                    //{
+                    //    var s = mkr.Shape as Ellipse;
+                    //    s.Stroke = Brushes.Red;
+                    //    s.Fill = Brushes.Red;
+                    //}
+                    //if (entries[name].Item1 == SignalMapPlotType.Line)
+                    //{
+                    //    var s = mkr.Shape as Path;
+                    //    s.Stroke = Brushes.Red;
+                    //}
+                    //if (entries[name].Item1 == SignalMapPlotType.Area)
+                    //{
+                    //    var s = mkr.Shape as Path;
+                    //    s.Stroke = Brushes.Red;
+                    //    var areaColor = Brushes.Red.Clone();
+                    //    areaColor.Opacity = 0.2;
+                    //    s.Fill = areaColor;
+                    //}
 
                 }
             }
@@ -473,12 +520,12 @@ namespace MapService.ViewModels
             //Gmap.UpdateLayout();
         }
         //when of the area in the path is not defined or not available in the SiteCoordinatesModel dictionary. As from Jim: When displaying DEF on the map, can you make a special case for when the To area is empty? In this case the From area could have a horizontal or vertical arrow pointing to/from it. 
-        private void _drawFixedArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest, bool noFrom, Dictionary<string, bool> drawnArea)
+        private void _drawFixedArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest, bool noFrom, Dictionary<string, FlowDirections> drawnArea)
         {
             PointLatLng existingCenter = new PointLatLng();
             SignalMapPlotType existingCenterType;
             string pathLabel = "";
-            string arrowHeadLabel = "";
+            //string arrowHeadLabel = "";
             bool toExistingCenter = true;
             if (noFrom)
             {
@@ -486,16 +533,31 @@ namespace MapService.ViewModels
                 existingCenterType = entries[pth.To].Item1;
                 if (pth.DEF > 0)
                 {
-                    pathLabel = "Unknown Area to " + pth.To;
-                    arrowHeadLabel = pth.To + "_arrow_head";
+                    if (string.IsNullOrEmpty(pth.From))
+                    {
+                        pathLabel = "To " + pth.To;
+                    }
+                    else
+                    {
+                        pathLabel = pth.From + " to " + pth.To;
+                    }
+                    //arrowHeadLabel = pth.To + "_arrow_head";
                     toExistingCenter = true;
-                    drawnArea[pth.To] = false;
+                    drawnArea[pth.To].inflow = true;
                 }
                 else
                 {
-                    pathLabel = pth.To + " to Unknown Area";
-                    arrowHeadLabel = "Unknown Area";
+                    if (string.IsNullOrEmpty(pth.From))
+                    {
+                        pathLabel = "From " + pth.To;
+                    }
+                    else
+                    {
+                        pathLabel = pth.To + " to " + pth.From;
+                    }
+                    //arrowHeadLabel = "";
                     toExistingCenter = false;
+                    drawnArea[pth.To].outflow = true;
                 }
             }
             else
@@ -504,21 +566,37 @@ namespace MapService.ViewModels
                 existingCenterType = entries[pth.From].Item1;
                 if (pth.DEF > 0)
                 {
-                    pathLabel = pth.From + " to Unkonwn Area";
-                    arrowHeadLabel = "Unknown Area";
+                    if (string.IsNullOrEmpty(pth.To))
+                    {
+                        pathLabel = "From " + pth.From;
+                    }
+                    else
+                    {
+                        pathLabel = pth.From + " to " + pth.To;
+                    }
+                    //arrowHeadLabel = "";
                     toExistingCenter = false;
+                    drawnArea[pth.From].outflow = true;
                 }
                 else
                 {
-                    pathLabel = "Unkonwn Area to " + pth.From;
-                    arrowHeadLabel = pth.From + "_arrow_head";
+                    if (string.IsNullOrEmpty(pth.To))
+                    {
+                        pathLabel = "To " + pth.From;
+                    }
+                    else
+                    {
+                        pathLabel = pth.To + " to " + pth.From;
+                    }
+                    //arrowHeadLabel = pth.From + "_arrow_head";
                     toExistingCenter = true;
-                    drawnArea[pth.From] = false;
+                    drawnArea[pth.From].inflow = true;
                 }
             }
             var relativeEFstrength = (int)Math.Round((Math.Abs(pth.DEF) - thinnest) / (thickest - thinnest) * 16, MidpointRounding.AwayFromZero) + 4;
             var arrowHeadSize = relativeEFstrength * 1.5;
 
+            var fixedArrowLength = 40;
 
             var sp = Gmap.FromLatLngToLocal(existingCenter);
             var pointsCollection = new PointCollection();
@@ -529,15 +607,15 @@ namespace MapService.ViewModels
                 pointsCollection.Add(new Point(Math.Cos(Math.PI / 5) * arrowHeadSize + 10, Math.Sin(Math.PI / 5) * arrowHeadSize));
                 pointsCollection.Add(new Point(Math.Cos(Math.PI / 5) * arrowHeadSize + 10, - Math.Sin(Math.PI / 5) * arrowHeadSize));
                 lineStart = Math.Cos(Math.PI / 5) * arrowHeadSize + 10;
-                lineEnd = 100;
+                lineEnd = fixedArrowLength;
             }
             else
             {
-                pointsCollection.Add(new Point(100, 0));
-                pointsCollection.Add(new Point(100 - Math.Cos(Math.PI / 5) * arrowHeadSize, Math.Sin(Math.PI / 5) * arrowHeadSize));
-                pointsCollection.Add(new Point(100 - Math.Cos(Math.PI / 5) * arrowHeadSize, -Math.Sin(Math.PI / 5) * arrowHeadSize));
+                pointsCollection.Add(new Point(fixedArrowLength, 0));
+                pointsCollection.Add(new Point(fixedArrowLength - Math.Cos(Math.PI / 5) * arrowHeadSize, Math.Sin(Math.PI / 5) * arrowHeadSize));
+                pointsCollection.Add(new Point(fixedArrowLength - Math.Cos(Math.PI / 5) * arrowHeadSize, -Math.Sin(Math.PI / 5) * arrowHeadSize));
                 lineStart = 10;
-                lineEnd = 100 - Math.Cos(Math.PI / 5) * arrowHeadSize;
+                lineEnd = fixedArrowLength - Math.Cos(Math.PI / 5) * arrowHeadSize;
             }
 
             // arrow head
@@ -546,12 +624,13 @@ namespace MapService.ViewModels
             {
                 Stroke = Brushes.Black,
                 Fill = Brushes.Black,
-                ToolTip = arrowHeadLabel,
+                ToolTip = pathLabel,
                 Points = pointsCollection
             };
-            mkr.Tag = arrowHeadLabel;
+            //mkr.Tag = arrowHeadLabel;
+            mkr.Tag = pathLabel;
             Gmap.Markers.Add(mkr);
-            mkr.ZIndex = 0;
+            mkr.ZIndex = 500;
 
 
             //body of arrow
@@ -569,7 +648,7 @@ namespace MapService.ViewModels
             };
             mkr2.Tag = pathLabel;
             Gmap.Markers.Add(mkr2);
-            mkr2.ZIndex = 0;
+            mkr2.ZIndex = 500;
 
 
         }
@@ -596,7 +675,7 @@ namespace MapService.ViewModels
             return rlt;
         }
 
-        private void _drawArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest, Dictionary<string, bool> drawnArea)
+        private void _drawArrow(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, ForcedOscillationTypeOccurrencePath pth, float thinnest, float thickest, Dictionary<string, FlowDirections> drawnArea)
         {
             var relativeEFstrength = (int)Math.Round((Math.Abs(pth.DEF) - thinnest) / (thickest - thinnest) * 16, MidpointRounding.AwayFromZero) + 4;
             var arrowHeadSize = relativeEFstrength * 1.5;
@@ -605,15 +684,16 @@ namespace MapService.ViewModels
             PointLatLng toAreaCenter = new PointLatLng();
             //SignalMapPlotType toCenterType;
             string pathLabel = "";
-            string arrowHeadLabel = "";
+            //string arrowHeadLabel = "";
             if (pth.DEF > 0)
             {
                 fromAreaCenter = _getAreaCenter(entries[pth.From].Item2);
                 toAreaCenter = _getAreaCenter(entries[pth.To].Item2);
                 //toCenterType = entries[pth.To].Item1;
                 pathLabel = pth.From + " to " + pth.To;
-                arrowHeadLabel = pth.To + "_arrow_head";
-                drawnArea[pth.To] = false;
+                //arrowHeadLabel = pth.To + "_arrow_head";
+                drawnArea[pth.To].inflow = true;
+                drawnArea[pth.From].outflow = true;
             }
             else
             {
@@ -621,8 +701,9 @@ namespace MapService.ViewModels
                 toAreaCenter = _getAreaCenter(entries[pth.From].Item2);
                 //toCenterType = entries[pth.From].Item1;
                 pathLabel = pth.To + " to " + pth.From;
-                arrowHeadLabel = pth.From + "_arrow_head";
-                drawnArea[pth.From] = false;
+                //arrowHeadLabel = pth.From + "_arrow_head";
+                drawnArea[pth.From].inflow = true;
+                drawnArea[pth.To].outflow = true;
             }
             //var relativeEFstrength = (int)(Math.Abs(Math.Log10(Math.Abs(pth.DEF)) / Math.Log10(thinkest)) * 10);
             //var relativeEFstrength = (int)(Math.Abs(Math.Log10(Math.Abs(pth.DEF) / thinnest)) * 2) + 4;
@@ -708,9 +789,12 @@ namespace MapService.ViewModels
                 Stroke = Brushes.Black,
                 Fill = Brushes.Black,
                 Points = pointsCollection,
-                ToolTip = arrowHeadLabel,
+                //ToolTip = arrowHeadLabel,
+                ToolTip = pathLabel,
             };
-            mkr.Tag = arrowHeadLabel;
+            //mkr.Tag = arrowHeadLabel;
+            mkr.Tag = pathLabel;
+            mkr.ZIndex = 500;
             //mkr.Offset = markerOffset;
             Gmap.Markers.Add(mkr);
 
@@ -762,6 +846,7 @@ namespace MapService.ViewModels
                 StrokeThickness = relativeEFstrength
             };
             mkr2.Tag = new Tuple<PointLatLng, PointLatLng>(toAreaCenter, fromAreaCenter);
+            mkr2.ZIndex = 500;
             Gmap.Markers.Add(mkr2);
         }
 
@@ -772,10 +857,10 @@ namespace MapService.ViewModels
             return new PointLatLng(lat, lng);
         }
 
-        private int _drawDEFArea(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, List<OxyColor> RBColors, int areaCount, Dictionary<string, bool> drawnArea, string areaName)
+        private int _drawDEFArea(Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>> entries, int areaCount, Dictionary<string, FlowDirections> drawnArea, string areaName)
         {
-            drawnArea[areaName] = true;
-            var color = new SolidColorBrush(Color.FromArgb(RBColors[areaCount].A, RBColors[areaCount].R, RBColors[areaCount].G, RBColors[areaCount].B));
+            drawnArea[areaName] = new FlowDirections(false, false);
+            //var color = new SolidColorBrush(Color.FromArgb(RBColors[areaCount].A, RBColors[areaCount].R, RBColors[areaCount].G, RBColors[areaCount].B));
             areaCount++;
             var thisArea = entries[areaName];
             if (thisArea.Item1 == SignalMapPlotType.Dot)
@@ -788,8 +873,8 @@ namespace MapService.ViewModels
                     {
                         Width = 15,
                         Height = 15,
-                        Stroke = color,
-                        Fill = color,
+                        Stroke = Brushes.Blue,
+                        Fill = Brushes.Blue,
                         ToolTip = areaName
                     };
                     mkr.Tag = areaName;
@@ -815,8 +900,9 @@ namespace MapService.ViewModels
                 {
                     //to plot them straight
                     var newRoute = new GMapRoute(newLine);
-                    newRoute.Shape = new Path() { StrokeThickness = 4, ToolTip = areaName, Stroke = color};
+                    newRoute.Shape = new Path() { StrokeThickness = 4, ToolTip = areaName, Stroke = Brushes.Blue };
                     newRoute.Tag = areaName;
+                    newRoute.ZIndex = 0;
                     Gmap.Markers.Add(newRoute);
                 }
                 else
@@ -837,10 +923,11 @@ namespace MapService.ViewModels
                     }
                 }
                 var mkr = new GMap.NET.WindowsPresentation.GMapPolygon(points);
-                var areaColor = color.Clone();
+                var areaColor = Brushes.Blue.Clone();
                 areaColor.Opacity = 0.2;
-                mkr.Shape = new Path() { StrokeThickness = 2, ToolTip = areaName, Stroke = color, Fill = areaColor };
+                mkr.Shape = new Path() { StrokeThickness = 2, ToolTip = areaName, Stroke = Brushes.Blue, Fill = areaColor };
                 mkr.Tag = areaName;
+                mkr.ZIndex = 0;
                 Gmap.Markers.Add(mkr);
             }
 
@@ -909,7 +996,7 @@ namespace MapService.ViewModels
                     var centers = marker.Tag as Tuple<PointLatLng, PointLatLng>;
                     var toAreaCenter = centers.Item1;
                     var fromAreaCenter = centers.Item2;
-                    double upperx = 0d, lowerx = 0d, uppery = 0d, lowery = 0d, slope = 0d;
+                    double slope = 0d;
                     var tosp = Gmap.FromLatLngToLocal(toAreaCenter);
                     var frsp = Gmap.FromLatLngToLocal(fromAreaCenter);
                     var xDiff = tosp.X - frsp.X;
@@ -1016,5 +1103,16 @@ namespace MapService.ViewModels
         //    //}
         //}
 
+    }
+    class FlowDirections
+    {
+        public bool inflow;
+        public bool outflow;
+
+        public FlowDirections(bool v1, bool v2)
+        {
+            this.inflow = v1;
+            this.outflow = v2;
+        }
     }
 }
