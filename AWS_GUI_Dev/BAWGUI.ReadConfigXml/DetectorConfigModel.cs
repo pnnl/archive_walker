@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DissipationEnergyFlow.Models;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace BAWGUI.ReadConfigXml
@@ -63,6 +64,15 @@ namespace BAWGUI.ReadConfigXml
                 foreach (var item in items)
                 {
                     DetectorList.Add(new RingdownDetectorModel(item));
+                }
+            }
+            items = _xElement.Element("Configuration").Elements("EnergyFlow");
+            if (items != null)
+            {
+                foreach (var item in items)
+                {
+                    var reader = new DEFReader(item);
+                    DetectorList.Add(reader.GetDEFDetector());
                 }
             }
             items = _xElement.Element("Configuration").Elements("DataWriter");

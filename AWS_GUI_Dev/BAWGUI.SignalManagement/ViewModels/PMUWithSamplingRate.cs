@@ -76,7 +76,7 @@ namespace BAWGUI.SignalManagement.ViewModels
 
     public class PMUWithSamplingRateComparer : IEqualityComparer<PMUWithSamplingRate>
     {
-        public new bool Equals(PMUWithSamplingRate x, PMUWithSamplingRate y)
+        public bool Equals(PMUWithSamplingRate x, PMUWithSamplingRate y)
         {
             if (x == y)
                 return true;
@@ -84,7 +84,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                 return false;
             return (x.PMU == y.PMU); // AndAlso (x.SamplingRate = y.SamplingRate)
         }
-        public new int GetHashCode(PMUWithSamplingRate item)
+        public int GetHashCode(PMUWithSamplingRate item)
         {
             if (item == null)
                 return 0;

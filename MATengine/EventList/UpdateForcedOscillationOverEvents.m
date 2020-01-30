@@ -28,9 +28,9 @@ for EventIdx = OngoingIdx
     % For each field with an entry for each occurrence:
     %   Keep all but the final occurrence in OverEventList
     %   Keep only the final occurrence in EventList
-    for FN = setdiff(fieldnames(OverEventList.(EventType)(end)),{'ID','OverallStart','OverallEnd'}).'
-        OverEventList.(EventType)(end).(FN{1}) = OverEventList.(EventType)(end).(FN{1})(1:end-1);
-        EventList.(EventType)(EventIdx).(FN{1}) = EventList.(EventType)(EventIdx).(FN{1})(end);
+    for FN = setdiff(fieldnames(OverEventList.(EventType)(end)),{'ID','OverallStart','OverallEnd','PathDescription'}).'
+        OverEventList.(EventType)(end).(FN{1}) = OverEventList.(EventType)(end).(FN{1})(:,1:end-1);
+        EventList.(EventType)(EventIdx).(FN{1}) = EventList.(EventType)(EventIdx).(FN{1})(:,end);
     end
 end
 
@@ -105,15 +105,15 @@ for EventIdx = 1:length(OverEventList.(EventType))
                 EventXML.(EventType) = [EventXML.(EventType) OverEventList.(EventType)(EventIdx)];
                 
                 % Keep only the occurrences for this day
-                for FN = setdiff(fieldnames(EventXML.(EventType)(end)),{'ID','OverallStart','OverallEnd'}).'
-                    EventXML.(EventType)(end).(FN{1}) = EventXML.(EventType)(end).(FN{1})(KeepOccurrence);
+                for FN = setdiff(fieldnames(EventXML.(EventType)(end)),{'ID','OverallStart','OverallEnd','PathDescription'}).'
+                    EventXML.(EventType)(end).(FN{1}) = EventXML.(EventType)(end).(FN{1})(:,KeepOccurrence);
                 end
             else
                 % Update the existing event record
                 EventXML.(EventType)(IDidx).OverallStart = OverEventList.(EventType)(EventIdx).OverallStart;
                 EventXML.(EventType)(IDidx).OverallEnd = OverEventList.(EventType)(EventIdx).OverallEnd;
-                for FN = setdiff(fieldnames(EventXML.(EventType)(IDidx)),{'ID','OverallStart','OverallEnd'}).'
-                    EventXML.(EventType)(IDidx).(FN{1}) = [EventXML.(EventType)(IDidx).(FN{1}) OverEventList.(EventType)(EventIdx).(FN{1})(KeepOccurrence)];
+                for FN = setdiff(fieldnames(EventXML.(EventType)(IDidx)),{'ID','OverallStart','OverallEnd','PathDescription'}).'
+                    EventXML.(EventType)(IDidx).(FN{1}) = [EventXML.(EventType)(IDidx).(FN{1}) OverEventList.(EventType)(EventIdx).(FN{1})(:,KeepOccurrence)];
                 end
             end
 
@@ -124,8 +124,8 @@ for EventIdx = 1:length(OverEventList.(EventType))
             OverEventListTemp.(EventType) = OverEventList.(EventType)(EventIdx);
             
             % Keep only the occurrences for this day
-            for FN = setdiff(fieldnames(OverEventListTemp.(EventType)(1)),{'ID','OverallStart','OverallEnd'}).'
-                OverEventListTemp.(EventType)(1).(FN{1}) = OverEventListTemp.(EventType)(1).(FN{1})(KeepOccurrence);
+            for FN = setdiff(fieldnames(OverEventListTemp.(EventType)(1)),{'ID','OverallStart','OverallEnd','PathDescription'}).'
+                OverEventListTemp.(EventType)(1).(FN{1}) = OverEventListTemp.(EventType)(1).(FN{1})(:,KeepOccurrence);
             end
             
             WriteEventListXML(OverEventListTemp,EventXMLfileName,0);

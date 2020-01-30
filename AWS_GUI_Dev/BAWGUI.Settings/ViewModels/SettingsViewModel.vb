@@ -13,6 +13,8 @@ Imports VoltageStability.ViewModels
 Imports ModeMeter.ViewModels
 Imports VoltageStability.Models
 Imports ModeMeter.Models
+Imports DissipationEnergyFlow.ViewModels
+Imports BAWGUI.CoordinateMapping.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -88,6 +90,7 @@ Namespace ViewModels
 
             '_inputFileDirTree = New ObservableCollection(Of Folder)
             _signalMgr = SignalManager.Instance
+            _signalMgr.cleanUp()
 
             '_allPMUs = New ObservableCollection(Of String)
 
@@ -940,8 +943,9 @@ Namespace ViewModels
                             Next
                             ModeMeterXmlWriter.CheckMMDirsStatus(Run.Model, modeMeters)
                         End If
-
-
+                        _signalMgr.DistinctMappingSignal()
+                        'SiteMappingVM.SignalCoordsMappingVM = New SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, config.SignalSiteMappingConfig);
+                        RaiseEvent DEFAreasChanged()
                     Catch ex As Exception
                         Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
@@ -1401,6 +1405,12 @@ Namespace ViewModels
                             _currentSelectedStep.ChangeSignalSelection(obj)
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error changing mode meter signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
+                    ElseIf TypeOf _currentSelectedStep Is DEFDetectorViewModel Then
+                        Try
+                            _currentSelectedStep.ChangeSignalSelection(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing dissipation energy flow detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                         End Try
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try
@@ -4680,6 +4690,7 @@ Namespace ViewModels
                     If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
                         '_groupAllPostProcessConfigOutputSignal()
                         DeSelectAllDetectors()
+                        _updateDEFAreas()
                     End If
                     If _oldTabIndex = 5 And _currentTabIndex <> 5 Then
                         '_groupAllPostProcessConfigOutputSignal()
@@ -4720,8 +4731,11 @@ Namespace ViewModels
                         End If
                     End If
 
-                    If _currentTabIndex = 5 Then
+                    'tab index 6 is the coordinate setup setting. no signal selection needed, but need to get unique detector signals and DEF areas.
+                    If _currentTabIndex = 6 Then
                         _signalMgr.DistinctMappingSignal()
+                        'find all distinct areas used in DEF detecotr
+                        '_updateDEFAreas()
                     End If
                 Catch ex As Exception
                     _addLog(ex.Message)
@@ -4735,6 +4749,47 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Private Sub _updateDEFAreas()
+            For Each dtr In DetectorConfigure.DetectorList
+                If TypeOf (dtr) Is DEFDetectorViewModel Then
+                    Dim detector As DEFDetectorViewModel = dtr
+                    Dim addedNewArea = False
+                    Dim newAreaList = New List(Of String)
+                    For Each pth In detector.Paths
+                        If String.IsNullOrEmpty(pth.FromArea) Then
+                            Forms.MessageBox.Show("From Area in the path of Dissipation Energy Flow detector is required. If left empty, will result in MATLAB calculation error.", "Error!", MessageBoxButtons.OK)
+                        Else
+                            If Not detector.UniqueAreas.Contains(pth.FromArea) AndAlso Not addedNewArea Then
+                                addedNewArea = True
+                            End If
+                            If Not newAreaList.Contains(pth.FromArea) Then
+                                newAreaList.Add(pth.FromArea)
+                            End If
+                        End If
+                        'If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not newAreaList.Contains(pth.FromArea) Then
+                        '    newAreaList.Add(pth.FromArea)
+                        'Else
+
+                        'End If
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not detector.UniqueAreas.Contains(pth.ToArea) And Not addedNewArea Then
+                            addedNewArea = True
+                        End If
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not newAreaList.Contains(pth.ToArea) Then
+                            newAreaList.Add(pth.ToArea)
+                        End If
+                    Next
+                    If addedNewArea OrElse newAreaList.Count <> detector.UniqueAreas.Count Then
+                        detector.UniqueAreas = newAreaList
+                        RaiseEvent DEFAreasChanged()
+                    End If
+                    Exit For
+                End If
+            Next
+        End Sub
+
+        Public Event DEFAreasChanged()
+
         ''' <summary>
         ''' if signal type has been changed in the prosessing tab, need to re-group them by type
         ''' </summary>
@@ -4742,7 +4797,8 @@ Namespace ViewModels
             SignalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             For Each info In SignalMgr.FileInfo
                 If info.TaggedSignals.Count > 0 Then
-                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    'Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory + ", " + info.Mnemonic + ", Sampling Rate: " + info.SamplingRate.ToString + "/Second"))
                     b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
                     SignalMgr.ReGroupedRawSignalsByType.Add(b)
                 End If

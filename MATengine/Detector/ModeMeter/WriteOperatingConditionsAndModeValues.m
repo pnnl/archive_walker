@@ -1,7 +1,10 @@
 % Created by Urmila Agrawal(urmila.agrawal@pnnl.gov) on 07/09/2018
 
-function WriteOperatingConditionsAndModeValues(AdditionalOutput,ResultPath)
+function WriteOperatingConditionsAndModeValues(AdditionalOutput,ResultPath,DEFparams)
 TimeString = datestr(AdditionalOutput(1).TimeString{end},'yymmdd');
+if exist(ResultPath,'dir') == 0
+    mkdir(ResultPath);
+end
 FileName = [ResultPath '\' TimeString '.csv'];
 tt = [];
 for tIdx = 1:length(AdditionalOutput(1).t)
@@ -46,6 +49,24 @@ else
             H4 = [H4, AdditionalOutput(ModeIdx).MethodName{ModeEstIdx}];
         end
     end
+    if ~isempty(DEFparams)
+        for ModeIdx = 1:length(AdditionalOutput)
+            for ModeEstIdx = 1:length(AdditionalOutput(ModeIdx).ModeOfInterest)
+                for PathIdx = 1:size(DEFparams.PathDescription,2)
+                    H1 = [H1, ['DEF_' DEFparams.PathDescription{1,PathIdx} '_to_' DEFparams.PathDescription{2,PathIdx}]];
+                    H2 = [H2, AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstIdx}];
+                    H3 = [H3, DEFparams.PathDescription{1,PathIdx}];
+                    if isempty(DEFparams.PathDescription{2,PathIdx})
+                        % To area was not specified
+                        H4 = [H4, ' '];
+                    else
+                        % To area was specified
+                        H4 = [H4, DEFparams.PathDescription{2,PathIdx}];
+                    end
+                end
+            end
+        end
+    end
 end
 % end
 if ~isempty(AdditionalOutput(1).OperatingNames)
@@ -62,7 +83,13 @@ end
 for ModeIdx = 1:length(AdditionalOutput)
     T2 = [T2 cell2mat(AdditionalOutput(ModeIdx).ModeFreqHistory)];
 end
-T = [tt T1 T2];
+T3 = [];
+if ~isempty(DEFparams)
+    for ModeIdx = 1:length(AdditionalOutput)
+        T3 = [T3 cell2mat(AdditionalOutput(ModeIdx).DEFhistory)];
+    end
+end
+T = [tt T1 T2 T3];
 H = {H1,H2,H3,H4};
 fid = fopen(FileName,'w');
 for idx = 1:4

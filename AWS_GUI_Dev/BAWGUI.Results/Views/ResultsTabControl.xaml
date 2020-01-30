@@ -10,9 +10,9 @@
              d:DesignHeight="300" d:DesignWidth="1000">
     <TabControl SelectedIndex="{Binding CurrentTabIndex}">
         <TabItem Header="Forced Oscillations">
-            <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            <!--<ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">-->
                 <views:ForcedOscillationResultsView DataContext="{Binding ForcedOscillationResultsViewModel}"/>
-            </ScrollViewer>
+            <!--</ScrollViewer>-->
         </TabItem>
         <TabItem Header="Out of Range Events">
             <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">

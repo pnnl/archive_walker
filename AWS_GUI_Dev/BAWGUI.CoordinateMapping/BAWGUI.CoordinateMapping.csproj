@@ -103,11 +103,15 @@
     <Compile Include="Converters\MapPlotTypeVisibilityConverter.cs" />
     <Compile Include="Converters\SiteCountVisibilityConverter.cs" />
     <Compile Include="Converters\TextBoxSelectionCommandParameterConverter.cs" />
+    <Compile Include="Models\DEFAreaMappingconfigReader.cs" />
+    <Compile Include="Models\DEFAreaMappingConfigWriter.cs" />
+    <Compile Include="Models\EnergyFlowAreaCoordsMappingModel.cs" />
     <Compile Include="Models\SignalCoordsMappingModel.cs" />
     <Compile Include="Models\SignalMappingPlotConfigReader.cs" />
     <Compile Include="Models\SignalMappingPlotConfigWriter.cs" />
     <Compile Include="Models\SiteCoordinatesReader.cs" />
     <Compile Include="Models\SiteCoordinatesWriter.cs" />
+    <Compile Include="Models\SitesReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -120,16 +124,37 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\CoordinatesTableViewModel.cs" />
+    <Compile Include="ViewModels\DEFAreaSiteSetupViewModel.cs" />
+    <Compile Include="ViewModels\EnergyFlowAreaCoordsMappingViewModel.cs" />
     <Compile Include="ViewModels\SignalCoordsMappingViewModel.cs" />
     <Compile Include="ViewModels\SiteCoordinatesViewModel.cs" />
+    <Compile Include="ViewModels\SiteMappingViewModel.cs" />
+    <Compile Include="Views\AvailableSitesView.xaml.cs">
+      <DependentUpon>AvailableSitesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CoordsTableView.xaml.cs">
       <DependentUpon>CoordsTableView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignalCoordsSetupView.xaml.cs">
-      <DependentUpon>SignalCoordsSetupView.xaml</DependentUpon>
+    <Compile Include="Views\DEFAreaSitePlotDotSetupView.xaml.cs">
+      <DependentUpon>DEFAreaSitePlotDotSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DEFAreaSitePlotLineAreaSetupView.xaml.cs">
+      <DependentUpon>DEFAreaSitePlotLineAreaSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DEFAreaSiteSetupView.xaml.cs">
+      <DependentUpon>DEFAreaSiteSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SiteSetupView.xaml.cs">
+      <DependentUpon>SiteSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalMappingPlotDotSetupView.xaml.cs">
+      <DependentUpon>SignalMappingPlotDotSetupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignalMappingPlotLineAreaSetupView.xaml.cs">
       <DependentUpon>SignalMappingPlotLineAreaSetupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalSiteSetupView.xaml.cs">
+      <DependentUpon>SignalSiteSetupView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -192,15 +217,39 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\AvailableSitesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CoordsTableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SignalCoordsSetupView.xaml">
+    <Page Include="Views\DEFAreaSitePlotDotSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DEFAreaSitePlotLineAreaSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DEFAreaSiteSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SiteSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignalMappingPlotDotSetupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalMappingPlotLineAreaSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SignalSiteSetupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

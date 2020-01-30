@@ -58,6 +58,19 @@ else
     FirstCall = false;
 end
 
+if isfield(Parameters,'CalcDEF')
+    if strcmp(Parameters.CalcDEF,'TRUE')
+        NumDEFpaths = length(Parameters.DEF.PathIdx);
+        DEFparams = Parameters.DEF;
+    else
+        DEFparams = [];
+        NumDEFpaths = 0;
+    end
+else
+    DEFparams = [];
+    NumDEFpaths = 0;
+end
+
 for ModeIdx = 1:NumMode
     ModeEstimateCalcIdx = 1;
     ExtractedParameters = ExtractedParametersAll{ModeIdx};
@@ -77,6 +90,7 @@ for ModeIdx = 1:NumMode
         AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
         AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+        AdditionalOutput(ModeIdx).DEFhistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
         
         AdditionalOutput(ModeIdx).EventDet = cell(1,size(Data{ModeIdx},2));
         PastAdditionalOutput(ModeIdx).EventDet = cell(1,size(Data{ModeIdx},2));
@@ -91,11 +105,13 @@ for ModeIdx = 1:NumMode
             AdditionalOutput(ModeIdx).ModeHistory = PastAdditionalOutput(ModeIdx).ModeHistory;
             AdditionalOutput(ModeIdx).ModeDRHistory = PastAdditionalOutput(ModeIdx).ModeDRHistory;
             AdditionalOutput(ModeIdx).ModeFreqHistory = PastAdditionalOutput(ModeIdx).ModeFreqHistory;
+            AdditionalOutput(ModeIdx).DEFhistory = PastAdditionalOutput(ModeIdx).DEFhistory;
             AdditionalOutput(ModeIdx).t = [PastAdditionalOutput(ModeIdx).t; TimeStringDN(end);];
         else
             AdditionalOutput(ModeIdx).ModeHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
             AdditionalOutput(ModeIdx).ModeDRHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
             AdditionalOutput(ModeIdx).ModeFreqHistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
+            AdditionalOutput(ModeIdx).DEFhistory = cell(1,NumMethods(ModeIdx)*size(Data{ModeIdx},2));
             AdditionalOutput(ModeIdx).t = TimeStringDN(end);
             PastAdditionalOutput(1).OperatingValues = [];
         end
@@ -113,9 +129,11 @@ for ModeIdx = 1:NumMode
                 Mode=NaN;
                 DampingRatio=NaN;
                 Frequency=NaN;
+                DEF = NaN(1,NumDEFpaths);
                 AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
                 AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
                 AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
+                AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx};DEF];
                 AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
                 AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;
                 AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
@@ -148,13 +166,23 @@ for ModeIdx = 1:NumMode
                     '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters(MethodIdx), ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},DetectionResults(ModeIdx).FOfreq{ChanIdx})']);
                 DampingRatio = -real(Mode)/abs(Mode);
                 Frequency = abs(imag(Mode))/2/pi;
-                Frequency(isnan(DampingRatio))= NaN;
+                if isnan(DampingRatio)
+                    Frequency = NaN;
+                    DEF = NaN(1,NumDEFpaths);
+                elseif ~isempty(DEFparams)
+                    DEF = CalculateDEF(PMUstruct,Parameters.DEF,Frequency);
+                    DEF = DEF';
+                else
+                    % Good mode estimates, but the DEF is not desired.
+                    DEF = NaN(1,NumDEFpaths);
+                end
                 if strcmp(ExtractedParameters.RetConTrackingStatus, 'ON')
                     [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx},...
-                        AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},ModeRem]...
+                        AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx},...
+                        AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},ModeRem]...
                         = RunRetCon(Mode, AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx},AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx},...
-                        AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},...
-                        ExtractedParameters.MaxRetConLength, Parameters.ResultUpdateInterval);
+                        AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx},...
+                        AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}, ExtractedParameters.MaxRetConLength, Parameters.ResultUpdateInterval);
                     %         If ModeRem is not empty, need to assess .csv for previous days and update
                     %         the mode estimates
                     if ~isempty(ModeRem) && ~isempty(PastAdditionalOutput)
@@ -171,6 +199,7 @@ for ModeIdx = 1:NumMode
                 AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeHistory{ModeEstimateCalcIdx};Mode;];
                 AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeDRHistory{ModeEstimateCalcIdx};DampingRatio;];
                 AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).ModeFreqHistory{ModeEstimateCalcIdx};Frequency;];
+                AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx} = [AdditionalOutput(ModeIdx).DEFhistory{ModeEstimateCalcIdx};DEF];
                 AdditionalOutput(ModeIdx).ChannelsName{ModeEstimateCalcIdx} = DataChannel{ModeIdx}(ChanIdx);
                 AdditionalOutput(ModeIdx).ModeOfInterest{ModeEstimateCalcIdx}= ExtractedParameters.ModeName;
                 AdditionalOutput(ModeIdx).MethodName{ModeEstimateCalcIdx}= ExtractedParameters.MethodName{MethodIdx};
@@ -199,7 +228,7 @@ else
     AdditionalOutput(1).OperatingType = [];
 end
 %Write modeestimates and system operating points to a .csv file
-WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPathFinal);
+WriteOperatingConditionsAndModeValues(AdditionalOutput,ExtractedParameters.ResultPathFinal,DEFparams);
 
 
 

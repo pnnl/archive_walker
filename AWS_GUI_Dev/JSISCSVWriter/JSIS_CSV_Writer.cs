@@ -22,7 +22,7 @@ namespace JSISCSVWriter
                 outputFile.WriteLine(String.Join(",", data.TypeRowList));
                 outputFile.WriteLine(String.Join(",", data.UnitRowList));
                 outputFile.WriteLine(String.Join(",", data.PMUList));
-                for (int index = 0; index < data.Data.RowCount - 1; index++)
+                for (int index = 0; index < data.Data.RowCount; index++)
                 {
                     outputFile.WriteLine(string.Join(",", data.Data.Row(index).ToArray()));
                 }

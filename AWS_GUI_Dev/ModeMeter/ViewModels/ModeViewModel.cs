@@ -20,7 +20,7 @@ namespace ModeMeter.ViewModels
         public ModeViewModel(Mode mode, SignalManager _signalMgr)
         {
             this._model = mode;
-            _showEventDetectionParameters = false;
+            //_showEventDetectionParameters = false;
             PMUs = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in _model.PMUs)
             {
@@ -135,7 +135,7 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private bool _showEventDetectionParameters;
+        //private bool _showEventDetectionParameters;
         public bool ShowEventDetectionParameters
         {
             get { return _model.ShowEventDetectionParameters; }
@@ -410,7 +410,6 @@ namespace ModeMeter.ViewModels
         {
             _model = fODetectorParameters;
         }
-        private DetectorWindowType _windowType;
         public DetectorWindowType WindowType
         {
             get
@@ -423,7 +422,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyInterval;
         public string FrequencyInterval
         {
             get
@@ -436,7 +434,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private int _windowLength;
         public int WindowLength
         {
             get
@@ -450,7 +447,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private int _windowOverlap;
         public int WindowOverlap
         {
             get
@@ -463,7 +459,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _medianFilterFrequencyWidth;
         public string MedianFilterFrequencyWidth
         {
             get
@@ -476,7 +471,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _pfa;
         public string Pfa
         {
             get
@@ -489,7 +483,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyMin;
         public string FrequencyMin
         {
             get
@@ -502,7 +495,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyMax;
         public string FrequencyMax
         {
             get
@@ -515,7 +507,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyTolerance;
         public string FrequencyTolerance
         {
             get
@@ -528,6 +519,18 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool CalcDEF
+        {
+            get
+            {
+                return _model.CalcDEF;
+            }
+            set
+            {
+                _model.CalcDEF = value;
+                OnPropertyChanged();
+            }
+        }
     }
     public class EventDetectionParametersViewModel : ViewModelBase
     {
@@ -536,7 +539,6 @@ namespace ModeMeter.ViewModels
         {
             _model = m;
         }
-        private string _rmslength;
         public string RMSlength
         {
             get { return _model.RMSlength; }
@@ -546,7 +548,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _rmsmedianFilterTime;
         public string RMSmedianFilterTime
         {
             get { return _model.RMSmedianFilterTime; }
@@ -556,7 +557,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _ringThresholdScale;
         public string RingThresholdScale
         {
             get { return _model.RingThresholdScale; }
@@ -566,7 +566,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _minAnalysisLength;
         public string MinAnalysisLength
         {
             get { return _model.MinAnalysisLength; }

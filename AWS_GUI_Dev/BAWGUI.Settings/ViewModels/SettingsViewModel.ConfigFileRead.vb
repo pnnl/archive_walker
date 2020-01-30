@@ -1626,22 +1626,22 @@ Namespace ViewModels
             newList.Add(newDetector)
         End Sub
 
-        Private Sub _readOutOfRangeGeneral(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
-            Dim newDetector = New OutOfRangeGeneralDetector
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
-            newDetector.Max = detector.<Max>.Value
-            newDetector.Min = detector.<Min>.Value
-            newDetector.AnalysisWindow = detector.<AnalysisWindow>.Value
-            newDetector.Duration = detector.<Duration>.Value
-            Try
-                newDetector.InputChannels = _readPMUElements(detector)
-            Catch ex As Exception
-                _addLog("In out of range general detector" & ex.Message)
-            End Try
-            newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
-            _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
-            newList.Add(newDetector)
-        End Sub
+        'Private Sub _readOutOfRangeGeneral(detector As XElement, ByRef newList As ObservableCollection(Of DetectorBase))
+        '    Dim newDetector = New OutOfRangeGeneralDetector
+        '    newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
+        '    newDetector.Max = detector.<Max>.Value
+        '    newDetector.Min = detector.<Min>.Value
+        '    newDetector.AnalysisWindow = detector.<AnalysisWindow>.Value
+        '    newDetector.Duration = detector.<Duration>.Value
+        '    Try
+        '        newDetector.InputChannels = _readPMUElements(detector)
+        '    Catch ex As Exception
+        '        _addLog("In out of range general detector" & ex.Message)
+        '    End Try
+        '    newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
+        '    _signalMgr.GroupedSignalByDetectorInput.Add(newDetector.ThisStepInputsAsSignalHerachyByType)
+        '    newList.Add(newDetector)
+        'End Sub
 #End Region
 
     End Class
