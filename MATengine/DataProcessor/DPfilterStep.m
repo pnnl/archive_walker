@@ -285,5 +285,13 @@ for FiltIdx = 1:NumFilts
                 end
                 [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = POWpowerFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
             end
+        case 'RMSenergyFilt'
+            for PMUidx = 1:NumPMU
+               % If the PMU doesn't exist, skip to next index
+                if PMUstructIdx(PMUidx) == 0
+                    continue;
+                end
+                [PMU(PMUstructIdx(PMUidx)), FinalCondos{FiltIdx}{PMUidx}] = RMSenergyFilt(PMU(PMUstructIdx(PMUidx)),PMUchans(PMUidx).ChansToFilt,Parameters, InitialCondos{FiltIdx}{PMUidx});
+            end
     end
 end
