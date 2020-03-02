@@ -14,6 +14,7 @@ using Microsoft.VisualBasic;
 using System.ComponentModel;
 using BAWGUI.Core;
 using BAWGUI.Core.Models;
+using BAWGUI.Core.Converters;
 
 namespace BAWGUI.ReadConfigXml
 {
@@ -289,7 +290,7 @@ namespace BAWGUI.ReadConfigXml
                     value = filter.Element("Parameters").Element("Band");
                     if (value != null)
                     {
-                        BandType = (RMSEnergyBandOptions)Enum.Parse(typeof(RMSEnergyBandOptions), value.Value);
+                        BandType = EnumExtencsionMethod.GetValueFromDescription<RMSEnergyBandOptions>(value.Value);
                     }
                     break;
                 default:

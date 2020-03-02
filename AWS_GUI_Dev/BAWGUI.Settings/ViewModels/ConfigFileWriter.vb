@@ -274,7 +274,7 @@ Namespace ViewModels
                         Case TunableFilterType.RMSenergyFilt
                             Dim parameters = <Parameters></Parameters>
                             If Not String.IsNullOrEmpty(stp.BandType) Then
-                                parameters.Add(<Band><%= stp.BandType.ToString() %></Band>)
+                                parameters.Add(<Band><%= EnumExtencsionMethod.ToStringEnums(stp.BandType) %></Band>)
                             End If
                             aStep.Add(parameters)
                         Case Else
