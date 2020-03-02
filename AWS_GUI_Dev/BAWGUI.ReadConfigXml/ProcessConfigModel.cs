@@ -285,6 +285,13 @@ namespace BAWGUI.ReadConfigXml
                         PointOnWavePowerCalculationFilterParam.PhaseShiftI = value.Value;
                     }
                     break;
+                case TunableFilterType.RMSenergyFilt:
+                    value = filter.Element("Parameters").Element("Band");
+                    if (value != null)
+                    {
+                        BandType = (RMSEnergyBandOptions)Enum.Parse(typeof(RMSEnergyBandOptions), value.Value);
+                    }
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
             }
@@ -342,6 +349,7 @@ namespace BAWGUI.ReadConfigXml
         public string CustPMUName { get; set; }
         public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
         public PointOnWavePowerCalculationFilterParameters PointOnWavePowerCalculationFilterParam { get; set; }
+        public RMSEnergyBandOptions BandType { get; set; }
         //public string Pname { get; private set; }
         //public string Qname { get; private set; }
         //public string VA { get; private set; }

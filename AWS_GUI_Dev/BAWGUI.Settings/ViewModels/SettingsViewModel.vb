@@ -738,6 +738,9 @@ Namespace ViewModels
         '    Return pmuSignalTreeGroupedBySamplingRate
         'End Function
 
+        Private _powerTypeDictionary As Dictionary(Of String, String)
+        Private _lastCustPMUname As String
+
         Private _lastInputFolderLocation As String
         Private _browseInputFileDir As ICommand
         Public Property BrowseInputFileDir As ICommand
@@ -1670,6 +1673,7 @@ Namespace ViewModels
 
         Private Sub _checkMultiplicationCustomizationOutputTypeAndSamplingRate()
             Dim type = ""
+            Dim unit = ""
             Dim countNonScalarType = 0
             Dim rate = -1
             For Each signal In CurrentSelectedStep.InputChannels
@@ -1677,6 +1681,9 @@ Namespace ViewModels
                     countNonScalarType += 1
                     If String.IsNullOrEmpty(type) Then
                         type = signal.TypeAbbreviation
+                    End If
+                    If String.IsNullOrEmpty(unit) Then
+                        unit = signal.Unit
                     End If
                 End If
                 If rate = -1 Then
@@ -1692,6 +1699,7 @@ Namespace ViewModels
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "SC"
             ElseIf countNonScalarType = 1 Then
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = type
+                CurrentSelectedStep.OutputChannels(0).Unit = unit
             Else
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
             End If
@@ -1714,6 +1722,10 @@ Namespace ViewModels
             End If
             If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
+                If CurrentSelectedStep.Divisor.TypeAbbreviation = "SC" Then
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = CurrentSelectedStep.Dividend.TypeAbbreviation
+                    CurrentSelectedStep.OutputChannels(0).Unit = CurrentSelectedStep.Dividend.Unit
+                End If
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
                 _addLog("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
@@ -2673,6 +2685,7 @@ Namespace ViewModels
                         Dim newOutput = obj.SignalSignature
                         If _currentSelectedStep.UseCustomPMU Then
                             newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                            newOutput.Unit = obj.SignalSignature.Unit
                             'newOutput.PMUName = _currentSelectedStep.CustPMUname
                             newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         Else

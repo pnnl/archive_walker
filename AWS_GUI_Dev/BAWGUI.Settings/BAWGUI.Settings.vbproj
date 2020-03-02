@@ -313,6 +313,9 @@
     <Compile Include="Views\RingdownView.xaml.vb">
       <DependentUpon>RingdownView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\RMSEnergyFilterparameters.xaml.vb">
+      <DependentUpon>RMSEnergyFilterparameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RunningAverageFilterParameters.xaml.vb">
       <DependentUpon>RunningAverageFilterParameters.xaml</DependentUpon>
     </Compile>
@@ -577,6 +580,10 @@
     <Page Include="Views\RingdownView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RMSEnergyFilterparameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RunningAverageFilterParameters.xaml">
       <SubType>Designer</SubType>

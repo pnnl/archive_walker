@@ -271,6 +271,12 @@ Namespace ViewModels
                                 parameters.Add(<PhaseShiftI><%= stp.PhaseShiftI %></PhaseShiftI>)
                             End If
                             aStep.Add(parameters)
+                        Case TunableFilterType.RMSenergyFilt
+                            Dim parameters = <Parameters></Parameters>
+                            If Not String.IsNullOrEmpty(stp.BandType) Then
+                                parameters.Add(<Band><%= stp.BandType.ToString() %></Band>)
+                            End If
+                            aStep.Add(parameters)
                         Case Else
                             Dim parameters = <Parameters></Parameters>
                             aStep.Add(parameters)

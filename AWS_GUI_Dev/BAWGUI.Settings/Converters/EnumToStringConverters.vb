@@ -195,6 +195,8 @@ Namespace Converters
                     Return "Running Average"
                 Case TunableFilterType.PointOnWavePower
                     Return "Point on Wave Power Calculation"
+                Case TunableFilterType.RMSenergyFilt
+                    Return "RMS Energy"
                     'Case TunableFilterType.Median
                     '    Return "Median"
                 Case Else
@@ -216,6 +218,8 @@ Namespace Converters
                     Return TunableFilterType.RunningAverage
                 Case "Point on Wave Power Calculation"
                     Return TunableFilterType.PointOnWavePower
+                Case "RMS Energy"
+                    Return TunableFilterType.RMSenergyFilt
                     'Case "Median"
                     '    Return TunableFilterType.Median
                 Case Else

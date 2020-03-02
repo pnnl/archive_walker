@@ -83,7 +83,9 @@ namespace BAWGUI.Core.Models
         [Description("Running Average")]
         RunningAverage,
         [Description("Point on Wave Power Calculation")]
-        PointOnWavePower
+        PointOnWavePower,
+        [Description("RMS Energy")]
+        RMSenergyFilt
     }
     public enum InterpolateType
     {
@@ -116,5 +118,16 @@ namespace BAWGUI.Core.Models
         Option1,
         [Description("Option 2")]
         Option2
+    }
+    public enum RMSEnergyBandOptions
+    {
+        [Description("Band 1")]
+        Band1,
+        [Description("Band 2")]
+        Band2,
+        [Description("Band 3")]
+        Band3,
+        [Description("Band 4")]
+        Band4
     }
 }

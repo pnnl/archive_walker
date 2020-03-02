@@ -108,4 +108,40 @@ namespace BAWGUI.Core.Converters
             }
         }
     }
+    public class EnumToStringConverter13 : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch (value)
+            {
+                case RMSEnergyBandOptions.Band1:
+                    return "Band 1";
+                case RMSEnergyBandOptions.Band2:
+                    return "Band 2";
+                case RMSEnergyBandOptions.Band3:
+                    return "Band 3";
+                case RMSEnergyBandOptions.Band4:
+                    return "Band 4";
+                default:
+                    throw new Exception("Band type not valid!");
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch (value)
+            {
+                case "Band 1":
+                    return RMSEnergyBandOptions.Band1;
+                case "Band 2":
+                    return RMSEnergyBandOptions.Band2;
+                case "Band 3":
+                    return RMSEnergyBandOptions.Band3;
+                case "Band 4":
+                    return RMSEnergyBandOptions.Band4;
+                default:
+                    throw new Exception("Enum type not valid!");
+            }
+        }
+    }
 }
