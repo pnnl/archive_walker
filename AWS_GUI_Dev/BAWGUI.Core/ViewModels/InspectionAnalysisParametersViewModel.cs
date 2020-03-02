@@ -17,6 +17,10 @@ namespace BAWGUI.Core.ViewModels
             _model = new InspectionAnalysisParameters();
         }
         private InspectionAnalysisParameters _model;
+        public InspectionAnalysisParameters Model
+        {
+            get { return _model; }
+        }
         public string AnalysisLengthStr
         {
             get { return _model.AnalysisLengthStr; }
@@ -104,12 +108,38 @@ namespace BAWGUI.Core.ViewModels
                 OnPropertyChanged();
             }
         }
-        public int? ZeroPadding
+        public string ZeroPadding
         {
-            get { return _model.ZeroPadding; }
+            get
+            {
+                if (_model.ZeroPadding == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return _model.ZeroPadding.ToString();
+                }
+            }
             set
             {
-                _model.ZeroPadding = value;
+                if (string.IsNullOrEmpty(value))
+                {
+                    _model.ZeroPadding = null;
+                }
+                else
+                {
+                    int zp = 0;
+                    var re = int.TryParse(value, out zp);
+                    if (re)
+                    {
+                        _model.ZeroPadding = zp;
+                    }
+                    else
+                    {
+                        _model.ZeroPadding = null;
+                    }
+                }
                 OnPropertyChanged();
             }
         }
@@ -134,21 +164,73 @@ namespace BAWGUI.Core.ViewModels
                 OnPropertyChanged();
             }
         }
-        public double? FreqMin
+        public string FreqMin
         {
-            get { return _model.FreqMin; }
+            get
+            {
+                if (_model.FreqMin == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return _model.FreqMin.ToString();
+                }
+            }
             set
             {
-                _model.FreqMin = value;
+                if (string.IsNullOrEmpty(value))
+                {
+                    _model.FreqMin = null;
+                }
+                else
+                {
+                    double zp = 0d;
+                    var re = double.TryParse(value, out zp);
+                    if (re)
+                    {
+                        _model.FreqMin = zp;
+                    }
+                    else
+                    {
+                        _model.FreqMin = null;
+                    }
+                }
                 OnPropertyChanged();
             }
         }
-        public double? FreqMax
+        public string FreqMax
         {
-            get { return _model.FreqMax; }
+            get
+            {
+                if (_model.FreqMin == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return _model.FreqMax.ToString();
+                }
+            }
             set
             {
-                _model.FreqMax = value;
+                if (string.IsNullOrEmpty(value))
+                {
+                    _model.FreqMax = null;
+                }
+                else
+                {
+                    double zp = 0d;
+                    var re = double.TryParse(value, out zp);
+                    if (re)
+                    {
+                        _model.FreqMax = zp;
+                    }
+                    else
+                    {
+                        _model.FreqMax = null;
+                    }
+                }
                 OnPropertyChanged();
             }
         }
