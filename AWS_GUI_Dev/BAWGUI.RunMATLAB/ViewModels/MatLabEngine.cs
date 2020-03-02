@@ -1226,18 +1226,18 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 parameters["WindowLength", 1] = inspectionAnalysisParams.WindowLength;
                 parameters["Window", 1] = inspectionAnalysisParams.WindowType.ToString();
                 parameters["WindowOverlap", 1] = inspectionAnalysisParams.WindowOverlap;
-                if (inspectionAnalysisParams.ZeroPadding != null)
+                if (!string.IsNullOrEmpty(inspectionAnalysisParams.ZeroPadding))
                 {
-                    parameters["ZeroPadding", 1] = (int)inspectionAnalysisParams.ZeroPadding;
+                    parameters["ZeroPadding", 1] = (int)inspectionAnalysisParams.Model.ZeroPadding;
                 }
                 parameters["LogScale", 1] = inspectionAnalysisParams.LogScale.ToString().ToUpper();
-                if (inspectionAnalysisParams.FreqMin != null)
+                if (!string.IsNullOrEmpty(inspectionAnalysisParams.FreqMin))
                 {
-                    parameters["FreqMin", 1] = (double)inspectionAnalysisParams.FreqMin;
+                    parameters["FreqMin", 1] = (double)inspectionAnalysisParams.Model.FreqMin;
                 }
-                if (inspectionAnalysisParams.FreqMax != null)
+                if (!string.IsNullOrEmpty(inspectionAnalysisParams.FreqMax))
                 {
-                    parameters["FreqMax", 1] = (double)inspectionAnalysisParams.FreqMax;
+                    parameters["FreqMax", 1] = (double)inspectionAnalysisParams.Model.FreqMax;
                 }
                 parameters["fs", 1] = signals[0].SamplingRate;
 
