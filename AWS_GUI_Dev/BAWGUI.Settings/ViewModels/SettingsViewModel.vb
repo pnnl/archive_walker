@@ -1697,11 +1697,13 @@ Namespace ViewModels
             Next
             If countNonScalarType = 0 Then
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "SC"
+                CurrentSelectedStep.OutputChannels(0).Unit = "SC"
             ElseIf countNonScalarType = 1 Then
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = type
                 CurrentSelectedStep.OutputChannels(0).Unit = unit
             Else
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
             End If
             If rate <> -1 Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = rate
@@ -1709,26 +1711,31 @@ Namespace ViewModels
         End Sub
 
         Private Sub _checkDivisionCustomizationOutputTypeAndSamplingRate()
-            CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-            If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
-                If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
-                    If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
-                        If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
-                            _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                            Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                        End If
-                    End If
-                End If
-            End If
-            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
+            'If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
+            '    If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
+            '        If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
+            '            If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
+            '                _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+            '                Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+            '            End If
+            '        End If
+            '    End If
+            'End If
+            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.Unit IsNot Nothing AndAlso CurrentSelectedStep.Dividend.Unit IsNot Nothing AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
                 If CurrentSelectedStep.Divisor.TypeAbbreviation = "SC" Then
                     CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = CurrentSelectedStep.Dividend.TypeAbbreviation
                     CurrentSelectedStep.OutputChannels(0).Unit = CurrentSelectedStep.Dividend.Unit
+                ElseIf CurrentSelectedStep.Divisor.Unit = CurrentSelectedStep.Dividend.Unit Then
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "SC"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "SC"
+                Else
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
                 End If
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                _addLog("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
+                _addLog("Dividend and Divisor have to have units and their sampling rate should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
                 Throw New Exception("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
             End If
         End Sub
