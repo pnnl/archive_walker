@@ -1980,12 +1980,16 @@ Namespace ViewModels
         '    '_signalMgr.DetermineFileDirCheckableStatus()
         'End Sub
         Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
+            Dim sgnl = New SignalSignatureViewModel
             Dim signalCount = _determineSignalCountInTree(obj)
-            Forms.MessageBox.Show("There are " & signalCount & " signals")
-            Dim sgnl = _findTheBottomSignal(obj)
-            sgnl.IsChecked = obj.SignalSignature.IsChecked
-            If signalCount > 1 OrElse sgnl.PMUName Is Nothing OrElse sgnl.TypeAbbreviation Is Nothing Then    'if selected a group of signal
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+            Else 'if selected a group of signal
                 Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
+            End If
+            If sgnl.PMUName Is Nothing OrElse sgnl.TypeAbbreviation Is Nothing Then
+                Throw New Exception("Error! Signal selected is not valid.")
             Else
                 If _currentSelectedStep.CurrentCursor = "" Then 'If no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
                     Throw New Exception("Error! Please select a valid text box (Dividend or Divisor) for this input signal!")
