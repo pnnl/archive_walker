@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="2669068494" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="2389961956" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
@@ -157,6 +157,8 @@
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ConcatenatePMU.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\CreatePMUsegment.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DataWriterDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DEF\CalculateDEF.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DEF\RunTimeLocalization.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ExtractData.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\EventDetectionForModeMeter.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ExtractModeMeterParams.m</file>
