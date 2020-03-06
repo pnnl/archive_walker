@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="2389961956" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="2238818514" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
@@ -131,6 +131,10 @@
     </fileset.classes>
     <fileset.resources />
     <fileset.depfun>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\LS_ARMApS.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\SelectMode.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\xcorrWin.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\YW_ARMApS.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOpenPDCpresets.m</file>
@@ -165,14 +169,12 @@
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMA.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMApS.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\RunRetCon.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteMMreportGraphical.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteOperatingConditionsAndModeValues.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\YW_ARMA.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\YW_ARMApS.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\OutOfRangeGeneralDetector.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\calcGMSC.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\CalcPSD_OmegaB.m</file>
