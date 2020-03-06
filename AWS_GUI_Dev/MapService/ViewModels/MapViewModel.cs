@@ -62,6 +62,7 @@ namespace MapService.ViewModels
             Gmap.ShowCenter = false;
 
             Gmap.MapProvider = GMapProviders.OpenStreetMap;
+            //Gmap.MapProvider = GoogleSatelliteMapProvider.Instance; //satellite view
             if (!IsOfflineMode)
             {
                 Gmap.Manager.Mode = AccessMode.ServerAndCache;

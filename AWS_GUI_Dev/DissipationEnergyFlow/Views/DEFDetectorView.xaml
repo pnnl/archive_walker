@@ -1,0 +1,250 @@
+﻿<UserControl x:Class="DissipationEnergyFlow.Views.DEFDetectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DissipationEnergyFlow.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:converters="clr-namespace:DissipationEnergyFlow.Converters"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <coreconverters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreconverters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
+            <converters:DEFTextBoxSelectionCPConverter x:Key="DEFTextBoxSelectionCPConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Expander IsExpanded="{Binding IsExpanded}" Margin="2">
+            <Expander.Header>
+                <!--this won't work if there's border around it? according to  https://joshsmithonwpf.wordpress.com/2007/02/24/stretching-content-in-an-expander-header/ -->
+                    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
+                    <!--this way works too, but to make it consistence with other detectors, kept the way above. <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">-->
+                    <TextBlock VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                                <Binding/>
+                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
+                        <Image Width="16" Height="16" Source="/DissipationEnergyFlow;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                    </Button>
+                </DockPanel>
+            </Expander.Header>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Auto" MaxHeight="300">
+                <Grid Margin="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="0" HorizontalAlignment="Stretch"><!-- this dockpanel's width is affected by the Dockpanel below it in the itemscontrol when the width of that dockpanel is set to be the same as it's parents, which make the button go off the screen-->
+                            <Label Content="Specify Paths" Margin="2" FontSize="16"/>
+                        <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.AddAPath}" CommandParameter="{Binding}" ToolTip="Add A Energy Flow Path">
+                            <Image Width="16" Height="16" Source="/DissipationEnergyFlow;component/MyResources/AddCommand.png" HorizontalAlignment="Center"/>
+                        </Button>
+                    </DockPanel>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Paths}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="20,2,2,2" BorderBrush="LightGray" BorderThickness="0.5" CornerRadius="5">
+                                    <Expander>
+                                        <Expander.Header>
+                                            <!--Cannot use <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}"> as it will make the DockPanel above go off the edge-->
+                                                <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Content="From Area:" Margin="2" Grid.Column="0"/>
+                                                    <xtlkt:WatermarkTextBox Watermark="Required" Text="{Binding FromArea, UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="1" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <Label Content="To Area:" Margin="10,2,2,2" Grid.Column="2"/>
+                                                    <xtlkt:WatermarkTextBox Watermark="Optional" Text="{Binding ToArea, UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="3" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                                </Grid>
+                                                <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.DeleteAPath}" CommandParameter="{Binding}">
+                                                    <Image Width="16" Height="16" Source="/DissipationEnergyFlow;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                                </Button>
+                                            </DockPanel>
+                                        </Expander.Header>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="0">
+                                                <Label Content="Voltage Magnitude:" Margin="2" Width="120"/>
+                                                <TextBox Text="{Binding VoltageMag.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageMag"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding VoltageMag.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageMag"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>                                                </TextBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="1">
+                                                <Label Content="Voltage Angle:" Margin="2" Width="120"/>
+                                                <TextBox Text="{Binding VoltageAng.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageAng"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding VoltageAng.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="VoltageAng"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="2">
+                                                <Label Content="Active Power:" Margin="2" Width="120"/>
+                                                <TextBox Text="{Binding ActivePowerP.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ActivePowerP"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding ActivePowerP.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ActivePowerP"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="2" Grid.Row="3">
+                                                <Label Content="Reactive Power:" Margin="2" Width="120"/>
+                                                <TextBox Text="{Binding ReactivePowerQ.PMUName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ReactivePowerQ"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                                <TextBox Text="{Binding ReactivePowerQ.SignalName}" Margin="2" Width="150" VerticalAlignment="Center" VerticalContentAlignment="Center" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="GotFocus">
+                                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
+                                                                <i:InvokeCommandAction.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                        <Binding Source="ReactivePowerQ"/>
+                                                                        <Binding />
+                                                                    </MultiBinding>
+                                                                </i:InvokeCommandAction.CommandParameter>
+                                                            </i:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBox>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Expander>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Oscillation Start/End Point Estimation" Margin="2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Width="20" Grid.Row="1" Grid.Column="0"/>
+                        <Label Content="Estimate Start/End Point?" Margin="2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"/>
+                        <CheckBox IsChecked="{Binding PerformTimeLoc}" Margin="2,1" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"/>
+                        <Label Content="Minimum Analysis Window Length (seconds):" Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding LocMinLength}" Margin="2,1" Grid.Row="2" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
+                        <Label Content="Oscillation Length Resolution (seconds):" Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding LocLengthStep}" Margin="2,1" Grid.Row="3" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
+                        <Label Content="Oscillation Start/End Point Resolution (seconds):" Margin="2" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding LocRes}" Margin="2,1" Grid.Row="4" Grid.Column="2" Width="120" VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+        </Expander>
+    </Border>
+</UserControl>

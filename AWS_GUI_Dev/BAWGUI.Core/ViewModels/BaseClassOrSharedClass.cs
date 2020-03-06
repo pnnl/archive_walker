@@ -309,6 +309,21 @@ namespace BAWGUI.Core
             }
         }
         public abstract bool CheckStepIsComplete();
+
+        private int _stepCounter;
+        public int StepCounter
+        {
+            get
+            {
+                return _stepCounter;
+            }
+            set
+            {
+                _stepCounter = value;
+
+                OnPropertyChanged();
+            }
+        }
     }
 
     public abstract class AlarmingDetectorBase : ViewModelBase

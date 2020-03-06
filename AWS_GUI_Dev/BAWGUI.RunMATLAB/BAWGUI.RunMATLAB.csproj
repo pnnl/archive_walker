@@ -73,7 +73,7 @@
     </Reference>
     <Reference Include="MWArray, Version=2.18.1.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\MATLAB\MATLAB Runtime\v94\toolbox\dotnetbuilder\bin\win64\v4.0\MWArray.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\MATLAB\MATLAB Runtime\v94\toolbox\dotnetbuilder\bin\win64\v4.0\MWArray.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

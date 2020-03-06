@@ -1,13 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="513453708" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="2389961956" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-<<<<<<< HEAD
-    <param.version>2.33</param.version>
-=======
-    <param.version>2.34</param.version>
->>>>>>> DEF
+    <param.version>3.1</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -152,6 +148,7 @@
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\MedianFilt.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\POWpowerFilt.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RationalFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RMSenergyFilt.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RunningAveFilt.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\interpo.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\MultiRate.m</file>

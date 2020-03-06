@@ -114,7 +114,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _previousReportPath;
         public ICommand FindReportPath { get; set; }
         private void _browseReportPath(object obj)
         {

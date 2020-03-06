@@ -13,6 +13,8 @@
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:mmviewmodel="clr-namespace:ModeMeter.ViewModels;assembly=ModeMeter"
              xmlns:mmviews="clr-namespace:ModeMeter.Views;assembly=ModeMeter"
+             xmlns:defvm="clr-namespace:DissipationEnergyFlow.ViewModels;assembly=DissipationEnergyFlow"
+             xmlns:defv="clr-namespace:DissipationEnergyFlow.Views;assembly=DissipationEnergyFlow"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -87,6 +89,9 @@
                             </DataTemplate>
                             <DataTemplate DataType="{x:Type mmviewmodel:SmallSignalStabilityToolViewModel}">
                                 <mmviews:SmallSignalStabilityToolView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type defvm:DEFDetectorViewModel}">
+                                <defv:DEFDetectorView/>
                             </DataTemplate>
                         </ItemsControl.Resources>
                     </ItemsControl>

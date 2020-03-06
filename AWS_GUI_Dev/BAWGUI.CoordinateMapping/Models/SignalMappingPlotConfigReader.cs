@@ -1,18 +1,15 @@
 ﻿using BAWGUI.Core.Models;
-using BAWGUI.Xml;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace BAWGUI.CoordinateMapping.Models
 {
     public class SignalMappingPlotConfigReader
     {
         private string configFilePath;
+        private XElement _config;
+
         public List<SignalCoordsMappingModel> SignalMappingList { get; set; }
         public SignalMappingPlotConfigReader()
         {
@@ -21,20 +18,32 @@ namespace BAWGUI.CoordinateMapping.Models
         public SignalMappingPlotConfigReader(string configFilePath) : this()
         {
             this.configFilePath = configFilePath;
-            _readSignalMappingConfig();
+            _readSignalMappingConfigFromFile();
         }
+
+        public SignalMappingPlotConfigReader(XElement xElement) : this()
+        {
+            _config = xElement;
+            _readSignalSiteMappingConfig();
+        }
+
         public void ReadSignalMappingConfig(string configFilePath)
         {
             this.configFilePath = configFilePath;
-            _readSignalMappingConfig();
+            _readSignalMappingConfigFromFile();
         }
-        private void _readSignalMappingConfig()
+        private void _readSignalMappingConfigFromFile()
         {
             var configData = XDocument.Load(configFilePath);
-            var smpc = configData.Element("Config").Element("SignalMappingPlotConfig");
-            if (smpc != null)
+            _config = configData.Element("Config").Element("SignalMappingPlotConfig");
+            _readSignalSiteMappingConfig();
+        }
+
+        private void _readSignalSiteMappingConfig()
+        {
+            if (_config != null)
             {
-                var signals = smpc.Elements("Signal");
+                var signals = _config.Elements("Signal");
                 foreach (var signal in signals)
                 {
                     var newSignalMapping = new SignalCoordsMappingModel();
@@ -45,41 +54,12 @@ namespace BAWGUI.CoordinateMapping.Models
                     {
                         newSignalMapping.Type = (SignalMapPlotType)Enum.Parse(typeof(SignalMapPlotType), t.Value);
                     }
-                    var sites = new List<ConfigSite>();
-                    XmlSerializer serializer = null;
-                    try
-                    {
-                        serializer = new XmlSerializer(typeof(ConfigSite), new XmlRootAttribute("Site"));
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                    if (serializer != null)
-                    {
-                        foreach (var item in signal.Element("Sites").Elements("Site"))
-                        {
-                            var b = item.CreateReader();
-                            ConfigSite a = null;
-                            try
-                            {
-                                a = (ConfigSite)serializer.Deserialize(b);
-                            }
-                            catch (Exception ex)
-                            {
-                                throw ex;
-                            }
-                            if (a != null)
-                            {
-                                sites.Add(a);
-                            }
-                        }
-                    }
-                    newSignalMapping.Locations = sites;
+                    newSignalMapping.Locations = SitesReader.ReadSites(signal);
                     SignalMappingList.Add(newSignalMapping);
                 }
             }
         }
+
         public List<SignalCoordsMappingModel> GetSignalCoordsMappingModel()
         {
             return SignalMappingList;

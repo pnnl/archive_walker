@@ -73,7 +73,7 @@
             </Expander.Header>
             <localv:ProjectsBrowserView DataContext="{Binding ProjectControlVM}"/>
         </Expander>
-        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Center"/>
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

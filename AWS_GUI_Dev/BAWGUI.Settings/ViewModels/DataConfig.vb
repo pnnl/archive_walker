@@ -2185,12 +2185,16 @@ Namespace ViewModels
             InputChannels.Add(Divisor)
             Dim output = New SignalSignatureViewModel(_model.SignalName, _model.CustPMUname)
             If Dividend.IsValid AndAlso Divisor.IsValid Then
-                If Dividend.TypeAbbreviation = Divisor.TypeAbbreviation Then
+                output.SamplingRate = Dividend.SamplingRate
+                If Dividend.Unit = Divisor.Unit Then
+                    output.Unit = "SC"
+                    output.TypeAbbreviation = "SC"
+                ElseIf Divisor.TypeAbbreviation = "SC" Then
                     output.TypeAbbreviation = Dividend.TypeAbbreviation
                     output.Unit = Dividend.Unit
-                    output.SamplingRate = Dividend.SamplingRate
                 Else
-                    Throw New Exception("In step: " & stepCounter & " ," & _model.Name & ", the types of divisor and dividend do not match!")
+                    output.Unit = "OTHER"
+                    output.TypeAbbreviation = "OTHER"
                 End If
             End If
             output.IsCustomSignal = True

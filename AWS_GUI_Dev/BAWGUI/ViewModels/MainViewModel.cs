@@ -1,22 +1,22 @@
 ﻿using System;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Results.ViewModels;
-using BAWGUI.Settings;
 using BAWGUI.Settings.ViewModels;
 using System.Windows.Input;
 using System.IO;
-using BAWGUI.Core;
 using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using BAWGUI.ReadConfigXml;
 using VoltageStability.Models;
 using VoltageStability.ViewModels;
+using BAWGUI.CoordinateMapping.ViewModels;
 using ModeMeter.Models;
 using ModeMeter.ViewModels;
-using BAWGUI.CoordinateMapping.ViewModels;
 using BAWGUI.CoordinateMapping.Models;
+using DissipationEnergyFlow.ViewModels;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BAWGUI.ViewModels
 {
@@ -33,14 +33,46 @@ namespace BAWGUI.ViewModels
             MainViewSelected = new RelayCommand(_switchView);
             _projectControlVM.RunSelected += _onRunSelected;
             _signalMgr = SignalManager.Instance;
+            _signalMgr.UniqueMappingSignalChanged += _signalMgr_UniqueMappingSignalChanged;
             //_settingsVM.SaveNewTasl += _settingsVM_SaveNewTasl;
             _settingsVM.SaveNewTask += _projectControlVM.CreateNewTask;
             //_projectControlVM.WriteSettingsConfigFile += _projectControlVM_WriteSettingsConfigFile;
             _runMatlabVM.MatlabRunning += _matlabEngineStatusChanged;
             InspectRawSignal = new RelayCommand(_inpsectRawInputSignals);
             InspectSignalByTimeRange = new RelayCommand(_inpsectAllSignalsByTimeRange);
-            SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
+            SiteMappingVM = new SiteMappingViewModel(CoordsTableVM.SiteCoords);
+            //SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
+            SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr);
+            _settingsVM.DEFAreasChanged += _settingsVM_DEFAreasChanged;
             _projectControlVM.ResultsStoragePathChanged += _projectControlVM_ResultsStoragePathChanged;
+            CoordsTableVM.SiteCoordsDefinitionChanged += _siteCoordsDefinitionChanged;
+        }
+
+        private void _siteCoordsDefinitionChanged(object sender, EventArgs e)
+        {
+            SiteMappingVM.AvailableSites = CoordsTableVM.SiteCoords;
+            SiteMappingVM.SignalCoordsMappingVM.SetupSignalMapping();
+            _settingsVM_DEFAreasChanged();
+        }
+
+        private void _signalMgr_UniqueMappingSignalChanged(object sender, EventArgs e)
+        {
+            SiteMappingVM.SignalCoordsMappingVM.SetupSignalMapping();
+        }
+
+        private void _settingsVM_DEFAreasChanged()
+        {
+            foreach (var dtr in SettingsVM.DetectorConfigure.DetectorList)
+            {
+                if (dtr is DEFDetectorViewModel)
+                {
+                    var thisdtr = dtr as DEFDetectorViewModel;
+                    SiteMappingVM.DEFAreaSiteMappingVM.SetupAreaMapping(thisdtr.UniqueAreas);
+                    thisdtr.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas;
+                    ResultsVM.ForcedOscillationResultsViewModel.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas.ToList();
+                    break;
+                }
+            }
         }
 
         private void _projectControlVM_ResultsStoragePathChanged(object sender, string e)
@@ -261,6 +293,10 @@ namespace BAWGUI.ViewModels
                         var config = new ReadConfigXml.ConfigFileReader(e.SelectedRun.Model.ConfigFilePath);
                         //clean up the signal manager
                         _signalMgr.cleanUp();
+                        //this constructor has to be before the _signalMgr.DistinctMappingSignal() call as this call invoke SiteMappingVM.SignalCoordsMappingVM.SetupSignalMapping()
+                        SiteMappingVM.SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, config.SignalSiteMappingConfig);
+                        //_signalMgr.DistinctMappingSignal(); // it calls SiteMappingVM.SignalCoordsMappingVM.SetupSignalMapping() inside itself
+                        SiteMappingVM.DEFAreaSiteMappingVM = new DEFAreaSiteSetupViewModel(CoordsTableVM.SiteCoords, config.DEFAreaMappingConfig);
                         //read input data files and generate all the signal objects from the data files and put them in the signal manager.
                         var readingDataSourceSuccess = _signalMgr.AddRawSignals(config.DataConfigure.ReaderProperty.InputFileInfos, config.DataConfigure.ReaderProperty.ExampleTime);
                         //pass signal manager into settings.
@@ -277,6 +313,7 @@ namespace BAWGUI.ViewModels
                             {
                                 SettingsVM.ReverseSignalPassedThroughNameTypeUnit();
                             }
+                            // force update of all the signal groups in settings
                             SettingsVM.CurrentTabIndex = cti;
                             SettingsVM.CurrentSelectedStep = null;
                             e.SelectedRun.Model.DataFileDirectories = new List<string>();
@@ -305,14 +342,26 @@ namespace BAWGUI.ViewModels
                                 }
                                 ModeMeterXmlWriter.CheckMMDirsStatus(e.SelectedRun.Model, modeMeters);
                             }
+                            //set up DEF area and detector signals on map
+                            foreach (var dtr in SettingsVM.DetectorConfigure.DetectorList)
+                            {
+                                if (dtr is DEFDetectorViewModel)
+                                {
+                                    var thisdtr = dtr as DEFDetectorViewModel;
+                                    SiteMappingVM.DEFAreaSiteMappingVM.SetupAreaMapping(thisdtr.UniqueAreas);
+                                    thisdtr.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas;
+                                    break;
+                                }
+                            }
                         }
                         else
                         {
+                            SettingsVM.DataConfigure = new DataConfig();
                             SettingsVM.DataConfigure.ReaderProperty = new ReaderProperties(config.DataConfigure.ReaderProperty, _signalMgr);
+                            SettingsVM.ProcessConfigure = new ProcessConfig();
+                            SettingsVM.PostProcessConfigure = new PostProcessCustomizationConfig();
+                            SettingsVM.DetectorConfigure = new DetectorConfig();
                         }
-                        var signalSiteMappingConfig = new SignalMappingPlotConfigReader(e.SelectedRun.Model.ConfigFilePath);
-                        _signalMgr.DistinctMappingSignal();
-                        SignalCoordsMappingVM = new SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, signalSiteMappingConfig.GetSignalCoordsMappingModel());
                     }
                     catch (Exception ex)
                     {
@@ -329,10 +378,15 @@ namespace BAWGUI.ViewModels
                 RunMatlabVM.Run = e.SelectedRun;
                 ResultsVM.Project = e.Model;
                 ResultsVM.Run = e.SelectedRun;
+                if (SiteMappingVM.DEFAreaSiteMappingVM.Areas.Count() != 0)
+                {
+                    ResultsVM.ForcedOscillationResultsViewModel.Areas = SiteMappingVM.DEFAreaSiteMappingVM.Areas.ToList();
+                }
             }
         }
         public CoordinatesTableViewModel CoordsTableVM { get; set; }
-        public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
+        public SiteMappingViewModel SiteMappingVM { get; set; }
+        //public SignalCoordsMappingViewModel SignalCoordsMappingVM { get; set; }
         //private void _checkMMDirsStatus(AWRunViewModel task, List<SmallSignalStabilityTool> modeMeters)
         //{
         //    var eventPath = task.Model.EventPath;

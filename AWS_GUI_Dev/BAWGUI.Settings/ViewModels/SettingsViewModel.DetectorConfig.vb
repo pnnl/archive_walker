@@ -4,6 +4,7 @@ Imports System.Windows
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
+Imports DissipationEnergyFlow.ViewModels
 Imports ModeMeter.ViewModels
 Imports VoltageStability.ViewModels
 
@@ -64,6 +65,13 @@ Namespace ViewModels
                     End If
                     newDetector = New SmallSignalStabilityToolViewModel(_signalMgr)
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
+                Case "Dissipation Energy Flow Detector"
+                    If _isDEFDetectorExist(DetectorConfigure.DetectorList) Then
+                        Forms.MessageBox.Show("Only one Dissipation Energy Flow Detector can be added!", "Error!", MessageBoxButtons.OK)
+                        Exit Sub
+                    Else
+                        newDetector = New DEFDetectorViewModel(_signalMgr)
+                    End If
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
@@ -89,6 +97,14 @@ Namespace ViewModels
         Private Function _isVoltageStabilityDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
             For Each dt In detectorList
                 If TypeOf dt Is VoltageStabilityDetectorViewModel Then
+                    Return True
+                End If
+            Next
+            Return False
+        End Function
+        Private Function _isDEFDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
+            For Each dt In detectorList
+                If TypeOf dt Is DEFDetectorViewModel Then
                     Return True
                 End If
             Next
@@ -337,7 +353,12 @@ Namespace ViewModels
                     'If obj Is CurrentSelectedStep Then
                     '    CurrentSelectedStep = Nothing
                     'Else
-                    DeSelectAllDetectors()
+                    'DeSelectAllDetectors()
+                    If obj.InputChannels.Count > 0 Then
+                        DeSelectAllDetectors()
+                    Else
+                        CurrentSelectedStep = Nothing
+                    End If
                     'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
@@ -407,10 +428,17 @@ Namespace ViewModels
                     For index = 1 To _signalMgr.GroupedSignalByDataWriterDetectorInput.Count
                         _signalMgr.GroupedSignalByDataWriterDetectorInput(index - 1).SignalSignature.SignalName = "Detector " & index.ToString & " " & DetectorConfigure.DataWriterDetectorList(index - 1).Name
                     Next
+                    If DetectorConfigure.DataWriterDetectorList.Count = 0 Then
+                        DetectorConfigure.AutoEventExporter.Flag = False
+                    End If
                     'If obj Is CurrentSelectedStep Then
                     '    CurrentSelectedStep = Nothing
                     'Else
-                    DeSelectAllDetectors()
+                    If obj.InputChannels.Count > 0 Then
+                        DeSelectAllDetectors()
+                    Else
+                        CurrentSelectedStep = Nothing
+                    End If
                     'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)

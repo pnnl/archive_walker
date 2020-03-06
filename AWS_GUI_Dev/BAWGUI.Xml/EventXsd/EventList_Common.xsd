@@ -52,6 +52,15 @@
                 </xs:sequence>
               </xs:complexType>
             </xs:element>
+            <xs:element maxOccurs="unbounded" name="Path">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="From" type="xs:string"/>
+                  <xs:element name="To" type="xs:string"/>
+                  <xs:element name="DEF" type="xs:float"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>

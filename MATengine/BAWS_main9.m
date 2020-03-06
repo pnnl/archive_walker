@@ -802,14 +802,23 @@ while(~min(done))
             % Go through the current PMU structure and keep only the
             % signals that are needed for the block detectors. This
             % prevents concatenating a bunch of signals that aren't needed
-            PMU = ReduceSignals(PMU,DetectorXML,BlockDetectors);
+            PMUred = ReduceSignals(PMU,DetectorXML,BlockDetectors);
             
             % PMUconcat holds enough data in memory to apply the FO
             % detection algorithms (SecondsToConcat).
             % Add the current PMU to PMUconcat.
-            PMUconcat = ConcatenatePMU(PMUconcat,PMU);
-            % Length of PMUconcat in seconds
-            PMUconcatLength = round((PMUconcat(1).Signal_Time.Signal_datenum(end)-PMUconcat(1).Signal_Time.Signal_datenum(1)+PMUconcat(1).Signal_Time.Signal_datenum(2)-PMUconcat(1).Signal_Time.Signal_datenum(1))*24*60*60);
+            PMUconcat = ConcatenatePMU(PMUconcat,PMUred);
+            if ~isempty(PMUconcat)
+                % Length of PMUconcat in seconds
+                PMUconcatLength = round((PMUconcat(1).Signal_Time.Signal_datenum(end)-PMUconcat(1).Signal_Time.Signal_datenum(1)+PMUconcat(1).Signal_Time.Signal_datenum(2)-PMUconcat(1).Signal_Time.Signal_datenum(1))*24*60*60);
+            else
+                % If reading from a database, SecondsToConcat != NaN even
+                % though block detectors may not be in use. This if
+                % statement prevents an error in the calculation of 
+                % PMUconcatLength and keeps the if
+                % statement below from executing.
+                PMUconcatLength = 0;
+            end
             % If PMUconcat has enough data (SecondsToConcat) to apply the
             % FO detection algorithms, continue. If not, skip detection and
             % continue with the loop.

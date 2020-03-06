@@ -29,6 +29,7 @@ namespace BAWGUI.ReadConfigXml
             _frequencyMin = "0.1";
             _frequencyMax = "15";
             _frequencyTolerance = "0.05";
+            _calcDEF = false;
         }
 
         private XElement _item;
@@ -114,6 +115,18 @@ namespace BAWGUI.ReadConfigXml
             if (par != null)
             {
                 FrequencyTolerance = par.Value;
+            }
+            par = _item.Element("CalcDEF");
+            if (par != null)
+            {
+                if (par.Value.ToUpper() == "TRUE")
+                {
+                    CalcDEF = true;
+                }
+                else
+                {
+                    CalcDEF = false;
+                }
             }
         }
 
@@ -258,6 +271,18 @@ namespace BAWGUI.ReadConfigXml
                 _frequencyTolerance = value;                
             }
         }
+        private bool _calcDEF;
+        public bool CalcDEF
+        {
+            get
+            {
+                return _calcDEF;
+            }
+            set
+            {
+                _calcDEF = value;
+            }
+        }
         public List<SignalSignatures> PMUElementList { get; set; }
     }
 
@@ -275,6 +300,7 @@ namespace BAWGUI.ReadConfigXml
             _frequencyMin = "0.1";
             _frequencyMax = "15";
             _frequencyTolerance = "0.05";
+            _calcDEF = false;
         }
 
         private XElement _item;
@@ -389,6 +415,18 @@ namespace BAWGUI.ReadConfigXml
             if (par != null)
             {
                 FrequencyTolerance = par.Value;
+            }
+            par = _item.Element("CalcDEF");
+            if (par != null)
+            {
+                if (par.Value.ToUpper() == "TRUE")
+                {
+                    CalcDEF = true;
+                }
+                else
+                {
+                    CalcDEF = false;
+                }
             }
         }
 
@@ -559,6 +597,18 @@ namespace BAWGUI.ReadConfigXml
             set
             {
                 _frequencyTolerance = value;                
+            }
+        }
+        private bool _calcDEF;
+        public bool CalcDEF
+        {
+            get
+            {
+                return _calcDEF;
+            }
+            set
+            {
+                _calcDEF = value;
             }
         }
         public List<SignalSignatures> PMUElementList { get; set; }
@@ -1523,4 +1573,67 @@ namespace BAWGUI.ReadConfigXml
         public string DeletePastDays { get; set; }
         public string ExportPath { get; set; }
     }
+
+    //    public class DissipationEnergyFlowDetectorModel
+    //    {
+    //        private XElement _item;
+    //        public DissipationEnergyFlowDetectorModel(XElement item)
+    //        {
+    //            this._item = item;
+    //            var paths = _item.Element("Paths");
+    //            if (paths != null)
+    //            {
+    //            }
+    //            var parameters = _item.Element("Parameters");
+    //            if (parameters != null)
+    //            {
+    //                var par = parameters.Element("LocMinLength");
+    //                if (par != null)
+    //                {
+    //                    try
+    //                    {
+    //                        LocMinLength = Int32.Parse(par.Value);
+    //                    }
+    //                    catch (Exception ex)
+    //                    {
+
+    //                        throw new Exception("Integer expected. Original error: " + ex.Message);
+    //                    }
+    //                }
+    //                par = parameters.Element("LocLengthStep");
+    //                if (par != null)
+    //                {
+    //                    try
+    //                    {
+    //                        LocLengthStep = Int32.Parse(par.Value);
+    //                    }
+    //                    catch (Exception ex)
+    //                    {
+
+    //                        throw new Exception("Integer expected. Original error: " + ex.Message);
+    //                    }
+    //                }
+    //                par = parameters.Element("LocRes");
+    //                if (par != null)
+    //                {
+    //                    try
+    //                    {
+    //                        LocRes = Int32.Parse(par.Value);
+    //                    }
+    //                    catch (Exception ex)
+    //                    {
+
+    //                        throw new Exception("Integer expected. Original error: " + ex.Message);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        public int LocMinLength { get; set; }
+    //        public int LocLengthStep { get; set; }
+    //        public int LocRes { get; set; }
+    //    }
+    //    public class EnergyFlowPath
+    //    {
+    //        public EnergyFlowAreaCoordsMappingModel FromArea { get; set; }
+    //    }
 }

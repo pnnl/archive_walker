@@ -102,7 +102,7 @@ if (~isempty(SigIdxDend)) && (~isempty(SigIdxDisor))
         % dividend
         SignalType = SignalTypeDend;
         SignalUnit = SignalUnitDend;
-    elseif strcmp(SignalTypeDend,SignalTypeDisor)
+    elseif strcmp(SignalUnitDend,SignalUnitDisor)
         % If units are the same, the result is a scalar
         SignalType = 'SC';
         SignalUnit = 'SC';

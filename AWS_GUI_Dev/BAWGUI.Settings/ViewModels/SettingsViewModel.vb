@@ -13,6 +13,8 @@ Imports VoltageStability.ViewModels
 Imports ModeMeter.ViewModels
 Imports VoltageStability.Models
 Imports ModeMeter.Models
+Imports DissipationEnergyFlow.ViewModels
+Imports BAWGUI.CoordinateMapping.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -88,6 +90,7 @@ Namespace ViewModels
 
             '_inputFileDirTree = New ObservableCollection(Of Folder)
             _signalMgr = SignalManager.Instance
+            _signalMgr.cleanUp()
 
             '_allPMUs = New ObservableCollection(Of String)
 
@@ -735,6 +738,9 @@ Namespace ViewModels
         '    Return pmuSignalTreeGroupedBySamplingRate
         'End Function
 
+        Private _powerTypeDictionary As Dictionary(Of String, String)
+        Private _lastCustPMUname As String
+
         Private _lastInputFolderLocation As String
         Private _browseInputFileDir As ICommand
         Public Property BrowseInputFileDir As ICommand
@@ -940,8 +946,9 @@ Namespace ViewModels
                             Next
                             ModeMeterXmlWriter.CheckMMDirsStatus(Run.Model, modeMeters)
                         End If
-
-
+                        _signalMgr.DistinctMappingSignal()
+                        'SiteMappingVM.SignalCoordsMappingVM = New SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, config.SignalSiteMappingConfig);
+                        RaiseEvent DEFAreasChanged()
                     Catch ex As Exception
                         Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
@@ -1402,6 +1409,12 @@ Namespace ViewModels
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error changing mode meter signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                         End Try
+                    ElseIf TypeOf _currentSelectedStep Is DEFDetectorViewModel Then
+                        Try
+                            _currentSelectedStep.ChangeSignalSelection(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing dissipation energy flow detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try
                             _changeSignalSelection(obj)
@@ -1660,6 +1673,7 @@ Namespace ViewModels
 
         Private Sub _checkMultiplicationCustomizationOutputTypeAndSamplingRate()
             Dim type = ""
+            Dim unit = ""
             Dim countNonScalarType = 0
             Dim rate = -1
             For Each signal In CurrentSelectedStep.InputChannels
@@ -1667,6 +1681,9 @@ Namespace ViewModels
                     countNonScalarType += 1
                     If String.IsNullOrEmpty(type) Then
                         type = signal.TypeAbbreviation
+                    End If
+                    If String.IsNullOrEmpty(unit) Then
+                        unit = signal.Unit
                     End If
                 End If
                 If rate = -1 Then
@@ -1680,10 +1697,13 @@ Namespace ViewModels
             Next
             If countNonScalarType = 0 Then
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "SC"
+                CurrentSelectedStep.OutputChannels(0).Unit = "SC"
             ElseIf countNonScalarType = 1 Then
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = type
+                CurrentSelectedStep.OutputChannels(0).Unit = unit
             Else
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
             End If
             If rate <> -1 Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = rate
@@ -1691,22 +1711,31 @@ Namespace ViewModels
         End Sub
 
         Private Sub _checkDivisionCustomizationOutputTypeAndSamplingRate()
-            CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-            If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
-                If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
-                    If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
-                        If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
-                            _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                            Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                        End If
-                    End If
-                End If
-            End If
-            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
+            'If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
+            '    If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
+            '        If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
+            '            If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
+            '                _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+            '                Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+            '            End If
+            '        End If
+            '    End If
+            'End If
+            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.Unit IsNot Nothing AndAlso CurrentSelectedStep.Dividend.Unit IsNot Nothing AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
+                If CurrentSelectedStep.Divisor.TypeAbbreviation = "SC" Then
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = CurrentSelectedStep.Dividend.TypeAbbreviation
+                    CurrentSelectedStep.OutputChannels(0).Unit = CurrentSelectedStep.Dividend.Unit
+                ElseIf CurrentSelectedStep.Divisor.Unit = CurrentSelectedStep.Dividend.Unit Then
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "SC"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "SC"
+                Else
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
+                End If
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                _addLog("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
+                _addLog("Dividend and Divisor have to have units and their sampling rate should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
                 Throw New Exception("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
             End If
         End Sub
@@ -2663,6 +2692,7 @@ Namespace ViewModels
                         Dim newOutput = obj.SignalSignature
                         If _currentSelectedStep.UseCustomPMU Then
                             newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                            newOutput.Unit = obj.SignalSignature.Unit
                             'newOutput.PMUName = _currentSelectedStep.CustPMUname
                             newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         Else
@@ -4680,6 +4710,7 @@ Namespace ViewModels
                     If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
                         '_groupAllPostProcessConfigOutputSignal()
                         DeSelectAllDetectors()
+                        _updateDEFAreas()
                     End If
                     If _oldTabIndex = 5 And _currentTabIndex <> 5 Then
                         '_groupAllPostProcessConfigOutputSignal()
@@ -4720,8 +4751,11 @@ Namespace ViewModels
                         End If
                     End If
 
-                    If _currentTabIndex = 5 Then
+                    'tab index 6 is the coordinate setup setting. no signal selection needed, but need to get unique detector signals and DEF areas.
+                    If _currentTabIndex = 6 Then
                         _signalMgr.DistinctMappingSignal()
+                        'find all distinct areas used in DEF detecotr
+                        '_updateDEFAreas()
                     End If
                 Catch ex As Exception
                     _addLog(ex.Message)
@@ -4735,6 +4769,47 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Private Sub _updateDEFAreas()
+            For Each dtr In DetectorConfigure.DetectorList
+                If TypeOf (dtr) Is DEFDetectorViewModel Then
+                    Dim detector As DEFDetectorViewModel = dtr
+                    Dim addedNewArea = False
+                    Dim newAreaList = New List(Of String)
+                    For Each pth In detector.Paths
+                        If String.IsNullOrEmpty(pth.FromArea) Then
+                            Forms.MessageBox.Show("From Area in the path of Dissipation Energy Flow detector is required. If left empty, will result in MATLAB calculation error.", "Error!", MessageBoxButtons.OK)
+                        Else
+                            If Not detector.UniqueAreas.Contains(pth.FromArea) AndAlso Not addedNewArea Then
+                                addedNewArea = True
+                            End If
+                            If Not newAreaList.Contains(pth.FromArea) Then
+                                newAreaList.Add(pth.FromArea)
+                            End If
+                        End If
+                        'If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not newAreaList.Contains(pth.FromArea) Then
+                        '    newAreaList.Add(pth.FromArea)
+                        'Else
+
+                        'End If
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not detector.UniqueAreas.Contains(pth.ToArea) And Not addedNewArea Then
+                            addedNewArea = True
+                        End If
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not newAreaList.Contains(pth.ToArea) Then
+                            newAreaList.Add(pth.ToArea)
+                        End If
+                    Next
+                    If addedNewArea OrElse newAreaList.Count <> detector.UniqueAreas.Count Then
+                        detector.UniqueAreas = newAreaList
+                        RaiseEvent DEFAreasChanged()
+                    End If
+                    Exit For
+                End If
+            Next
+        End Sub
+
+        Public Event DEFAreasChanged()
+
         ''' <summary>
         ''' if signal type has been changed in the prosessing tab, need to re-group them by type
         ''' </summary>
@@ -4742,7 +4817,8 @@ Namespace ViewModels
             SignalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             For Each info In SignalMgr.FileInfo
                 If info.TaggedSignals.Count > 0 Then
-                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    'Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory + ", " + info.Mnemonic + ", Sampling Rate: " + info.SamplingRate.ToString + "/Second"))
                     b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
                     SignalMgr.ReGroupedRawSignalsByType.Add(b)
                 End If

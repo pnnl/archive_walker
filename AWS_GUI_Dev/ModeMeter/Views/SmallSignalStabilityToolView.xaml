@@ -24,69 +24,72 @@
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DetectorSelected}" CommandParameter="{Binding}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        <Grid Margin="2">
-            <Expander IsExpanded="{Binding IsExpanded}">
-                <Expander.Header>
-                    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
-                        <TextBlock VerticalAlignment="Center">
-                            <TextBlock.Text>
-                                <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
-                                    <Binding/>
-                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
-                            <Image Width="16" Height="16" Source="/ModeMeter;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                        </Button>
-                    </DockPanel>
-                </Expander.Header>
-                <ScrollViewer HorizontalScrollBarVisibility="Visible" CanContentScroll="True" VerticalScrollBarVisibility="Visible"  MaxHeight="300">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
-                            <Label Content="Mode Meter Name: "/>
-                            <TextBox Text="{Binding ModeMeterName}" Margin="2" MinWidth="100"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="2">
-                            <Label Content="Oscillation Baselining Signal Selection:"/>
-                            <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}" GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseLeftButtonDown">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.BaseliningSignalBoxSelected}" CommandParameter="{Binding}"/>
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="GotFocus">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.BaseliningSignalBoxSelected}" CommandParameter="{Binding}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </coreview:FilterListBox>
-                        </StackPanel>
-                        <Button Margin="2" Command="{Binding AddAMode}" Content="Add Mode of Interest" Grid.Row="2" Width="200" HorizontalAlignment="Left"/>
-                        <ItemsControl ItemsSource="{Binding Modes}" Margin="2" Grid.Row="3">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Expander>
-                                        <Expander.Header>
-                                            <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
-                                                <TextBlock VerticalAlignment="Center" Text="{Binding ModeName, StringFormat=Mode: {0}}"/>
-                                                <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.DeleteAMode}" CommandParameter="{Binding}">
-                                                    <Image Width="16" Height="16" Source="/ModeMeter;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
-                                                </Button>
-                                            </DockPanel>
-                                        </Expander.Header>
-                                        <local:ModeView/>
-                                    </Expander>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Grid>
-                </ScrollViewer>
-            </Expander>
-        </Grid>
+        <Expander IsExpanded="{Binding IsExpanded}" Margin="2">
+            <Expander.Header>
+                <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
+                    <TextBlock VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource DetectorExpanderHeaderConverter}">
+                                <Binding/>
+                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.DeleteDetector}" CommandParameter="{Binding}">
+                        <Image Width="16" Height="16" Source="/ModeMeter;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                    </Button>
+                </DockPanel>
+            </Expander.Header>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Auto" MaxHeight="300">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
+                        <Label Content="Mode Meter Name: " Width="150"/>
+                        <TextBox Text="{Binding ModeMeterName}" Margin="2" MinWidth="100"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="2">
+                        <Label Content="Calculate Energy Flow: " Width="150"/>
+                        <CheckBox IsChecked="{Binding CalcDEF}" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
+                        <Label Content="Oscillation Baselining Signal Selection:"/>
+                        <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}" GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.BaseliningSignalBoxSelected}" CommandParameter="{Binding}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.BaseliningSignalBoxSelected}" CommandParameter="{Binding}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </coreview:FilterListBox>
+                    </StackPanel>
+                    <Button Margin="2" Command="{Binding AddAMode}" Content="Add Mode of Interest" Grid.Row="3" Width="200" HorizontalAlignment="Left"/>
+                    <ItemsControl ItemsSource="{Binding Modes}" Margin="2" Grid.Row="4">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Expander>
+                                    <Expander.Header>
+                                        <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding ModeName, StringFormat=Mode: {0}}"/>
+                                            <Button DockPanel.Dock="Right" Margin="0,0,30,0" Width="24" Height="24" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.DeleteAMode}" CommandParameter="{Binding}">
+                                                <Image Width="16" Height="16" Source="/ModeMeter;component/MyResources/RemoveCommand_16x.png" HorizontalAlignment="Center"/>
+                                            </Button>
+                                        </DockPanel>
+                                    </Expander.Header>
+                                    <local:ModeView/>
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ScrollViewer>
+        </Expander>
     </Border>
 </UserControl>

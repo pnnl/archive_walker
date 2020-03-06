@@ -1,23 +1,18 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.Core.ViewModels;
-using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.MATLABRunResults.Models;
-using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using JSISCSVWriter;
 using OxyPlot;
 using OxyPlot.Axes;
-using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -1334,7 +1329,8 @@ namespace BAWGUI.SignalManagement.ViewModels
                 newSignalList.Add(signal);
             }
             fileInfo.TaggedSignals = newSignalList;
-            var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
+            //var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
+            var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", " + fileInfo.Mnemonic + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
             newSig.SamplingRate = fileInfo.SamplingRate;
             var a = new SignalTypeHierachy(newSig);
             a.SignalList = SortSignalByPMU(newSignalList);
@@ -3172,7 +3168,16 @@ namespace BAWGUI.SignalManagement.ViewModels
         /// <summary>
         /// signals that are selected by forced oscillation and voltage magnitude in voltage stability need to be marked on map
         /// </summary>
-        public ObservableCollection<SignalSignatureViewModel> MappingSignals { get; set; }
+        private ObservableCollection<SignalSignatureViewModel> _mappingSignals;
+        public ObservableCollection<SignalSignatureViewModel> MappingSignals 
+        {
+            get { return _mappingSignals; }
+            set 
+            { 
+                _mappingSignals = value;
+                UniqueMappingSignals = new ObservableCollection<SignalSignatureViewModel>(MappingSignals.Distinct());
+            } 
+        }
         private ObservableCollection<SignalSignatureViewModel> _uniqueMappingSignals;
         public ObservableCollection<SignalSignatureViewModel> UniqueMappingSignals
         {
@@ -3187,6 +3192,12 @@ namespace BAWGUI.SignalManagement.ViewModels
         public void DistinctMappingSignal()
         {
             UniqueMappingSignals = new ObservableCollection<SignalSignatureViewModel>(MappingSignals.Distinct());
+            OnUniqueMappingSignalChanged(EventArgs.Empty);
+        }
+        public event EventHandler UniqueMappingSignalChanged;
+        protected virtual void OnUniqueMappingSignalChanged(EventArgs e)
+        {
+            UniqueMappingSignalChanged?.Invoke(this, e);
         }
     }
 }
