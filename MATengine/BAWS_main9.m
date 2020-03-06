@@ -667,20 +667,32 @@ while(~min(done))
         end
         LastShortcutOverEmpty = ShortcutOverEmpty;
         
-        if strcmp(RunMode,'Normal') && ~exist([InitializationPath '\PMUtemplate.mat'],'file')
-            % Files from each directory have been loaded, the tool is in
-            % normal mode, and PMUtemplate.mat does not yet exist. Save
-            % PMUbyFile, which contains examples of each file to a mat file
-            % called PMUtemplate.mat. It is used in rerun mode if a file in
-            % a directory is missing. First, set all of its entries to NaN.
-            for DirIdx = 1:length(PMUbyFile)
-                for pmuIdx = 1:length(PMUbyFile{DirIdx})
-                    PMUbyFile{DirIdx}(pmuIdx).Flag(:) = 1;
-                    PMUbyFile{DirIdx}(pmuIdx).Data(:) = NaN;
-                    PMUbyFile{DirIdx}(pmuIdx).Stat(:) = NaN;
+        if strcmp(RunMode,'Normal')
+            if ~exist([InitializationPath '\PMUtemplate.mat'],'file')
+                % Files from each directory have been loaded, the tool is in
+                % normal mode, and PMUtemplate.mat does not yet exist. Save
+                % PMUbyFile, which contains examples of each file to a mat file
+                % called PMUtemplate.mat. It is used in rerun mode if a file in
+                % a directory is missing. First, set all of its entries to NaN.
+                for DirIdx = 1:length(PMUbyFile)
+                    for pmuIdx = 1:length(PMUbyFile{DirIdx})
+                        PMUbyFile{DirIdx}(pmuIdx).Flag(:) = 1;
+                        PMUbyFile{DirIdx}(pmuIdx).Data(:) = NaN;
+                        PMUbyFile{DirIdx}(pmuIdx).Stat(:) = NaN;
+                    end
                 end
+                save([InitializationPath '\PMUtemplate.mat'], 'PMUbyFile');
             end
-            save([InitializationPath '\PMUtemplate.mat'], 'PMUbyFile');
+            
+            % Write an empty CSV file to tell the GUI where processing is
+            % at
+            S = dir(fullfile([ControlPath '\Progress*']));
+            if length(S) == 1
+                delete(fullfile(S.folder,S.name))
+            end
+            if exist(ControlPath,'dir') == 7
+                csvwrite([ControlPath '\Progress_' datestr(FileInfo(1).tPMU(1),'yyyy_mm_dd_HH_MM') '.csv'],[]);
+            end
         elseif strcmp(RunMode,'Rerun')
             FileProgress = round((FileInfo(1).tPMU(end)-datenum(DataInfo.DateTimeStart))/(datenum(DataInfo.DateTimeEnd)-datenum(DataInfo.DateTimeStart))*100);
             if FileProgress > 100
