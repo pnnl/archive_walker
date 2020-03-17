@@ -2,7 +2,7 @@
 % XML information. It turns strings into numbers as necessary and sets
 % default values for parameters that were not specified.
 
-function ExtractedParameters = ExtractModeMeterParams(Parameters,fs)
+function ExtractedParameters = ExtractModeMeterParams(Parameters,fs,fsFOdet,fsEVENTdet)
 
 % Number of samples to use in the analysis
 if isfield(Parameters,'ResultPathFinal')
@@ -120,15 +120,17 @@ if isfield(Parameters,'Mode')
                 % Set te analysis length for the detector equal to the
                 % length of the mode meter analysis window
                 TempXML.FOdetectorParam.AnalysisLength = num2str(round(AnalysisLength/fs{ModeIdx}));
-                FOdetector = ExtractFOdetectionParamsPer(TempXML.FOdetectorParam,fs{ModeIdx});
+                FOdetector = ExtractFOdetectionParamsPer(TempXML.FOdetectorParam,fsFOdet{ModeIdx});
+                
+                FOdetector.PMU = TempXML.FOdetectorParam.PMU;
                 
                 if isfield(TempXML,'FOtimeLocParam')
                     % Retrieve time localization parameters
-                    TimeLocParams = ExtractFOtimeLocParameters(TempXML.FOtimeLocParam,fs{ModeIdx});
+                    TimeLocParams = ExtractFOtimeLocParameters(TempXML.FOtimeLocParam,fsFOdet{ModeIdx});
                 else
                     % Pass an empty structure to return parameters with
                     % time localization disabled.
-                    TimeLocParams = ExtractFOtimeLocParameters(struct(),fs{ModeIdx});
+                    TimeLocParams = ExtractFOtimeLocParameters(struct(),fsFOdet{ModeIdx});
                 end
             else
                 % FO detector is not desired. Setting the configuration
@@ -137,7 +139,7 @@ if isfield(Parameters,'Mode')
                 FOdetector = [];
                 % No need for time localization. Pass an empty structure to
                 % return parameters with time localization disabled.
-                TimeLocParams = ExtractFOtimeLocParameters(struct(),fs{ModeIdx});
+                TimeLocParams = ExtractFOtimeLocParameters(struct(),fsFOdet{ModeIdx});
             end
             
             % Event detection parameters
@@ -147,36 +149,36 @@ if isfield(Parameters,'Mode')
                 % Length for RMS calculation
                 if isfield(EventParamExtrXML,'RMSlength')
                     % Use specified length
-                    RMSlength = str2double(EventParamExtrXML.RMSlength)*fs{ModeIdx};
+                    RMSlength = str2double(EventParamExtrXML.RMSlength)*fsEVENTdet{ModeIdx};
 
                     if isnan(RMSlength)
                         % str2double sets the value to NaN when it can't make it a number
                         warning('RMSlength is not a number. Default of 8 will be used.');
-                        RMSlength = 8*fs{ModeIdx};
+                        RMSlength = 8*fsEVENTdet{ModeIdx};
                     end
                 else
                     % Use default length
-                    RMSlength = 8*fs{ModeIdx};
+                    RMSlength = 8*fsEVENTdet{ModeIdx};
                 end
 
                 % Forgetting factor for threshold
                 if isfield(EventParamExtrXML,'RMSmedianFilterTime')
                     % Use specified filter order, converted to samples from time
-                    RMSmedianFilterOrder = round(str2double(EventParamExtrXML.RMSmedianFilterTime)*fs{ModeIdx});
+                    RMSmedianFilterOrder = round(str2double(EventParamExtrXML.RMSmedianFilterTime)*fsEVENTdet{ModeIdx});
 
                     if isnan(RMSmedianFilterOrder)
                         % str2double sets the value to NaN when it can't make it a number
                         warning('RMSmedianFilterTime is not a number. Default of 120 seconds will be used.');
-                        RMSmedianFilterOrder = 120*fs{ModeIdx};
+                        RMSmedianFilterOrder = 120*fsEVENTdet{ModeIdx};
                     end
 
                     if (RMSmedianFilterOrder<=0)
                         warning('RMSmedianFilterTime must be positive. Default of 120 seconds will be used.');
-                        RMSmedianFilterOrder = 120*fs{ModeIdx};
+                        RMSmedianFilterOrder = 120*fsEVENTdet{ModeIdx};
                     end
                 else
                     % Use default filter time
-                    RMSmedianFilterOrder = 120*fs{ModeIdx};
+                    RMSmedianFilterOrder = 120*fsEVENTdet{ModeIdx};
                 end
                 % Ensure that the median filter order is odd
                 if mod(RMSmedianFilterOrder,2) == 0
@@ -206,7 +208,7 @@ if isfield(Parameters,'Mode')
                 % Minimum analysis window length
                 if isfield(EventParamExtrXML,'MinAnalysisLength')
                     % Use specified value
-                    N2 = str2double(EventParamExtrXML.MinAnalysisLength)*fs{ModeIdx};
+                    N2 = str2double(EventParamExtrXML.MinAnalysisLength)*fsEVENTdet{ModeIdx};
 
                     if isnan(N2)
                         % str2double sets the value to NaN when it can't make it a number
@@ -265,10 +267,20 @@ if isfield(Parameters,'Mode')
                     % Use default value (do ot adjust window)
                     PostEventWinAdj = 'FALSE';
                 end
+                
+                % RMS-energy signals used to detect disturbances
+                if isfield(EventParamExtrXML,'PMU')
+                    % Use specified signals
+                    EventDetPMU = EventParamExtrXML.PMU;
+                else
+                    % Throw error
+                    error('RMS-energy signals must be specified for the mode meter event detector.');
+                end
 
                 EventDetector = struct('RingThresholdScale',RingThresholdScale,...
                     'RMSlength',RMSlength,'RMSmedianFilterOrder',RMSmedianFilterOrder,...
-                    'N2',N2,'lam1',lam1,'lam2',lam2,'PostEventWinAdj',PostEventWinAdj);
+                    'N2',N2,'lam1',lam1,'lam2',lam2,'PostEventWinAdj',PostEventWinAdj,...
+                    'PMU',EventDetPMU);
             else
                 EventDetector = struct([]);
             end
@@ -279,7 +291,7 @@ if isfield(Parameters,'Mode')
             FOdetector = [];
             MethodName = [];
             AlgorithmSpecificParameters = [];
-            TimeLocParams = ExtractFOtimeLocParameters(struct(),fs);
+            TimeLocParams = ExtractFOtimeLocParameters(struct(),fsFOdet{ModeIdx});
         end
         ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,...
             'AnalysisLength',AnalysisLength,'RetConTrackingStatus',RetConTrackingStatus,'MaxRetConLength',MaxRetConLength,...

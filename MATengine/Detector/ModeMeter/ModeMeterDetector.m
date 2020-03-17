@@ -29,6 +29,11 @@ if NumMode==1
     Parameters.Mode = {Parameters.Mode};
 end
 
+DataFOdet = cell(1,NumMode);
+fsFOdet = cell(1,NumMode);
+DataEVENTdet = cell(1,NumMode);
+fsEVENTdet = cell(1,NumMode);
+
 try
     for ModeIdx = 1:NumMode
         [Data{ModeIdx}, DataPMU{ModeIdx}, DataChannel{ModeIdx}, DataType{ModeIdx}, DataUnit{ModeIdx}, ~, fs{ModeIdx}, TimeString{ModeIdx}] = ExtractData(PMUstruct,Parameters.Mode{ModeIdx});
@@ -36,6 +41,17 @@ try
         AnalysisLength = str2double(Parameters.Mode{ModeIdx}.AnalysisLength)*fs{ModeIdx};
         Data{ModeIdx} = Data{ModeIdx}(end-AnalysisLength+1:end,:);
         TimeString{ModeIdx} = TimeString{ModeIdx}(end-AnalysisLength+1:end);
+        
+        
+        if isfield(Parameters.Mode{ModeIdx}.FOdetectorParam,'PMU')
+            [DataFOdet{ModeIdx}, ~, ~, ~, ~, ~, fsFOdet{ModeIdx}, ~] = ExtractData(PMUstruct,Parameters.Mode{ModeIdx}.FOdetectorParam);
+        end
+        if isfield(Parameters.Mode{ModeIdx}.EventDetectorParam,'PMU')
+            [DataEVENTdet{ModeIdx}, ~, ~, ~, ~, ~, fsEVENTdet{ModeIdx}, ~] = ExtractData(PMUstruct,Parameters.Mode{ModeIdx}.EventDetectorParam);
+            if fs{ModeIdx} ~= fsEVENTdet{ModeIdx}
+                error('Sample rate of input to mode meter must match input to transient event detection for the mode meter.');
+            end
+        end
     end
 catch
     warning('Input data for the mode-meter could not be used.');
@@ -47,7 +63,7 @@ catch
 end
 DetectionResults = struct([]);
 AdditionalOutput = struct([]);
-ExtractedParametersAll = ExtractModeMeterParams(Parameters,fs);
+ExtractedParametersAll = ExtractModeMeterParams(Parameters,fs,fsFOdet,fsEVENTdet);
 AdditionalOutput(1).OperatingValues = [];
 
 if isempty(PastAdditionalOutput)
@@ -127,20 +143,21 @@ for ModeIdx = 1:NumMode
             TimeLoc = [];
         else
             % Run FO detection algorithm
-            FOfreq = FOdetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fs{ModeIdx});
+            FOfreq = FOdetectionForModeMeter(DataFOdet{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fsFOdet{ModeIdx});
 
-            TimeLoc = RunTimeLocalization(Data{ModeIdx}(:,ChanIdx),FOfreq,Parameters,fs{ModeIdx});
+            TimeLoc = RunTimeLocalization(DataFOdet{ModeIdx}(:,ChanIdx),FOfreq,ExtractedParameters.TimeLocParams,fsFOdet{ModeIdx});
+            error('you have not converted from sample rate of detection signal to sample rate of MM signa.');
         end
 
         % High-energy event detection
         if ~isempty(ExtractedParameters.EventDetectorPara)
             % Run event detection algorithm
             AdditionalOutput(ModeIdx).EventDet{ChanIdx} = ...
-                EventDetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),ExtractedParameters.EventDetectorPara,Parameters.ResultUpdateInterval,fs{ModeIdx},PastAdditionalOutput(ModeIdx).EventDet{ChanIdx});
+                EventDetectionForModeMeter(DataEVENTdet{ModeIdx}(:,ChanIdx),ExtractedParameters.EventDetectorPara,Parameters.ResultUpdateInterval,fsEVENTdet{ModeIdx},PastAdditionalOutput(ModeIdx).EventDet{ChanIdx});
 
             win = AdditionalOutput(ModeIdx).EventDet{ChanIdx}.win;
         else
-            win = ones(size(Data{ModeIdx}(:,ChanIdx)));
+            win = ones(size(DataEVENTdet{ModeIdx}(:,ChanIdx)));
         end
 
         for MethodIdx = 1:NumMethods(ModeIdx)

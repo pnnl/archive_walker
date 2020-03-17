@@ -36,6 +36,17 @@ for DetectorType = BlockDetectors
                     [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.Mode{ModeIdx});
                     PMUlist = [PMUlist PMUlistTemp];
                     ChanList = [ChanList ChanListTemp];
+                    
+                    if isfield(Parameters.Mode{ModeIdx},'FOdetectorParam')
+                        [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.Mode{ModeIdx}.FOdetectorParam);
+                        PMUlist = [PMUlist PMUlistTemp];
+                        ChanList = [ChanList ChanListTemp];
+                    end
+                    if isfield(Parameters.Mode{ModeIdx},'EventDetectorParam')
+                        [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.Mode{ModeIdx}.EventDetectorParam);
+                        PMUlist = [PMUlist PMUlistTemp];
+                        ChanList = [ChanList ChanListTemp];
+                    end
                 end
                 if isfield(Parameters,'BaseliningSignals')
                     [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.BaseliningSignals);
