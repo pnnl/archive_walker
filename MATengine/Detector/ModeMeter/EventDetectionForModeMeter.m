@@ -1,79 +1,38 @@
-function AdditionalOutput = EventDetectionForModeMeter(Data,Parameters,ResultUpdateInterval,fs,PastAdditionalOutput)
+function AdditionalOutput = EventDetectionForModeMeter(RMS,Parameters,ResultUpdateInterval,fs,PastAdditionalOutput)
 
 %% Store detector parameters in variables for easier access
-RMSlength = Parameters.RMSlength;
-RMSmedianFilterOrder = Parameters.RMSmedianFilterOrder;
-RingThresholdScale = Parameters.RingThresholdScale;
-
+Threshold = Parameters.Threshold;
 lam1 = Parameters.lam1;
 lam2 = Parameters.lam2;
 N2 = Parameters.N2;
 PostEventWinAdj = Parameters.PostEventWinAdj;
 
 % Analysis length
-N1 = size(Data,1);
+N1 = size(RMS,1);
 
 %% RMS energy based detector
 
 ResultUpdateInterval = ResultUpdateInterval*fs;
 
-AdditionalOutput = struct('threshold',[],'RMS',[],'RMShist',[],'FilterConditions',[],'EventIndicator',[]);
-
-Data2 = Data.^2;
+AdditionalOutput = struct('RMSlength',[],'EventIndicator',[],'win',[],'Eadditional',[]);
 
 if isempty(PastAdditionalOutput)
-    % PastAdditionalOutput isn't available
-    % Get initial conditions by filtering data with a constant 
-    % value equal to the first sample of Data.
-    [~, InitConditions] = filter(ones(1,RMSlength)/RMSlength,1,Data2(1)*ones(ceil(RMSlength/2),1));
+    [~,bLP] = DesignRMSfilters('Band 2',fs);
+    RMSlength = length(bLP);
+    AdditionalOutput.RMSlength = RMSlength;
     
     % Initialize the event indicator 
     EventIndicator = zeros(1,N1);
 else
     % Initial conditions are available
-    InitConditions = PastAdditionalOutput.FilterConditions;
+    RMSlength = PastAdditionalOutput.RMSlength;
+    AdditionalOutput.RMSlength = RMSlength;
     % Only process the newly available measurements
-    Data2 = Data2(end-ResultUpdateInterval+1:end);
+    RMS = RMS(end-ResultUpdateInterval+1:end);
     % Retrieve the event indicator from the previous call
     EventIndicator = PastAdditionalOutput.EventIndicator;
-    % Update to correspond to the new data
-%     EventIndicator = [EventIndicator(end-ResultUpdateInterval+1:end) zeros(1,ResultUpdateInterval)];
 end
 
-[RMS, AdditionalOutput.FilterConditions] = filter(ones(1,RMSlength)/RMSlength,1,Data2,InitConditions);
-RMS = sqrt(RMS);
-
-if isempty(PastAdditionalOutput)
-    % PastAdditionalOutput isn't available
-
-    % Apply median filter to RMS to establish the threshold
-    RMSmed = medfilt1(RMS,RMSmedianFilterOrder,'truncate');
-    % Remove samples at the end to make the median filter causal
-    % It needs to be causal for continuity when new samples are added in
-    % the future.
-    RMSmed = [nan((RMSmedianFilterOrder-1)/2,1); RMSmed(1:end-(RMSmedianFilterOrder-1)/2)];
-
-    % Store the RMS for use the next time the function is called
-    AdditionalOutput.RMShist = RMS;
-else
-    % PastAdditionalOutput is available
-
-    % Add previous RMS values to the front end to make the median
-    % filter continuous
-    RMSmed = medfilt1([PastAdditionalOutput.RMShist(end-RMSmedianFilterOrder+2:end); RMS],RMSmedianFilterOrder);
-    % Remove extra samples, making the filter causal.
-    % It needs to be causal for continuity when new samples are added in
-    % the future.
-    RMSmed = RMSmed((RMSmedianFilterOrder+1)/2:end-(RMSmedianFilterOrder-1)/2);
-
-    % Replace the RMS values in PastAdditionalOutput for next time
-    AdditionalOutput.RMShist = [PastAdditionalOutput.RMShist(length(RMS)+1:end); RMS];
-end
-
-RMShist = AdditionalOutput.RMShist;
-
-% Calculate the threshold
-Threshold = RMSmed*RingThresholdScale;
 % Perform detection by comparing RMS to Threshold
 DetLgc = RMS > Threshold;
 

@@ -4,23 +4,16 @@
 
 function ExtractedParameters = ExtractModeMeterParams(Parameters,fs,fsFOdet,fsEVENTdet)
 
-% Number of samples to use in the analysis
+% Folder where results are to be stored. This parameter is created in
+% InitializeBAWS from the ResultPath parameter that is in the config file.
 if isfield(Parameters,'ResultPathFinal')
     % Use specified value
-    ResultPathFinal =Parameters.ResultPathFinal;
+    ResultPathFinal = Parameters.ResultPathFinal;
+else
+    error('The path for results is not specified for the Mode Meter. This should be done automatically by the GUI.');
 end
 
 if isfield(Parameters,'Mode')
-    % Find the number of separate instances of this detector type.
-    %     ModeName = cell(1,length(Parameters.Mode));
-    %     AnalysisLength = ones(1,length(Parameters.Mode));
-    %     DampRatioThreshold = .05*ones(1,length(Parameters.Mode)); %default value
-    %     RetConTrackingStatus = cell(1,length(Parameters.Mode));
-    %     MaxRetConLength = NaN(1,length(Parameters.Mode));
-    %     DesiredModes = cell(1,length(Parameters.Mode));
-    %AlgSpecificParameters = cell(1,length(Parameters.Mode));
-    %     FOdetector = cell(1,length(Parameters.Mode));
-    %     MethodName = cell(1,length(Parameters.Mode));
     ExtractedParameters = cell(1,length(Parameters.Mode)); 
     for ModeIdx = 1:length(Parameters.Mode)
         ModeName = Parameters.Mode{ModeIdx}.Name;
@@ -56,9 +49,8 @@ if isfield(Parameters,'Mode')
         if isfield(TempXML,'DesiredModes')
             % Desired mode parameters: min freq, max freq, freq estimate, max damp
             DesiredModes = [str2double(TempXML.DesiredModes.LowF) str2double(TempXML.DesiredModes.HighF) str2double(TempXML.DesiredModes.GuessF) str2double(TempXML.DesiredModes.DampMax)];
-            %         else
-            %             warning('Please enter parameters required for selecting the mode of interest');
-            %DesiredModes = [];
+        else
+            error('The mode parameters must be specified.');
         end
         FOdetectorParaFlag  = 0;
         if isfield(TempXML,'AlgNames')
@@ -146,65 +138,6 @@ if isfield(Parameters,'Mode')
             if isfield(TempXML,'EventDetectorParam')
                 EventParamExtrXML = TempXML.EventDetectorParam;
                 
-                % Length for RMS calculation
-                if isfield(EventParamExtrXML,'RMSlength')
-                    % Use specified length
-                    RMSlength = str2double(EventParamExtrXML.RMSlength)*fsEVENTdet{ModeIdx};
-
-                    if isnan(RMSlength)
-                        % str2double sets the value to NaN when it can't make it a number
-                        warning('RMSlength is not a number. Default of 8 will be used.');
-                        RMSlength = 8*fsEVENTdet{ModeIdx};
-                    end
-                else
-                    % Use default length
-                    RMSlength = 8*fsEVENTdet{ModeIdx};
-                end
-
-                % Forgetting factor for threshold
-                if isfield(EventParamExtrXML,'RMSmedianFilterTime')
-                    % Use specified filter order, converted to samples from time
-                    RMSmedianFilterOrder = round(str2double(EventParamExtrXML.RMSmedianFilterTime)*fsEVENTdet{ModeIdx});
-
-                    if isnan(RMSmedianFilterOrder)
-                        % str2double sets the value to NaN when it can't make it a number
-                        warning('RMSmedianFilterTime is not a number. Default of 120 seconds will be used.');
-                        RMSmedianFilterOrder = 120*fsEVENTdet{ModeIdx};
-                    end
-
-                    if (RMSmedianFilterOrder<=0)
-                        warning('RMSmedianFilterTime must be positive. Default of 120 seconds will be used.');
-                        RMSmedianFilterOrder = 120*fsEVENTdet{ModeIdx};
-                    end
-                else
-                    % Use default filter time
-                    RMSmedianFilterOrder = 120*fsEVENTdet{ModeIdx};
-                end
-                % Ensure that the median filter order is odd
-                if mod(RMSmedianFilterOrder,2) == 0
-                    RMSmedianFilterOrder = RMSmedianFilterOrder + 1;
-                end
-
-                % Scaling term for threshold
-                if isfield(EventParamExtrXML,'RingThresholdScale')
-                    % Use specified scaling term
-                    RingThresholdScale = str2double(EventParamExtrXML.RingThresholdScale);
-
-                    if isnan(RingThresholdScale)
-                        % str2double sets the value to NaN when it can't make it a number
-                        warning('RingThresholdScale is not a number. Default of 5 will be used.');
-                        RingThresholdScale = 5;
-                    end
-
-                    if RingThresholdScale < 0
-                        warning('RingThresholdScale cannot be negative. Default of 5 will be used.');
-                        RingThresholdScale = 5;
-                    end
-                else
-                    % Use default scaling term
-                    RingThresholdScale = 5;
-                end
-                
                 % Minimum analysis window length
                 if isfield(EventParamExtrXML,'MinAnalysisLength')
                     % Use specified value
@@ -268,6 +201,15 @@ if isfield(Parameters,'Mode')
                     PostEventWinAdj = 'FALSE';
                 end
                 
+                % Threshold for RMS-energy detector
+                if isfield(EventParamExtrXML,'Threshold')
+                    % Use specified value
+                    Threshold = str2double(EventParamExtrXML.Threshold);
+                else
+                    % Throw error
+                    error('RMS-energy threshold must be specified for the mode meter event detector.');
+                end
+                
                 % RMS-energy signals used to detect disturbances
                 if isfield(EventParamExtrXML,'PMU')
                     % Use specified signals
@@ -277,15 +219,13 @@ if isfield(Parameters,'Mode')
                     error('RMS-energy signals must be specified for the mode meter event detector.');
                 end
 
-                EventDetector = struct('RingThresholdScale',RingThresholdScale,...
-                    'RMSlength',RMSlength,'RMSmedianFilterOrder',RMSmedianFilterOrder,...
-                    'N2',N2,'lam1',lam1,'lam2',lam2,'PostEventWinAdj',PostEventWinAdj,...
-                    'PMU',EventDetPMU);
+                EventDetector = struct('N2',N2,'lam1',lam1,'lam2',lam2,'PostEventWinAdj',PostEventWinAdj,...
+                    'PMU',EventDetPMU,'Threshold',Threshold);
             else
                 EventDetector = struct([]);
             end
         else
-            % Proper informatio was not passed. Return empty parameter
+            % Proper information was not passed. Return empty parameter
             % structures. This might cause errors later, so issue a warning.
             warning('The configuration file is not properly formatted for a mode meter.');
             FOdetector = [];

@@ -3,7 +3,7 @@
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>3.1</param.version>
+    <param.version>4.0</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -158,20 +158,22 @@
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\CreatePMUsegment.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DataWriterDetector.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DEF\CalculateDEF.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DEF\ExtractFOtimeLocParameters.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DEF\RunTimeLocalization.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ExtractData.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\EventDetectionForModeMeter.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ExtractModeMeterParams.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMA.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMApS.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\RunRetCon.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\SelectMode.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WindowDesign.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteMMreportGraphical.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteOperatingConditionsAndModeValues.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\YW_ARMA.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\xcorrWin.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\YW_ARMApS.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\OutOfRangeGeneralDetector.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\calcGMSC.m</file>
@@ -239,7 +241,6 @@
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateEventXML.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateForcedOscillationEvents.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateForcedOscillationOverEvents.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateModeMeterOverEvents.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateOutOfRangeEvents.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateOutOfRangeOverEvents.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateOverallStartAndEndTimes.m</file>
@@ -276,6 +277,7 @@
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Rerun\CleanAdditionalOutput.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Rerun\DisableDetectors.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Rerun\RetrieveInitializationFile.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\RMSenergy\DesignRMSfilters.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\GenerateWindAppReport.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindAppCatAndRank.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\WindApplication\WindApplication.m</file>

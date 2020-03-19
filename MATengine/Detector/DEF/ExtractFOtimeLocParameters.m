@@ -17,7 +17,7 @@ end
 
 % Minimum analysis window length
 if isfield(Parameters,'LocMinLength')
-    LocMinLength = str2double(Parameters.LocMinLength);
+    LocMinLength = str2double(Parameters.LocMinLength)*fs;
     
     if isnan(LocMinLength)
         % str2double sets the value to NaN when it can't make it a number
@@ -32,7 +32,7 @@ end
 % Resolution for the window length (how big the difference is between each
 % window that is checked)
 if isfield(Parameters,'LocLengthStep')
-    LocLengthStep = str2double(Parameters.LocLengthStep);
+    LocLengthStep = str2double(Parameters.LocLengthStep)*fs;
     
     if isnan(LocLengthStep)
         % str2double sets the value to NaN when it can't make it a number
@@ -46,7 +46,7 @@ end
 
 % Resolution for the location (how much to slide the window for each check)
 if isfield(Parameters,'LocRes')
-    LocRes = str2double(Parameters.LocRes);
+    LocRes = str2double(Parameters.LocRes)*fs;
     
     if isnan(LocRes)
         % str2double sets the value to NaN when it can't make it a number

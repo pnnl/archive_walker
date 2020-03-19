@@ -67,6 +67,20 @@ if sum(nanLoc) > 0
     end
 end
 
+%% Calculate the duration of each FO, accounting for the impact of windowing
+
+m = zeros(1,P);
+for p = 1:P
+    m(p) = sum(w(TimeLoc(p,1):TimeLoc(p,2)) > 0);
+end
+
+% Remove any FOs that are completely windowed out
+KillIdx = m == 0;
+FOfreq(KillIdx) = [];
+m(KillIdx) = [];
+
+P = length(FOfreq);
+
 %% Remove leading and trailing values that are to be removed by windowing
 KeepIdx = find(w,1):find(w,1,'last');
 if length(KeepIdx) <= 2*nb+2*L
@@ -80,14 +94,6 @@ else
     % anyway
     w = w(KeepIdx);
     y = y(KeepIdx);
-    % Adjust the forced oscillation start and end times to account for the
-    % samples that were removed from the beginning
-    TimeLoc = TimeLoc - KeepIdx(1) + 1;
-    % Shouldn't be possible in the time localization code, but just in case
-    % make sure that the TimeLoc values aren't outside of the range between
-    % 1 and the new length of the analysis window
-    TimeLoc(TimeLoc < 1) = 1;
-    TimeLoc(TimeLoc > length(y)) = length(y);
 end
 
 %% Estimate autocorrelation of y
@@ -101,7 +107,6 @@ rbar = r(nb+1+IdxAdj:nb+L+IdxAdj);  % "data" vector (see eq. (3.58))
 
 R = toeplitz(r(nb+IdxAdj:nb+L-1+IdxAdj),r(nb+IdxAdj:-1:nb-na+1+IdxAdj));    % ACF matrix (see eq. (3.59))
 
-m = diff(TimeLoc,1,2) + 1;  % Durations of each sinusoid in FO
 SM = zeros(L,2*P);  % S matrix (see eq. (3.60)) .* M matrix (see eq. (3.61))
 for p = 1:P
     Mcol = (m(p)-nb-1:-1:m(p)-nb-L)'; % Corresponding column of M matrix

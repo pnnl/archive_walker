@@ -43,10 +43,10 @@ try
         TimeString{ModeIdx} = TimeString{ModeIdx}(end-AnalysisLength+1:end);
         
         
-        if isfield(Parameters.Mode{ModeIdx}.FOdetectorParam,'PMU')
+        if isfield(Parameters.Mode{ModeIdx},'FOdetectorParam')
             [DataFOdet{ModeIdx}, ~, ~, ~, ~, ~, fsFOdet{ModeIdx}, ~] = ExtractData(PMUstruct,Parameters.Mode{ModeIdx}.FOdetectorParam);
         end
-        if isfield(Parameters.Mode{ModeIdx}.EventDetectorParam,'PMU')
+        if isfield(Parameters.Mode{ModeIdx},'EventDetectorParam')
             [DataEVENTdet{ModeIdx}, ~, ~, ~, ~, ~, fsEVENTdet{ModeIdx}, ~] = ExtractData(PMUstruct,Parameters.Mode{ModeIdx}.EventDetectorParam);
             if fs{ModeIdx} ~= fsEVENTdet{ModeIdx}
                 error('Sample rate of input to mode meter must match input to transient event detection for the mode meter.');
@@ -108,6 +108,9 @@ for ModeIdx = 1:NumMode
         
         AdditionalOutput(ModeIdx).EventDet = cell(1,size(Data{ModeIdx},2));
         PastAdditionalOutput(ModeIdx).EventDet = cell(1,size(Data{ModeIdx},2));
+        
+        AdditionalOutput(ModeIdx).FOdet = cell(1,size(Data{ModeIdx},2));
+        PastAdditionalOutput(ModeIdx).FOdet = cell(1,size(Data{ModeIdx},2));
     else
         AdditionalOutput(ModeIdx).Modetrack = PastAdditionalOutput(ModeIdx).Modetrack;
         AdditionalOutput(ModeIdx).ModeOriginal = PastAdditionalOutput(ModeIdx).ModeOriginal;
@@ -135,18 +138,27 @@ for ModeIdx = 1:NumMode
     
     for ChanIdx = 1:size(Data{ModeIdx},2)
         % Forced oscillation detection
-        if isempty(ExtractedParameters.FOdetectorPara) || (sum(isnan(Data{ModeIdx}(:,ChanIdx))) > 0)
-            % Forced oscillation detection was not desired OR there are
-            % NaN values in the input signal which prevent detection
-            % from being run
+        if isempty(ExtractedParameters.FOdetectorPara)
+            % Forced oscillation detection was not desired
+            FOfreq = [];
+            TimeLoc = [];
+        elseif sum(isnan(DataFOdet{ModeIdx}(:,ChanIdx))) > 0
+            % There are NaN values in the input signal which prevent 
+            % detection from being run
             FOfreq = [];
             TimeLoc = [];
         else
             % Run FO detection algorithm
-            FOfreq = FOdetectionForModeMeter(DataFOdet{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,fsFOdet{ModeIdx});
-
-            TimeLoc = RunTimeLocalization(DataFOdet{ModeIdx}(:,ChanIdx),FOfreq,ExtractedParameters.TimeLocParams,fsFOdet{ModeIdx});
-            error('you have not converted from sample rate of detection signal to sample rate of MM signa.');
+            AdditionalOutput(ModeIdx).FOdet{ChanIdx} = FOdetectionForModeMeter(DataFOdet{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,ExtractedParameters.TimeLocParams,Parameters.ResultUpdateInterval,fsFOdet{ModeIdx},PastAdditionalOutput(ModeIdx).FOdet{ChanIdx});
+            
+            FOfreq = AdditionalOutput(ModeIdx).FOdet{ChanIdx}.FOfreq;
+            
+            % Adjust the values in TimeLoc to account for the difference
+            % between sampling rates: fsFOdet{ModeIdx} and fs{ModeIdx}
+            TimeLoc = round((AdditionalOutput(ModeIdx).FOdet{ChanIdx}.TimeLoc-1)*fs{ModeIdx}/fsFOdet{ModeIdx} + 1);
+            % Values at the very end can be assigned to a downsampled index
+            % beyond the current window. This corrects for it.
+            TimeLoc(TimeLoc > length(Data{ModeIdx}(:,ChanIdx))) = length(Data{ModeIdx}(:,ChanIdx));
         end
 
         % High-energy event detection
@@ -157,7 +169,7 @@ for ModeIdx = 1:NumMode
 
             win = AdditionalOutput(ModeIdx).EventDet{ChanIdx}.win;
         else
-            win = ones(size(DataEVENTdet{ModeIdx}(:,ChanIdx)));
+            win = ones(size(Data{ModeIdx}(:,ChanIdx)));
         end
 
         for MethodIdx = 1:NumMethods(ModeIdx)

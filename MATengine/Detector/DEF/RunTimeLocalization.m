@@ -15,15 +15,15 @@ if size(Mrat,1) > 1
 end
 
 
-Nmin = Parameters.LocMinLength*fs;
-Nstep = Parameters.LocLengthStep*fs;
+Nmin = Parameters.LocMinLength;
+Nstep = Parameters.LocLengthStep;
 
 nvec = Nmin:Nstep:N;
 if nvec(end) ~= N
     nvec = [nvec N];
 end
 
-Kstep = Parameters.LocRes*fs;
+Kstep = Parameters.LocRes;
 kvec = Nmin:Kstep:N;
 if kvec(end) ~= N
     kvec = [kvec N];

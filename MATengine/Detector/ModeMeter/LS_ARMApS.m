@@ -64,6 +64,20 @@ if sum(nanLoc) > 0
     end
 end
 
+%% Remove forced oscillations that are localized to a portion of the 
+%  analysis window that is being removed
+
+KillIdx = [];
+for p = 1:P
+    if sum(w(TimeLoc(p,1):TimeLoc(p,2))) == 0
+        KillIdx = [KillIdx p];
+    end
+end
+FOfreq(KillIdx) = [];
+TimeLoc(KillIdx,:) = [];
+
+P = length(FOfreq);
+
 %% Remove leading and trailing values that are to be removed by windowing
 KeepIdx = find(w,1):find(w,1,'last');
 if length(KeepIdx) <= n_alpha + nb
@@ -80,8 +94,7 @@ else
     % Adjust the forced oscillation start and end times to account for the
     % samples that were removed from the beginning
     TimeLoc = TimeLoc - KeepIdx(1) + 1;
-    % Shouldn't be possible in the time localization code, but just in case
-    % make sure that the TimeLoc values aren't outside of the range between
+    % Make sure that the TimeLoc values aren't outside of the range between
     % 1 and the new length of the analysis window
     TimeLoc(TimeLoc < 1) = 1;
     TimeLoc(TimeLoc > length(y)) = length(y);
