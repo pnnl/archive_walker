@@ -99,7 +99,7 @@ for SigIdx = 1:length(SigsToInterpo)
     end
        
     % Can only interpolate if some good data exists
-    if ~isempty(GoodDataIdx)
+    if length(GoodDataIdx) > 1
         if strcmp(Interpolate_type,'Linear') && ~isempty(InterDataIdx)
             %carries out linear interpolation
             PMU.Data(InterDataIdx,ThisSig) = interp1(GoodDataIdx, PMU.Data(GoodDataIdx,ThisSig), InterDataIdx, 'linear','extrap');

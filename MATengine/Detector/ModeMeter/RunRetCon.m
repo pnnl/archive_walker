@@ -44,6 +44,11 @@ if length(Modetrack) > 1
                 % The constructed path is longer than the matrix of
                 % results because the estimates cross a day transition.
                 ModeHistory = Mpath(end-size(ModeHistory,1)+1:end);
+                % size(ModeHistory,1) is checked. If size(ModeHistory) is
+                % 1x0 it will cause problems.
+                if isempty(ModeHistory)
+                    ModeHistory = [];
+                end
                 Freq = abs(imag(ModeHistory))/2/pi;
                 DR =  -real(ModeHistory)./abs(ModeHistory);
                 ChangeIdx = ModeFreqHistory(end-size(ModeHistory,1)+1:end) ~= Freq;
