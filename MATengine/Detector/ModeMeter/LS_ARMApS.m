@@ -31,7 +31,7 @@
 %         in stage 1 and then updated in stage 2. 
 % yhat = reconstructed version of input signal y based on identified model
 
-function [ModeEst, Mtrack] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
+function [ModeEst, Mtrack, ExtraOutput] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
@@ -145,6 +145,7 @@ Wp5 = diag(sqrt(wbar));
 
 theta = pinv(Wp5*Z)*Wp5*ybar;   % Estimate of reduced parameter vector
 a = [1; theta(1:L)];   % AR coefficients
+b = 1;
 
 e = [zeros(L,1); ybar-Z*theta];    % Estimates of process noise (see eq. (3.22))
                                    % Add zeros to make indexing easier
@@ -187,7 +188,12 @@ if nb > 0
 
     theta = pinv(Wp5*Z)*Wp5*ybar;   % Estimate of full parameter vector
     a = [1; theta(1:na)];   % AR coefficients
+    b = [1; theta(na+1:na+nb)];
 end
 
 %% Select modes
 [ModeEst, Mtrack] = SelectMode(a,fs,DesiredModes,Mtrack);
+
+%% Store other values necessary outside of this function
+ExtraOutput.a = a;
+ExtraOutput.b = b;

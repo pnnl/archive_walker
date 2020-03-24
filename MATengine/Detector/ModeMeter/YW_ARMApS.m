@@ -28,12 +28,13 @@
 % rhat = column one is estimated autocorrelation of y. Column two is 
 %        reconstructed autocorrelation of y based on identified model
 
-function [ModeEst, Mtrack] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
+function [ModeEst, Mtrack, ExtraOutput] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
 na = Parameters.na;
 nb = Parameters.nb;
+ng = Parameters.ng;
 NaNomitLimit = Parameters.NaNomitLimit;
 
 TimeLoc(isnan(FOfreq),:) = [];
@@ -63,6 +64,7 @@ if sum(nanLoc) > 0
         % estimate
         ModeEst = NaN; 
         Mtrack{length(Mtrack)+1} = NaN;
+        ExtraOutput = struct();
         return
     end
 end
@@ -88,6 +90,7 @@ if length(KeepIdx) <= 2*nb+2*L
     % mode estimate
     ModeEst = NaN; 
     Mtrack{length(Mtrack)+1} = NaN;
+    ExtraOutput = struct();
     return
 else
     % Remove samples at beginning and end that are to be windowed out
@@ -120,3 +123,67 @@ theta = pinv([-R SM])*rbar;
 a = [1; theta(1:na)];
 
 [ModeEst, Mtrack] = SelectMode(a,fs,DesiredModes,Mtrack);
+
+%% Implement second part of YW-ARMA+S to get MA parameters
+
+if ng > 0
+    % Some additional tricks are used here to account for windowing:
+        % The signal y is set to NaN where the window is zero
+        % The MA filter is then applied. Because it's FIR, the NaNs aren't
+            % too problematic.
+        % After filtering, the window is used to remove all the NaNs.
+        % To make sure NaNomitLimit in LS_ARMApS doesn't become a problem,
+            % it is set to infinity. Keep in mind that to make it to this
+            % point in the code the original signal fell below the limit so
+            % it can't be that bad of a signal. 
+        
+    y(w == 0) = NaN;
+        
+    % Filter y by AR coefficients to get x (see Figure 3.2)
+    x = filter(a,1,y);
+    
+    w = ones(size(x));
+    w(isnan(x)) = 0;
+
+    % Implement the first stage of the LS-ARMA+S algorithm to get the AR
+    % coefficients (gamma_i) describing x. See eq. (3.65).
+    %
+    % Adjust parameters - na is don't care, NaNomitLimit is same as for
+    % above
+    ParametersLS.n_alpha = ng;
+    ParametersLS.na = 0;  % No second stage
+    ParametersLS.nb = 0;  % No second stage
+    ParametersLS.NaNomitLimit = Inf;    % Do not set a limit
+    %
+    [~, ~, ExtraOutputLS] = LS_ARMApS(x,w,ParametersLS,[],fs,{},FOfreq,TimeLoc);
+    gamma = [1; ExtraOutputLS.a]; % Add in gamma_0 = 1;
+
+    % Form matrices needed to estimate b coefficients
+    rgamma = zeros(nb,1);
+    Rgamma = zeros(nb,nb);
+    for i = 1:nb
+        % See eq. (2.85)
+        rgamma(i) = gamma(1:ng-i+1)'*gamma(i+1:ng+1);
+
+        % See eq. (2.84)
+        for j = 1:nb
+            Rgamma(i,j) = gamma(1:ng-abs(i-j)+1)'*gamma(abs(i-j)+1:ng+1);
+        end
+    end
+    rgamma = 1/(ng+1)*rgamma;
+    Rgamma = 1/(ng+1)*Rgamma;
+
+    b = -Rgamma\rgamma; % b parameter estimates (see eq. (2.83))
+    
+    % Store other values necessary outside of this function
+    ExtraOutput.a = a;
+    ExtraOutput.b = b;
+elseif nb == 0
+    % AR model - no need to estimate b
+    ExtraOutput.a = a;
+    ExtraOutput.b = 1;
+else
+    % Store other values necessary outside of this function
+    % Empty structure in this case because b was not estimated
+    ExtraOutput = struct();
+end

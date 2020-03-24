@@ -1,8 +1,16 @@
-function [ModeEst, Mtrack] = SelectMode(a,fs,DesiredModes,Mtrack)
+function [ModeEst, Mtrack, sPoles] = SelectMode(a,fs,DesiredModes,Mtrack)
 
 % Find all poles (includes spurious roots)
 zPoles = roots(a);  % Find z-domain poles (see eq. (2.8))
 sPoles = log(zPoles)*fs;    % Transform to s-domain (see eq. (2.7))
+
+% If a specific mode was not specified, return all poles (sPoles) and set
+% other outputs to empty.
+if isempty(DesiredModes)
+    ModeEst = [];
+    Mtrack = {};
+    return
+end
 
 % 0: Remove all modes outside specified frequency range.
 sPolesTemp = sPoles;

@@ -81,18 +81,28 @@ if isfield(Parameters,'Mode')
                         FunctionName = 'YW_ARMApS';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        if isfield(ExtrctParamXML{MethodIdx},'ng')
+                            ng = str2double(ExtrctParamXML{MethodIdx}.ng);
+                        else
+                            ng = 0;
+                        end
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'L',L,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
                     case 'YW_ARMApS'
                         FunctionName = 'YW_ARMApS';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        if isfield(ExtrctParamXML{MethodIdx},'ng')
+                            ng = str2double(ExtrctParamXML{MethodIdx}.ng);
+                        else
+                            ng = 0;
+                        end
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         LFO = str2double(ExtrctParamXML{MethodIdx}.LFO);
                         FOdetectorParaFlag = 1;
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
                     case 'LS_ARMApS'
                         FunctionName = 'LS_ARMApS';
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
@@ -210,6 +220,22 @@ if isfield(Parameters,'Mode')
                     error('RMS-energy threshold must be specified for the mode meter event detector.');
                 end
                 
+                % Flag determining whether ringdowns are identified or if
+                % all high-energy events are removed
+                if isfield(EventParamExtrXML,'RingdownID')
+                    if strcmpi(EventParamExtrXML.RingdownID,'TRUE')
+                        % User desires ringdown identification
+                        RingdownID = true;
+                    else
+                        % User does not desire ringdown identification
+                        RingdownID = false;
+                    end
+                else
+                    % Flag was not specified - disable ringdown
+                    % identification
+                    RingdownID = false;
+                end
+                
                 % RMS-energy signals used to detect disturbances
                 if isfield(EventParamExtrXML,'PMU')
                     % Use specified signals
@@ -220,7 +246,7 @@ if isfield(Parameters,'Mode')
                 end
 
                 EventDetector = struct('N2',N2,'lam1',lam1,'lam2',lam2,'PostEventWinAdj',PostEventWinAdj,...
-                    'PMU',EventDetPMU,'Threshold',Threshold);
+                    'PMU',EventDetPMU,'Threshold',Threshold,'RingdownID',RingdownID);
             else
                 EventDetector = struct([]);
             end

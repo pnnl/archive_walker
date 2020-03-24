@@ -58,7 +58,8 @@ catch
     DetectionResults = struct([]);
     AdditionalOutput = struct('ModeTrack',[],'OperatingValues',[], 'OperatingNames',[], 'OperatingUnits',[],...
         'Data',[],'DataPMU',[],'DataChannel',[],'DataType',[],'DataUnit',[],'TimeString',[],...
-        'ModeOriginal',[],'ModeHistory',[],'ModeFreqHistory',[],'ModeDRHistory',[],'MethodName',[],'ChannelName',[]);
+        'ModeOriginal',[],'ModeHistory',[],'ModeFreqHistory',[],'ModeDRHistory',[],'MethodName',[],'ChannelName',[],...
+        'ExtraOutput',[]);
     return
 end
 DetectionResults = struct([]);
@@ -111,6 +112,9 @@ for ModeIdx = 1:NumMode
         
         AdditionalOutput(ModeIdx).FOdet = cell(1,size(Data{ModeIdx},2));
         PastAdditionalOutput(ModeIdx).FOdet = cell(1,size(Data{ModeIdx},2));
+        
+        AdditionalOutput(ModeIdx).ExtraOutput = cell(size(Data{ModeIdx},2),NumMethods(ModeIdx));
+        PastAdditionalOutput(ModeIdx).ExtraOutput = cell(size(Data{ModeIdx},2),NumMethods(ModeIdx));
     else
         AdditionalOutput(ModeIdx).Modetrack = PastAdditionalOutput(ModeIdx).Modetrack;
         AdditionalOutput(ModeIdx).ModeOriginal = PastAdditionalOutput(ModeIdx).ModeOriginal;
@@ -132,6 +136,7 @@ for ModeIdx = 1:NumMode
             AdditionalOutput(ModeIdx).t = TimeStringDN(end);
             PastAdditionalOutput(1).OperatingValues = [];
         end
+        AdditionalOutput(ModeIdx).ExtraOutput = cell(size(Data{ModeIdx},2),NumMethods(ModeIdx));
     end
     
     AdditionalOutput(ModeIdx).fs = fs{ModeIdx};
@@ -165,17 +170,18 @@ for ModeIdx = 1:NumMode
         if ~isempty(ExtractedParameters.EventDetectorPara)
             % Run event detection algorithm
             AdditionalOutput(ModeIdx).EventDet{ChanIdx} = ...
-                EventDetectionForModeMeter(DataEVENTdet{ModeIdx}(:,ChanIdx),ExtractedParameters.EventDetectorPara,Parameters.ResultUpdateInterval,fsEVENTdet{ModeIdx},PastAdditionalOutput(ModeIdx).EventDet{ChanIdx});
+                EventDetectionForModeMeter(Data{ModeIdx}(:,ChanIdx),DataEVENTdet{ModeIdx}(:,ChanIdx),ExtractedParameters.EventDetectorPara,Parameters.ResultUpdateInterval,fsEVENTdet{ModeIdx},PastAdditionalOutput(ModeIdx).EventDet{ChanIdx},PastAdditionalOutput(ModeIdx).ExtraOutput(ChanIdx,:));
 
             win = AdditionalOutput(ModeIdx).EventDet{ChanIdx}.win;
         else
-            win = ones(size(Data{ModeIdx}(:,ChanIdx)));
+            win = cell(1,NumMethods(ModeIdx));
+            win(:) = {ones(size(Data{ModeIdx}(:,ChanIdx)))};
         end
 
         for MethodIdx = 1:NumMethods(ModeIdx)
-            [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}]...
+            [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).ExtraOutput{ChanIdx,MethodIdx}]...
                 = eval([ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}.FunctionName...
-                '(Data{ModeIdx}(:,ChanIdx),win,ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}, ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},FOfreq,TimeLoc)']);
+                '(Data{ModeIdx}(:,ChanIdx),win{MethodIdx},ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}, ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},FOfreq,TimeLoc)']);
             DampingRatio = -real(Mode)/abs(Mode);
             Frequency = abs(imag(Mode))/2/pi;
             if isnan(DampingRatio)
