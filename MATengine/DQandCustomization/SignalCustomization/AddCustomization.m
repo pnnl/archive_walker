@@ -88,22 +88,15 @@ for TermIdx = 1:NumTerms
         SignalUnit = PMUstruct(PMUidx).Signal_Unit{SigIdx};
         SignalType = PMUstruct(PMUidx).Signal_Type{SigIdx};
     else
-        % If there is disagreement between signal types, set to OTHER
-        if ~strcmp(SignalType,PMUstruct(PMUidx).Signal_Type{SigIdx})
+        % If there is disagreement between signal types or units, set to OTHER
+        if ~strcmp(SignalType,PMUstruct(PMUidx).Signal_Type{SigIdx}) || ~strcmp(SignalUnit,PMUstruct(PMUidx).Signal_Unit{SigIdx})
             SignalType = 'OTHER';
-        end
-        
-        % Make sure units are consistent with the other terms. If not,
-        % return NaN and set Flags
-        if ~strcmp(SignalUnit,PMUstruct(PMUidx).Signal_Unit{SigIdx})
-            warning(['Signal ' Parameters.term{TermIdx}.Channel ' does not have the correct units, returning NaN and setting Flags']);
-            ErrFlag = 1;
-            break
+            SignalUnit = 'O';
         end
         
         % Check dimensions
         if length(CustSig) == length(PMUstruct(PMUidx).Data(:,SigIdx))
-            % Dimensions and units are okay, so add the signal in
+            % Dimensions are okay, so add the signal in
             CustSig = CustSig + PMUstruct(PMUidx).Data(:,SigIdx);
             % Track flags
             FlagVec = FlagVec | (sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3) > 0);
@@ -153,6 +146,7 @@ else
         % Specified SignalType was not acceptable, so set to OTHER
         warning([SignalType ' is not an acceptable signal type, setting to OTHER.']);
         PMUstruct(custPMUidx).Signal_Type{NumSig+1} = 'OTHER';
+        PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
     end
 
     % Add the custom signal and set associated flags

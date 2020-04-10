@@ -1,5 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+<<<<<<< HEAD
   <configuration build-checksum="3885715107" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+=======
+  <configuration build-checksum="2238818514" file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+>>>>>>> units
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
@@ -131,7 +135,131 @@
     </fileset.classes>
     <fileset.resources />
     <fileset.depfun>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\LS_ARMApS.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\SelectMode.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\xcorrWin.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\AGM Osc\EI\YW_ARMApS.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\BAWS_main9.m</file>
+<<<<<<< HEAD
+=======
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOHpresets.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadOpenPDCpresets.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Database\ReadPIpresets.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\ChangeNameTypeUnit.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DataProcessor.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPfilterStep.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPinterpolation.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPMultiRate.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPUnwrap.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\DPWrap.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\FrequencyDerivationFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\HighPassFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\LowPassFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\MedianFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\POWpowerFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RationalFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RMSenergyFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\Filter\RunningAveFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\interpo.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\MultiRate.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\UnwrapAngle.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DataProcessor\WrapAngle.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ConcatenatePMU.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\CreatePMUsegment.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DataWriterDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DEF\CalculateDEF.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\DEF\RunTimeLocalization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ExtractData.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\EventDetectionForModeMeter.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ExtractModeMeterParams.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\FOdetectionForModeMeter.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\GetRetConPath.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\LS_ARMA.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\RunRetCon.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteMMreportGraphical.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\WriteOperatingConditionsAndModeValues.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ModeMeter\YW_ARMA.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\OutOfRangeGeneralDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\calcGMSC.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\CalcPSD_OmegaB.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\CalcThreshold.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\DetectFO.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\ExtractFOdetectionParamsPer.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\PeriodogramDetector\PeriodogramDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\ReduceSignals.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\RingdownDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\RunDetection.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\SpectralCoherenceDetector\calcSelfGMSC.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\SpectralCoherenceDetector\DetectFO_SC.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\SpectralCoherenceDetector\ExtractFOdetectionParamsSC.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\SpectralCoherenceDetector\SpectralCoherenceDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\Thevenin\DeMarco2_3c_LNout.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\Thevenin\GSPF_puLLout.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\Thevenin\Mitsubishi3_LNout.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\Thevenin\Quanta_LNout3.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\Thevenin\RPI.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\Thevenin\Tellegen_LNout2.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\Thevenin\TheveninDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\UpdatePMUconcat.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\Detector\WindRampDetector.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\CustomizationStep.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQandCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\ChanFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\DataFrameFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\DropOutMissingFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\DropOutZeroFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\EntirePMUfilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\FreqFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\OutlierFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\PMUflagFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\StaleFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\VoltPhasorFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilters\WrappingFailureFilt.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\DQfilterStep.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\InitCustomPMU.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\AddCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\AngleCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\AngleUnitCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\CheckSignalNameError.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\CheckTypeAndUnits.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\CommonCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\CreatePhasorCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\DivisionCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\ExpCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\MultCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\PowCalcCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\PowCalcMagAng.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\PowCalcPhasor.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\PrefixCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\ReplicateSignalCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\ScalarRep.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\SpecTypeUnitCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DQandCustomization\SignalCustomization\SubtractionCustomization.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\AssignEventID.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\EventListXML2MAT.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\ExtractAlarmingParamsPer.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\ExtractAlarmingParamsRingdown.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\ExtractAlarmingParamsSC.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\StoreEventList.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateEventXML.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateForcedOscillationEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateForcedOscillationOverEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateModeMeterOverEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateOutOfRangeEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateOutOfRangeOverEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateOverallStartAndEndTimes.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateRingEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateRingOverEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateTheveninEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateTheveninOverEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateWindAppOverEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateWindRampEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\UpdateWindRampOverEvents.m</file>
+      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\EventList\WriteEventListXML.m</file>
+>>>>>>> units
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\ExportEvents.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\fun_xmlread_comments.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\InitializeBAWS.m</file>

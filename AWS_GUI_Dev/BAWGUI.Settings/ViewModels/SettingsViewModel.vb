@@ -1980,32 +1980,40 @@ Namespace ViewModels
         '    '_signalMgr.DetermineFileDirCheckableStatus()
         'End Sub
         Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+            Else 'if selected a group of signal
                 Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
+            End If
+            If sgnl.PMUName Is Nothing OrElse sgnl.TypeAbbreviation Is Nothing Then
+                Throw New Exception("Error! Signal selected is not valid.")
             Else
                 If _currentSelectedStep.CurrentCursor = "" Then 'If no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
                     Throw New Exception("Error! Please select a valid text box (Dividend or Divisor) for this input signal!")
 
                 ElseIf _currentSelectedStep.CurrentCursor = "Dividend" Then
-                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                    If sgnl.IsChecked Then ' If a Signal box is selected
                         If _currentSelectedStep.Dividend IsNot Nothing Then ' If the current Dividend box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
                         End If
-                        If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
+                        If _currentSelectedStep.Divisor IsNot Nothing AndAlso sgnl = _currentSelectedStep.Divisor Then
                             ' If Dividend and Divisor are the same
-                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                            _currentSelectedStep.InputChannels.Remove(sgnl)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
                             _currentSelectedStep.Dividend = dummy
                             Throw New Exception("Error! Dividend cannot be the same as the Divisor!")
 
                         End If
-                        _currentSelectedStep.Dividend = obj.SignalSignature ' Assign the selected signal to Dividend
+                        _currentSelectedStep.Dividend = sgnl ' Assign the selected signal to Dividend
                         If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Dividend) Then
                             _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Dividend)
                         End If
                     Else ' If a Signal box is unselected
-                        If _currentSelectedStep.Dividend Is obj.SignalSignature Then ' If the current Dividend box has PMU and signal names
+                        If _currentSelectedStep.Dividend Is sgnl Then ' If the current Dividend box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
@@ -2017,11 +2025,11 @@ Namespace ViewModels
                     _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
 
                 ElseIf _currentSelectedStep.CurrentCursor = "Divisor" Then
-                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                    If sgnl.IsChecked Then ' If a Signal box is selected
                         If _currentSelectedStep.Divisor IsNot Nothing Then ' If the current Divisor box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
                         End If
-                        If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
+                        If _currentSelectedStep.Dividend IsNot Nothing AndAlso sgnl = _currentSelectedStep.Dividend Then
                             ' If Dividend and Divisor are the same
                             _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                             Dim dummy = New SignalSignatureViewModel("", "")
@@ -2029,12 +2037,12 @@ Namespace ViewModels
                             _currentSelectedStep.Divisor = dummy
                             Throw New Exception("Error! Divisor cannot be the same as the Dividend!")
                         End If
-                        _currentSelectedStep.Divisor = obj.SignalSignature ' Assign the selected signal to Divisor
+                        _currentSelectedStep.Divisor = sgnl ' Assign the selected signal to Divisor
                         If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Divisor) Then
                             _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Divisor)
                         End If
                     Else ' If a Signal box is unselected
-                        If _currentSelectedStep.Divisor Is obj.SignalSignature Then ' If the current Divisor box has PMU and signal names
+                        If _currentSelectedStep.Divisor Is sgnl Then ' If the current Divisor box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
@@ -3131,7 +3139,23 @@ Namespace ViewModels
         End Sub
         Private _pointOnWavePowCalFltrInputSignalNeedToBeChanged As String
 #End Region
-
+        Private Function _determineSignalCountInTree(obj As SignalTypeHierachy) As Integer
+            If obj.SignalList.Count > 0 Then
+                Dim totalcount = 0
+                For Each tree In obj.SignalList
+                    totalcount += _determineSignalCountInTree(tree)
+                Next
+                Return totalcount
+            Else
+                Return 1
+            End If
+        End Function
+        Private Function _findTheBottomSignal(obj As SignalTypeHierachy) As SignalSignatureViewModel
+            While obj.SignalList.Count > 0
+                Return _findTheBottomSignal(obj.SignalList.FirstOrDefault)
+            End While
+            Return obj.SignalSignature
+        End Function
         'Private Sub _dataConfigDetermineAllParentNodeStatus()
         '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
         '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
