@@ -60,6 +60,7 @@ if sum(nanLoc) > 0
         % estimate
         ModeEst = NaN; 
         Mtrack{length(Mtrack)+1} = NaN;
+        ExtraOutput = struct();
         return
     end
 end
@@ -85,6 +86,7 @@ if length(KeepIdx) <= n_alpha + nb
     % mode estimate
     ModeEst = NaN; 
     Mtrack{length(Mtrack)+1} = NaN;
+    ExtraOutput = struct();
     return
 else
     % Remove samples at beginning and end that are to be windowed out

@@ -11,12 +11,10 @@ N1 = size(RMS,1);
 
 ResultUpdateInterval = ResultUpdateInterval*fs;
 
-AdditionalOutput = struct('RMSlength',[],'EventIndicator',[],'win',[],'Eadditional',[]);
+AdditionalOutput = struct('GrpDelay',[],'EventIndicator',[],'win',[]);
 
 if isempty(PastAdditionalOutput)
     [bBP,bLP] = DesignRMSfilters('Band 2',fs);
-    RMSlength = length(bLP);
-    AdditionalOutput.RMSlength = RMSlength;
     GrpDelay = round((length(bBP)-1)/2 + (length(bLP)-1)/2);
     AdditionalOutput.GrpDelay = GrpDelay;
     
@@ -24,8 +22,6 @@ if isempty(PastAdditionalOutput)
     RMSpresent = RMS;
 else
     % Initial conditions are available
-    RMSlength = PastAdditionalOutput.RMSlength;
-    AdditionalOutput.RMSlength = RMSlength;
     GrpDelay = PastAdditionalOutput.GrpDelay;
     AdditionalOutput.GrpDelay = GrpDelay;
     % Only process the newly available measurements
@@ -69,7 +65,7 @@ if RingdownID && (sum(DetLgc) > 0)
     % RMSlength, otherwise you will consider essentially zero events
     Emax = 20*fs;
     % Length of simulations used to evaluate the events
-    Nsim = 15*fs;
+    Nsim = 10*fs;
     
     % Number of different mode meter algorithms applied to this channel of data. The
     % determination about the event is made separately for each algorithm
@@ -100,7 +96,7 @@ if RingdownID && (sum(DetLgc) > 0)
                 % Events with at least Nsim samples and no more than Emax
                 % samples are evaluated. ThisDetLgc is set to false for 
                 % events identified as ringdowns
-                ThisDetLgc = ModelCase(ThisDetLgc,Emax,Nsim,RMSpast,Threshold,ResultUpdateInterval,y,RMS,ExtraOutput{MethodIdx}.a,ExtraOutput{MethodIdx}.b,fs);
+                ThisDetLgc = ModelCase(ThisDetLgc,Emax,Nsim,RMSpast,Threshold,ResultUpdateInterval,y,GrpDelay,ExtraOutput{MethodIdx}.a,ExtraOutput{MethodIdx}.b,fs);
             else
                 % An ARMA model is not available, either because the method
                 % does not create one or because of a problem, such as data
@@ -113,10 +109,9 @@ if RingdownID && (sum(DetLgc) > 0)
         end
         
         % Use ThisDetLgc to update the window
-        [win, EventIndicator, Eadditional] = UpdateWindow(ThisDetLgc,Parameters,N1,ResultUpdateInterval,RMSlength,PastAdditionalOutput,MethodIdx);
+        [win, EventIndicator] = UpdateWindow(y,ThisDetLgc,Parameters,N1,ResultUpdateInterval,GrpDelay,PastAdditionalOutput,MethodIdx);
         AdditionalOutput.win{MethodIdx} = win;
         AdditionalOutput.EventIndicator{MethodIdx} = EventIndicator;
-        AdditionalOutput.Eadditional{MethodIdx} = Eadditional;
     end
 else
     % Number of different mode meter algorithms applied to this channel of data. The
@@ -126,10 +121,9 @@ else
     % For each of the mode meter algorithms
     for MethodIdx = 1:NumMethods
         % Use ThisDetLgc to update the window
-        [win, EventIndicator, Eadditional] = UpdateWindow(DetLgc,Parameters,N1,ResultUpdateInterval,RMSlength,PastAdditionalOutput,MethodIdx);
+        [win, EventIndicator] = UpdateWindow(y,DetLgc,Parameters,N1,ResultUpdateInterval,GrpDelay,PastAdditionalOutput,MethodIdx);
         AdditionalOutput.win{MethodIdx} = win;
         AdditionalOutput.EventIndicator{MethodIdx} = EventIndicator;
-        AdditionalOutput.Eadditional{MethodIdx} = Eadditional;
     end
 end
 
@@ -180,7 +174,7 @@ end
 
 
 %% ModelCase
-function ThisDetLgc = ModelCase(ThisDetLgc,Emax,Nsim,RMSpast,Threshold,ResultUpdateInterval,y,RMS,a,b,fs)
+function ThisDetLgc = ModelCase(ThisDetLgc,Emax,Nsim,RMSpast,Threshold,ResultUpdateInterval,y,GrpDelay,a,b,fs)
 
 % If the first sample is part of an event, add previous values 
 if ThisDetLgc(1)
@@ -215,16 +209,17 @@ for e = 1:length(StIdxTooLong)
     ThisDetLgc(DetIdx(StIdxTooLong(e)):DetIdx(EnIdxTooLong(e))) = 0;
 end
 
-% Start and end of events shorter than Emax (will be evaluated)
+% Start and end of events shorter than Emax - will be evaluated
 StIdxEval = StIdx(Dur <= Emax);
 EnIdxEval = EnIdx(Dur <= Emax);
 
 for e = 1:length(StIdxEval)
-    eIdx = (DetIdx(StIdxEval(e)):DetIdx(EnIdxEval(e))) - Nadd + (length(y) - ResultUpdateInterval);
-    IsRingdown = CheckIfRingdown(y,RMS,eIdx,Threshold,a,b,Nsim,fs,GrpDelay);
+    eIdx1 = DetIdx(StIdxEval(e)):DetIdx(EnIdxEval(e));
+    eIdx2 = eIdx1 - Nadd + (length(y) - ResultUpdateInterval);
+    [IsRingdown,RingKeepIdx] = CheckIfRingdown(y,eIdx2,a,b,Nsim,fs,GrpDelay);
     if IsRingdown
         % This is a ringdown, so set ThisDetLgc to false
-        ThisDetLgc(DetIdx(StIdxEval(e)):DetIdx(EnIdxEval(e))) = 0;
+        ThisDetLgc(eIdx1(RingKeepIdx)) = 0;
     end
 end
 
@@ -235,26 +230,81 @@ end
 
 
 %% CheckIfRingdown
-function IsRingdown = CheckIfRingdown(y,RMS,eIdx,Threshold,a,b,Nsim,fs,GrpDelay)
+function [IsRingdown,RingKeepIdx] = CheckIfRingdown(y,eIdx,a,b,Nsim,fs,GrpDelay)
+
+% You don't need to worry about whether the event took place in the past or
+% not. Get the event (no matter where it is), evaluate it, and return the
+% result. The ModelCase (and NoModelCase) functions only deal with indices
+% corresponding to the RMS signal. The delay between the mode meter signal
+% and the RMS is addressed in UpdateWindow. 
+
+% Remember that eIdx(1) is important for finding the event in y, but 
+% length(eIdx) is not. In this function the length of the event in the RMS
+% doesn't matter. Use Nsim samples for the comparison no matter what.
+
 % If Nsim samples are not available, then IsRingdown = false so that the
-% event is removed
+% event is removed. The rest of the event may later be determined to be a
+% good ringdown, but changes to the window prior to the current
+% ResultUpdateInterval samples are impossible. 
+if eIdx(1) - GrpDelay + Nsim-1 > length(y)
+    IsRingdown = false;
+    RingKeepIdx = [];
+    return
+end
 
-% Probably a good idea to put the simulation in a try-catch in case there's
-% a problem with a or b
+% Retrieve step response based on the a and b coefficients
+% The try-catch is used in case there's a problem with a or b
+try
+    h = stepz(b,a,Nsim,fs);
+catch
+    IsRingdown = false;
+    RingKeepIdx = [];
+    return
+end
 
-RMS(eIdx);
+% Retrieve transient
+transient = y(eIdx(1) - GrpDelay + (0:Nsim-1));
 
-% Adjust for filter delays
-eIdx = eIdx - GrpDelay;
-y(eIdx);
+% Scale
+h = h/max(abs(h))*max(abs(transient));
 
-IsRingdown = true;
+% Calculate dynamic time warping distance
+d = dtw(h,transient);
+
+if d < 0.45
+    IsRingdown = true;
+
+    % Even if it is a ringdown, the initial part of the disturbance
+    % should be removed. Find the maximum and minimum in the signal.
+    % Then find the zero crossing following the later of the two.
+    yy = y(eIdx-GrpDelay);
+    [yyMax,MaxIdx] = max(yy);
+    [yyMin,MinIdx] = min(yy);
+    if (yyMin < 0) && (0 < yyMax)
+        if MinIdx < MaxIdx
+            % Find the first negative value following the maximum, which
+            % followed the minimum
+            zIdx = find(yy(MaxIdx:end) < 0,1) + MaxIdx-1;
+        else % MaxIdx < MinIdx
+            % Find the first positive value following the minimum, which
+            % followed the maximum
+            zIdx = find(yy(MinIdx:end) > 0,1) + MinIdx-1;
+        end
+    else
+        zIdx = [];
+    end
+
+    RingKeepIdx = zIdx:length(yy);
+else
+    IsRingdown = false;
+    RingKeepIdx = [];
+end
 
 end
 
 
 %% UpdateWindow
-function [win, EventIndicator, Eadditional] = UpdateWindow(DetLgc,Parameters,N1,ResultUpdateInterval,RMSlength,PastAdditionalOutput,MethodIdx)
+function [win, EventIndicator] = UpdateWindow(y,DetLgc,Parameters,N1,ResultUpdateInterval,GrpDelay,PastAdditionalOutput,MethodIdx)
 
 lam1 = Parameters.lam1;
 lam2 = Parameters.lam2;
@@ -282,65 +332,62 @@ if isempty(PastAdditionalOutput)
         GrpSt = DetIdx([1; DetDiff+1]);
         GrpEn = [DetIdx(DetDiff); DetIdx(end)];
         
-        % The start is moved forward by RMSlength samples and the end is moved back
-        % RMSlength samples to ensure that the entire event is removed.
-        GrpStExtra = GrpSt - RMSlength + 1;
-        GrpEnExtra = GrpEn + RMSlength;
+        % Shift the event forward by GrpDelay samples to account for the
+        % filter delays introduced when calculating the RMS
+        GrpSt = GrpSt - GrpDelay;
+        GrpEn = GrpEn - GrpDelay;
         
         % Make sure that the start and end are within the window.
-        % Additional samples that should be removed are counted with
-        % Eadditional
-        Eadditional = max([max(GrpEnExtra)-N1, 0]);
-        GrpStExtra(GrpStExtra < 1) = 1;
-        GrpEnExtra(GrpEnExtra > N1) = N1;
+        GrpSt(GrpSt < 1) = 1;
+        GrpEn(GrpEn < 1) = 1;
         
         % For each detected event, mark the event
         for Eidx = 1:length(GrpSt)
-            EventIndicator(GrpStExtra(Eidx):GrpEnExtra(Eidx)) = 2;
             EventIndicator(GrpSt(Eidx):GrpEn(Eidx)) = 1;
         end
         
         % Remove the event from the window
         win(EventIndicator ~= 0) = 0;
-    else
-        Eadditional = 0;
     end
     
     return
 end
 
-win = PastAdditionalOutput.win{MethodIdx};
-Eadditional = PastAdditionalOutput.Eadditional{MethodIdx};
 EventIndicator = PastAdditionalOutput.EventIndicator{MethodIdx};
+
+% Adjust the indices of samples with a detection based on the group delay
+% of the filters used to calculate the RMS
+DetLgcAdj = false(size(DetLgc));
+% DetLgc is just for the most recent ResultUpdateInterval samples. Create
+% an index that corresponds to the EventIndicator vector, which corresponds
+% to the full analysis window of length N1. Simultaneously, adjust for the
+% group delay.
+DetIdxEI = find(DetLgc) + N1 - GrpDelay;
+% In many cases, DetIdxEI will contain indices beyond N1 because DetLgc
+% corresponds to the ResultUpdtateInterval samples following
+% EventIndicator. Overlap is caused by the group delay. Remove indices
+% beyond N1 (the window corresponding to EventIndicator).
+DetIdxEI(DetIdxEI > N1) = [];
+% Set EventIndicator to 1 at DetIdxEI. This is detecting an event in
+% samples that are already passed. 
+EventIndicator(DetIdxEI) = 1;
+% Adjust DetLgc to account for the group delay of the filters used to
+% calculate the RMS.
+DetIdx = find(DetLgc) - GrpDelay;
+DetIdx(DetIdx<1) = [];  % These can be dropped off because EventIndicator was adjusted above
+DetLgcAdj(DetIdx) = true;
+DetLgc = DetLgcAdj;
+
+win = PastAdditionalOutput.win{MethodIdx};
 for k = 1:ResultUpdateInterval
     if DetLgc(k)
         % Newest sample is part of an event
         % Shift the event tracker forward and mark the event
         EventIndicator = [EventIndicator(2:end) 1];
-        
-        % If this is the first sample where the event has not been detected,
-        % Add the past RMSlength samples to the event to make sure that
-        % it is completely removed
-        if EventIndicator(end-1) == 0
-            EventIndicator(end-RMSlength+1:end-1) = 2;
-        end
     else
         % Newest sample is NOT part of an event
         % Shift the event tracker forward and mark the non-event
         EventIndicator = [EventIndicator(2:end) 0];
-        
-        % If there was an event detected in the previous sample, add an 
-        % additional RMSlength samples to the event to make sure
-        % that it is completely removed
-        if EventIndicator(end-1) == 1
-            Eadditional = RMSlength;
-        end
-        
-        if Eadditional > 0
-            % Continue removing samples for the detected event
-            EventIndicator(end) = 2;
-            Eadditional = Eadditional - 1;
-        end
     end
     
     if isempty(find(EventIndicator(end-N2+1:end)==1,1))
@@ -363,6 +410,10 @@ for k = 1:ResultUpdateInterval
 
         % Update window
         win = [lam*win(2:end); 1];
+        
+        % Because an event can be detected in past samples, make sure
+        % all event samples are set to zero in the window
+        win(EventIndicator ~= 0) = 0;
 
         % Find the last zero in the window
         Zidx = find(win==0,1,'last');
@@ -402,6 +453,20 @@ for k = 1:ResultUpdateInterval
             end
         end
     end
+end
+
+% Due to the filter delay when calculating the RMS, the most recent GrpDelay
+% samples of y can't be effectively evaluated with RMS. 
+% After removing samples as specified by the window, if the maximum value
+% of y occurs within the final GrpDelay samples, remove all the samples.
+% This will prevent events that just occurred from biasing the mode meter.
+% Downside: In this implementation the window will be permanently set to
+% zero for these samples, even if they don't trigger the RMS-energy
+% detector.
+y(win == 0) = 0;
+[~,MaxIdx] = max(y);
+if MaxIdx >= length(y)-GrpDelay
+    win(end-GrpDelay:end) = 0;
 end
 
 end
