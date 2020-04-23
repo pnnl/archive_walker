@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ModeMeter.Views
 {
     /// <summary>
-    /// Interaction logic for FOParametersView1.xaml
+    /// Interaction logic for FOtimeLocParametersView.xaml
     /// </summary>
-    public partial class FOParametersView : UserControl
+    public partial class FOtimeLocParametersView : UserControl
     {
-        public FOParametersView()
+        public FOtimeLocParametersView()
         {
             InitializeComponent();
         }

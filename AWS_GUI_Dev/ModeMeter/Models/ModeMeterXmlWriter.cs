@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -65,7 +66,7 @@ namespace ModeMeter.Models
         {
             var modeElement = new XElement("Mode");
             modeElement.Add(new XElement("Name", mode.ModeName));
-            _addModePMUSignals(modeElement, mode);
+            _addModePMUSignals(modeElement, mode.PMUs);
             modeElement.Add(new XElement("AnalysisLength", mode.AnalysisLength));
             var retConTracking = new XElement("RetConTracking");
             switch (mode.Status)
@@ -93,38 +94,57 @@ namespace ModeMeter.Models
             {
                 _writeAMethod(modeElement, method);
             }
-            if (mode.IsFODetecotrParametersVisible)
+            //if (mode.IsFODetecotrParametersVisible)
+            if (mode.ShowFOParameters)
             {
                 XElement foParameters = _writeFOParameterElement(mode.FODetectorParameters);
                 modeElement.Add(foParameters);
+                XElement foTimeLocParameters = _writeFOTimeLocParameterElement(mode.FODetectorParameters);
+                modeElement.Add(foTimeLocParameters);
             }
-            if (mode.ShowEventDetectionParameters)
+            if (mode.ShowRMSEnergyTransientParameters)
             {
                 XElement eventDetectionparams = _writeEventDetectionParameterElement(mode.EventDetectionParameters);
                 modeElement.Add(eventDetectionparams);
             }
             mmElement.Add(modeElement);
         }
-
+        private XElement _writeFOTimeLocParameterElement(FOdetectorParametersViewModel fODetectorParameters)
+        {
+            throw new NotImplementedException();
+        }
         private XElement _writeEventDetectionParameterElement(EventDetectionParametersViewModel parameters)
         {
             var edParameters = new XElement("EventDetectorParam");
-            if (!string.IsNullOrEmpty(parameters.RMSlength))
-            {
-                edParameters.Add(new XElement("RMSlength", parameters.RMSlength));
-            }
-            if (!string.IsNullOrEmpty(parameters.RMSmedianFilterTime))
-            {
-                edParameters.Add(new XElement("RMSmedianFilterTime", parameters.RMSmedianFilterTime));
-            }
-            if (!string.IsNullOrEmpty(parameters.RingThresholdScale))
-            {
-                edParameters.Add(new XElement("RingThresholdScale", parameters.RingThresholdScale));
-            }
+            //if (!string.IsNullOrEmpty(parameters.RMSlength))
+            //{
+            //    edParameters.Add(new XElement("RMSlength", parameters.RMSlength));
+            //}
+            //if (!string.IsNullOrEmpty(parameters.RMSmedianFilterTime))
+            //{
+            //    edParameters.Add(new XElement("RMSmedianFilterTime", parameters.RMSmedianFilterTime));
+            //}
+            //if (!string.IsNullOrEmpty(parameters.RingThresholdScale))
+            //{
+            //    edParameters.Add(new XElement("RingThresholdScale", parameters.RingThresholdScale));
+            //}
             if (!string.IsNullOrEmpty(parameters.MinAnalysisLength))
             {
                 edParameters.Add(new XElement("MinAnalysisLength", parameters.MinAnalysisLength));
             }
+            if (!string.IsNullOrEmpty(parameters.Threshold))
+            {
+                edParameters.Add(new XElement("Threshold", parameters.Threshold));
+            }
+            if (parameters.RingdownID)
+            {
+                edParameters.Add(new XElement("RingdownID", "TRUE"));
+            }
+            else
+            {
+                edParameters.Add(new XElement("RingdownID", "FALSE"));
+            }
+            edParameters.Add(new XElement("ForgetFactor1", parameters.ForgetFactor1));
             return edParameters;
         }
 
@@ -137,14 +157,17 @@ namespace ModeMeter.Models
                     mth = new XElement("AlgNames", new XElement("Name", "YW_ARMA"),
                                                         new XElement("na", method.ARModelOrder),
                                                         new XElement("nb", method.MAModelOrder),
-                                                        new XElement("L", method.NumberOfEquations));
+                                                        new XElement("L", method.NumberOfEquations),
+                                                        new XElement("ng", method.ExaggeratedARModelOrder),
+                                                        new XElement("NaNomitLimit", method.NaNomitLimit));
                     modeElement.Add(mth);
                     break;
                 case ModeMethods.LSARMA:
                     mth = new XElement("AlgNames", new XElement("Name", "LS_ARMA"),
                                                         new XElement("na", method.ARModelOrder),
                                                         new XElement("nb", method.MAModelOrder),
-                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder));
+                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder),
+                                                        new XElement("NaNomitLimit", method.NaNomitLimit));
                     modeElement.Add(mth);
                     break;
                 case ModeMethods.YWARMAS:
@@ -152,14 +175,17 @@ namespace ModeMeter.Models
                                                         new XElement("na", method.ARModelOrder),
                                                         new XElement("nb", method.MAModelOrder),
                                                         new XElement("L", method.NumberOfEquations),
-                                                        new XElement("LFO", method.NumberOfEquationsWithFOpresent));
+                                                        new XElement("LFO", method.NumberOfEquationsWithFOpresent),
+                                                        new XElement("ng", method.ExaggeratedARModelOrder),
+                                                        new XElement("NaNomitLimit", method.NaNomitLimit));
                     modeElement.Add(mth);
                     break;
                 case ModeMethods.LSARMAS:
                     mth = new XElement("AlgNames", new XElement("Name", "LS_ARMApS"),
                                                         new XElement("na", method.ARModelOrder),
                                                         new XElement("nb", method.MAModelOrder),
-                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder));
+                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder),
+                                                        new XElement("NaNomitLimit", method.NaNomitLimit));
                     modeElement.Add(mth);
                     break;
                 default:
@@ -167,7 +193,7 @@ namespace ModeMeter.Models
             }
         }
 
-        private static XElement _writeFOParameterElement(PeriodogramDetectorParametersViewModel parameters)
+        private XElement _writeFOParameterElement(FOdetectorParametersViewModel parameters)
         {
             var foParameters = new XElement("FOdetectorParam");//, new XElement("FrequencyInterval", parameters.FrequencyInterval),
                                                                 //new XElement("FrequencyMax", parameters.FrequencyMax),
@@ -178,34 +204,34 @@ namespace ModeMeter.Models
                                                                 //new XElement("WindowLength", parameters.WindowLength),
                                                                 //new XElement("WindowOverlap", parameters.WindowOverlap)
                                                                 //);
-            if (!string.IsNullOrEmpty(parameters.FrequencyInterval))
+            if (!string.IsNullOrEmpty(parameters.FODetectorParams.FrequencyInterval))
             {
-                foParameters.Add(new XElement("FrequencyInterval", parameters.FrequencyInterval));
+                foParameters.Add(new XElement("FrequencyInterval", parameters.FODetectorParams.FrequencyInterval));
             }
-            if (!string.IsNullOrEmpty(parameters.FrequencyMax))
+            if (!string.IsNullOrEmpty(parameters.FODetectorParams.FrequencyMax))
             {
-                foParameters.Add(new XElement("FrequencyMax", parameters.FrequencyMax));
+                foParameters.Add(new XElement("FrequencyMax", parameters.FODetectorParams.FrequencyMax));
             }
-            if (!string.IsNullOrEmpty(parameters.FrequencyMin))
+            if (!string.IsNullOrEmpty(parameters.FODetectorParams.FrequencyMin))
             {
-                foParameters.Add(new XElement("FrequencyMin", parameters.FrequencyMin));
+                foParameters.Add(new XElement("FrequencyMin", parameters.FODetectorParams.FrequencyMin));
             }
-            if (!string.IsNullOrEmpty(parameters.FrequencyTolerance))
+            if (!string.IsNullOrEmpty(parameters.FODetectorParams.FrequencyTolerance))
             {
-                foParameters.Add(new XElement("FrequencyTolerance", parameters.FrequencyTolerance));
+                foParameters.Add(new XElement("FrequencyTolerance", parameters.FODetectorParams.FrequencyTolerance));
             }
-            if (!string.IsNullOrEmpty(parameters.MedianFilterFrequencyWidth))
+            if (!string.IsNullOrEmpty(parameters.FODetectorParams.MedianFilterFrequencyWidth))
             {
-                foParameters.Add(new XElement("MedianFilterFrequencyWidth", parameters.MedianFilterFrequencyWidth));
+                foParameters.Add(new XElement("MedianFilterFrequencyWidth", parameters.FODetectorParams.MedianFilterFrequencyWidth));
             }
-            if (!string.IsNullOrEmpty(parameters.Pfa))
+            if (!string.IsNullOrEmpty(parameters.FODetectorParams.Pfa))
             {
-                foParameters.Add(new XElement("Pfa", parameters.Pfa));
+                foParameters.Add(new XElement("Pfa", parameters.FODetectorParams.Pfa));
             }
-            foParameters.Add(new XElement("WindowLength", parameters.WindowLength));
-            foParameters.Add(new XElement("WindowOverlap", parameters.WindowOverlap));
+            foParameters.Add(new XElement("WindowLength", parameters.FODetectorParams.WindowLength));
+            foParameters.Add(new XElement("WindowOverlap", parameters.FODetectorParams.WindowOverlap));
             XElement type = null;
-            switch (parameters.WindowType)
+            switch (parameters.FODetectorParams.WindowType)
             {
                 case BAWGUI.Core.Models.DetectorWindowType.hann:
                     type = new XElement("WindowType", "hann");
@@ -226,12 +252,17 @@ namespace ModeMeter.Models
                     break;
             }
             foParameters.AddFirst(type);
+            if (!string.IsNullOrEmpty(parameters.MinTestStatWinLength))
+            {
+                foParameters.Add(new XElement("MinTestStatWinLength", parameters.MinTestStatWinLength));
+            }
+            _addModePMUSignals(foParameters, parameters.PMUs);
             return foParameters;
         }
 
-        private void _addModePMUSignals(XElement modeElement, ModeViewModel mode)
+        private void _addModePMUSignals(XElement modeElement, ObservableCollection<SignalSignatureViewModel> signals)
         {
-            var PMUSignalDictionary = mode.PMUs.GroupBy(x => x.PMUName).ToDictionary(x => x.Key, x => x.ToList());
+            var PMUSignalDictionary = signals.GroupBy(x => x.PMUName).ToDictionary(x => x.Key, x => x.ToList());
             foreach (var pmuGroup in PMUSignalDictionary)
             {
                 var pmu = new XElement("PMU");

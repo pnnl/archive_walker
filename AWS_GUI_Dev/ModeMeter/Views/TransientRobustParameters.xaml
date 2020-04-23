@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="ModeMeter.Views.TransientRobustParameters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModeMeter.Views"
+             xmlns:converters="clr-namespace:ModeMeter.Converters"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
+             xmlns:models="clr-namespace:ModeMeter.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="ForgetFactor1TypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="models:ForgetFactor1Type"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="ForgetFactor2TypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="models:ForgetFactor2Type"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="PostEventWinAdjTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="models:PostEventWinAdjType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <converters:EnumToStringConverter20 x:Key="EnumToStringConverter20"/>
+            <converters:EnumToStringConverter21 x:Key="EnumToStringConverter21"/>
+            <converters:EnumToStringConverter22 x:Key="EnumToStringConverter22"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!--<GroupBox Header="Transient Robust Parameters" Margin="2">-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Margin="0,1" VerticalAlignment="Center" Content="Retain ringdowns based on step response of ARMA model" HorizontalAlignment="Left"/>
+            <CheckBox IsChecked="{Binding RingdownID}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Margin="0,1" />
+            <Label Grid.Row="1" Grid.Column="0" Margin="0,1" VerticalAlignment="Center" Content="Smallest Analysis Window (seconds):" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MinAnalysisLength, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+            <Label Grid.Row="2" Grid.Column="0" Margin="0,1" VerticalAlignment="Center" Content="Forgetting Factor 1:" HorizontalAlignment="Left"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource ForgetFactor1TypeValues}}" Text="{Binding ForgetFactor1, Converter={StaticResource EnumToStringConverter20}}" HorizontalAlignment="Left"/>
+            <!--<TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ForgetFactor1, Converter={StaticResource }}" HorizontalAlignment="Left"/>-->
+            <Label Grid.Row="3" Grid.Column="0" Margin="0,1" VerticalAlignment="Center" Content="Forgetting Factor 2:" HorizontalAlignment="Left"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource ForgetFactor2TypeValues}}" Text="{Binding ForgetFactor2, Converter={StaticResource EnumToStringConverter21}}" HorizontalAlignment="Left"/>
+            <!--<TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding WindowOverlap, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>-->
+            <Label Grid.Row="4" Grid.Column="0" Margin="0,1" VerticalAlignment="Center" Content="Post-Event Window Adjustment:" HorizontalAlignment="Left"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource PostEventWinAdjTypeValues}}" Text="{Binding PostEventWinAdj, Converter={StaticResource EnumToStringConverter22}}" HorizontalAlignment="Left"/>
+            <!--<TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MedianFilterFrequencyWidth, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>-->
+            <Label Grid.Row="5" Grid.Column="0" Margin="0,1" VerticalAlignment="Center" Content="Threshold:" HorizontalAlignment="Left"/>
+            <TextBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding Threshold, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+        </Grid>
+    <!--</GroupBox>-->
+</UserControl>

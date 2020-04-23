@@ -124,8 +124,14 @@
     <Compile Include="Views\EventDetectionParametersView.xaml.cs">
       <DependentUpon>EventDetectionParametersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FODetectorParametersView.xaml.cs">
+      <DependentUpon>FODetectorParametersView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FOParametersView.xaml.cs">
       <DependentUpon>FOParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FOtimeLocParametersView.xaml.cs">
+      <DependentUpon>FOtimeLocParametersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GenerateMMReportView.xaml.cs">
       <DependentUpon>GenerateMMReportView.xaml</DependentUpon>
@@ -159,6 +165,9 @@
     </Compile>
     <Compile Include="Views\SparsePlotView.xaml.cs">
       <DependentUpon>SparsePlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TransientRobustParameters.xaml.cs">
+      <DependentUpon>TransientRobustParameters.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\YWARMASView.xaml.cs">
       <DependentUpon>YWARMASView.xaml</DependentUpon>
@@ -210,7 +219,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FODetectorParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FOParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FOtimeLocParametersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -255,6 +272,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SparsePlotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TransientRobustParameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

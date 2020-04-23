@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ModeMeter.Views.EventDetectionParametersView"
+﻿<!--<UserControl x:Class="ModeMeter.Views.EventDetectionParametersView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -26,4 +26,4 @@
         <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="270" VerticalAlignment="Center" Content="Minimum Equivalent Analysis Length (seconds):" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MinAnalysisLength}" HorizontalAlignment="Left"/>
     </Grid>
-</UserControl>
+</UserControl>-->
