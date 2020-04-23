@@ -25,6 +25,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -38,5 +39,7 @@
         <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MAModelOrder}" HorizontalAlignment="Left"/>
         <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Exaggerated AR Model Order:" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ExaggeratedARModelOrder}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Max NaNs to Omit:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding NaNomitLimit}" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>

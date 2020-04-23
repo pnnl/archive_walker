@@ -118,49 +118,108 @@ namespace ModeMeter.Models
                 var methods = ReadMethods(algs);
                 newMode.AlgNames = methods;
             }
+            FOdetectorParameters FOparams = null;
             var foDetectorParams = mode.Element("FOdetectorParam");
             if (foDetectorParams != null && foDetectorParams.HasElements)
             {
-                var foDetectorParameters = ReadFODetectorParameters(foDetectorParams);
-                newMode.FODetectorParameters = foDetectorParameters;
+                if (FOparams == null)
+                {
+                    FOparams = new FOdetectorParameters();
+                }
+                ReadFODetectorParameters(FOparams, foDetectorParams);
+            }
+            var FOtimeLocParam = mode.Element("FOtimeLocParam");
+            if (FOtimeLocParam != null && FOtimeLocParam.HasElements)
+            {
+                if (FOparams == null)
+                {
+                    FOparams = new FOdetectorParameters();
+                }
+                ReadFOtimeLocParam(FOparams, FOtimeLocParam);
+            }
+            // if both FOdetectorParam and FOtimeLocParam do not exist, FOparams would be null
+            if (FOparams != null)
+            {
+                newMode.ShowFOParameters = true;
+                newMode.FODetectorParas = FOparams;
             }
             var eventDetectionParameters = mode.Element("EventDetectorParam");
             if (eventDetectionParameters != null && eventDetectionParameters.HasElements)
             {
-                newMode.ShowEventDetectionParameters = true;
+                newMode.ShowRMSEnergyTransientParameters = true;
                 var eventDetectionParams = ReadEventDetectionParameters(eventDetectionParameters);
                 newMode.EventDetectionPara = eventDetectionParams;
             }    
             return newMode;
         }
-
         private EventDetectionParameters ReadEventDetectionParameters(XElement eventDetectionParameters)
         {
             var parameters = new EventDetectionParameters();
-            var par = eventDetectionParameters.Element("RMSlength");
-            if (par != null)
-            {
-                parameters.RMSlength = par.Value;
-            }
-            par = eventDetectionParameters.Element("RMSmedianFilterTime");
-            if (par != null)
-            {
-                parameters.RMSmedianFilterTime = par.Value;
-            }
-            par = eventDetectionParameters.Element("RingThresholdScale");
-            if (par != null)
-            {
-                parameters.RingThresholdScale = par.Value;
-            }
-            par = eventDetectionParameters.Element("MinAnalysisLength");
+            //var par = eventDetectionParameters.Element("RMSlength");
+            //if (par != null)
+            //{
+            //    parameters.RMSlength = par.Value;
+            //}
+            //par = eventDetectionParameters.Element("RMSmedianFilterTime");
+            //if (par != null)
+            //{
+            //    parameters.RMSmedianFilterTime = par.Value;
+            //}
+            //par = eventDetectionParameters.Element("RingThresholdScale");
+            //if (par != null)
+            //{
+            //    parameters.RingThresholdScale = par.Value;
+            //}
+            var par = eventDetectionParameters.Element("MinAnalysisLength");
             if (par != null)
             {
                 parameters.MinAnalysisLength = par.Value;
             }
+            par = eventDetectionParameters.Element("Threshold");
+            if (par != null)
+            {
+                parameters.Threshold = par.Value;
+            }
+            par = eventDetectionParameters.Element("RingdownID");
+            if (par != null)
+            {
+                if (par.Value.ToUpper() == "TRUE")
+                {
+                    parameters.RingdownID = true;
+                }
+                else
+                {
+                    parameters.RingdownID = false;
+                }
+            }
+            par = eventDetectionParameters.Element("ForgetFactor1");
+            if (par != null)
+            {
+                parameters.ForgetFactor1 = (ForgetFactor1Type)Enum.Parse(typeof(ForgetFactor1Type), par.Value);
+            }
+            par = eventDetectionParameters.Element("ForgetFactor2");
+            if (par != null)
+            {
+                parameters.ForgetFactor2 = (ForgetFactor2Type)Enum.Parse(typeof(ForgetFactor2Type), par.Value);
+            }
+            par = eventDetectionParameters.Element("PostEventWinAdj");
+            if (par != null)
+            {
+                parameters.PostEventWinAdj = (PostEventWinAdjType)Enum.Parse(typeof(PostEventWinAdjType), par.Value);
+            }
+            try
+            {
+                parameters.PMUs = PMUElementReader.ReadPMUElements(eventDetectionParameters);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
             return parameters;
         }
 
-        public PeriodogramDetectorModel ReadFODetectorParameters(XElement foDetectorParams)
+        public void ReadFODetectorParameters(FOdetectorParameters fOparams, XElement foDetectorParams)
         {
             var parameters = new PeriodogramDetectorModel();
             var par = foDetectorParams.Element("WindowType");
@@ -236,9 +295,54 @@ namespace ModeMeter.Models
                     parameters.CalcDEF = false;
                 }
             }
-            return parameters;
-        }
+            fOparams.FODetectorParams = parameters;
+            par = foDetectorParams.Element("MinTestStatWinLength");
+            if (par != null)
+            {
+                fOparams.MinTestStatWinLength = par.Value;
+            }
+            try
+            {
+                fOparams.PMUs = PMUElementReader.ReadPMUElements(foDetectorParams);
+            }
+            catch (Exception ex)
+            {
 
+                throw ex;
+            }
+        }
+        private void ReadFOtimeLocParam(FOdetectorParameters fOparams, XElement fOtimeLocParam)
+        {
+            var parameters = new FOtimeLocParameters();
+            var par = fOtimeLocParam.Element("PerformTimeLoc");
+            if (par != null)
+            {
+                if (par.Value.ToUpper() == "TRUE")
+                {
+                    parameters.PerformTimeLoc = true;
+                }
+                else
+                {
+                    parameters.PerformTimeLoc = false;
+                }
+            }
+            par = fOtimeLocParam.Element("LocMinLength");
+            if (par != null)
+            {
+                parameters.LocMinLength = par.Value;
+            }
+            par = fOtimeLocParam.Element("LocLengthStep");
+            if (par != null)
+            {
+                parameters.LocLengthStep = par.Value;
+            }
+            par = fOtimeLocParam.Element("LocRes");
+            if (par != null)
+            {
+                parameters.LocRes = par.Value;
+            }
+            fOparams.FOtimeLocParams = parameters;
+        }
         public List<ModeMethod> ReadMethods(IEnumerable<XElement> algs)
         {
             var methods = new List<ModeMethod>();
@@ -264,17 +368,16 @@ namespace ModeMeter.Models
                     //numberOfEquations = l.Value;
                     aNewMethod.NumberOfEquations = l.Value;
                 }
-                var nalpha = alg.Element("n_alpha");
-                if (nalpha != null)
-                {
-                    //exaggeratedARmodelOrder = nalpha.Value;
-                    aNewMethod.ExaggeratedARModelOrder = nalpha.Value;
-                }
                 var lfo = alg.Element("LFO");
                 if (lfo != null)
                 {
                     //numberOfEquationsWithFOpresent = lfo.Value;
                     aNewMethod.NumberOfEquationsWithFOpresent = lfo.Value;
+                }
+                var nan = alg.Element("NaNomitLimit");
+                if (nan != null)
+                {
+                    aNewMethod.NaNomitLimit = nan.Value;
                 }
                 var mName = alg.Element("Name");
                 if (mName != null)
@@ -286,6 +389,11 @@ namespace ModeMeter.Models
                     {
                         case "YW_ARMA":
                             aNewMethod.Name = ModeMethods.YWARMA;
+                            var ng = alg.Element("ng");
+                            if (ng != null)
+                            {
+                                aNewMethod.ExaggeratedARModelOrder = ng.Value;
+                            }
                             //aNewMethod = new YWARMA
                             //{
                             //    ARModelOrder = arModelOrder,
@@ -296,6 +404,12 @@ namespace ModeMeter.Models
                             break;
                         case "LS_ARMA":
                             aNewMethod.Name = ModeMethods.LSARMA;
+                            var nalpha = alg.Element("n_alpha");
+                            if (nalpha != null)
+                            {
+                                //exaggeratedARmodelOrder = nalpha.Value;
+                                aNewMethod.ExaggeratedARModelOrder = nalpha.Value;
+                            }
                             //aNewMethod = new LSARMA
                             //{
                             //    ARModelOrder = arModelOrder,
@@ -306,6 +420,11 @@ namespace ModeMeter.Models
                             break;
                         case "YW_ARMApS":
                             aNewMethod.Name = ModeMethods.YWARMAS;
+                            var ng2 = alg.Element("ng");
+                            if (ng2 != null)
+                            {
+                                aNewMethod.ExaggeratedARModelOrder = ng2.Value;
+                            }
                             //aNewMethod = new YWARMAS()
                             //{
                             //    ARModelOrder = arModelOrder,
@@ -317,6 +436,12 @@ namespace ModeMeter.Models
                             break;
                         case "LS_ARMApS":
                             aNewMethod.Name = ModeMethods.LSARMAS;
+                            var nalpha2 = alg.Element("n_alpha");
+                            if (nalpha2 != null)
+                            {
+                                //exaggeratedARmodelOrder = nalpha.Value;
+                                aNewMethod.ExaggeratedARModelOrder = nalpha2.Value;
+                            }
                             //aNewMethod = new LSARMAS()
                             //{
                             //    ARModelOrder = arModelOrder,
