@@ -1,9 +1,9 @@
 /*
-* MATLAB Compiler: 7.1 (R2019b)
-* Date: Thu Apr 23 14:04:52 2020
+* MATLAB Compiler: 6.6 (R2018a)
+* Date: Thu Apr 23 14:32:39 2020
 * Arguments:
-* "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private,version=4.1""-T""link:lib"
-* "-d""C:\Users\foll154\OneDrive -
+* "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
+* s\foll154\OneDrive -
 * PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_testi
 * ng""-v""class{GUI2MAT:C:\Users\foll154\OneDrive -
 * PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m,C:
@@ -95,7 +95,7 @@ namespace BAWSengineNative
   /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m
   /// </summary>
   /// <remarks>
-  /// @Version 4.1
+  /// @Version 4.0
   /// </remarks>
   public class GUI2MAT : IDisposable
   {
@@ -114,12 +114,7 @@ namespace BAWSengineNative
 
           string ctfFilePath= assembly.Location;
 
-		  int lastDelimiter = ctfFilePath.LastIndexOf(@"/");
-
-	      if (lastDelimiter == -1)
-		  {
-		    lastDelimiter = ctfFilePath.LastIndexOf(@"\");
-		  }
+          int lastDelimiter= ctfFilePath.LastIndexOf(@"\");
 
           ctfFilePath= ctfFilePath.Remove(lastDelimiter, (ctfFilePath.Length - lastDelimiter));
 

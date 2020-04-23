@@ -55,7 +55,7 @@
             PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m
             </summary>
             <remarks>
-            @Version 4.1
+            @Version 4.0
             </remarks>
         </member>
         <member name="M:BAWSengineNative.GUI2MAT.#cctor">
