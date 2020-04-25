@@ -77,6 +77,16 @@ else
             idx(idx3) = false;
             continue
         end
+        
+        % If possible, check to make sure the number of samples in this
+        % file matches the previous file
+        if ~isempty(FileInfo(idx3).tPMU)
+            if length(FileInfo(idx3).tPMU) ~= length(tPMU)
+                warning([focusFile{idx3} ' does not contain the right number of samples and will be skipped.']);
+                idx(idx3) = false;
+                continue
+            end
+        end
 
         % Store information for this file
         PMUbyFile{idx3} = PMUbyFileTemp;

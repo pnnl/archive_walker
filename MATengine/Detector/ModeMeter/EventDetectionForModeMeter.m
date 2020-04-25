@@ -271,7 +271,8 @@ h = h/max(abs(h))*max(abs(transient));
 % Calculate dynamic time warping distance
 d = dtw(h,transient);
 
-if d < 0.45
+% Tamara initially recommended 0.45
+if d < 0.03
     IsRingdown = true;
 
     % Even if it is a ringdown, the initial part of the disturbance
@@ -464,7 +465,7 @@ end
 % zero for these samples, even if they don't trigger the RMS-energy
 % detector.
 y(win == 0) = 0;
-[~,MaxIdx] = max(y);
+[~,MaxIdx] = max(abs(y));
 if MaxIdx >= length(y)-GrpDelay
     win(end-GrpDelay:end) = 0;
 end
