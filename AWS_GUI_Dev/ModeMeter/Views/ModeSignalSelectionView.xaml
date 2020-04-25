@@ -13,10 +13,10 @@
         <coreview:FilterListBox GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=4}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=5}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="GotFocus">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=4}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=5}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </coreview:FilterListBox>

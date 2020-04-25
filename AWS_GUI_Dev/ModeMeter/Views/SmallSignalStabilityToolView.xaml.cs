@@ -31,6 +31,7 @@ namespace ModeMeter.Views
         {
             var b = sender as FilterListBox;
             b.Background = Utility.HighlightColor;
+            // try to find parent group box and highlight it.
             var c = VisualTreeHelper.GetChild(b,0);
         }
         private void FilterListBox_LostFocus(object sender, RoutedEventArgs e)

@@ -109,9 +109,30 @@ namespace ModeMeter.Models
             }
             mmElement.Add(modeElement);
         }
-        private XElement _writeFOTimeLocParameterElement(FOdetectorParametersViewModel fODetectorParameters)
+        private XElement _writeFOTimeLocParameterElement(FOdetectorParametersViewModel parameters)
         {
-            throw new NotImplementedException();
+            var edParameters = new XElement("FOtimeLocParam");
+            if (parameters.FOtimeLocParams.PerformTimeLoc)
+            {
+                edParameters.Add(new XElement("PerformTimeLoc", "TRUE"));
+            }
+            else
+            {
+                edParameters.Add(new XElement("PerformTimeLoc", "FALSE"));
+            }
+            if (!string.IsNullOrEmpty(parameters.FOtimeLocParams.LocMinLength))
+            {
+                edParameters.Add(new XElement("LocMinLength", parameters.FOtimeLocParams.LocMinLength));
+            }
+            if (!string.IsNullOrEmpty(parameters.FOtimeLocParams.LocLengthStep))
+            {
+                edParameters.Add(new XElement("LocLengthStep", parameters.FOtimeLocParams.LocLengthStep));
+            }
+            if (!string.IsNullOrEmpty(parameters.FOtimeLocParams.LocRes))
+            {
+                edParameters.Add(new XElement("LocRes", parameters.FOtimeLocParams.LocRes));
+            }
+            return edParameters;
         }
         private XElement _writeEventDetectionParameterElement(EventDetectionParametersViewModel parameters)
         {
@@ -145,6 +166,9 @@ namespace ModeMeter.Models
                 edParameters.Add(new XElement("RingdownID", "FALSE"));
             }
             edParameters.Add(new XElement("ForgetFactor1", parameters.ForgetFactor1));
+            edParameters.Add(new XElement("ForgetFactor2", parameters.ForgetFactor2));
+            edParameters.Add(new XElement("PostEventWinAdj", parameters.PostEventWinAdj));
+            _addModePMUSignals(edParameters, parameters.PMUs);
             return edParameters;
         }
 

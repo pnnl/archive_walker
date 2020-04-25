@@ -28,9 +28,12 @@ namespace ModeMeter.Views
         {
             var b = sender as FilterListBox;
             b.Background = Utility.HighlightColor;
+            var a = b.Parent;
+            //var c = a.Parent;
+            Console.WriteLine(a);
             //foreach (var item in b.Parent)
             //{
-
+            //    Console.WriteLine(item);
             //}
         }
 
