@@ -54,7 +54,7 @@ if isfield(Parameters,'Mode')
         end
         FOdetectorParaFlag  = 0;
         if isfield(TempXML,'AlgNames')
-            %FInds the number of different algorithms implemented for a
+            %Finds the number of different algorithms implemented for a
             %given instance of selected modemeter
             NumMethods = length(TempXML.AlgNames);
             ExtrctParamXML = TempXML.AlgNames;
