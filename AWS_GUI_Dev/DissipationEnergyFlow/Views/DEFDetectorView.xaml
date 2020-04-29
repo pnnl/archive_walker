@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:DissipationEnergyFlow.Views"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
-             xmlns:converters="clr-namespace:DissipationEnergyFlow.Converters"
              xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -14,7 +13,8 @@
         <ResourceDictionary>
             <coreconverters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <coreconverters:DetectorExpanderHeaderConverter x:Key="DetectorExpanderHeaderConverter"/>
-            <converters:DEFTextBoxSelectionCPConverter x:Key="DEFTextBoxSelectionCPConverter"/>
+            <coreconverters:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
+            <!--<converters:DEFTextBoxSelectionCPConverter x:Key="DEFTextBoxSelectionCPConverter"/>-->
         </ResourceDictionary>
     </UserControl.Resources>
     <Border Margin="2,2,11,2" BorderBrush="LightGray" BorderThickness="1" Background="{Binding IsStepSelected, Converter={StaticResource SelectionStatusBackgroundConverter}}">
@@ -97,7 +97,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="VoltageMag"/>
                                                                         <Binding />
                                                                     </MultiBinding>
@@ -111,7 +111,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="VoltageMag"/>
                                                                         <Binding />
                                                                     </MultiBinding>
@@ -127,7 +127,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="VoltageAng"/>
                                                                         <Binding />
                                                                     </MultiBinding>
@@ -141,7 +141,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="VoltageAng"/>
                                                                         <Binding />
                                                                     </MultiBinding>
@@ -158,7 +158,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="ActivePowerP"/>
                                                                         <Binding />
                                                                     </MultiBinding>
@@ -172,7 +172,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="ActivePowerP"/>
                                                                         <Binding />
                                                                     </MultiBinding>
@@ -189,7 +189,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="ReactivePowerQ"/>
                                                                         <Binding />
                                                                     </MultiBinding>
@@ -203,7 +203,7 @@
                                                         <i:EventTrigger EventName="GotFocus">
                                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SignalSelectedToChange}">
                                                                 <i:InvokeCommandAction.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource DEFTextBoxSelectionCPConverter}">
+                                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                                         <Binding Source="ReactivePowerQ"/>
                                                                         <Binding />
                                                                     </MultiBinding>

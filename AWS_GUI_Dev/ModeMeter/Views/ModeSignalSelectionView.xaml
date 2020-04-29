@@ -6,19 +6,85 @@
              xmlns:local="clr-namespace:ModeMeter.Views"
              xmlns:coreview="clr-namespace:BAWGUI.Core.Views;assembly=BAWGUI.Core"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:coreConverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <!--<GroupBox Header="Mode Meter">-->
-        <!--<Label Content="Signal Selection:" Margin="2"/>-->
-        <coreview:FilterListBox GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=5}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="GotFocus">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=5}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </coreview:FilterListBox>
-    <!--</GroupBox>-->
+    <!--<coreview:FilterListBox GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus" MouseLeftButtonUp="FilterListBox_MouseLeftButtonUp">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonDown">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=5}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="GotFocus">
+                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=5}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+    </coreview:FilterListBox>-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <coreConverters:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200" ScrollViewer.CanContentScroll="True">
+                <ItemsControl ItemsSource="{Binding}" AlternationCount="{Binding Count}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Name="PMU" Margin="0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus" MinWidth="150">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=4}, Path=DataContext.AModePMUSignalBoxSelected}">
+                                                <i:InvokeCommandAction.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                                        <Binding/>
+                                                        <Binding Path="(ItemsControl.AlternationIndex)" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=UserControl, Mode=FindAncestor}"/>
+                                                    </MultiBinding>
+                                                </i:InvokeCommandAction.CommandParameter>
+                                            </i:InvokeCommandAction>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <TextBox.Text>
+                                        <MultiBinding StringFormat=" {0}) PMU: {1},   Channel: {2}">
+                                            <Binding Path="(ItemsControl.AlternationIndex)" RelativeSource="{RelativeSource Mode=TemplatedParent}" Mode="OneWay"/>
+                                            <Binding Path="PMUName"/>
+                                            <Binding Path="SignalName"/>
+                                        </MultiBinding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <!--<TextBox Name="Channel" Width="150" Text="{Binding Path=Value[0].SignalName}" Margin="2,0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus" BorderBrush="{Binding Path=Value[0].IsValid, Converter={StaticResource ErrorStatusBorderColorConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                                <xtlkt:WatermarkTextBox Name="CustName" Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus" Text="{Binding Path=Key.SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="70,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentFocusedTextboxUnarySteps}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </xtlkt:WatermarkTextBox>-->
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <StackPanel Orientation="Horizontal">
+                <xtlkt:WatermarkTextBox Watermark="Please select signal(s)" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}" Margin="0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus" MinWidth="150">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=4}, Path=DataContext.AModePMUSignalBoxSelected}" CommandParameter="{Binding}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </xtlkt:WatermarkTextBox>
+                <!--<xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please select signal(s) from signal selection panel on the right" Style="{StaticResource NoItemsTextBoxStyle}"  Width="150" Margin="2,0" IsReadOnly="True" GotFocus="UnaryTextBoxGotFocus" LostFocus="UnaryTextBoxLostFocus"/>
+                <xtlkt:WatermarkTextBox Watermark="Enter Signal Name" ToolTip="Please enter custom signal name" Width="150" Text="{Binding Path=Key.SignalName, UpdateSourceTrigger=PropertyChanged}" Margin="70,0" Style="{StaticResource NoItemsTextBoxStyle}" />-->
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
 </UserControl>

@@ -422,6 +422,13 @@ namespace ModeMeter.ViewModels
     public class FOdetectorParametersViewModel : ViewModelBase
     {
         private FOdetectorParameters _model;
+        public FOdetectorParametersViewModel()
+        {
+            _model = new FOdetectorParameters();
+            FODetectorParams = new PeriodogramDetectorParametersViewModel(_model.FODetectorParams);
+            FOtimeLocParams = new FOtimeLocParametersViewModel(_model.FOtimeLocParams);
+            PMUs = new ObservableCollection<SignalSignatureViewModel>();
+        }
         public FOdetectorParametersViewModel(FOdetectorParameters parameters, SignalManager _signalMgr)
         {
             _model = parameters;
@@ -503,6 +510,10 @@ namespace ModeMeter.ViewModels
     public class PeriodogramDetectorParametersViewModel : ViewModelBase
     {
         private PeriodogramDetectorModel _model;
+        public PeriodogramDetectorParametersViewModel()
+        {
+            _model = new PeriodogramDetectorModel();
+        }
 
         public PeriodogramDetectorParametersViewModel(PeriodogramDetectorModel fODetectorParameters)
         {

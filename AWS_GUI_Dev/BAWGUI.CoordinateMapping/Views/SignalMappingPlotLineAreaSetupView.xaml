@@ -6,13 +6,15 @@
              xmlns:local="clr-namespace:BAWGUI.CoordinateMapping.Views"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters="clr-namespace:BAWGUI.CoordinateMapping.Converters"
+             xmlns:coreConverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:SiteCountVisibilityConverter x:Key="SiteCountVisibilityConverter"/>
-            <converters:TextBoxSelectionCommandParameterConverter x:Key="TextBoxSelectionCommandParameterConverter"/>
+            <!--<converters:TextBoxSelectionCommandParameterConverter x:Key="TextBoxSelectionCommandParameterConverter"/>-->
             <converters:MapPlotTypeVisibilityConverter x:Key="MapPlotTypeVisibilityConverter"/>
+            <coreConverters:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
             <!--<DataTemplate x:Key="TwoSitesOrMore">
                 <ItemsControl Grid.Column="1" ItemsSource="{Binding Locations}">
                     <ItemsControl.ItemTemplate>
@@ -110,7 +112,7 @@
                                         <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=2,Mode=FindAncestor}, Path=DataContext.ModifySiteSelection}">
                                             <!--<i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentSelectedSignal}" CommandName="From">-->
                                             <i:InvokeCommandAction.CommandParameter>
-                                                <MultiBinding Converter="{StaticResource TextBoxSelectionCommandParameterConverter}">
+                                                <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                     <Binding RelativeSource="{RelativeSource AncestorType=UserControl ,AncestorLevel=1, Mode=FindAncestor}" Path="DataContext"/>
                                                     <Binding />
                                                     <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}" Path="(ItemsControl.AlternationIndex)"/>
@@ -126,7 +128,7 @@
                             <Button Command="{Binding DataContext.DeleteASite, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl, AncestorLevel=1}}" Width="20" Height="20">
                                 <Image Source="/BAWGUI.CoordinateMapping;component/MyResources/delete.bmp"/>
                                 <Button.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource TextBoxSelectionCommandParameterConverter}">
+                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                         <Binding />
                                         <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}" Path="(ItemsControl.AlternationIndex)"/>
                                         <!--<Binding RelativeSource="{RelativeSource AncestorType=UserControl ,AncestorLevel=1, Mode=FindAncestor}" Path="DataContext"/>-->

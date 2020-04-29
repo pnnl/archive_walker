@@ -62,6 +62,17 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Expander>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Expanded">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentMode}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.SetCurrentMode}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                        <!--<i:EventTrigger EventName="LostKeyboardFocus">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=1}, Path=DataContext.CheckSignalSelectedEqual}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>-->
+                                    </i:Interaction.Triggers>
                                     <Expander.Header>
                                         <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
                                             <TextBlock VerticalAlignment="Center" Text="{Binding ModeName, StringFormat=Mode: {0}}"/>
@@ -76,7 +87,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     <GroupBox Grid.Row="4" Margin="2" Header="Oscillation Baselining Signal Selection">
-                        <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}" GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus">
+                        <coreview:FilterListBox Margin="2" DataContext="{Binding BaseliningSignals}" GotFocus="FilterListBox_GotFocus" LostFocus="FilterListBox_LostFocus" MouseLeftButtonUp="FilterListBox_MouseLeftButtonUp">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.BaseliningSignalBoxSelected}" CommandParameter="{Binding}"/>

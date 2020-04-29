@@ -8,11 +8,13 @@
             xmlns:local="clr-namespace:BAWGUI.Settings"
             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:coreConverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
             mc:Ignorable="d" 
             d:DesignHeight="450" d:DesignWidth="800">
 <UserControl.Resources>
     <ResourceDictionary>
-        <converters:PhasorCreationCommandParameterConverter x:Key="PhasorCreationCommandParameterConverter"/>
+        <!--<converters:PhasorCreationCommandParameterConverter x:Key="PhasorCreationCommandParameterConverter"/>-->
+        <coreConverters:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
     </ResourceDictionary>
 </UserControl.Resources>
 <Grid>
@@ -35,7 +37,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseAVoltage"/>
                             <Binding Source="PhaseAVoltage"/>
                         </MultiBinding>
@@ -49,7 +51,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseAVoltage"/>
                             <Binding Source="PhaseAVoltage"/>
                         </MultiBinding>
@@ -64,7 +66,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseBVoltage"/>
                             <Binding Source="PhaseBVoltage"/>
                         </MultiBinding>
@@ -78,7 +80,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseBVoltage"/>
                             <Binding Source="PhaseBVoltage"/>
                         </MultiBinding>
@@ -93,7 +95,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseCVoltage"/>
                             <Binding Source="PhaseCVoltage"/>
                         </MultiBinding>
@@ -107,7 +109,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseCVoltage"/>
                             <Binding Source="PhaseCVoltage"/>
                         </MultiBinding>
@@ -122,7 +124,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseACurrent"/>
                             <Binding Source="PhaseACurrent"/>
                         </MultiBinding>
@@ -136,7 +138,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseACurrent"/>
                             <Binding Source="PhaseACurrent"/>
                         </MultiBinding>
@@ -151,7 +153,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseBCurrent"/>
                             <Binding Source="PhaseBCurrent"/>
                         </MultiBinding>
@@ -165,7 +167,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseBCurrent"/>
                             <Binding Source="PhaseBCurrent"/>
                         </MultiBinding>
@@ -180,7 +182,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseCCurrent"/>
                             <Binding Source="PhaseCCurrent"/>
                         </MultiBinding>
@@ -194,7 +196,7 @@
             <i:EventTrigger EventName="GotFocus">
                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox}">
                     <i:InvokeCommandAction.CommandParameter>
-                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                             <Binding Path="POWInputSignals.PhaseCCurrent"/>
                             <Binding Source="PhaseCCurrent"/>
                         </MultiBinding>

@@ -36,9 +36,39 @@ namespace ModeMeter.Views
         }
         private void FilterListBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            var b = sender as FilterListBox;
-            b.Background = new SolidColorBrush(Colors.White);
+            var b = sender as Expander;
+            //b.Background = new SolidColorBrush(Colors.White);
+            //var c = b.Content as Grid;
+            //foreach (var ch in c.Children)
+            //{
+            //    if (ch is TextBlock)
+            //    {
+            //        var child = ch as TextBlock;
+            //        child.Foreground = new SolidColorBrush(Colors.Black);
+            //    }
+            //}
 
+        }
+
+        private void FilterListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var b = sender as FilterListBox;
+            var c = b.Content as Grid;
+            foreach (var ch in c.Children)
+            {
+                if (ch is ListView)
+                {
+                    var child = ch as ListView;
+                    child.Visibility = Visibility.Visible;
+                    child.Focus();
+                }
+                if (ch is TextBlock)
+                {
+                    var child = ch as TextBlock;
+                    child.Foreground = new SolidColorBrush(Colors.Red);
+                    //child.Visibility = Visibility.Collapsed;
+                }
+            }
         }
     }
 }

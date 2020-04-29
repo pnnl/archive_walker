@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using Xceed.Wpf.Toolkit;
 
 namespace ModeMeter.Views
 {
@@ -24,24 +25,103 @@ namespace ModeMeter.Views
             InitializeComponent();
         }
 
-        private void FilterListBox_GotFocus(object sender, RoutedEventArgs e)
+        //private void FilterListBox_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    var b = sender as FilterListBox;
+        //    b.Background = Utility.HighlightColor;
+        //    //var a = b.Parent as UserControl;
+        //    //var cc = a.Parent as GroupBox;
+        //    //cc.Background = Utility.HighlightColor;
+        //    //foreach (var item in b.Parent)
+        //    //{
+        //    //    Console.WriteLine(item);
+        //    //}
+        //}
+
+        //private void FilterListBox_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    var b = sender as FilterListBox;
+        //    b.Background = new SolidColorBrush(Colors.White);
+        //    //var a = b.Parent as UserControl;
+        //    //var cc = a.Parent as GroupBox;
+        //    //cc.Background = new SolidColorBrush(Colors.White);
+        //    var c = b.Content as Grid;
+        //    //var showText = false;
+        //    foreach (var ch in c.Children)
+        //    {
+        //        //if (ch is ListView)
+        //        //{
+        //        //    var child = ch as ListView;
+        //        //    if (child.Items.Count == 0)
+        //        //    {
+        //        //        //child.Visibility = Visibility.Collapsed;
+        //        //        showText = true;
+        //        //    }
+        //        //}
+        //        if (ch is TextBlock)
+        //        {
+        //            var child = ch as TextBlock;
+        //            child.Foreground = new SolidColorBrush(Colors.Black);
+        //            //if (showText)
+        //            //{
+        //            //    //child.Visibility = Visibility.Visible;
+        //            //}
+        //        }
+        //    }
+
+        //}
+
+        //private void FilterListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    var b = sender as FilterListBox;
+        //    var c = b.Content as Grid;
+        //    foreach (var ch in c.Children)
+        //    {
+        //        if (ch is ListView)
+        //        {
+        //            var child = ch as ListView;
+        //            child.Visibility = Visibility.Visible;
+        //            child.Focus();
+        //        }
+        //        if (ch is TextBlock)
+        //        {
+        //            var child = ch as TextBlock;
+        //            child.Foreground = new SolidColorBrush(Colors.Red);
+        //            //child.Visibility = Visibility.Collapsed;
+        //        }
+        //    }
+        //}
+
+        private void UnaryTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            var b = sender as FilterListBox;
+            var b = sender as TextBox;
             b.Background = Utility.HighlightColor;
-            var a = b.Parent;
-            //var c = a.Parent;
-            Console.WriteLine(a);
-            //foreach (var item in b.Parent)
+            //foreach (var item in sender.Parent.Children)
             //{
-            //    Console.WriteLine(item);
+            //    if (item.Name == "PMU")
+            //        item.Background = Utility.HighlightColor;
+            //    if (item.Name == "Channel")
+            //        item.Background = Utility.HighlightColor;
+            //    if (item.Name == "CustName")
+            //        item.Background = Utility.HighlightColor;
             //}
         }
 
-        private void FilterListBox_LostFocus(object sender, RoutedEventArgs e)
+        private void UnaryTextBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            var b = sender as FilterListBox;
+            var b = sender as TextBox;
             b.Background = new SolidColorBrush(Colors.White);
-
+            //foreach (var item in sender.Parent.Children)
+            //{
+            //    if (item.Name == "PMU")
+            //        item.Background = new System.Media.SolidColorBrush(Colors.White);
+            //    if (item.Name == "Channel")
+            //        item.Background = new System.Media.SolidColorBrush(Colors.White);
+            //    if (item.Name == "CustName")
+            //        item.Background = new System.Media.SolidColorBrush(Colors.White);
+            //}
         }
+
+
     }
 }

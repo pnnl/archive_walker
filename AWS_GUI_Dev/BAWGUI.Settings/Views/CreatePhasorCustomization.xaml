@@ -13,7 +13,8 @@
         <ResourceDictionary>
             <converters:ErrorStatusBorderColorConverter x:Key="ErrorStatusBorderColorConverter"/>
             <coreconverters:VisibleIfNonZeroConverter x:Key="VisibleIfNonZeroConverter"/>
-            <converters:PhasorCreationCommandParameterConverter x:Key="PhasorCreationCommandParameterConverter"/>
+            <coreconverters:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
+            <!--<converters:PhasorCreationCommandParameterConverter x:Key="PhasorCreationCommandParameterConverter"/>-->
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="2" Name="StepPanel">
@@ -49,7 +50,7 @@
                                             <i:EventTrigger EventName="GotKeyboardFocus">
                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
                                                     <i:InvokeCommandAction.CommandParameter>
-                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                        <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                             <Binding Path="."/>
                                                             <Binding Path="Value[0]"/>
                                                         </MultiBinding>
@@ -63,7 +64,7 @@
                                             <i:EventTrigger EventName="GotKeyboardFocus">
                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
                                                     <i:InvokeCommandAction.CommandParameter>
-                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                        <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                             <Binding Path="."/>
                                                             <Binding Path="Value[0]"/>
                                                         </MultiBinding>
@@ -77,7 +78,7 @@
                                             <i:EventTrigger EventName="GotKeyboardFocus">
                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
                                                     <i:InvokeCommandAction.CommandParameter>
-                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                        <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                             <Binding Path="."/>
                                                             <Binding Path="Value[1]"/>
                                                         </MultiBinding>
@@ -91,7 +92,7 @@
                                             <i:EventTrigger EventName="GotKeyboardFocus">
                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=2}, Path=DataContext.SetCurrentPhasorCreationFocusedTextBox}">
                                                     <i:InvokeCommandAction.CommandParameter>
-                                                        <MultiBinding Converter="{StaticResource PhasorCreationCommandParameterConverter}">
+                                                        <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                             <Binding Path="."/>
                                                             <Binding Path="Value[1]"/>
                                                         </MultiBinding>

@@ -151,9 +151,9 @@ namespace ModeMeter.Models
     }
     public class FOdetectorParameters
     {
-        public FOtimeLocParameters FOtimeLocParams { get; set; }
-        public PeriodogramDetectorModel FODetectorParams { get; set; }
-        public List<SignalSignatures> PMUs { get; set; }
+        public FOtimeLocParameters FOtimeLocParams { get; set; } = new FOtimeLocParameters();
+        public PeriodogramDetectorModel FODetectorParams { get; set; } = new PeriodogramDetectorModel();
+        public List<SignalSignatures> PMUs { get; set; } = new List<SignalSignatures>();
         public string MinTestStatWinLength { get; set; }
     }
 }

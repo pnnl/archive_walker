@@ -9,6 +9,7 @@
              xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:converters="clr-namespace:ModeMeter.Converters"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -75,14 +76,89 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Mode Meter" Grid.Column="0" Margin="2">
-                        <local:ModeSignalSelectionView DataContext="{Binding PMUs}"/>
+                    <GroupBox Header="Mode Meter" Grid.Column="0" Margin="2" Focusable="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <local:ModeSignalSelectionView DataContext="{Binding PMUs}" Grid.Row="0"/>
+                            <Border Grid.Row="1" GotFocus="GroupBox_GotFocus" LostFocus="GroupBox_LostFocus" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                                    </i:EventTrigger>
+                                    <!--<i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                                    </i:EventTrigger>-->
+                                </i:Interaction.Triggers>
+                                <TextBlock></TextBlock>
+                            </Border>
+                        </Grid>
+                            <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
                     </GroupBox>
-                    <GroupBox Header="Forced Oscillation Detection" Grid.Column="1" Margin="2" Visibility="{Binding ShowFOParameters, Converter={StaticResource BooleanVisibilityConverter}}">
-                        <local:ModeSignalSelectionView DataContext="{Binding FODetectorParameters.PMUs}"/>
+                    <GroupBox Header="Forced Oscillation Detection" Focusable="True" Grid.Column="1" Margin="2" Visibility="{Binding ShowFOParameters, Converter={StaticResource BooleanVisibilityConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <local:ModeSignalSelectionView DataContext="{Binding FODetectorParameters.PMUs}" Grid.Row="0"/>
+                            <Border Grid.Row="1" GotFocus="GroupBox_GotFocus" LostFocus="GroupBox_LostFocus" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <TextBlock></TextBlock>
+                            </Border>
+                        </Grid>
+                        <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
                     </GroupBox>
-                    <GroupBox Header="RMS Energy Transient Detection" Grid.Column="2" Margin="2" Visibility="{Binding ShowRMSEnergyTransientParameters, Converter={StaticResource BooleanVisibilityConverter}}">
-                        <local:ModeSignalSelectionView DataContext="{Binding EventDetectionParameters.PMUs}"/>
+                    <GroupBox Header="RMS Energy Transient Detection" Focusable="True" Grid.Column="2" Margin="2" Visibility="{Binding ShowRMSEnergyTransientParameters, Converter={StaticResource BooleanVisibilityConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <local:ModeSignalSelectionView DataContext="{Binding EventDetectionParameters.PMUs}" Grid.Row="0"/>
+                            <Border Grid.Row="1" GotFocus="GroupBox_GotFocus" LostFocus="GroupBox_LostFocus" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <TextBlock></TextBlock>
+                            </Border>
+                        </Grid>
+                            <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
                     </GroupBox>
                 </Grid>
             </GroupBox>
