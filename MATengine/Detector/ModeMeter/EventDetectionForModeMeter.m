@@ -230,6 +230,7 @@ end
 
 
 %% CheckIfRingdown
+
 function [IsRingdown,RingKeepIdx] = CheckIfRingdown(y,eIdx,a,b,Nsim,fs,GrpDelay)
 
 % You don't need to worry about whether the event took place in the past or
@@ -256,6 +257,7 @@ end
 % The try-catch is used in case there's a problem with a or b
 try
     h = stepz(b,a,Nsim,fs);
+    h = h - h(end);
 catch
     IsRingdown = false;
     RingKeepIdx = [];
@@ -263,39 +265,58 @@ catch
 end
 
 % Retrieve transient
-transient = y(eIdx(1) - GrpDelay + (0:Nsim-1));
+yy = y(eIdx(1)-GrpDelay:end);
+[yyMax,MaxIdx] = max(yy);
+[yyMin,MinIdx] = min(yy);
+if (yyMin < 0) && (0 < yyMax)
+    if MinIdx < MaxIdx
+        % Find the first negative value following the maximum, which
+        % followed the minimum
+        zIdx = find(yy(MaxIdx:end) < 0,1) + MaxIdx-1;
+    else % MaxIdx < MinIdx
+        % Find the first positive value following the minimum, which
+        % followed the maximum
+        zIdx = find(yy(MinIdx:end) > 0,1) + MinIdx-1;
+    end
+else
+    zIdx = [];
+end
+yy = yy(zIdx:end);
+% If Nsim samples are not available, then IsRingdown = false so that the
+% event is removed. The rest of the event may later be determined to be a
+% good ringdown, but changes to the window prior to the current
+% ResultUpdateInterval samples are impossible. 
+if length(yy) < Nsim
+    IsRingdown = false;
+    RingKeepIdx = [];
+    return
+else
+    yy = yy(1:Nsim);
+end
 
-% Scale
-h = h/max(abs(h))*max(abs(transient));
+% Adjust yy and h so that max(abs(x))==max(x)
+if max(abs(yy)) ~= max(yy)
+    yy = -yy;
+end
+if max(abs(h)) ~= max(h)
+    h = -h;
+end
+
+% Scale so max(x) == 1
+yy = yy/max(yy);
+h = h/max(h);
 
 % Calculate dynamic time warping distance
-d = dtw(h,transient);
+d = dtw(h,yy);
 
 % Tamara initially recommended 0.45
-if d < 0.03
+if d < 7
     IsRingdown = true;
 
     % Even if it is a ringdown, the initial part of the disturbance
     % should be removed. Find the maximum and minimum in the signal.
     % Then find the zero crossing following the later of the two.
-    yy = y(eIdx-GrpDelay);
-    [yyMax,MaxIdx] = max(yy);
-    [yyMin,MinIdx] = min(yy);
-    if (yyMin < 0) && (0 < yyMax)
-        if MinIdx < MaxIdx
-            % Find the first negative value following the maximum, which
-            % followed the minimum
-            zIdx = find(yy(MaxIdx:end) < 0,1) + MaxIdx-1;
-        else % MaxIdx < MinIdx
-            % Find the first positive value following the minimum, which
-            % followed the maximum
-            zIdx = find(yy(MinIdx:end) > 0,1) + MinIdx-1;
-        end
-    else
-        zIdx = [];
-    end
-
-    RingKeepIdx = zIdx:length(yy);
+    RingKeepIdx = zIdx:length(eIdx);
 else
     IsRingdown = false;
     RingKeepIdx = [];
