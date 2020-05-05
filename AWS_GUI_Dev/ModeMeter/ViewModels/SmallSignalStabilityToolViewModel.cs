@@ -238,34 +238,34 @@ namespace ModeMeter.ViewModels
             {
                 if (!checkStatus && InputChannels.Contains(obj.SignalSignature))
                 {
-                    if (InputChannels == CurrentMode.PMUs)
-                    {
+                    //if (InputChannels == CurrentMode.PMUs)
+                    //{
                         if (_currentSelectedPMUSignal == null)
                         {
                             _indexOfCurrentSelectedPMUSignal = InputChannels.IndexOf(obj.SignalSignature);
                         }
                         InputChannels.RemoveAt(_indexOfCurrentSelectedPMUSignal);
-                        if (CurrentMode.ShowFOParameters)
-                        {
-                            CurrentMode.FODetectorParameters.PMUs.RemoveAt(_indexOfCurrentSelectedPMUSignal);
-                        }
-                        if (CurrentMode.ShowRMSEnergyTransientParameters)
-                        {
-                            CurrentMode.EventDetectionParameters.PMUs.RemoveAt(_indexOfCurrentSelectedPMUSignal);
-                        }
+                        //if (CurrentMode.ShowFOParameters)
+                        //{
+                        //    CurrentMode.FODetectorParameters.PMUs.RemoveAt(_indexOfCurrentSelectedPMUSignal);
+                        //}
+                        //if (CurrentMode.ShowRMSEnergyTransientParameters)
+                        //{
+                        //    CurrentMode.EventDetectionParameters.PMUs.RemoveAt(_indexOfCurrentSelectedPMUSignal);
+                        //}
                         _currentSelectedPMUSignal = null;
                         _indexOfCurrentSelectedPMUSignal = -1;
-                    }
-                    if (InputChannels == CurrentMode.FODetectorParameters.PMUs || InputChannels == CurrentMode.EventDetectionParameters.PMUs)
-                    {
-                        if (InputChannels.Count() == CurrentMode.PMUs.Count())
-                        {
-                            MessageBox.Show("Forced oscillation signal and/or RMS Energy transient detection signal should have the same number of signals as the mode meter signal selection.");
-                            obj.SignalSignature.IsChecked = true;
-                            return;
-                        }
-                        else { InputChannels.Remove(obj.SignalSignature); }
-                    }
+                    //}
+                    //if (InputChannels == CurrentMode.FODetectorParameters.PMUs || InputChannels == CurrentMode.EventDetectionParameters.PMUs)
+                    //{
+                    //    if (InputChannels.Count() == CurrentMode.PMUs.Count())
+                    //    {
+                    //        MessageBox.Show("Forced oscillation signal and/or RMS Energy transient detection signal should have the same number of signals as the mode meter signal selection.");
+                    //        obj.SignalSignature.IsChecked = true;
+                    //        return;
+                    //    }
+                    //    else { InputChannels.Remove(obj.SignalSignature); }
+                    //}
                 }
                 if (checkStatus)
                 {
@@ -280,28 +280,28 @@ namespace ModeMeter.ViewModels
                     }
                     else
                     {
-                        if (InputChannels == CurrentMode.PMUs)
-                        {
+                        //if (InputChannels == CurrentMode.PMUs)
+                        //{
                             InputChannels.Add(obj.SignalSignature);
-                            if (CurrentMode.ShowFOParameters)
-                            {
-                                CurrentMode.FODetectorParameters.PMUs.Add(obj.SignalSignature);
-                            }
-                            if (CurrentMode.ShowRMSEnergyTransientParameters)
-                            {
-                                CurrentMode.EventDetectionParameters.PMUs.Add(obj.SignalSignature);
-                            }
-                        }
-                        if (InputChannels == CurrentMode.FODetectorParameters.PMUs || InputChannels == CurrentMode.EventDetectionParameters.PMUs)
-                        {
-                            if (InputChannels.Count() == CurrentMode.PMUs.Count())
-                            {
-                                MessageBox.Show("Forced oscillation signal and/or RMS Energy transient detection signal should have the same number of signals as the mode meter signal selection.");
-                                obj.SignalSignature.IsChecked = false;
-                                return;
-                            }
-                            else { InputChannels.Add(obj.SignalSignature); }
-                        }
+                            //if (CurrentMode.ShowFOParameters)
+                            //{
+                            //    CurrentMode.FODetectorParameters.PMUs.Add(new SignalSignatureViewModel());
+                            //}
+                            //if (CurrentMode.ShowRMSEnergyTransientParameters)
+                            //{
+                            //    CurrentMode.EventDetectionParameters.PMUs.Add(new SignalSignatureViewModel());
+                            //}
+                        //}
+                        //if (InputChannels == CurrentMode.FODetectorParameters.PMUs || InputChannels == CurrentMode.EventDetectionParameters.PMUs)
+                        //{
+                        //    if (InputChannels.Count() == CurrentMode.PMUs.Count())
+                        //    {
+                        //        MessageBox.Show("Forced oscillation signal and/or RMS Energy transient detection signal should have the same number of signals as the mode meter signal selection.");
+                        //        obj.SignalSignature.IsChecked = false;
+                        //        return;
+                        //    }
+                        //    else { InputChannels.Add(obj.SignalSignature); }
+                        //}
                     }                    
                 }
                 obj.SignalSignature.IsChecked = checkStatus;

@@ -64,6 +64,14 @@ namespace ModeMeter.Models
         }
         private void _writeAMode(XElement mmElement, ModeViewModel mode)
         {
+            if (mode.ShowRMSEnergyTransientParameters && mode.EventDetectionParameters.PMUs.Count != mode.PMUs.Count)
+            {
+                throw new Exception("RMS Energy transient detection signal should have the same number of signals as the mode meter signal selection.");
+            }
+            if (mode.FODetectorParameters.PMUs.Count != mode.PMUs.Count && mode.ShowFOParameters)
+            {
+                throw new Exception("Forced oscillation signal should have the same number of signals as the mode meter signal selection.");
+            }
             var modeElement = new XElement("Mode");
             modeElement.Add(new XElement("Name", mode.ModeName));
             _addModePMUSignals(modeElement, mode.PMUs);
