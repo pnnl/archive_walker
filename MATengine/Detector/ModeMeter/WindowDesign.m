@@ -121,7 +121,10 @@ for WinNum = 1:length(D)
     
     Bold = B;                       % To start iteration
     D0vec = DD:4*DD;                % Vector of D0 to check
-    Pd = zeros(1,length(D0vec));    % Stores Pd vs. D0
+    if length(D0vec) > 100000
+        D0vec = round(linspace(DD,4*DD,100000));
+    end
+    Pd = 2*ones(1,length(D0vec));    % Stores Pd vs. D0
     Pd(1) = PdThreshAct;            % Just added for clarity
     for D0idx = 2:length(D0vec)
         % Determine how many bins must be examined for this level of zero
@@ -152,6 +155,7 @@ for WinNum = 1:length(D)
     end
     % The desired amount of zero padding corresponds to the maximum in the
     % probability of detection as a function of zero padding.
+    Pd(Pd == 2) = 0;
     D0 = [D0 D0vec(Pd == max(Pd))];
     
     % Find indices of periodogram that will correspond to frequency range of interest

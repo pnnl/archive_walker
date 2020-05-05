@@ -39,6 +39,15 @@ na = Parameters.na;
 nb = Parameters.nb;
 n_alpha = Parameters.n_alpha;
 NaNomitLimit = Parameters.NaNomitLimit;
+
+% Under certain setups, FOfreq and TimeLoc can be non-empty even when the
+% YW-ARMA algorithm was requested. In this case, set these inputs to [] so
+% that FO robustness is not added.
+if ~Parameters.FOrobust
+    TimeLoc = [];
+    FOfreq = [];
+end
+
 TimeLoc(isnan(FOfreq),:) = [];
 FOfreq(isnan(FOfreq)) = [];
 P = length(FOfreq);
