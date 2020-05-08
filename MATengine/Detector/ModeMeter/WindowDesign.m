@@ -121,8 +121,8 @@ for WinNum = 1:length(D)
     
     Bold = B;                       % To start iteration
     D0vec = DD:4*DD;                % Vector of D0 to check
-    if length(D0vec) > 100000
-        D0vec = round(linspace(DD,4*DD,100000));
+    if length(D0vec) > 10000
+        D0vec = round(linspace(DD,4*DD,10000));
     end
     Pd = 2*ones(1,length(D0vec));    % Stores Pd vs. D0
     Pd(1) = PdThreshAct;            % Just added for clarity
