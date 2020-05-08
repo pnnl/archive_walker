@@ -86,7 +86,13 @@ end
 
 if FOlocParam.PerformTimeLoc
     % Run time localization
-    TimeLoc = RunTimeLocalization(y,FOfreq,FOlocParam,fs);
+    TimeLoc = [];
+    for fidx = 1:length(FOfreq)
+        TimeLocTemp = RunTimeLocalization(y(end-Ddet(fidx)+1:end),FOfreq(fidx),FOlocParam,fs);
+        % Store FO location and adjust for difference between localization
+        % window and the detection window
+        TimeLoc = [TimeLoc; TimeLocTemp + length(y)-Ddet(fidx)];
+    end
 else
     % Time localization is disabled - assume that FO is present for entire
     % detection window 
