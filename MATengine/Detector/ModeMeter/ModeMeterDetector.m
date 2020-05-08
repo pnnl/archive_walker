@@ -13,8 +13,12 @@
 
 function [DetectionResults, AdditionalOutput] = ModeMeterDetector(PMUstruct,Parameters,PastAdditionalOutput)
 
+% These make functions that are called using eval() visible when the tool
+% is compiled as a DLL. DO NOT REMOVE!
+%
 %#function LS_ARMApS
 %#function YW_ARMApS
+%#function STLS
 
 NumMode = length(Parameters.Mode); % gives number of modes of interest
 Data = cell(1,NumMode);
