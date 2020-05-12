@@ -31,7 +31,7 @@
 %         in stage 1 and then updated in stage 2. 
 % yhat = reconstructed version of input signal y based on identified model
 
-function [ModeEst, Mtrack, ExtraOutput] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
+function [ModeEst, Mtrack, ExtraOutput] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc,~,~)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector

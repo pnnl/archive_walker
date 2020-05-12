@@ -28,7 +28,7 @@
 % rhat = column one is estimated autocorrelation of y. Column two is 
 %        reconstructed autocorrelation of y based on identified model
 
-function [ModeEst, Mtrack, ExtraOutput] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
+function [ModeEst, Mtrack, ExtraOutput] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,~,~,FOfreq,TimeLoc)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector

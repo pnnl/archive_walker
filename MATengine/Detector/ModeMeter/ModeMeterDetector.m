@@ -151,23 +151,30 @@ for ModeIdx = 1:NumMode
             % Forced oscillation detection was not desired
             FOfreq = [];
             TimeLoc = [];
+            FOfreqRefined = [];
+            TimeLocRefined = [];
         elseif sum(isnan(DataFOdet{ModeIdx}(:,ChanIdx))) > 0
             % There are NaN values in the input signal which prevent 
             % detection from being run
             FOfreq = [];
             TimeLoc = [];
+            FOfreqRefined = [];
+            TimeLocRefined = [];
         else
             % Run FO detection algorithm
             AdditionalOutput(ModeIdx).FOdet{ChanIdx} = FOdetectionForModeMeter(DataFOdet{ModeIdx}(:,ChanIdx),ExtractedParameters.FOdetectorPara,ExtractedParameters.TimeLocParams,Parameters.ResultUpdateInterval,fsFOdet{ModeIdx},PastAdditionalOutput(ModeIdx).FOdet{ChanIdx});
             
             FOfreq = AdditionalOutput(ModeIdx).FOdet{ChanIdx}.FOfreq;
+            FOfreqRefined = AdditionalOutput(ModeIdx).FOdet{ChanIdx}.FOfreqRefined;
             
             % Adjust the values in TimeLoc to account for the difference
             % between sampling rates: fsFOdet{ModeIdx} and fs{ModeIdx}
             TimeLoc = round((AdditionalOutput(ModeIdx).FOdet{ChanIdx}.TimeLoc-1)*fs{ModeIdx}/fsFOdet{ModeIdx} + 1);
+            TimeLocRefined = round((AdditionalOutput(ModeIdx).FOdet{ChanIdx}.TimeLocRefined-1)*fs{ModeIdx}/fsFOdet{ModeIdx} + 1);
             % Values at the very end can be assigned to a downsampled index
             % beyond the current window. This corrects for it.
             TimeLoc(TimeLoc > length(Data{ModeIdx}(:,ChanIdx))) = length(Data{ModeIdx}(:,ChanIdx));
+            TimeLocRefined(TimeLocRefined > length(Data{ModeIdx}(:,ChanIdx))) = length(Data{ModeIdx}(:,ChanIdx));
         end
 
         % High-energy event detection
@@ -185,7 +192,7 @@ for ModeIdx = 1:NumMode
         for MethodIdx = 1:NumMethods(ModeIdx)
             [Mode, AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx}, AdditionalOutput(ModeIdx).ExtraOutput{ChanIdx,MethodIdx}]...
                 = eval([ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}.FunctionName...
-                '(Data{ModeIdx}(:,ChanIdx),win{MethodIdx},ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}, ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},FOfreq,TimeLoc)']);
+                '(Data{ModeIdx}(:,ChanIdx),win{MethodIdx},ExtractedParameters.AlgorithmSpecificParameters{MethodIdx}, ExtractedParameters.DesiredModes,fs{ModeIdx},AdditionalOutput(ModeIdx).Modetrack{ModeEstimateCalcIdx},FOfreq,TimeLoc,FOfreqRefined,TimeLocRefined)']);
             DampingRatio = -real(Mode)/abs(Mode);
             Frequency = abs(imag(Mode))/2/pi;
             if isnan(DampingRatio)
