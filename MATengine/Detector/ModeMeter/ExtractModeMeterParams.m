@@ -52,7 +52,6 @@ if isfield(Parameters,'Mode')
         else
             error('The mode parameters must be specified.');
         end
-        FOdetectorParaFlag  = 0;
         if isfield(TempXML,'AlgNames')
             %Finds the number of different algorithms implemented for a
             %given instance of selected modemeter
@@ -72,13 +71,15 @@ if isfield(Parameters,'Mode')
                 switch ExtrctParamXML{MethodIdx}.Name
                     case 'LS_ARMA'
                         FunctionName = 'LS_ARMApS';
+                        FOrobust = false;   % This flag is needed because the same FunctionName is used for LS-ARMA and LS-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
                     case 'YW_ARMA'
                         FunctionName = 'YW_ARMApS';
+                        FOrobust = false;   % This flag is needed because the same FunctionName is used for YW-ARMA and YW-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         if isfield(ExtrctParamXML{MethodIdx},'ng')
@@ -88,9 +89,10 @@ if isfield(Parameters,'Mode')
                         end
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
                     case 'YW_ARMApS'
                         FunctionName = 'YW_ARMApS';
+                        FOrobust = true;   % This flag is needed because the same FunctionName is used for YW-ARMA and YW-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         if isfield(ExtrctParamXML{MethodIdx},'ng')
@@ -100,23 +102,40 @@ if isfield(Parameters,'Mode')
                         end
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         LFO = str2double(ExtrctParamXML{MethodIdx}.LFO);
-                        FOdetectorParaFlag = 1;
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
                     case 'LS_ARMApS'
                         FunctionName = 'LS_ARMApS';
+                        FOrobust = true;   % This flag is needed because the same FunctionName is used for LS-ARMA and LS-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
-                        FOdetectorParaFlag = 1;
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
+                    case 'STLS'
+                        FunctionName = 'STLS';
+                        FOrobust = false;   % This flag is needed because the same FunctionName is used for STLS and STLS+S
+                        na = str2double(ExtrctParamXML{MethodIdx}.na);
+                        nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
+                        NumIteration = str2double(ExtrctParamXML{MethodIdx}.NumIteration);
+                        thresh = str2double(ExtrctParamXML{MethodIdx}.thresh);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NumIteration',NumIteration,'thresh',thresh,'FOrobust',FOrobust);
+                    case 'STLSpS'
+                        FunctionName = 'STLS';
+                        FOrobust = true;   % This flag is needed because the same FunctionName is used for STLS and STLS+S
+                        na = str2double(ExtrctParamXML{MethodIdx}.na);
+                        nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
+                        NumIteration = str2double(ExtrctParamXML{MethodIdx}.NumIteration);
+                        thresh = str2double(ExtrctParamXML{MethodIdx}.thresh);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NumIteration',NumIteration,'thresh',thresh,'FOrobust',FOrobust);
                     otherwise
-                        error([ExtrctParamXML{MethodIdx}.AlgName ' is not a valid mode-meter algorithm. Select LS-ARMA, YW-ARMA, LS-ARMA+S or YW-ARMA+S.']);
+                        error([ExtrctParamXML{MethodIdx}.AlgName ' is not a valid mode-meter algorithm. Select LS-ARMA, LS-ARMA+S, YW-ARMA, YW-ARMA+S, STLS, or STLS+S.']);
                 end
             end
             
-            if FOdetectorParaFlag ==1 && isfield(TempXML,'FOdetectorParam')
+            if isfield(TempXML,'FOdetectorParam')
                 % Use the same parameter extractor that the main
                 % periodogram detector uses
                 % Set te analysis length for the detector equal to the

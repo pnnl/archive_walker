@@ -40,6 +40,10 @@ if isempty(PastAdditionalOutput)
     % to consider
     PastFOfreq = [];
     PastTimeLoc = [];
+    PastDdet = [];
+    PastFOfreqRefined = [];
+    PastTimeLocRefined = [];
+    PastDdetRefined = [];
 else
     % Retrieve window design from PastAdditionalOutput
     WinStruct = PastAdditionalOutput.WinStruct;
@@ -53,6 +57,10 @@ else
     
     PastFOfreq = PastAdditionalOutput.FOfreq;
     PastTimeLoc = PastAdditionalOutput.TimeLoc;
+    PastDdet = PastAdditionalOutput.Ddet;
+    PastFOfreqRefined = PastAdditionalOutput.FOfreqRefined;
+    PastTimeLocRefined = PastAdditionalOutput.TimeLocRefined;
+    PastDdetRefined = PastAdditionalOutput.DdetRefined;
 end
 
 %% Handle the case where y has NaN values (detection is not run)
@@ -60,6 +68,10 @@ end
 if sum(isnan(y)) > 0
     AdditionalOutput.FOfreq = [];
     AdditionalOutput.TimeLoc = [];
+    AdditionalOutput.Ddet = [];
+    AdditionalOutput.FOfreqRefined = [];
+    AdditionalOutput.TimeLocRefined = [];
+    AdditionalOutput.DdetRefined = [];
     return
 end
 
@@ -77,61 +89,110 @@ for d = 1:length(D)
     PhiV(d).PSD = interp1(freqAll(OmegaBpsd),AmbientNoisePSD,FreqOfInterest(d).f);
 end
 
-FOfreq = Detect(y,Pfa,FrequencyTolerance,D,WinStruct,U,PhiV,D0,OmegaB,PhiV(end).PSD,D0(end),OmegaB(end).bins,fs);
+[FOfreq,Ddet,FOfreqRefined,DdetRefined] = Detect(y,Pfa,FrequencyTolerance,D,WinStruct,U,PhiV,D0,OmegaB,fs);
 
 if FOlocParam.PerformTimeLoc
     % Run time localization
-    TimeLoc = RunTimeLocalization(y,FOfreq,FOlocParam,fs);
+    TimeLoc = [];
+    for fidx = 1:length(FOfreq)
+        TimeLocTemp = RunTimeLocalization(y(end-Ddet(fidx)+1:end),FOfreq(fidx),FOlocParam,fs);
+        % Store FO location and adjust for difference between localization
+        % window and the detection window
+        TimeLoc = [TimeLoc; TimeLocTemp + length(y)-Ddet(fidx)];
+    end
 else
-    % Time localization is disabled - assume that all FOs are present for
-    % the entire analysis window
-    TimeLoc = [ones(length(FOfreq),1) length(y)*ones(length(FOfreq),1)];
+    % Time localization is disabled - assume that FO is present for entire
+    % detection window 
+    TimeLoc = [length(y)-Ddet'+1 length(y)*ones(length(Ddet),1)];
 end
 
+% Get the subset of TimeLoc that corresponds to FOfreqRefined
+RefinedIdx = zeros(1,length(FOfreqRefined));
+for k = 1:length(FOfreqRefined)
+    RefinedIdx(k) = find(FOfreqRefined(k) == FOfreq);
+end
+TimeLocRefined = TimeLoc(RefinedIdx,:);
 
 % For each of the FOs detected in the previous iteration, check if it is
-% still being detected. If not add it to the list of detected FOs and
+% still being detected. If not, add it to the list of detected FOs and
 % adjust its location in time. 
 % This gives the detector "memory" so that FOs detected with shorter
 % windows aren't lost as they pass out of the short windows, leading to
 % bias.
-FOadd = [];
-LOCadd = [];
-for fidx = 1:length(PastFOfreq)
-    if (min(abs(PastFOfreq(fidx) - FOfreq)) > FrequencyTolerance)
-        TooFar = true;
-    else
-        TooFar = false;
+% If the FO was detected before, update the current frequency estimate
+% based on prior information.
+[FOfreq,Ddet,TimeLoc] = FOmemory(FOfreq,Ddet,TimeLoc,PastFOfreq,PastTimeLoc,PastDdet,FrequencyTolerance,ResultUpdateInterval);
+[FOfreqRefined,DdetRefined,TimeLocRefined] = FOmemory(FOfreqRefined,DdetRefined,TimeLocRefined,PastFOfreqRefined,PastTimeLocRefined,PastDdetRefined,FrequencyTolerance,ResultUpdateInterval);
+
+% For unrefined frequencies: Make sure there are no duplicates.
+%
+% Start by sorting according to Ddet so that the largest Ddet is retained
+% after duplicates are removed.
+[Ddet,SortIdx] = sort(Ddet,'descend');
+FOfreq = FOfreq(SortIdx);
+TimeLoc = TimeLoc(SortIdx,:);
+% Keep unique frequencies. Use the 'stable' set order so that the largest
+% Ddet are retained.
+[FOfreq,uidx] = unique(FOfreq,'stable');
+Ddet = Ddet(uidx);
+TimeLoc = TimeLoc(uidx,:);
+% Finally, sort by frequency
+[FOfreq,SortIdx] = sort(FOfreq,'ascend');
+Ddet = Ddet(SortIdx);
+TimeLoc = TimeLoc(SortIdx,:);
+
+% For refined frequencies:
+% Additional check to make sure FOs are far apart in frequency. Combine
+% multiples into one by giving preference to frequency estimates from
+% longer detection segments, then to estimates associated with longer
+% durations. If multiple frequency estimates remain for a group, they are
+% averaged.
+if ~isempty(FOfreqRefined)
+    Loc = [0 find(diff(FOfreqRefined)>FrequencyTolerance) length(FOfreqRefined)];    % Breaks frequency bins with detections into groups separated by at least FrequencyTolerance Hz
+    
+    Dur = diff(TimeLocRefined,[],2);
+    
+    FOfreqFinal = zeros(1,length(Loc)-1);    % Final frequency vector
+    TimeLocFinal = zeros(length(Loc)-1,2);
+    DdetFinal = zeros(1,length(Loc)-1);
+    for L = 1:length(Loc)-1             % For each group
+        Lidx = Loc(L)+1:Loc(L+1);
+        % First based on the length of detection segment
+        MaxIdxD = find(max(DdetRefined(Lidx)) == DdetRefined(Lidx));
+        % If multiple, then base it on the duration of the FO
+        MaxIdxDur = find(max(Dur(Lidx(MaxIdxD))) == Dur(Lidx(MaxIdxD)));
+        % Indices (still could be multiple) that should be included
+        KeepIdx = Lidx(MaxIdxD(MaxIdxDur));
+        % Final frequency is the average of remaining (hopefully just one)
+        FOfreqFinal(L) = mean(FOfreqRefined(KeepIdx));
+        % Store the detection segment length (all the same, so just need
+        % the first)
+        DdetFinal(L) = DdetRefined(KeepIdx(1));
+
+        TimeLocFinal(L,1) = min(TimeLocRefined(Lidx,1));
+        TimeLocFinal(L,2) = max(TimeLocRefined(Lidx,2));
     end
-    if TooFar || isempty(FOfreq)
-        % Update the FO location based on the estimate from the
-        % previous iteration
-        LOCtemp = PastTimeLoc(fidx,:)-ResultUpdateInterval;
-        if LOCtemp(2) < 1
-            continue
-        end
-        if LOCtemp(1) < 1
-            LOCtemp(1) = 1;
-        end
-        LOCadd = [LOCadd; LOCtemp];
-        FOadd = [FOadd PastFOfreq(fidx)];
-    end
+    FOfreqRefined = FOfreqFinal;
+    TimeLocRefined = TimeLocFinal;
+    DdetRefined = DdetFinal;
 end
-FOfreq = [FOfreq FOadd];
-TimeLoc = [TimeLoc; LOCadd];
 
 
 AdditionalOutput.FOfreq = FOfreq;
 AdditionalOutput.TimeLoc = TimeLoc;
+AdditionalOutput.Ddet = Ddet;
+AdditionalOutput.FOfreqRefined = FOfreqRefined;
+AdditionalOutput.TimeLocRefined = TimeLocRefined;
+AdditionalOutput.DdetRefined = DdetRefined;
 end
 
-% [FOfreqPool,FOdiffPool,Dpool,FOfreqAll,DpoolAll] = Detect(y,PfaMax,D,WinStruct,U,PhiV,D0,OmegaB,PhiVzp,D0zp,OmegaB_ZP,fs)
+% [FOfreqPool,FOdiffPool,Dpool,FOfreqAll,DpoolAll] = Detect(y,PfaMax,D,WinStruct,U,PhiV,D0,OmegaB,fs)
 % 
 % This function performs the detection algorithm on the signal contained in
 % y. After the initial frequencies are found, they are refined in two ways.
 % First, the bins are broken up such that each group is separated from the
-% others by at least 5 frequency bins. A single frequency is then
-% selected from each group based on the scaled periodogram. The second
+% others by a certain tolerance. A single frequency is then
+% selected from each group using a frequency estimation method. The second
 % refining step is to remove duplicate frequencies coming from the multiple
 % detection segments. Preference is given to larger segments. See Section 4.2
 % for details on frequency refining.
@@ -150,11 +211,6 @@ end
 % OmegaB = structure containing indices for each periodogram with length given by D0.
 %          These indices correspond to frequency range of interest and make
 %          the periodograms match the PSDs in PhiV.
-% PhiVzp = zero padded PSD used in frequency refinement. Truncated to frequency range of interest
-% D0zp = length of PhiVzp before being truncated to frequency range of
-%        interest.
-% OmegaB_ZP = indices of the full PhiVzp corresponding to frequency range
-%             of interest
 % fs = sampling rate of y
 %
 % OUTPUTS:
@@ -165,24 +221,15 @@ end
 %              used in amplitude estimation.
 % Dpool = vector of detection segment lengths corresponding to detected
 %         frequencies in FOfreqPool.
-% FOfreqAll = vector of all unrefined detected frequencies (minus
-%              duplicates from the multiple detection segments)
-% DpoolAll = vector of detection segment lengths corresponding to detected
-%            frequencies in FOfreqAll.
 
-function [FOfreqPool,FOdiffPool,Dpool,FOfreqAll,DpoolAll] = Detect(y,PfaMax,FrequencyTolerance,D,WinStruct,U,PhiV,D0,OmegaB,PhiVzp,D0zp,OmegaB_ZP,fs)
-
-% Preliminaries
-
-fZP = fs*(0:D0zp-1)/D0zp;   % Frequency vector for zero padded periodogram used in frequency refinement
-fZP = fZP(OmegaB_ZP);       % Select frequency range of interest
+function [FOfreqAll,Dall,FOfreqRefined,Drefined] = Detect(y,PfaMax,FrequencyTolerance,D,WinStruct,U,PhiV,D0,OmegaB,fs)
 
 % Result vectors
-FOfreqPool = [];    % Frequencies of detected FOs
-FOdiffPool = [];    % Difference between periodogram and PSD at detected frequencies. Used in amplitude estimation
-Dpool = [];         % Detection segment lengths responsible for each detected frequency
-FOfreqAll = [];     % Unrefined frequency estimates from all detection segments (no duplicates)
-DpoolAll = [];      % Detection segment lengths corresponding to FOfreqAll
+FOfreqRefined = [];    % Frequencies of detected FOs
+Drefined = [];         % Detection segment lengths responsible for each detected frequency
+GroupRangeRefined = [];
+FOfreqAll = [];
+Dall = [];
 
 % Run detection algorithm for each detection segment length
 for d = 1:length(D)
@@ -198,99 +245,193 @@ for d = 1:length(D)
     PhiYhat = 1/(D(d)*U(d))*abs(fft(y(end-D(d)+1:end).*WinStruct(d).win,D0(d))).^2;    % (see eq 2.34)
 
     % Perform hypothesis test
-    OmegaFO = OmegaBseg(PhiYhat(OmegaBseg) > gam);    % FO detected when periodogram exceeds threshold
+    DetIdx = find(PhiYhat(OmegaBseg) > gam);
+    OmegaFO = OmegaBseg(DetIdx);    % FO detected when periodogram exceeds threshold
+    Evidence = PhiYhat(OmegaBseg(DetIdx)) - gam(DetIdx);
     
-    f = fs*(0:D0(d)-1)'/D0(d);              % Frequency vector accompanying periodogram          
-    FOfreqAll = [FOfreqAll; f(OmegaFO)];    % Contains all detected frequencies
-    DpoolAll = [DpoolAll; D(d)*ones(size(f(OmegaFO)))];
+    f = fs*(0:D0(d)-1)'/D0(d);              % Frequency vector accompanying periodogram   
+    
+    FOfreq = zeros(1,length(OmegaFO));
+    s = [y(end-D(d)+1:end); zeros(D0(d)-D(d)+1,1)];
+    for k = 1:length(OmegaFO)
+        mhat = OmegaFO(k);
+        FOfreq(k) = EstimateFrequency(s,mhat,fs);
+    end
+    FOfreqAll = [FOfreqAll FOfreq];
+    Dall = [Dall D(d)*ones(size(FOfreq))];
 
-    % Refine frequency estimates (leakage filter and further zero padding)
-    % Also finds the difference between PhiYhat and PhiVzp to pass along to
-    % periodogram-based amplitude estimation algorithm.
+    % Refine frequency estimates (leakage filter and iterative estimation)
     if isempty(OmegaFO) == 0    % Only continue if an FO was detected
-        PhiYhatZP = 1/(D(d)*U(d))*abs(fft(y(end-D(d)+1:end).*WinStruct(d).win,D0zp)).^2;    % Periodogram with extra zero padding for frequency refinement
-        PhiT = 2*PhiYhatZP(OmegaB_ZP)./PhiVzp;   % Scaled periodogram (see eq. 4.24)
-        PhiDiff = PhiYhatZP(OmegaB_ZP) - PhiVzp; % Used in amplitude estimation. See eq. (4.95)
-        
         Loc = [0 find(diff(f(OmegaFO)')>FrequencyTolerance) length(OmegaFO)];    % Breaks frequency bins with detections 
                                                             % into groups separated by at least FrequencyTolerance Hz
                                                             
-        FOfreq = zeros(1,length(Loc)-1);    % Final frequency vector
-        FOdiff = zeros(1,length(Loc)-1);    % Vector of differences associated with FOfreq to be used in amplitude estimation
-        Group(d).IdxZP = zeros(2,length(Loc)-1);
+        FOfreqRefTemp = zeros(1,length(Loc)-1);    % Final frequency vector
+        GroupRange = zeros(2,length(Loc)-1);
         for L = 1:length(Loc)-1             % For each group
-            % Range of frequencies corresponding to PhiVzp that match range of
-            % current group of frequency bins
-            OmegaGroup = ceil(D0zp/D0(d)*(OmegaFO(Loc(L)+1)-2)+1):floor(D0zp/D0(d)*OmegaFO(Loc(L+1))+1);    
-
-            % Limit frequency bins under consideration to those in the
-            % frequency range of interest.
-            OmegaGroup = intersect(OmegaGroup,OmegaB_ZP);
-
-            % Transform to indices of PhiT
-            OmegaGroup = find(OmegaB_ZP == OmegaGroup(1)):find(OmegaB_ZP == OmegaGroup(end));
-
-            % Refined frequency estimate in Hz (see Sec. 4.2)
-            FOfreq(L) = fZP(OmegaGroup(PhiT(OmegaGroup) == max(PhiT(OmegaGroup))));   
-
-            % Will be used by amplitude estimation algorithm (see eq. (4.95))
-            FOdiff(L) = PhiDiff(OmegaGroup(PhiT(OmegaGroup) == max(PhiT(OmegaGroup))));
-
-            Group(d).IdxZP(:,L) = [OmegaGroup(1); OmegaGroup(end)];
-%             Group(d).IdxZP(:,L) = [1; length(fZP)];
+            Lidx = Loc(L)+1:Loc(L+1);
+            % Find index that provides most evidence of a FO
+            [~,mhat] = max(Evidence(Lidx));
+            FOfreqRefTemp(L) = FOfreq(Lidx(mhat));
+            
+            GroupRange(1,L) = f(OmegaFO(Lidx(1))) - fs/D0(d);
+            GroupRange(2,L) = f(OmegaFO(Lidx(end))) + fs/D0(d);
         end
     else
-        FOfreq = [];
-        FOdiff = [];
-        Group(d).IdxZP = [];
+        FOfreqRefTemp = [];
+        GroupRange = [];
     end
     
-    FOfreqPool = [FOfreqPool FOfreq];
-    FOdiffPool = [FOdiffPool FOdiff];
-    Dpool = [Dpool D(d)*ones(size(FOfreq))];
+    FOfreqRefined = [FOfreqRefined FOfreqRefTemp];
+    Drefined = [Drefined D(d)*ones(size(FOfreqRefTemp))];
+    GroupRangeRefined = [GroupRangeRefined GroupRange];
 end
-[FOfreqAll,Uidx] = unique(FOfreqAll);
-DpoolAll = DpoolAll(Uidx);
+
+% Remove duplicates from the list of unrefined frequency estimates.
+%
+% Start by sorting according to Dall so that the largest Dall is retained
+% after duplicates are removed.
+[Dall,SortIdx] = sort(Dall,'descend');
+FOfreqAll = FOfreqAll(SortIdx);
+% Keep unique frequencies. Use the 'stable' set order so that the largest
+% Dall are retained.
+[FOfreqAll,uidx] = unique(FOfreqAll,'stable');
+Dall = Dall(uidx);
 
 % Further frequency refinement (see Section 4.2)
 % Remove (approximately) duplicate frequencies coming from multiple
 % detection segments. Give preference to larger detection segments. This
 % algorithm uses the grouping established in the leakage filter above.
-if isempty(FOfreqPool) == 0
-    DD = unique(Dpool);     % Lengths of detection sements with a detection
+if isempty(FOfreqRefined) == 0
+    DD = unique(Drefined);     % Lengths of detection sements with a detection
     for d = 1:length(DD)    % For each of these detection segments
-        Idx = find(Dpool == DD(d)); % Indices of FOfreqPool with detections from the current detection segment
-        GrpIdx = find(D==DD(d),1);  % Index of the current detection segment in D
+        Idx = find(Drefined == DD(d)); % Indices of FOfreqPool with detections from the current detection segment
         KillIdx = [];               % Keeps track of detected frequencies that should be removed
                                     % to give preference to larger detection segments
         for ii = Idx    % For each of the frequencies detected by the current detection segment
-            % This is the group index that the current detected frequency represents (established above)
-            GrpFreqIdx = ii-Idx(1)+1;
-            
             % Find frequencies from all other detection segments that fall
             % within the range of the group that the current detected
             % frequency represents.
-            FreqTemp = FOfreqPool(setdiff(Idx(1):length(Dpool),Idx));   % Having Idx(1) instead of 1 keeps the alg from killing frequencies from big windows because smaller windows have a similar frequency
-            FreqTemp = FreqTemp(FreqTemp >= fZP(Group(GrpIdx).IdxZP(1,GrpFreqIdx)));
-            FreqTemp = FreqTemp(FreqTemp <= fZP(Group(GrpIdx).IdxZP(2,GrpFreqIdx)));
+            GrpIdx = setdiff(Idx(1):length(Drefined),Idx);
+            FreqTemp = FOfreqRefined(GrpIdx);   % Having Idx(1) instead of 1 keeps the alg from killing frequencies from big windows because smaller windows have a similar frequency
+            RangeTemp = GroupRangeRefined(:,GrpIdx);
+            FreqTemp = FreqTemp(FreqTemp >= min(RangeTemp(1,:)));
+            FreqTemp = FreqTemp(FreqTemp <= max(RangeTemp(2,:)));
 
             % If detected frequencies from larger detection segments are
             % duplicates of this one, remove it.
-            if isempty(FreqTemp) == 0
+            if ~isempty(FreqTemp)
                 KillIdx = [KillIdx ii];
             end
         end
         % Remove frequencies and associated values to give preference to
         % larger detection segments.
-        FOfreqPool(KillIdx) = [];
-        Dpool(KillIdx) = [];
-        FOdiffPool(KillIdx) = [];
+        FOfreqRefined(KillIdx) = [];
+        Drefined(KillIdx) = [];
+        GroupRangeRefined(:,KillIdx) = [];
     end
 
     % Sort final results by frequency
-    [FOfreqPool,SortIdx] = sort(FOfreqPool);
-    Dpool = Dpool(SortIdx);
-    FOdiffPool = FOdiffPool(SortIdx);
+    [FOfreqRefined,SortIdx] = sort(FOfreqRefined);
+    Drefined = Drefined(SortIdx);
 end
+
+end
+
+
+% This function estimates the iterative frequency estimation algorithm from
+% "Iterative Frequency Estimation by Interpolation on Fourier
+% Coefficients". This is the paper that Luke Dosiek referenced in "The 
+% Effects of Forced Oscillation Frequency Estimation Error on the LS-ARMA+S
+% Mode Meter".
+function fhat = EstimateFrequency(s,mhat,fs)
+
+N = length(s);
+
+d0 = 0;
+k = 0:N-1;
+for q = 1:3
+    p = 0.5;
+    Xp = s.' * exp(-1i*2*pi*k*(mhat + d0 + p)/N).';
+    p = -0.5;
+    Xn = s.' * exp(-1i*2*pi*k*(mhat + d0 + p)/N).';
+    h = 1/2*real((Xp + Xn)/(Xp - Xn));
+%     h = 1/2*(abs(Xp) - abs(Xn))/(abs(Xp) + abs(Xn));
+    d0 = d0 + h;
+end
+
+fhat = (mhat + d0)/N*fs;
+
+end
+
+
+
+
+% For each of the FOs detected in the previous iteration, check if it is
+% still being detected. If not, add it to the list of detected FOs and
+% adjust its location in time. 
+% This gives the detector "memory" so that FOs detected with shorter
+% windows aren't lost as they pass out of the short windows, leading to
+% bias.
+% If the FO was detected before, update the current frequency estimate
+% based on prior information.
+function [FOfreq,Ddet,TimeLoc] = FOmemory(FOfreq,Ddet,TimeLoc,PastFOfreq,PastTimeLoc,PastDdet,FrequencyTolerance,ResultUpdateInterval);
+
+FOadd = [];
+LOCadd = [];
+DdetAdd = [];
+for fidx = 1:length(PastFOfreq)
+    if (min(abs(PastFOfreq(fidx) - FOfreq)) > FrequencyTolerance)
+        TooFar = true;
+    else
+        TooFar = false;
+    end
+    if TooFar || isempty(FOfreq)
+        % Add FO detected previously
+        
+        % Update the FO location based on the estimate from the
+        % previous iteration
+        LOCtemp = PastTimeLoc(fidx,:)-ResultUpdateInterval;
+        if LOCtemp(2) < 1
+            continue
+        end
+        if LOCtemp(1) < 1
+            LOCtemp(1) = 1;
+        end
+        LOCadd = [LOCadd; LOCtemp];
+        FOadd = [FOadd PastFOfreq(fidx)];
+        DdetAdd = [DdetAdd PastDdet(fidx)];
+    elseif ~TooFar
+        % Modify start time based on previous run
+
+        % Update the FO location based on the estimate from the
+        % previous iteration
+        LOCtemp = PastTimeLoc(fidx,:)-ResultUpdateInterval;
+        if LOCtemp(2) < 1
+            continue
+        end
+        if LOCtemp(1) < 1
+            LOCtemp(1) = 1;
+        end
+
+        CurrIdx = near(FOfreq,PastFOfreq(fidx));
+        if isempty(CurrIdx)
+            continue;
+        end
+        TimeLoc(CurrIdx,1) = min([TimeLoc(CurrIdx,1) LOCtemp(1)]);
+        
+        % If the past detection segment was longer than the current one,
+        % use the frequency estimate from that one
+        if PastDdet(fidx) > Ddet(CurrIdx)
+            FOfreq(CurrIdx) = PastFOfreq(fidx);
+        end
+    end
+end
+FOfreq = [FOfreq FOadd];
+TimeLoc = [TimeLoc; LOCadd];
+Ddet = [Ddet DdetAdd];
+
+[FOfreq,SortIdx] = sort(FOfreq,'ascend');
+TimeLoc = TimeLoc(SortIdx,:);
+Ddet = Ddet(SortIdx);
 
 end

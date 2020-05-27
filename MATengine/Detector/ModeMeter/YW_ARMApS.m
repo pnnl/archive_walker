@@ -28,7 +28,7 @@
 % rhat = column one is estimated autocorrelation of y. Column two is 
 %        reconstructed autocorrelation of y based on identified model
 
-function [ModeEst, Mtrack, ExtraOutput] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc)
+function [ModeEst, Mtrack, ExtraOutput] = YW_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,~,~,FOfreq,TimeLoc)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
@@ -36,6 +36,14 @@ na = Parameters.na;
 nb = Parameters.nb;
 ng = Parameters.ng;
 NaNomitLimit = Parameters.NaNomitLimit;
+
+% Under certain setups, FOfreq and TimeLoc can be non-empty even when the
+% YW-ARMA algorithm was requested. In this case, set these inputs to [] so
+% that FO robustness is not added.
+if ~Parameters.FOrobust
+    TimeLoc = [];
+    FOfreq = [];
+end
 
 TimeLoc(isnan(FOfreq),:) = [];
 FOfreq(isnan(FOfreq)) = [];

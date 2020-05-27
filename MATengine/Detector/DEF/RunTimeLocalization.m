@@ -18,6 +18,13 @@ end
 Nmin = Parameters.LocMinLength;
 Nstep = Parameters.LocLengthStep;
 
+% Handle the case where the input data is shorter than the parameter
+% specifying the minimum length.
+if N <= Nmin
+    TimeLoc = [ones(NumF,1) N*ones(NumF,1)];
+    return
+end
+
 nvec = Nmin:Nstep:N;
 if nvec(end) ~= N
     nvec = [nvec N];
