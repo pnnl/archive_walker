@@ -18,9 +18,9 @@
             <DataTemplate x:Key="YWARMASView">
                 <local:YWARMASView/>
             </DataTemplate>
-            <!--<DataTemplate x:Key="LSARMASView">
-                <local:LSARMASView/>
-            </DataTemplate>-->
+            <DataTemplate x:Key="STLSView">
+                <local:STLSView/>
+            </DataTemplate>
             <converters:MethodExpanderHeaderConverter x:Key="MethodExpanderHeaderConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -59,6 +59,12 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Name}" Value="3">
                                         <Setter Property="ContentTemplate" Value="{StaticResource LSARMAView}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Name}" Value="4">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource STLSView}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Name}" Value="5">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource STLSView}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

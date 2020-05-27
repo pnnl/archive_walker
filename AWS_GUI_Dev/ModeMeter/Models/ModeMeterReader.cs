@@ -379,6 +379,17 @@ namespace ModeMeter.Models
                 {
                     aNewMethod.NaNomitLimit = nan.Value;
                 }
+                var niter = alg.Element("NumIteration");
+                if (niter != null)
+                {
+                    //numberOfEquationsWithFOpresent = lfo.Value;
+                    aNewMethod.MaximumIterations = niter.Value;
+                }
+                var thresh = alg.Element("thresh");
+                if (thresh != null)
+                {
+                    aNewMethod.SVThreshold = thresh.Value;
+                }
                 var mName = alg.Element("Name");
                 if (mName != null)
                 {
@@ -449,6 +460,22 @@ namespace ModeMeter.Models
                             //    ExaggeratedARModelOrder = exaggeratedARmodelOrder
                             //};
                             //methods.Add(aNewMethod);
+                            break;
+                        case "STLS":
+                            aNewMethod.Name = ModeMethods.STLS;
+                            var nalpha3 = alg.Element("n_alpha");
+                            if (nalpha3 != null)
+                            {
+                                aNewMethod.ExaggeratedARModelOrder = nalpha3.Value;
+                            }
+                            break;
+                        case "STLSpS":
+                            aNewMethod.Name = ModeMethods.STLSS;
+                            var nalpha4 = alg.Element("n_alpha");
+                            if (nalpha4 != null)
+                            {
+                                aNewMethod.ExaggeratedARModelOrder = nalpha4.Value;
+                            }
                             break;
                         default:
                             throw new Exception("Method name not recognized!");

@@ -220,6 +220,24 @@ namespace ModeMeter.Models
                                                         new XElement("NaNomitLimit", method.NaNomitLimit));
                     modeElement.Add(mth);
                     break;
+                case ModeMethods.STLS:
+                    mth = new XElement("AlgNames", new XElement("Name", "STLS"),
+                                                        new XElement("na", method.ARModelOrder),
+                                                        new XElement("nb", method.MAModelOrder),
+                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder),
+                                                        new XElement("NumIteration", method.MaximumIterations),
+                                                        new XElement("thresh", method.SVThreshold));
+                    modeElement.Add(mth);
+                    break;
+                case ModeMethods.STLSS:
+                    mth = new XElement("AlgNames", new XElement("Name", "STLSpS"),
+                                                        new XElement("na", method.ARModelOrder),
+                                                        new XElement("nb", method.MAModelOrder),
+                                                        new XElement("n_alpha", method.ExaggeratedARModelOrder),
+                                                        new XElement("NumIteration", method.MaximumIterations),
+                                                        new XElement("thresh", method.SVThreshold));
+                    modeElement.Add(mth);
+                    break;
                 default:
                     break;
             }

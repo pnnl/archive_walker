@@ -57,6 +57,8 @@ namespace ModeMeter.Models
         public string ExaggeratedARModelOrder { get; set; }
         public string NumberOfEquationsWithFOpresent { get; set; }
         public string NaNomitLimit { get; set; } = "0";
+        public string MaximumIterations { get; set; }
+        public string SVThreshold { get; set; }
     }
     //public class YWARMA : ModeMethodBase
     //{
@@ -88,7 +90,11 @@ namespace ModeMeter.Models
         [Description("YW-ARMA+S")]
         YWARMAS,
         [Description("LS-ARMA+S")]
-        LSARMAS
+        LSARMAS,
+        [Description("STLS")]
+        STLS,
+        [Description("STLS+S")]
+        STLSS
     }
     public enum RetroactiveContinuityStatusType
     {

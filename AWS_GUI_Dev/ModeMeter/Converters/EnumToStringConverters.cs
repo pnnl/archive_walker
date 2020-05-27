@@ -53,6 +53,10 @@ namespace ModeMeter.Converters
                     return "YW-ARMA+S";
                 case ModeMethods.LSARMAS:
                     return "LS-ARMA+S";
+                case ModeMethods.STLS:
+                    return "STLS";
+                case ModeMethods.STLSS:
+                    return "STLS+S";
                 default:
                     throw new Exception("Mode method type not valid!");
             }
@@ -70,6 +74,10 @@ namespace ModeMeter.Converters
                     return ModeMethods.YWARMAS;
                 case "LS-ARMA+S":
                     return ModeMethods.LSARMAS;
+                case "STLS":
+                    return ModeMethods.STLS;
+                case "STLS+S":
+                    return ModeMethods.STLSS;
                 default:
                     throw new Exception("Enum type not valid!");
             }

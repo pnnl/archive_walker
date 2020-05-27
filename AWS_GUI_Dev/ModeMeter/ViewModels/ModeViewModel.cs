@@ -295,6 +295,24 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
+        public string MaximumIterations
+        {
+            get { return _model.MaximumIterations; }
+            set
+            {
+                _model.MaximumIterations = value;
+                OnPropertyChanged();
+            }
+        }
+        public string SVThreshold
+        {
+            get { return _model.SVThreshold; }
+            set
+            {
+                _model.SVThreshold = value;
+                OnPropertyChanged();
+            }
+        }
     }
     //public class LSARMASViewModel : ModeMethodViewModel
     //{
