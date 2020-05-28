@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3429817061" file="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\GitFolders\archive_walker\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="1462016462" file="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\GitFolders\archive_walker\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>4.3</param.version>
+    <param.version>4.4</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -169,6 +169,7 @@
       <file>C:\GitFolders\archive_walker\MATengine\Detector\ModeMeter\ModeMeterDetector.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\ModeMeter\RunRetCon.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\ModeMeter\SelectMode.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\Detector\ModeMeter\STLS.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\ModeMeter\UpdatePreviousDayModeEst.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\ModeMeter\WindowDesign.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\ModeMeter\WriteMMreportGraphical.m</file>
