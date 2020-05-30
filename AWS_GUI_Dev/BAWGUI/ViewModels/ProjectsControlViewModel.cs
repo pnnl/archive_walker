@@ -18,8 +18,9 @@ using VoltageStability.ViewModels;
 using ModeMeter.ViewModels;
 using ModeMeter.Models;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using BAWGUI.RunMATLAB.ViewModels;
 
-namespace BAWGUI.RunMATLAB.ViewModels
+namespace BAWGUI.ViewModels
 {
     public class ProjectsControlViewModel : ViewModelBase
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,7 @@ namespace BAWGUI.Views
             }
             //treeViewItem.DataContext.IsSelected = true;
             var st = sender as TreeViewItem;
-            var selectedProject = st.DataContext as RunMATLAB.ViewModels.AWProjectViewModel;
+            var selectedProject = st.DataContext as AWProjectViewModel;
             if (selectedProject.SelectedRun != null)
             {
                 selectedProject.SelectedRun.IsSelected = false;

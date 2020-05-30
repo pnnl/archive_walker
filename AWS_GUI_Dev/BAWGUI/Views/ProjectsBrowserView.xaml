@@ -15,6 +15,7 @@
             <coreConverter:InverseBooleanVisibilityConverter x:Key="InverseBooleanVisibilityConverter"/>
             <coreConverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters:EnabledIfRunningOrPausedConverter x:Key="EnabledIfRunningOrPausedConverter"/>
+            <converters2:ProgressVisibilityConverter x:Key="ProgressVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}" CanContentScroll="True">
@@ -78,7 +79,7 @@
                 </MenuItem>
             </Menu>-->
                 </StackPanel>
-
+                <TextBlock Text="{Binding RunCommands.Engine.NormalRunProgress, StringFormat=Current File Time: {0}}" Margin="2" Visibility="{Binding RunCommands.Engine.NormalRunProgress, Converter={StaticResource ProgressVisibilityConverter}}"/>
                 <Button Content="Add Project" ToolTip="Add A New Project" Margin="0,5" Command="{Binding AddAProject}" Width="100" HorizontalAlignment="Left"/>
                 <!--<Separator/>-->
                 <local:ProjectTreeView/>

@@ -379,32 +379,89 @@ namespace BAWGUI.Results.ViewModels
         }
         private void _getAvailableDates(List<string> dates)
         {
-            List<DateStruct> dateList = new List<DateStruct>();
-            string year, month, day;
-            foreach(var date in dates)
-            {
-                year = "20" + date.Substring(0, 2);
-                month = date.Substring(2, 2);
-                day = date.Substring(4, 2);
+            var initPath = Run.Model.InitializationPath;
 
-                dateList.Add(new DateStruct(year, month, day));
-                if (!_availableDateDict.ContainsKey(year))
+            string[] alldirs;
+            try
+            {
+                //allFiles = Directory.GetFiles(initPath, "*.mat", SearchOption.AllDirectories);
+                //allFiles = Directory.GetFiles(initPath, "*.mat");
+                alldirs = Directory.GetDirectories(initPath);
+                Array.Sort(alldirs);
+                List<int> yearList = new List<int>();
+                for (int i = 0; i < alldirs.Length; i++)
                 {
-                    _availableDateDict[year] = new Dictionary<string, List<string>>();
+                    var frag = alldirs[i].Split('\\');
+                    if (int.TryParse(frag.Last(), out int dir))
+                    {
+                        yearList.Add(dir);
+                    }
                 }
-                if (!_availableDateDict[year].ContainsKey(month))
+                var firstY = yearList.Min();
+                var lastY = yearList.Max();
+                var alldates = Directory.GetDirectories(initPath + firstY.ToString());
+                List<int> dayList = new List<int>();
+                for (int i = 0; i < alldates.Length; i++)
                 {
-                    _availableDateDict[year][month] = new List<string>();
+                    var frag = alldates[i].Split('\\');
+                    if (int.TryParse(frag.Last(), out int dir))
+                    {
+                        dayList.Add(dir);
+                    }
                 }
-                _availableDateDict[year][month].Add(day);
+                var firstT = dayList.Min();
+                var alltimes = Directory.GetFiles(initPath + firstY.ToString() + "\\" + firstT.ToString(), "*.mat");
+                Array.Sort(alltimes);
+                var firstFile = Path.GetFileNameWithoutExtension(alltimes.First());
+                FirstAvailableDate = DateTime.ParseExact(firstFile, "\"Initialization\"_yyyyMMdd_HHmmss", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+
+                alldates = Directory.GetDirectories(initPath + lastY.ToString());
+                for (int i = 0; i < alldates.Length; i++)
+                {
+                    var frag = alldates[i].Split('\\');
+                    if (int.TryParse(frag.Last(), out int dir))
+                    {
+                        dayList.Add(dir);
+                    }
+                }
+                var lastT = dayList.Max();
+                alltimes = Directory.GetFiles(initPath + lastY.ToString() + "\\" + lastT.ToString(), "*.mat");
+                Array.Sort(alltimes);
+                var lastFile = Path.GetFileNameWithoutExtension(alltimes.Last());
+                LastAvailableDate = DateTime.ParseExact(lastFile, "\"Initialization\"_yyyyMMdd_HHmmss", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+
             }
-            YearList = _availableDateDict.Keys.ToList();
-            DateStruct date1 = dateList.FirstOrDefault();
-            string d1 = date1.Year.Substring(2, 2) + date1.Month + date1.Day;
-            DateStruct date2 = dateList.LastOrDefault();
-            string d2= date2.Year.Substring(2, 2) + date2.Month + date2.Day;
-            FirstAvailableDate = DateTime.ParseExact(d1, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
-            LastAvailableDate = DateTime.ParseExact(d2, "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            //List<DateStruct> dateList = new List<DateStruct>();
+            //string year, month, day;
+            //foreach(var date in dates)
+            //{
+            //    year = "20" + date.Substring(0, 2);
+            //    month = date.Substring(2, 2);
+            //    day = date.Substring(4, 2);
+
+            //    dateList.Add(new DateStruct(year, month, day));
+            //    if (!_availableDateDict.ContainsKey(year))
+            //    {
+            //        _availableDateDict[year] = new Dictionary<string, List<string>>();
+            //    }
+            //    if (!_availableDateDict[year].ContainsKey(month))
+            //    {
+            //        _availableDateDict[year][month] = new List<string>();
+            //    }
+            //    _availableDateDict[year][month].Add(day);
+            //}
+            //YearList = _availableDateDict.Keys.ToList();
+            //DateStruct date1 = dateList.FirstOrDefault();
+            //string d1 = date1.Year.Substring(2, 2) + date1.Month + date1.Day;
+            //DateStruct date2 = dateList.LastOrDefault();
+            //string d2= date2.Year.Substring(2, 2) + date2.Month + date2.Day;
+            //FirstAvailableDate = DateTime.ParseExact(d1, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            //LastAvailableDate = DateTime.ParseExact(d2, "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
             
             //AvailableDates.Values.
         }
@@ -514,7 +571,7 @@ namespace BAWGUI.Results.ViewModels
             var dateTimeNode = from el in _configData.Descendants("DateTimeEnd") select(string)el;
             if (dateTimeNode.Any())
             {
-                _lastDateOfTheRun = System.DateTime.ParseExact(dateTimeNode.FirstOrDefault(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
+                _lastDateOfTheRun = System.DateTime.ParseExact(dateTimeNode.FirstOrDefault(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyMMdd");
             }
             //_lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
             if (!String.IsNullOrEmpty(_resultPath) && Directory.Exists(_resultPath))
