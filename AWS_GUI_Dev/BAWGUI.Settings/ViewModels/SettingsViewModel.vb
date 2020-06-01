@@ -1651,9 +1651,11 @@ Namespace ViewModels
                         Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
                         If letter2 = "P" Then
                             inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                            inputOutputPair.Key.Unit = "RAD"
                         End If
                     Else
                         inputOutputPair.Key.TypeAbbreviation = "OTHER"
+                        inputOutputPair.Key.Unit = "OTHER"
                     End If
                 End If
             Next
@@ -1664,8 +1666,10 @@ Namespace ViewModels
                 If inputOutputPair.Value.Count > 0 Then
                     If CurrentSelectedStep.Exponent = 1 OrElse inputOutputPair.Value(0).TypeAbbreviation = "SC" Then
                         inputOutputPair.Key.TypeAbbreviation = inputOutputPair.Value(0).TypeAbbreviation
+                        inputOutputPair.Key.Unit = inputOutputPair.Value(0).Unit
                     Else
                         inputOutputPair.Key.TypeAbbreviation = "OTHER"
+                        inputOutputPair.Key.Unit = "OTHER"
                     End If
                 End If
             Next
@@ -1691,7 +1695,7 @@ Namespace ViewModels
                 ElseIf rate <> signal.SamplingRate Then
                     _addLog("Sampling rate of all factors in multiplication customization have to be the same. Different sampling rate found in multiplication customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                    Throw New Exception("Sampling rate of all terms in multiplication customization have to be the same. Different sampling rate found in multiplication customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
+                    'Throw New Exception("Sampling rate of all terms in multiplication customization have to be the same. Different sampling rate found in multiplication customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     Exit Sub
                 End If
             Next
@@ -1736,18 +1740,23 @@ Namespace ViewModels
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
                 _addLog("Dividend and Divisor have to have units and their sampling rate should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
-                Throw New Exception("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
+                'Throw New Exception("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
             End If
         End Sub
 
         Private Sub _checkSubtractionCustomizationOutputTypeAndSamplingRate()
             CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+            CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
             If CurrentSelectedStep.Subtrahend.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Minuend.TypeAbbreviation IsNot Nothing Then
                 If CurrentSelectedStep.Subtrahend.TypeAbbreviation <> CurrentSelectedStep.Minuend.TypeAbbreviation Then
-                    _addLog("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
-                    Throw New Exception("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
+                    '_addLog("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
+                    'Throw New Exception("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
                 Else
                     CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = CurrentSelectedStep.Subtrahend.TypeAbbreviation
+                End If
+                If CurrentSelectedStep.Subtrahend.Unit <> CurrentSelectedStep.Minuend.Unit Then
+                Else
+                    CurrentSelectedStep.OutputChannels(0).Unit = CurrentSelectedStep.Subtrahend.Unit
                 End If
             End If
             If CurrentSelectedStep.Subtrahend.IsValid AndAlso CurrentSelectedStep.Minuend.IsValid Then
@@ -1755,8 +1764,8 @@ Namespace ViewModels
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Subtrahend.SamplingRate
                 Else
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                    _addLog("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
-                    Throw New Exception("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
+                    '_addLog("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
+                    'Throw New Exception("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
                 End If
             End If
             'If CurrentSelectedStep.SubtrahendOrDivisor.IsValid AndAlso CurrentSelectedStep.MinuendOrDividend.IsValid AndAlso CurrentSelectedStep.SubtrahendOrDivisor.SamplingRate = CurrentSelectedStep.MinuendOrDividend.SamplingRate Then
@@ -1771,13 +1780,21 @@ Namespace ViewModels
         Private Sub _checkAdditionCustomizationOutputTypeAndSamplingRate()
             Dim type = ""
             Dim rate = -1
+            Dim unit = ""
             For Each signal In CurrentSelectedStep.InputChannels
                 If String.IsNullOrEmpty(type) Then
                     type = signal.TypeAbbreviation
                 ElseIf type <> signal.TypeAbbreviation Then
                     _addLog("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                     CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-                    Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
+                    'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
+                    Exit Sub
+                End If
+                If String.IsNullOrEmpty(unit) Then
+                    unit = signal.TypeAbbreviation
+                ElseIf unit <> signal.TypeAbbreviation Then
+                    CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
+                    'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                     Exit Sub
                 End If
                 If rate = -1 Then
@@ -1785,7 +1802,7 @@ Namespace ViewModels
                 ElseIf rate <> signal.SamplingRate Then
                     _addLog("Sampling rate of all terms in addition customization have to be the same. Different sampling rate found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                    Throw New Exception("Sampling rate of all terms in addition customization have to be the same. Different sampling rate found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
+                    'Throw New Exception("Sampling rate of all terms in addition customization have to be the same. Different sampling rate found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     Exit Sub
                 End If
             Next
