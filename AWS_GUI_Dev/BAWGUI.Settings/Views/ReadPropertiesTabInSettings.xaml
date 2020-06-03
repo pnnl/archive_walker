@@ -158,6 +158,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
@@ -268,9 +269,10 @@
                 </Grid>
             </ScrollViewer>
         </Border>
-        <!--<Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="1">
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+        <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="2">
             <ScrollViewer Margin="2">
-                <ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
+                <!--<ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Margin="2,0,0,10">
@@ -290,8 +292,8 @@
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                </ItemsControl>-->
             </ScrollViewer>
-        </Border>-->
+        </Border>
     </Grid>
 </UserControl>

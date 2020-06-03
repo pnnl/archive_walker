@@ -857,9 +857,9 @@ namespace BAWGUI.ViewModels
             Directory.CreateDirectory(controlRunPath);
             var controlReRunPath = taskDir + "\\ControlRerun\\";
             Directory.CreateDirectory(controlReRunPath);
-            var eventPath = taskDir + "\\Event";
+            var eventPath = taskDir + "\\Event\\";
             Directory.CreateDirectory(eventPath);
-            var initPath = taskDir + "\\Init";
+            var initPath = taskDir + "\\Init\\";
             Directory.CreateDirectory(initPath);
 
             var newTask = new AWRun();

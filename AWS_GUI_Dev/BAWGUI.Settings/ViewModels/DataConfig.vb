@@ -1847,12 +1847,14 @@ Namespace ViewModels
                 If String.IsNullOrEmpty(type) Then
                     type = signal.TypeAbbreviation
                 ElseIf type <> signal.TypeAbbreviation Then
-                    Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
+                    type = "OTHER"
+                    'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                 End If
                 If String.IsNullOrEmpty(unit) Then
                     unit = signal.Unit
                 ElseIf unit <> signal.Unit Then
-                    Throw New Exception("All terms of addition customization have to have the same unit! Different unit found in addition customization step: " & stepCounter & ", with unit: " & unit & " and " & signal.Unit & ".")
+                    unit = "OTHER"
+                    'Throw New Exception("All terms of addition customization have to have the same unit! Different unit found in addition customization step: " & stepCounter & ", with unit: " & unit & " and " & signal.Unit & ".")
                 End If
                 If samplingRate = -1 Then
                     samplingRate = signal.SamplingRate
@@ -1954,14 +1956,20 @@ Namespace ViewModels
                 Subtrahend.IsValid = False
             End If
             InputChannels.Add(Subtrahend)
-            Dim output = New SignalSignatureViewModel(_model.SignalName, _model.CustPMUname)
+            Dim output = New SignalSignatureViewModel(_model.SignalName, _model.CustPMUname, "OTHER")
+            output.Unit = "OTHER"
+            output.SamplingRate = -1
             If Minuend.IsValid AndAlso Subtrahend.IsValid Then
                 If Minuend.TypeAbbreviation = Subtrahend.TypeAbbreviation Then
                     output.TypeAbbreviation = Minuend.TypeAbbreviation
-                    output.Unit = Minuend.Unit
-                    output.SamplingRate = Minuend.SamplingRate
                 Else
-                    Throw New Exception("In step: " & stepCounter & " ," & _model.Name & ", the types of Minuend and Subtrahend do not match!")
+                    'Throw New Exception("In step: " & stepCounter & " ," & _model.Name & ", the types of Minuend and Subtrahend do not match!")
+                End If
+                If Minuend.Unit = Subtrahend.Unit Then
+                    output.Unit = Minuend.Unit
+                End If
+                If Minuend.SamplingRate = Subtrahend.SamplingRate Then
+                    output.SamplingRate = Minuend.SamplingRate
                 End If
             End If
             output.IsCustomSignal = True
@@ -2794,10 +2802,16 @@ Namespace ViewModels
                 End If
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
-                If input.IsValid Then
-                    output.TypeAbbreviation = input.TypeAbbreviation
-                    output.Unit = input.Unit
+                output.TypeAbbreviation = "OTHER"
+                output.Unit = "OTHER"
+                output.SamplingRate = -1
+                If input.IsValid AndAlso input.TypeAbbreviation.Length = 3 Then
                     output.SamplingRate = input.SamplingRate
+                    Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
+                    If letter2 = "P" Then
+                        output.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                        output.Unit = "RAD"
+                    End If
                 End If
                 output.OldUnit = output.Unit
                 output.OldTypeAbbreviation = output.TypeAbbreviation
