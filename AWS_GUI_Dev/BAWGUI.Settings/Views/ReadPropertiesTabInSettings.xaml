@@ -11,6 +11,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              xmlns:coreConverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:local="clr-namespace:BAWGUI.Settings"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -271,8 +272,16 @@
         </Border>
         <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
         <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="2">
-            <ScrollViewer Margin="2">
-                <!--<ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
+            <Grid Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Available Signals" Margin="2"/>
+                <local:SignalListPanel Grid.Row="1" Margin="2"/>
+            </Grid>
+            <!--<ScrollViewer Margin="2">
+                <ItemsControl ItemsSource="{Binding DataConfigure.ReaderProperty.InputFileInfos}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Margin="2,0,0,10">
@@ -292,8 +301,8 @@
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>-->
-            </ScrollViewer>
+                </ItemsControl>
+            </ScrollViewer>-->
         </Border>
     </Grid>
 </UserControl>

@@ -49,6 +49,8 @@ Namespace Converters
             If TypeOf index Is Integer Then
                 Select Case index
                     Case 0
+                        value1 = {"All Initial Input Channels by Signal Type",
+                                           "All Initial Input Channels by PMU"}.ToList
                     Case 1
                         value1 = {"All Initial Input Channels by Signal Type",
                                            "All Initial Input Channels by PMU",

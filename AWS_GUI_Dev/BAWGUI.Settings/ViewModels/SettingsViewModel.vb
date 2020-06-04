@@ -1647,15 +1647,18 @@ Namespace ViewModels
             For Each inputOutputPair In CurrentSelectedStep.OutputInputMappingPair
                 If inputOutputPair.Value.Count > 0 Then
                     Dim input = inputOutputPair.Value(0)
-                    If input.IsValid AndAlso input.TypeAbbreviation.Length = 3 Then
-                        Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
-                        If letter2 = "P" Then
-                            inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                    inputOutputPair.Key.TypeAbbreviation = "OTHER"
+                    inputOutputPair.Key.Unit = "OTHER"
+                    If input.IsValid Then
+                        If input.TypeAbbreviation = "CP" Then
                             inputOutputPair.Key.Unit = "RAD"
+                        ElseIf input.TypeAbbreviation.Length = 3 Then
+                            Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
+                            If letter2 = "P" Then
+                                inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                                inputOutputPair.Key.Unit = "RAD"
+                            End If
                         End If
-                    Else
-                        inputOutputPair.Key.TypeAbbreviation = "OTHER"
-                        inputOutputPair.Key.Unit = "OTHER"
                     End If
                 End If
             Next

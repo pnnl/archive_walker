@@ -2805,12 +2805,16 @@ Namespace ViewModels
                 output.TypeAbbreviation = "OTHER"
                 output.Unit = "OTHER"
                 output.SamplingRate = -1
-                If input.IsValid AndAlso input.TypeAbbreviation.Length = 3 Then
+                If input.IsValid Then
                     output.SamplingRate = input.SamplingRate
-                    Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
-                    If letter2 = "P" Then
-                        output.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                    If input.TypeAbbreviation = "CP" Then
                         output.Unit = "RAD"
+                    ElseIf input.TypeAbbreviation.Length = 3 Then
+                        Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
+                        If letter2 = "P" Then
+                            output.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                            output.Unit = "RAD"
+                        End If
                     End If
                 End If
                 output.OldUnit = output.Unit

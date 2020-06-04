@@ -191,12 +191,14 @@ namespace BAWGUI.ViewModels
                 //ProjectControl = new ProjectsControlViewModel(ResultsStoragePath);
                 _resultsStoragePath = ResultsStoragePath;
                 var awProjects = new ObservableCollection<AWProjectViewModel>();
-                foreach (var dir in Directory.GetDirectories(ResultsStoragePath))
+                var dirs = new DirectoryInfo(ResultsStoragePath).GetDirectories().OrderBy(x => x.CreationTime).ToList();
+                foreach (var dir in dirs)
                 {
-                    var projectNameFrac = Path.GetFileName(dir).Split('_');
-                    if (projectNameFrac[0] == "Project" && Directory.Exists(dir))
+                    var dirName = dir.FullName;
+                    var projectNameFrac = Path.GetFileName(dirName).Split('_');
+                    if (projectNameFrac[0] == "Project" && Directory.Exists(dirName))
                     {
-                        var aNewPoject = new AWProjectViewModel(dir);
+                        var aNewPoject = new AWProjectViewModel(dirName);
                         aNewPoject.ProjectSelected += _onProjectSelected;
                         awProjects.Add(aNewPoject);
                     }
@@ -653,7 +655,7 @@ namespace BAWGUI.ViewModels
                 newRunViewModel.RunSelected += _onOneOfTheRunSelected;
                 runs.Add(newRunViewModel);
             }
-           return new ObservableCollection<AWRunViewModel>(runs.OrderBy(x => x.AWRunName).ToList());
+           return new ObservableCollection<AWRunViewModel>(runs);
         }
 
         private void _onOneOfTheRunSelected(object sender, AWRunViewModel e)
@@ -881,7 +883,7 @@ namespace BAWGUI.ViewModels
             var newTaskVieModel = new AWRunViewModel(newTask);
             newTaskVieModel.RunSelected += _onOneOfTheRunSelected;
             AWRuns.Add(newTaskVieModel);
-            AWRuns = new ObservableCollection<AWRunViewModel>(AWRuns.OrderBy(x => x.AWRunName).ToList());
+            AWRuns = new ObservableCollection<AWRunViewModel>(AWRuns);
             //AWRuns = GetAWRunViewModelCollection(_model.AWRuns);
             //_model.AWRuns.OrderBy(x => x.RunName);
             //OnPropertyChanged("AWRuns");
