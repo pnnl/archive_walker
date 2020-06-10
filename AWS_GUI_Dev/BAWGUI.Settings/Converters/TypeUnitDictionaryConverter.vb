@@ -29,25 +29,30 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            Dim type = value.ToString.ToList.FirstOrDefault
+            Dim type = value.ToString
             Select Case type
-                Case "V"
+                Case "VMP", "VMA", "VMB", "VMC", "VPP", "VPA", "VPB", "VPC"
                     Return New List(Of String) From {"kV", "V"}.ToList
-                Case "I"
+                Case "IMP", "IMA", "IMB", "IMC", "IPP", "IPA", "IPB", "IPC"
                     Return New List(Of String) From {"A", "kA"}.ToList
+                'Case "VAP", "VAA", "VAB", "VAC", "IAP", "IAA", "IAB", "IAC"
+                '    Return New List(Of String) From {"RAD", "DEG"}.ToList
                 Case "R"
                     Return New List(Of String) From {"Hz/sec", "mHz/sec"}.ToList
                 Case "F"
                     Return New List(Of String) From {"Hz", "mHz"}.ToList
                 Case "P"
                     Return New List(Of String) From {"W", "kW", "MW"}.ToList
-                Case "QP"
+                Case "Q"
                     Return New List(Of String) From {"VAR", "kVAR", "MVAR"}.ToList
-                Case "CP"
+                Case "CP", "S"
                     Return New List(Of String) From {"VA", "kVA", "MVA"}.ToList
-                Case "S"
-                    Return New List(Of String) From {"VA", "kVA", "MVA"}.ToList
-
+                    'Case "D"
+                    '    Return New List(Of String) From {"D"}.ToList
+                    'Case "SC"
+                    '    Return New List(Of String) From {"SC"}.ToList
+                    'Case "OTHER"
+                    '    Return New List(Of String) From {"O", "kV", "V", "A", "kA", "RAD", "DEG", "Hz/sec", "mHz/sec", "Hz", "mHz", "W", "kW", "MW", "VAR", "kVAR", "MVAR", "VA", "kVA", "MVA", "D", "SC"}.ToList
                 Case Else
                     Return DependencyProperty.UnsetValue
             End Select

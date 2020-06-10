@@ -1251,7 +1251,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                                 else
                                 {
                                     signal.TypeAbbreviation = "OTHER";
-                                    signal.Unit = "OTHER";
+                                    signal.Unit = "O";
                                 }
 
                                 break;
@@ -1274,7 +1274,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                                 else
                                 {
                                     signal.TypeAbbreviation = "OTHER";
-                                    signal.Unit = "OTHER";
+                                    signal.Unit = "O";
                                 }
 
                                 break;

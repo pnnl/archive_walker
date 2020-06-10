@@ -1843,17 +1843,20 @@ Namespace ViewModels
             Dim unit = ""
             Dim samplingRate = -1
             Dim output = New SignalSignatureViewModel(_model.SignalName, _model.CustPMUname, "OTHER")
+            output.Unit = "O"
             For Each signal In InputChannels
                 If String.IsNullOrEmpty(type) Then
                     type = signal.TypeAbbreviation
                 ElseIf type <> signal.TypeAbbreviation Then
                     type = "OTHER"
+                    unit = "O"
                     'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                 End If
                 If String.IsNullOrEmpty(unit) Then
                     unit = signal.Unit
                 ElseIf unit <> signal.Unit Then
-                    unit = "OTHER"
+                    unit = "O"
+                    type = "OTHER"
                     'Throw New Exception("All terms of addition customization have to have the same unit! Different unit found in addition customization step: " & stepCounter & ", with unit: " & unit & " and " & signal.Unit & ".")
                 End If
                 If samplingRate = -1 Then
@@ -1957,16 +1960,14 @@ Namespace ViewModels
             End If
             InputChannels.Add(Subtrahend)
             Dim output = New SignalSignatureViewModel(_model.SignalName, _model.CustPMUname, "OTHER")
-            output.Unit = "OTHER"
+            output.Unit = "O"
             output.SamplingRate = -1
             If Minuend.IsValid AndAlso Subtrahend.IsValid Then
-                If Minuend.TypeAbbreviation = Subtrahend.TypeAbbreviation Then
+                If Minuend.TypeAbbreviation = Subtrahend.TypeAbbreviation AndAlso Minuend.Unit = Subtrahend.Unit Then
                     output.TypeAbbreviation = Minuend.TypeAbbreviation
+                    output.Unit = Minuend.Unit
                 Else
                     'Throw New Exception("In step: " & stepCounter & " ," & _model.Name & ", the types of Minuend and Subtrahend do not match!")
-                End If
-                If Minuend.Unit = Subtrahend.Unit Then
-                    output.Unit = Minuend.Unit
                 End If
                 If Minuend.SamplingRate = Subtrahend.SamplingRate Then
                     output.SamplingRate = Minuend.SamplingRate
@@ -2103,7 +2104,7 @@ Namespace ViewModels
                 'TODO: Are there any other multiplication result in legal signal?
             Else
                 output.TypeAbbreviation = "OTHER"
-                output.Unit = "OTHER"
+                output.Unit = "O"
             End If
             output.SamplingRate = samplingRate
             output.IsCustomSignal = True
@@ -2201,7 +2202,7 @@ Namespace ViewModels
                     output.TypeAbbreviation = Dividend.TypeAbbreviation
                     output.Unit = Dividend.Unit
                 Else
-                    output.Unit = "OTHER"
+                    output.Unit = "O"
                     output.TypeAbbreviation = "OTHER"
                 End If
             End If
@@ -2320,7 +2321,7 @@ Namespace ViewModels
                         output.Unit = input.Unit
                     Else
                         output.TypeAbbreviation = "OTHER"
-                        output.Unit = "OTHER"
+                        output.Unit = "O"
                     End If
                     output.SamplingRate = input.SamplingRate
                 End If
@@ -2803,20 +2804,20 @@ Namespace ViewModels
                 Dim output = New SignalSignatureViewModel(signal.CustSignalName, CustPMUname)
                 output.IsCustomSignal = True
                 output.TypeAbbreviation = "OTHER"
-                output.Unit = "OTHER"
+                output.Unit = "O"
                 output.SamplingRate = -1
                 If input.IsValid Then
                     output.SamplingRate = input.SamplingRate
-                    If input.TypeAbbreviation = "CP" Then
-                        output.Unit = "RAD"
-                    ElseIf input.TypeAbbreviation.Length = 3 Then
-                        Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
-                        If letter2 = "P" Then
-                            output.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
-                            output.Unit = "RAD"
+                    'If input.TypeAbbreviation = "CP" Then
+                    '    output.Unit = "RAD"
+                    If input.TypeAbbreviation.Length = 3 Then
+                            Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
+                            If letter2 = "P" Then
+                                output.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                                output.Unit = "RAD"
+                            End If
                         End If
                     End If
-                End If
                 output.OldUnit = output.Unit
                 output.OldTypeAbbreviation = output.TypeAbbreviation
                 output.OldSignalName = output.SignalName
@@ -3014,6 +3015,7 @@ Namespace ViewModels
                     Dim atype = angSignal.TypeAbbreviation.ToArray
                     If mtype(0) = atype(0) AndAlso mtype(2) = atype(2) AndAlso mtype(1) = "M" AndAlso atype(1) = "A" Then
                         output.TypeAbbreviation = mtype(0) & "P" & mtype(2)
+                        output.Unit = magSignal.Unit
                     Else
                         Throw New Exception("In step: " & stepCounter & ", type of input magnitude siganl: " & magSignal.SignalName & ", does not match angle signal: " & angSignal.SignalName & ".")
                     End If
@@ -3261,8 +3263,18 @@ Namespace ViewModels
             End Get
             Set(ByVal value As PowerType)
                 _model.PowType = value
+                Dim u = "O"
+                Select Case value
+                    Case PowerType.CP, PowerType.S
+                        u = "MVA"
+                    Case PowerType.Q
+                        u = "MVAR"
+                    Case PowerType.P
+                        u = "MW"
+                End Select
                 For Each out In OutputChannels
                     out.TypeAbbreviation = value.ToString
+                    out.Unit = u
                 Next
                 OnPropertyChanged()
             End Set
