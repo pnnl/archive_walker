@@ -1648,18 +1648,18 @@ Namespace ViewModels
                 If inputOutputPair.Value.Count > 0 Then
                     Dim input = inputOutputPair.Value(0)
                     inputOutputPair.Key.TypeAbbreviation = "OTHER"
-                    inputOutputPair.Key.Unit = "OTHER"
+                    inputOutputPair.Key.Unit = "O"
                     If input.IsValid Then
-                        If input.TypeAbbreviation = "CP" Then
-                            inputOutputPair.Key.Unit = "RAD"
-                        ElseIf input.TypeAbbreviation.Length = 3 Then
-                            Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
-                            If letter2 = "P" Then
-                                inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
-                                inputOutputPair.Key.Unit = "RAD"
+                        'If input.TypeAbbreviation = "CP" Then
+                        '    inputOutputPair.Key.Unit = "RAD"
+                        If input.TypeAbbreviation.Length = 3 Then
+                                Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
+                                If letter2 = "P" Then
+                                    inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                                    inputOutputPair.Key.Unit = "RAD"
+                                End If
                             End If
                         End If
-                    End If
                 End If
             Next
         End Sub
@@ -1672,7 +1672,7 @@ Namespace ViewModels
                         inputOutputPair.Key.Unit = inputOutputPair.Value(0).Unit
                     Else
                         inputOutputPair.Key.TypeAbbreviation = "OTHER"
-                        inputOutputPair.Key.Unit = "OTHER"
+                        inputOutputPair.Key.Unit = "O"
                     End If
                 End If
             Next
@@ -1710,7 +1710,7 @@ Namespace ViewModels
                 CurrentSelectedStep.OutputChannels(0).Unit = unit
             Else
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-                CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
+                CurrentSelectedStep.OutputChannels(0).Unit = "O"
             End If
             If rate <> -1 Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = rate
@@ -1738,7 +1738,7 @@ Namespace ViewModels
                     CurrentSelectedStep.OutputChannels(0).Unit = "SC"
                 Else
                     CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-                    CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "O"
                 End If
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
@@ -1749,7 +1749,7 @@ Namespace ViewModels
 
         Private Sub _checkSubtractionCustomizationOutputTypeAndSamplingRate()
             CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-            CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
+            CurrentSelectedStep.OutputChannels(0).Unit = "O"
             If CurrentSelectedStep.Subtrahend.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Minuend.TypeAbbreviation IsNot Nothing Then
                 If CurrentSelectedStep.Subtrahend.TypeAbbreviation <> CurrentSelectedStep.Minuend.TypeAbbreviation Then
                     '_addLog("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
@@ -1790,13 +1790,15 @@ Namespace ViewModels
                 ElseIf type <> signal.TypeAbbreviation Then
                     _addLog("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                     CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "O"
                     'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                     Exit Sub
                 End If
                 If String.IsNullOrEmpty(unit) Then
                     unit = signal.TypeAbbreviation
                 ElseIf unit <> signal.TypeAbbreviation Then
-                    CurrentSelectedStep.OutputChannels(0).Unit = "OTHER"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "O"
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
                     'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                     Exit Sub
                 End If
@@ -2474,16 +2476,10 @@ Namespace ViewModels
             Else
 
                 If sgnl.TypeAbbreviation.Length <> 3 OrElse sgnl.TypeAbbreviation.Substring(1, 1) <> "P" Then
-                    '_keepOriginalSelection(obj)
                     _addLog("Selected signal: " & sgnl.SignalName & " is not a phasor signal.")
                     Throw New Exception("Signal selection is not Valid! Please select a signal of type phasor.")
                 ElseIf _currentFocusedPhasorSignalForPowerCalculation Is Nothing Then
-                    '_keepOriginalSelection(obj)
                     Throw New Exception("No textbox selected!")
-                    'ElseIf _currentFocusedPhasorSignalForPowerCalculation.IsValid AndAlso (_currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation.Substring(0) <> obj.SignalSignature.TypeAbbreviation.Substring(0)) Then
-                    '    _keepOriginalSelection(obj)
-                    '    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
-                    '    Throw New Exception("Signal selection is not Valid! Please select a signal of type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
                 ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) Is _currentFocusedPhasorSignalForPowerCalculation Then
                     If sgnl.TypeAbbreviation.Substring(0, 1) = "V" Then
                         Dim oldPhasor = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
@@ -3234,11 +3230,15 @@ Namespace ViewModels
                 For Each signal In _currentSelectedStep.InputChannels
                     signal.IsChecked = False
                 Next
-                If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
-                    obj(1).IsChecked = True
+                If obj Is Nothing Then
+                    _currentInputOutputPair = Nothing
+                Else
+                    If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
+                        obj(1).IsChecked = True
+                    End If
+                    _currentInputOutputPair = obj(0)
                 End If
                 _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-                _currentInputOutputPair = obj(0)
             End If
         End Sub
         Private _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
@@ -3876,6 +3876,14 @@ Namespace ViewModels
                     Case "Power Calculation"
                         newCustomization = New PowerCalcCust
                         Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname, newCustomization.PowType.ToString)
+                        Select Case newSignal.TypeAbbreviation
+                            Case "CP", "S"
+                                newSignal.Unit = "MVA"
+                            Case "Q"
+                                newSignal.Unit = "MVAR"
+                            Case "P"
+                                newSignal.Unit = "MW"
+                        End Select
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
                         Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newSignal, New ObservableCollection(Of SignalSignatureViewModel))
@@ -4076,7 +4084,7 @@ Namespace ViewModels
                                 End If
                             End If
                         ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                            '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
+                            _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
                         ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                             _disableEnableAllButAngleSignalsInDataConfig(True)
                         End If
@@ -4103,7 +4111,7 @@ Namespace ViewModels
                             End If
                         End If
                     ElseIf processStep.Name = "Metric Prefix" Then
-                        '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(False)
+                        _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(False)
                     ElseIf processStep.Name = "Angle Conversion" Then
                         _disableEnableAllButAngleSignalsInDataConfig(False)
                     End If
@@ -4343,61 +4351,60 @@ Namespace ViewModels
                 Next
             Next
         End Sub
-        'Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(isEnabled As Boolean)
-        '    For Each group In _signalMgr.GroupedRawSignalsByType
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-        '                    subgroup.SignalSignature.IsEnabled = isEnabled
-        '                Else
-        '                    For Each subsubgroup In subgroup.SignalList
-        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                        End If
-        '                    Next
-        '                End If
-        '            Next
-        '        Next
-        '    Next
-        '    For Each group In _signalMgr.GroupedRawSignalsByPMU
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                For Each subsubgroup In subgroup.SignalList
-        '                    'If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
-        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                    End If
-        '                Next
-        '            Next
-        '        Next
-        '    Next
-        '    For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-        '                    subgroup.SignalSignature.IsEnabled = isEnabled
-        '                Else
-        '                    For Each subsubgroup In subgroup.SignalList
-        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                        End If
-        '                    Next
-        '                End If
-        '            Next
-        '        Next
-        '    Next
-        '    For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                For Each subsubgroup In subgroup.SignalList
-        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
-        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                    End If
-        '                Next
-        '            Next
-        '        Next
-        '    Next
-        'End Sub
+        Private Sub _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(isEnabled As Boolean)
+            For Each group In _signalMgr.GroupedRawSignalsByType
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        If subgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subgroup.SignalSignature.TypeAbbreviation = "D" Then
+                            subgroup.SignalSignature.IsEnabled = isEnabled
+                        Else
+                            For Each subsubgroup In subgroup.SignalList
+                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) = "A") Then
+                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
+                                End If
+                            Next
+                        End If
+                    Next
+                Next
+            Next
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        For Each subsubgroup In subgroup.SignalList
+                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "D" OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) = "A") Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnabled
+                            End If
+                        Next
+                    Next
+                Next
+            Next
+            For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        If subgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subgroup.SignalSignature.TypeAbbreviation = "D" Then
+                            subgroup.SignalSignature.IsEnabled = isEnabled
+                        Else
+                            For Each subsubgroup In subgroup.SignalList
+                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) = "A") Then
+                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
+                                End If
+                            Next
+                        End If
+                    Next
+                Next
+            Next
+            For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        For Each subsubgroup In subgroup.SignalList
+                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "D" OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) = "A") Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnabled
+                            End If
+                        Next
+                    Next
+                Next
+            Next
+        End Sub
         'this function disables/enables or current and voltage signals, including phasor signals
         Private Sub _disableEnableAllButCurrentVoltageSignalsInDataConfig(isEnabled As Boolean)
             For Each group In _signalMgr.GroupedRawSignalsByType
@@ -4541,7 +4548,7 @@ Namespace ViewModels
                         End If
                     End If
                 ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                    '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
+                    _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInDataConfig(True)
                 End If
