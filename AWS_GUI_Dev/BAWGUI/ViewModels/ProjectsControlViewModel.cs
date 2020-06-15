@@ -56,10 +56,10 @@ namespace BAWGUI.ViewModels
             _generatedNewRun = new AWRunViewModel();
             _isMatlabEngineRunning = false;
             _runCommands = new RunMATLABViewModel();
+            //_runCommands.TaskIsRunning += _taskStartedRunning;
             DeleteRun = new RelayCommand(_deleteARun);
             _canRun = true;
         }
-
         //public ProjectsControlViewModel(string resultsStoragePath)
         //{
         //    _resultsStoragePath = resultsStoragePath;
@@ -232,6 +232,7 @@ namespace BAWGUI.ViewModels
             {
                 _selectedRun = value;
 #if !DEBUG
+                _selectedRun.TaskIsRunning += _taskStartedRunning;
                 CanRun = !_findRunGeneratedFile(value.Model.RunPath);
 #endif
                 OnPropertyChanged();
@@ -429,7 +430,7 @@ namespace BAWGUI.ViewModels
             {
                 var ext = Path.GetExtension(file).ToLower();
                 var filename = Path.GetFileNameWithoutExtension(file);
-                if (ext == "mat" || filename.Contains("EventList") || filename.Contains("Pause"))
+                if (ext == "mat" || ext == "csv" || filename.Contains("EventList") || filename.Contains("Pause") || filename.Contains("RunFlag"))
                 {
                     return true;
                 }
@@ -607,6 +608,10 @@ namespace BAWGUI.ViewModels
             {
                 return _canRun;
             }
+        }
+        private void _taskStartedRunning(object sender, AWRunViewModel e)
+        {
+            CanRun = false;
         }
     }
     public class AWProjectViewModel : ViewModelBase
