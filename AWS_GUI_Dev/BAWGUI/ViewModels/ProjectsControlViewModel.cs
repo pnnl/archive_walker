@@ -430,7 +430,7 @@ namespace BAWGUI.ViewModels
             {
                 var ext = Path.GetExtension(file).ToLower();
                 var filename = Path.GetFileNameWithoutExtension(file);
-                if (ext == "mat" || ext == "csv" || filename.Contains("EventList") || filename.Contains("Pause") || filename.Contains("RunFlag"))
+                if (ext == ".mat" || ext == ".csv" || filename.Contains("EventList") || filename.Contains("Pause") || filename.Contains("RunFlag"))
                 {
                     return true;
                 }
