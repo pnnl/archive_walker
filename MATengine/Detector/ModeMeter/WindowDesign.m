@@ -35,6 +35,11 @@ function [WinStruct,D,D0,U,OmegaB,FreqOfInterest] = WindowDesign(Dmin,Dmax,SLL,f
 
 %% Preliminaries  
 
+% Check to make sure inputs are logical
+if Dmin > Dmax
+    Dmin = Dmax;
+end
+
 Dshort = Dmin;      % Starting point for shorter window to start algorithm
 
 SNRdb = -50:0.25:0;   % SNR range to search for Pd = 0.9 (part of the 
@@ -61,45 +66,47 @@ WinStruct(1).win = kaiser(Dshort,alpha);
 D = Dshort;
 U = 1/(Dshort)*sum((WinStruct(1).win).^2); % Scaling parameter for periodogram
 
-WinIdx = 1;     % Index to store window
-while 1
-    WinIdx = WinIdx + 1; % Increment index
-    
-    % Set initial values for the detection segment lengths. Dlong will be
-    % incrementally increased.
-    Dshort = D(end);
-    Dlong = Dshort;
-    
-    winShort = kaiser(Dshort,alpha);    % Current short window 
+if Dmin < Dmax
+    WinIdx = 1;     % Index to store window
     while 1
-        Dlong = Dlong + fs;             % Increment the long detection segment's length
-        
-        % Check if the new length is greater than Dmax. If so, use Dmax as
-        % the length and stop iterating 
-        if Dlong >= Dmax
-            WinStruct(WinIdx).win = kaiser(Dmax,alpha);
-            D = [D Dmax];
-            U = [U 1/Dmax*sum((WinStruct(WinIdx).win).^2)];
+        WinIdx = WinIdx + 1; % Increment index
+
+        % Set initial values for the detection segment lengths. Dlong will be
+        % incrementally increased.
+        Dshort = D(end);
+        Dlong = Dshort;
+
+        winShort = kaiser(Dshort,alpha);    % Current short window 
+        while 1
+            Dlong = Dlong + fs;             % Increment the long detection segment's length
+
+            % Check if the new length is greater than Dmax. If so, use Dmax as
+            % the length and stop iterating 
+            if Dlong >= Dmax
+                WinStruct(WinIdx).win = kaiser(Dmax,alpha);
+                D = [D Dmax];
+                U = [U 1/Dmax*sum((WinStruct(WinIdx).win).^2)];
+                break;
+            end
+
+            winLong = kaiser(Dlong,alpha);  % Calculate new long window
+
+            % Check if the condition in eq. (4.52) has been passed. If so, back
+            % up one step and take that detection segment length as the next
+            % detection segment length.
+            if 1/Dshort*sum(winShort)^2 > 1/Dlong*sum(winLong(end-Dshort+1:end))^2
+                WinStruct(WinIdx).win = kaiser(Dlong-fs,alpha);
+                D = [D Dlong-fs];
+                U = [U 1/(Dlong-fs)*sum((WinStruct(WinIdx).win).^2)];
+                break;
+            end
+        end
+
+        % Check to see if the current detection segment is long enough to stop
+        % iterating.
+        if D(end) == Dmax
             break;
         end
-        
-        winLong = kaiser(Dlong,alpha);  % Calculate new long window
-        
-        % Check if the condition in eq. (4.52) has been passed. If so, back
-        % up one step and take that detection segment length as the next
-        % detection segment length.
-        if 1/Dshort*sum(winShort)^2 > 1/Dlong*sum(winLong(end-Dshort+1:end))^2
-            WinStruct(WinIdx).win = kaiser(Dlong-fs,alpha);
-            D = [D Dlong-fs];
-            U = [U 1/(Dlong-fs)*sum((WinStruct(WinIdx).win).^2)];
-            break;
-        end
-    end
-    
-    % Check to see if the current detection segment is long enough to stop
-    % iterating.
-    if D(end) == Dmax
-        break;
     end
 end
 

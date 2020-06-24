@@ -85,7 +85,11 @@ for p = 1:P
 end
 
 % Remove any FOs that are completely windowed out
-KillIdx = m == 0;
+% (After testing, it was found that very short duration FOs led to
+% deviations in the mode estimates. So rather than removing FOs that are
+% completely windowed out, even those with durations less than 30 seconds
+% are removed).
+KillIdx = m <= 30*fs;
 FOfreq(KillIdx) = [];
 m(KillIdx) = [];
 
