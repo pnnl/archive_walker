@@ -37,10 +37,18 @@ nb = Parameters.nb;
 ng = Parameters.ng;
 NaNomitLimit = Parameters.NaNomitLimit;
 
-% Under certain setups, FOfreq and TimeLoc can be non-empty even when the
-% YW-ARMA algorithm was requested. In this case, set these inputs to [] so
-% that FO robustness is not added.
-if ~Parameters.FOrobust
+% Deal with the difference between YW-ARMA and YW-ARMA+S
+if Parameters.FOrobust
+    % YW-ARMA+S algorithm
+    EnableTimeLoc = Parameters.EnableTimeLoc;
+else
+    % YW-ARMA algorithm
+    
+    EnableTimeLoc = false;
+    
+    % Under certain setups, FOfreq and TimeLoc can be non-empty even when the
+    % YW-ARMA algorithm was requested. In this case, set these inputs to [] so
+    % that FO robustness is not added.
     TimeLoc = [];
     FOfreq = [];
 end
@@ -79,9 +87,17 @@ end
 
 %% Calculate the duration of each FO, accounting for the impact of windowing
 
-m = zeros(1,P);
-for p = 1:P
-    m(p) = sum(w(TimeLoc(p,1):TimeLoc(p,2)) > 0);
+% Start with assumption that time localization is disabled and the duration
+% of each FO should be set to the length of the analysis window.
+m = length(y)*ones(1,P);
+% If time localization is enabled, calculate the duration for each FO.
+% (Note that time localization, at least down to the detection segment, is
+% performed no matter what for FO tracking. The EnableTimeLoc flag just
+% determines how the YW algorithm uses that information.
+if EnableTimeLoc
+    for p = 1:P
+        m(p) = sum(w(TimeLoc(p,1):TimeLoc(p,2)) > 0);
+    end
 end
 
 % Remove any FOs that are completely windowed out

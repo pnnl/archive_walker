@@ -31,7 +31,7 @@
 %         in stage 1 and then updated in stage 2. 
 % yhat = reconstructed version of input signal y based on identified model
 
-function [ModeEst, Mtrack, ExtraOutput] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq,TimeLoc,~,~)
+function [ModeEst, Mtrack, ExtraOutput] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreqUnref,TimeLocUnref,FOfreqRef,TimeLocRef)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
@@ -40,10 +40,22 @@ nb = Parameters.nb;
 n_alpha = Parameters.n_alpha;
 NaNomitLimit = Parameters.NaNomitLimit;
 
-% Under certain setups, FOfreq and TimeLoc can be non-empty even when the
-% YW-ARMA algorithm was requested. In this case, set these inputs to [] so
-% that FO robustness is not added.
-if ~Parameters.FOrobust
+% Deal with the difference between LS-ARMA and LS-ARMA+S
+if Parameters.FOrobust
+    % LS-ARMA+S algorithm
+    if Parameters.UseRefinedFreq
+        TimeLoc = TimeLocRef;
+        FOfreq = FOfreqRef;
+    else
+        TimeLoc = TimeLocUnref;
+        FOfreq = FOfreqUnref;
+    end
+else
+    % LS-ARMA algorithm
+    
+    % Under certain setups, FOfreq and TimeLoc can be non-empty even when the
+    % LS-ARMA algorithm was requested. In this case, set these inputs to [] so
+    % that FO robustness is not added.
     TimeLoc = [];
     FOfreq = [];
 end
