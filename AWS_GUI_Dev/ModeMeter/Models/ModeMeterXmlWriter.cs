@@ -210,6 +210,14 @@ namespace ModeMeter.Models
                                                         new XElement("LFO", method.NumberOfEquationsWithFOpresent),
                                                         new XElement("ng", method.ExaggeratedARModelOrder),
                                                         new XElement("NaNomitLimit", method.NaNomitLimit));
+                    if (method.EnableTimeLoc)
+                    {
+                        mth.Add(new XElement("EnableTimeLoc", "TRUE"));
+                    }
+                    else
+                    {
+                        mth.Add(new XElement("EnableTimeLoc", "FALSE"));
+                    }
                     modeElement.Add(mth);
                     break;
                 case ModeMethods.LSARMAS:
@@ -218,6 +226,14 @@ namespace ModeMeter.Models
                                                         new XElement("nb", method.MAModelOrder),
                                                         new XElement("n_alpha", method.ExaggeratedARModelOrder),
                                                         new XElement("NaNomitLimit", method.NaNomitLimit));
+                    if (method.UseRefinedFreq)
+                    {
+                        mth.Add(new XElement("UseRefinedFreq", "TRUE"));
+                    }
+                    else
+                    {
+                        mth.Add(new XElement("UseRefinedFreq", "FALSE"));
+                    }
                     modeElement.Add(mth);
                     break;
                 case ModeMethods.STLS:

@@ -313,6 +313,24 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool EnableTimeLoc
+        {
+            get { return _model.EnableTimeLoc; }
+            set
+            {
+                _model.EnableTimeLoc = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool UseRefinedFreq
+        {
+            get { return _model.UseRefinedFreq; }
+            set
+            {
+                _model.UseRefinedFreq = value;
+                OnPropertyChanged();
+            }
+        }
     }
     //public class LSARMASViewModel : ModeMethodViewModel
     //{

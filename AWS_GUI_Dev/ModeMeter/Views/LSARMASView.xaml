@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ModeMeter.Views.YWARMASView"
+﻿<UserControl x:Class="ModeMeter.Views.LSARMASView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -27,8 +27,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -40,15 +38,11 @@
         <TextBox Grid.Row="1" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ARModelOrder}" HorizontalAlignment="Left"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="MA Model Order:" HorizontalAlignment="Left"/>
         <TextBox Grid.Row="2" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding MAModelOrder}" HorizontalAlignment="Left"/>
-        <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Number of Equations:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding NumberOfEquations}" HorizontalAlignment="Left"/>
-        <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Number of Equations With FO Present:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding NumberOfEquationsWithFOpresent}" HorizontalAlignment="Left"/>
-        <Label Grid.Row="6" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Max NaNs to Omit:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="6" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding NaNomitLimit}" HorizontalAlignment="Left"/>
-        <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Exaggerated AR Model Order:" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ExaggeratedARModelOrder}" HorizontalAlignment="Left" IsEnabled="{Binding RingdownID}"/>
-        <Label Grid.Row="7" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Enable Time Localization:" HorizontalAlignment="Left"/>
-        <CheckBox Grid.Row="7" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" IsChecked="{Binding EnableTimeLoc}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="3" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Exaggerated AR Model Order:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding ExaggeratedARModelOrder}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="4" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Max NaNs to Omit:" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding NaNomitLimit}" HorizontalAlignment="Left"/>
+        <Label Grid.Row="5" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Use Refined Frequency Estimates:" HorizontalAlignment="Left"/>
+        <CheckBox Grid.Row="5" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" IsChecked="{Binding UseRefinedFreq}" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>

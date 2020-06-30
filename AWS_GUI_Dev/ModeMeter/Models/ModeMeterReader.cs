@@ -390,6 +390,30 @@ namespace ModeMeter.Models
                 {
                     aNewMethod.SVThreshold = thresh.Value;
                 }
+                var enabletl = alg.Element("EnableTimeLoc");
+                if (enabletl != null)
+                {
+                    if (enabletl.Value.ToUpper() == "TRUE")
+                    {
+                        aNewMethod.EnableTimeLoc = true;
+                    }
+                    else
+                    {
+                        aNewMethod.EnableTimeLoc = false;
+                    }
+                }
+                var userf = alg.Element("UseRefinedFreq");
+                if (userf != null)
+                {
+                    if (userf.Value.ToUpper() == "TRUE")
+                    {
+                        aNewMethod.UseRefinedFreq = true;
+                    }
+                    else
+                    {
+                        aNewMethod.UseRefinedFreq = false;
+                    }
+                }
                 var mName = alg.Element("Name");
                 if (mName != null)
                 {

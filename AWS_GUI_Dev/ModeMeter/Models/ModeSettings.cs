@@ -59,6 +59,8 @@ namespace ModeMeter.Models
         public string NaNomitLimit { get; set; } = "0";
         public string MaximumIterations { get; set; }
         public string SVThreshold { get; set; }
+        public bool EnableTimeLoc { get; set; }
+        public bool UseRefinedFreq { get; set; }
     }
     //public class YWARMA : ModeMethodBase
     //{

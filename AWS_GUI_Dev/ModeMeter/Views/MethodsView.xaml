@@ -18,6 +18,9 @@
             <DataTemplate x:Key="YWARMASView">
                 <local:YWARMASView/>
             </DataTemplate>
+            <DataTemplate x:Key="LSARMASView">
+                <local:LSARMASView/>
+            </DataTemplate>
             <DataTemplate x:Key="STLSView">
                 <local:STLSView/>
             </DataTemplate>
@@ -58,7 +61,7 @@
                                         <Setter Property="ContentTemplate" Value="{StaticResource YWARMASView}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Name}" Value="3">
-                                        <Setter Property="ContentTemplate" Value="{StaticResource LSARMAView}"/>
+                                        <Setter Property="ContentTemplate" Value="{StaticResource LSARMASView}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Name}" Value="4">
                                         <Setter Property="ContentTemplate" Value="{StaticResource STLSView}"/>
