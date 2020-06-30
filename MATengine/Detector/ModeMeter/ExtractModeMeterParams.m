@@ -103,7 +103,12 @@ if isfield(Parameters,'Mode')
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         LFO = str2double(ExtrctParamXML{MethodIdx}.LFO);
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
+                        if strcmp(ExtrctParamXML{MethodIdx}.EnableTimeLoc,'TRUE')
+                            EnableTimeLoc = true;
+                        else
+                            EnableTimeLoc = false;
+                        end
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'EnableTimeLoc',EnableTimeLoc,'FOrobust',FOrobust);
                     case 'LS_ARMApS'
                         FunctionName = 'LS_ARMApS';
                         FOrobust = true;   % This flag is needed because the same FunctionName is used for LS-ARMA and LS-ARMA+S
@@ -111,7 +116,12 @@ if isfield(Parameters,'Mode')
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
                         NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
-                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
+                        if strcmp(ExtrctParamXML{MethodIdx}.UseRefinedFreq,'TRUE')
+                            UseRefinedFreq = true;
+                        else
+                            UseRefinedFreq = false;
+                        end
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'UseRefinedFreq',UseRefinedFreq,'FOrobust',FOrobust);
                     case 'STLS'
                         FunctionName = 'STLS';
                         FOrobust = false;   % This flag is needed because the same FunctionName is used for STLS and STLS+S
