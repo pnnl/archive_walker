@@ -1,0 +1,2604 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BAWSengineNative</name>
+    </assembly>
+    <members>
+        <member name="T:BAWSengineNative.GUI2MAT">
+            <summary>
+            The GUI2MAT class provides a CLS compliant, Object (native) interface to the MATLAB
+            functions contained in the files:
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.
+            m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleD
+            B.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnaly
+            sis.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOsci
+            llation.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange
+            .m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATprese
+            t.m
+            <newpara></newpara>
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m
+            </summary>
+            <remarks>
+            @Version 4.0
+            </remarks>
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.#cctor">
+            <summary internal= "true">
+            The static constructor instantiates and initializes the MATLAB Runtime instance.
+            </summary>
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.#ctor">
+            <summary>
+            Constructs a new instance of the GUI2MAT class.
+            </summary>
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.Finalize">
+            <summary internal= "true">
+            Class destructor called by the CLR garbage collector.
+            </summary>
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.Dispose">
+            <summary>
+            Frees the native resources associated with this object
+            </summary>
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.Dispose(System.Boolean)">
+            <summary internal= "true">
+            Internal dispose function
+            </summary>
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="InputFile">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="InputFile">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the GetFileExample MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="InputFile">Input argument #1</param>
+             <param name="FileType">Input argument #2</param>
+             <param name="MetaOnly">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExample(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the GetFileExample function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <param name="PresetFile">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <param name="PresetFile">Input argument #3</param>
+             <param name="MetaOnly">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 5-input Objectinterface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <param name="PresetFile">Input argument #3</param>
+             <param name="MetaOnly">Input argument #4</param>
+             <param name="DBtype">Input argument #5</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <param name="PresetFile">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <param name="PresetFile">Input argument #3</param>
+             <param name="MetaOnly">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 5-input Object interface to the GetFileExampleDB MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="preset">Input argument #2</param>
+             <param name="PresetFile">Input argument #3</param>
+             <param name="MetaOnly">Input argument #4</param>
+             <param name="DBtype">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetFileExampleDB(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the GetFileExampleDB function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Repeat error so that the message is captured by the GUI
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="SparseStartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="SparseStartTime">Input argument #1</param>
+             <param name="SparseEndTime">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="SparseStartTime">Input argument #1</param>
+             <param name="SparseEndTime">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="SparseStartTime">Input argument #1</param>
+             <param name="SparseEndTime">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <param name="SparseDetector">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="SparseStartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="SparseStartTime">Input argument #1</param>
+             <param name="SparseEndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="SparseStartTime">Input argument #1</param>
+             <param name="SparseEndTime">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the GetSparseData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="SparseStartTime">Input argument #1</param>
+             <param name="SparseEndTime">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <param name="SparseDetector">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.GetSparseData(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the GetSparseData function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Convert string times to datetime
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the InspectionAnalysis
+             MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <param name="Params">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the InspectionAnalysis MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="Func">Input argument #1</param>
+             <param name="Data">Input argument #2</param>
+             <param name="t">Input argument #3</param>
+             <param name="Params">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.InspectionAnalysis(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the InspectionAnalysis function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the ReadMMdata MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the ReadMMdata MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the ReadMMdata MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the ReadMMdata MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the ReadMMdata MATLAB function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.ReadMMdata(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the ReadMMdata function in which the input and output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 5-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 6-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 7-input Objectinterface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 5-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 6-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 7-input Object interface to the RerunForcedOscillation
+             MATLAB function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunForcedOscillation(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the RerunForcedOscillation function in which the input
+             and output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 5-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 6-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 7-input Objectinterface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 5-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 6-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 7-input Object interface to the RerunOutOfRange MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunOutOfRange(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the RerunOutOfRange function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 5-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 6-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 7-input Objectinterface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 5-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 6-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 7-input Object interface to the RerunRingdown MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RerunRingdown(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the RerunRingdown function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Rerun the general out-of-range detector for the specified time period
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 5-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 6-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 7-input Objectinterface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 5-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 6-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 7-input Object interface to the RetrieveData MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="RerunStartTime">Input argument #1</param>
+             <param name="RerunEndTime">Input argument #2</param>
+             <param name="ConfigFile">Input argument #3</param>
+             <param name="ControlPath">Input argument #4</param>
+             <param name="EventPath">Input argument #5</param>
+             <param name="InitializationPath">Input argument #6</param>
+             <param name="FileDirectory">Input argument #7</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RetrieveData(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the RetrieveData function in which the input and output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode">
+             <summary>
+             Provides a void output, 0-input Objectinterface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Object)">
+             <summary>
+             Provides a void output, 1-input Objectinterface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="ControlPath">Input argument #1</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Object,System.Object)">
+             <summary>
+             Provides a void output, 2-input Objectinterface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a void output, 3-input Objectinterface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a void output, 4-input Objectinterface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <param name="FileDirectory">Input argument #4</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a void output, 5-input Objectinterface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <param name="FileDirectory">Input argument #4</param>
+             <param name="ConfigFile">Input argument #5</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="ControlPath">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <param name="FileDirectory">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 5-input Object interface to the RunNormalMode MATLAB
+             function.
+             </summary>
+             <remarks>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="ControlPath">Input argument #1</param>
+             <param name="EventPath">Input argument #2</param>
+             <param name="InitializationPath">Input argument #3</param>
+             <param name="FileDirectory">Input argument #4</param>
+             <param name="ConfigFile">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.RunNormalMode(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the RunNormalMode function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="NewPreset">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="NewPreset">Input argument #1</param>
+             <param name="Detector">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="NewPreset">Input argument #1</param>
+             <param name="Detector">Input argument #2</param>
+             <param name="AWconfigFile">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="NewPreset">Input argument #1</param>
+             <param name="Detector">Input argument #2</param>
+             <param name="AWconfigFile">Input argument #3</param>
+             <param name="OBATpresetFile">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="NewPreset">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="NewPreset">Input argument #1</param>
+             <param name="Detector">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="NewPreset">Input argument #1</param>
+             <param name="Detector">Input argument #2</param>
+             <param name="AWconfigFile">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the UpdateOBATpreset MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="NewPreset">Input argument #1</param>
+             <param name="Detector">Input argument #2</param>
+             <param name="AWconfigFile">Input argument #3</param>
+             <param name="OBATpresetFile">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.UpdateOBATpreset(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the UpdateOBATpreset function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Read the OBAT preset file into cell A
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport">
+             <summary>
+             Provides a single output, 0-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object)">
+             <summary>
+             Provides a single output, 1-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object)">
+             <summary>
+             Provides a single output, 2-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 3-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 4-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 5-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <param name="DampThresh">Input argument #5</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 6-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <param name="DampThresh">Input argument #5</param>
+             <param name="EventSepMinutes">Input argument #6</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides a single output, 7-input Objectinterface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <param name="DampThresh">Input argument #5</param>
+             <param name="EventSepMinutes">Input argument #6</param>
+             <param name="ReportPath">Input argument #7</param>
+             <returns>An Object containing the first output argument.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32)">
+             <summary>
+             Provides the standard 0-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object)">
+             <summary>
+             Provides the standard 1-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object)">
+             <summary>
+             Provides the standard 2-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 3-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 4-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 5-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <param name="DampThresh">Input argument #5</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 6-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <param name="DampThresh">Input argument #5</param>
+             <param name="EventSepMinutes">Input argument #6</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+             <summary>
+             Provides the standard 7-input Object interface to the WriteMMreport MATLAB
+             function.
+             </summary>
+             <remarks>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return.</param>
+             <param name="StartTime">Input argument #1</param>
+             <param name="EndTime">Input argument #2</param>
+             <param name="EventPath">Input argument #3</param>
+             <param name="ReportType">Input argument #4</param>
+             <param name="DampThresh">Input argument #5</param>
+             <param name="EventSepMinutes">Input argument #6</param>
+             <param name="ReportPath">Input argument #7</param>
+             <returns>An Array of length "numArgsOut" containing the output
+             arguments.</returns>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WriteMMreport(System.Int32,System.Object[]@,System.Object[],System.Object[])">
+             <summary>
+             Provides an interface for the WriteMMreport function in which the input and
+             output
+             arguments are specified as an array of Objects.
+             </summary>
+             <remarks>
+             This method will allocate and return by reference the output argument
+             array.<newpara></newpara>
+             M-Documentation:
+             Identify periods separated by at least EventSepSamp samples
+             </remarks>
+             <param name="numArgsOut">The number of output arguments to return</param>
+             <param name= "argsOut">Array of Object output arguments</param>
+             <param name= "argsIn">Array of Object input arguments</param>
+             <param name= "varArgsIn">Array of Object representing variable input
+             arguments</param>
+            
+        </member>
+        <member name="M:BAWSengineNative.GUI2MAT.WaitForFiguresToDie">
+             <summary>
+             This method will cause a MATLAB figure window to behave as a modal dialog box.
+             The method will not return until all the figure windows associated with this
+             component have been closed.
+             </summary>
+             <remarks>
+             An application should only call this method when required to keep the
+             MATLAB figure window from disappearing.  Other techniques, such as calling
+             Console.ReadLine() from the application should be considered where
+             possible.</remarks>
+            
+        </member>
+    </members>
+</doc>
