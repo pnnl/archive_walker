@@ -195,28 +195,3 @@ if isfield(EventListXML,'WindApp')
         end
     end
 end
-
-% Translate the Thevenin portion
-if isfield(EventListXML,'Thevenin')
-    EventListMAT.Thevenin = [];
-    
-    if length(EventListXML.Thevenin) == 1
-        EventListXML.Thevenin = {EventListXML.Thevenin};
-    end
-    
-    for idx = 1:length(EventListXML.Thevenin)
-        EventListMAT.Thevenin(idx).ID = EventListXML.Thevenin{idx}.ID;
-        EventListMAT.Thevenin(idx).Start = datenum(EventListXML.Thevenin{idx}.Start);
-        EventListMAT.Thevenin(idx).End = datenum(EventListXML.Thevenin{idx}.End);
-        
-        NumSub = length(EventListXML.Thevenin{idx}.Sub);
-        if NumSub == 1
-            EventListXML.Thevenin{idx}.Sub = {EventListXML.Thevenin{idx}.Sub};
-        end
-        
-        EventListMAT.Thevenin(idx).Sub = cell(1,NumSub);
-        for idx2 = 1:NumSub
-            EventListMAT.Thevenin(idx).Sub{idx2} = EventListXML.Thevenin{idx}.Sub{idx2}.Name;
-        end
-    end
-end

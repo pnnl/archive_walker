@@ -31,16 +31,100 @@
 %         in stage 1 and then updated in stage 2. 
 % yhat = reconstructed version of input signal y based on identified model
 
-function [ModeEst, Mtrack] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreq)
+function [ModeEst, Mtrack, ExtraOutput] = LS_ARMApS(y,w,Parameters,DesiredModes,fs,Mtrack,FOfreqUnref,TimeLocUnref,FOfreqRef,TimeLocRef)
 
 %% Preliminaries
 y = y(:); % Make sure y  is a column vector
-na = Parameters{1}.na;
-nb = Parameters{1}.nb;
-n_alpha = Parameters{1}.n_alpha;
-W = length(y);  % Estimation segment length
+na = Parameters.na;
+nb = Parameters.nb;
+n_alpha = Parameters.n_alpha;
+NaNomitLimit = Parameters.NaNomitLimit;
+
+% Deal with the difference between LS-ARMA and LS-ARMA+S
+if Parameters.FOrobust
+    % LS-ARMA+S algorithm
+    if Parameters.UseRefinedFreq
+        TimeLoc = TimeLocRef;
+        FOfreq = FOfreqRef;
+    else
+        TimeLoc = TimeLocUnref;
+        FOfreq = FOfreqUnref;
+    end
+else
+    % LS-ARMA algorithm
+    
+    % Under certain setups, FOfreq and TimeLoc can be non-empty even when the
+    % LS-ARMA algorithm was requested. In this case, set these inputs to [] so
+    % that FO robustness is not added.
+    TimeLoc = [];
+    FOfreq = [];
+end
+
+TimeLoc(isnan(FOfreq),:) = [];
 FOfreq(isnan(FOfreq)) = [];
 P = length(FOfreq);
+
+%% Handle the case where y contains NaN
+
+% If there are NaNs in y, handle them according to the user's input
+nanLoc = isnan(y);
+if sum(nanLoc) > 0
+    if sum(nanLoc) < NaNomitLimit
+        % There are few enough NaNs that they can be omitted
+        % Using the window, remove any samples that are NaN
+        w(nanLoc) = 0;
+        % For the window to work, y(nanLoc)*0 must equal 0, but nan*0 =
+        % nan. So, replace the NaNs in y with an arbitrary value.
+        y(nanLoc) = 0;
+    else
+        % There are too many NaNs in the input signal - return NaN for the mode
+        % estimate
+        ModeEst = NaN; 
+        Mtrack{length(Mtrack)+1} = NaN;
+        ExtraOutput = struct();
+        return
+    end
+end
+
+%% Remove forced oscillations that are localized to a portion of the 
+%  analysis window that is being removed
+
+KillIdx = [];
+for p = 1:P
+    if sum(w(TimeLoc(p,1):TimeLoc(p,2))) == 0
+        KillIdx = [KillIdx p];
+    end
+end
+FOfreq(KillIdx) = [];
+TimeLoc(KillIdx,:) = [];
+
+P = length(FOfreq);
+
+%% Remove leading and trailing values that are to be removed by windowing
+KeepIdx = find(w,1):find(w,1,'last');
+if length(KeepIdx) <= n_alpha + nb
+    % Too much of the analysis window is to be removed, so return NaN for the
+    % mode estimate
+    ModeEst = NaN; 
+    Mtrack{length(Mtrack)+1} = NaN;
+    ExtraOutput = struct();
+    return
+else
+    % Remove samples at beginning and end that are to be windowed out
+    % anyway
+    w = w(KeepIdx);
+    y = y(KeepIdx);
+    % Adjust the forced oscillation start and end times to account for the
+    % samples that were removed from the beginning
+    TimeLoc = TimeLoc - KeepIdx(1) + 1;
+    % Make sure that the TimeLoc values aren't outside of the range between
+    % 1 and the new length of the analysis window
+    TimeLoc(TimeLoc < 1) = 1;
+    TimeLoc(TimeLoc > length(y)) = length(y);
+end
+
+W = length(y);  % Estimation segment length
+
 %% Stage 1
 L = n_alpha;    % Term that specifies the number of equations to be used
 
@@ -48,21 +132,43 @@ ybar = y(L+1:W);    % Data vector (see eq. (2.49))
 
 Y = -toeplitz(y(L:W-1),y(L:-1:1));   % Data matrix (see eq. (2.50))
 
+% The weights at the input to this function correspond to y. If they were
+% used in WLS directly, they would correspond only to ybar. As a result, a 
+% bad value in y would be removed from ybar, but not from Y. This is okay
+% in many uses of WLS because the values in ybar don't necessarily appear
+% in Y, but for an ARMA model the same values appear in both places. 
+% The weights calculated below are the minimum of all weights in the 
+% equation (one row in the matrix equation). Thus, if an entry in y should
+% be ignored, it's influence is removed from the calculation entirely.
+wbar = min(toeplitz(w(L+1:W),w(L+1:-1:1)), [], 2);
+
 % Form S matrix (see eq. (3.19))
 % Note that k_i has been replaced with i. This will impact the phase
 % estimates!
 S = zeros(W-L,2*P);
+if P > 0
+    eps = TimeLoc(:,1);
+    eta = TimeLoc(:,2);
+end
 for p = 1:P
-    S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W));
-    S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W));
+    % The psi term is used to incorporate the starting and ending samples
+    % of each sinusoid. Each psi is the corresponding column of Psi in
+    % eq. (3.20)
+    psi = zeros(1,W);
+    psi(eps(p):eta(p)) = 1;
+    psi = psi(L+1:W);
+    
+    S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
+    S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
 end
 
 Z = [Y S];
 
-Wp5 = diag(sqrt(w(L+1:W)));
+Wp5 = diag(sqrt(wbar));
 
 theta = pinv(Wp5*Z)*Wp5*ybar;   % Estimate of reduced parameter vector
 a = [1; theta(1:L)];   % AR coefficients
+b = 1;
 
 e = [zeros(L,1); ybar-Z*theta];    % Estimates of process noise (see eq. (3.22))
                                    % Add zeros to make indexing easier
@@ -79,70 +185,38 @@ if nb > 0
     
     E = toeplitz(e(L:W-1),e(L:-1:L-nb+1));   % Process noise matrix (see eq. (2.63))
     
+    % Recalculation of the weights (see comment above first definition of
+    % wbar for details)
+    wbar = min(toeplitz(w(L+1:W),w(L+1:-1:1)), [], 2);
+    
     % Form S matrix (see eq. (3.19))
     % Note that k_i has been replaced with i. This will impact the phase
     % estimates!
     S = zeros(W-L,2*P);
     for p = 1:P
-        S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W));
-        S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W));
+        % The psi term is used to incorporate the starting and ending samples
+        % of each sinusoid. Each psi is the corresponding column of Psi in
+        % eq. (3.20)
+        psi = zeros(1,W);
+        psi(eps(p):eta(p)) = 1;
+        psi = psi(L+1:W);
+        
+        S(:,2*p-1) = cos(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
+        S(:,2*p) = -sin(2*pi*FOfreq(p)/fs*(L+1:W)).*psi;
     end
     
     Z = [Y E S];
     
-    Wp5 = diag(sqrt(w(L+1:W)));
+    Wp5 = diag(sqrt(wbar));
 
     theta = pinv(Wp5*Z)*Wp5*ybar;   % Estimate of full parameter vector
     a = [1; theta(1:na)];   % AR coefficients
+    b = [1; theta(na+1:na+nb)];
 end
 
 %% Select modes
+[ModeEst, Mtrack] = SelectMode(a,fs,DesiredModes,Mtrack);
 
-
-% Find all poles (includes spurious roots)
-zPoles = roots(a);  % Find z-domain poles (see eq. (2.8))
-sPoles = log(zPoles)*fs;    % Transform to s-domain (see eq. (2.7))
-
-
-sPolesDamp = -real(sPoles)./abs(sPoles)*100;
-sPolesFreq = (imag(sPoles))/(2*pi);
-
-
-% 0: Remove all modes outside specified frequency range.
-sPolesTemp = sPoles;
-sPolesFreqTemp = sPolesFreq;
-sPolesDampTemp = sPolesDamp;
-KillIdx = unique([find(sPolesFreqTemp < DesiredModes(1)); find(sPolesFreqTemp > DesiredModes(2));find(sPolesDampTemp > DesiredModes(4));]);
-sPolesTemp(KillIdx) = [];
-sPolesFreqTemp(KillIdx) = [];
-sPolesDampTemp(KillIdx) = [];
-
-if length(sPolesTemp) > 1
-    % 1: Which is closest to past s-domain estimate (specified frequency if not
-    % available)?
-    if imag(DesiredModes(3)) ~= 0
-        % Past s-domain estimate is available
-        sPoleErr = abs(sPolesTemp - DesiredModes(3));
-        SelectIdx = find(sPoleErr == min(sPoleErr));
-    else
-        % Last estimate not available, use specified frequency instead
-        SelectIdx = near(sPolesFreqTemp,DesiredModes(3));
-        
-        % In case they are equally distant (only happens when a junk mode
-        % meter is set up, but prevents crashing)
-        if isempty(SelectIdx)
-            SelectIdx = 1;
-        end
-    end
-
-    ModeEst = sPolesTemp(SelectIdx);
-    Mtrack{length(Mtrack)+1} = sPolesTemp;
-elseif isempty(sPolesTemp)
-    % No possibilities for this mode were identified
-    ModeEst = NaN; 
-    Mtrack{length(Mtrack)+1} = NaN;
-else
-    % One possibility for this mode was identified
-    ModeEst = sPolesTemp;    
-    Mtrack{length(Mtrack)+1} = sPolesTemp;
-end
+%% Store other values necessary outside of this function
+ExtraOutput.a = a;
+ExtraOutput.b = b;

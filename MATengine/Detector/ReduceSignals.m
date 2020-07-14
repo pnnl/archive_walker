@@ -36,17 +36,22 @@ for DetectorType = BlockDetectors
                     [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.Mode{ModeIdx});
                     PMUlist = [PMUlist PMUlistTemp];
                     ChanList = [ChanList ChanListTemp];
+                    
+                    if isfield(Parameters.Mode{ModeIdx},'FOdetectorParam')
+                        [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.Mode{ModeIdx}.FOdetectorParam);
+                        PMUlist = [PMUlist PMUlistTemp];
+                        ChanList = [ChanList ChanListTemp];
+                    end
+                    if isfield(Parameters.Mode{ModeIdx},'EventDetectorParam')
+                        [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.Mode{ModeIdx}.EventDetectorParam);
+                        PMUlist = [PMUlist PMUlistTemp];
+                        ChanList = [ChanList ChanListTemp];
+                    end
                 end
                 if isfield(Parameters,'BaseliningSignals')
                     [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters.BaseliningSignals);
                     PMUlist = [PMUlist PMUlistTemp];
                     ChanList = [ChanList ChanListTemp];
-                end
-            elseif strcmp(DetectorType{1},'Thevenin')
-                % Special case for Thevenin - just include all signals
-                PMUlist = [PMUlist 1:length(PMU)];
-                for PMUidx = 1:length(PMU)
-                    ChanList = [ChanList {1:length(PMU(PMUidx).Signal_Name)}];
                 end
             else
                 [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters);

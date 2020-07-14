@@ -40,9 +40,11 @@ namespace BAWGUI.Core
             _projectpath = dir + "\\";
             _projectName = Path.GetFileName(dir).Split(new[] { '_' }, 2)[1];
             _awRun = new List<AWRun>();
-            foreach (var run in Directory.GetDirectories(dir))
+            var dirs = new DirectoryInfo(dir).GetDirectories().OrderBy(x => x.CreationTime).ToList();
+            foreach (var run in dirs)
             {
-                var runNameFrac = Path.GetFileName(run).Split(new[] { '_' }, 2);
+                var dirName = run.FullName;
+                var runNameFrac = Path.GetFileName(dirName).Split(new[] { '_' }, 2);
                 //var newName = "";
                 //if (runNameFrac[0] == "Run" && Directory.Exists(run))
                 //{
@@ -50,9 +52,9 @@ namespace BAWGUI.Core
                 //    Directory.Move(run, newName);
                 //}
                 //runNameFrac = Path.GetFileName(newName).Split(new[] { '_' }, 2);
-                if (runNameFrac[0] == "Task" && Directory.Exists(run))
+                if (runNameFrac[0] == "Task" && Directory.Exists(dirName))
                 {
-                    _awRun.Add(new AWRun(run));
+                    _awRun.Add(new AWRun(dirName));
                 }
             }
             _isSelected = false;

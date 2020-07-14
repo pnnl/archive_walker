@@ -1,6 +1,12 @@
 function TimeLoc = RunTimeLocalization(Data,Freq,Parameters,fs)
 
 NumF = length(Freq);
+
+if NumF == 0
+    TimeLoc = [];
+    return
+end
+
 N = size(Data,1);
 
 Mrat = Freq/fs;
@@ -9,15 +15,22 @@ if size(Mrat,1) > 1
 end
 
 
-Nmin = Parameters.LocMinLength*fs;
-Nstep = Parameters.LocLengthStep*fs;
+Nmin = Parameters.LocMinLength;
+Nstep = Parameters.LocLengthStep;
+
+% Handle the case where the input data is shorter than the parameter
+% specifying the minimum length.
+if N <= Nmin
+    TimeLoc = [ones(NumF,1) N*ones(NumF,1)];
+    return
+end
 
 nvec = Nmin:Nstep:N;
 if nvec(end) ~= N
     nvec = [nvec N];
 end
 
-Kstep = Parameters.LocRes*fs;
+Kstep = Parameters.LocRes;
 kvec = Nmin:Kstep:N;
 if kvec(end) ~= N
     kvec = [kvec N];

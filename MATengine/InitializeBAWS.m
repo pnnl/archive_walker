@@ -21,7 +21,7 @@ clear ConfigAll
 % detectors to implement. The calls are separated because the block detectors
 % operate on a block of data sliding through time, while the file
 % detectors operate on data as if it were streaming.
-BlockDetectors = {'Periodogram', 'SpectralCoherence', 'Thevenin','ModeMeter','EnergyFlow'};
+BlockDetectors = {'Periodogram', 'SpectralCoherence', 'ModeMeter','EnergyFlow'};
 FileDetectors = {'Ringdown', 'OutOfRangeGeneral','WindRamp','DataWriter'};
 OmitFromSparse = {'DataWriter','EnergyFlow'};
 
@@ -299,29 +299,6 @@ if isfield(temp,'SpectralCoherence')
     end
 end
 
-if isfield(temp,'Thevenin')
-    if length(temp.Thevenin) == 1
-        temp.Thevenin = {temp.Thevenin};
-        
-        % The Thevenin detectors need ResultUpdateInterval (most other
-        % detectors do not), so add it to the Thevenin portion of the
-        % configuration structure. (single detector)
-        DetectorXML.Thevenin.ResultUpdateInterval = ResultUpdateInterval;
-    else
-        % The Thevenin detectors need ResultUpdateInterval (most other
-        % detectors do not), so add it to the Thevenin portion of the
-        % configuration structure. (multiple detectors)
-        for idx = 1:length(temp.Thevenin)
-            DetectorXML.Thevenin{idx}.ResultUpdateInterval = ResultUpdateInterval;
-        end
-    end
-    for idx = 1:length(temp.Thevenin)
-        if isfield(temp.Thevenin{idx}, 'AnalysisLength')
-            SecondsToConcat = max([SecondsToConcat str2double(temp.Thevenin{idx}.AnalysisLength)]);
-        end
-    end
-end
-
 %Calculating SecondsToConcat using user-specified input for
 %analysislength for modemeter algorithm
 if isfield(temp,'ModeMeter')
@@ -467,7 +444,7 @@ end
 
 %% Extract alarming parameters
 AlarmingParams = struct('Periodogram',[],'SpectralCoherence',[],...
-    'Ringdown',[],'OutOfRangeGeneral',[],'WindRamp',[],'Thevenin',[],'ModeMeter',[]);
+    'Ringdown',[],'OutOfRangeGeneral',[],'WindRamp',[],'ModeMeter',[]);
 if isfield(DetectorXML.Alarming,'Periodogram')
     AlarmingParams.Periodogram = ExtractAlarmingParamsPer(DetectorXML.Alarming.Periodogram);
 else
@@ -483,8 +460,3 @@ if isfield(DetectorXML.Alarming,'Ringdown')
 else
     AlarmingParams.Ringdown = ExtractAlarmingParamsRingdown(struct());
 end
-% if isfield(DetectorXML.Alarming,'ModeMeter')
-%     AlarmingParams.ModeMeter = ExtractAlarmingParamsModeMeter(DetectorXML.Alarming.Ringdown);
-% else
-%     AlarmingParams.Modemeter = ExtractAlarmingParamsModeMeter(struct());
-% end

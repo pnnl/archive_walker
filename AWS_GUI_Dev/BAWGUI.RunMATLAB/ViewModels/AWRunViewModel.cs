@@ -42,7 +42,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 _model.IsTaskRunning = value;
                 OnPropertyChanged();
+                if (value)
+                {
+                    OnTaskingIsRunning(this);
+                }
             }
+        }
+        public event EventHandler<AWRunViewModel> TaskIsRunning;
+        protected virtual void OnTaskingIsRunning(AWRunViewModel e)
+        {
+            TaskIsRunning?.Invoke(this, e);
         }
         public string AWRunName { get { return _model.RunName; } }
         public string AWRunConfigPath { get { return _model.ConfigFilePath; } }

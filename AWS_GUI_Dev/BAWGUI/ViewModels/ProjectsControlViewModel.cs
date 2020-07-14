@@ -18,8 +18,9 @@ using VoltageStability.ViewModels;
 using ModeMeter.ViewModels;
 using ModeMeter.Models;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using BAWGUI.RunMATLAB.ViewModels;
 
-namespace BAWGUI.RunMATLAB.ViewModels
+namespace BAWGUI.ViewModels
 {
     public class ProjectsControlViewModel : ViewModelBase
     {
@@ -55,10 +56,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _generatedNewRun = new AWRunViewModel();
             _isMatlabEngineRunning = false;
             _runCommands = new RunMATLABViewModel();
+            //_runCommands.TaskIsRunning += _taskStartedRunning;
             DeleteRun = new RelayCommand(_deleteARun);
             _canRun = true;
         }
-
         //public ProjectsControlViewModel(string resultsStoragePath)
         //{
         //    _resultsStoragePath = resultsStoragePath;
@@ -190,12 +191,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 //ProjectControl = new ProjectsControlViewModel(ResultsStoragePath);
                 _resultsStoragePath = ResultsStoragePath;
                 var awProjects = new ObservableCollection<AWProjectViewModel>();
-                foreach (var dir in Directory.GetDirectories(ResultsStoragePath))
+                var dirs = new DirectoryInfo(ResultsStoragePath).GetDirectories().OrderBy(x => x.CreationTime).ToList();
+                foreach (var dir in dirs)
                 {
-                    var projectNameFrac = Path.GetFileName(dir).Split('_');
-                    if (projectNameFrac[0] == "Project" && Directory.Exists(dir))
+                    var dirName = dir.FullName;
+                    var projectNameFrac = Path.GetFileName(dirName).Split('_');
+                    if (projectNameFrac[0] == "Project" && Directory.Exists(dirName))
                     {
-                        var aNewPoject = new AWProjectViewModel(dir);
+                        var aNewPoject = new AWProjectViewModel(dirName);
                         aNewPoject.ProjectSelected += _onProjectSelected;
                         awProjects.Add(aNewPoject);
                     }
@@ -229,6 +232,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 _selectedRun = value;
 #if !DEBUG
+                _selectedRun.TaskIsRunning += _taskStartedRunning;
                 CanRun = !_findRunGeneratedFile(value.Model.RunPath);
 #endif
                 OnPropertyChanged();
@@ -426,7 +430,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 var ext = Path.GetExtension(file).ToLower();
                 var filename = Path.GetFileNameWithoutExtension(file);
-                if (ext == "mat" || filename.Contains("EventList") || filename.Contains("Pause"))
+                if (ext == ".mat" || ext == ".csv" || filename.Contains("EventList") || filename.Contains("Pause") || filename.Contains("RunFlag"))
                 {
                     return true;
                 }
@@ -605,6 +609,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 return _canRun;
             }
         }
+        private void _taskStartedRunning(object sender, AWRunViewModel e)
+        {
+            CanRun = false;
+        }
     }
     public class AWProjectViewModel : ViewModelBase
     {
@@ -652,7 +660,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 newRunViewModel.RunSelected += _onOneOfTheRunSelected;
                 runs.Add(newRunViewModel);
             }
-           return new ObservableCollection<AWRunViewModel>(runs.OrderBy(x => x.AWRunName).ToList());
+           return new ObservableCollection<AWRunViewModel>(runs);
         }
 
         private void _onOneOfTheRunSelected(object sender, AWRunViewModel e)
@@ -856,9 +864,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Directory.CreateDirectory(controlRunPath);
             var controlReRunPath = taskDir + "\\ControlRerun\\";
             Directory.CreateDirectory(controlReRunPath);
-            var eventPath = taskDir + "\\Event";
+            var eventPath = taskDir + "\\Event\\";
             Directory.CreateDirectory(eventPath);
-            var initPath = taskDir + "\\Init";
+            var initPath = taskDir + "\\Init\\";
             Directory.CreateDirectory(initPath);
 
             var newTask = new AWRun();
@@ -880,7 +888,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             var newTaskVieModel = new AWRunViewModel(newTask);
             newTaskVieModel.RunSelected += _onOneOfTheRunSelected;
             AWRuns.Add(newTaskVieModel);
-            AWRuns = new ObservableCollection<AWRunViewModel>(AWRuns.OrderBy(x => x.AWRunName).ToList());
+            AWRuns = new ObservableCollection<AWRunViewModel>(AWRuns);
             //AWRuns = GetAWRunViewModelCollection(_model.AWRuns);
             //_model.AWRuns.OrderBy(x => x.RunName);
             //OnPropertyChanged("AWRuns");

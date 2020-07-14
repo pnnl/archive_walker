@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace ModeMeter.Views
 {
     /// <summary>
-    /// Interaction logic for FOParametersView.xaml
+    /// Interaction logic for FOParametersView1.xaml
     /// </summary>
     public partial class FOParametersView : UserControl
     {

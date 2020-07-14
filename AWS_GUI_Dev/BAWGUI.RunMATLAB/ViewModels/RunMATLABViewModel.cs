@@ -97,6 +97,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     {
                         MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
                     }
+                    //if (Run.IsTaskRunning)
+                    //{
+                    //    OnTaskingIsRunning(Run);
+                    //}
                 }
                 else
                 {
@@ -108,8 +112,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show("No run is selected!", "Error!", MessageBoxButtons.OK);
             }
         }
-
-
         public ICommand OpenConfigFile { get; set; }
         private void _openConfigFile(object obj)
         {

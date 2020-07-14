@@ -49,7 +49,7 @@ for MMidx = 1:length(MMfolders)
     ModeNames = unique(H{2,FreqIdx},'stable');
     ModeIdx = cell(1,length(ModeNames));
     for Midx = 1:length(ModeNames)
-        ModeIdx{Midx} = strcmp(H{2,:},ModeNames{Midx}) & ~DEFidx;
+        ModeIdx{Midx} = strcmp(H{2,:},ModeNames{Midx}) & (FreqIdx | DampIdx | OpIdx) & ~DEFidx;
 
         AlgNames = unique(H{4,ModeIdx{Midx}},'stable');
         AlgIdx = cell(1,length(AlgNames));

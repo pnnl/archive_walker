@@ -28,7 +28,7 @@
         </Grid.RowDefinitions>-->
         <!--<StackPanel Orientation="Vertical">-->
         <!--<TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}" IsEnabled="{Binding IsMatlabEngineRunning, Converter={StaticResource InverseBooleanConverter}}">-->
-        <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" SelectedItemChanged="myProjectTreeView_SelectedItemChanged" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}">
+        <TreeView ItemsSource="{Binding AWProjects}" BorderThickness="0" Name="myProjectTreeView" utility:TreeViewHelper.SelectedItem="{Binding SelectedRun}">
             <!--<TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />

@@ -328,6 +328,9 @@
     <Compile Include="Views\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SignalListPanel.xaml.vb">
+      <DependentUpon>SignalListPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SignalReplicationCustomization.xaml.vb">
       <DependentUpon>SignalReplicationCustomization.xaml</DependentUpon>
     </Compile>
@@ -600,6 +603,10 @@
     <Page Include="Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SignalListPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalReplicationCustomization.xaml">
       <SubType>Designer</SubType>
