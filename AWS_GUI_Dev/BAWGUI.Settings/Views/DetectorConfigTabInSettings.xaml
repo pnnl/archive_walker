@@ -5,10 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
-             xmlns:vsmodel="clr-namespace:VoltageStability.Models;assembly=VoltageStability"
-             xmlns:vsviewmodel="clr-namespace:VoltageStability.ViewModels;assembly=VoltageStability"
              xmlns:views="clr-namespace:BAWGUI.Settings"
-             xmlns:vsviews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:mmviewmodel="clr-namespace:ModeMeter.ViewModels;assembly=ModeMeter"
@@ -83,9 +80,6 @@
                             </DataTemplate>
                             <DataTemplate DataType="{x:Type vm:OutOfRangeFrequencyDetector}">
                                 <views:OutOfRangeFrequencyView/>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type vsviewmodel:VoltageStabilityDetectorViewModel}">
-                                <vsviews:VoltageStabilityDetectorView/>
                             </DataTemplate>
                             <DataTemplate DataType="{x:Type mmviewmodel:SmallSignalStabilityToolViewModel}">
                                 <mmviews:SmallSignalStabilityToolView/>

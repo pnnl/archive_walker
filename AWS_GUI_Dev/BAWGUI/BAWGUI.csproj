@@ -290,10 +290,6 @@
       <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>
       <Name>ModeMeter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
-      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
-      <Name>VoltageStability</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MapService\MapService.csproj">
       <Project>{908167fb-4c0e-4285-a6ee-0ef81a164929}</Project>
       <Name>MapService</Name>

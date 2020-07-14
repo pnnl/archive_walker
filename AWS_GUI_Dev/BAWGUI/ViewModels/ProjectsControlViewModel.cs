@@ -13,8 +13,6 @@ using BAWGUI.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.Settings.ViewModels;
-using VoltageStability.Models;
-using VoltageStability.ViewModels;
 using ModeMeter.ViewModels;
 using ModeMeter.Models;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -364,19 +362,6 @@ namespace BAWGUI.ViewModels
                 catch (Exception ex)
                 {
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
-                }
-                var detectorList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is VoltageStabilityDetectorViewModel).Select(x=>(VoltageStabilityDetectorViewModel)x).ToList();
-                if (detectorList.Count > 0)
-                {
-                    var vsWriter = new VoltageStabilityDetectorGroupWriter();
-                    try
-                    {
-                        vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
                 }
                 var modeMeterList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is SmallSignalStabilityToolViewModel).Select(x => (SmallSignalStabilityToolViewModel)x).ToList();
                 if (modeMeterList.Count > 0)

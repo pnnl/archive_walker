@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:BAWGUI.Results.Views"
-             xmlns:vsViews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
              xmlns:mmViews="clr-namespace:ModeMeter.Views;assembly=ModeMeter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
@@ -29,9 +28,6 @@
                 <views:WindRampResultsView DataContext="{Binding WindRampResultsViewModel}"/>
             </ScrollViewer>
         </TabItem>
-        <!--<TabItem Header="Voltage Stability">
-            <vsViews:VoltageStabilityResultsView DataContext="{Binding VoltageStabilityResultsViewModel}"/>
-        </TabItem>-->
         <TabItem Header="Mode Meter">
             <ScrollViewer CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <mmViews:ModeMeterResultsView DataContext="{Binding ModeMeterResultsVM}"/>

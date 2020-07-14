@@ -367,11 +367,11 @@ namespace ModeMeter.ViewModels
             set
             {
                 _reRunResult = value;
-                _drawVSReRunPlots();
+                _drawMMReRunPlots();
                 OnPropertyChanged();
             }
         }
-        private void _drawVSReRunPlots()
+        private void _drawMMReRunPlots()
         {
             var mmrrPlots = new ObservableCollection<MMRerunPlotModel>();
             foreach (var plot in ReRunResult)

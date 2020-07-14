@@ -7,7 +7,6 @@ Imports BAWGUI.SignalManagement.ViewModels
 Imports DissipationEnergyFlow.Models
 Imports DissipationEnergyFlow.ViewModels
 Imports ModeMeter.ViewModels
-Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Public Class ConfigFileWriter
@@ -606,8 +605,6 @@ Namespace ViewModels
                             element.Add(<FrequencyTolerance><%= dt.FrequencyTolerance %></FrequencyTolerance>)
                         End If
                         element.Add(<CalcDEF><%= dt.CalcDEF.ToString.ToUpper %></CalcDEF>)
-                    Case GetType(VoltageStabilityDetectorViewModel)
-                        Continue For
                     Case GetType(SmallSignalStabilityToolViewModel)
                         Continue For
                     Case GetType(DEFDetectorViewModel)

@@ -9,9 +9,7 @@ Imports BAWGUI.Utilities
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.Core.Models
-Imports VoltageStability.ViewModels
 Imports ModeMeter.ViewModels
-Imports VoltageStability.Models
 Imports ModeMeter.Models
 Imports DissipationEnergyFlow.ViewModels
 Imports BAWGUI.CoordinateMapping.ViewModels
@@ -930,15 +928,6 @@ Namespace ViewModels
                         PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
                         DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
 
-                        'read voltage stability settings from config file.
-                        Dim vsDetectors = New VoltageStabilityDetectorGroupReader(Run.Model.ConfigFilePath).GetDetector
-                        'add voltage stability detectors to te detector list in the settings.
-                        If vsDetectors.Count > 0 Then
-                            DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible
-                            For Each detector In vsDetectors
-                                DetectorConfigure.DetectorList.Add(New VoltageStabilityDetectorViewModel(detector, _signalMgr))
-                            Next
-                        End If
                         Dim modeMeters = New ModeMeterReader(Run.Model.ConfigFilePath).GetDetectors
                         If modeMeters.Count > 0 Then
                             For Each mm In modeMeters
@@ -1394,15 +1383,6 @@ Namespace ViewModels
                             Forms.MessageBox.Show("Please choose a way to specify sampling rate for Multirate!", "Error!", MessageBoxButtons.OK)
                             _addLog("Error selecting signal(s) for Multirate! No sampling rate specified!")
                         End If
-                    ElseIf TypeOf _currentSelectedStep Is VoltageStabilityDetectorViewModel Then
-                        'If obj.SignalList.Count > 0 Then
-                        '    Throw New Exception("Only single signal selection is allowed.")
-                        'End If
-                        Try
-                            _currentSelectedStep.ChangeASignal(obj)
-                        Catch ex As Exception
-                            Forms.MessageBox.Show("Error changing voltage stability detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                        End Try
                     ElseIf TypeOf _currentSelectedStep Is SmallSignalStabilityToolViewModel Then
                         Try
                             _currentSelectedStep.ChangeSignalSelection(obj)

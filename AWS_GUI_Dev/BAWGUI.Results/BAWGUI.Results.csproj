@@ -410,10 +410,6 @@
       <Project>{f28598d8-9c9f-42c9-b828-4d1bd86bb751}</Project>
       <Name>ModeMeter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
-      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
-      <Name>VoltageStability</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="..\BAWGUI.Resources\Images\open.gif">

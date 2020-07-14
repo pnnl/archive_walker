@@ -6,7 +6,6 @@ Imports System.Windows.Input
 Imports BAWGUI.Core
 Imports DissipationEnergyFlow.ViewModels
 Imports ModeMeter.ViewModels
-Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -50,15 +49,6 @@ Namespace ViewModels
                 Case "Spectral Coherence Forced Oscillation Detector"
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
-                Case "Voltage Stability"
-                    If _isVoltageStabilityDetectorExist(DetectorConfigure.DetectorList) Then
-                        Forms.MessageBox.Show("Only one Voltage Stability detector can be added!", "Error!", MessageBoxButtons.OK)
-                        Exit Sub
-                    Else
-                        newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
-                        DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
-                    End If
-                    'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
                 Case "Mode Meter Tool"
                     If Not _isModeMeterResultFolderExists() Then
                         _generateModeMeterResultFolder()
@@ -76,7 +66,7 @@ Namespace ViewModels
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            If TypeOf (newDetector) Is VoltageStabilityDetectorViewModel OrElse TypeOf (newDetector) Is SmallSignalStabilityToolViewModel Then
+            If TypeOf (newDetector) Is SmallSignalStabilityToolViewModel Then
             Else
                 newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
                 newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
@@ -94,14 +84,6 @@ Namespace ViewModels
             Return Directory.Exists(Run.Model.EventPath & "\MM")
         End Function
 
-        Private Function _isVoltageStabilityDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
-            For Each dt In detectorList
-                If TypeOf dt Is VoltageStabilityDetectorViewModel Then
-                    Return True
-                End If
-            Next
-            Return False
-        End Function
         Private Function _isDEFDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
             For Each dt In detectorList
                 If TypeOf dt Is DEFDetectorViewModel Then
@@ -335,7 +317,7 @@ Namespace ViewModels
                         If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False
                             For Each dtr In DetectorConfigure.DetectorList
-                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Or TypeOf dtr Is VoltageStabilityDetectorViewModel Then
+                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Then
                                     updateResultInterval = True
                                     Exit For
                                 End If

@@ -8,8 +8,6 @@ using BAWGUI.SignalManagement.ViewModels;
 using BAWGUI.Utilities;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using VoltageStability.Models;
-using VoltageStability.ViewModels;
 using BAWGUI.CoordinateMapping.ViewModels;
 using ModeMeter.Models;
 using ModeMeter.ViewModels;
@@ -323,16 +321,6 @@ namespace BAWGUI.ViewModels
                             }
 
                             //read voltage stability settings from config file.
-                            var vsDetectors = new VoltageStabilityDetectorGroupReader(e.SelectedRun.Model.ConfigFilePath).GetDetector();
-                            //add voltage stability detectors to te detector list in the settings.
-                            if (vsDetectors.Count > 0)
-                            {
-                                SettingsVM.DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible;
-                                foreach (var detector in vsDetectors)
-                                {
-                                    SettingsVM.DetectorConfigure.DetectorList.Add(new VoltageStabilityDetectorViewModel(detector, _signalMgr));
-                                }
-                            }
                             var modeMeters = new ModeMeterReader(e.SelectedRun.Model.ConfigFilePath).GetDetectors();
                             if (modeMeters.Count > 0)
                             {
