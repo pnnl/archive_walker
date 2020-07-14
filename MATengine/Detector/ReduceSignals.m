@@ -53,12 +53,6 @@ for DetectorType = BlockDetectors
                     PMUlist = [PMUlist PMUlistTemp];
                     ChanList = [ChanList ChanListTemp];
                 end
-            elseif strcmp(DetectorType{1},'Thevenin')
-                % Special case for Thevenin - just include all signals
-                PMUlist = [PMUlist 1:length(PMU)];
-                for PMUidx = 1:length(PMU)
-                    ChanList = [ChanList {1:length(PMU(PMUidx).Signal_Name)}];
-                end
             else
                 [PMUlistTemp, ChanListTemp] = ListSignals(PMU,Parameters);
                 PMUlist = [PMUlist PMUlistTemp];

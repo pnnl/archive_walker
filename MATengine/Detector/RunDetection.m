@@ -66,7 +66,6 @@ function [DetectionResults, AdditionalOutput] = RunDetection(PMUstruct,DetectorX
 %#function WindRampDetector
 %#function PeriodogramDetector
 %#function SpectralCoherenceDetector
-%#function TheveninDetector
 %#function ModeMeterDetector
 %#function DataWriterDetector
 

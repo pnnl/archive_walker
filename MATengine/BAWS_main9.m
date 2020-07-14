@@ -2,13 +2,12 @@
 %
 % This is the main function used to generate results (normal mode when
 % called by RunNormalMode) or to rerun analyses to retrieve detailed
-% operation information (rerun mode when called by RerunThevenin,
+% operation information (rerun mode when called by
 % RerunForcedOscillation, RerunOutOfRange, or RerunRingdown). In Rerun
 % mode, additional inputs are required.
 %
 % Called by: 
 %   RunNormalMode
-%   RerunThevenin
 %   RerunForcedOscillation
 %   RerunOutOfRange
 %   RerunRingdown
@@ -56,7 +55,7 @@
 %           MM/DD/YYYY HH:MM:SS
 %       RerunDetector - Specifies which detector to be rerun. String.
 %           Acceptable values: 'Periodogram', 'SpectralCoherence', 
-%           'Thevenin','ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
+%           'ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
 %
 % Outputs:
 %   DetectionResultsRerun - Cell array containing the DetectionResults
@@ -187,13 +186,13 @@ elseif ~Unpause
         error([RerunDetector ' is not a valid detector name.']);
     end
     
-    % If forced oscillation or Thevenin application results are of interest, the window size must
+    % If forced oscillation results are of interest, the window size must
     % be accounted for in the start time. The other detectors operate file-by-file.
     % To do this, an initialization file corresponding to RerunStartTime is
     % loaded and SecondsToConcat is retrieved. RerunStartTime is then
     % adjusted to account for the window size, and the new initialization
     % file is loaded.
-    if strcmp(RerunDetector,'ForcedOscillation') || strcmp(RerunDetector,'Thevenin') %|| strcmp(RerunDetector,'ModeMeter')
+    if strcmp(RerunDetector,'ForcedOscillation')
         % Need to account for the sizes of the windows used in analysis
 
         % The SparsePMU has timestamps every ResultUpdateInterval
@@ -204,41 +203,18 @@ elseif ~Unpause
         % RerunEndTime should be the last sample in the first analysis
         % window that is evaluated.
         
-        if strcmp(RerunDetector,'ForcedOscillation')
-            % Load the SparsePMU corresponding to the periodogram or
-            % spectral coherence detectors. The timestamps will be
-            % identical.
-            if isfield(DetectorXML,'Periodogram')
-                SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Periodogram');
-            elseif isfield(DetectorXML,'SpectralCoherence')
-                SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'SpectralCoherence');
-            else
-                warning('Forced oscillation detectors were not running during this time.');
-                DetectionResultsRerun = {};
-                AdditionalOutputRerun = {};
-                return
-            end
-        elseif strcmp(RerunDetector,'Thevenin')
-            % Load the SparsePMU corresponding to the Thevenin application.
-            if isfield(DetectorXML,'Thevenin')
-                SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Thevenin');
-            else
-                warning('The Thevenin application was not running during this time.');
-                DetectionResultsRerun = {};
-                AdditionalOutputRerun = {};
-                return
-            end
-%         else
-%             % Load the SparsePMU corresponding to the ModeMeter algorithm.
-%             if isfield(DetectorXML,'ModeMeter')
-%                 SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'ModeMeter');
-%             else
-%                 warning('The modemeter application was not running during this time.');
-%                 DetectionResultsRerun = {};
-%                 AdditionalOutputRerun = {};
-%                 return
-%             end
-%             
+        % Load the SparsePMU corresponding to the periodogram or
+        % spectral coherence detectors. The timestamps will be
+        % identical.
+        if isfield(DetectorXML,'Periodogram')
+            SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Periodogram');
+        elseif isfield(DetectorXML,'SpectralCoherence')
+            SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'SpectralCoherence');
+        else
+            warning('Forced oscillation detectors were not running during this time.');
+            DetectionResultsRerun = {};
+            AdditionalOutputRerun = {};
+            return
         end
         %
         % Find the first timestamp after RerunStartTime
@@ -246,11 +222,6 @@ elseif ~Unpause
         if isnat(FirstWindowEndTime) || (datenum(FirstWindowEndTime) > datenum(RerunEndTime))
             if strcmp(RerunDetector,'ForcedOscillation')
                 warning('The forced oscillation detection algorithms did not execute during the specified time range.');
-            else
-                strcmp(RerunDetector,'Thevenin')
-                warning('The Thevenin application did not execute during the specified time range.');
-%             else
-%                 warning('The modemeter application did not execute during the specified time range.');
             end
             DetectionResultsRerun = {};
             AdditionalOutputRerun = {};
@@ -304,10 +275,9 @@ elseif ~Unpause
     
     % Disable all but the desired detector
     DetectorXML = DisableDetectors(DetectorXML,RerunDetector);
-    % If neither the forced oscillation detectors or the Thevenin
-    % application or the modemeter applications are of interest, set 
+    % If the forced oscillation detector is not of interest, set 
     % SecondsToConcat to empty so that the loop doesn't execute
-    if (~strcmp(RerunDetector,'ForcedOscillation')) && (~strcmp(RerunDetector,'Thevenin')) %&& (~strcmp(RerunDetector,'ModeMeter'))
+    if ~strcmp(RerunDetector,'ForcedOscillation')
         SecondsToConcat = [];
     end
     
@@ -896,22 +866,6 @@ while(~min(done))
                                     end
                                 end
                             end
-                            % This is done inside the TheveninDetector code
-%                             if isfield(AdditionalOutput,'Thevenin')
-%                                 for DetIdx = 1:length(AdditionalOutput)
-%                                     if ~isempty(AdditionalOutput(DetIdx).Thevenin)
-%                                         KeepSamp = ResultUpdateInterval*AdditionalOutput(DetIdx).Thevenin(1).fs;
-%                                         AdditionalOutput(DetIdx).Thevenin(1).Data = AdditionalOutput(DetIdx).Thevenin(1).Data(end-KeepSamp+1:end,:);
-%                                         
-%                                         for SubIdx = 1:length(AdditionalOutput(DetIdx).Thevenin)
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).Vmeas = AdditionalOutput(DetIdx).Thevenin(SubIdx).Vmeas(end-KeepSamp+1:end,:);
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).TimeString = AdditionalOutput(DetIdx).Thevenin(SubIdx).TimeString(end-KeepSamp+1:end);
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).ShuntQ = AdditionalOutput(DetIdx).Thevenin(SubIdx).ShuntQ(end-KeepSamp+1:end,:);
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).SinkQ = AdditionalOutput(DetIdx).Thevenin(SubIdx).SinkQ(end-KeepSamp+1:end,:);
-%                                         end
-%                                     end
-%                                 end
-%                             end
                             AdditionalOutputRerun{length(AdditionalOutputRerun) + 1} = AdditionalOutput;
                         end
                     end

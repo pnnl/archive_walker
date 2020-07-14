@@ -133,55 +133,6 @@ for ThisField = AllFields
         end
     end
     
-    % Thevenin portion
-    if strfind(ThisField{1},'Thevenin')==1
-        fprintf(fHandle,'<!-- ************************ -->\n');
-        fprintf(fHandle,'<!-- Voltage Stability Events -->\n');
-        fprintf(fHandle,'<!-- ************************ -->\n');
-        for idx = 1:length(EventList.(ThisField{1}))
-            fprintf(fHandle,'<Thevenin>\n');
-            fprintf(fHandle,['\t<ID>' EventList.(ThisField{1})(idx).ID '</ID>\n']);
-            fprintf(fHandle,['\t<Start>' datestr(EventList.(ThisField{1})(idx).Start, 'mm/dd/yy HH:MM:SS.FFF') '</Start>\n']);
-            fprintf(fHandle,['\t<End>' datestr(EventList.(ThisField{1})(idx).End, 'mm/dd/yy HH:MM:SS.FFF') '</End>\n']);
-            
-            for idx2 = 1:length(EventList.(ThisField{1})(idx).Sub)
-                fprintf(fHandle,'\t<Sub>\n');
-                fprintf(fHandle,['\t\t<Name>' EventList.(ThisField{1})(idx).Sub{idx2} '</Name>\n']);
-                fprintf(fHandle,'\t</Sub>\n');
-            end
-            
-            fprintf(fHandle,'</Thevenin>\n');
-            fprintf(fHandle,'<!-- -->\n');
-        end
-    end
-%     
-%     % Modemeter portion
-%     if strfind(ThisField{1},'ModeMeter')==1
-%         fprintf(fHandle,'<!-- *********************** -->\n');
-%         fprintf(fHandle,'<!-- ModeMeter Events -->\n');
-%         fprintf(fHandle,'<!-- *********************** -->\n');
-% %         for idx = 1:length(EventList.(ThisField{1}).Mode)
-% %             fprintf(fHandle,'<Mode>\n');
-% %             fprintf(fHandle,['\t<ID>' EventList.(ThisField{1}).Mode(idx).ID '</ID>\n']);
-% %             fprintf(fHandle,['\t<Start>' datestr(EventList.(ThisField{1}).Mode(idx).Start, 'mm/dd/yy HH:MM:SS.FFF') '</Start>\n']);
-% %             fprintf(fHandle,['\t<End>' datestr(EventList.(ThisField{1}).Mode(idx).End, 'mm/dd/yy HH:MM:SS.FFF') '</End>\n']);
-% %             for idx2 = 1:length(EventList.(ThisField{1}).Mode(idx).Channel)
-% %                 fprintf(fHandle,'\t<Channel>\n');
-% %                 %                 fprintf(fHandle,['\t\t<PMU>' EventList.(ThisField{1})(idx).PMU{idx2} '</PMU>\n']);
-% %                 fprintf(fHandle,['\t\t<Name>' EventList.(ThisField{1}).Mode(idx).Channel{idx2} '</Name>\n']);
-% %                 for idx3 = 1:length(EventList.(ThisField{1}).Mode(idx).Channel)
-% %                     fprintf(fHandle,'\t<Methods>\n');
-% %                     %                     fprintf(fHandle,['\t\t<PMU>' EventList.(ThisField{1})Mode(idx).PMU{idx2} '</PMU>\n']);
-% %                     fprintf(fHandle,['\t\t<Name>' EventList.(ThisField{1}).Mode(idx).Channel{idx2}.MethodName(idx3) '</Name>\n']);
-% %                     printf(fHandle,'\t<Methods>\n');
-% %                 end
-% %                 fprintf(fHandle,'\t</Channel>\n');
-% %             end
-% %         end
-%         fprintf(fHandle,'</Mode>\n');
-%         fprintf(fHandle,'<!-- -->\n');
-%     end
-%     
     
     % Wind Application portion
     if strfind(ThisField{1},'WindApp')==1
