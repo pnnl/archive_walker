@@ -3,7 +3,7 @@
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>4.8</param.version>
+    <param.version>4.9</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -104,7 +104,6 @@
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
       <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
@@ -121,7 +120,6 @@
           <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
           <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
           <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunThevenin.m</file>
           <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
           <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
           <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
@@ -190,13 +188,6 @@
       <file>C:\GitFolders\archive_walker\MATengine\Detector\SpectralCoherenceDetector\DetectFO_SC.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\SpectralCoherenceDetector\ExtractFOdetectionParamsSC.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\SpectralCoherenceDetector\SpectralCoherenceDetector.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\Detector\Thevenin\DeMarco2_3c_LNout.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\Detector\Thevenin\GSPF_puLLout.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\Detector\Thevenin\Mitsubishi3_LNout.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\Detector\Thevenin\Quanta_LNout3.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\Detector\Thevenin\RPI.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\Detector\Thevenin\Tellegen_LNout2.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\Detector\Thevenin\TheveninDetector.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\UpdatePMUconcat.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\Detector\WindRampDetector.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\DQandCustomization\CustomizationStep.m</file>
@@ -247,8 +238,6 @@
       <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateOverallStartAndEndTimes.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateRingEvents.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateRingOverEvents.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateTheveninEvents.m</file>
-      <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateTheveninOverEvents.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateWindAppOverEvents.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateWindRampEvents.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\EventList\UpdateWindRampOverEvents.m</file>
