@@ -96,46 +96,33 @@ if (~isempty(SigIdxMin)) && (~isempty(SigIdxSub))
     SignalUnitSub = PMUstruct(PMUidxSub).Signal_Unit{SigIdxSub};
     SignalTypeSub = PMUstruct(PMUidxSub).Signal_Type{SigIdxSub};
     
-    if strcmp(SignalTypeMin,SignalTypeSub)
-        % Signal types agree, keep them
+    if strcmp(SignalTypeMin,SignalTypeSub) && strcmp(SignalUnitMin,SignalUnitSub)
+        % Signal types/units agree, keep them
         SignalType = SignalTypeMin;
+        SignalUnit = SignalUnitMin;
     else
-        % Signal types disagree, set to OTHER
+        % Signal types/units disagree, set to OTHER
         SignalType = 'OTHER';
+        SignalUnit = 'O';
     end
     PMUstruct(custPMUidx).Signal_Type{NumSig+1} = SignalType;
+    PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = SignalUnit;
     
     % Ensure that sizes are compatible
     N = size(PMUstruct(custPMUidx).Data,1);
     if (N==length(PMUstruct(PMUidxMin).Data(:,SigIdxMin))) && (N==length(PMUstruct(PMUidxSub).Data(:,SigIdxSub)))
-        % Check if signal units agree
-        if strcmp(SignalUnitMin,SignalUnitSub)
-            % Units agree
+        % Assign custom signal
+        CustSig = PMUstruct(PMUidxMin).Data(:,SigIdxMin) - PMUstruct(PMUidxSub).Data(:,SigIdxSub);
+        PMUstruct(custPMUidx).Data(:,NumSig+1) = CustSig;
 
-            % Assign custom signal
-            CustSig = PMUstruct(PMUidxMin).Data(:,SigIdxMin) - PMUstruct(PMUidxSub).Data(:,SigIdxSub);
-            PMUstruct(custPMUidx).Data(:,NumSig+1) = CustSig;
-
-            % Set flags
-            FlagVec = sum(PMUstruct(PMUidxMin).Flag(:,SigIdxMin,:),3) > 0 | sum(PMUstruct(PMUidxSub).Flag(:,SigIdxSub,:),3) > 0; % if any of the data channel is flgged then the custom signal is flagged with flag for custom signal
-
-            PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(1)) = FlagVec;
-
-            % Set units
-            PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = SignalUnitMin;
-        else
-            % Units do not agree
-            warning('Signal units did not agree. Values were set to NaN and Flags set.');
-            PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;
-            PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(2)) = true;
-            PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
-        end
+        % Set flags
+        FlagVec = sum(PMUstruct(PMUidxMin).Flag(:,SigIdxMin,:),3) > 0 | sum(PMUstruct(PMUidxSub).Flag(:,SigIdxSub,:),3) > 0; % if any of the data channel is flgged then the custom signal is flagged with flag for custom signal
+        PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(1)) = FlagVec;
     else
         % Sizes do not agree
         warning('Signal lengths did not agree. Values were set to NaN and Flags set.');
         PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;
         PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(2)) = true;
-        PMUstruct(custPMUidx).Signal_Unit{NumSig+1} = 'O';
     end
 else
     % Signals were not found

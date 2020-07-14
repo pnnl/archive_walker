@@ -111,7 +111,6 @@ if (~isempty(SigIdxDend)) && (~isempty(SigIdxDisor))
         SignalType = 'OTHER';
         SignalUnit = 'O';
     end
-    PMUstruct(custPMUidx).Signal_Type{NumSig+1} = SignalType;
     
     % Make sure units and type make sense together
     if CheckTypeAndUnits(SignalType,SignalUnit)
