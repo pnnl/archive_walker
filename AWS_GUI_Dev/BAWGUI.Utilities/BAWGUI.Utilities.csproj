@@ -76,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComboBoxItemsSourceDecorator.cs" />
-    <Compile Include="EnumberationManager.cs" />
+    <Compile Include="EnumerationManager.cs" />
     <Compile Include="FocusExtension.cs" />
     <Compile Include="Folder.cs" />
     <Compile Include="GridColumnWidthReseterBehaviour.cs" />

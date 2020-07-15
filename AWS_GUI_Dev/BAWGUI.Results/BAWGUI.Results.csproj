@@ -69,7 +69,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GMap.NET.WindowsPresentation, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef" />
+    <Reference Include="GMap.NET.WindowsPresentation, Version=1.9.3.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\GMap.NET.Windows.1.9.3\lib\net40\GMap.NET.WindowsPresentation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -112,8 +115,8 @@
   <ItemGroup>
     <Compile Include="Converters\DataContexTypeConverter.cs" />
     <Compile Include="Converters\DateDictionaryKeyConverter.cs" />
+    <Compile Include="Converters\MapColorBarVisibilityConverter.cs" />
     <Compile Include="Converters\ThumbnailVisibilityConverter.cs" />
-    <Compile Include="Converters\TableValueNANConverter.cs" />
     <Compile Include="Converters\VisibleIfNotEqualToOneConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
     <Compile Include="Extensions.cs" />
@@ -354,6 +357,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -362,6 +366,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.CoordinateMapping\BAWGUI.CoordinateMapping.csproj">
+      <Project>{65931574-76AF-4900-86C9-458DED20CE5D}</Project>
+      <Name>BAWGUI.CoordinateMapping</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
       <Project>{efa1218f-366b-4f26-b9d9-c958baa1ecdf}</Project>
       <Name>BAWGUI.Core</Name>
@@ -386,21 +394,21 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DissipationEnergyFlowResults\DissipationEnergyFlowResults.csproj">
+      <Project>{05E7BB06-2633-4C06-8123-77BD9EE80131}</Project>
+      <Name>DissipationEnergyFlowResults</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JSISCSVWriter\JSISCSVWriter.csproj">
       <Project>{2c6141d9-cf7e-48a4-9479-7bd67340a370}</Project>
       <Name>JSISCSVWriter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
-      <Project>{f28598d8-9c9f-42c9-b828-4d1bd86bb751}</Project>
-      <Name>ModeMeter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
-      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
-      <Name>VoltageStability</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MapService\MapService.csproj">
       <Project>{908167FB-4C0E-4285-A6EE-0EF81A164929}</Project>
       <Name>MapService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
+      <Project>{f28598d8-9c9f-42c9-b828-4d1bd86bb751}</Project>
+      <Name>ModeMeter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

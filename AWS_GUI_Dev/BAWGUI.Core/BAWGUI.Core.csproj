@@ -55,6 +55,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -88,14 +89,17 @@
     <Compile Include="Converters\DateTimeStringConverter.cs" />
     <Compile Include="Converters\DetectorExpanderHeaderConverter.cs" />
     <Compile Include="Converters\EnumToStringConverters.cs" />
+    <Compile Include="Converters\MultipleParametersConverter.cs" />
     <Compile Include="Converters\ResultTableVisibilityConverter.cs" />
     <Compile Include="Converters\SelectionStatusBackgroundConverter.cs" />
     <Compile Include="Converters\TableRowIndexConverter.cs" />
+    <Compile Include="Converters\TableValueNANConverter.cs" />
     <Compile Include="Converters\VisibleIfNonZeroConverter.cs" />
     <Compile Include="Models\AWProject.cs" />
     <Compile Include="Models\AWRun.cs" />
     <Compile Include="Models\EnumDefinitions.cs" />
     <Compile Include="Models\IDetector.cs" />
+    <Compile Include="Models\InputFileInfoModel.cs" />
     <Compile Include="Models\InspectionAnalysisParameters.cs" />
     <Compile Include="Models\ISignal.cs" />
     <Compile Include="Models\Legend.cs" />

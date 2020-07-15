@@ -96,7 +96,9 @@ Namespace Converters
                     Case TunableFilterType.FrequencyDerivation
                         Return "Step " & number.ToString & " - Frequency Derivation"
                     Case TunableFilterType.RunningAverage
-                        Return "Step " & number.ToString & " - RunningAverage"
+                        Return "Step " & number.ToString & " - Running Average"
+                    Case TunableFilterType.RMSenergyFilt
+                        Return "Step " & number.ToString & " - RMS Energy Filter"
                     Case Else
                         Return "Step " & number.ToString & " - Point on Wave Power Calculation Filter"
                 End Select

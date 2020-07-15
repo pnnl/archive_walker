@@ -95,6 +95,7 @@ namespace BAWGUI.Results.ViewModels
                 openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
                 openFileDialog.Multiselect = false;
                 openFileDialog.Title = "Please select the Archive Walker .xml configure file";
+                openFileDialog.RestoreDirectory = true;
                 if (_run != null && Directory.Exists(_run.Model.RunPath))
                 {
                     openFileDialog.InitialDirectory = _run.Model.RunPath;
@@ -119,6 +120,7 @@ namespace BAWGUI.Results.ViewModels
                 openFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
                 openFileDialog.Multiselect = false;
                 openFileDialog.Title = "Please select the OBAT Preset.xml file";
+                openFileDialog.RestoreDirectory = true;
                 if (Directory.Exists(_previousOBATPresetFilePath))
                 {
                     openFileDialog.InitialDirectory = _previousOBATPresetFilePath;

@@ -14,6 +14,7 @@ using Microsoft.VisualBasic;
 using System.ComponentModel;
 using BAWGUI.Core;
 using BAWGUI.Core.Models;
+using BAWGUI.Core.Converters;
 
 namespace BAWGUI.ReadConfigXml
 {
@@ -285,6 +286,13 @@ namespace BAWGUI.ReadConfigXml
                         PointOnWavePowerCalculationFilterParam.PhaseShiftI = value.Value;
                     }
                     break;
+                case TunableFilterType.RMSenergyFilt:
+                    value = filter.Element("Parameters").Element("Band");
+                    if (value != null)
+                    {
+                        BandType = EnumExtencsionMethod.GetValueFromDescription<RMSEnergyBandOptions>(value.Value);
+                    }
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
             }
@@ -333,7 +341,7 @@ namespace BAWGUI.ReadConfigXml
         public string StopCutoff { get; set; }
         public bool RemoveAve { get; set; }
         public string WindowLength { get; set; }
-        public new string Name
+        public string Name
         {
             get { return "Filter"; }
         }
@@ -342,6 +350,7 @@ namespace BAWGUI.ReadConfigXml
         public string CustPMUName { get; set; }
         public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
         public PointOnWavePowerCalculationFilterParameters PointOnWavePowerCalculationFilterParam { get; set; }
+        public RMSEnergyBandOptions BandType { get; set; }
         //public string Pname { get; private set; }
         //public string Qname { get; private set; }
         //public string VA { get; private set; }

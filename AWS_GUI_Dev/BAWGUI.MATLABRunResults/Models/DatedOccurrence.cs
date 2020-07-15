@@ -75,5 +75,20 @@ namespace BAWGUI.MATLABRunResults.Models
         {
             get { return _occurence.Channel.Select(x => x.Coherence).Max(); }
         }
+
+        public List<ForcedOscillationTypeOccurrencePath> Paths 
+        {
+            get 
+            {
+                if (_occurence.Path != null)
+                {
+                    return _occurence.Path.ToList();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
     }
 }

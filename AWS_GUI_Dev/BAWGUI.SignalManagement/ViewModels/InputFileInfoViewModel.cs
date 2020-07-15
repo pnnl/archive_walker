@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using BAWGUI.Core;
 using BAWGUI.Core.Models;
-using BAWGUI.ReadConfigXml;
 using BAWGUI.Utilities;
 
 namespace BAWGUI.SignalManagement.ViewModels
@@ -84,7 +79,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                         {
                             MessageBox.Show("Data file path contains one or more of the invalid characters. Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                         }
-                        if (FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian)
+                        if (FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian || FileType == DataFileType.OpenPDC)
                         {
                             Mnemonic = "";
                             //this try block need to stay so the change would show up in the GUI, even though it's duplicating the work in DataConfigModel.cs tryi block on line 268 to 279.

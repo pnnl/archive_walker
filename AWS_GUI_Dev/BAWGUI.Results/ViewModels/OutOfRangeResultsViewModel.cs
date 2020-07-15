@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -109,8 +110,24 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedStartTime = value;
                 OnPropertyChanged();
-                var startTime = Convert.ToDateTime(value);
-                var endTime = Convert.ToDateTime(_selectedEndTime);
+                var startTime = DateTime.Now;
+                var endTime = DateTime.Now;
+                try
+                {
+                    startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("In out of range results viewmodel, SelectedStartTime, startTime Convert;");
+                }
+                try
+                {
+                    endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("In out of range results viewmodel, SelectedStartTime, endTime Convert;");
+                }
                 if (startTime <= endTime)
                 {
                     _filterTableByTime();
@@ -132,8 +149,24 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    var startTime = Convert.ToDateTime(_selectedStartTime);
-                    var endTime = Convert.ToDateTime(value);
+                    var startTime = DateTime.Now;
+                    var endTime = DateTime.Now;
+                    try
+                    {
+                        startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("In out of range results viewmodel, SelectedEndTime, startTime Convert;");
+                    }
+                    try
+                    {
+                        endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("In out of range results viewmodel, SelectedEndTime, endTime Convert;");
+                    }
                     if (startTime <= endTime)
                     {
                         _filterTableByTime();
@@ -148,12 +181,12 @@ namespace BAWGUI.Results.ViewModels
         private void _filterTableByTime()
         {
             ObservableCollection<OutOfRangeEventViewModel> newResults = new ObservableCollection<OutOfRangeEventViewModel>();
-            DateTime startT = DateTime.Parse(_selectedStartTime);
-            DateTime endT = DateTime.Parse(_selectedEndTime);
+            DateTime startT = DateTime.Parse(_selectedStartTime, CultureInfo.InvariantCulture);
+            DateTime endT = DateTime.Parse(_selectedEndTime, CultureInfo.InvariantCulture);
             foreach (var evnt in _results)
             {
-                DateTime st = DateTime.Parse(evnt.StartTime);
-                DateTime ed = DateTime.Parse(evnt.EndTime);
+                DateTime st = DateTime.Parse(evnt.StartTime, CultureInfo.InvariantCulture);
+                DateTime ed = DateTime.Parse(evnt.EndTime, CultureInfo.InvariantCulture);
                 if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0)
                 {
                     newResults.Add(evnt);
@@ -275,8 +308,8 @@ namespace BAWGUI.Results.ViewModels
         {
             if (File.Exists(_configFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try
@@ -334,7 +367,7 @@ namespace BAWGUI.Results.ViewModels
                     else
                     {
                         //startTime = detector.SparseSignals.Min(x => x.TimeStamps.FirstOrDefault());
-                        startTime = Convert.ToDateTime(SelectedStartTime);
+                        startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
                     }
                     endTime = detector.SparseSignals.Max(x => x.TimeStamps.LastOrDefault());
                 }
@@ -487,8 +520,8 @@ namespace BAWGUI.Results.ViewModels
         {
             if (File.Exists(_run.Model.ConfigFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try

@@ -5,14 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
-             xmlns:vsmodel="clr-namespace:VoltageStability.Models;assembly=VoltageStability"
-             xmlns:vsviewmodel="clr-namespace:VoltageStability.ViewModels;assembly=VoltageStability"
              xmlns:views="clr-namespace:BAWGUI.Settings"
-             xmlns:vsviews="clr-namespace:VoltageStability.Views;assembly=VoltageStability"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:mmviewmodel="clr-namespace:ModeMeter.ViewModels;assembly=ModeMeter"
              xmlns:mmviews="clr-namespace:ModeMeter.Views;assembly=ModeMeter"
+             xmlns:defvm="clr-namespace:DissipationEnergyFlow.ViewModels;assembly=DissipationEnergyFlow"
+             xmlns:defv="clr-namespace:DissipationEnergyFlow.Views;assembly=DissipationEnergyFlow"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -25,6 +24,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
@@ -81,11 +81,11 @@
                             <DataTemplate DataType="{x:Type vm:OutOfRangeFrequencyDetector}">
                                 <views:OutOfRangeFrequencyView/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type vsviewmodel:VoltageStabilityDetectorViewModel}">
-                                <vsviews:VoltageStabilityDetectorView/>
-                            </DataTemplate>
                             <DataTemplate DataType="{x:Type mmviewmodel:SmallSignalStabilityToolViewModel}">
                                 <mmviews:SmallSignalStabilityToolView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type defvm:DEFDetectorViewModel}">
+                                <defv:DEFDetectorView/>
                             </DataTemplate>
                         </ItemsControl.Resources>
                     </ItemsControl>
@@ -158,7 +158,8 @@
                 </Grid>
             </ScrollViewer>
         </Border>
-        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="2">
             <Grid Margin="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

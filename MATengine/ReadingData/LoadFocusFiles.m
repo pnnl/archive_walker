@@ -19,7 +19,7 @@ else
             
             % If a database is being used, the pause doesn't need to be as
             % long.
-            if strcmpi(FileInfo(idx3).FileType, 'OpenHistorian') || strcmpi(FileInfo(idx3).FileType, 'PI')
+            if strcmpi(FileInfo(idx3).FileType, 'OpenHistorian') || strcmpi(FileInfo(idx3).FileType, 'openPDC') || strcmpi(FileInfo(idx3).FileType, 'PI')
                 PauseDuration = 1;
             else
                 PauseDuration = 10;
@@ -46,6 +46,8 @@ else
                 [PMUbyFileTemp,tPMU] = PIreaderDLL(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
             elseif(strcmpi(FileInfo(idx3).FileType, 'OpenHistorian'))
                 [PMUbyFileTemp,tPMU] = OHreader(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
+            elseif(strcmpi(FileInfo(idx3).FileType, 'openPDC'))
+                [PMUbyFileTemp,tPMU] = openPDCreader(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
             end
             
             FailToRead = 0;
@@ -74,6 +76,16 @@ else
             warning([focusFile{idx3} ' is possibly corrupt and could not be read.']);
             idx(idx3) = false;
             continue
+        end
+        
+        % If possible, check to make sure the number of samples in this
+        % file matches the previous file
+        if ~isempty(FileInfo(idx3).tPMU)
+            if length(FileInfo(idx3).tPMU) ~= length(tPMU)
+                warning([focusFile{idx3} ' does not contain the right number of samples and will be skipped.']);
+                idx(idx3) = false;
+                continue
+            end
         end
 
         % Store information for this file

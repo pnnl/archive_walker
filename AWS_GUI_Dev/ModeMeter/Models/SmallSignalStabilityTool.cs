@@ -13,10 +13,19 @@ namespace ModeMeter.Models
         {
             Modes = new List<Mode>();
             BaseliningSignals = new List<SignalSignatures>();
+            CalcDEF = false;
+        }
+        public string Name
+        {
+            get
+            {
+                return "Mode Meter Tool";
+            }
         }
         public List<Mode> Modes { get; set; }
         public List<SignalSignatures> BaseliningSignals { get; set; }
         public string ResultPath { get; set; }
         public string ModeMeterName { get; set; }
+        public bool CalcDEF { get; set; }
     }
 }

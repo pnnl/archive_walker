@@ -71,10 +71,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BAWGUI.CoordinateMapping\BAWGUI.CoordinateMapping.csproj">
+      <Project>{65931574-76AF-4900-86C9-458DED20CE5D}</Project>
+      <Name>BAWGUI.CoordinateMapping</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Core\BAWGUI.Core.csproj">
       <Project>{EFA1218F-366B-4F26-B9D9-C958BAA1ECDF}</Project>
       <Name>BAWGUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DissipationEnergyFlow\DissipationEnergyFlow.csproj">
+      <Project>{548B4B31-7A6A-416E-9B4F-345BD69B1C8F}</Project>
+      <Name>DissipationEnergyFlow</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Linq;
 
 namespace BAWGUI.Core
 {
@@ -29,6 +30,8 @@ namespace BAWGUI.Core
             _model.Unit = "O";
             DeleteASite = new RelayCommand(_deleteASite);
             AddASite = new RelayCommand(_addASite);
+            _selectedLocation = Locations.FirstOrDefault();
+            SelectedLocationIndex = 0;
         }
         public SignalSignatureViewModel(string name) : this()
         {
@@ -81,7 +84,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private string _typeAbbreviation;
+        //private string _typeAbbreviation;
         public string TypeAbbreviation
         {
             get
@@ -147,7 +150,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private int _samplingRate;
+        //private int _samplingRate;
         public int SamplingRate
         {
             get
@@ -161,7 +164,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private int _passedThroughDQFilter;
+        //private int _passedThroughDQFilter;
         public int PassedThroughDQFilter
         {
             get
@@ -175,7 +178,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private int _passedThroughProcessor;
+        //private int _passedThroughProcessor;
         public int PassedThroughProcessor
         {
             get
@@ -222,19 +225,19 @@ namespace BAWGUI.Core
                 return false;
             }
             return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
-            if (x is null && y is null)
-            {
-                return true;
-            }
-            else if (x is null ^ y is null)
-            {
-                return false;
-            }
-            else
-            {
+            //if (x is null && y is null)
+            //{
+            //    return true;
+            //}
+            //else if (x is null ^ y is null)
+            //{
+            //    return false;
+            //}
+            //else
+            //{
 
-                return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
-            }
+            //    return x.PMUName == y.PMUName && x.SignalName == y.SignalName && x.TypeAbbreviation == y.TypeAbbreviation && x.Unit == y.Unit && x.OldSignalName == y.OldSignalName && x.OldTypeAbbreviation == y.OldTypeAbbreviation && x.OldUnit == y.OldUnit && x.SamplingRate == y.SamplingRate;
+            //}
         }
         public static bool operator !=(SignalSignatureViewModel x, SignalSignatureViewModel y)
         {
@@ -244,17 +247,17 @@ namespace BAWGUI.Core
             //    return y != null;
             //}
             //return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
-            if (x is null && y is null)
-            {
-                return false;
-            }else if(x is null ^ y is null)
-            {
-                return true;
-            }
-            else
-            {
-                return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
-            }
+            //if (x is null && y is null)
+            //{
+            //    return false;
+            //}else if(x is null ^ y is null)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return x.PMUName != y.PMUName || x.SignalName != y.SignalName || x.TypeAbbreviation != y.TypeAbbreviation || x.Unit != y.Unit || x.OldSignalName != y.OldSignalName || x.OldTypeAbbreviation != y.OldTypeAbbreviation || x.OldUnit != y.OldUnit || x.SamplingRate != y.SamplingRate;
+            //}
         }
 
         public bool IsSignalInformationComplete()
@@ -262,7 +265,7 @@ namespace BAWGUI.Core
             return !string.IsNullOrEmpty(PMUName) && !string.IsNullOrEmpty(SignalName) && !string.IsNullOrEmpty(TypeAbbreviation) && !string.IsNullOrEmpty(Unit) && (SamplingRate > 0);
         }
 
-        private string _oldSignalName;
+        //private string _oldSignalName;
         public string OldSignalName
         {
             get
@@ -276,7 +279,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private string _oldUnit;
+        //private string _oldUnit;
         public string OldUnit
         {
             get
@@ -290,7 +293,7 @@ namespace BAWGUI.Core
             }
         }
 
-        private string _oldTypeAbbreviation;
+        //private string _oldTypeAbbreviation;
         public string OldTypeAbbreviation
         {
             get
@@ -303,7 +306,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private List<double> _data;
+        //private List<double> _data;
         public List<double> Data
         {
             get { return _model.Data; }
@@ -313,7 +316,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private List<double> _timeStampNumber;
+        //private List<double> _timeStampNumber;
         public List<double> TimeStampNumber
         {
             get { return _model.TimeStampNumber; }
@@ -323,7 +326,7 @@ namespace BAWGUI.Core
                 OnPropertyChanged();
             }
         }
-        private List<double> _matlabTimeStampNumber;
+        //private List<double> _matlabTimeStampNumber;
         public List<double> MATLABTimeStampNumber
         {
             get { return _model.MATLABTimeStampNumber; }
@@ -368,7 +371,7 @@ namespace BAWGUI.Core
                     }
                     if (value == SignalMapPlotType.Area)
                     {
-                        for (int index = Locations.Count; index < 2; index++)
+                        for (int index = Locations.Count; index < 3; index++)
                         {
                             Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
                         }
@@ -386,6 +389,8 @@ namespace BAWGUI.Core
                             Locations.Add(keep);
                         }
                     }
+                    SelectedLocation = Locations.LastOrDefault();
+                    SelectedLocationIndex = Locations.Count - 1;
                     OnPropertyChanged();
                 }
             }
@@ -396,6 +401,8 @@ namespace BAWGUI.Core
             set
             {
                 _model.Locations = value;
+                SelectedLocation = _model.Locations.FirstOrDefault();
+                SelectedLocationIndex = 0;
                 OnPropertyChanged();
             }
         }
@@ -404,18 +411,37 @@ namespace BAWGUI.Core
         {
             var values = (object[])obj;
             var currentLocation = (SiteCoordinatesModel)values[0];
-            var selectedTextboxIndex = (int)values[1];
-            Locations.RemoveAt(selectedTextboxIndex);
-            //foreach (var item in Locations)
-            //{
-
-            //}
+            SelectedLocationIndex = (int)values[1];
+            _model.Locations.RemoveAt(SelectedLocationIndex);
+            if (SelectedLocationIndex >= Locations.Count)
+            {
+                SelectedLocationIndex = Locations.Count - 1;
+            }
+            SelectedLocation = Locations[SelectedLocationIndex];
         }
         public ICommand AddASite { get; set; }
         private void _addASite(object obj)
         {
             _model.Locations.Add(CoreUtilities.DummySiteCoordinatesModel);
+            SelectedLocation = Locations.LastOrDefault();
+            SelectedLocationIndex = Locations.Count - 1;
         }
-
+        private SiteCoordinatesModel _selectedLocation;
+        public SiteCoordinatesModel SelectedLocation
+        {
+            get { return _selectedLocation; }
+            set
+            {
+                _selectedLocation = value;
+                OnPropertyChanged();
+                OnLocationSelectionChanged(EventArgs.Empty);
+            }
+        }
+        public int SelectedLocationIndex { get; set; }
+        public event EventHandler LocationSelectionChanged;
+        protected virtual void OnLocationSelectionChanged(EventArgs e)
+        {
+            LocationSelectionChanged?.Invoke(this, e);
+        }
     }
 }

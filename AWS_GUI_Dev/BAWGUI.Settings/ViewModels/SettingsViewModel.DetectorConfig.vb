@@ -4,8 +4,8 @@ Imports System.Windows
 Imports System.Windows.Forms
 Imports System.Windows.Input
 Imports BAWGUI.Core
+Imports DissipationEnergyFlow.ViewModels
 Imports ModeMeter.ViewModels
-Imports VoltageStability.ViewModels
 
 Namespace ViewModels
     Partial Public Class SettingsViewModel
@@ -49,26 +49,24 @@ Namespace ViewModels
                 Case "Spectral Coherence Forced Oscillation Detector"
                     newDetector = New SpectralCoherenceDetector
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
-                Case "Voltage Stability"
-                    If _isVoltageStabilityDetectorExist(DetectorConfigure.DetectorList) Then
-                        Forms.MessageBox.Show("Only one Voltage Stability detector can be added!", "Error!", MessageBoxButtons.OK)
-                        Exit Sub
-                    Else
-                        newDetector = New VoltageStabilityDetectorViewModel(_signalMgr)
-                        DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
-                    End If
-                    'newDetector.DetectorGroupID = (DetectorConfigure.DetectorList.Count + 1).ToString
                 Case "Mode Meter Tool"
                     If Not _isModeMeterResultFolderExists() Then
                         _generateModeMeterResultFolder()
                     End If
                     newDetector = New SmallSignalStabilityToolViewModel(_signalMgr)
                     DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible
+                Case "Dissipation Energy Flow Detector"
+                    If _isDEFDetectorExist(DetectorConfigure.DetectorList) Then
+                        Forms.MessageBox.Show("Only one Dissipation Energy Flow Detector can be added!", "Error!", MessageBoxButtons.OK)
+                        Exit Sub
+                    Else
+                        newDetector = New DEFDetectorViewModel(_signalMgr)
+                    End If
                 Case Else
                     Throw New Exception("Unknown detector selected to add.")
             End Select
             newDetector.IsExpanded = True
-            If TypeOf (newDetector) Is VoltageStabilityDetectorViewModel OrElse TypeOf (newDetector) Is SmallSignalStabilityToolViewModel Then
+            If TypeOf (newDetector) Is SmallSignalStabilityToolViewModel Then
             Else
                 newDetector.ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (_signalMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & newDetector.Name
                 newDetector.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(newDetector.InputChannels)
@@ -86,9 +84,9 @@ Namespace ViewModels
             Return Directory.Exists(Run.Model.EventPath & "\MM")
         End Function
 
-        Private Function _isVoltageStabilityDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
+        Private Function _isDEFDetectorExist(detectorList As ObservableCollection(Of DetectorBase)) As Boolean
             For Each dt In detectorList
-                If TypeOf dt Is VoltageStabilityDetectorViewModel Then
+                If TypeOf dt Is DEFDetectorViewModel Then
                     Return True
                 End If
             Next
@@ -319,7 +317,7 @@ Namespace ViewModels
                         If DetectorConfigure.ResultUpdateIntervalVisibility = Visibility.Visible Then
                             Dim updateResultInterval = False
                             For Each dtr In DetectorConfigure.DetectorList
-                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Or TypeOf dtr Is VoltageStabilityDetectorViewModel Then
+                                If TypeOf dtr Is SpectralCoherenceDetector Or TypeOf dtr Is PeriodogramDetector Then
                                     updateResultInterval = True
                                     Exit For
                                 End If
@@ -334,11 +332,16 @@ Namespace ViewModels
                         DetectorConfigure.AlarmingList = newlist
                         _addLog("Alarming detector " & obj.Name & " is deleted from alarming!")
                     End If
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    Else
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'Else
+                    'DeSelectAllDetectors()
+                    If obj.InputChannels.Count > 0 Then
                         DeSelectAllDetectors()
+                    Else
+                        CurrentSelectedStep = Nothing
                     End If
+                    'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
                 End Try
@@ -407,11 +410,18 @@ Namespace ViewModels
                     For index = 1 To _signalMgr.GroupedSignalByDataWriterDetectorInput.Count
                         _signalMgr.GroupedSignalByDataWriterDetectorInput(index - 1).SignalSignature.SignalName = "Detector " & index.ToString & " " & DetectorConfigure.DataWriterDetectorList(index - 1).Name
                     Next
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    Else
-                        DeSelectAllDetectors()
+                    If DetectorConfigure.DataWriterDetectorList.Count = 0 Then
+                        DetectorConfigure.AutoEventExporter.Flag = False
                     End If
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'Else
+                    If obj.InputChannels.Count > 0 Then
+                        DeSelectAllDetectors()
+                    Else
+                        CurrentSelectedStep = Nothing
+                    End If
+                    'End If
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting detector " & obj.Name & " in Detector Configuration.", "Error!", MessageBoxButtons.OK)
                 End Try

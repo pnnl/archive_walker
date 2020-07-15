@@ -1,4 +1,5 @@
 ﻿using BAWGUI.CoordinateMapping.ViewModels;
+using BAWGUI.Results.ViewModels;
 using BAWGUI.Settings.ViewModels;
 using BAWGUI.ViewModels;
 using System;
@@ -42,6 +43,44 @@ namespace BAWGUI.Converters
             else
             {
                 return Visibility.Collapsed;
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return DependencyProperty.UnsetValue;
+        }
+    }
+    public class ViewVisibilityConverter3 : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is ResultsViewModel)
+            {
+                return Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Collapsed;
+            }
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return DependencyProperty.UnsetValue;
+        }
+    }
+    public class ProgressVisibilityConverter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (string.IsNullOrEmpty((string)value))
+            {
+                return Visibility.Collapsed;
+            }
+            else
+            {
+                return Visibility.Visible;
             }
         }
 

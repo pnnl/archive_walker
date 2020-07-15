@@ -14,10 +14,10 @@ using System.Windows.Input;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.MATLABRunResults.Models;
-using VoltageStability.MATLABRunResults.Models;
 using ModeMeter.MATLABRunResults.Models;
 using System.Collections.ObjectModel;
 using BAWGUI.Core.ViewModels;
+using System.Globalization;
 
 //[assembly: NOJVM(true)]
 namespace BAWGUI.RunMATLAB.ViewModels
@@ -90,6 +90,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 System.Windows.Forms.MessageBox.Show("Error getting MATLAB engine! Error message: " + ex.Message, "ERROR!", MessageBoxButtons.OK);
             }
+            _normalRunProgress = "";
         }
     
         private static MatLabEngine _instance = null;
@@ -136,6 +137,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 PauseMatlabNormalRun();
             }
             worker = new BackgroundWorker();
+            worker2 = new BackgroundWorker();
             //IsNormalRunPaused = false;
             Run = run;
             _controlPath = run.Model.ControlRerunPath;
@@ -148,7 +150,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 worker.RunWorkerCompleted += _workerRDReRun_RunWorkerCompleted;
                 worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
-                worker2.DoWork += _progressReporter;
+                worker2.DoWork += _reRunProgressReporter;
                 worker2.ProgressChanged += _worker_ProgressChanged;
                 worker2.RunWorkerCompleted += _progressReportsDone;
                 worker2.WorkerReportsProgress = true;
@@ -221,8 +223,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show(ex.Message);
             }
 
-            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             var runFlag = controlPath + "RunFlag.txt";
             if (!System.IO.File.Exists(runFlag))
             {
@@ -257,8 +259,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
         //    {
         //        Thread.CurrentThread.Name = "RDReRunThread";
         //    }
-        //    start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-        //    end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+        //    start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+        //    end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
         //    var runFlag = controlPath + "RunFlag.txt";
         //    if (!System.IO.File.Exists(runFlag))
         //    {
@@ -275,8 +277,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
 
         public List<SparseDetector> GetSparseData(string start, string end, AWRunViewModel run, string detector)
         {
-            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             if (IsMatlabEngineRunning)
             {
                 PauseMatlabNormalRun();
@@ -338,6 +340,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             Run = run;
             worker = new BackgroundWorker();
+            worker2 = new BackgroundWorker();
             IsNormalRunPaused = false;
             IsNormalRunPaused = false;
             //_controlPath = controlPath;
@@ -348,13 +351,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 worker.DoWork += (obj, e) => _runNormalMode(run.Model.ControlRunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories, run.Model.ConfigFilePath);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
-                worker.WorkerReportsProgress = true;
+                worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
+                worker2.DoWork += _normalRunProgressReporter;
+                //worker2.ProgressChanged += _normalRunworker_ProgressChanged;
+                worker2.RunWorkerCompleted += _normalRun_progressReportsDone;
+                worker2.WorkerReportsProgress = false;
+                worker2.WorkerSupportsCancellation = true;
                 while (worker.IsBusy)
                 {
                     Thread.Sleep(500);
                 }
                 worker.RunWorkerAsync();
+                worker2.RunWorkerAsync();
                 //System.Threading.Thread t1 = new System.Threading.Thread(() => { _engine.RunNormalMode(controlPath, ConfigFileName); });
                 //t1.Start();
             }
@@ -364,7 +373,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 throw ex;
             }
         }
-
         private void _runNormalMode(string controlPath, string eventPath, string initPath, List<string> dataFileDir, string configFilename)
         {
             MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
@@ -405,9 +413,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             //IsMatlabEngineRunning = false;
         }
-
         private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            worker2.CancelAsync();
             IsMatlabEngineRunning = false;
             Run.IsTaskRunning = false;
             //need to see if the run that is done is selected, if yes, read in results
@@ -421,6 +429,56 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             RunSelected?.Invoke(this, e);
         }
+        private string _normalRunProgress;
+        public string NormalRunProgress
+        {
+            get { return _normalRunProgress; }
+            set
+            {
+                _normalRunProgress = value;
+                OnPropertyChanged();
+            }
+        }
+        private void _normalRunProgressReporter(object sender, DoWorkEventArgs e)
+        {
+            Thread.Sleep(1000);
+            BackgroundWorker bwAsync = sender as BackgroundWorker;
+            while (!bwAsync.CancellationPending)
+            {
+                foreach (var f in Directory.GetFiles(Run.Model.ControlRunPath))
+                {
+                    if (Path.GetExtension(f) == ".csv")
+                    {
+                        var fn = Path.GetFileNameWithoutExtension(f);
+                        NormalRunProgress = DateTime.ParseExact(fn, "\"Progress\"_yyyy_MM_dd_HH_mm", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd HH:mm");
+                        //bwAsync.ReportProgress();
+                        break;
+                    }
+                }
+                Thread.Sleep(1000);
+            }
+            //bwAsync.ReportProgress(100);
+            Thread.Sleep(200);
+        }
+        private void _normalRun_progressReportsDone(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            foreach (var f in Directory.GetFiles(Run.Model.ControlRunPath))
+            {
+                if (Path.GetExtension(f) == ".csv")
+                {
+                    var fn = Path.GetFileNameWithoutExtension(f);
+                    NormalRunProgress = DateTime.ParseExact(fn, "\"Progress\"_yyyy_MM_dd_HH_mm", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd HH:mm");
+                    break;
+                }
+            }
+            Thread.Sleep(1000);
+            NormalRunProgress = "";
+        }
+        private void _normalRunworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
         private int _reRunProgress;
         public int ReRunProgress
         {
@@ -431,8 +489,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        private void _progressReporter(object sender, DoWorkEventArgs e)
+        private void _reRunProgressReporter(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bwAsync = sender as BackgroundWorker;
             while (!bwAsync.CancellationPending)
@@ -568,12 +625,19 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     dir.Delete();
                 }
+                worker.CancelAsync();
+                worker2.CancelAsync();
                 //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
                 //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
                 //System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
                 //fs.Close();
                 //File.Delete(runFlag);
                 while (worker.IsBusy)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(500);
+                }
+                while (worker2.IsBusy)
                 {
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(500);
@@ -603,7 +667,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 worker.RunWorkerCompleted += _workerOORReRun_RunWorkerCompleted;
                 worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
-                worker2.DoWork += _progressReporter;
+                worker2.DoWork += _reRunProgressReporter;
                 worker2.ProgressChanged += _worker_ProgressChanged;
                 worker2.RunWorkerCompleted += _progressReportsDone;
                 worker2.WorkerReportsProgress = true;
@@ -667,8 +731,8 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 MessageBox.Show(ex.Message);
             }
 
-            start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
+            start = Convert.ToDateTime(start, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            end = Convert.ToDateTime(end, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
             var runFlag = controlPath + "RunFlag.txt";
             if (!System.IO.File.Exists(runFlag))
             {
@@ -709,6 +773,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 {
                     dir.Delete();
                 }
+                worker.CancelAsync();
                 worker2.CancelAsync();
                 //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
                 //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
@@ -720,131 +785,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(500);
                 }
-                run.IsTaskRunning = false;
-                Mouse.OverrideCursor = null;
-            }
-        }
-        public void VSRerun(string start, string end, AWRunViewModel run, int predictionDelay)
-        {
-            if (IsMatlabEngineRunning)
-            {
-                //Here the running engine could be running a rerun instead of the normal run,
-                //need to talk to Jim as how to distinguish normal or rerun,
-                //I might need to set a separate flag for them or a class of flags with individual flag for each situation.
-                PauseMatlabNormalRun();
-            }
-            worker = new BackgroundWorker();
-            Run = run;
-            _controlPath = run.Model.ControlRerunPath;
-            _configFilePath = run.Model.ConfigFilePath;
-
-            try
-            {
-                worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runVSReRunMode);
-                worker.ProgressChanged += _worker_ProgressChanged;
-                worker.RunWorkerCompleted += _workerVSReRun_RunWorkerCompleted;
-                worker.WorkerReportsProgress = true;
-                worker.WorkerSupportsCancellation = true;
-                while (worker.IsBusy)
-                {
-                    Thread.Sleep(500);
-                }
-                object[] parameters = new object[] { start, end, run.Model.ConfigFilePath, run.Model.ControlRerunPath, run.Model.EventPath, run.Model.InitializationPath, run.Model.DataFileDirectories, predictionDelay };
-                worker.RunWorkerAsync(parameters);
-                IsReRunRunning = true;
-                Run.IsTaskRunning = true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        private void _workerVSReRun_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            IsMatlabEngineRunning = false;
-            IsReRunRunning = false;
-            Run.IsTaskRunning = false;
-            OnVSReRunCompletedEvent(e.Result as List<TheveninDetector>);
-        }
-
-        private void OnVSReRunCompletedEvent(List<TheveninDetector> e)
-        {
-            VSReRunCompletedEvent?.Invoke(this, e);
-        }
-        public Action<object, List<TheveninDetector>> VSReRunCompletedEvent { get; set; }
-
-        private void _runVSReRunMode(object sender, DoWorkEventArgs e)
-        {
-            if (Thread.CurrentThread.Name == null)
-            {
-                Thread.CurrentThread.Name = "VSReRunThread";
-            }
-            object[] parameters = e.Argument as object[];
-            var start = parameters[0] as string;
-            var end = parameters[1] as string;
-            var configFilename = parameters[2] as string;
-            var controlPath = parameters[3] as string;
-            var eventPath = parameters[4] as string;
-            var initPath = parameters[5] as string;
-            var dataFileDir = parameters[6] as List<string>;
-            var predictionDelay = parameters[7] as int?;
-
-            MWCellArray dataFileDirs = new MWCellArray(dataFileDir.Count);
-            try
-            {
-                for (int index = 0; index < dataFileDir.Count; index++)
-                {
-                    dataFileDirs[index + 1] = new MWCharArray(dataFileDir[index]);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            //start = Convert.ToDateTime(start).ToString("MM/dd/yyyy HH:mm:ss");
-            //end = Convert.ToDateTime(end).ToString("MM/dd/yyyy HH:mm:ss");
-            var runFlag = controlPath + "RunFlag.txt";
-            if (!System.IO.File.Exists(runFlag))
-            {
-                System.IO.FileStream fs = System.IO.File.Create(runFlag);
-                fs.Close();
-            }
-            var vsRerunResults = new TheveninReRunResults();
-            IsMatlabEngineRunning = true;
-            try
-            {
-                vsRerunResults = new TheveninReRunResults((MWStructArray)_matlabEngine.RerunThevenin(start, end, configFilename, controlPath, eventPath, initPath, dataFileDirs, predictionDelay));
-            }
-            catch (Exception ex)
-            {
-                IsMatlabEngineRunning = false;
-                MessageBox.Show("Error in running matlab voltage stability re-run mode on background worker thread: " + ex.Message, "Error!", MessageBoxButtons.OK);
-            }
-
-            e.Result = vsRerunResults.VSDetectorList;
-        }
-        public void CancelVSReRun(AWRunViewModel run)
-        {
-            var result = MessageBox.Show("Cancel Voltage Stability re-run?", "Warning!", MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
-            {
-                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                System.IO.DirectoryInfo di = new DirectoryInfo(run.Model.ControlRerunPath);
-                foreach (var file in di.GetFiles())
-                {
-                    file.Delete();
-                }
-                foreach (var dir in di.GetDirectories())
-                {
-                    dir.Delete();
-                }
-                //var pauseFlag = run.Model.ControlRerunPath + "PauseFlag.txt";
-                //var runFlag = run.Model.ControlRerunPath + "RunFlag.txt";
-                //System.IO.FileStream fs = System.IO.File.Create(pauseFlag);
-                //fs.Close();
-                //File.Delete(runFlag);
-                while (worker.IsBusy)
+                while (worker2.IsBusy)
                 {
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(500);
@@ -853,7 +794,6 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 Mouse.OverrideCursor = null;
             }
         }
-
 
         //public PDATExampleResults ReadPDATSampleFile(string filename)
         public ReadExampleFileResults GetFileExample(string filename, int fileType)
@@ -881,7 +821,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ReadExampleFileResults GetDBFileExample(string starttime, string preset, string filename, string dbtype)
         {
             var FileReadingResults = new ReadExampleFileResults();
-            var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
+            var start = "";
+            //MessageBox.Show("The time string is: " + starttime);
+            try
+            {
+                start = Convert.ToDateTime(starttime, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Time string convert to datetime object failed.");
+            }
 
             if (IsMatlabEngineRunning)
             {
@@ -897,6 +846,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 else if (dbtype == "openHistorian")
                 {
                     FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "OpenHistorian"));
+                }
+                else if (dbtype == "openPDC")
+                {
+                    FileReadingResults.GetSignals((MWStructArray)_matlabEngine.GetFileExampleDB(start, preset, filename, 1, "openPDC"));
                 }
                 else { }            
             }
@@ -925,6 +878,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 PauseMatlabNormalRun();
             }
             worker = new BackgroundWorker();
+            worker2 = new BackgroundWorker();
             //IsNormalRunPaused = false;
             Run = run;
             _controlPath = run.Model.ControlRerunPath;
@@ -936,7 +890,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
                 worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
-                worker2.DoWork += _progressReporter;
+                worker2.DoWork += _reRunProgressReporter;
                 worker2.ProgressChanged += _worker_ProgressChanged;
                 worker2.RunWorkerCompleted += _progressReportsDone;
                 worker2.WorkerReportsProgress = true;
@@ -1027,6 +981,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 PauseMatlabNormalRun();
             }
             worker = new BackgroundWorker();
+            worker2 = new BackgroundWorker();
             try
             {
                 worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrieveExampleFileDataMode);
@@ -1034,7 +989,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
                 worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
-                worker2.DoWork += _progressReporter;
+                worker2.DoWork += _reRunProgressReporter;
                 worker2.ProgressChanged += _worker_ProgressChanged;
                 worker2.RunWorkerCompleted += _progressReportsDone;
                 worker2.WorkerReportsProgress = true;
@@ -1199,18 +1154,18 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 parameters["WindowLength", 1] = inspectionAnalysisParams.WindowLength;
                 parameters["Window", 1] = inspectionAnalysisParams.WindowType.ToString();
                 parameters["WindowOverlap", 1] = inspectionAnalysisParams.WindowOverlap;
-                if (inspectionAnalysisParams.ZeroPadding != null)
+                if (!string.IsNullOrEmpty(inspectionAnalysisParams.ZeroPadding))
                 {
-                    parameters["ZeroPadding", 1] = (int)inspectionAnalysisParams.ZeroPadding;
+                    parameters["ZeroPadding", 1] = (int)inspectionAnalysisParams.Model.ZeroPadding;
                 }
                 parameters["LogScale", 1] = inspectionAnalysisParams.LogScale.ToString().ToUpper();
-                if (inspectionAnalysisParams.FreqMin != null)
+                if (!string.IsNullOrEmpty(inspectionAnalysisParams.FreqMin))
                 {
-                    parameters["FreqMin", 1] = (double)inspectionAnalysisParams.FreqMin;
+                    parameters["FreqMin", 1] = (double)inspectionAnalysisParams.Model.FreqMin;
                 }
-                if (inspectionAnalysisParams.FreqMax != null)
+                if (!string.IsNullOrEmpty(inspectionAnalysisParams.FreqMax))
                 {
-                    parameters["FreqMax", 1] = (double)inspectionAnalysisParams.FreqMax;
+                    parameters["FreqMax", 1] = (double)inspectionAnalysisParams.Model.FreqMax;
                 }
                 parameters["fs", 1] = signals[0].SamplingRate;
 
@@ -1372,15 +1327,16 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 PauseMatlabNormalRun();
             }
             worker = new BackgroundWorker();
+            worker2 = new BackgroundWorker();
             try
             {
-                var start = Convert.ToDateTime(starttime).ToString("MM/dd/yyyy HH:mm:ss");
+                var start = Convert.ToDateTime(starttime, CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
                 worker.DoWork += new System.ComponentModel.DoWorkEventHandler(_runRetrieveDBDataMode);
                 worker.ProgressChanged += _worker_ProgressChanged;
                 worker.RunWorkerCompleted += _workerRetrieveData_RunWorkerCompleted;
                 worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
-                worker2.DoWork += _progressReporter;
+                worker2.DoWork += _reRunProgressReporter;
                 worker2.ProgressChanged += _worker_ProgressChanged;
                 worker2.RunWorkerCompleted += _progressReportsDone;
                 worker2.WorkerReportsProgress = true;
@@ -1422,6 +1378,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 else if (dbtype == "openHistorian")
                 {
                     FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "OpenHistorian"));
+                }
+                else if (dbtype == "openPDC")
+                {
+                    FileReadingResults.GetSignalsWithData((MWStructArray)_matlabEngine.GetFileExampleDB(starttime, preset, filename, 0, "openPDC"));
                 }
             }
             catch (Exception ex)

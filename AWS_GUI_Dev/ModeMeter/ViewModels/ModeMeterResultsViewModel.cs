@@ -65,8 +65,8 @@ namespace ModeMeter.ViewModels
         {
             if (File.Exists(_run.Model.ConfigFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try
@@ -95,8 +95,8 @@ namespace ModeMeter.ViewModels
         {
             if (File.Exists(_run.Model.ConfigFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try
@@ -126,8 +126,8 @@ namespace ModeMeter.ViewModels
             {
                 _selectedStartTime = value;
                 OnPropertyChanged();
-                var startTime = Convert.ToDateTime(value);
-                var endTime = Convert.ToDateTime(_selectedEndTime);
+                var startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     //_filterTableByTime();
@@ -148,8 +148,8 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    var startTime = Convert.ToDateTime(_selectedStartTime);
-                    var endTime = Convert.ToDateTime(value);
+                    var startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    var endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
                     if (startTime <= endTime)
                     {
                         //_filterTableByTime();
@@ -367,11 +367,11 @@ namespace ModeMeter.ViewModels
             set
             {
                 _reRunResult = value;
-                _drawVSReRunPlots();
+                _drawMMReRunPlots();
                 OnPropertyChanged();
             }
         }
-        private void _drawVSReRunPlots()
+        private void _drawMMReRunPlots()
         {
             var mmrrPlots = new ObservableCollection<MMRerunPlotModel>();
             foreach (var plot in ReRunResult)

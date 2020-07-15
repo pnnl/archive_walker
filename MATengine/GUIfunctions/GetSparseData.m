@@ -19,7 +19,7 @@
 %       (max and min of analyzed signals) are stored. A string.
 %   SparseDetector - Specifies which detector the returned data corresponds
 %       to. String. Acceptable values: 'Periodogram', 'SpectralCoherence',
-%       'Thevenin','ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
+%       'ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
 %
 % Outputs:
 %   SparseOut - a structure array with an element for each implemented

@@ -129,10 +129,6 @@
       <Project>{967B98DE-8ED1-4F8A-9C26-C3C9255F8EB8}</Project>
       <Name>BAWGUI.MATLABRunResults</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BAWGUI.ReadConfigXml\BAWGUI.ReadConfigXml.csproj">
-      <Project>{45b27ec1-0a7d-4b08-a11e-04001e70f316}</Project>
-      <Name>BAWGUI.ReadConfigXml</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BAWGUI.RunMATLAB\BAWGUI.RunMATLAB.csproj">
       <Project>{bf338bcb-0788-4de9-8d78-5db5142fbf27}</Project>
       <Name>BAWGUI.RunMATLAB</Name>

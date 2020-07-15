@@ -30,6 +30,18 @@ ExtractedParameters = ExtractParameters(Parameters);
 SavePath = ExtractedParameters.SavePath;
 SeparatePMUs = ExtractedParameters.SeparatePMUs;
 Mnemonic = ExtractedParameters.Mnemonic;
+% Only used when being called from ExportEvents (not as a detector)
+NoTimeSubfolders = ExtractedParameters.NoTimeSubfolders;
+Estart = ExtractedParameters.Estart;
+Eend = ExtractedParameters.Eend;
+
+% If this function is being called from ExportEvents, trim the data down to
+% cover the specified time period of the event
+if (~isempty(Estart)) && (~isempty(Eend))
+    KeepIdx = (Estart <= TimeDT) & (TimeDT <= Eend);
+    Data = Data(KeepIdx,:);
+    t = t(KeepIdx);
+end
 
 % Get the indices for channels of data to be included in each folder. Each
 % folder corresponds to a PMU if SeparatePMUs==1. If SeparatePMUs==0, then
@@ -55,6 +67,9 @@ else
 end
 
 
+% Convert data types to JSIS-CSV format
+DataType = ConvertDataTypes(DataType);
+DataUnit(strcmp(DataType,'OTHER')) = {'O'};
 
 TS = erase(TimeString{1},{'-',' ',':'});    % Puts the timestamp in the form yyyymmddHHMMSS.FFF
 for idx = 1:length(FolderIdx)
@@ -62,13 +77,25 @@ for idx = 1:length(FolderIdx)
     ThisMn = Mnemonic{idx};
     ThisSubFolder = SubFolder{idx};
     
+    % Replace spaces with underscores to prevent errors
+    ThisMn = strrep(ThisMn,' ','_');
+    ThisSubFolder = strrep(ThisSubFolder,' ','_');
+    
     H1 = ['Time' DataChannel(ThisIdx)];
     H2 = ['Type' DataType(ThisIdx)];
     H3 = ['second' DataUnit(ThisIdx)];
     H4 = ['Time' strcat(DataPMU(ThisIdx), '_', DataChannel(ThisIdx))];
     H = {H1,H2,H3,H4};
     
-    FullSavePath = fullfile(SavePath,ThisSubFolder,TS(1:4),TS(3:8));
+    if NoTimeSubfolders == 0
+        % This function is being called "normally" - as a detector.
+        % Subfolders are desired.
+        FullSavePath = fullfile(SavePath,ThisSubFolder,TS(1:4),TS(3:8));
+    else
+        % This function is being called from ExportEvents, so the yyyy and
+        % yymmdd subfolders are not desired
+        FullSavePath = fullfile(SavePath,ThisSubFolder);
+    end
     SaveFile = fullfile(FullSavePath,[ThisMn '_' TS(1:8) '_' TS(9:14) '.csv']);
     
     if exist(FullSavePath,'dir') == 0
@@ -134,6 +161,114 @@ else
     end
 end
 
+% *********
+% Only used when being called from ExportEvents (not as a detector)
+% *********
+
+% This flag makes it so that the yyyy and yymmdd subfolders are not used.
+% It allows the DataWriterDetector function to be called from ExportEvents.
+if isfield(Parameters,'NoTimeSubfolders')
+    if Parameters.NoTimeSubfolders == 1
+        NoTimeSubfolders = 1;
+    else
+        NoTimeSubfolders = 0;
+    end
+else
+    NoTimeSubfolders = 0;
+end
+
+if isfield(Parameters,'Estart')
+    Estart = Parameters.Estart;
+else
+    Estart = [];
+end
+
+if isfield(Parameters,'Eend')
+    Eend = Parameters.Eend;
+else
+    Eend = [];
+end
+
 ExtractedParameters = struct('SavePath',SavePath,...
-    'SeparatePMUs',SeparatePMUs,'Mnemonic',Mnemonic);
+    'SeparatePMUs',SeparatePMUs,'Mnemonic',Mnemonic,...
+    'NoTimeSubfolders',NoTimeSubfolders,'Estart',Estart,'Eend',Eend);
+end
+
+
+
+% function to convert signal types to JSIS-CSV format
+function [DataTypes,flag] = ConvertDataTypes(DataTypes)
+
+flag = zeros(1,length(DataTypes));
+% VMP to VPM
+k = find(strcmp(DataTypes,'VMP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'VPM';
+        flag(k(i)) = 1;
+    end    
+end
+
+% VAP to VPA
+k = find(strcmp(DataTypes,'VAP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'VPA';
+        flag(k(i)) = 1;
+    end
+end
+
+% IMP to IPM
+k = find(strcmp(DataTypes,'IMP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'IPM';
+        flag(k(i)) = 1;
+    end
+end
+
+% IAP to IPA
+k = find(strcmp(DataTypes,'IAP'));
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'IPA';
+        flag(k(i)) = 1;
+    end
+end
+
+% F, no change
+k = find(strcmp(DataTypes,'F'));
+if(~isempty(k))
+    for i = 1:length(k)
+        % no need to change the signal type
+        flag(k(i)) = 1;
+    end
+end
+
+% P, no change
+k = find(strcmp(DataTypes,'P'));
+if(~isempty(k))
+    for i = 1:length(k)
+        % no need to change the signal type
+        flag(k(i)) = 1;
+    end
+end
+
+% Q, no change
+k = find(strcmp(DataTypes,'Q'));
+if(~isempty(k))
+    for i = 1:length(k)
+        % no need to change the signal type
+        flag(k(i)) = 1;
+    end
+end
+
+% set anything else to OTHER
+k = find(flag == 0);
+if(~isempty(k))
+    for i = 1:length(k)
+        DataTypes{k(i)} = 'OTHER';
+    end
+end
+
 end

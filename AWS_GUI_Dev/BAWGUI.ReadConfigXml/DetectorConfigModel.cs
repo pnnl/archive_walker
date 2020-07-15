@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DissipationEnergyFlow.Models;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace BAWGUI.ReadConfigXml
@@ -65,6 +66,15 @@ namespace BAWGUI.ReadConfigXml
                     DetectorList.Add(new RingdownDetectorModel(item));
                 }
             }
+            items = _xElement.Element("Configuration").Elements("EnergyFlow");
+            if (items != null)
+            {
+                foreach (var item in items)
+                {
+                    var reader = new DEFReader(item);
+                    DetectorList.Add(reader.GetDEFDetector());
+                }
+            }
             items = _xElement.Element("Configuration").Elements("DataWriter");
             if (items != null)
             {
@@ -95,10 +105,20 @@ namespace BAWGUI.ReadConfigXml
                     }
                 }
             }
+            par = _xElement.Element("Configuration").Element("AutoEventExport");
+            if (par != null)
+            {
+                AutoEventExporter = new AutoEventExportModel(par);
+            }
+            else
+            {
+                AutoEventExporter = new AutoEventExportModel();
+            }
         }
         public string EventPath { get; set; }
         public string ResultUpdateInterval { get; set; }
         public List<object> DetectorList { get; set; }
         public List<object> AlarmingList { get; set; }
+        public AutoEventExportModel AutoEventExporter { get; set; }
     }
 }

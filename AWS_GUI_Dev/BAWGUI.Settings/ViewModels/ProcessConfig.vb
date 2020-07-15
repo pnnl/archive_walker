@@ -401,7 +401,8 @@ Namespace ViewModels
                                                                                                     {TunableFilterType.LowPass, {"PassRipple", "StopRipple", "PassCutoff", "StopCutoff"}.ToList()},
                                                                                                     {TunableFilterType.FrequencyDerivation, New List(Of String)()},
                                                                                                     {TunableFilterType.RunningAverage, {"RemoveAve", "WindowLength"}.ToList()},
-                                                                                                    {TunableFilterType.PointOnWavePower, {"WindowLength"}.ToList()}}
+                                                                                                    {TunableFilterType.PointOnWavePower, {"WindowLength"}.ToList()},
+                                                                                                    {TunableFilterType.RMSenergyFilt, {"BandType"}.ToList()}}
             '{TunableFilterType.Median, {"Order", "Endpoints", "HandleNaN"}.ToList()}}
             InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
             OutputChannels = New ObservableCollection(Of SignalSignatureViewModel)
@@ -951,6 +952,16 @@ Namespace ViewModels
                     OutputChannels(2).SignalName = value
                     OnPropertyChanged()
                 End If
+            End Set
+        End Property
+        Private _bandType As RMSEnergyBandOptions
+        Public Property BandType As RMSEnergyBandOptions
+            Get
+                Return _model.BandType
+            End Get
+            Set(ByVal value As RMSEnergyBandOptions)
+                _model.BandType = value
+                OnPropertyChanged()
             End Set
         End Property
     End Class

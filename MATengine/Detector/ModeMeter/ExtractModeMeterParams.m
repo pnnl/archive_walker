@@ -2,25 +2,18 @@
 % XML information. It turns strings into numbers as necessary and sets
 % default values for parameters that were not specified.
 
-function ExtractedParameters = ExtractModeMeterParams(Parameters,fs)
+function ExtractedParameters = ExtractModeMeterParams(Parameters,fs,fsFOdet,fsEVENTdet)
 
-% Number of samples to use in the analysis
+% Folder where results are to be stored. This parameter is created in
+% InitializeBAWS from the ResultPath parameter that is in the config file.
 if isfield(Parameters,'ResultPathFinal')
     % Use specified value
-    ResultPathFinal =Parameters.ResultPathFinal;
+    ResultPathFinal = Parameters.ResultPathFinal;
+else
+    error('The path for results is not specified for the Mode Meter. This should be done automatically by the GUI.');
 end
 
 if isfield(Parameters,'Mode')
-    % Find the number of separate instances of this detector type.
-    %     ModeName = cell(1,length(Parameters.Mode));
-    %     AnalysisLength = ones(1,length(Parameters.Mode));
-    %     DampRatioThreshold = .05*ones(1,length(Parameters.Mode)); %default value
-    %     RetConTrackingStatus = cell(1,length(Parameters.Mode));
-    %     MaxRetConLength = NaN(1,length(Parameters.Mode));
-    %     DesiredModes = cell(1,length(Parameters.Mode));
-    %AlgSpecificParameters = cell(1,length(Parameters.Mode));
-    %     FOdetector = cell(1,length(Parameters.Mode));
-    %     MethodName = cell(1,length(Parameters.Mode));
     ExtractedParameters = cell(1,length(Parameters.Mode)); 
     for ModeIdx = 1:length(Parameters.Mode)
         ModeName = Parameters.Mode{ModeIdx}.Name;
@@ -30,19 +23,8 @@ if isfield(Parameters,'Mode')
             % Use specified value
             AnalysisLength = str2double(TempXML.AnalysisLength)*fs{ModeIdx};
         else
-            % Use default value of 10 minutes
+            % Use default value of 20 minutes
             AnalysisLength = 20*60*fs{ModeIdx};
-        end
-        if isfield(TempXML,'DampRatioThreshold')
-            % Use specified limit
-            DampRatioThreshold = str2num(TempXML.DampRatioThreshold);
-            if DampRatioThreshold>100
-                DampRatioThreshold = 100;
-                warning('Damping ratio detection threshold input cannot exceed 100%, so setting the threshold to 100%.');
-            end
-        else
-            % Use default (disable)
-            DampRatioThreshold = .05;
         end
         %Parameter for implementing retroactice continuity
         if isfield(TempXML,'RetConTracking')
@@ -67,13 +49,11 @@ if isfield(Parameters,'Mode')
         if isfield(TempXML,'DesiredModes')
             % Desired mode parameters: min freq, max freq, freq estimate, max damp
             DesiredModes = [str2double(TempXML.DesiredModes.LowF) str2double(TempXML.DesiredModes.HighF) str2double(TempXML.DesiredModes.GuessF) str2double(TempXML.DesiredModes.DampMax)];
-            %         else
-            %             warning('Please enter parameters required for selecting the mode of interest');
-            %DesiredModes = [];
+        else
+            error('The mode parameters must be specified.');
         end
-        FOdetectorParaFlag  = 0;
         if isfield(TempXML,'AlgNames')
-            %FInds the number of different algorithms implemented for a
+            %Finds the number of different algorithms implemented for a
             %given instance of selected modemeter
             NumMethods = length(TempXML.AlgNames);
             ExtrctParamXML = TempXML.AlgNames;
@@ -83,282 +63,239 @@ if isfield(Parameters,'Mode')
                 % indexing can be used in the following for loop.
                 ExtrctParamXML = {ExtrctParamXML};
             end
-            %             MethodName = cell(1,NumMethods);
-            %             AlgSpecificParameters = cell(1,NumMethods);
+            
+            MethodName = cell(1,NumMethods);
+            AlgorithmSpecificParameters = cell(1,NumMethods);
             for MethodIdx = 1:NumMethods
-                MethodName{1}{MethodIdx} = ExtrctParamXML{MethodIdx}.Name;
+                MethodName{MethodIdx} = ExtrctParamXML{MethodIdx}.Name;
                 switch ExtrctParamXML{MethodIdx}.Name
                     case 'LS_ARMA'
+                        FunctionName = 'LS_ARMApS';
+                        FOrobust = false;   % This flag is needed because the same FunctionName is used for LS-ARMA and LS-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha);
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
                     case 'YW_ARMA'
+                        FunctionName = 'YW_ARMApS';
+                        FOrobust = false;   % This flag is needed because the same FunctionName is used for YW-ARMA and YW-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        if isfield(ExtrctParamXML{MethodIdx},'ng')
+                            ng = str2double(ExtrctParamXML{MethodIdx}.ng);
+                        else
+                            ng = 0;
+                        end
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L);
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'FOrobust',FOrobust);
                     case 'YW_ARMApS'
+                        FunctionName = 'YW_ARMApS';
+                        FOrobust = true;   % This flag is needed because the same FunctionName is used for YW-ARMA and YW-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        if isfield(ExtrctParamXML{MethodIdx},'ng')
+                            ng = str2double(ExtrctParamXML{MethodIdx}.ng);
+                        else
+                            ng = 0;
+                        end
                         L = str2double(ExtrctParamXML{MethodIdx}.L);
                         LFO = str2double(ExtrctParamXML{MethodIdx}.LFO);
-                        FOdetectorParaFlag =1;
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'L',L,'LFO',LFO);
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        if strcmp(ExtrctParamXML{MethodIdx}.EnableTimeLoc,'TRUE')
+                            EnableTimeLoc = true;
+                        else
+                            EnableTimeLoc = false;
+                        end
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'ng',ng,'L',L,'LFO',LFO,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'EnableTimeLoc',EnableTimeLoc,'FOrobust',FOrobust);
                     case 'LS_ARMApS'
+                        FunctionName = 'LS_ARMApS';
+                        FOrobust = true;   % This flag is needed because the same FunctionName is used for LS-ARMA and LS-ARMA+S
                         na = str2double(ExtrctParamXML{MethodIdx}.na);
                         nb = str2double(ExtrctParamXML{MethodIdx}.nb);
                         n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
-                        FOdetectorParaFlag =1;
-                        AlgSpecificParameters{1}{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha);
+                        NaNomitLimit = str2double(ExtrctParamXML{MethodIdx}.NaNomitLimit)*fs{ModeIdx};
+                        if strcmp(ExtrctParamXML{MethodIdx}.UseRefinedFreq,'TRUE')
+                            UseRefinedFreq = true;
+                        else
+                            UseRefinedFreq = false;
+                        end
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NaNomitLimit',NaNomitLimit,'UseRefinedFreq',UseRefinedFreq,'FOrobust',FOrobust);
+                    case 'STLS'
+                        FunctionName = 'STLS';
+                        FOrobust = false;   % This flag is needed because the same FunctionName is used for STLS and STLS+S
+                        na = str2double(ExtrctParamXML{MethodIdx}.na);
+                        nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
+                        NumIteration = str2double(ExtrctParamXML{MethodIdx}.NumIteration);
+                        thresh = str2double(ExtrctParamXML{MethodIdx}.thresh);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NumIteration',NumIteration,'thresh',thresh,'FOrobust',FOrobust);
+                    case 'STLSpS'
+                        FunctionName = 'STLS';
+                        FOrobust = true;   % This flag is needed because the same FunctionName is used for STLS and STLS+S
+                        na = str2double(ExtrctParamXML{MethodIdx}.na);
+                        nb = str2double(ExtrctParamXML{MethodIdx}.nb);
+                        n_alpha = str2double(ExtrctParamXML{MethodIdx}.n_alpha);
+                        NumIteration = str2double(ExtrctParamXML{MethodIdx}.NumIteration);
+                        thresh = str2double(ExtrctParamXML{MethodIdx}.thresh);
+                        AlgorithmSpecificParameters{MethodIdx} = struct('na',na,'nb',nb,'n_alpha',n_alpha,'FunctionName',FunctionName,'NumIteration',NumIteration,'thresh',thresh,'FOrobust',FOrobust);
                     otherwise
-                        error([ExtrctParamXML{MethodIdx}.AlgName ' is not a valid mode-meter algorithm. Select LS-ARMA, YW-ARMA, LS-ARMA+S or YW-ARMA+S.']);
+                        error([ExtrctParamXML{MethodIdx}.AlgName ' is not a valid mode-meter algorithm. Select LS-ARMA, LS-ARMA+S, YW-ARMA, YW-ARMA+S, STLS, or STLS+S.']);
                 end
             end
-            %FO detection parameters
-            if FOdetectorParaFlag ==1 && isfield(TempXML,'FOdetectorParam')
-                FOParamExtrXML = TempXML.FOdetectorParam;
-                FOdetector = struct('WindowType',[], 'FrequencyInterval',[],'ZeroPadding',[],...
-                    'WindowLength',[],'WindowOverlap',[],'MedianFilterFrequencyWidth',[],...
-                    'FrequencyTolerance',[],'MedianFilterOrder',[],'Pfa',[],'FrequencyMin',[],'FrequencyMax',[]);
-                FOdetector.FrequencyMin = 0;
-                FOdetector.FrequencyMax = fs{ModeIdx}/2;
-                if isfield(FOParamExtrXML,'WindowType')
-                    % Use specified window
-                    FOdetector.WindowType = FOParamExtrXML.WindowType;
-                else
-                    % Use default window
-                    FOdetector.WindowType = 'hann';
-                end
+            
+            if isfield(TempXML,'FOdetectorParam')
+                % Use the same parameter extractor that the main
+                % periodogram detector uses
+                % Set te analysis length for the detector equal to the
+                % length of the mode meter analysis window
+                TempXML.FOdetectorParam.AnalysisLength = num2str(round(AnalysisLength/fs{ModeIdx}));
+                FOdetector = ExtractFOdetectionParamsPer(TempXML.FOdetectorParam,fsFOdet{ModeIdx});
                 
-                % Zero padded length of the test statistic periodogram, Daniell-Welch
-                % periodogram, and GMSC. If omitted, no zero padding is implemented.
-                if isfield(FOParamExtrXML,'FrequencyInterval')
-                    % Use specified zero padding
-                    FOdetector.FrequencyInterval = str2double(FOParamExtrXML.FrequencyInterval);
-                    FOdetector.ZeroPadding = round(fs{ModeIdx}/FOParamExtrXML.FrequencyInterval);
-                else
-                    % Use default zero padding (none for the test statistic periodogram)
-                    FOdetector.ZeroPadding = AnalysisLength;
-                    FOdetector.FrequencyInterval = fs{ModeIdx}/FOdetector.ZeroPadding;
-                end
+                FOdetector.PMU = TempXML.FOdetectorParam.PMU;
                 
-                % Length of the sections for the Daniell-Welch periodogram and GMSC. If
-                % omitted, default is 1/3 of K (AnalyisLength).
-                if isfield(FOParamExtrXML,'WindowLength')
-                    % Use specified window length
-                    FOdetector.WindowLength = str2double(FOParamExtrXML.WindowLength)*fs{ModeIdx};
+                if isfield(TempXML,'FOtimeLocParam')
+                    % Retrieve time localization parameters
+                    TimeLocParams = ExtractFOtimeLocParameters(TempXML.FOtimeLocParam,fsFOdet{ModeIdx});
                 else
-                    % Use default window length
-                    FOdetector.WindowLength = floor(AnalysisLength/3);
-                end
-                
-                % Amount of overlap between sections for the Daniell-Welch periodogram and
-                % GMSC. If omitted, default is half of WindowLength
-                if isfield(FOParamExtrXML,'WindowOverlap')
-                    % Use specified window overlap
-                    FOdetector.WindowOverlap = str2double(FOParamExtrXML.WindowOverlap)*fs{ModeIdx};
-                else
-                    % Use default window overlap
-                    FOdetector.WindowOverlap = floor(FOdetector.WindowLength/2);
-                end
-                
-                % Order for the median filter used in the Daniell-Welch periodogram. If
-                % omitted, the default is the smallest odd integer greater than or equal to
-                % three times the main lobe width of the applied window. If an even number,
-                % a number less than 3, or a non-integer is specified, the smallest odd
-                % integer greater than or equal to 3 and the specified value will be used.
-                if isfield(FOParamExtrXML,'MedianFilterFrequencyWidth')
-                    % Use specified median filter order
-                    FOdetector.MedianFilterFrequencyWidth = str2double(FOParamExtrXML.MedianFilterFrequencyWidth);
-                    
-                    % Round to ensure that an integer is selected
-                    FOdetector.MedianFilterOrder = round(FOParamExtrXML.MedianFilterFrequencyWidth/FOParamExtrXML.FrequencyInterval);
-                    
-                    % If the median filter is less than 3, set it to 3
-                    if FOdetector.MedianFilterOrder < 3
-                        FOdetector.MedianFilterOrder = 3;
-                    end
-                else
-                    % Use default median filter order.
-                    % The term inside ceil() is 3 times the main lobe width in radians per
-                    % sample times the amount of zero padding divided by 2 times pi. The
-                    % result is 3 times the main lobe width in bins. The full expressions
-                    % are included in the comments, but the expressions have been reduced
-                    % to avoid numerical errors when multiplying and dividing by pi.
-                    switch FOdetector.WindowType
-                        case 'rectwin'
-                            FOdetector.MedianFilterOrder = ceil(6*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 4*pi/WindowLength * K0/(2*pi));
-                        case 'bartlett'
-                            FOdetector.MedianFilterOrder = ceil(12*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 8*pi/WindowLength * K0/(2*pi));
-                        case 'hann'
-                            FOdetector.MedianFilterOrder = ceil(12*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 8*pi/WindowLength * K0/(2*pi));
-                        case 'hamming'
-                            FOdetector.MedianFilterOrder = ceil(12*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 8*pi/WindowLength * K0/(2*pi));
-                        case 'blackman'
-                            FOdetector.MedianFilterOrder = ceil(18*FOdetector.ZeroPadding/FOdetector.WindowLength); % ceil(3 * 12*pi/WindowLength * K0/(2*pi));
-                    end
-                end
-                % If the median filter order is even, add one to make it odd.
-                if mod(FOdetector.MedianFilterOrder,2) == 0
-                    FOdetector.MedianFilterOrder = FOdetector.MedianFilterOrder + 1;
-                end
-                
-                
-                % Probability of false alarm. With zero padding it becomes a maximum
-                if isfield(FOParamExtrXML,'Pfa')
-                    % Use specified probability of false alarm
-                    FOdetector.Pfa = str2num(FOParamExtrXML.Pfa);
-                else
-                    % Use default probability of false alarm
-                    FOdetector.Pfa = 0.01;
-                end
-                
-                % Minimum frequency to be considered. If omitted, the default is zero, but
-                % in many cases this will cause excessive false alarms.
-                if isfield(FOParamExtrXML,'FrequencyMin')
-                    % Use specified minimum frequency
-                    FOdetector.FrequencyMin = str2num(FOParamExtrXML.FrequencyMin);
-                else
-                    % Use default minimum frequency
-                    FOdetector.FrequencyMin = 0;
-                end
-                 if isfield(FOParamExtrXML,'FrequencyMax')
-                    % Use specified minimum frequency
-                    FOdetector.FrequencyMax = str2num(FOParamExtrXML.FrequencyMax);
-                    if FOdetector.FrequencyMax>fs{ModeIdx}/2
-                        FOdetector.FrequencyMax = fs{ModeIdx}/2;
-                        warning('Maximum frequency for forced oscillation detection exceeds folding frequency of the signal, so changing maximum frequency to the folding frequency of the signal.');
-                    end
-                else
-                    % Use default minimum frequency
-                    FOdetector.FrequencyMax = fs{ModeIdx}/2;
-                end
-                
-                % Tolerance used to refine the frequency estimate. If omitted, the default
-                % is the greater of 1) the main lobe width of the test statistic
-                % periodogram's window and 2) half of FrequencyMin.
-                if isfield(FOParamExtrXML,'FrequencyTolerance')
-                    % Use specified frequency tolerance
-                    FOdetector.FrequencyTolerance = str2num(FOParamExtrXML.FrequencyTolerance);
-                else
-                    % Use default frequency tolerance: the sampling rate (samples/second)
-                    % times the main lobe width (radians/sample) times the cycle-radians
-                    % ratio (cycles/(2pi radians)). The result is the main lobe width
-                    % in Hz. The full expression is included in the comments, but a reduced
-                    % expression is used to avoid numerical errors introduced by
-                    % multiplying and dividing by pi.
-                    switch FOdetector.WindowType
-                        case 'rectwin'
-                            FOdetector.FrequencyTolerance = 2*fs{ModeIdx}/AnalysisLength; % fs * 4*pi/AnalysisLength / (2*pi);
-                        case 'bartlett'
-                            FOdetector.FrequencyTolerance = 4*fs{ModeIdx}/AnalysisLength; % fs * 8*pi/AnalysisLength / (2*pi);
-                        case 'hann'
-                            FOdetector.FrequencyTolerance = 4*fs{ModeIdx}/AnalysisLength; % fs * 8*pi/AnalysisLength / (2*pi);
-                        case 'hamming'
-                            FOdetector.FrequencyTolerance = 4*fs{ModeIdx}/AnalysisLength; % fs * 8*pi/AnalysisLength / (2*pi);
-                        case 'blackman'
-                            FOdetector.FrequencyTolerance = 6*fs{ModeIdx}/AnalysisLength; % fs * 12*pi/AnalysisLength / (2*pi);
-                    end
-                    % Round to nearest 100th of a Hz
-                    FOdetector.FrequencyTolerance = round(FOdetector.FrequencyTolerance,2);
+                    % Pass an empty structure to return parameters with
+                    % time localization disabled.
+                    TimeLocParams = ExtractFOtimeLocParameters(struct(),fsFOdet{ModeIdx});
                 end
             else
-                FOdetector = struct([]);
+                % FO detector is not desired. Setting the configuration
+                % variable to empty ensures that the FO detector is
+                % disabled in ModeMeterDetector
+                FOdetector = [];
+                % No need for time localization. Pass an empty structure to
+                % return parameters with time localization disabled.
+                TimeLocParams = ExtractFOtimeLocParameters(struct(),fsFOdet{ModeIdx});
             end
             
             % Event detection parameters
             if isfield(TempXML,'EventDetectorParam')
                 EventParamExtrXML = TempXML.EventDetectorParam;
                 
-                % Length for RMS calculation
-                if isfield(EventParamExtrXML,'RMSlength')
-                    % Use specified length
-                    RMSlength = str2double(EventParamExtrXML.RMSlength)*fs{ModeIdx};
-
-                    if isnan(RMSlength)
-                        % str2double sets the value to NaN when it can't make it a number
-                        warning('RMSlength is not a number. Default of 15 will be used.');
-                        RMSlength = 15*fs{ModeIdx};
-                    end
-                else
-                    % Use default length
-                    RMSlength = 15*fs{ModeIdx};
-                end
-
-                % Forgetting factor for threshold
-                if isfield(EventParamExtrXML,'RMSmedianFilterTime')
-                    % Use specified filter order, converted to samples from time
-                    RMSmedianFilterOrder = round(str2double(EventParamExtrXML.RMSmedianFilterTime)*fs{ModeIdx});
-
-                    if isnan(RMSmedianFilterOrder)
-                        % str2double sets the value to NaN when it can't make it a number
-                        warning('RMSmedianFilterTime is not a number. Default of 120 seconds will be used.');
-                        RMSmedianFilterOrder = 120*fs{ModeIdx};
-                    end
-
-                    if (RMSmedianFilterOrder<=0)
-                        warning('RMSmedianFilterTime must be positive. Default of 120 seconds will be used.');
-                        RMSmedianFilterOrder = 120*fs{ModeIdx};
-                    end
-                else
-                    % Use default filter time
-                    RMSmedianFilterOrder = 120*fs{ModeIdx};
-                end
-                % Ensure that the median filter order is odd
-                if mod(RMSmedianFilterOrder,2) == 0
-                    RMSmedianFilterOrder = RMSmedianFilterOrder + 1;
-                end
-
-                % Scaling term for threshold
-                if isfield(EventParamExtrXML,'RingThresholdScale')
-                    % Use specified scaling term
-                    RingThresholdScale = str2double(EventParamExtrXML.RingThresholdScale);
-
-                    if isnan(RingThresholdScale)
-                        % str2double sets the value to NaN when it can't make it a number
-                        warning('RingThresholdScale is not a number. Default of 3 will be used.');
-                        RingThresholdScale = 3;
-                    end
-
-                    if RingThresholdScale < 0
-                        warning('RingThresholdScale cannot be negative. Default of 3 will be used.');
-                        RingThresholdScale = 3;
-                    end
-                else
-                    % Use default scaling term
-                    RingThresholdScale = 3;
-                end
-                
                 % Minimum analysis window length
                 if isfield(EventParamExtrXML,'MinAnalysisLength')
                     % Use specified value
-                    MinAnalysisLength = str2double(EventParamExtrXML.MinAnalysisLength)*fs{ModeIdx};
+                    N2 = str2double(EventParamExtrXML.MinAnalysisLength)*fsEVENTdet{ModeIdx};
 
-                    if isnan(RingThresholdScale)
+                    if isnan(N2)
                         % str2double sets the value to NaN when it can't make it a number
                         error('MinAnalysisLength is not a number.');
                     end
 
-                    if RingThresholdScale < 0
+                    if N2 < 0
                         error('MinAnalysisLength cannot be negative.');
                     end
                 else
                     % Use default value (no adjustment to shorter window)
-                    MinAnalysisLength = AnalysisLength;
+                    N2 = AnalysisLength;
+                end
+                
+                % Forgetting factor 1
+                if isfield(EventParamExtrXML,'ForgetFactor1')
+                    % Use specified value
+                    if strcmp(EventParamExtrXML.ForgetFactor1, 'TRUE')
+                        % Calculate the forgetting factor based on the
+                        % window length
+                        lam1 = (AnalysisLength-1)/AnalysisLength;
+                    else
+                        % No forgetting
+                        lam1 = 1;
+                    end
+                else
+                    % Use default value (no forgetting factor)
+                    lam1 = 1;
+                end
+                
+                % Forgetting factor 2
+                if isfield(EventParamExtrXML,'ForgetFactor2')
+                    % Use specified value
+                    if strcmp(EventParamExtrXML.ForgetFactor2, 'TRUE')
+                        % Calculate the forgetting factor based on the
+                        % window length
+                        lam2 = (N2-1)/N2;
+                    elseif strcmp(EventParamExtrXML.ForgetFactor2, 'MATCH')
+                        % Match the forgetting factor for window 1
+                        lam2 = lam1;
+                    else
+                        % No forgetting 
+                        lam2 = 1;
+                    end
+                else
+                    % Use default value (no forgetting factor)
+                    lam2 = 1;
+                end
+                
+                % After an event occurs, adjust the window preceeding the
+                % event
+                if isfield(EventParamExtrXML,'PostEventWinAdj')
+                    % Use specified value (DIMINISH, SHORTEN, or FALSE)
+                    PostEventWinAdj = EventParamExtrXML.PostEventWinAdj;
+                else
+                    % Use default value (do ot adjust window)
+                    PostEventWinAdj = 'FALSE';
+                end
+                
+                % Threshold for RMS-energy detector
+                if isfield(EventParamExtrXML,'Threshold')
+                    % Use specified value
+                    Threshold = str2double(EventParamExtrXML.Threshold);
+                else
+                    % Throw error
+                    error('RMS-energy threshold must be specified for the mode meter event detector.');
+                end
+                
+                % Flag determining whether ringdowns are identified or if
+                % all high-energy events are removed
+                if isfield(EventParamExtrXML,'RingdownID')
+                    if strcmpi(EventParamExtrXML.RingdownID,'TRUE')
+                        % User desires ringdown identification
+                        RingdownID = true;
+                    else
+                        % User does not desire ringdown identification
+                        RingdownID = false;
+                    end
+                else
+                    % Flag was not specified - disable ringdown
+                    % identification
+                    RingdownID = false;
+                end
+                
+                % RMS-energy signals used to detect disturbances
+                if isfield(EventParamExtrXML,'PMU')
+                    % Use specified signals
+                    EventDetPMU = EventParamExtrXML.PMU;
+                else
+                    % Throw error
+                    error('RMS-energy signals must be specified for the mode meter event detector.');
                 end
 
-
-                EventDetector = struct('RingThresholdScale',RingThresholdScale,...
-                    'RMSlength',RMSlength,'RMSmedianFilterOrder',RMSmedianFilterOrder,...
-                    'MinAnalysisLength',MinAnalysisLength);
+                EventDetector = struct('N2',N2,'lam1',lam1,'lam2',lam2,'PostEventWinAdj',PostEventWinAdj,...
+                    'PMU',EventDetPMU,'Threshold',Threshold,'RingdownID',RingdownID);
             else
                 EventDetector = struct([]);
             end
+        else
+            % Proper information was not passed. Return empty parameter
+            % structures. This might cause errors later, so issue a warning.
+            warning('The configuration file is not properly formatted for a mode meter.');
+            FOdetector = [];
+            MethodName = [];
+            AlgorithmSpecificParameters = [];
+            TimeLocParams = ExtractFOtimeLocParameters(struct(),fsFOdet{ModeIdx});
         end
-        ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,'DampRatioThreshold',DampRatioThreshold,...
+        ExtractedParameters{ModeIdx} = struct('ModeName',ModeName,...
             'AnalysisLength',AnalysisLength,'RetConTrackingStatus',RetConTrackingStatus,'MaxRetConLength',MaxRetConLength,...
             'DesiredModes',DesiredModes,'ResultPathFinal',ResultPathFinal,'FOdetectorPara',FOdetector,'EventDetectorPara',EventDetector,...
-            'MethodName',MethodName,'AlgorithmSpecificParameters',AlgSpecificParameters);
+            'MethodName',[],'AlgorithmSpecificParameters',[],'TimeLocParams',TimeLocParams);
+        % Due to the way Matlab initializes structures, these fields needs to
+        % be added separately because they are comprised of cell arrays. This
+        % keeps ExtractedParameters{ModeIdx} from becoming a struct array
+        ExtractedParameters{ModeIdx}.MethodName = MethodName;
+        ExtractedParameters{ModeIdx}.AlgorithmSpecificParameters = AlgorithmSpecificParameters;
     end
 end

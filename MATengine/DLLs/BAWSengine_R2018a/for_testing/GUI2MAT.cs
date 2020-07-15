@@ -1,24 +1,33 @@
 /*
 * MATLAB Compiler: 6.6 (R2018a)
-* Date: Fri Apr 26 15:37:45 2019
+* Date: Tue Jul 14 10:31:04 2020
 * Arguments:
-* "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\User
-* s\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\DLLs\BAWSengine_R2018a\for_
-* testing""-v""class{GUI2MAT:C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MAT
-* engine\GUIfunctions\GetFileExample.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepo
-* sitory\MATengine\GUIfunctions\GetFileExampleDB.m,C:\Users\foll154\Documents\BPAoscillati
-* onApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\Users\foll154\Documents\BPA
-* oscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m,C:\Users\foll154
-* \Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Users\f
-* oll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscill
-* ation.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions
-* \RerunOutOfRange.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\G
-* UIfunctions\RerunRingdown.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MA
-* Tengine\GUIfunctions\RerunThevenin.m,C:\Users\foll154\Documents\BPAoscillationApp\AWrepo
-* sitory\MATengine\GUIfunctions\RetrieveData.m,C:\Users\foll154\Documents\BPAoscillationAp
-* p\AWrepository\MATengine\GUIfunctions\RunNormalMode.m,C:\Users\foll154\Documents\BPAosci
-* llationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m,C:\Users\foll154\Docum
-* ents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m}"
+* "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\GitF
+* olders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_testing""-v""class{GUI2MAT:C:
+* \Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m,C:
+* \Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleDB.m,
+* C:\Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\
+* Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnalysis.
+* m,C:\Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Use
+* rs\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillat
+* ion.m,C:\Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m,C
+* :\Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m,C:\
+* Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m,C:\U
+* sers\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m,C:\
+* Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m,
+* C:\Users\foll154\OneDrive -
+* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m}"
 */
 using System;
 using System.Reflection;
@@ -37,44 +46,47 @@ namespace BAWSengine
   /// The GUI2MAT class provides a CLS compliant, MWArray interface to the MATLAB
   /// functions contained in the files:
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// FileExample.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.
+  /// m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// FileExampleDB.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleD
+  /// B.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-  /// SparseData.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ins
-  /// pectionAnalysis.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnaly
+  /// sis.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
-  /// dMMdata.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-  /// unForcedOscillation.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOsci
+  /// llation.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-  /// unOutOfRange.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange
+  /// .m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-  /// unRingdown.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-  /// unThevenin.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ret
-  /// rieveData.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
-  /// NormalMode.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATprese
+  /// t.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Upd
-  /// ateOBATpreset.m
-  /// <newpara></newpara>
-  /// C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Wri
-  /// teMMreport.m
+  /// C:\Users\foll154\OneDrive -
+  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m
   /// </summary>
   /// <remarks>
   /// @Version 4.0
@@ -2279,428 +2291,6 @@ namespace BAWSengine
     public void RerunRingdown(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
     {
       mcr.EvaluateFunction("RerunRingdown", numArgsOut, ref argsOut, argsIn);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 0-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin()
-    {
-      return mcr.EvaluateFunction("RerunThevenin", new MWArray[]{});
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 1-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 2-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime, MWArray RerunEndTime)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime, RerunEndTime);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 3-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
-                           ConfigFile)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 4-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
-                           ConfigFile, MWArray ControlPath)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 5-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
-                           ConfigFile, MWArray ControlPath, MWArray EventPath)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 6-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <param name="InitializationPath">Input argument #6</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
-                           ConfigFile, MWArray ControlPath, MWArray EventPath, MWArray 
-                           InitializationPath)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 7-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <param name="InitializationPath">Input argument #6</param>
-    /// <param name="FileDirectory">Input argument #7</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
-                           ConfigFile, MWArray ControlPath, MWArray EventPath, MWArray 
-                           InitializationPath, MWArray FileDirectory)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory);
-    }
-
-
-    /// <summary>
-    /// Provides a single output, 8-input MWArrayinterface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <param name="InitializationPath">Input argument #6</param>
-    /// <param name="FileDirectory">Input argument #7</param>
-    /// <param name="PredictionDelay">Input argument #8</param>
-    /// <returns>An MWArray containing the first output argument.</returns>
-    ///
-    public MWArray RerunThevenin(MWArray RerunStartTime, MWArray RerunEndTime, MWArray 
-                           ConfigFile, MWArray ControlPath, MWArray EventPath, MWArray 
-                           InitializationPath, MWArray FileDirectory, MWArray 
-                           PredictionDelay)
-    {
-      return mcr.EvaluateFunction("RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory, PredictionDelay);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 0-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", new MWArray[]{});
-    }
-
-
-    /// <summary>
-    /// Provides the standard 1-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 2-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime, MWArray 
-                             RerunEndTime)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime, RerunEndTime);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 3-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime, MWArray 
-                             RerunEndTime, MWArray ConfigFile)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 4-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime, MWArray 
-                             RerunEndTime, MWArray ConfigFile, MWArray ControlPath)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 5-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime, MWArray 
-                             RerunEndTime, MWArray ConfigFile, MWArray ControlPath, 
-                             MWArray EventPath)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 6-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <param name="InitializationPath">Input argument #6</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime, MWArray 
-                             RerunEndTime, MWArray ConfigFile, MWArray ControlPath, 
-                             MWArray EventPath, MWArray InitializationPath)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 7-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <param name="InitializationPath">Input argument #6</param>
-    /// <param name="FileDirectory">Input argument #7</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime, MWArray 
-                             RerunEndTime, MWArray ConfigFile, MWArray ControlPath, 
-                             MWArray EventPath, MWArray InitializationPath, MWArray 
-                             FileDirectory)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory);
-    }
-
-
-    /// <summary>
-    /// Provides the standard 8-input MWArray interface to the RerunThevenin MATLAB
-    /// function.
-    /// </summary>
-    /// <remarks>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return.</param>
-    /// <param name="RerunStartTime">Input argument #1</param>
-    /// <param name="RerunEndTime">Input argument #2</param>
-    /// <param name="ConfigFile">Input argument #3</param>
-    /// <param name="ControlPath">Input argument #4</param>
-    /// <param name="EventPath">Input argument #5</param>
-    /// <param name="InitializationPath">Input argument #6</param>
-    /// <param name="FileDirectory">Input argument #7</param>
-    /// <param name="PredictionDelay">Input argument #8</param>
-    /// <returns>An Array of length "numArgsOut" containing the output
-    /// arguments.</returns>
-    ///
-    public MWArray[] RerunThevenin(int numArgsOut, MWArray RerunStartTime, MWArray 
-                             RerunEndTime, MWArray ConfigFile, MWArray ControlPath, 
-                             MWArray EventPath, MWArray InitializationPath, MWArray 
-                             FileDirectory, MWArray PredictionDelay)
-    {
-      return mcr.EvaluateFunction(numArgsOut, "RerunThevenin", RerunStartTime, RerunEndTime, ConfigFile, ControlPath, EventPath, InitializationPath, FileDirectory, PredictionDelay);
-    }
-
-
-    /// <summary>
-    /// Provides an interface for the RerunThevenin function in which the input and
-    /// output
-    /// arguments are specified as an array of MWArrays.
-    /// </summary>
-    /// <remarks>
-    /// This method will allocate and return by reference the output argument
-    /// array.<newpara></newpara>
-    /// M-Documentation:
-    /// Rerun the general out-of-range detector for the specified time period
-    /// </remarks>
-    /// <param name="numArgsOut">The number of output arguments to return</param>
-    /// <param name= "argsOut">Array of MWArray output arguments</param>
-    /// <param name= "argsIn">Array of MWArray input arguments</param>
-    ///
-    public void RerunThevenin(int numArgsOut, ref MWArray[] argsOut, MWArray[] argsIn)
-    {
-      mcr.EvaluateFunction("RerunThevenin", numArgsOut, ref argsOut, argsIn);
     }
 
 

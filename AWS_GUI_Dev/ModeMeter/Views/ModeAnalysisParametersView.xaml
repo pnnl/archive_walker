@@ -9,6 +9,7 @@
              xmlns:coreconverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
              xmlns:converters="clr-namespace:ModeMeter.Converters"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -30,44 +31,144 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="5*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
                 <Label Content="Analysis Length (seconds):" Margin="2"/>
                 <TextBox Text="{Binding AnalysisLength}" VerticalAlignment="Center" Margin="130,2,2,2" Width="100"/>
             </StackPanel>
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="2">
                 <Label Content="Retroactive Continuity:" Margin="2"/>
                 <Label Content="Status" Margin="20,2,0,2"/>
                 <ComboBox ItemsSource="{Binding Source={StaticResource RetroactiveContinuityStatusTypeValues}}" Margin="5,2,2,2" Width="50" HorizontalAlignment="Left" Text="{Binding Status, Converter={StaticResource EnumToStringConverter11}}" VerticalContentAlignment="Center"/>
                 <Label Content="Maximum Length (seconds):" Margin="20,2,2,2" Visibility="{Binding Status, Converter={StaticResource RetroactiveContinuityStatusVisibilityConverter}}"/>
                 <TextBox Text="{Binding MaxLength}" VerticalAlignment="Center" Margin="2" Width="100" Visibility="{Binding Status, Converter={StaticResource RetroactiveContinuityStatusVisibilityConverter}}"/>
             </StackPanel>
-            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
-                <Label Content="Event Robustness" Margin="2"/>
-                <CheckBox IsChecked="{Binding ShowEventDetectionParameters}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="2">
+                <Label Content="Forced Oscillation Robust" Margin="2"/>
+                <CheckBox IsChecked="{Binding ShowFOParameters}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"/>
+                <TextBlock Text="Implemented for YW-ARMA+S, LS-ARMA+S, STLS+S" Margin="25,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
-            <!--<StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Margin="2">
-                <Label Content="Damping-Ratio Detection Threshold (%): " Margin="2"/>
-                <TextBox Text="{Binding DampRatioThreshold}" VerticalAlignment="Center" Margin="2" Width="100"/>
-            </StackPanel>-->
-            <GroupBox Header="Methods" Grid.Row="3" Grid.Column="0" Margin="2,0,0,0">
+            <GroupBox Header="FO Detection Parameters" Grid.Row="3" Margin="2,0,0,0" Visibility="{Binding ShowFOParameters, Converter={StaticResource BooleanVisibilityConverter}}">
+                <local:FOParametersView DataContext="{Binding FODetectorParameters}"/>
+            </GroupBox>
+            <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
+                <Label Content="Transient Robust" Margin="2"/>
+                <CheckBox IsChecked="{Binding ShowRMSEnergyTransientParameters}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"/>
+                <TextBlock Text="Implemented for YW-ARMA, YW-ARMA+S, LS-ARMA, LS-ARMA+S" Margin="25,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <GroupBox Header="Transient Robust Parameters" Grid.Row="5" Margin="2,0,0,0" Visibility="{Binding ShowRMSEnergyTransientParameters, Converter={StaticResource BooleanVisibilityConverter}}">
+                <local:TransientRobustParameters DataContext="{Binding EventDetectionParameters}"/>
+            </GroupBox>
+            <GroupBox Header="Methods" Grid.Row="6" Margin="2,0,0,0">
                 <StackPanel Orientation="Vertical" Margin="2">
                     <Button Content="Add A Method" Margin="50,0" Command="{Binding AddAMethod}"/>
                     <local:MethodsView DataContext="{Binding Methods}"/>
                 </StackPanel>
             </GroupBox>
-            <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="0">
-                <GroupBox Header="FO Detection Parameters" Visibility="{Binding Path=IsFODetecotrParametersVisible, Converter={StaticResource BooleanVisibilityConverter}}" Margin="2">
-                    <local:FOParametersView DataContext="{Binding FODetectorParameters}"/>
-                </GroupBox>
+            <GroupBox Grid.Row="7" Margin="2,0,0,0" Header="Signal Selection">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Mode Meter" Grid.Column="0" Margin="2" Focusable="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <local:ModeSignalSelectionView DataContext="{Binding PMUs}" Grid.Row="0"/>
+                            <Border Grid.Row="1" GotFocus="GroupBox_GotFocus" LostFocus="GroupBox_LostFocus" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                                    </i:EventTrigger>
+                                    <!--<i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                                    </i:EventTrigger>-->
+                                </i:Interaction.Triggers>
+                                <TextBlock></TextBlock>
+                            </Border>
+                        </Grid>
+                            <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding PMUs}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
+                    </GroupBox>
+                    <GroupBox Header="Forced Oscillation Detection" Focusable="True" Grid.Column="1" Margin="2" Visibility="{Binding ShowFOParameters, Converter={StaticResource BooleanVisibilityConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <local:ModeSignalSelectionView DataContext="{Binding FODetectorParameters.PMUs}" Grid.Row="0"/>
+                            <Border Grid.Row="1" GotFocus="GroupBox_GotFocus" LostFocus="GroupBox_LostFocus" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <TextBlock></TextBlock>
+                            </Border>
+                        </Grid>
+                        <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding FODetectorParameters.PMUs}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
+                    </GroupBox>
+                    <GroupBox Header="RMS Energy Transient Detection" Focusable="True" Grid.Column="2" Margin="2" Visibility="{Binding ShowRMSEnergyTransientParameters, Converter={StaticResource BooleanVisibilityConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <local:ModeSignalSelectionView DataContext="{Binding EventDetectionParameters.PMUs}" Grid.Row="0"/>
+                            <Border Grid.Row="1" GotFocus="GroupBox_GotFocus" LostFocus="GroupBox_LostFocus" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <TextBlock></TextBlock>
+                            </Border>
+                        </Grid>
+                            <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.ModePMUSignalBoxSelected}" CommandParameter="{Binding EventDetectionParameters.PMUs}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
+                    </GroupBox>
+                </Grid>
+            </GroupBox>
+
+
+            <!--<StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" Margin="0">
                 <GroupBox Header="Event Detection Parameters" Visibility="{Binding ShowEventDetectionParameters, Converter={StaticResource BooleanVisibilityConverter}}" Margin="2,5">
                     <local:EventDetectionParametersView DataContext="{Binding EventDetectionParameters}"/>
                 </GroupBox>
-            </StackPanel>
+            </StackPanel>-->
         </Grid>
     </GroupBox>
 </UserControl>

@@ -9,10 +9,10 @@ Imports BAWGUI.Utilities
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.Core.Models
-Imports VoltageStability.ViewModels
 Imports ModeMeter.ViewModels
-Imports VoltageStability.Models
 Imports ModeMeter.Models
+Imports DissipationEnergyFlow.ViewModels
+Imports BAWGUI.CoordinateMapping.ViewModels
 
 'Public Shared HighlightColor = Brushes.Cornsilk
 'Imports BAWGUI.DataConfig
@@ -88,6 +88,7 @@ Namespace ViewModels
 
             '_inputFileDirTree = New ObservableCollection(Of Folder)
             _signalMgr = SignalManager.Instance
+            _signalMgr.cleanUp()
 
             '_allPMUs = New ObservableCollection(Of String)
 
@@ -735,6 +736,9 @@ Namespace ViewModels
         '    Return pmuSignalTreeGroupedBySamplingRate
         'End Function
 
+        Private _powerTypeDictionary As Dictionary(Of String, String)
+        Private _lastCustPMUname As String
+
         Private _lastInputFolderLocation As String
         Private _browseInputFileDir As ICommand
         Public Property BrowseInputFileDir As ICommand
@@ -784,6 +788,9 @@ Namespace ViewModels
             ElseIf obj.FileType = DataFileType.OpenHistorian Then
                 openFileDialog.DefaultExt = ".xml"
                 openFileDialog.Filter = "openHistorian Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            ElseIf obj.FileType = DataFileType.OpenPDC Then
+                openFileDialog.DefaultExt = ".xml"
+                openFileDialog.Filter = "openPDC Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
             End If
             If _lastInputFolderLocation Is Nothing Then
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory
@@ -921,15 +928,6 @@ Namespace ViewModels
                         PostProcessConfigure = New PostProcessCustomizationConfig(config.PostProcessConfigure, _signalMgr)
                         DetectorConfigure = New DetectorConfig(config.DetectorConfigure, _signalMgr)
 
-                        'read voltage stability settings from config file.
-                        Dim vsDetectors = New VoltageStabilityDetectorGroupReader(Run.Model.ConfigFilePath).GetDetector
-                        'add voltage stability detectors to te detector list in the settings.
-                        If vsDetectors.Count > 0 Then
-                            DetectorConfigure.ResultUpdateIntervalVisibility = System.Windows.Visibility.Visible
-                            For Each detector In vsDetectors
-                                DetectorConfigure.DetectorList.Add(New VoltageStabilityDetectorViewModel(detector, _signalMgr))
-                            Next
-                        End If
                         Dim modeMeters = New ModeMeterReader(Run.Model.ConfigFilePath).GetDetectors
                         If modeMeters.Count > 0 Then
                             For Each mm In modeMeters
@@ -937,8 +935,9 @@ Namespace ViewModels
                             Next
                             ModeMeterXmlWriter.CheckMMDirsStatus(Run.Model, modeMeters)
                         End If
-
-
+                        _signalMgr.DistinctMappingSignal()
+                        'SiteMappingVM.SignalCoordsMappingVM = New SignalCoordsMappingViewModel(CoordsTableVM.SiteCoords, _signalMgr, config.SignalSiteMappingConfig);
+                        RaiseEvent DEFAreasChanged()
                     Catch ex As Exception
                         Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK)
                     End Try
@@ -1058,8 +1057,8 @@ Namespace ViewModels
         '            Dim t2 = Convert.ToDouble(time2)
         '            fileInfo.SamplingRate = Math.Round((1 / (t2 - t1)) / 10) * 10.ToString
         '        Catch ex As Exception
-        '            Dim t1 = DateTime.Parse(time1)
-        '            Dim t2 = DateTime.Parse(time2)
+        '            Dim t1 = DateTime.Parse(time1, CultureInfo.InvariantCulture)
+        '            Dim t2 = DateTime.Parse(time2, CultureInfo.InvariantCulture)
         '            Dim dif = t2.Subtract(t1).TotalSeconds
         '            fileInfo.SamplingRate = Math.Round((1 / dif) / 10) * 10.ToString
         '        End Try
@@ -1384,20 +1383,17 @@ Namespace ViewModels
                             Forms.MessageBox.Show("Please choose a way to specify sampling rate for Multirate!", "Error!", MessageBoxButtons.OK)
                             _addLog("Error selecting signal(s) for Multirate! No sampling rate specified!")
                         End If
-                    ElseIf TypeOf _currentSelectedStep Is VoltageStabilityDetectorViewModel Then
-                        'If obj.SignalList.Count > 0 Then
-                        '    Throw New Exception("Only single signal selection is allowed.")
-                        'End If
-                        Try
-                            _currentSelectedStep.ChangeASignal(obj)
-                        Catch ex As Exception
-                            Forms.MessageBox.Show("Error changing voltage stability detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
-                        End Try
                     ElseIf TypeOf _currentSelectedStep Is SmallSignalStabilityToolViewModel Then
                         Try
                             _currentSelectedStep.ChangeSignalSelection(obj)
                         Catch ex As Exception
                             Forms.MessageBox.Show("Error changing mode meter signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
+                        End Try
+                    ElseIf TypeOf _currentSelectedStep Is DEFDetectorViewModel Then
+                        Try
+                            _currentSelectedStep.ChangeSignalSelection(obj)
+                        Catch ex As Exception
+                            Forms.MessageBox.Show("Error changing dissipation energy flow detector signal. Original message: " & ex.Message, "Error!", MessageBoxButtons.OK)
                         End Try
                     ElseIf TypeOf _currentSelectedStep Is DetectorBase Then
                         Try
@@ -1631,14 +1627,19 @@ Namespace ViewModels
             For Each inputOutputPair In CurrentSelectedStep.OutputInputMappingPair
                 If inputOutputPair.Value.Count > 0 Then
                     Dim input = inputOutputPair.Value(0)
-                    If input.IsValid AndAlso input.TypeAbbreviation.Length = 3 Then
-                        Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
-                        If letter2 = "P" Then
-                            inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                    inputOutputPair.Key.TypeAbbreviation = "OTHER"
+                    inputOutputPair.Key.Unit = "O"
+                    If input.IsValid Then
+                        'If input.TypeAbbreviation = "CP" Then
+                        '    inputOutputPair.Key.Unit = "RAD"
+                        If input.TypeAbbreviation.Length = 3 Then
+                                Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
+                                If letter2 = "P" Then
+                                    inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                                    inputOutputPair.Key.Unit = "RAD"
+                                End If
+                            End If
                         End If
-                    Else
-                        inputOutputPair.Key.TypeAbbreviation = "OTHER"
-                    End If
                 End If
             Next
         End Sub
@@ -1648,8 +1649,10 @@ Namespace ViewModels
                 If inputOutputPair.Value.Count > 0 Then
                     If CurrentSelectedStep.Exponent = 1 OrElse inputOutputPair.Value(0).TypeAbbreviation = "SC" Then
                         inputOutputPair.Key.TypeAbbreviation = inputOutputPair.Value(0).TypeAbbreviation
+                        inputOutputPair.Key.Unit = inputOutputPair.Value(0).Unit
                     Else
                         inputOutputPair.Key.TypeAbbreviation = "OTHER"
+                        inputOutputPair.Key.Unit = "O"
                     End If
                 End If
             Next
@@ -1657,6 +1660,7 @@ Namespace ViewModels
 
         Private Sub _checkMultiplicationCustomizationOutputTypeAndSamplingRate()
             Dim type = ""
+            Dim unit = ""
             Dim countNonScalarType = 0
             Dim rate = -1
             For Each signal In CurrentSelectedStep.InputChannels
@@ -1665,22 +1669,28 @@ Namespace ViewModels
                     If String.IsNullOrEmpty(type) Then
                         type = signal.TypeAbbreviation
                     End If
+                    If String.IsNullOrEmpty(unit) Then
+                        unit = signal.Unit
+                    End If
                 End If
                 If rate = -1 Then
                     rate = signal.SamplingRate
                 ElseIf rate <> signal.SamplingRate Then
                     _addLog("Sampling rate of all factors in multiplication customization have to be the same. Different sampling rate found in multiplication customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                    Throw New Exception("Sampling rate of all terms in multiplication customization have to be the same. Different sampling rate found in multiplication customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
+                    'Throw New Exception("Sampling rate of all terms in multiplication customization have to be the same. Different sampling rate found in multiplication customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     Exit Sub
                 End If
             Next
             If countNonScalarType = 0 Then
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "SC"
+                CurrentSelectedStep.OutputChannels(0).Unit = "SC"
             ElseIf countNonScalarType = 1 Then
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = type
+                CurrentSelectedStep.OutputChannels(0).Unit = unit
             Else
                 CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                CurrentSelectedStep.OutputChannels(0).Unit = "O"
             End If
             If rate <> -1 Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = rate
@@ -1688,34 +1698,48 @@ Namespace ViewModels
         End Sub
 
         Private Sub _checkDivisionCustomizationOutputTypeAndSamplingRate()
-            CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-            If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
-                If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
-                    If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
-                        If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
-                            _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                            Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
-                        End If
-                    End If
-                End If
-            End If
-            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
+            'If CurrentSelectedStep.Divisor.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation IsNot Nothing Then
+            '    If CurrentSelectedStep.Divisor.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Divisor.TypeAbbreviation <> "OTHER" Then
+            '        If CurrentSelectedStep.Dividend.TypeAbbreviation <> "SC" AndAlso CurrentSelectedStep.Dividend.TypeAbbreviation <> "OTHER" Then
+            '            If CurrentSelectedStep.Divisor.TypeAbbreviation <> CurrentSelectedStep.Dividend.TypeAbbreviation Then
+            '                _addLog("Type of Divisor and Dividend should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+            '                Throw New Exception("Type of Dividend and Divisor should match! Different signal type found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Divisor.TypeAbbreviation & " and " & CurrentSelectedStep.Dividend.TypeAbbreviation & ".")
+            '            End If
+            '        End If
+            '    End If
+            'End If
+            If CurrentSelectedStep.Divisor.IsValid AndAlso CurrentSelectedStep.Dividend.IsValid AndAlso CurrentSelectedStep.Divisor.Unit IsNot Nothing AndAlso CurrentSelectedStep.Dividend.Unit IsNot Nothing AndAlso CurrentSelectedStep.Divisor.SamplingRate = CurrentSelectedStep.Dividend.SamplingRate Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Divisor.SamplingRate
+                If CurrentSelectedStep.Divisor.TypeAbbreviation = "SC" Then
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = CurrentSelectedStep.Dividend.TypeAbbreviation
+                    CurrentSelectedStep.OutputChannels(0).Unit = CurrentSelectedStep.Dividend.Unit
+                ElseIf CurrentSelectedStep.Divisor.Unit = CurrentSelectedStep.Dividend.Unit Then
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "SC"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "SC"
+                Else
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                    CurrentSelectedStep.OutputChannels(0).Unit = "O"
+                End If
             Else
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                _addLog("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
-                Throw New Exception("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
+                _addLog("Dividend and Divisor have to have units and their sampling rate should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
+                'Throw New Exception("Sampling rate of Dividend and Divisor should match! Different Sampling rate found in Division customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Divisor.SamplingRate & " and " & CurrentSelectedStep.Dividend.SamplingRate & ".")
             End If
         End Sub
 
         Private Sub _checkSubtractionCustomizationOutputTypeAndSamplingRate()
             CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+            CurrentSelectedStep.OutputChannels(0).Unit = "O"
             If CurrentSelectedStep.Subtrahend.TypeAbbreviation IsNot Nothing AndAlso CurrentSelectedStep.Minuend.TypeAbbreviation IsNot Nothing Then
                 If CurrentSelectedStep.Subtrahend.TypeAbbreviation <> CurrentSelectedStep.Minuend.TypeAbbreviation Then
-                    _addLog("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
-                    Throw New Exception("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
+                    '_addLog("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
+                    'Throw New Exception("Type of subtrahend and minuend should match! Different signal type found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & CurrentSelectedStep.Subtrahend.TypeAbbreviation & " and " & CurrentSelectedStep.Minuend.TypeAbbreviation & ".")
                 Else
                     CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = CurrentSelectedStep.Subtrahend.TypeAbbreviation
+                End If
+                If CurrentSelectedStep.Subtrahend.Unit <> CurrentSelectedStep.Minuend.Unit Then
+                Else
+                    CurrentSelectedStep.OutputChannels(0).Unit = CurrentSelectedStep.Subtrahend.Unit
                 End If
             End If
             If CurrentSelectedStep.Subtrahend.IsValid AndAlso CurrentSelectedStep.Minuend.IsValid Then
@@ -1723,8 +1747,8 @@ Namespace ViewModels
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = CurrentSelectedStep.Subtrahend.SamplingRate
                 Else
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                    _addLog("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
-                    Throw New Exception("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
+                    '_addLog("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
+                    'Throw New Exception("Sampling rate of subtrahend and minuend should match! Different Sampling rate found in subtraction customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & CurrentSelectedStep.Subtrahend.SamplingRate & " and " & CurrentSelectedStep.Minuend.SamplingRate & ".")
                 End If
             End If
             'If CurrentSelectedStep.SubtrahendOrDivisor.IsValid AndAlso CurrentSelectedStep.MinuendOrDividend.IsValid AndAlso CurrentSelectedStep.SubtrahendOrDivisor.SamplingRate = CurrentSelectedStep.MinuendOrDividend.SamplingRate Then
@@ -1739,13 +1763,23 @@ Namespace ViewModels
         Private Sub _checkAdditionCustomizationOutputTypeAndSamplingRate()
             Dim type = ""
             Dim rate = -1
+            Dim unit = ""
             For Each signal In CurrentSelectedStep.InputChannels
                 If String.IsNullOrEmpty(type) Then
                     type = signal.TypeAbbreviation
                 ElseIf type <> signal.TypeAbbreviation Then
                     _addLog("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                     CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
-                    Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
+                    CurrentSelectedStep.OutputChannels(0).Unit = "O"
+                    'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
+                    Exit Sub
+                End If
+                If String.IsNullOrEmpty(unit) Then
+                    unit = signal.TypeAbbreviation
+                ElseIf unit <> signal.TypeAbbreviation Then
+                    CurrentSelectedStep.OutputChannels(0).Unit = "O"
+                    CurrentSelectedStep.OutputChannels(0).TypeAbbreviation = "OTHER"
+                    'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
                     Exit Sub
                 End If
                 If rate = -1 Then
@@ -1753,7 +1787,7 @@ Namespace ViewModels
                 ElseIf rate <> signal.SamplingRate Then
                     _addLog("Sampling rate of all terms in addition customization have to be the same. Different sampling rate found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
-                    Throw New Exception("Sampling rate of all terms in addition customization have to be the same. Different sampling rate found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
+                    'Throw New Exception("Sampling rate of all terms in addition customization have to be the same. Different sampling rate found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
                     Exit Sub
                 End If
             Next
@@ -1808,75 +1842,71 @@ Namespace ViewModels
             _currentFocusedPhasorSignalForPowerCalculation = Nothing
         End Sub
 
-        ''' <summary>
-        ''' This method is for the subtraction or division cutomization steps
-        ''' </summary>
-        ''' <param name="obj"></param>
-        Private Sub _setFocusedTextboxSubtraction(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
-                Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
-            Else
-                If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
-                    Throw New Exception("Error! Please select a valid text box for this input signal!")
-                ElseIf _currentSelectedStep.CurrentCursor = "Minuend" Then
-                    If _currentSelectedStep.Subtrahend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Subtrahend Then
-                        Throw New Exception("Minuend cannot be the same as the subtrahend!")
-                    End If
-                    If obj.SignalSignature.IsChecked Then       ' check box checked
-                        If _currentSelectedStep.Minuend IsNot Nothing And _currentSelectedStep.Minuend IsNot _currentSelectedStep.Subtrahend Then  ' if the current text box has content and not equal to the divisor
-                            _currentSelectedStep.Minuend.IsChecked = False
-                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Minuend)
-                        End If
-                        _currentSelectedStep.Minuend = obj.SignalSignature
-                        If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                        End If
-                    Else                                        ' check box unchecked
-                        If _currentSelectedStep.Minuend Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
-                            If _currentSelectedStep.Subtrahend Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
-                                obj.SignalSignature.IsChecked = True
-                            Else
-                                _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                            End If
-                            Dim dummy = New SignalSignatureViewModel("", "")
-                            dummy.IsValid = False
-                            _currentSelectedStep.Minuend = dummy
-                        End If
-                    End If
-                    _currentSelectedStep.CurrentCursor = ""
-                    _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-                    _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-                ElseIf _currentSelectedStep.CurrentCursor = "Subtrahend" Then
-                    If _currentSelectedStep.Minuend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Minuend Then
-                        Throw New Exception("Subtrahend cannot be the same as the minuend!")
-                    End If
-                    If obj.SignalSignature.IsChecked Then
-                        If _currentSelectedStep.Subtrahend IsNot Nothing And _currentSelectedStep.Subtrahend IsNot _currentSelectedStep.Minuend Then
-                            _currentSelectedStep.Subtrahend.IsChecked = False
-                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Subtrahend)
-                        End If
-                        _currentSelectedStep.Subtrahend = obj.SignalSignature
-                        If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
-                        End If
-                    Else
-                        If _currentSelectedStep.Subtrahend Is obj.SignalSignature Then
-                            If _currentSelectedStep.Minuend Is obj.SignalSignature Then
-                                obj.SignalSignature.IsChecked = True
-                            Else
-                                _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
-                            End If
-                            Dim dummy = New SignalSignatureViewModel("", "")
-                            dummy.IsValid = False
-                            _currentSelectedStep.Subtrahend = dummy
-                        End If
-                    End If
-                    _currentSelectedStep.CurrentCursor = ""
-                    _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
-                    _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-                End If
-            End If
-        End Sub
+        'Private Sub _setFocusedTextboxSubtraction(obj As SignalTypeHierachy)
+        '    If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
+        '        Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
+        '    Else
+        '        If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
+        '            Throw New Exception("Error! Please select a valid text box for this input signal!")
+        '        ElseIf _currentSelectedStep.CurrentCursor = "Minuend" Then
+        '            If _currentSelectedStep.Subtrahend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Subtrahend Then
+        '                Throw New Exception("Minuend cannot be the same as the subtrahend!")
+        '            End If
+        '            If obj.SignalSignature.IsChecked Then       ' check box checked
+        '                If _currentSelectedStep.Minuend IsNot Nothing And _currentSelectedStep.Minuend IsNot _currentSelectedStep.Subtrahend Then  ' if the current text box has content and not equal to the divisor
+        '                    _currentSelectedStep.Minuend.IsChecked = False
+        '                    _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Minuend)
+        '                End If
+        '                _currentSelectedStep.Minuend = obj.SignalSignature
+        '                If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+        '                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+        '                End If
+        '            Else                                        ' check box unchecked
+        '                If _currentSelectedStep.Minuend Is obj.SignalSignature Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
+        '                    If _currentSelectedStep.Subtrahend Is obj.SignalSignature Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
+        '                        obj.SignalSignature.IsChecked = True
+        '                    Else
+        '                        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+        '                    End If
+        '                    Dim dummy = New SignalSignatureViewModel("", "")
+        '                    dummy.IsValid = False
+        '                    _currentSelectedStep.Minuend = dummy
+        '                End If
+        '            End If
+        '            _currentSelectedStep.CurrentCursor = ""
+        '            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+        '            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+        '        ElseIf _currentSelectedStep.CurrentCursor = "Subtrahend" Then
+        '            If _currentSelectedStep.Minuend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Minuend Then
+        '                Throw New Exception("Subtrahend cannot be the same as the minuend!")
+        '            End If
+        '            If obj.SignalSignature.IsChecked Then
+        '                If _currentSelectedStep.Subtrahend IsNot Nothing And _currentSelectedStep.Subtrahend IsNot _currentSelectedStep.Minuend Then
+        '                    _currentSelectedStep.Subtrahend.IsChecked = False
+        '                    _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Subtrahend)
+        '                End If
+        '                _currentSelectedStep.Subtrahend = obj.SignalSignature
+        '                If Not _currentSelectedStep.InputChannels.Contains(obj.SignalSignature) Then
+        '                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+        '                End If
+        '            Else
+        '                If _currentSelectedStep.Subtrahend Is obj.SignalSignature Then
+        '                    If _currentSelectedStep.Minuend Is obj.SignalSignature Then
+        '                        obj.SignalSignature.IsChecked = True
+        '                    Else
+        '                        _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+        '                    End If
+        '                    Dim dummy = New SignalSignatureViewModel("", "")
+        '                    dummy.IsValid = False
+        '                    _currentSelectedStep.Subtrahend = dummy
+        '                End If
+        '            End If
+        '            _currentSelectedStep.CurrentCursor = ""
+        '            _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+        '            _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+        '        End If
+        '    End If
+        'End Sub
         'Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
         '    If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
         '        Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
@@ -1947,33 +1977,123 @@ Namespace ViewModels
         '    End If
         '    '_signalMgr.DetermineFileDirCheckableStatus()
         'End Sub
-        Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
+        ''' <summary>
+        ''' This method is for the subtraction or division cutomization steps
+        ''' </summary>
+        ''' <param name="obj"></param>
+        Private Sub _setFocusedTextboxSubtraction(obj As SignalTypeHierachy)
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+            Else 'if selected a group of signal
+                _keepOriginalSelection(obj)
                 Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
+            End If
+            If sgnl.PMUName Is Nothing OrElse sgnl.TypeAbbreviation Is Nothing Then
+                _keepOriginalSelection(obj)
+                Throw New Exception("Error! Signal selected is not valid.")
+            Else
+                If _currentSelectedStep.CurrentCursor = "" Then ' if no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
+                    Throw New Exception("Error! Please select a valid text box for this input signal!")
+                ElseIf _currentSelectedStep.CurrentCursor = "Minuend" Then
+                    If _currentSelectedStep.Subtrahend IsNot Nothing AndAlso sgnl = _currentSelectedStep.Subtrahend Then
+                        Throw New Exception("Minuend cannot be the same as the subtrahend!")
+                    End If
+                    If obj.SignalSignature.IsChecked Then       ' check box checked
+                        If _currentSelectedStep.Minuend IsNot Nothing And _currentSelectedStep.Minuend IsNot _currentSelectedStep.Subtrahend Then  ' if the current text box has content and not equal to the divisor
+                            _currentSelectedStep.Minuend.IsChecked = False
+                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Minuend)
+                        End If
+                        _currentSelectedStep.Minuend = sgnl
+                        If Not _currentSelectedStep.InputChannels.Contains(sgnl) Then
+                            _currentSelectedStep.InputChannels.Add(sgnl)
+                        End If
+                    Else                                        ' check box unchecked
+                        If _currentSelectedStep.Minuend Is sgnl Then   ' if the content of the text box is the same as the clicked item and the checkbox is unchecked, means user wants to delete the content in the textbox
+                            If _currentSelectedStep.Subtrahend Is sgnl Then     ' however, if the textbox has the same contect as the divisor or subtrahend, we cannot uncheck the clicked item
+                                sgnl.IsChecked = True
+                            Else
+                                _currentSelectedStep.InputChannels.Remove(sgnl)
+                            End If
+                            Dim dummy = New SignalSignatureViewModel("", "")
+                            dummy.IsValid = False
+                            _currentSelectedStep.Minuend = dummy
+                        End If
+                    End If
+                    _currentSelectedStep.CurrentCursor = ""
+                    _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                    _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+                ElseIf _currentSelectedStep.CurrentCursor = "Subtrahend" Then
+                    If _currentSelectedStep.Minuend IsNot Nothing AndAlso sgnl = _currentSelectedStep.Minuend Then
+                        Throw New Exception("Subtrahend cannot be the same as the minuend!")
+                    End If
+                    If obj.SignalSignature.IsChecked Then
+                        If _currentSelectedStep.Subtrahend IsNot Nothing And _currentSelectedStep.Subtrahend IsNot _currentSelectedStep.Minuend Then
+                            _currentSelectedStep.Subtrahend.IsChecked = False
+                            _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Subtrahend)
+                        End If
+                        _currentSelectedStep.Subtrahend = sgnl
+                        If Not _currentSelectedStep.InputChannels.Contains(sgnl) Then
+                            _currentSelectedStep.InputChannels.Add(sgnl)
+                        End If
+                    Else
+                        If _currentSelectedStep.Subtrahend Is sgnl Then
+                            If _currentSelectedStep.Minuend Is sgnl Then
+                                sgnl.IsChecked = True
+                            Else
+                                _currentSelectedStep.InputChannels.Remove(sgnl)
+                            End If
+                            Dim dummy = New SignalSignatureViewModel("", "")
+                            dummy.IsValid = False
+                            _currentSelectedStep.Subtrahend = dummy
+                        End If
+                    End If
+                    _currentSelectedStep.CurrentCursor = ""
+                    _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
+                    _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
+                End If
+            End If
+        End Sub
+
+        Private Sub _setFocusedTextboxDivision(obj As SignalTypeHierachy)
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+            Else 'if selected a group of signal
+                _keepOriginalSelection(obj)
+                Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
+            End If
+            If sgnl.PMUName Is Nothing OrElse sgnl.TypeAbbreviation Is Nothing Then
+                _keepOriginalSelection(obj)
+                Throw New Exception("Error! Signal selected is not valid.")
             Else
                 If _currentSelectedStep.CurrentCursor = "" Then 'If no textbox selected, textbox lost it focus right after a click any where else, so only click immediate follow a textbox selection would work
                     Throw New Exception("Error! Please select a valid text box (Dividend or Divisor) for this input signal!")
 
                 ElseIf _currentSelectedStep.CurrentCursor = "Dividend" Then
-                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                    If sgnl.IsChecked Then ' If a Signal box is selected
                         If _currentSelectedStep.Dividend IsNot Nothing Then ' If the current Dividend box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
                         End If
-                        If _currentSelectedStep.Divisor IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Divisor Then
+                        If _currentSelectedStep.Divisor IsNot Nothing AndAlso sgnl = _currentSelectedStep.Divisor Then
                             ' If Dividend and Divisor are the same
-                            _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
+                            _currentSelectedStep.InputChannels.Remove(sgnl)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
                             _currentSelectedStep.Dividend = dummy
                             Throw New Exception("Error! Dividend cannot be the same as the Divisor!")
 
                         End If
-                        _currentSelectedStep.Dividend = obj.SignalSignature ' Assign the selected signal to Dividend
+                        _currentSelectedStep.Dividend = sgnl ' Assign the selected signal to Dividend
                         If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Dividend) Then
                             _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Dividend)
                         End If
                     Else ' If a Signal box is unselected
-                        If _currentSelectedStep.Dividend Is obj.SignalSignature Then ' If the current Dividend box has PMU and signal names
+                        If _currentSelectedStep.Dividend Is sgnl Then ' If the current Dividend box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Dividend)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
@@ -1985,11 +2105,11 @@ Namespace ViewModels
                     _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
 
                 ElseIf _currentSelectedStep.CurrentCursor = "Divisor" Then
-                    If obj.SignalSignature.IsChecked Then ' If a Signal box is selected
+                    If sgnl.IsChecked Then ' If a Signal box is selected
                         If _currentSelectedStep.Divisor IsNot Nothing Then ' If the current Divisor box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
                         End If
-                        If _currentSelectedStep.Dividend IsNot Nothing AndAlso obj.SignalSignature = _currentSelectedStep.Dividend Then
+                        If _currentSelectedStep.Dividend IsNot Nothing AndAlso sgnl = _currentSelectedStep.Dividend Then
                             ' If Dividend and Divisor are the same
                             _currentSelectedStep.InputChannels.Remove(obj.SignalSignature)
                             Dim dummy = New SignalSignatureViewModel("", "")
@@ -1997,12 +2117,12 @@ Namespace ViewModels
                             _currentSelectedStep.Divisor = dummy
                             Throw New Exception("Error! Divisor cannot be the same as the Dividend!")
                         End If
-                        _currentSelectedStep.Divisor = obj.SignalSignature ' Assign the selected signal to Divisor
+                        _currentSelectedStep.Divisor = sgnl ' Assign the selected signal to Divisor
                         If Not _currentSelectedStep.InputChannels.Contains(_currentSelectedStep.Divisor) Then
                             _currentSelectedStep.InputChannels.Add(_currentSelectedStep.Divisor)
                         End If
                     Else ' If a Signal box is unselected
-                        If _currentSelectedStep.Divisor Is obj.SignalSignature Then ' If the current Divisor box has PMU and signal names
+                        If _currentSelectedStep.Divisor Is sgnl Then ' If the current Divisor box has PMU and signal names
                             _currentSelectedStep.InputChannels.Remove(_currentSelectedStep.Divisor)
                             Dim dummy = New SignalSignatureViewModel("", "")
                             dummy.IsValid = False
@@ -2320,32 +2440,37 @@ Namespace ViewModels
         End Function
 
         Private Sub _changePhasorSignalForPowerCalculationCustomization(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 OrElse obj.SignalSignature.PMUName Is Nothing OrElse obj.SignalSignature.TypeAbbreviation Is Nothing Then    'if selected a group of signal
-                Throw New Exception("Error! Please select valid signal for this textbox! We need a single signal, cannot be group of signals!")
+
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+            Else 'if selected a group of signal
+                _keepOriginalSelection(obj)
+                Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
+            End If
+            If sgnl.PMUName Is Nothing OrElse sgnl.TypeAbbreviation Is Nothing Then
+                _keepOriginalSelection(obj)
+                Throw New Exception("Error! Signal selected is not valid.")
             Else
 
-                If obj.SignalSignature.TypeAbbreviation.Length <> 3 OrElse obj.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "P" Then
-                    '_keepOriginalSelection(obj)
-                    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not a phasor signal.")
+                If sgnl.TypeAbbreviation.Length <> 3 OrElse sgnl.TypeAbbreviation.Substring(1, 1) <> "P" Then
+                    _addLog("Selected signal: " & sgnl.SignalName & " is not a phasor signal.")
                     Throw New Exception("Signal selection is not Valid! Please select a signal of type phasor.")
                 ElseIf _currentFocusedPhasorSignalForPowerCalculation Is Nothing Then
-                    '_keepOriginalSelection(obj)
                     Throw New Exception("No textbox selected!")
-                    'ElseIf _currentFocusedPhasorSignalForPowerCalculation.IsValid AndAlso (_currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation.Substring(0) <> obj.SignalSignature.TypeAbbreviation.Substring(0)) Then
-                    '    _keepOriginalSelection(obj)
-                    '    _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
-                    '    Throw New Exception("Signal selection is not Valid! Please select a signal of type: " & _currentFocusedPhasorSignalForPowerCalculation.TypeAbbreviation)
-                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) = _currentFocusedPhasorSignalForPowerCalculation Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "V" Then
+                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) Is _currentFocusedPhasorSignalForPowerCalculation Then
+                    If sgnl.TypeAbbreviation.Substring(0, 1) = "V" Then
                         Dim oldPhasor = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
                         If _currentSelectedStep.InputChannels.Contains(oldPhasor) Then
                             oldPhasor.IsChecked = False
                             _currentSelectedStep.InputChannels.Remove(oldPhasor)
                         End If
                         _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldPhasor)
-                        If obj.SignalSignature.IsChecked Then
-                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, obj.SignalSignature)
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If sgnl.IsChecked Then
+                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, sgnl)
+                            _currentSelectedStep.InputChannels.Add(sgnl)
                             '_currentSelectedStep.OutputInputMappingPair(0).Key.SamplingRate = obj.SignalSignature.SamplingRate
                         Else
                             'Dim dummy = New SignalSignatures("PleaseAddVoltagePhasor", "PleaseAddVoltagePhasor")
@@ -2354,20 +2479,20 @@ Namespace ViewModels
                             _currentSelectedStep.OutputInputMappingPair(0).Key.SamplingRate = -1
                         End If
                     Else
-                        _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type Voltage phasor ")
+                        _addLog("Selected signal: " & sgnl.SignalName & " is not of signal type Voltage phasor ")
                         Throw New Exception("Signal selection is not Valid! Please select a signal of voltage phasor")
                     End If
-                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(1) = _currentFocusedPhasorSignalForPowerCalculation Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 1) = "I" Then
+                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(1) Is _currentFocusedPhasorSignalForPowerCalculation Then
+                    If sgnl.TypeAbbreviation.Substring(0, 1) = "I" Then
                         Dim oldPhasor = _currentSelectedStep.OutputInputMappingPair(0).Value(1)
                         If _currentSelectedStep.InputChannels.Contains(oldPhasor) Then
                             oldPhasor.IsChecked = False
                             _currentSelectedStep.InputChannels.Remove(oldPhasor)
                         End If
                         _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldPhasor)
-                        If obj.SignalSignature.IsChecked Then
-                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, obj.SignalSignature)
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If sgnl.IsChecked Then
+                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, sgnl)
+                            _currentSelectedStep.InputChannels.Add(sgnl)
                             '_currentSelectedStep.OutputInputMappingPair(0).Key.SamplingRate = obj.SignalSignature.SamplingRate
                         Else
                             'Dim dummy = New SignalSignatures("PleaseAddCurrentPhasor", "PleaseAddVoltagePhasor")
@@ -2376,7 +2501,7 @@ Namespace ViewModels
                             _currentSelectedStep.OutputInputMappingPair(0).Key.SamplingRate = -1
                         End If
                     Else
-                        _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current phasor.")
+                        _addLog("Selected signal: " & sgnl.SignalName & " is not of signal type current phasor.")
                         Throw New Exception("Signal selection is not Valid! Please select a signal of current phasor.")
                     End If
                 Else
@@ -2399,18 +2524,26 @@ Namespace ViewModels
             '_signalMgr.DetermineFileDirCheckableStatus()
         End Sub
         Private Sub _changeMagAngSignalForPowerCalculationCustomization(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 Then
-                _addLog("Selected a group of signals! Signal group: " & obj.SignalSignature.SignalName & ", number of signals: " & obj.SignalList.Count & " .")
-                Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
-            ElseIf obj.SignalSignature.TypeAbbreviation.Length <> 3 OrElse (obj.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso obj.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "A") Then
-                _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not a magnitude or angle signal.")
+
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+            Else 'if selected a group of signal
+                _keepOriginalSelection(obj)
+                Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
+            End If
+            If sgnl.TypeAbbreviation.Length <> 3 OrElse (sgnl.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso sgnl.TypeAbbreviation.Substring(1, 1) <> "A") Then
+                _keepOriginalSelection(obj)
+                _addLog("Selected signal: " & sgnl.SignalName & " is not a magnitude or angle signal.")
                 Throw New Exception("Signal selection is not Valid! Please select a signal of VM, VA, IM or IA type.")
             Else
                 'If obj.SignalSignature.IsChecked Then       'add signal
                 If _currentFocusedPhasorSignalForPowerCalculation Is Nothing Then
                     Throw New Exception("No textbox selected!")
-                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) = _currentFocusedPhasorSignalForPowerCalculation Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) = "VM" Then
+                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(0) Is _currentFocusedPhasorSignalForPowerCalculation Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) = "VM" Then
                         Dim oldVM = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
                         'Dim oldVA = _currentSelectedStep.OutputInputMappingPair(0).Value(1)
                         If _currentSelectedStep.InputChannels.Contains(oldVM) Then
@@ -2423,9 +2556,9 @@ Namespace ViewModels
                         'End If
                         _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVM)
                         '_currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVA)
-                        If obj.SignalSignature.IsChecked Then
-                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, obj.SignalSignature)
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If sgnl.IsChecked Then
+                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(0, sgnl)
+                            _currentSelectedStep.InputChannels.Add(sgnl)
                             'Dim newVA = _findMatchingAng(obj.SignalSignature)
                             'If newVA Is Nothing Then
                             '    newVA = New SignalSignatures("NoMatchingAnglefound")
@@ -2445,11 +2578,11 @@ Namespace ViewModels
                             '    _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, dummyVA)
                         End If
                     Else
-                        _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type Voltage Magnitude.")
+                        _addLog("Selected signal: " & sgnl.SignalName & " is not of signal type Voltage Magnitude.")
                         Throw New Exception("Signal selection is not Valid! Please select a signal of voltage Magnitude.")
                     End If
-                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(1) = _currentFocusedPhasorSignalForPowerCalculation Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) = "VA" Then
+                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(1) Is _currentFocusedPhasorSignalForPowerCalculation Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) = "VA" Then
                         'Dim oldVM = _currentSelectedStep.OutputInputMappingPair(0).Value(0)
                         Dim oldVA = _currentSelectedStep.OutputInputMappingPair(0).Value(1)
                         'If _currentSelectedStep.InputChannels.Contains(oldVM) Then
@@ -2462,9 +2595,9 @@ Namespace ViewModels
                         End If
                         '_currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVM)
                         _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldVA)
-                        If obj.SignalSignature.IsChecked Then
-                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, obj.SignalSignature)
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If sgnl.IsChecked Then
+                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(1, sgnl)
+                            _currentSelectedStep.InputChannels.Add(sgnl)
                         Else
                             'Dim dummyVM = New SignalSignatures("PleaseAddVoltageMag")
                             'dummyVM.IsValid = False
@@ -2475,11 +2608,11 @@ Namespace ViewModels
                             '_currentSelectedStep.OutputInputMappingPair(0).Key.SamplingRate = -1
                         End If
                     Else
-                        _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type Voltage Angle.")
+                        _addLog("Selected signal: " & sgnl.SignalName & " is not of signal type Voltage Angle.")
                         Throw New Exception("Signal selection is not Valid! Please select a signal of voltage Angle.")
                     End If
-                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(2) = _currentFocusedPhasorSignalForPowerCalculation Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) = "IM" Then
+                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(2) Is _currentFocusedPhasorSignalForPowerCalculation Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) = "IM" Then
                         Dim oldIM = _currentSelectedStep.OutputInputMappingPair(0).Value(2)
                         'Dim oldIA = _currentSelectedStep.OutputInputMappingPair(0).Value(3)
                         If _currentSelectedStep.InputChannels.Contains(oldIM) Then
@@ -2492,9 +2625,9 @@ Namespace ViewModels
                         'End If
                         _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIM)
                         '_currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIA)
-                        If obj.SignalSignature.IsChecked Then
-                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(2, obj.SignalSignature)
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If sgnl.IsChecked Then
+                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(2, sgnl)
+                            _currentSelectedStep.InputChannels.Add(sgnl)
                             'Dim newIA = _findMatchingAng(obj.SignalSignature)
                             'If newIA Is Nothing Then
                             '    newIA = New SignalSignatures("NoMatchingAnglefound")
@@ -2514,11 +2647,11 @@ Namespace ViewModels
                             '_currentSelectedStep.OutputInputMappingPair(0).Value.Insert(3, dummyIA)
                         End If
                     Else
-                        _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current magnitude.")
+                        _addLog("Selected signal: " & sgnl.SignalName & " is not of signal type current magnitude.")
                         Throw New Exception("Signal selection is not Valid! Please select a signal of current magnitude.")
                     End If
-                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(3) = _currentFocusedPhasorSignalForPowerCalculation Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) = "IA" Then
+                ElseIf _currentSelectedStep.OutputInputMappingPair(0).Value(3) Is _currentFocusedPhasorSignalForPowerCalculation Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) = "IA" Then
                         'Dim oldIM = _currentSelectedStep.OutputInputMappingPair(0).Value(2)
                         Dim oldIA = _currentSelectedStep.OutputInputMappingPair(0).Value(3)
                         'If _currentSelectedStep.InputChannels.Contains(oldIM) Then
@@ -2531,9 +2664,9 @@ Namespace ViewModels
                         End If
                         '_currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIM)
                         _currentSelectedStep.OutputInputMappingPair(0).Value.Remove(oldIA)
-                        If obj.SignalSignature.IsChecked Then
-                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(3, obj.SignalSignature)
-                            _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                        If sgnl.IsChecked Then
+                            _currentSelectedStep.OutputInputMappingPair(0).Value.Insert(3, sgnl)
+                            _currentSelectedStep.InputChannels.Add(sgnl)
                         Else
                             'Dim dummyIM = New SignalSignatures("PleaseAddCurrentMag")
                             'dummyIM.IsValid = False
@@ -2544,7 +2677,7 @@ Namespace ViewModels
                             '_currentSelectedStep.OutputInputMappingPair(0).Key.SamplingRate = -1
                         End If
                     Else
-                        _addLog("Selected signal: " & obj.SignalSignature.SignalName & " is not of signal type current angle.")
+                        _addLog("Selected signal: " & sgnl.SignalName & " is not of signal type current angle.")
                         Throw New Exception("Signal selection is not Valid! Please select a signal of current angle.")
                     End If
                 Else
@@ -2568,7 +2701,15 @@ Namespace ViewModels
             End If
         End Sub
         Private Sub _specifySignalTypeUnitSignalSelectionChanged(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 OrElse String.IsNullOrEmpty(obj.SignalSignature.PMUName) OrElse String.IsNullOrEmpty(obj.SignalSignature.TypeAbbreviation) Then
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+            Else 'if selected a group of signal
+                Throw New Exception("Error! Please select ONLY ONE valid signal for this textbox! No group of signals!")
+            End If
+            If sgnl.PMUName Is Nothing OrElse sgnl.TypeAbbreviation Is Nothing Then
                 _keepOriginalSelection(obj)
                 Throw New Exception("Signal selection is not Valid! Please select a single valid signal.")
             Else
@@ -2576,12 +2717,12 @@ Namespace ViewModels
                     _currentSelectedStep.InputChannels(0).IsChecked = False
                     _currentSelectedStep.InputChannels.Clear
                 End If
-                If obj.SignalSignature.IsChecked Then
-                    _currentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                If sgnl.IsChecked Then
+                    _currentSelectedStep.InputChannels.Add(sgnl)
                     If String.IsNullOrEmpty(_currentSelectedStep.OutputChannels(0).SignalName) Then
-                        _currentSelectedStep.OutputChannels(0).SignalName = obj.SignalSignature.SignalName
+                        _currentSelectedStep.OutputChannels(0).SignalName = sgnl.SignalName
                     End If
-                    _currentSelectedStep.OutputChannels(0).SamplingRate = obj.SignalSignature.SamplingRate
+                    _currentSelectedStep.OutputChannels(0).SamplingRate = sgnl.SamplingRate
                 End If
                 _currentSelectedStep.ThisStepInputsAsSignalHerachyByType.SignalList = _signalMgr.SortSignalByType(_currentSelectedStep.InputChannels)
                 '_dataConfigDetermineAllParentNodeStatus()
@@ -2660,6 +2801,7 @@ Namespace ViewModels
                         Dim newOutput = obj.SignalSignature
                         If _currentSelectedStep.UseCustomPMU Then
                             newOutput = New SignalSignatureViewModel(obj.SignalSignature.SignalName, _currentSelectedStep.CustPMUname, obj.SignalSignature.TypeAbbreviation)
+                            newOutput.Unit = obj.SignalSignature.Unit
                             'newOutput.PMUName = _currentSelectedStep.CustPMUname
                             newOutput.SamplingRate = obj.SignalSignature.SamplingRate
                         Else
@@ -3068,11 +3210,15 @@ Namespace ViewModels
                 For Each signal In _currentSelectedStep.InputChannels
                     signal.IsChecked = False
                 Next
-                If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
-                    obj(1).IsChecked = True
+                If obj Is Nothing Then
+                    _currentInputOutputPair = Nothing
+                Else
+                    If obj(1) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(1).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(1).PMUName) Then
+                        obj(1).IsChecked = True
+                    End If
+                    _currentInputOutputPair = obj(0)
                 End If
                 _signalMgr.DetermineDataConfigPostProcessConfigAllParentNodeStatus()
-                _currentInputOutputPair = obj(0)
             End If
         End Sub
         Private _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
@@ -3098,7 +3244,23 @@ Namespace ViewModels
         End Sub
         Private _pointOnWavePowCalFltrInputSignalNeedToBeChanged As String
 #End Region
-
+        Private Function _determineSignalCountInTree(obj As SignalTypeHierachy) As Integer
+            If obj.SignalList.Count > 0 Then
+                Dim totalcount = 0
+                For Each tree In obj.SignalList
+                    totalcount += _determineSignalCountInTree(tree)
+                Next
+                Return totalcount
+            Else
+                Return 1
+            End If
+        End Function
+        Private Function _findTheBottomSignal(obj As SignalTypeHierachy) As SignalSignatureViewModel
+            While obj.SignalList.Count > 0
+                Return _findTheBottomSignal(obj.SignalList.FirstOrDefault)
+            End While
+            Return obj.SignalSignature
+        End Function
         'Private Sub _dataConfigDetermineAllParentNodeStatus()
         '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByType)
         '    _determineParentGroupedByTypeNodeStatus(_signalMgr.GroupedRawSignalsByPMU)
@@ -3694,6 +3856,14 @@ Namespace ViewModels
                     Case "Power Calculation"
                         newCustomization = New PowerCalcCust
                         Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname, newCustomization.PowType.ToString)
+                        Select Case newSignal.TypeAbbreviation
+                            Case "CP", "S"
+                                newSignal.Unit = "MVA"
+                            Case "Q"
+                                newSignal.Unit = "MVAR"
+                            Case "P"
+                                newSignal.Unit = "MW"
+                        End Select
                         newSignal.IsCustomSignal = True
                         newCustomization.OutputChannels.Add(newSignal)
                         Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(newSignal, New ObservableCollection(Of SignalSignatureViewModel))
@@ -3894,7 +4064,7 @@ Namespace ViewModels
                                 End If
                             End If
                         ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                            '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
+                            _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
                         ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                             _disableEnableAllButAngleSignalsInDataConfig(True)
                         End If
@@ -3921,7 +4091,7 @@ Namespace ViewModels
                             End If
                         End If
                     ElseIf processStep.Name = "Metric Prefix" Then
-                        '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(False)
+                        _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(False)
                     ElseIf processStep.Name = "Angle Conversion" Then
                         _disableEnableAllButAngleSignalsInDataConfig(False)
                     End If
@@ -4161,61 +4331,60 @@ Namespace ViewModels
                 Next
             Next
         End Sub
-        'Private Sub _disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(isEnabled As Boolean)
-        '    For Each group In _signalMgr.GroupedRawSignalsByType
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-        '                    subgroup.SignalSignature.IsEnabled = isEnabled
-        '                Else
-        '                    For Each subsubgroup In subgroup.SignalList
-        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                        End If
-        '                    Next
-        '                End If
-        '            Next
-        '        Next
-        '    Next
-        '    For Each group In _signalMgr.GroupedRawSignalsByPMU
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                For Each subsubgroup In subgroup.SignalList
-        '                    'If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "R") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M") Then
-        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
-        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                    End If
-        '                Next
-        '            Next
-        '        Next
-        '    Next
-        '    For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                If subgroup.SignalSignature.TypeAbbreviation <> "I" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "V" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "F" AndAlso subgroup.SignalSignature.TypeAbbreviation <> "R" Then
-        '                    subgroup.SignalSignature.IsEnabled = isEnabled
-        '                Else
-        '                    For Each subsubgroup In subgroup.SignalList
-        '                        If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) <> "M") Then
-        '                            subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                        End If
-        '                    Next
-        '                End If
-        '            Next
-        '        Next
-        '    Next
-        '    For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
-        '        For Each subgroupBySamplingRate In group.SignalList
-        '            For Each subgroup In subgroupBySamplingRate.SignalList
-        '                For Each subsubgroup In subgroup.SignalList
-        '                    If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length <> 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "F") OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) <> "M" AndAlso subsubgroup.SignalSignature.TypeAbbreviation <> "RCF") Then
-        '                        subsubgroup.SignalSignature.IsEnabled = isEnabled
-        '                    End If
-        '                Next
-        '            Next
-        '        Next
-        '    Next
-        'End Sub
+        Private Sub _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(isEnabled As Boolean)
+            For Each group In _signalMgr.GroupedRawSignalsByType
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        If subgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subgroup.SignalSignature.TypeAbbreviation = "D" Then
+                            subgroup.SignalSignature.IsEnabled = isEnabled
+                        Else
+                            For Each subsubgroup In subgroup.SignalList
+                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) = "A") Then
+                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
+                                End If
+                            Next
+                        End If
+                    Next
+                Next
+            Next
+            For Each group In _signalMgr.GroupedRawSignalsByPMU
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        For Each subsubgroup In subgroup.SignalList
+                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "D" OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) = "A") Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnabled
+                            End If
+                        Next
+                    Next
+                Next
+            Next
+            For Each group In _signalMgr.GroupedSignalByDataConfigStepsInput
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        If subgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subgroup.SignalSignature.TypeAbbreviation = "D" Then
+                            subgroup.SignalSignature.IsEnabled = isEnabled
+                        Else
+                            For Each subsubgroup In subgroup.SignalList
+                                If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 2 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1) = "A") Then
+                                    subsubgroup.SignalSignature.IsEnabled = isEnabled
+                                End If
+                            Next
+                        End If
+                    Next
+                Next
+            Next
+            For Each group In _signalMgr.GroupedSignalByDataConfigStepsOutput
+                For Each subgroupBySamplingRate In group.SignalList
+                    For Each subgroup In subgroupBySamplingRate.SignalList
+                        For Each subsubgroup In subgroup.SignalList
+                            If String.IsNullOrEmpty(subsubgroup.SignalSignature.TypeAbbreviation) OrElse subsubgroup.SignalSignature.TypeAbbreviation = "OTHER" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "SC" OrElse subsubgroup.SignalSignature.TypeAbbreviation = "D" OrElse (subsubgroup.SignalSignature.TypeAbbreviation.Length = 3 AndAlso subsubgroup.SignalSignature.TypeAbbreviation.Substring(1, 1) = "A") Then
+                                subsubgroup.SignalSignature.IsEnabled = isEnabled
+                            End If
+                        Next
+                    Next
+                Next
+            Next
+        End Sub
         'this function disables/enables or current and voltage signals, including phasor signals
         Private Sub _disableEnableAllButCurrentVoltageSignalsInDataConfig(isEnabled As Boolean)
             For Each group In _signalMgr.GroupedRawSignalsByType
@@ -4359,7 +4528,7 @@ Namespace ViewModels
                         End If
                     End If
                 ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
-                    '_disableEnableAllButMagnitudeFrequencyROCOFSignalsInDataConfig(True)
+                    _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInDataConfig(True)
                 End If
@@ -4425,15 +4594,15 @@ Namespace ViewModels
                             signal.PassedThroughDQFilter = signal.PassedThroughDQFilter - 1
                         Next
                     End If
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    Else
-                        DeSelectAllDataConfigSteps()
-                    End If
-                    CurrentSelectedStep = Nothing
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'Else
+                    DeSelectAllDataConfigSteps()
+                    'End If
+                    'CurrentSelectedStep = Nothing
                     _addLog("Step " & obj.StepCounter & ", " & obj.Name & " is deleted!")
                     DataConfigure.CollectionOfSteps = steps
-                    SignalSelectionTreeViewVisibility = "Visible"
+                    'SignalSelectionTreeViewVisibility = "Visible"
                 Catch ex As Exception
                     Forms.MessageBox.Show("Error deleting step " & obj.StepCounter.ToString & " in Data Configuration, " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)
                 End Try
@@ -4677,6 +4846,7 @@ Namespace ViewModels
                     If _oldTabIndex = 4 And _currentTabIndex <> 4 Then
                         '_groupAllPostProcessConfigOutputSignal()
                         DeSelectAllDetectors()
+                        _updateDEFAreas()
                     End If
                     If _oldTabIndex = 5 And _currentTabIndex <> 5 Then
                         '_groupAllPostProcessConfigOutputSignal()
@@ -4717,8 +4887,11 @@ Namespace ViewModels
                         End If
                     End If
 
-                    If _currentTabIndex = 5 Then
+                    'tab index 6 is the coordinate setup setting. no signal selection needed, but need to get unique detector signals and DEF areas.
+                    If _currentTabIndex = 6 Then
                         _signalMgr.DistinctMappingSignal()
+                        'find all distinct areas used in DEF detecotr
+                        '_updateDEFAreas()
                     End If
                 Catch ex As Exception
                     _addLog(ex.Message)
@@ -4732,6 +4905,47 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+
+        Private Sub _updateDEFAreas()
+            For Each dtr In DetectorConfigure.DetectorList
+                If TypeOf (dtr) Is DEFDetectorViewModel Then
+                    Dim detector As DEFDetectorViewModel = dtr
+                    Dim addedNewArea = False
+                    Dim newAreaList = New List(Of String)
+                    For Each pth In detector.Paths
+                        If String.IsNullOrEmpty(pth.FromArea) Then
+                            Forms.MessageBox.Show("From Area in the path of Dissipation Energy Flow detector is required. If left empty, will result in MATLAB calculation error.", "Error!", MessageBoxButtons.OK)
+                        Else
+                            If Not detector.UniqueAreas.Contains(pth.FromArea) AndAlso Not addedNewArea Then
+                                addedNewArea = True
+                            End If
+                            If Not newAreaList.Contains(pth.FromArea) Then
+                                newAreaList.Add(pth.FromArea)
+                            End If
+                        End If
+                        'If Not String.IsNullOrEmpty(pth.FromArea) AndAlso Not newAreaList.Contains(pth.FromArea) Then
+                        '    newAreaList.Add(pth.FromArea)
+                        'Else
+
+                        'End If
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not detector.UniqueAreas.Contains(pth.ToArea) And Not addedNewArea Then
+                            addedNewArea = True
+                        End If
+                        If Not String.IsNullOrEmpty(pth.ToArea) AndAlso Not newAreaList.Contains(pth.ToArea) Then
+                            newAreaList.Add(pth.ToArea)
+                        End If
+                    Next
+                    If addedNewArea OrElse newAreaList.Count <> detector.UniqueAreas.Count Then
+                        detector.UniqueAreas = newAreaList
+                        RaiseEvent DEFAreasChanged()
+                    End If
+                    Exit For
+                End If
+            Next
+        End Sub
+
+        Public Event DEFAreasChanged()
+
         ''' <summary>
         ''' if signal type has been changed in the prosessing tab, need to re-group them by type
         ''' </summary>
@@ -4739,7 +4953,8 @@ Namespace ViewModels
             SignalMgr.ReGroupedRawSignalsByType = New ObservableCollection(Of SignalTypeHierachy)
             For Each info In SignalMgr.FileInfo
                 If info.TaggedSignals.Count > 0 Then
-                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    'Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory))
+                    Dim b = New SignalTypeHierachy(New SignalSignatureViewModel(info.FileDirectory + ", " + info.Mnemonic + ", Sampling Rate: " + info.SamplingRate.ToString + "/Second"))
                     b.SignalList = SignalMgr.SortSignalByType(info.TaggedSignals)
                     SignalMgr.ReGroupedRawSignalsByType.Add(b)
                 End If

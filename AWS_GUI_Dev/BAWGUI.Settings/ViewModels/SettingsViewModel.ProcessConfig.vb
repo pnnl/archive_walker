@@ -487,10 +487,11 @@ Namespace ViewModels
                             signal.PassedThroughProcessor = signal.PassedThroughProcessor - 1
                         Next
                     End If
-                    If obj Is CurrentSelectedStep Then
-                        CurrentSelectedStep = Nothing
-                    End If
+                    'If obj Is CurrentSelectedStep Then
+                    '    CurrentSelectedStep = Nothing
+                    'End If
                     '_deSelectAllProcessConfigSteps()
+                    DeSelectAllProcessConfigSteps()
                     _addLog("Step " & obj.StepCounter.ToString & ", " & obj.Name & " is deleted!")
                 Catch ex As Exception
                     MessageBox.Show("Error deleting a step " & obj.StepCounter.ToString & ", " & obj.Name & ex.Message, "Error!", MessageBoxButtons.OK)

@@ -24,6 +24,8 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Globalization;
 using System.Windows.Media.Animation;
+using BAWGUI.CoordinateMapping.ViewModels;
+using BAWGUI.Core.Models;
 
 namespace BAWGUI.Results.ViewModels
 {
@@ -55,8 +57,9 @@ namespace BAWGUI.Results.ViewModels
             //_selectedEndTime = "01/01/0001 00:00:00";
             _selectedStartTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             _selectedEndTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
-            _mapPlottingRule = new List<string>(new string[]{ "SNR", "Amplitude", "Coherence" });
+            _mapPlottingRule = new List<string>(new string[]{ "SNR", "Amplitude", "Coherence", "DEF" });
             _selectedPlottingRule = "SNR";
+            Areas = new List<EnergyFlowAreaCoordsMappingViewModel>();
         }
         private AWRunViewModel _run;
         public AWRunViewModel Run
@@ -100,6 +103,7 @@ namespace BAWGUI.Results.ViewModels
                     var mm = new ForcedOscillationResultViewModel(model);
                     mm.SelectedOccurrenceChanged += _selectedOccurrenceChanged;
                     mm.SelectedChannelChanged += _selectedChannelChanged;
+                    mm.SelectedPathChanged += _selectedPathChanged;
                     _results.Add(mm);
                     _filteredResults.Add(mm);
 
@@ -127,8 +131,26 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedStartTime = value;
                 OnPropertyChanged();
-                var startTime = Convert.ToDateTime(value);
-                var endTime = Convert.ToDateTime(_selectedEndTime);
+                //var startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                //var endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
+                var startTime = DateTime.Now;
+                var endTime = DateTime.Now;
+                try
+                {
+                    startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedStartTime, startTime Convert;");
+                }
+                try
+                {
+                    endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedStartTime, endTime Convert;");
+                }
                 if (startTime <= endTime)
                 {
                     _filterTableByTime();
@@ -150,8 +172,26 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    var startTime = Convert.ToDateTime(_selectedStartTime);
-                    var endTime = Convert.ToDateTime(value);
+                    //var startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    //var endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                    var startTime = DateTime.Now;
+                    var endTime = DateTime.Now;
+                    try
+                    {
+                        startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedEndTime, startTime Convert;");
+                    }
+                    try
+                    {
+                        endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        System.Windows.Forms.MessageBox.Show("In fo results viewmodel, SelectedEndTime, endTime Convert;");
+                    }
                     if (startTime <= endTime)
                     {
                         _filterTableByTime();
@@ -167,19 +207,19 @@ namespace BAWGUI.Results.ViewModels
         private void _filterTableByTime()
         {
             ObservableCollection<ForcedOscillationResultViewModel> newResults = new ObservableCollection<ForcedOscillationResultViewModel>();
-            DateTime startT = DateTime.Parse(_selectedStartTime);
-            DateTime endT = DateTime.Parse(_selectedEndTime);
+            DateTime startT = DateTime.Parse(_selectedStartTime, CultureInfo.InvariantCulture);
+            DateTime endT = DateTime.Parse(_selectedEndTime, CultureInfo.InvariantCulture);
             foreach (var evnt in _results)
             {
-                DateTime st = DateTime.Parse(evnt.OverallStartTime);
-                DateTime ed = DateTime.Parse(evnt.OverallEndTime);
+                DateTime st = DateTime.Parse(evnt.OverallStartTime, CultureInfo.InvariantCulture);
+                DateTime ed = DateTime.Parse(evnt.OverallEndTime, CultureInfo.InvariantCulture);
                 if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0)
                 {
                     ObservableCollection<OccurrenceViewModel> newOcurs = new ObservableCollection<OccurrenceViewModel>();
                     foreach (var ocur in evnt.Occurrences)
                     {
-                        DateTime ocurst = DateTime.Parse(ocur.Start);
-                        DateTime ocured = DateTime.Parse(ocur.End);
+                        DateTime ocurst = DateTime.Parse(ocur.Start, CultureInfo.InvariantCulture);
+                        DateTime ocured = DateTime.Parse(ocur.End, CultureInfo.InvariantCulture);
                         if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
                         {
                             newOcurs.Add(ocur);
@@ -192,8 +232,8 @@ namespace BAWGUI.Results.ViewModels
                     }
 
                     ////flattened occurence with events
-                    //DateTime ocurst = DateTime.Parse(evnt.Occurrence.Start);
-                    //DateTime ocured = DateTime.Parse(evnt.Occurrence.End);
+                    //DateTime ocurst = DateTime.Parse(evnt.Occurrence.Start, CultureInfo.InvariantCulture);
+                    //DateTime ocured = DateTime.Parse(evnt.Occurrence.End, CultureInfo.InvariantCulture);
                     //if (DateTime.Compare(ocurst, endT) <= 0 && DateTime.Compare(ocured, startT) >= 0)
                     //{
                     //    newResults.Add(evnt);
@@ -205,8 +245,17 @@ namespace BAWGUI.Results.ViewModels
             {
                 _drawFOPlot();
                 _updateSelectionsInTables(SelectedPlottingRule);
-                _updateFOplotAndMapAfterSelectionChange();
-                _updateMapMarkerAfterChannelSelectionChange();
+                _updateFOMapAfterSelectionChange();
+                if (SelectedPlottingRule == "DEF")
+                {
+                    //draw energy flow on map with currently selected event and occurrance
+                    _drawDEF();
+                }
+                else
+                {
+                    _updateFOplotAfterSelectionChange();
+                    _updateMapMarkerAfterChannelSelectionChange();
+                }
             }
             //else
             //{
@@ -233,7 +282,19 @@ namespace BAWGUI.Results.ViewModels
                         oldSelectedOscillationEvent = _selectedOscillationEvent;
                     }
                     _selectedOscillationEvent = value;
-                    _updateFOplotAndMapAfterSelectionChange();
+                    if (_selectedOscillationEvent != null)
+                    {
+                        _updateFOplotAfterSelectionChange();
+                        if (SelectedPlottingRule == "DEF")
+                        {
+                            //draw energy flow with currently selected event and occurence
+                            _drawDEF();
+                        }
+                        else
+                        {
+                            _updateFOMapAfterSelectionChange();
+                        }
+                    }
                     OnPropertyChanged();
                     if (oldSelectedOscillationEvent != null)
                     {
@@ -264,14 +325,53 @@ namespace BAWGUI.Results.ViewModels
             var orig = sender as ForcedOscillationResultViewModel;
             if (SelectedOscillationEvent == orig)
             {
-                _updateFOplotAndMapAfterSelectionChange();
+                _updateFOplotAfterSelectionChange();
+                if (SelectedPlottingRule == "DEF")
+                {
+                    //draw energy flow with currently selected occurrence and event
+                    _drawDEF();
+                }
+                else
+                {
+                    _updateFOMapAfterSelectionChange();
+                }
             }
         }
-        private void _selectedChannelChanged(object sender, EventArgs e)
+
+        private void _drawDEF()
         {
-            _updateMapMarkerAfterChannelSelectionChange();
+            var entries = new Dictionary<string, Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>>();
+            foreach (var area in Areas)
+            {
+                var key = area.AreaName;
+                var type = area.Type;
+                var locations = area.Locations;
+                entries[key] = new Tuple<SignalMapPlotType, List<SiteCoordinatesModel>>(type, locations.ToList());
+            }
+
+            if (entries.Count() != 0 && SelectedOscillationEvent.SelectedOccurrence.Model.Paths.Count() != 0)
+            {
+                ResultMapVM.DrawDEF(entries, SelectedOscillationEvent.SelectedOccurrence.Model.Paths);
+            }
         }
 
+        private void _selectedChannelChanged(object sender, EventArgs e)
+        {
+
+            if (SelectedPlottingRule != "DEF")
+            {
+                _updateMapMarkerAfterChannelSelectionChange();
+            }
+        }
+
+        private void _selectedPathChanged(object sender, EventArgs e)
+        {
+
+            if (SelectedPlottingRule == "DEF")
+            {
+                _updateMapMarkerAfterPathSelectionChange();
+            }
+        }
         private void _updateMapMarkerAfterChannelSelectionChange()
         {
             if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedChannel != null)
@@ -309,28 +409,74 @@ namespace BAWGUI.Results.ViewModels
                 }
             }
         }
-
-        private void _updateFOplotAndMapAfterSelectionChange()
+        private void _updateMapMarkerAfterPathSelectionChange()
+        {
+            if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null && SelectedOscillationEvent.SelectedOccurrence.SelectedPath != null)
+            {
+                var from = SelectedOscillationEvent.SelectedOccurrence.SelectedPath.From;
+                var to = SelectedOscillationEvent.SelectedOccurrence.SelectedPath.To;
+                var possiblePathLabel = "";
+                //var possibleArrowHeadLabel = "";
+                if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                {
+                    possiblePathLabel = from + " to " + to;
+                    //possibleArrowHeadLabel = to + "_arrow_head";
+                }
+                else if (!string.IsNullOrEmpty(from))
+                {
+                    possiblePathLabel = "From " + from;
+                }
+                else if (!string.IsNullOrEmpty(to))
+                {
+                    possiblePathLabel = "To " + to;
+                    //possibleArrowHeadLabel = to + "_arrow_head";
+                }
+                foreach (var mkr in ResultMapVM.Gmap.Markers)
+                {
+                    if (mkr.Shape is Line || mkr.Shape is Polygon)
+                    {
+                        if (mkr.Shape is Line)
+                        {
+                            var thisline = mkr.Shape as Line;
+                            if (thisline.ToolTip.ToString() == possiblePathLabel)
+                            {
+                                thisline.Stroke = Brushes.Blue;
+                                mkr.ZIndex = 2000;
+                            }
+                            else
+                            {
+                                thisline.Stroke = Brushes.Black;
+                                mkr.ZIndex = 500;
+                            }
+                        }
+                        if (mkr.Shape is Polygon)
+                        {
+                            var thisTriangle = mkr.Shape as Polygon;
+                            if (thisTriangle.ToolTip.ToString() == possiblePathLabel)
+                            {
+                                thisTriangle.Stroke = Brushes.Blue;
+                                thisTriangle.Fill = Brushes.Blue;
+                                mkr.ZIndex = 2000;
+                            }
+                            else
+                            {
+                                thisTriangle.Stroke = Brushes.Black;
+                                thisTriangle.Fill = Brushes.Black;
+                                mkr.ZIndex = 500;
+                            }
+                        }
+                    }
+                    else
+                    {
+                    }
+                }
+            }
+        }
+        private void _updateFOMapAfterSelectionChange()
         {
             ResultMapVM.ClearMarkers();
             if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null)
             {
-                foreach (var item in FOPlotModel.Series)
-                {
-                    if (item is LineSeries)
-                    {
-                        var it = item as LineSeries;
-                        if (it.StrokeThickness == 10)
-                        {
-                            it.StrokeThickness = 5;
-                        }
-                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.Start)) && it.Points[0].Y == SelectedOscillationEvent.SelectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.End)))
-                        {
-                            it.StrokeThickness = 10;
-                            FOPlotModel.InvalidatePlot(true);
-                        }
-                    }
-                }
                 var signalList = new List<SignalIntensityViewModel>();
                 foreach (var channel in SelectedOscillationEvent.SelectedOccurrence.Channels)
                 {
@@ -348,6 +494,8 @@ namespace BAWGUI.Results.ViewModels
                             case "Coherence":
                                 signalList.Add(new SignalIntensityViewModel(signal, channel.Coherence));
                                 break;
+                            case "DEF":
+
                             default:
                                 break;
                         }
@@ -359,6 +507,29 @@ namespace BAWGUI.Results.ViewModels
                 //need to pass more information to the update map function by telling how to distinguish the intensity of the drawings
                 //need to know if it's by SNR, Amplitude or Coherence, as selected drawing property.
                 //need to add a property in the signalviewmodel, might be called intensity, or add a wrapper class that wraps signalsignatureviewmodel and has intensity property.
+            }
+        }
+
+        private void _updateFOplotAfterSelectionChange()
+        {
+            if (SelectedOscillationEvent != null && SelectedOscillationEvent.SelectedOccurrence != null)
+            {
+                foreach (var item in FOPlotModel.Series)
+                {
+                    if (item is LineSeries)
+                    {
+                        var it = item as LineSeries;
+                        if (it.StrokeThickness == 10)
+                        {
+                            it.StrokeThickness = 5;
+                        }
+                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.Start, CultureInfo.InvariantCulture)) && it.Points[0].Y == SelectedOscillationEvent.SelectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(SelectedOscillationEvent.SelectedOccurrence.End)))
+                        {
+                            it.StrokeThickness = 10;
+                            FOPlotModel.InvalidatePlot(true);
+                        }
+                    }
+                }
             }
             else
             {// change all plots to normal size since nothing is selected in table.
@@ -398,7 +569,7 @@ namespace BAWGUI.Results.ViewModels
         //                        {
         //                            it.StrokeThickness = 5;
         //                        }
-        //                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
+        //                        if (it.Points[0].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.Start, CultureInfo.InvariantCulture)) && it.Points[0].Y == _selectedOccurrence.Frequency && it.Points[1].X == DateTimeAxis.ToDouble(Convert.ToDateTime(_selectedOccurrence.End)))
         //                        {
         //                            it.StrokeThickness = 10;
         //                            FOPlotModel.InvalidatePlot(true);
@@ -437,7 +608,6 @@ namespace BAWGUI.Results.ViewModels
         //        }
         //    }
         //}
-
         public List<string> _mapPlottingRule { get; private set; }
         public List<string> MapPlottingRule { get { return _mapPlottingRule; } }
         private string _selectedPlottingRule;
@@ -448,11 +618,19 @@ namespace BAWGUI.Results.ViewModels
             {
                 _selectedPlottingRule = value;
                 _updateSelectionsInTables(value);
-                _updateFOplotAndMapAfterSelectionChange();
+                _updateFOplotAfterSelectionChange();
+                if (value == "DEF")
+                {
+                    //draw energy flow on map with currently selected event and occurrence.
+                    _drawDEF();
+                }
+                else
+                {
+                    _updateFOMapAfterSelectionChange();
+                }
                 OnPropertyChanged();
             }
         }
-
         private void _updateSelectionsInTables(string rule)
         {
             switch (rule)
@@ -508,11 +686,13 @@ namespace BAWGUI.Results.ViewModels
                         }
                     }
                     break;
+                case "DEF":
+                    SelectedOscillationEvent = FilteredResults.FirstOrDefault();
+                    break;
                 default:
                     break;
             }
         }
-
         private OccurrenceTableWindow _occurrenceTableWin;
         public ICommand ShowOccurrenceWindow { get; set; }
         private void _showOccurrenceWindow(object obj)
@@ -600,10 +780,10 @@ namespace BAWGUI.Results.ViewModels
             var endTime = new DateTime();
             if (FilteredResults.Count > 0)
             {
-                startTime = Convert.ToDateTime(FilteredResults.Min(x => x.GetFirstStartOfFilteredOccurrences()));
-                endTime = Convert.ToDateTime(FilteredResults.Max(x => x.GetLastEndOfFilteredOccurrences()));
+                startTime = Convert.ToDateTime(FilteredResults.Min(x => x.GetFirstStartOfFilteredOccurrences()), CultureInfo.InvariantCulture);
+                endTime = Convert.ToDateTime(FilteredResults.Max(x => x.GetLastEndOfFilteredOccurrences()), CultureInfo.InvariantCulture);
             }
-            var time = Convert.ToDateTime(endTime) - Convert.ToDateTime(startTime);
+            var time = Convert.ToDateTime(endTime, CultureInfo.InvariantCulture) - Convert.ToDateTime(startTime, CultureInfo.InvariantCulture);
             if(time < TimeSpan.FromHours(24))
             {
                 xAxisFormatString = "HH:mm";
@@ -673,8 +853,8 @@ namespace BAWGUI.Results.ViewModels
                     {
                         newSeries.StrokeThickness = 10;
                     }
-                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency));
-                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency));
+                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency));
+                    newSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency));
                     a.Series.Add(newSeries);
                     newSeries.TrackerKey = trackerKey.ToString();
                     ocur.trackerKey = trackerKey;
@@ -682,8 +862,8 @@ namespace BAWGUI.Results.ViewModels
                     newSeries.MouseDown += foEvent_MouseDown;
                     if (ocur.Alarm == "YES")
                     {
-                        var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start)), ocur.Frequency, 4, 0);
-                        var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End)), ocur.Frequency, 4, 0);
+                        var startPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.Start, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
+                        var endPoint = new ScatterPoint(DateTimeAxis.ToDouble(Convert.ToDateTime(ocur.End, CultureInfo.InvariantCulture)), ocur.Frequency, 4, 0);
                         //aPoint.Size = 5;
                         //aPoint.Tag = "Alarm";
                         alarmSeries.Points.Add(startPoint);
@@ -838,5 +1018,6 @@ namespace BAWGUI.Results.ViewModels
 
         private SignalManager _signalMgr;
         public ResultMapViewModel ResultMapVM { get; set; }
+        public List<EnergyFlowAreaCoordsMappingViewModel> Areas { get; set; }
     }
 }
