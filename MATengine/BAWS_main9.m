@@ -2,13 +2,12 @@
 %
 % This is the main function used to generate results (normal mode when
 % called by RunNormalMode) or to rerun analyses to retrieve detailed
-% operation information (rerun mode when called by RerunThevenin,
+% operation information (rerun mode when called by
 % RerunForcedOscillation, RerunOutOfRange, or RerunRingdown). In Rerun
 % mode, additional inputs are required.
 %
 % Called by: 
 %   RunNormalMode
-%   RerunThevenin
 %   RerunForcedOscillation
 %   RerunOutOfRange
 %   RerunRingdown
@@ -56,7 +55,7 @@
 %           MM/DD/YYYY HH:MM:SS
 %       RerunDetector - Specifies which detector to be rerun. String.
 %           Acceptable values: 'Periodogram', 'SpectralCoherence', 
-%           'Thevenin','ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
+%           'ModeMeter', 'Ringdown', 'OutOfRangeGeneral','WindRamp'
 %
 % Outputs:
 %   DetectionResultsRerun - Cell array containing the DetectionResults
@@ -124,8 +123,8 @@ if (nargin == 5) && (~Unpause)
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
         BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
-        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
-%     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],WindAppXML);
+        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags,...
+        AutoEventExport] = InitializeBAWS(ConfigAll,EventPath);
     InitialCondosFilter = [];
     InitialCondosMultiRate = [];
     FinalAngles = [];
@@ -181,20 +180,19 @@ elseif ~Unpause
     end
     
     [~,~,~,DetectorXML,~,BlockDetectors,FileDetectors,OmitFromSparse,~,~,~,~,~,~,SecondsToConcat,~,~] = InitializeBAWS(ConfigAll,EventPath);    
-%     ConfigSignalSelection = GetPMU_SignalList(DetectorXML, [FileDetectors BlockDetectors],[]);
     
     % Error check on RerunDetector entry
     if sum(strcmp(RerunDetector,[{'RetrieveMode', 'ForcedOscillation'} BlockDetectors FileDetectors])) == 0
         error([RerunDetector ' is not a valid detector name.']);
     end
     
-    % If forced oscillation or Thevenin application results are of interest, the window size must
+    % If forced oscillation results are of interest, the window size must
     % be accounted for in the start time. The other detectors operate file-by-file.
     % To do this, an initialization file corresponding to RerunStartTime is
     % loaded and SecondsToConcat is retrieved. RerunStartTime is then
     % adjusted to account for the window size, and the new initialization
     % file is loaded.
-    if strcmp(RerunDetector,'ForcedOscillation') || strcmp(RerunDetector,'Thevenin') %|| strcmp(RerunDetector,'ModeMeter')
+    if strcmp(RerunDetector,'ForcedOscillation')
         % Need to account for the sizes of the windows used in analysis
 
         % The SparsePMU has timestamps every ResultUpdateInterval
@@ -205,41 +203,18 @@ elseif ~Unpause
         % RerunEndTime should be the last sample in the first analysis
         % window that is evaluated.
         
-        if strcmp(RerunDetector,'ForcedOscillation')
-            % Load the SparsePMU corresponding to the periodogram or
-            % spectral coherence detectors. The timestamps will be
-            % identical.
-            if isfield(DetectorXML,'Periodogram')
-                SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Periodogram');
-            elseif isfield(DetectorXML,'SpectralCoherence')
-                SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'SpectralCoherence');
-            else
-                warning('Forced oscillation detectors were not running during this time.');
-                DetectionResultsRerun = {};
-                AdditionalOutputRerun = {};
-                return
-            end
-        elseif strcmp(RerunDetector,'Thevenin')
-            % Load the SparsePMU corresponding to the Thevenin application.
-            if isfield(DetectorXML,'Thevenin')
-                SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Thevenin');
-            else
-                warning('The Thevenin application was not running during this time.');
-                DetectionResultsRerun = {};
-                AdditionalOutputRerun = {};
-                return
-            end
-%         else
-%             % Load the SparsePMU corresponding to the ModeMeter algorithm.
-%             if isfield(DetectorXML,'ModeMeter')
-%                 SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'ModeMeter');
-%             else
-%                 warning('The modemeter application was not running during this time.');
-%                 DetectionResultsRerun = {};
-%                 AdditionalOutputRerun = {};
-%                 return
-%             end
-%             
+        % Load the SparsePMU corresponding to the periodogram or
+        % spectral coherence detectors. The timestamps will be
+        % identical.
+        if isfield(DetectorXML,'Periodogram')
+            SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'Periodogram');
+        elseif isfield(DetectorXML,'SpectralCoherence')
+            SparseOut = GetSparseData(RerunStartTime,RerunEndTime,InitializationPath,'SpectralCoherence');
+        else
+            warning('Forced oscillation detectors were not running during this time.');
+            DetectionResultsRerun = {};
+            AdditionalOutputRerun = {};
+            return
         end
         %
         % Find the first timestamp after RerunStartTime
@@ -247,11 +222,6 @@ elseif ~Unpause
         if isnat(FirstWindowEndTime) || (datenum(FirstWindowEndTime) > datenum(RerunEndTime))
             if strcmp(RerunDetector,'ForcedOscillation')
                 warning('The forced oscillation detection algorithms did not execute during the specified time range.');
-            else
-                strcmp(RerunDetector,'Thevenin')
-                warning('The Thevenin application did not execute during the specified time range.');
-%             else
-%                 warning('The modemeter application did not execute during the specified time range.');
             end
             DetectionResultsRerun = {};
             AdditionalOutputRerun = {};
@@ -297,14 +267,17 @@ elseif ~Unpause
     [DataXML,ProcessXML,PostProcessCustXML,DetectorXML,WindAppXML,...
         BlockDetectors,FileDetectors,OmitFromSparse,NumDQandCustomStages,NumPostProcessCustomStages,...
         NumProcessingStages,DataInfo,FileInfo,...
-        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags] = InitializeBAWS(ConfigAll,EventPath);
+        ResultUpdateInterval,SecondsToConcat,AlarmingParams,Num_Flags,...
+        ~] = InitializeBAWS(ConfigAll,EventPath);
+    
+    % Do not try to export events in rerun mode
+    AutoEventExport.Flag = 0;
     
     % Disable all but the desired detector
     DetectorXML = DisableDetectors(DetectorXML,RerunDetector);
-    % If neither the forced oscillation detectors or the Thevenin
-    % application or the modemeter applications are of interest, set 
+    % If the forced oscillation detector is not of interest, set 
     % SecondsToConcat to empty so that the loop doesn't execute
-    if (~strcmp(RerunDetector,'ForcedOscillation')) && (~strcmp(RerunDetector,'Thevenin')) %&& (~strcmp(RerunDetector,'ModeMeter'))
+    if ~strcmp(RerunDetector,'ForcedOscillation')
         SecondsToConcat = [];
     end
     
@@ -464,6 +437,7 @@ while(~min(done))
         % Generate a wind report
         % Update the event list and store events that are over
         % Reset the sparse PMU structure
+        % Export out-of-range and ringdown events using data output from data writer
         if ~isempty(DataInfo.LastFocusFileTime) && (~strcmp(datestr(FocusFileTime,'yyyymmdd'),datestr(DataInfo.LastFocusFileTime,'yyyymmdd')) || min(done))
             % If the wind app is configured, generate a report
             if isfield(WindAppXML,'PMU')
@@ -484,6 +458,9 @@ while(~min(done))
 
             % Reset the sparse PMU structure
             SparsePMU = struct();
+            
+            % Export out-of-range and ringdown events using data output from data writer
+            ExportEvents(AutoEventExport,EventPath,DataInfo.LastFocusFileTime,done);
         end
         WriteEventListXML(EventList,[EventPath '\EventList_Current.XML'],0);
     end
@@ -542,7 +519,15 @@ while(~min(done))
             MaxHist = 0;
             for idx1 = 1:length(AdditionalOutput)
                 for idx2 = 1:length(AdditionalOutput(idx1).Ringdown)
-                    MaxHist = max([MaxHist length(AdditionalOutput(idx1).Ringdown(idx2).RMShist)/AdditionalOutput(idx1).Ringdown(1).fs]);
+                    try
+                        MaxHist = max([MaxHist length(AdditionalOutput(idx1).Ringdown(idx2).RMShist)/AdditionalOutput(idx1).Ringdown(1).fs]);
+                    catch
+                        % If the data for the ringdown detector could not
+                        % be loaded, the AdditionalOutput is set to empty.
+                        % In this case MaxHist can't be calculated, so do
+                        % not take the shortcut.
+                        MaxHist = Inf;
+                    end
                 end
             end
             if SkippedFiles*FileLength >= MaxHist
@@ -570,11 +555,16 @@ while(~min(done))
             hhmmss = datestr(FileInfo(1).tPMU(1),'HHMMSS');
             InitializationFilePath = [InitializationPath '\' yyyymmdd(1:4) '\' yyyymmdd(3:8) '\'];
             InitializationFile = [InitializationFilePath 'Initialization_' yyyymmdd '_' hhmmss '.mat'];
+            % If the directory for the files hasn't been established
+            % yet, add it.
+            if exist(InitializationFilePath,'dir') == 0
+                mkdir(InitializationFilePath);
+            end
             save(InitializationFile,...
                 'AdditionalOutputCondos','InitialCondosFilter','InitialCondosMultiRate','FinalAngles','ConfigAll','FileLength');
             
             % Add NaNs to SparsePMU for event detectors
-            SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(FileInfo(1).tPMU(end),'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,FileDetectors);
+            SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(FileInfo(1).tPMU(end),'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,setdiff(FileDetectors,OmitFromSparse));
             
             % If necessary, handle steps that are specific to detectors
             % that operate on an interval, rather than file-by-file
@@ -599,7 +589,7 @@ while(~min(done))
 
                         % Add NaNs to SparsePMU for FO detectors - each time they would
                         % have been implemented using ResultUpdateInterval
-                        SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(PMUsegment(1).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,BlockDetectors);
+                        SparsePMU = AddMissingToSparsePMU(SparsePMU,datestr(PMUsegment(1).Signal_Time.Signal_datenum,'yyyy-mm-dd HH:MM:SS.FFF'),DetectorXML,setdiff(BlockDetectors,OmitFromSparse));
                     else
                         break
                     end
@@ -655,20 +645,32 @@ while(~min(done))
         end
         LastShortcutOverEmpty = ShortcutOverEmpty;
         
-        if strcmp(RunMode,'Normal') && ~exist([InitializationPath '\PMUtemplate.mat'],'file')
-            % Files from each directory have been loaded, the tool is in
-            % normal mode, and PMUtemplate.mat does not yet exist. Save
-            % PMUbyFile, which contains examples of each file to a mat file
-            % called PMUtemplate.mat. It is used in rerun mode if a file in
-            % a directory is missing. First, set all of its entries to NaN.
-            for DirIdx = 1:length(PMUbyFile)
-                for pmuIdx = 1:length(PMUbyFile{DirIdx})
-                    PMUbyFile{DirIdx}(pmuIdx).Flag(:) = 1;
-                    PMUbyFile{DirIdx}(pmuIdx).Data(:) = NaN;
-                    PMUbyFile{DirIdx}(pmuIdx).Stat(:) = NaN;
+        if strcmp(RunMode,'Normal')
+            if ~exist([InitializationPath '\PMUtemplate.mat'],'file')
+                % Files from each directory have been loaded, the tool is in
+                % normal mode, and PMUtemplate.mat does not yet exist. Save
+                % PMUbyFile, which contains examples of each file to a mat file
+                % called PMUtemplate.mat. It is used in rerun mode if a file in
+                % a directory is missing. First, set all of its entries to NaN.
+                for DirIdx = 1:length(PMUbyFile)
+                    for pmuIdx = 1:length(PMUbyFile{DirIdx})
+                        PMUbyFile{DirIdx}(pmuIdx).Flag(:) = 1;
+                        PMUbyFile{DirIdx}(pmuIdx).Data(:) = NaN;
+                        PMUbyFile{DirIdx}(pmuIdx).Stat(:) = NaN;
+                    end
                 end
+                save([InitializationPath '\PMUtemplate.mat'], 'PMUbyFile');
             end
-            save([InitializationPath '\PMUtemplate.mat'], 'PMUbyFile');
+            
+            % Write an empty CSV file to tell the GUI where processing is
+            % at
+            S = dir(fullfile([ControlPath '\Progress*']));
+            if length(S) == 1
+                delete(fullfile(S.folder,S.name))
+            end
+            if exist(ControlPath,'dir') == 7
+                csvwrite([ControlPath '\Progress_' datestr(FileInfo(1).tPMU(1),'yyyy_mm_dd_HH_MM') '.csv'],[]);
+            end
         elseif strcmp(RunMode,'Rerun')
             FileProgress = round((FileInfo(1).tPMU(end)-datenum(DataInfo.DateTimeStart))/(datenum(DataInfo.DateTimeEnd)-datenum(DataInfo.DateTimeStart))*100);
             if FileProgress > 100
@@ -735,8 +737,6 @@ while(~min(done))
             end
         end
         
-%         PMU = GetOutputSignalsRev(PMU,ConfigSignalSelection);
-        
         % *********
         % Detection
         % *********
@@ -781,12 +781,26 @@ while(~min(done))
         % ResultUpdateInterval seconds at each step.
 
         if ~isempty(SecondsToConcat) && ~isnan(SecondsToConcat)
+            % Go through the current PMU structure and keep only the
+            % signals that are needed for the block detectors. This
+            % prevents concatenating a bunch of signals that aren't needed
+            PMUred = ReduceSignals(PMU,DetectorXML,BlockDetectors);
+            
             % PMUconcat holds enough data in memory to apply the FO
             % detection algorithms (SecondsToConcat).
             % Add the current PMU to PMUconcat.
-            PMUconcat = ConcatenatePMU(PMUconcat,PMU);
-            % Length of PMUconcat in seconds
-            PMUconcatLength = round((PMUconcat(1).Signal_Time.Signal_datenum(end)-PMUconcat(1).Signal_Time.Signal_datenum(1)+PMUconcat(1).Signal_Time.Signal_datenum(2)-PMUconcat(1).Signal_Time.Signal_datenum(1))*24*60*60);
+            PMUconcat = ConcatenatePMU(PMUconcat,PMUred);
+            if ~isempty(PMUconcat)
+                % Length of PMUconcat in seconds
+                PMUconcatLength = round((PMUconcat(1).Signal_Time.Signal_datenum(end)-PMUconcat(1).Signal_Time.Signal_datenum(1)+PMUconcat(1).Signal_Time.Signal_datenum(2)-PMUconcat(1).Signal_Time.Signal_datenum(1))*24*60*60);
+            else
+                % If reading from a database, SecondsToConcat != NaN even
+                % though block detectors may not be in use. This if
+                % statement prevents an error in the calculation of 
+                % PMUconcatLength and keeps the if
+                % statement below from executing.
+                PMUconcatLength = 0;
+            end
             % If PMUconcat has enough data (SecondsToConcat) to apply the
             % FO detection algorithms, continue. If not, skip detection and
             % continue with the loop.
@@ -852,22 +866,6 @@ while(~min(done))
                                     end
                                 end
                             end
-                            % This is done inside the TheveninDetector code
-%                             if isfield(AdditionalOutput,'Thevenin')
-%                                 for DetIdx = 1:length(AdditionalOutput)
-%                                     if ~isempty(AdditionalOutput(DetIdx).Thevenin)
-%                                         KeepSamp = ResultUpdateInterval*AdditionalOutput(DetIdx).Thevenin(1).fs;
-%                                         AdditionalOutput(DetIdx).Thevenin(1).Data = AdditionalOutput(DetIdx).Thevenin(1).Data(end-KeepSamp+1:end,:);
-%                                         
-%                                         for SubIdx = 1:length(AdditionalOutput(DetIdx).Thevenin)
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).Vmeas = AdditionalOutput(DetIdx).Thevenin(SubIdx).Vmeas(end-KeepSamp+1:end,:);
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).TimeString = AdditionalOutput(DetIdx).Thevenin(SubIdx).TimeString(end-KeepSamp+1:end);
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).ShuntQ = AdditionalOutput(DetIdx).Thevenin(SubIdx).ShuntQ(end-KeepSamp+1:end,:);
-%                                             AdditionalOutput(DetIdx).Thevenin(SubIdx).SinkQ = AdditionalOutput(DetIdx).Thevenin(SubIdx).SinkQ(end-KeepSamp+1:end,:);
-%                                         end
-%                                     end
-%                                 end
-%                             end
                             AdditionalOutputRerun{length(AdditionalOutputRerun) + 1} = AdditionalOutput;
                         end
                     end

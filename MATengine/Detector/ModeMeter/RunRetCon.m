@@ -1,4 +1,4 @@
-function [ModeHistory,ModeDRHistory, ModeFreqHistory, Modetrack,ModeRem]= RunRetCon(Mode, ModeHistory, ModeFreqHistory, ModeDRHistory, Modetrack, MaxRetConLength, ResultUpdateInterval)
+function [ModeHistory,ModeDRHistory, ModeFreqHistory, DEFhistory, Modetrack,ModeRem]= RunRetCon(Mode, ModeHistory, ModeFreqHistory, ModeDRHistory, DEFhistory, Modetrack, MaxRetConLength, ResultUpdateInterval)
 if length(Modetrack) > floor((MaxRetConLength)/ResultUpdateInterval)
     % Multiple poles have been viable candidates for too long. Run
     % retroactive continuity now, using the selected mode estimate
@@ -30,19 +30,36 @@ if length(Modetrack) > 1
                 ModeHistory(end-length(Mpath)+1:end) = Mpath;
                 FreqMpath = abs(imag(Mpath))/2/pi;
                 DRMpath =  -real(Mpath)./abs(Mpath);
-                FreqMpath(isnan(DRMpath)) = NaN;              
+                FreqMpath(isnan(DRMpath)) = NaN;    
+                ChangeIdx = ModeFreqHistory(end-length(Mpath)+1:end) ~= FreqMpath;
                 ModeFreqHistory(end-length(Mpath)+1:end) = FreqMpath;
                 ModeDRHistory(end-length(Mpath)+1:end) = DRMpath;
                 ModeRem = [];
+                % Where the mode estimates changed, set the DEF to NaN
+                % (The DEF is not calculated for all modes. A limitation if
+                % retcon tracking is used)
+                UpdateIdx = size(DEFhistory,1)-length(Mpath)+1:size(DEFhistory,1);
+                DEFhistory(UpdateIdx(ChangeIdx),:) = NaN;
             else
                 % The constructed path is longer than the matrix of
                 % results because the estimates cross a day transition.
                 ModeHistory = Mpath(end-size(ModeHistory,1)+1:end);
+                % size(ModeHistory,1) is checked. If size(ModeHistory) is
+                % 1x0 it will cause problems.
+                if isempty(ModeHistory)
+                    ModeHistory = [];
+                end
                 Freq = abs(imag(ModeHistory))/2/pi;
                 DR =  -real(ModeHistory)./abs(ModeHistory);
+                ChangeIdx = ModeFreqHistory(end-size(ModeHistory,1)+1:end) ~= Freq;
                 ModeFreqHistory(end-size(ModeHistory,1)+1:end) = Freq;
                 ModeDRHistory(end-size(ModeHistory,1)+1:end) = DR;
                 ModeRem = Mpath(1:end-size(ModeHistory,1));
+                % Where the mode estimates changed, set the DEF to NaN
+                % (The DEF is not calculated for all modes. A limitation if
+                % retcon tracking is used)
+                UpdateIdx = size(DEFhistory,1)-size(ModeHistory,1)+1:size(DEFhistory,1);
+                DEFhistory(UpdateIdx(ChangeIdx),:) = NaN;
             end
         end
         % Reset the tracking cell, keeping the most recent

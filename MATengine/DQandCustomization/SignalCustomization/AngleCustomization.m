@@ -60,6 +60,7 @@ if NumSigs == 1
 end
 SigMat = [];
 SignalType = cell(1,NumSigs);
+SignalUnit = cell(1,NumSigs);
 SignalName = cell(1,NumSigs);
 ErrFlag = zeros(NumSigs,1);
 PMUidxAll = [];
@@ -109,22 +110,31 @@ for SigCount = 1:NumSigs
     switch PMUstruct(PMUidx).Signal_Type{SigIdx}
         case 'VPP'
             SignalType{SigCount} = 'VAP';
+            SignalUnit{SigCount} = 'RAD';
         case 'VPA'
             SignalType{SigCount} = 'VAA';
+            SignalUnit{SigCount} = 'RAD';
         case 'VPB'
             SignalType{SigCount} = 'VAB';
+            SignalUnit{SigCount} = 'RAD';
         case 'VPC'
             SignalType{SigCount} = 'VAC';
+            SignalUnit{SigCount} = 'RAD';
         case 'IPP'
             SignalType{SigCount} = 'IAP';
+            SignalUnit{SigCount} = 'RAD';
         case 'IPA'
             SignalType{SigCount} = 'IAA';
+            SignalUnit{SigCount} = 'RAD';
         case 'IPB'
             SignalType{SigCount} = 'IAB';
+            SignalUnit{SigCount} = 'RAD';
         case 'IPC'
             SignalType{SigCount} = 'IAC';
+            SignalUnit{SigCount} = 'RAD';
         otherwise
             SignalType{SigCount} = 'OTHER';
+            SignalUnit{SigCount} = 'OTHER';
     end
     % Store SignalName
     SignalName{SigCount} = Parameters.signal{SigCount}.CustName;
@@ -159,8 +169,6 @@ NcustSigs = size(PMUstruct(custPMUidx).Data,2);
 % Store results in custom PMU
 PMUstruct(custPMUidx).Signal_Name(NcustSigs+(1:NumSigs)) = SignalName;
 PMUstruct(custPMUidx).Signal_Type(NcustSigs+(1:NumSigs)) = SignalType;
-SignalUnit = cell(NumSigs,1);
-[SignalUnit{:}] = deal('RAD');
 PMUstruct(custPMUidx).Signal_Unit(NcustSigs+(1:NumSigs)) = SignalUnit;
 PMUstruct(custPMUidx).Data(:,NcustSigs+(1:NumSigs)) = SigMat;
 for SigInd = 1:NumSigs

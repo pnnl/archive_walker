@@ -37,15 +37,6 @@ if isfield(AdditionalOutputCondos,'WindRamp')
     end
 end
 
-if isfield(AdditionalOutputCondos,'Thevenin')
-    for DetIdx = 1:length(AdditionalOutputCondos)
-        if ~isempty(AdditionalOutputCondos(DetIdx).Thevenin)
-            FN = fieldnames(AdditionalOutputCondos(DetIdx).Thevenin);
-            AdditionalOutputCondos(DetIdx).Thevenin = rmfield(AdditionalOutputCondos(DetIdx).Thevenin, setdiff(FN,{'PastVals'}));
-        end
-    end
-end
-
 if isfield(AdditionalOutputCondos,'ModeMeter')
     AdditionalOutputCondos = rmfield(AdditionalOutputCondos,'ModeMeter');
 end

@@ -134,6 +134,12 @@ for PMUidx = 1:length(PMU)
 
         % Wrong number of samples - need to identify missing with NaN
         try
+            % Remove any duplicate time stamps
+            [~,uidx] = unique(PMUtemp(PMUidx).Time{idx});
+            DupIdx = setdiff(1:length(PMUtemp(PMUidx).Time{idx}),uidx);
+            PMUtemp(PMUidx).Time{idx}(DupIdx) = [];
+            PMUtemp(PMUidx).Data{idx}(DupIdx) = [];
+            
             % Identify missing samples at the beginning
             NumNanToAdd = near(PMUtemp(PMUidx).Time{idx}(1),tPMU)-1;
             PMUtemp(PMUidx).Time{idx} = [tPMU(1:NumNanToAdd); PMUtemp(PMUidx).Time{idx}];

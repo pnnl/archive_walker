@@ -98,6 +98,12 @@ for idx = 1:length(v)
     
     % Wrong number of samples - need to identify missing with NaN
     try
+        % Remove any duplicate time stamps
+        [~,uidx] = unique(tPMUsig{idx});
+        DupIdx = setdiff(1:length(tPMUsig{idx}),uidx);
+        tPMUsig{idx}(DupIdx) = [];
+        v{idx}(DupIdx) = [];
+
         % Identify missing samples at the beginning
         NumNanToAdd = near(tPMUsig{idx}(1),tPMU)-1;
         tPMUsig{idx} = [tPMU(1:NumNanToAdd); tPMUsig{idx}];

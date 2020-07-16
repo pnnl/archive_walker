@@ -56,6 +56,13 @@ if isfield(EventListXML,'ForcedOscillation')
         EventListMAT.ForcedOscillation(idx).Amplitude = cell(1,NumOccurrences);
         EventListMAT.ForcedOscillation(idx).SNR = cell(1,NumOccurrences);
         EventListMAT.ForcedOscillation(idx).Coherence = cell(1,NumOccurrences);
+        if isfield(EventListXML.ForcedOscillation{idx}.Occurrence{1},'Path')
+            NumPath = length(EventListXML.ForcedOscillation{idx}.Occurrence{1}.Path);
+            EventListMAT.ForcedOscillation(idx).DEF = zeros(NumPath,NumOccurrences);
+            EventListMAT.ForcedOscillation(idx).PathDescription = cell(2,NumPath);
+        else
+            NumPath = 0;
+        end
         for idx2 = 1:NumOccurrences
             EventListMAT.ForcedOscillation(idx).OccurrenceID{idx2} = EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.OccurrenceID;
             EventListMAT.ForcedOscillation(idx).Frequency(idx2) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Frequency);
@@ -82,6 +89,12 @@ if isfield(EventListXML,'ForcedOscillation')
                 EventListMAT.ForcedOscillation(idx).Amplitude{idx2}(idx3) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Channel{idx3}.Amplitude);
                 EventListMAT.ForcedOscillation(idx).SNR{idx2}(idx3) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Channel{idx3}.SNR);
                 EventListMAT.ForcedOscillation(idx).Coherence{idx2}(idx3) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Channel{idx3}.Coherence);
+            end
+            
+            for pIdx = 1:NumPath
+                EventListMAT.ForcedOscillation(idx).DEF(pIdx,idx2) = str2double(EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Path{pIdx}.DEF);
+                EventListMAT.ForcedOscillation(idx).PathDescription{1,pIdx} = EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Path{pIdx}.From;
+                EventListMAT.ForcedOscillation(idx).PathDescription{2,pIdx} = EventListXML.ForcedOscillation{idx}.Occurrence{idx2}.Path{pIdx}.To;
             end
         end
     end
@@ -179,31 +192,6 @@ if isfield(EventListXML,'WindApp')
         EventListMAT.WindApp(idx).WindPower = cell(1,NumWindPow);
         for idx2 = 1:NumWindPow
             EventListMAT.WindApp(idx).WindPower{idx2} = EventListXML.WindApp{idx}.WindPower{idx2}.Info;
-        end
-    end
-end
-
-% Translate the Thevenin portion
-if isfield(EventListXML,'Thevenin')
-    EventListMAT.Thevenin = [];
-    
-    if length(EventListXML.Thevenin) == 1
-        EventListXML.Thevenin = {EventListXML.Thevenin};
-    end
-    
-    for idx = 1:length(EventListXML.Thevenin)
-        EventListMAT.Thevenin(idx).ID = EventListXML.Thevenin{idx}.ID;
-        EventListMAT.Thevenin(idx).Start = datenum(EventListXML.Thevenin{idx}.Start);
-        EventListMAT.Thevenin(idx).End = datenum(EventListXML.Thevenin{idx}.End);
-        
-        NumSub = length(EventListXML.Thevenin{idx}.Sub);
-        if NumSub == 1
-            EventListXML.Thevenin{idx}.Sub = {EventListXML.Thevenin{idx}.Sub};
-        end
-        
-        EventListMAT.Thevenin(idx).Sub = cell(1,NumSub);
-        for idx2 = 1:NumSub
-            EventListMAT.Thevenin(idx).Sub{idx2} = EventListXML.Thevenin{idx}.Sub{idx2}.Name;
         end
     end
 end

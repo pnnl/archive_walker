@@ -9,44 +9,47 @@
             The GUI2MAT class provides a CLS compliant, MWArray interface to the MATLAB
             functions contained in the files:
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-            FileExample.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.
+            m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-            FileExampleDB.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleD
+            B.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Get
-            SparseData.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ins
-            pectionAnalysis.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnaly
+            sis.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rea
-            dMMdata.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unForcedOscillation.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOsci
+            llation.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unOutOfRange.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange
+            .m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unRingdown.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Rer
-            unThevenin.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Ret
-            rieveData.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Run
-            NormalMode.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATprese
+            t.m
             <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Upd
-            ateOBATpreset.m
-            <newpara></newpara>
-            C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\Wri
-            teMMreport.m
+            C:\Users\foll154\OneDrive -
+            PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m
             </summary>
             <remarks>
             @Version 4.0
@@ -1668,329 +1671,6 @@
         <member name="M:BAWSengine.GUI2MAT.RerunRingdown(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray[]@,MathWorks.MATLAB.NET.Arrays.MWArray[])">
              <summary>
              Provides an interface for the RerunRingdown function in which the input and
-             output
-             arguments are specified as an array of MWArrays.
-             </summary>
-             <remarks>
-             This method will allocate and return by reference the output argument
-             array.<newpara></newpara>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return</param>
-             <param name= "argsOut">Array of MWArray output arguments</param>
-             <param name= "argsIn">Array of MWArray input arguments</param>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin">
-             <summary>
-             Provides a single output, 0-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 1-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 2-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 3-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 4-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 5-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 6-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <param name="InitializationPath">Input argument #6</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 7-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <param name="InitializationPath">Input argument #6</param>
-             <param name="FileDirectory">Input argument #7</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides a single output, 8-input MWArrayinterface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <param name="InitializationPath">Input argument #6</param>
-             <param name="FileDirectory">Input argument #7</param>
-             <param name="PredictionDelay">Input argument #8</param>
-             <returns>An MWArray containing the first output argument.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32)">
-             <summary>
-             Provides the standard 0-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 1-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 2-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 3-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 4-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 5-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 6-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <param name="InitializationPath">Input argument #6</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 7-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <param name="InitializationPath">Input argument #6</param>
-             <param name="FileDirectory">Input argument #7</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray,MathWorks.MATLAB.NET.Arrays.MWArray)">
-             <summary>
-             Provides the standard 8-input MWArray interface to the RerunThevenin MATLAB
-             function.
-             </summary>
-             <remarks>
-             M-Documentation:
-             Rerun the general out-of-range detector for the specified time period
-             </remarks>
-             <param name="numArgsOut">The number of output arguments to return.</param>
-             <param name="RerunStartTime">Input argument #1</param>
-             <param name="RerunEndTime">Input argument #2</param>
-             <param name="ConfigFile">Input argument #3</param>
-             <param name="ControlPath">Input argument #4</param>
-             <param name="EventPath">Input argument #5</param>
-             <param name="InitializationPath">Input argument #6</param>
-             <param name="FileDirectory">Input argument #7</param>
-             <param name="PredictionDelay">Input argument #8</param>
-             <returns>An Array of length "numArgsOut" containing the output
-             arguments.</returns>
-            
-        </member>
-        <member name="M:BAWSengine.GUI2MAT.RerunThevenin(System.Int32,MathWorks.MATLAB.NET.Arrays.MWArray[]@,MathWorks.MATLAB.NET.Arrays.MWArray[])">
-             <summary>
-             Provides an interface for the RerunThevenin function in which the input and
              output
              arguments are specified as an array of MWArrays.
              </summary>

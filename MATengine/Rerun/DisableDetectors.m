@@ -10,8 +10,6 @@ switch Detector
         DetectorXML = rmfield(DetectorXML, setdiff(fields,{'Ringdown', 'EventPath', 'ResultUpdateInterval', 'Alarming'}));
     case 'WindRamp'
         DetectorXML = rmfield(DetectorXML, setdiff(fields,{'WindRamp', 'EventPath', 'ResultUpdateInterval', 'Alarming'}));
-    case 'Thevenin'
-        DetectorXML = rmfield(DetectorXML, setdiff(fields,{'Thevenin', 'EventPath', 'ResultUpdateInterval'}));
     case 'ModeMeter'
         DetectorXML = rmfield(DetectorXML, setdiff(fields,{'ModeMeter', 'EventPath', 'ResultUpdateInterval'}));
 end

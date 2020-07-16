@@ -264,8 +264,26 @@ for ToConvertIdx = 1:NumToConvert
                 else
                     ErrFlagIncompatible = 1;
                 end
+            case 'Hz'
+                % From Hz to NewUnit
+                if strcmp(NewUnit,'mHz')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'Hz')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'mHz'
+                % From mHz to NewUnit
+                if strcmp(NewUnit,'mHz')
+                    CustSig = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'Hz')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
             otherwise
-                warning([PMUstruct(custPMUidx).Signal_Unit{SigIdx} ' is an unacceptable input unit. Values were set to NaN and Flags set.']);
+                warning([PMUstruct(PMUidx).Signal_Unit{SigIdx} ' is an unacceptable input unit. Values were set to NaN and Flags set.']);
                 continue
         end
         
@@ -435,6 +453,24 @@ for ToConvertIdx = 1:NumToConvert
                 elseif strcmp(NewUnit,'MVAR')
                     PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000000;
                 elseif strcmp(NewUnit,'VAR')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'Hz'
+                % From Hz to NewUnit
+                if strcmp(NewUnit,'mHz')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)/1000;
+                elseif strcmp(NewUnit,'Hz')
+                    ErrFlagIdentical = 1;
+                else
+                    ErrFlagIncompatible = 1;
+                end
+            case 'mHz'
+                % From mHz to NewUnit
+                if strcmp(NewUnit,'mHz')
+                    PMUstruct(PMUidx).Data(:,SigIdx) = PMUstruct(PMUidx).Data(:,SigIdx)*1000;
+                elseif strcmp(NewUnit,'Hz')
                     ErrFlagIdentical = 1;
                 else
                     ErrFlagIncompatible = 1;

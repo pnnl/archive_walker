@@ -36,7 +36,6 @@ function EventList = UpdateEvents(DetectionResults,AdditionalOutput,DetectorXML,
 %#function UpdateRingEvents
 %#function UpdateOutOfRangeEvents
 %#function UpdateWindRampEvents
-%#function UpdateTheveninEvents
 
 for DetectorType = DetectorTypes
     
@@ -74,16 +73,8 @@ for DetectorType = DetectorTypes
                 case 'WindRamp'
                     FieldName = ['WindRamp_' num2str(DetectorIndex)];
                     FunctionName = 'UpdateWindRampEvents';
-                case 'Thevenin'
-                    FieldName = ['Thevenin_' num2str(DetectorIndex)];
-                    FunctionName = 'UpdateTheveninEvents';
-                case 'ModeMeter'
-                    continue;
-%                     FieldName = 'ModeMeter';
-%                     FunctionName = 'UpdateModeMeterEvents';
-%                     AlarmParams.ModeMeter{1} = [];
                 otherwise
-                    % DataWriter, for example
+                    % DataWriter and ModeMeter, for example
                     continue;
             end
             
