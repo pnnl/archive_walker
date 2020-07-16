@@ -286,9 +286,3 @@ build/
 *.sln
 
 # End of https://www.gitignore.io/api/visualstudio
-
-#### MATLAB ignore items ####
-
-# Autosave files
-.asv
-
