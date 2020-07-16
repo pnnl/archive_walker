@@ -111,11 +111,9 @@
     <ApplicationIcon>archive_walker_gray_final_KT6_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GMap.NET.Core, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GMap.NET.Windows.1.8.5\lib\net40\GMap.NET.Core.dll</HintPath>
+    <Reference Include="GMap.NET.WindowsPresentation">
+      <HintPath>..\packages\GMap.NET.Windows.1.9.3\lib\net40\GMap.NET.WindowsPresentation.dll</HintPath>
     </Reference>
-    <Reference Include="GMap.NET.WindowsPresentation, Version=1.8.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef" />
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -269,7 +267,7 @@
       <Name>BAWGUI.RunMATLAB</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.Settings\BAWGUI.Settings.vbproj">
-      <Project>{0edc5fef-a2e3-4d51-8079-fc5499c08ebc}</Project>
+      <Project>{0EDC5FEF-A2E3-4D51-8079-FC5499C08EBC}</Project>
       <Name>BAWGUI.Settings</Name>
     </ProjectReference>
     <ProjectReference Include="..\BAWGUI.SignalManagement\BAWGUI.SignalManagement.csproj">
@@ -284,13 +282,13 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DissipationEnergyFlow\DissipationEnergyFlow.csproj">
+      <Project>{548B4B31-7A6A-416E-9B4F-345BD69B1C8F}</Project>
+      <Name>DissipationEnergyFlow</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
       <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>
       <Name>ModeMeter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
-      <Project>{6F2A8BD2-EE3E-465B-9B64-362A35846F4D}</Project>
-      <Name>VoltageStability</Name>
     </ProjectReference>
     <ProjectReference Include="..\MapService\MapService.csproj">
       <Project>{908167fb-4c0e-4285-a6ee-0ef81a164929}</Project>

@@ -49,6 +49,8 @@ Namespace Converters
             If TypeOf index Is Integer Then
                 Select Case index
                     Case 0
+                        value1 = {"All Initial Input Channels by Signal Type",
+                                           "All Initial Input Channels by PMU"}.ToList
                     Case 1
                         value1 = {"All Initial Input Channels by Signal Type",
                                            "All Initial Input Channels by PMU",
@@ -128,17 +130,17 @@ Namespace Converters
     End Class
 
 
-    Public Class AddCustomizationParameters
-        Implements IMultiValueConverter
+    'Public Class AddCustomizationParameters
+    '    Implements IMultiValueConverter
 
-        Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
-            Return values.ToList
-        End Function
+    '    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+    '        Return values.ToList
+    '    End Function
 
-        Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
-            Return DependencyProperty.UnsetValue
-        End Function
-    End Class
+    '    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+    '        Return DependencyProperty.UnsetValue
+    '    End Function
+    'End Class
 
     'Public Class TreeViewItemLabelConverter
     '    Implements IMultiValueConverter
@@ -156,23 +158,23 @@ Namespace Converters
     '    End Function
     'End Class
 
-    Public Class PhasorCreationCommandParameterConverter
-        Implements IMultiValueConverter
+    'Public Class PhasorCreationCommandParameterConverter
+    '    Implements IMultiValueConverter
 
-        Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
-            Return values.ToList
-        End Function
+    '    Public Function Convert(values() As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IMultiValueConverter.Convert
+    '        Return values.ToList
+    '    End Function
 
-        Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
-            Return DependencyProperty.UnsetValue
-        End Function
-    End Class
+    '    Public Function ConvertBack(value As Object, targetTypes() As Type, parameter As Object, culture As CultureInfo) As Object() Implements IMultiValueConverter.ConvertBack
+    '        Return DependencyProperty.UnsetValue
+    '    End Function
+    'End Class
 
     Public Class FileTypeToLabelConverter
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return "Preset:"
             Else
                 Return "Mnemonic:"
@@ -187,7 +189,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return 2
             Else
                 Return 1
@@ -202,7 +204,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return 3
             Else
                 Return 2
@@ -217,7 +219,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return 1
             Else
                 Return 3
@@ -232,7 +234,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return False
             Else
                 Return True
@@ -247,7 +249,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return "White"
             Else
                 Return "WhiteSmoke"

@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="SignalListPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:SignalSelectionDropDownConverter x:Key="SignalSelectionDropDownConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ComboBox Name="signalGroupMethodCombobox" Grid.Row="0" SelectedValue="{Binding SelectedSelectionMethod}" Margin="2">
+            <ComboBox.ItemsSource>
+                <MultiBinding Converter="{StaticResource SignalSelectionDropDownConverter}">
+                    <Binding Path="SelectSignalMethods"/>
+                    <Binding Path="CurrentTabIndex"/>
+                </MultiBinding>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+        <TreeView Grid.Row="2" Margin="2">
+            <TreeView.Style>
+                <Style TargetType="{x:Type TreeView}">
+                    <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedRawSignalsByType}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by Signal Type">
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedRawSignalsByType}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedSelectionMethod}" Value="All Initial Input Channels by PMU">
+                            <Setter Property="ItemsSource" Value="{Binding SignalMgr.GroupedRawSignalsByPMU}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.Style>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding SignalList}">
+                        <TextBlock Text="{Binding SignalSignature.SignalName}" Margin="0"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>

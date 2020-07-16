@@ -14,9 +14,9 @@ namespace BAWGUI.CoordinateMapping.Models
 {
     public class SiteCoordinatesReader
     {
-        internal void ReadCoordsFile(string locationCoordinatesFilePath, ObservableCollection<SiteCoordinatesViewModel> coords)
+        public ObservableCollection<SiteCoordinatesViewModel> ReadCoordsFile(string locationCoordinatesFilePath)
         {
-            coords.Clear();
+            ObservableCollection<SiteCoordinatesViewModel> coords = new ObservableCollection<SiteCoordinatesViewModel>();
             XmlSerializer serializer = new XmlSerializer(typeof(LocationCoordinatesConfig));
             FileStream stream = new FileStream(locationCoordinatesFilePath, FileMode.Open, FileAccess.Read);
             var content = serializer.Deserialize(stream) as LocationCoordinatesConfig;
@@ -28,6 +28,7 @@ namespace BAWGUI.CoordinateMapping.Models
                     coords.Add(new SiteCoordinatesViewModel(lcl));
                 }
             }
+            return coords;
         }
     }
 }

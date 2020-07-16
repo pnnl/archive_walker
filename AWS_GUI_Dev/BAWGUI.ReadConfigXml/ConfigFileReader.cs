@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.CoordinateMapping.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace BAWGUI.ReadConfigXml
             _processConfigure = new ProcessConfigModel(_configData.Element("Config").Element("ProcessConfig"));
             _postProcessConfig = new PostProcessConfigModel(_configData.Element("Config").Element("PostProcessCustomizationConfig"));
             _detectorConfigure = new DetectorConfigModel(_configData.Element("Config").Element("DetectorConfig"));
+            SignalSiteMappingConfig = new SignalMappingPlotConfigReader(_configData.Element("Config").Element("SignalMappingPlotConfig")).GetSignalCoordsMappingModel();
+            DEFAreaMappingConfig = new DEFAreaMappingconfigReader(_configData.Element("Config").Element("DEFAreaMappingConfig")).GetDEFAreaMappoingModel();
             //_readConfigFile(_configData);
         }
         private XDocument _configData { get; set; }
@@ -62,6 +65,18 @@ namespace BAWGUI.ReadConfigXml
         {
             get { return _detectorConfigure; }
             set { _detectorConfigure = value; }
+        }
+        private List<SignalCoordsMappingModel> _signalSiteMappingConfig;
+        public List<SignalCoordsMappingModel> SignalSiteMappingConfig 
+        { 
+            get { return _signalSiteMappingConfig; }
+            set { _signalSiteMappingConfig = value; }
+        }
+        private List<EnergyFlowAreaCoordsMappingModel> _defAreaMappingConfig;
+        public List<EnergyFlowAreaCoordsMappingModel> DEFAreaMappingConfig 
+        {
+            get { return _defAreaMappingConfig; }
+            set { _defAreaMappingConfig = value; }
         }
     }
 }

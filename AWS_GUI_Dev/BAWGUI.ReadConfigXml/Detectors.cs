@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using BAWGUI.Core;
+using BAWGUI.Core.Models;
+using Microsoft.VisualBasic;
 
 namespace BAWGUI.ReadConfigXml
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
-    using BAWGUI.Core;
-    using BAWGUI.Core.Models;
-    using Microsoft.VisualBasic;
-
     public class PeriodogramDetectorModel
     {
         public PeriodogramDetectorModel()
@@ -35,6 +29,7 @@ namespace BAWGUI.ReadConfigXml
             _frequencyMin = "0.1";
             _frequencyMax = "15";
             _frequencyTolerance = "0.05";
+            _calcDEF = false;
         }
 
         private XElement _item;
@@ -120,6 +115,18 @@ namespace BAWGUI.ReadConfigXml
             if (par != null)
             {
                 FrequencyTolerance = par.Value;
+            }
+            par = _item.Element("CalcDEF");
+            if (par != null)
+            {
+                if (par.Value.ToUpper() == "TRUE")
+                {
+                    CalcDEF = true;
+                }
+                else
+                {
+                    CalcDEF = false;
+                }
             }
         }
 
@@ -264,6 +271,18 @@ namespace BAWGUI.ReadConfigXml
                 _frequencyTolerance = value;                
             }
         }
+        private bool _calcDEF;
+        public bool CalcDEF
+        {
+            get
+            {
+                return _calcDEF;
+            }
+            set
+            {
+                _calcDEF = value;
+            }
+        }
         public List<SignalSignatures> PMUElementList { get; set; }
     }
 
@@ -281,6 +300,7 @@ namespace BAWGUI.ReadConfigXml
             _frequencyMin = "0.1";
             _frequencyMax = "15";
             _frequencyTolerance = "0.05";
+            _calcDEF = false;
         }
 
         private XElement _item;
@@ -395,6 +415,18 @@ namespace BAWGUI.ReadConfigXml
             if (par != null)
             {
                 FrequencyTolerance = par.Value;
+            }
+            par = _item.Element("CalcDEF");
+            if (par != null)
+            {
+                if (par.Value.ToUpper() == "TRUE")
+                {
+                    CalcDEF = true;
+                }
+                else
+                {
+                    CalcDEF = false;
+                }
             }
         }
 
@@ -565,6 +597,18 @@ namespace BAWGUI.ReadConfigXml
             set
             {
                 _frequencyTolerance = value;                
+            }
+        }
+        private bool _calcDEF;
+        public bool CalcDEF
+        {
+            get
+            {
+                return _calcDEF;
+            }
+            set
+            {
+                _calcDEF = value;
             }
         }
         public List<SignalSignatures> PMUElementList { get; set; }
@@ -1470,4 +1514,126 @@ namespace BAWGUI.ReadConfigXml
         public string Mnemonic { get; set; }
         public List<SignalSignatures> PMUElementList { get; set; }
     }
+    public class AutoEventExportModel
+    {
+        private XElement _item;
+        public AutoEventExportModel()
+        {
+            Flag = false;
+            DeletePastFlag = false;
+            SurroundingMinutes = "0";
+            DeletePastDays = "2";
+        }
+        public AutoEventExportModel(XElement item)
+        {
+            this._item = item;
+            var par = _item.Element("Flag");
+            if (par != null)
+            {
+                if (par.Value == "0")
+                {
+                    Flag = false;
+                }
+                else
+                {
+                    Flag = true;
+                }
+            }
+            par = _item.Element("SurroundingMinutes");
+            if (par != null)
+            {
+                SurroundingMinutes = par.Value;
+            }
+            par = _item.Element("DeletePastFlag");
+            if (par != null)
+            {
+                if (par.Value == "0")
+                {
+                    DeletePastFlag = false;
+                }
+                else
+                {
+                    DeletePastFlag = true;
+                }
+            }
+            par = _item.Element("DeletePastDays");
+            if (par != null)
+            {
+                DeletePastDays = par.Value;
+            }
+            par = _item.Element("ExportPath");
+            if (par != null)
+            {
+                ExportPath = par.Value;
+            }
+        }
+        public bool Flag { get; set; }
+        public string SurroundingMinutes { get; set; }
+        public bool DeletePastFlag { get; set; }
+        public string DeletePastDays { get; set; }
+        public string ExportPath { get; set; }
+    }
+
+    //    public class DissipationEnergyFlowDetectorModel
+    //    {
+    //        private XElement _item;
+    //        public DissipationEnergyFlowDetectorModel(XElement item)
+    //        {
+    //            this._item = item;
+    //            var paths = _item.Element("Paths");
+    //            if (paths != null)
+    //            {
+    //            }
+    //            var parameters = _item.Element("Parameters");
+    //            if (parameters != null)
+    //            {
+    //                var par = parameters.Element("LocMinLength");
+    //                if (par != null)
+    //                {
+    //                    try
+    //                    {
+    //                        LocMinLength = Int32.Parse(par.Value);
+    //                    }
+    //                    catch (Exception ex)
+    //                    {
+
+    //                        throw new Exception("Integer expected. Original error: " + ex.Message);
+    //                    }
+    //                }
+    //                par = parameters.Element("LocLengthStep");
+    //                if (par != null)
+    //                {
+    //                    try
+    //                    {
+    //                        LocLengthStep = Int32.Parse(par.Value);
+    //                    }
+    //                    catch (Exception ex)
+    //                    {
+
+    //                        throw new Exception("Integer expected. Original error: " + ex.Message);
+    //                    }
+    //                }
+    //                par = parameters.Element("LocRes");
+    //                if (par != null)
+    //                {
+    //                    try
+    //                    {
+    //                        LocRes = Int32.Parse(par.Value);
+    //                    }
+    //                    catch (Exception ex)
+    //                    {
+
+    //                        throw new Exception("Integer expected. Original error: " + ex.Message);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        public int LocMinLength { get; set; }
+    //        public int LocLengthStep { get; set; }
+    //        public int LocRes { get; set; }
+    //    }
+    //    public class EnergyFlowPath
+    //    {
+    //        public EnergyFlowAreaCoordsMappingModel FromArea { get; set; }
+    //    }
 }

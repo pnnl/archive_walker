@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
-             xmlns:converters2="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coreConverters="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
              xmlns:vm="clr-namespace:BAWGUI.Settings.ViewModels"
              xmlns:local="clr-namespace:BAWGUI.Settings"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
@@ -15,8 +15,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:ExpanderHeaderConverter x:Key="ExpanderHeaderConverter"/>
-            <converters:AddCustomizationParameters x:Key="AddCustomizationParameters"/>
-            <converters2:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
+            <coreConverters:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
+            <!--<converters:AddCustomizationParameters x:Key="AddCustomizationParameters"/>-->
+            <coreConverters:SelectionStatusBackgroundConverter x:Key="SelectionStatusBackgroundConverter"/>
             <DataTemplate x:Key="ScalarRepCustomization">                
                 <local:ScalarRepCustomization/>
             </DataTemplate>
@@ -101,6 +102,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Border BorderBrush="Black" Margin="2" BorderThickness="0.5" Grid.Column="0">
@@ -144,7 +146,7 @@
                                             <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.CustomizationSelected, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}"/>
                                             <Setter Property="MenuItem.CommandParameter">
                                                 <Setter.Value>
-                                                    <MultiBinding Converter="{StaticResource AddCustomizationParameters}">
+                                                    <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
                                                         <Binding Path="Header" RelativeSource="{RelativeSource Mode=Self}"/>
                                                         <Binding Source="DataConfig"/>
                                                     </MultiBinding>
@@ -407,7 +409,8 @@
                 </Grid>
             </ScrollViewer>
         </Border>
-        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="1">
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+        <Border BorderBrush="Black" Margin="5,2" BorderThickness="0.5" Grid.Column="2">
             <Grid Margin="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

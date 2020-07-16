@@ -40,13 +40,13 @@ namespace BAWGUI.Utilities
         {
             add
             {
-                System.Windows.Input.CommandManager.RequerySuggested += value;
+                CommandManager.RequerySuggested += value;
                 this.CanExecuteChangedInternal += value;
             }
 
             remove
             {
-                System.Windows.Input.CommandManager.RequerySuggested -= value;
+                CommandManager.RequerySuggested -= value;
                 this.CanExecuteChangedInternal -= value;
             }
         }

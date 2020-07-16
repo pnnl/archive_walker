@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAWGUI.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,27 @@ namespace ModeMeter.Views
         public ModeAnalysisParametersView()
         {
             InitializeComponent();
+        }
+
+        private void GroupBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var b = sender as Border;
+            var a = b.Parent as Grid;
+            var c = a.Parent as GroupBox;
+            c.Background = Utility.HighlightColor;
+        }
+
+        private void GroupBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var b = sender as Border;
+            var a = b.Parent as Grid;
+            var c = a.Parent as GroupBox;
+            c.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void GroupBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            var c = sender as GroupBox;
         }
     }
 }

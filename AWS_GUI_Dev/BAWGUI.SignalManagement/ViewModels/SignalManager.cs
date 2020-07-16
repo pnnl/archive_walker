@@ -1,23 +1,18 @@
 ﻿using BAWGUI.Core;
 using BAWGUI.Core.Models;
 using BAWGUI.Core.ViewModels;
-using BAWGUI.CSVDataReader.CSVDataReader;
 using BAWGUI.MATLABRunResults.Models;
-using BAWGUI.ReadConfigXml;
 using BAWGUI.RunMATLAB.ViewModels;
 using BAWGUI.Utilities;
 using JSISCSVWriter;
 using OxyPlot;
 using OxyPlot.Axes;
-using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -210,6 +205,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                             MissingExampleFile.Add("\nError reading openHistorian database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
+                    else if (item.FileType == DataFileType.OpenPDC)
+                    {
+                        try
+                        {
+                            aFileInfo.PresetList = item.GetPresets(item.ExampleFile);
+                            _readDBExampleFile(aFileInfo, starttime, "openPDC");
+                        }
+                        catch (Exception ex)
+                        {
+                            MissingExampleFile.Add("\nError reading openPDC database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
+                        }
+                    }
                     //FileInfo.Add(aFileInfo);
                 }
             }
@@ -287,6 +294,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                     catch (Exception ex)
                     {
                         throw new Exception("Error reading openHistorian database. " + ex.Message);
+                    }
+                }
+                else if (model.Model.FileType == DataFileType.OpenPDC)
+                {
+                    try
+                    {
+                        model.PresetList = model.Model.GetPresets(model.ExampleFile);
+                        _readDBExampleFile(model, starttime, "openPDC");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading openPDC database. " + ex.Message);
                     }
                 }
                 //FileInfo.Add(model);
@@ -1232,7 +1251,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                                 else
                                 {
                                     signal.TypeAbbreviation = "OTHER";
-                                    signal.Unit = "OTHER";
+                                    signal.Unit = "O";
                                 }
 
                                 break;
@@ -1255,7 +1274,7 @@ namespace BAWGUI.SignalManagement.ViewModels
                                 else
                                 {
                                     signal.TypeAbbreviation = "OTHER";
-                                    signal.Unit = "OTHER";
+                                    signal.Unit = "O";
                                 }
 
                                 break;
@@ -1310,7 +1329,8 @@ namespace BAWGUI.SignalManagement.ViewModels
                 newSignalList.Add(signal);
             }
             fileInfo.TaggedSignals = newSignalList;
-            var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
+            //var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
+            var newSig = new SignalSignatureViewModel(fileInfo.FileDirectory + ", " + fileInfo.Mnemonic + ", Sampling Rate: " + fileInfo.SamplingRate + "/Second");
             newSig.SamplingRate = fileInfo.SamplingRate;
             var a = new SignalTypeHierachy(newSig);
             a.SignalList = SortSignalByPMU(newSignalList);
@@ -2945,6 +2965,10 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "openHistorian");
                     }
+                    else if (info.FileType == DataFileType.OpenPDC)
+                    {
+                        _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "openPDC");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -3100,6 +3124,7 @@ namespace BAWGUI.SignalManagement.ViewModels
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "JSIS_CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             saveFileDialog1.Title = "Export Result Data File";
+            saveFileDialog1.RestoreDirectory = true;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName != "")
@@ -3141,9 +3166,18 @@ namespace BAWGUI.SignalManagement.ViewModels
         }
 
         /// <summary>
-        /// signals that are selected by forced oscillation and voltage magnitude in voltage stability need to be marked on map
+        /// signals that are selected by forced oscillation need to be marked on map
         /// </summary>
-        public ObservableCollection<SignalSignatureViewModel> MappingSignals { get; set; }
+        private ObservableCollection<SignalSignatureViewModel> _mappingSignals;
+        public ObservableCollection<SignalSignatureViewModel> MappingSignals 
+        {
+            get { return _mappingSignals; }
+            set 
+            { 
+                _mappingSignals = value;
+                UniqueMappingSignals = new ObservableCollection<SignalSignatureViewModel>(MappingSignals.Distinct());
+            } 
+        }
         private ObservableCollection<SignalSignatureViewModel> _uniqueMappingSignals;
         public ObservableCollection<SignalSignatureViewModel> UniqueMappingSignals
         {
@@ -3158,6 +3192,12 @@ namespace BAWGUI.SignalManagement.ViewModels
         public void DistinctMappingSignal()
         {
             UniqueMappingSignals = new ObservableCollection<SignalSignatureViewModel>(MappingSignals.Distinct());
+            OnUniqueMappingSignalChanged(EventArgs.Empty);
+        }
+        public event EventHandler UniqueMappingSignalChanged;
+        protected virtual void OnUniqueMappingSignalChanged(EventArgs e)
+        {
+            UniqueMappingSignalChanged?.Invoke(this, e);
         }
     }
 }

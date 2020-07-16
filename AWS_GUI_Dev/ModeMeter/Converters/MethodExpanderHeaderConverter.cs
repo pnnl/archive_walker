@@ -33,6 +33,12 @@ namespace ModeMeter.Converters
                     case ModeMethods.LSARMAS:
                         secondString = "LS-ARMA+S";
                         break;
+                    case ModeMethods.STLS:
+                        secondString = "STLS";
+                        break;
+                    case ModeMethods.STLSS:
+                        secondString = "STLS+S";
+                        break;
                     default:
                         throw new Exception("Mode method type not valid!");
                 }

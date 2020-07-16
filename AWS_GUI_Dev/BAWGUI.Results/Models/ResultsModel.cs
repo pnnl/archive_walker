@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using BAWGUI.MATLABRunResults.Models;
 using BAWGUI.Xml;
-using VoltageStability.Models;
 
 namespace BAWGUI.Results.Models
 {
@@ -28,7 +27,6 @@ namespace BAWGUI.Results.Models
             _ringdownEvents = new List<RingDownEvent>();
             _outOfRangeEvents = new List<OutOfRangeEvent>();
             _windRampEvents = new List<WindRampEvent>();
-            _voltageStabilityEvents = new List<VoltageStabilityEvent>();
         }
 
         internal void LoadResults(List<string> filenames, List<string> dates)
@@ -40,7 +38,6 @@ namespace BAWGUI.Results.Models
             var ringdownEvents = new List<RingDownEvent>();
             var outOfRangeEvents = new List<OutOfRangeEvent>();
             var windRampEvents = new List<WindRampEvent>();
-            var voltageStabilityEvents = new List<VoltageStabilityEvent>();
 
             foreach (var filename in filenames)
             {
@@ -72,9 +69,9 @@ namespace BAWGUI.Results.Models
                         ringdownEvents.Add(newrd);
                     }
                 }
-                if (content.OutOfRangeFrequency != null)
+                if (content.OutOfRangeGeneral != null)
                 {
-                    foreach (var oor in content.OutOfRangeFrequency)
+                    foreach (var oor in content.OutOfRangeGeneral)
                     {
                         var newoor = new OutOfRangeEvent(oor, date);
                         outOfRangeEvents.Add(newoor);
@@ -88,23 +85,11 @@ namespace BAWGUI.Results.Models
                         windRampEvents.Add(newwr);
                     }
                 }
-                if (content.Thevenin != null)
-                {
-                    foreach (var vs in content.Thevenin)
-                    {
-                        var newvs = new VoltageStabilityEvent(vs, date);
-                        voltageStabilityEvents.Add(newvs);
-                    }
-                }
                 stream.Close();
                 //}
             }
             _combineForcedOscillationEvents(forcedOscillationCompleteList);
             _combineEventList(ringdownEvents, outOfRangeEvents, windRampEvents);
-            if (voltageStabilityEvents.Count() > 0)
-            {
-                _combineVSEventList(voltageStabilityEvents);
-            }
         }
 
         //private void _combineEventList(List<RingDownEvent> ringdownEvents, List<OutOfRangeEvent> outOfRangeEvents, List<WindRampEvent> windRampEvents)
@@ -201,24 +186,6 @@ namespace BAWGUI.Results.Models
         }
 
 
-        private void _combineVSEventList(List<VoltageStabilityEvent> voltageStabilityEvents)
-        {
-            var vsEventsCombined = new List<VoltageStabilityEvent>();
-            var vsByID = voltageStabilityEvents.GroupBy(x => x.ID).ToDictionary(p => p.Key, p => p.ToList());
-            foreach (var vs in vsByID)
-            {
-                if (vs.Value.Count > 1)
-                {
-                    var keep = vs.Value.Aggregate((x1, x2) => DateTime.ParseExact(x1.Date, "yyMMdd", CultureInfo.InvariantCulture) > DateTime.ParseExact(x2.Date, "yyMMdd", CultureInfo.InvariantCulture) ? x1 : x2);
-                    vsEventsCombined.Add(keep);
-                }
-                else
-                {
-                    vsEventsCombined.Add(vs.Value.FirstOrDefault());
-                }
-            }
-            _voltageStabilityEvents = vsEventsCombined;
-        }
         //private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList = new List<DatedForcedOscillationEvent>();
         private List<DatedForcedOscillationEvent> _forcedOscillationCombinedList;
         public List<DatedForcedOscillationEvent> ForcedOscillationCombinedList
@@ -252,11 +219,6 @@ namespace BAWGUI.Results.Models
         //    get { return _selectedEndTime; }
         //    set { _selectedEndTime = value; }
         //}
-        private List<VoltageStabilityEvent> _voltageStabilityEvents;
-        public List<VoltageStabilityEvent> VoltageStabilityEvents
-        {
-            get { return _voltageStabilityEvents; }
-        }
 
     }
 }

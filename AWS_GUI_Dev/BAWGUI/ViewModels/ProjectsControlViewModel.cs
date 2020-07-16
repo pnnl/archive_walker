@@ -13,13 +13,12 @@ using BAWGUI.ViewModels;
 using BAWGUI.Core;
 using BAWGUI.Utilities;
 using BAWGUI.Settings.ViewModels;
-using VoltageStability.Models;
-using VoltageStability.ViewModels;
 using ModeMeter.ViewModels;
 using ModeMeter.Models;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using BAWGUI.RunMATLAB.ViewModels;
 
-namespace BAWGUI.RunMATLAB.ViewModels
+namespace BAWGUI.ViewModels
 {
     public class ProjectsControlViewModel : ViewModelBase
     {
@@ -55,10 +54,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
             _generatedNewRun = new AWRunViewModel();
             _isMatlabEngineRunning = false;
             _runCommands = new RunMATLABViewModel();
+            //_runCommands.TaskIsRunning += _taskStartedRunning;
             DeleteRun = new RelayCommand(_deleteARun);
             _canRun = true;
         }
-
         //public ProjectsControlViewModel(string resultsStoragePath)
         //{
         //    _resultsStoragePath = resultsStoragePath;
@@ -149,6 +148,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         public ICommand BrowseResultsStorage { get; set; }
         private void _browseResultsStorage(object obj)
         {
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
             using (var fbd = new CommonOpenFileDialog())
             {
                 fbd.InitialDirectory = ResultsStoragePath;
@@ -162,6 +162,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 fbd.EnsureValidNames = true;
                 fbd.Multiselect = false;
                 fbd.ShowPlacesList = true;
+                fbd.RestoreDirectory = true;
                 CommonFileDialogResult result = fbd.ShowDialog();
 
                 if (result == CommonFileDialogResult.Ok && !string.IsNullOrWhiteSpace(fbd.FileName))
@@ -178,6 +179,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     //string[] files = Directory.GetFiles(ResultsStoragePath);
                 }
             }
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
         }
 
         private void _generateProjectTree(string ResultsStoragePath)
@@ -187,12 +189,14 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 //ProjectControl = new ProjectsControlViewModel(ResultsStoragePath);
                 _resultsStoragePath = ResultsStoragePath;
                 var awProjects = new ObservableCollection<AWProjectViewModel>();
-                foreach (var dir in Directory.GetDirectories(ResultsStoragePath))
+                var dirs = new DirectoryInfo(ResultsStoragePath).GetDirectories().OrderBy(x => x.CreationTime).ToList();
+                foreach (var dir in dirs)
                 {
-                    var projectNameFrac = Path.GetFileName(dir).Split('_');
-                    if (projectNameFrac[0] == "Project" && Directory.Exists(dir))
+                    var dirName = dir.FullName;
+                    var projectNameFrac = Path.GetFileName(dirName).Split('_');
+                    if (projectNameFrac[0] == "Project" && Directory.Exists(dirName))
                     {
-                        var aNewPoject = new AWProjectViewModel(dir);
+                        var aNewPoject = new AWProjectViewModel(dirName);
                         aNewPoject.ProjectSelected += _onProjectSelected;
                         awProjects.Add(aNewPoject);
                     }
@@ -226,6 +230,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 _selectedRun = value;
 #if !DEBUG
+                _selectedRun.TaskIsRunning += _taskStartedRunning;
                 CanRun = !_findRunGeneratedFile(value.Model.RunPath);
 #endif
                 OnPropertyChanged();
@@ -348,32 +353,24 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 try
                 {
                     configWriter.WriteXmlConfigFile(_generatedNewRun.Model.ConfigFilePath);
+                    var errors = configWriter.GetErrorMessages();
+                    if (errors.Count > 0)
+                    {
+                        System.Windows.Forms.MessageBox.Show(string.Join(Environment.NewLine, errors), "warning!", MessageBoxButtons.OK);
+                    }
                 }
                 catch (Exception ex)
                 {
                     System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
-                var detectorList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is VoltageStabilityDetectorViewModel).Select(x=>(VoltageStabilityDetectorViewModel)x).ToList();
-                if (detectorList.Count > 0)
+                var modeMeterList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is SmallSignalStabilityToolViewModel).Select(x => (SmallSignalStabilityToolViewModel)x).ToList();
+                if (modeMeterList.Count > 0)
                 {
                     var MMDir = _generatedNewRun.Model.EventPath + "\\MM\\";
                     if (!Directory.Exists(MMDir))
                     {
                         Directory.CreateDirectory(MMDir);
                     }
-                    var vsWriter = new VoltageStabilityDetectorGroupWriter();
-                    try
-                    {
-                        vsWriter.WriteXmlCofigFile(_generatedNewRun.Model.ConfigFilePath, detectorList);
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
-                    }
-                }
-                var modeMeterList = settingNeedsToBeSaved.DetectorConfigure.DetectorList.Where(x => x is SmallSignalStabilityToolViewModel).Select(x => (SmallSignalStabilityToolViewModel)x).ToList();
-                if (modeMeterList.Count > 0)
-                {
                     var mmWriter = new ModeMeterXmlWriter();
                     try
                     {
@@ -381,7 +378,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.Forms.MessageBox.Show("Error writing voltage stability detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
+                        System.Windows.Forms.MessageBox.Show("Error writing Mode Meter detector(s). Original message: " + ex.Message, "Error!", MessageBoxButtons.OK);
                     }
                 }
                 if (SelectedRun != null)
@@ -418,7 +415,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             {
                 var ext = Path.GetExtension(file).ToLower();
                 var filename = Path.GetFileNameWithoutExtension(file);
-                if (ext == "mat" || filename.Contains("EventList") || filename.Contains("Pause"))
+                if (ext == ".mat" || ext == ".csv" || filename.Contains("EventList") || filename.Contains("Pause") || filename.Contains("RunFlag"))
                 {
                     return true;
                 }
@@ -433,7 +430,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
             }
             return false;
         }
-
+        //need to keep
         public ICommand AddRun { get; set; }
         private void _addARun(object obj)
         {
@@ -448,11 +445,13 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 DataContext = _addTaskVM
             };
             _addRundialogbox.ShowDialog();
-            //var dialogResult = dialogbox.ShowDialog();
-            //if (true)
-            //{
-
-            //}
+            if (obj != null && !File.Exists(_generatedNewRun.Model.ConfigFilePath))
+            {
+                FileStream fs = File.Create(_generatedNewRun.Model.ConfigFilePath);
+                fs.Close();
+                var wr = new ConfigFileWriter(new SettingsViewModel(), _generatedNewRun.Model);
+                wr.WriteXmlConfigFile(_generatedNewRun.Model.ConfigFilePath);
+            }
         }
         //private AddTaskViewModel _addTaskVM;
         private AddARunPopup _addRundialogbox;
@@ -595,6 +594,10 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 return _canRun;
             }
         }
+        private void _taskStartedRunning(object sender, AWRunViewModel e)
+        {
+            CanRun = false;
+        }
     }
     public class AWProjectViewModel : ViewModelBase
     {
@@ -607,7 +610,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
         {
             _model = new AWProject(dir);
             DeleteRun = new RelayCommand(DeleteARun);
-            AddRun = new RelayCommand(_addARun);
+            //AddRun = new RelayCommand(_addARun);
             //_addTaskVM = new AddTaskViewModel();
             _dialogbox = new AddARunPopup();
             IsEnabled = true;
@@ -642,7 +645,7 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 newRunViewModel.RunSelected += _onOneOfTheRunSelected;
                 runs.Add(newRunViewModel);
             }
-           return new ObservableCollection<AWRunViewModel>(runs.OrderBy(x => x.AWRunName).ToList());
+           return new ObservableCollection<AWRunViewModel>(runs);
         }
 
         private void _onOneOfTheRunSelected(object sender, AWRunViewModel e)
@@ -693,7 +696,20 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 System.IO.FileStream fs = System.IO.File.Create(configFilePath);
                 fs.Close();
                 var wr = new ConfigFileWriter(new Settings.ViewModels.SettingsViewModel(), task.Model);
-                wr.WriteXmlConfigFile(configFilePath);
+                try
+                {
+                    wr.WriteXmlConfigFile(configFilePath);
+                    var errors = wr.GetErrorMessages();
+                    if (errors.Count > 0)
+                    {
+                        System.Windows.Forms.MessageBox.Show(string.Join(Environment.NewLine, errors), "warning!", MessageBoxButtons.OK);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error writing config.xml file!\n" + ex.Message, "Error!", System.Windows.Forms.MessageBoxButtons.OK);
+                    return;
+                }
                 task.Model.ConfigFilePath = configFilePath;
                 System.Windows.Forms.MessageBox.Show("Config.xml was just created since it didn't exist.", "warning!", MessageBoxButtons.OK);
             }
@@ -768,62 +784,63 @@ namespace BAWGUI.RunMATLAB.ViewModels
                 Directory.Delete(path, true);
             }
         }
+        //do I need this?
+        //public ICommand AddRun { get; set; }
+        //private void _addARun(object obj)
+        //{
+        //    var _addTaskVM = new AddTaskViewModel();
+        //    //_addTaskVM.NameAccepted2 += _generateNewTaskStructureOnDisk;
+        //    _addTaskVM.NewTaskCancelled2 += _newTaskCancelled;
+        //    _addTaskVM.CurrentProject = this;
+        //    _dialogbox = new AddARunPopup
+        //    {
+        //        Owner = System.Windows.Application.Current.MainWindow,
+        //        DataContext = _addTaskVM
+        //    };
+        //    _dialogbox.ShowDialog();
+        //    //var dialogResult = dialogbox.ShowDialog();
+        //    //if (true)
+        //    //{
 
-        public ICommand AddRun { get; set; }
-        private void _addARun(object obj)
-        {
-            var _addTaskVM = new AddTaskViewModel();
-            _addTaskVM.NameAccepted2 += _generateNewTaskStructureOnDisk;
-            _addTaskVM.NewTaskCancelled2 += _newTaskCancelled;
-            _addTaskVM.CurrentProject = this;
-            _dialogbox = new AddARunPopup
-            {
-                Owner = System.Windows.Application.Current.MainWindow,
-                DataContext = _addTaskVM
-            };
-            _dialogbox.ShowDialog();
-            //var dialogResult = dialogbox.ShowDialog();
-            //if (true)
-            //{
-
-            //}
-        }
+        //    //}
+        //}
         //private AddTaskViewModel _addTaskVM;
         private AddARunPopup _dialogbox;
-        private void _generateNewTaskStructureOnDisk(object sender, EventArgs e)
-        {
-            _dialogbox.Close();
-            var newtaskName = ((AddTaskViewModel)sender).NewRunName;
-            var nameExistsFlag = false;
-            foreach (var task in AWRuns)
-            {
-                if (task.Model.RunName == newtaskName)
-                {
-                    nameExistsFlag = true;
-                    break;
-                }
-            }
-            if (nameExistsFlag)
-            {
-                System.Windows.Forms.MessageBox.Show("Task exists, please give a new name!", "ERROR!", MessageBoxButtons.OK);
-                var _addTaskVM = new AddTaskViewModel();
-                _addTaskVM.NameAccepted2 += _generateNewTaskStructureOnDisk;
-                _addTaskVM.NewTaskCancelled2 += _newTaskCancelled;
-                _addTaskVM.CurrentProject = this;
-                _dialogbox = new AddARunPopup
-                {
-                    Owner = System.Windows.Application.Current.MainWindow,
-                    DataContext = _addTaskVM
-                };
-                _dialogbox.ShowDialog();
-            }
-            else
-            {
-                AddANewTask(newtaskName);
-                //var newRunVm = new AWRunViewModel(taskDir);
-                //AWRuns.Add(new AWRunViewModel(taskDir));
-            }
-        }
+        //do we need this function?
+        //private void _generateNewTaskStructureOnDisk(object sender, EventArgs e)
+        //{
+        //    _dialogbox.Close();
+        //    var newtaskName = ((AddTaskViewModel)sender).NewRunName;
+        //    var nameExistsFlag = false;
+        //    foreach (var task in AWRuns)
+        //    {
+        //        if (task.Model.RunName == newtaskName)
+        //        {
+        //            nameExistsFlag = true;
+        //            break;
+        //        }
+        //    }
+        //    if (nameExistsFlag)
+        //    {
+        //        System.Windows.Forms.MessageBox.Show("Task exists, please give a new name!", "ERROR!", MessageBoxButtons.OK);
+        //        var _addTaskVM = new AddTaskViewModel();
+        //        _addTaskVM.NameAccepted2 += _generateNewTaskStructureOnDisk;
+        //        _addTaskVM.NewTaskCancelled2 += _newTaskCancelled;
+        //        _addTaskVM.CurrentProject = this;
+        //        _dialogbox = new AddARunPopup
+        //        {
+        //            Owner = System.Windows.Application.Current.MainWindow,
+        //            DataContext = _addTaskVM
+        //        };
+        //        _dialogbox.ShowDialog();
+        //    }
+        //    else
+        //    {
+        //        AddANewTask(newtaskName);
+        //        //var newRunVm = new AWRunViewModel(taskDir);
+        //        //AWRuns.Add(new AWRunViewModel(taskDir));
+        //    }
+        //}
         public void AddANewTask(string newtaskName)
         {
             var taskDir = _model.Projectpath + "Task_" + newtaskName;
@@ -832,9 +849,9 @@ namespace BAWGUI.RunMATLAB.ViewModels
             Directory.CreateDirectory(controlRunPath);
             var controlReRunPath = taskDir + "\\ControlRerun\\";
             Directory.CreateDirectory(controlReRunPath);
-            var eventPath = taskDir + "\\Event";
+            var eventPath = taskDir + "\\Event\\";
             Directory.CreateDirectory(eventPath);
-            var initPath = taskDir + "\\Init";
+            var initPath = taskDir + "\\Init\\";
             Directory.CreateDirectory(initPath);
 
             var newTask = new AWRun();
@@ -845,18 +862,18 @@ namespace BAWGUI.RunMATLAB.ViewModels
             newTask.InitializationPath = initPath;
             newTask.RunName = newtaskName;
             newTask.RunPath = taskDir;
-            if (!File.Exists(newTask.ConfigFilePath))
-            {
-                FileStream fs = File.Create(newTask.ConfigFilePath);
-                fs.Close();
-                var wr = new ConfigFileWriter(new SettingsViewModel(), newTask);
-                wr.WriteXmlConfigFile(newTask.ConfigFilePath);
-            }
+            //if (!File.Exists(newTask.ConfigFilePath))
+            //{
+            //    FileStream fs = File.Create(newTask.ConfigFilePath);
+            //    fs.Close();
+            //    var wr = new ConfigFileWriter(new SettingsViewModel(), newTask);
+            //    wr.WriteXmlConfigFile(newTask.ConfigFilePath);
+            //}
             _model.AWRuns.Add(newTask);
             var newTaskVieModel = new AWRunViewModel(newTask);
             newTaskVieModel.RunSelected += _onOneOfTheRunSelected;
             AWRuns.Add(newTaskVieModel);
-            AWRuns = new ObservableCollection<AWRunViewModel>(AWRuns.OrderBy(x => x.AWRunName).ToList());
+            AWRuns = new ObservableCollection<AWRunViewModel>(AWRuns);
             //AWRuns = GetAWRunViewModelCollection(_model.AWRuns);
             //_model.AWRuns.OrderBy(x => x.RunName);
             //OnPropertyChanged("AWRuns");

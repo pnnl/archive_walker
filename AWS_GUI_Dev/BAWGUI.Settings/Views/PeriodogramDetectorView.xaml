@@ -42,7 +42,7 @@
             </i:EventTrigger>
         </i:Interaction.Triggers>
         <Grid Margin="2">
-            <Expander Grid.Column="0" IsExpanded="{Binding IsExpanded}">
+            <Expander IsExpanded="{Binding IsExpanded}">
                 <Expander.Header>
                     <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}">
                         <TextBlock VerticalAlignment="Center">
@@ -96,6 +96,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <!--<Image Grid.Row="0" Grid.Column="0" Source="/BAWGUI.Settings;component/MyResources/Asterisk.png" Height="8" Width="8" VerticalAlignment="Top" Margin="2,12,0,0" HorizontalAlignment="Right"/>-->
                             <Label Grid.Row="0" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Mode:" HorizontalAlignment="Left"/>
@@ -131,6 +132,8 @@
                             <Label Grid.Row="10" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Frequency Tolerance (Hz):" HorizontalAlignment="Left"/>
                             <xtlkt:WatermarkTextBox Watermark="Optional" Grid.Row="10" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" Text="{Binding FrequencyTolerance, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                             <!--<TextBlock Text="(Optional)" Grid.Row="10" Grid.Column="2" Margin="2,1" VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
+                            <Label Grid.Row="11" Grid.Column="0" Margin="0,1" Width="230" VerticalAlignment="Center" Content="Calculate Energy Flow:" HorizontalAlignment="Left"/>
+                            <CheckBox Grid.Row="11" Grid.Column="1" Margin="0,1" Width="120" VerticalAlignment="Center" IsChecked="{Binding CalcDEF, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
                         </Grid>
                     </Grid>
                 </ScrollViewer>

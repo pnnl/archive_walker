@@ -48,7 +48,7 @@ namespace BAWGUI.Core
         public int PassedThroughDQFilter { get; set; }
         public int PassedThroughProcessor { get; set; }
         public List<double> Data { get; set; }
-        public List<double> TimeStampNumber { get; set; }
+        public List<double> TimeStampNumber { get; set; } //.net number of days
         public List<double> MATLABTimeStampNumber { get; internal set; }
         public SiteCoordinatesModel From { get; set; }
         public SiteCoordinatesModel To { get; set; }

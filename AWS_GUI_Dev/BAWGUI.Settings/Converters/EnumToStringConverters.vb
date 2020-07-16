@@ -18,6 +18,8 @@ Namespace Converters
                     Return "PI Database"
                 Case DataFileType.OpenHistorian
                     Return "openHistorian"
+                Case DataFileType.OpenPDC
+                    Return "openPDC"
                 Case Else
                     Throw New Exception("Data file type not valid!")
             End Select
@@ -35,6 +37,8 @@ Namespace Converters
                     Return DataFileType.PI
                 Case "openHistorian"
                     Return DataFileType.OpenHistorian
+                Case "openPDC"
+                    Return DataFileType.OpenPDC
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select
@@ -191,6 +195,8 @@ Namespace Converters
                     Return "Running Average"
                 Case TunableFilterType.PointOnWavePower
                     Return "Point on Wave Power Calculation"
+                Case TunableFilterType.RMSenergyFilt
+                    Return "RMS Energy"
                     'Case TunableFilterType.Median
                     '    Return "Median"
                 Case Else
@@ -212,6 +218,8 @@ Namespace Converters
                     Return TunableFilterType.RunningAverage
                 Case "Point on Wave Power Calculation"
                     Return TunableFilterType.PointOnWavePower
+                Case "RMS Energy"
+                    Return TunableFilterType.RMSenergyFilt
                     'Case "Median"
                     '    Return TunableFilterType.Median
                 Case Else

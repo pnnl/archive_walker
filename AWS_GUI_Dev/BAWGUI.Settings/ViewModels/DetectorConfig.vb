@@ -8,6 +8,9 @@ Imports BAWGUI.ReadConfigXml
 Imports BAWGUI.SignalManagement.ViewModels
 Imports BAWGUI.Utilities
 Imports Microsoft.WindowsAPICodePack.Dialogs
+Imports DissipationEnergyFlow
+Imports DissipationEnergyFlow.ViewModels
+Imports BAWGUI.CoordinateMapping.ViewModels
 
 Namespace ViewModels
     Public Class DetectorConfig
@@ -22,14 +25,16 @@ Namespace ViewModels
                                                           "Spectral Coherence Forced Oscillation Detector",
                                                           "Ringdown Detector",
                                                           "Out-of-Range Detector",
-                                                          "Wind Ramp Detector",'"Voltage Stability",
-                                                          "Mode Meter Tool"}
+                                                          "Wind Ramp Detector",
+                                                          "Mode Meter Tool",
+                                                          "Dissipation Energy Flow Detector"}
             _alarmingDetectorNameList = New List(Of String) From {"Periodogram Forced Oscillation Detector",
                                                                   "Spectral Coherence Forced Oscillation Detector",
                                                                   "Ringdown Detector"}
             '_addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
             _signalsMgr = SignalManager.Instance
             _browseSavePath = New DelegateCommand(AddressOf _openSavePath, AddressOf CanExecute)
+            _autoEventExporter = New AutoEventExportViewModel
         End Sub
         Public Sub New(detectorConfigure As ReadConfigXml.DetectorConfigModel, signalsMgr As SignalManager)
             Me.New
@@ -52,6 +57,8 @@ Namespace ViewModels
                         ResultUpdateIntervalVisibility = Visibility.Visible
                     Case "Data Writer"
                         newDataWriterDetectorList.Add(New DataWriterDetectorViewModel(detector, signalsMgr))
+                    Case "Dissipation Energy Flow Detector"
+                        newDetectorList.Add(New DEFDetectorViewModel(detector, signalsMgr))
                     Case Else
                         Throw New Exception("Unknown element found in DetectorConfig in config file.")
                 End Select
@@ -74,6 +81,7 @@ Namespace ViewModels
             Next
             AlarmingList = newAlarmingList
             _signalsMgr = signalsMgr
+            AutoEventExporter = New AutoEventExportViewModel(_model.AutoEventExporter)
         End Sub
         Private _signalsMgr As SignalManager
         Private _model As DetectorConfigModel
@@ -208,6 +216,7 @@ Namespace ViewModels
             Dim openDirectoryDialog As New CommonOpenFileDialog
             openDirectoryDialog.Title = "Select the Save Path"
             openDirectoryDialog.IsFolderPicker = True
+            openDirectoryDialog.RestoreDirectory = True
             If _lastSavePath Is Nothing Then
                 openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
             Else
@@ -227,6 +236,16 @@ Namespace ViewModels
                 obj.SavePath = openDirectoryDialog.FileName
             End If
         End Sub
+        Private _autoEventExporter As AutoEventExportViewModel
+        Public Property AutoEventExporter As AutoEventExportViewModel
+            Get
+                Return _autoEventExporter
+            End Get
+            Set(ByVal value As AutoEventExportViewModel)
+                _autoEventExporter = value
+                OnPropertyChanged()
+            End Set
+        End Property
     End Class
 
     Public Class PeriodogramDetector
@@ -250,6 +269,7 @@ Namespace ViewModels
         Public Sub New(detector As PeriodogramDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
+            StepCounter = signalsMgr.GroupedSignalByDetectorInput.Count + 1
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
@@ -283,7 +303,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Periodogram Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _mode As DetectorModeType
@@ -398,6 +418,15 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        Public Property CalcDEF As Boolean
+            Get
+                Return _model.CalcDEF
+            End Get
+            Set(ByVal value As Boolean)
+                _model.CalcDEF = value
+                OnPropertyChanged()
+            End Set
+        End Property
     End Class
 
     Public Class SpectralCoherenceDetector
@@ -423,6 +452,7 @@ Namespace ViewModels
         Public Sub New(detector As SpectralCoherenceDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
+            StepCounter = signalsMgr.GroupedSignalByDetectorInput.Count + 1
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
@@ -451,7 +481,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Spectral Coherence Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _mode As DetectorModeType
@@ -585,6 +615,15 @@ Namespace ViewModels
                 OnPropertyChanged()
             End Set
         End Property
+        Public Property CalcDEF As Boolean
+            Get
+                Return _model.CalcDEF
+            End Get
+            Set(ByVal value As Boolean)
+                _model.CalcDEF = value
+                OnPropertyChanged()
+            End Set
+        End Property
 
         Public Overrides Function CheckStepIsComplete() As Boolean
             Return InputChannels.Count > 0
@@ -606,6 +645,7 @@ Namespace ViewModels
         Public Sub New(detector As RingdownDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
+            StepCounter = signalsMgr.GroupedSignalByDetectorInput.Count + 1
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
@@ -634,7 +674,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Ringdown Detector"
+                Return _model.Name
             End Get
         End Property
         Private _rmsLength As String
@@ -685,63 +725,63 @@ Namespace ViewModels
     ''' <summary>
     ''' This class is not used anymore, as the outofrangeFrequencydetector is kept as the more general one.
     ''' </summary>
-    Public Class OutOfRangeGeneralDetector
-        Inherits DetectorBase
-        Public Sub New()
-            InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
-            ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
-            IsExpanded = False
-        End Sub
-        Public Overrides ReadOnly Property Name As String
-            Get
-                Return "Out-Of-Range Detector"
-            End Get
-        End Property
-        Private _max As Double
-        Public Property Max As Double
-            Get
-                Return _max
-            End Get
-            Set(ByVal value As Double)
-                _max = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _min As Double
-        Public Property Min As Double
-            Get
-                Return _min
-            End Get
-            Set(ByVal value As Double)
-                _min = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _duration As String
-        Public Property Duration As String
-            Get
-                Return _duration
-            End Get
-            Set(ByVal value As String)
-                _duration = value
-                OnPropertyChanged()
-            End Set
-        End Property
-        Private _analysisWindow As String
-        Public Property AnalysisWindow As String
-            Get
-                Return _analysisWindow
-            End Get
-            Set(ByVal value As String)
-                _analysisWindow = value
-                OnPropertyChanged()
-            End Set
-        End Property
+    'Public Class OutOfRangeGeneralDetector
+    '    Inherits DetectorBase
+    '    Public Sub New()
+    '        InputChannels = New ObservableCollection(Of SignalSignatureViewModel)
+    '        ThisStepInputsAsSignalHerachyByType = New SignalTypeHierachy(New SignalSignatureViewModel)
+    '        IsExpanded = False
+    '    End Sub
+    '    Public Overrides ReadOnly Property Name As String
+    '        Get
+    '            Return "Out-Of-Range Detector"
+    '        End Get
+    '    End Property
+    '    Private _max As Double
+    '    Public Property Max As Double
+    '        Get
+    '            Return _max
+    '        End Get
+    '        Set(ByVal value As Double)
+    '            _max = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
+    '    Private _min As Double
+    '    Public Property Min As Double
+    '        Get
+    '            Return _min
+    '        End Get
+    '        Set(ByVal value As Double)
+    '            _min = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
+    '    Private _duration As String
+    '    Public Property Duration As String
+    '        Get
+    '            Return _duration
+    '        End Get
+    '        Set(ByVal value As String)
+    '            _duration = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
+    '    Private _analysisWindow As String
+    '    Public Property AnalysisWindow As String
+    '        Get
+    '            Return _analysisWindow
+    '        End Get
+    '        Set(ByVal value As String)
+    '            _analysisWindow = value
+    '            OnPropertyChanged()
+    '        End Set
+    '    End Property
 
-        Public Overrides Function CheckStepIsComplete() As Boolean
-            Return InputChannels.Count > 0
-        End Function
-    End Class
+    '    Public Overrides Function CheckStepIsComplete() As Boolean
+    '        Return InputChannels.Count > 0
+    '    End Function
+    'End Class
     ''' <summary>
     ''' This detector is considered the more general one and used in the GUI as the out-of-range general detector.
     ''' </summary>
@@ -757,6 +797,7 @@ Namespace ViewModels
         Public Sub New(detector As OutOfRangeFrequencyDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
+            StepCounter = signalsMgr.GroupedSignalByDetectorInput.Count + 1
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
@@ -786,7 +827,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Out-Of-Range Detector"
+                Return _model.Name
             End Get
         End Property
         Private _type As OutOfRangeFrequencyDetectorType
@@ -939,6 +980,7 @@ Namespace ViewModels
         Public Sub New(detector As WindRampDetectorModel, signalsMgr As SignalManager)
             Me.New
             Me._model = detector
+            StepCounter = signalsMgr.GroupedSignalByDetectorInput.Count + 1
             ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Detector " & (signalsMgr.GroupedSignalByDetectorInput.Count + 1).ToString & " " & Name
             Try
                 InputChannels = signalsMgr.FindSignals(detector.PMUElementList)
@@ -964,7 +1006,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Wind Ramp Detector"
+                Return _model.Name
             End Get
         End Property
         ''' <summary>
@@ -1118,7 +1160,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Data Writer"
+                Return _model.Name
             End Get
         End Property
         Private _savePath As String
@@ -1180,6 +1222,102 @@ Namespace ViewModels
         'End Sub
     End Class
 
+    Public Class AutoEventExportViewModel
+        Inherits ViewModelBase
+        Public Sub New()
+            _model = New AutoEventExportModel
+            _browseExportPath = New DelegateCommand(AddressOf _browseEventExportPath, AddressOf CanExecute)
+        End Sub
+
+        Public Sub New(autoEventExporter As AutoEventExportModel)
+            Me.New
+            _model = autoEventExporter
+        End Sub
+
+        Private _model As AutoEventExportModel
+        Public Property Flag As Boolean
+            Get
+                Return _model.Flag
+            End Get
+            Set(ByVal value As Boolean)
+                _model.Flag = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property SurroundingMinutes As String
+            Get
+                Return _model.SurroundingMinutes
+            End Get
+            Set(ByVal value As String)
+                _model.SurroundingMinutes = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property DeletePastFlag As Boolean
+            Get
+                Return _model.DeletePastFlag
+            End Get
+            Set(ByVal value As Boolean)
+                _model.DeletePastFlag = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property DeletePastDays As String
+            Get
+                Return _model.DeletePastDays
+            End Get
+            Set(ByVal value As String)
+                _model.DeletePastDays = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Property ExportPath As String
+            Get
+                Return _model.ExportPath
+            End Get
+            Set(ByVal value As String)
+                _model.ExportPath = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _browseExportPath As ICommand
+        Public Property BrowseExportPath As ICommand
+            Get
+                Return _browseExportPath
+            End Get
+            Set(ByVal value As ICommand)
+                _browseExportPath = value
+            End Set
+        End Property
+        'Private _lastSavePath As String
+        Private autoEventExporter As AutoEventExportModel
+
+        Private Sub _browseEventExportPath(obj As Object)
+            Dim openDirectoryDialog As New CommonOpenFileDialog
+            openDirectoryDialog.Title = "Select the Event Export Path"
+            openDirectoryDialog.IsFolderPicker = True
+            openDirectoryDialog.RestoreDirectory = True
+            If String.IsNullOrEmpty(ExportPath) Then
+                openDirectoryDialog.InitialDirectory = Environment.CurrentDirectory
+            Else
+                openDirectoryDialog.InitialDirectory = ExportPath
+            End If
+            openDirectoryDialog.AddToMostRecentlyUsedList = True
+            openDirectoryDialog.AllowNonFileSystemItems = False
+            openDirectoryDialog.DefaultDirectory = Environment.CurrentDirectory
+            openDirectoryDialog.EnsureFileExists = True
+            openDirectoryDialog.EnsurePathExists = True
+            openDirectoryDialog.EnsureReadOnly = False
+            openDirectoryDialog.EnsureValidNames = True
+            openDirectoryDialog.Multiselect = False
+            openDirectoryDialog.ShowPlacesList = True
+            If openDirectoryDialog.ShowDialog = CommonFileDialogResult.Ok Then
+                '_lastSavePath = openDirectoryDialog.FileName
+                ExportPath = openDirectoryDialog.FileName
+            End If
+        End Sub
+    End Class
+
     'Public Enum DetectorModeType
     '    <ComponentModel.Description("Single Channel")>
     '    SingleChannel
@@ -1235,7 +1373,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Spectral Coherence Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _coherenceAlarm As String
@@ -1316,7 +1454,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Periodogram Forced Oscillation Detector"
+                Return _model.Name
             End Get
         End Property
         Private _snrAlarm As String
@@ -1397,7 +1535,7 @@ Namespace ViewModels
         End Property
         Public Overrides ReadOnly Property Name As String
             Get
-                Return "Ringdown Detector"
+                Return _model.Name
             End Get
         End Property
         Private _maxDuration As String

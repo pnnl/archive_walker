@@ -20,7 +20,7 @@ namespace ModeMeter.ViewModels
         public ModeViewModel(Mode mode, SignalManager _signalMgr)
         {
             this._model = mode;
-            _showEventDetectionParameters = false;
+            //_showEventDetectionParameters = false;
             PMUs = new ObservableCollection<SignalSignatureViewModel>();
             foreach (var signal in _model.PMUs)
             {
@@ -59,33 +59,33 @@ namespace ModeMeter.ViewModels
                 //        break;
                 //}
             }
-            FODetectorParameters = new PeriodogramDetectorParametersViewModel(_model.FODetectorParameters);
+            FODetectorParameters = new FOdetectorParametersViewModel(_model.FODetectorParas, _signalMgr);
             DeleteAMethod = new RelayCommand(_deleteAMethod);
-            IsFODetecotrParametersVisible = _checkFOParameterVisibility();
+            //IsFODetecotrParametersVisible = _checkFOParameterVisibility();
             AddAMethod = new RelayCommand(_addAMethod);
-            EventDetectionParameters = new EventDetectionParametersViewModel(_model.EventDetectionPara);
+            EventDetectionParameters = new EventDetectionParametersViewModel(_model.EventDetectionPara, _signalMgr);
         }
 
         private void OnModeMethodChanged(object sender, ModeMethodViewModel e)
         {
-            IsFODetecotrParametersVisible = _checkFOParameterVisibility();
+            //IsFODetecotrParametersVisible = _checkFOParameterVisibility();
         }
 
-        private bool _checkFOParameterVisibility()
-        {
-            foreach (var method in Methods)
-            {
-                if (method.Name == ModeMethods.LSARMAS)
-                {
-                    return true;
-                }
-                if (method.Name == ModeMethods.YWARMAS)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        //private bool _checkFOParameterVisibility()
+        //{
+        //    foreach (var method in Methods)
+        //    {
+        //        if (method.Name == ModeMethods.LSARMAS)
+        //        {
+        //            return true;
+        //        }
+        //        if (method.Name == ModeMethods.YWARMAS)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
         public string ModeName
         {
@@ -104,7 +104,7 @@ namespace ModeMeter.ViewModels
             set
             {
                 _model.AnalysisLength = value;
-                FODetectorParameters.WindowLength = (int)Math.Floor(value / 3d);
+                FODetectorParameters.FODetectorParams.WindowLength = (int)Math.Floor(value / 3d);
                 OnPropertyChanged();
             }
         }
@@ -135,13 +135,22 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private bool _showEventDetectionParameters;
-        public bool ShowEventDetectionParameters
+        //private bool _showEventDetectionParameters;
+        public bool ShowRMSEnergyTransientParameters
         {
-            get { return _model.ShowEventDetectionParameters; }
+            get { return _model.ShowRMSEnergyTransientParameters; }
             set
             {
-                _model.ShowEventDetectionParameters = value;
+                _model.ShowRMSEnergyTransientParameters = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool ShowFOParameters 
+        {
+            get { return _model.ShowFOParameters; }
+            set
+            {
+                _model.ShowFOParameters = value;
                 OnPropertyChanged();
             }
         }
@@ -155,7 +164,7 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        public PeriodogramDetectorParametersViewModel FODetectorParameters { get; set; }
+        public FOdetectorParametersViewModel FODetectorParameters { get; set; }
         public EventDetectionParametersViewModel EventDetectionParameters { get; set; }
         public ICommand DeleteAMethod { get; set; }
         private void _deleteAMethod(object obj)
@@ -179,18 +188,18 @@ namespace ModeMeter.ViewModels
                 }
             }
             Methods = oldMethods;
-            IsFODetecotrParametersVisible = _checkFOParameterVisibility();
+            //IsFODetecotrParametersVisible = _checkFOParameterVisibility();
         }
-        private bool _isFODetecotrParametersVisible = false;
-        public bool IsFODetecotrParametersVisible
-        {
-            get { return _isFODetecotrParametersVisible; }
-            set
-            {
-                _isFODetecotrParametersVisible = value;
-                OnPropertyChanged();
-            }
-        }
+        //private bool _isFODetecotrParametersVisible = false;
+        //public bool IsFODetecotrParametersVisible
+        //{
+        //    get { return _isFODetecotrParametersVisible; }
+        //    set
+        //    {
+        //        _isFODetecotrParametersVisible = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
         public ICommand AddAMethod { get; set; }
         private void _addAMethod(object obj)
         {
@@ -274,6 +283,51 @@ namespace ModeMeter.ViewModels
             set
             {
                 _model.NumberOfEquationsWithFOpresent = value;
+                OnPropertyChanged();
+            }
+        }
+        public string NaNomitLimit
+        {
+            get { return _model.NaNomitLimit; }
+            set
+            {
+                _model.NaNomitLimit = value;
+                OnPropertyChanged();
+            }
+        }
+        public string MaximumIterations
+        {
+            get { return _model.MaximumIterations; }
+            set
+            {
+                _model.MaximumIterations = value;
+                OnPropertyChanged();
+            }
+        }
+        public string SVThreshold
+        {
+            get { return _model.SVThreshold; }
+            set
+            {
+                _model.SVThreshold = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool EnableTimeLoc
+        {
+            get { return _model.EnableTimeLoc; }
+            set
+            {
+                _model.EnableTimeLoc = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool UseRefinedFreq
+        {
+            get { return _model.UseRefinedFreq; }
+            set
+            {
+                _model.UseRefinedFreq = value;
                 OnPropertyChanged();
             }
         }
@@ -401,16 +455,106 @@ namespace ModeMeter.ViewModels
             }
         }
     }
+    public class FOdetectorParametersViewModel : ViewModelBase
+    {
+        private FOdetectorParameters _model;
+        public FOdetectorParametersViewModel()
+        {
+            _model = new FOdetectorParameters();
+            FODetectorParams = new PeriodogramDetectorParametersViewModel(_model.FODetectorParams);
+            FOtimeLocParams = new FOtimeLocParametersViewModel(_model.FOtimeLocParams);
+            PMUs = new ObservableCollection<SignalSignatureViewModel>();
+        }
+        public FOdetectorParametersViewModel(FOdetectorParameters parameters, SignalManager _signalMgr)
+        {
+            _model = parameters;
+            FODetectorParams = new PeriodogramDetectorParametersViewModel(parameters.FODetectorParams);
+            FOtimeLocParams = new FOtimeLocParametersViewModel(parameters.FOtimeLocParams);
+            PMUs = new ObservableCollection<SignalSignatureViewModel>();
+            foreach (var signal in _model.PMUs)
+            {
+                if (!string.IsNullOrEmpty(signal.SignalName))
+                {
+                    var thisSignal = _signalMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName);
+                    PMUs.Add(thisSignal);
+                }
+                else
+                {
+                    _signalMgr.FindSignalsOfAPMU(PMUs, signal.PMUName);
+                }
+            }
+        }
+        public PeriodogramDetectorParametersViewModel FODetectorParams { get; set; }
+        public FOtimeLocParametersViewModel FOtimeLocParams { get; set; }
+        public string MinTestStatWinLength 
+        {
+            get { return _model.MinTestStatWinLength; }
+            set
+            {
+                _model.MinTestStatWinLength = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<SignalSignatureViewModel> PMUs { get; set; }
+    }
+
+    public class FOtimeLocParametersViewModel : ViewModelBase
+    {
+        private FOtimeLocParameters _model;
+        public FOtimeLocParametersViewModel(FOtimeLocParameters parameters)
+        {
+            _model = parameters;
+        }
+        public bool PerformTimeLoc
+        {
+            get { return _model.PerformTimeLoc; }
+            set
+            {
+                _model.PerformTimeLoc = value;
+                OnPropertyChanged();
+            }
+        }
+        public string LocMinLength
+        {
+            get { return _model.LocMinLength; }
+            set
+            {
+                _model.LocMinLength = value;
+                OnPropertyChanged();
+            }
+        }
+        public string LocLengthStep
+        {
+            get { return _model.LocLengthStep; }
+            set
+            {
+                _model.LocLengthStep = value;
+                OnPropertyChanged();
+            }
+        }
+        public string LocRes
+        {
+            get { return _model.LocRes; }
+            set
+            {
+                _model.LocRes = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public class PeriodogramDetectorParametersViewModel : ViewModelBase
     {
         private PeriodogramDetectorModel _model;
+        public PeriodogramDetectorParametersViewModel()
+        {
+            _model = new PeriodogramDetectorModel();
+        }
 
         public PeriodogramDetectorParametersViewModel(PeriodogramDetectorModel fODetectorParameters)
         {
             _model = fODetectorParameters;
         }
-        private DetectorWindowType _windowType;
         public DetectorWindowType WindowType
         {
             get
@@ -423,7 +567,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyInterval;
         public string FrequencyInterval
         {
             get
@@ -436,7 +579,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private int _windowLength;
         public int WindowLength
         {
             get
@@ -450,7 +592,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private int _windowOverlap;
         public int WindowOverlap
         {
             get
@@ -463,7 +604,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _medianFilterFrequencyWidth;
         public string MedianFilterFrequencyWidth
         {
             get
@@ -476,7 +616,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _pfa;
         public string Pfa
         {
             get
@@ -489,7 +628,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyMin;
         public string FrequencyMin
         {
             get
@@ -502,7 +640,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyMax;
         public string FrequencyMax
         {
             get
@@ -515,7 +652,6 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
-        private string _frequencyTolerance;
         public string FrequencyTolerance
         {
             get
@@ -528,45 +664,66 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool CalcDEF
+        {
+            get
+            {
+                return _model.CalcDEF;
+            }
+            set
+            {
+                _model.CalcDEF = value;
+                OnPropertyChanged();
+            }
+        }
     }
     public class EventDetectionParametersViewModel : ViewModelBase
     {
         private EventDetectionParameters _model;
-        public EventDetectionParametersViewModel(EventDetectionParameters m)
+        public EventDetectionParametersViewModel(EventDetectionParameters m, SignalManager _signalMgr)
         {
             _model = m;
-        }
-        private string _rmslength;
-        public string RMSlength
-        {
-            get { return _model.RMSlength; }
-            set
+            PMUs = new ObservableCollection<SignalSignatureViewModel>();
+            foreach (var signal in _model.PMUs)
             {
-                _model.RMSlength = value;
-                OnPropertyChanged();
+                if (!string.IsNullOrEmpty(signal.SignalName))
+                {
+                    var thisSignal = _signalMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.SignalName);
+                    PMUs.Add(thisSignal);
+                }
+                else
+                {
+                    _signalMgr.FindSignalsOfAPMU(PMUs, signal.PMUName);
+                }
             }
         }
-        private string _rmsmedianFilterTime;
-        public string RMSmedianFilterTime
-        {
-            get { return _model.RMSmedianFilterTime; }
-            set
-            {
-                _model.RMSmedianFilterTime = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _ringThresholdScale;
-        public string RingThresholdScale
-        {
-            get { return _model.RingThresholdScale; }
-            set
-            {
-                _model.RingThresholdScale = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _minAnalysisLength;
+        //public string RMSlength
+        //{
+        //    get { return _model.RMSlength; }
+        //    set
+        //    {
+        //        _model.RMSlength = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+        //public string RMSmedianFilterTime
+        //{
+        //    get { return _model.RMSmedianFilterTime; }
+        //    set
+        //    {
+        //        _model.RMSmedianFilterTime = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+        //public string RingThresholdScale
+        //{
+        //    get { return _model.RingThresholdScale; }
+        //    set
+        //    {
+        //        _model.RingThresholdScale = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
         public string MinAnalysisLength
         {
             get { return _model.MinAnalysisLength; }
@@ -576,5 +733,51 @@ namespace ModeMeter.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool RingdownID
+        {
+            get { return _model.RingdownID; }
+            set
+            {
+                _model.RingdownID = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Threshold
+        {
+            get { return _model.Threshold; }
+            set
+            {
+                _model.Threshold = value;
+                OnPropertyChanged();
+            }
+        }
+        public ForgetFactor1Type ForgetFactor1
+        {
+            get { return _model.ForgetFactor1; }
+            set
+            {
+                _model.ForgetFactor1 = value;
+                OnPropertyChanged();
+            }
+        }
+        public ForgetFactor2Type ForgetFactor2
+        {
+            get { return _model.ForgetFactor2; }
+            set
+            {
+                _model.ForgetFactor2 = value;
+                OnPropertyChanged();
+            }
+        }
+        public PostEventWinAdjType PostEventWinAdj
+        {
+            get { return _model.PostEventWinAdj; }
+            set
+            {
+                _model.PostEventWinAdj = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<SignalSignatureViewModel> PMUs { get; set; }
     }
 }

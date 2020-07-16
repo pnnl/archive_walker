@@ -69,7 +69,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = 3 OrElse value = 5 Then
+            If value = 3 OrElse value = 5 OrElse value = 6 Then
                 Return Visibility.Collapsed
             Else
                 Return Visibility.Visible
@@ -99,7 +99,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return Visibility.Visible
             Else
                 Return Visibility.Collapsed
@@ -114,7 +114,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian Then
+            If value = DataFileType.PI OrElse value = DataFileType.OpenHistorian OrElse value = DataFileType.OpenPDC Then
                 Return Visibility.Collapsed
             Else
                 Return Visibility.Visible
@@ -141,6 +141,20 @@ Namespace Converters
     '        Return DependencyProperty.UnsetValue
     '    End Function
     'End Class
+    Public Class DataWriterDetectorCountVisibilityConverter
+        Implements IValueConverter
 
+        Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
+            If value > 0 Then
+                Return Visibility.Visible
+            Else
+                Return Visibility.Collapsed
+            End If
+        End Function
+
+        Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+            Return DependencyProperty.UnsetValue
+        End Function
+    End Class
 
 End Namespace

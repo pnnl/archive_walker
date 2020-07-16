@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -126,8 +127,8 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedEndTime))
                 {
-                    var startTime = Convert.ToDateTime(value);
-                    var endTime = Convert.ToDateTime(_selectedEndTime);
+                    var startTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                    var endTime = Convert.ToDateTime(_selectedEndTime, CultureInfo.InvariantCulture);
                     if (startTime <= endTime)
                     {
                         _filterTableByTime();
@@ -149,8 +150,8 @@ namespace BAWGUI.Results.ViewModels
                 OnPropertyChanged();
                 if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(_selectedStartTime))
                 {
-                    var startTime = Convert.ToDateTime(_selectedStartTime);
-                    var endTime = Convert.ToDateTime(value);
+                    var startTime = Convert.ToDateTime(_selectedStartTime, CultureInfo.InvariantCulture);
+                    var endTime = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
                     if (startTime <= endTime)
                     {
                         _filterTableByTime();
@@ -166,12 +167,12 @@ namespace BAWGUI.Results.ViewModels
         {
             var oldSelection = SelectedWREvent;
             ObservableCollection<WindRampEventViewModel> newResults = new ObservableCollection<WindRampEventViewModel>();
-            DateTime startT = DateTime.Parse(_selectedStartTime);
-            DateTime endT = DateTime.Parse(_selectedEndTime);
+            DateTime startT = DateTime.Parse(_selectedStartTime, CultureInfo.InvariantCulture);
+            DateTime endT = DateTime.Parse(_selectedEndTime, CultureInfo.InvariantCulture);
             foreach (var evnt in _results)
             {
-                DateTime st = DateTime.Parse(evnt.TrendStart);
-                DateTime ed = DateTime.Parse(evnt.TrendEnd);
+                DateTime st = DateTime.Parse(evnt.TrendStart, CultureInfo.InvariantCulture);
+                DateTime ed = DateTime.Parse(evnt.TrendEnd, CultureInfo.InvariantCulture);
                 if (DateTime.Compare(st, endT) <= 0 && DateTime.Compare(ed, startT) >= 0)
                 {
                     newResults.Add(evnt);
@@ -292,8 +293,8 @@ namespace BAWGUI.Results.ViewModels
             var endTime = new DateTime();
             if (FilteredResults.Count > 0)
             {
-                startTime = Convert.ToDateTime(FilteredResults.Min(x => x.TrendStart));
-                endTime = Convert.ToDateTime(FilteredResults.Max(x => x.TrendEnd));
+                startTime = Convert.ToDateTime(FilteredResults.Min(x => x.TrendStart), CultureInfo.InvariantCulture);
+                endTime = Convert.ToDateTime(FilteredResults.Max(x => x.TrendEnd), CultureInfo.InvariantCulture);
             }
             //SelectedStartTime = startTime.ToString("MM/dd/yyyy HH:mm:ss");
             //SelectedEndTime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
@@ -350,8 +351,8 @@ namespace BAWGUI.Results.ViewModels
                 if (wr.IsSignalSelected)
                 {
                     var newSeries = new OxyPlot.Series.LineSeries() { LineStyle = LineStyle.Solid, StrokeThickness = 2 };
-                    newSeries.Points.Add(new DataPoint(Convert.ToDateTime(wr.TrendStart).ToOADate(), wr.ValueStart));
-                    newSeries.Points.Add(new DataPoint(Convert.ToDateTime(wr.TrendEnd).ToOADate(), wr.ValueEnd));
+                    newSeries.Points.Add(new DataPoint(Convert.ToDateTime(wr.TrendStart, CultureInfo.InvariantCulture).ToOADate(), wr.ValueStart));
+                    newSeries.Points.Add(new DataPoint(Convert.ToDateTime(wr.TrendEnd, CultureInfo.InvariantCulture).ToOADate(), wr.ValueEnd));
                     newSeries.Color = wr.SignalColor;
                     //if (!wrsignals2.Contains(wr.PMU + wr.Channel))
                     //{
@@ -444,8 +445,8 @@ namespace BAWGUI.Results.ViewModels
         {
             if (File.Exists(_configFilePath))
             {
-                var startTime = Convert.ToDateTime(SelectedStartTime);
-                var endTime = Convert.ToDateTime(SelectedEndTime);
+                var startTime = Convert.ToDateTime(SelectedStartTime, CultureInfo.InvariantCulture);
+                var endTime = Convert.ToDateTime(SelectedEndTime, CultureInfo.InvariantCulture);
                 if (startTime <= endTime)
                 {
                     try

@@ -18,7 +18,6 @@ using BAWGUI.Core;
 using BAWGUI.Utilities;
 using System.Collections.ObjectModel;
 using BAWGUI.MATLABRunResults.Models;
-using VoltageStability.ViewModels;
 using ModeMeter.ViewModels;
 
 namespace BAWGUI.Results.ViewModels
@@ -34,7 +33,6 @@ namespace BAWGUI.Results.ViewModels
         private OutOfRangeResultsViewModel _outOfRangeResultsViewModel;
         private RingdownResultsViewModel _ringdownResultsViewModel;
         private WindRampResultsViewModel _windRampResultsViewModel;
-        private VoltageStabilityResultsViewModel _voltageStabilityResultsViewModel;
         private ModeMeterResultsViewModel _modeMeterResultsViewModel;
         private ResultsModel _resultsModel;
         private RunMATLAB.ViewModels.MatLabEngine _engine;
@@ -62,11 +60,6 @@ namespace BAWGUI.Results.ViewModels
             set { _windRampResultsViewModel = value; OnPropertyChanged(); }
         }
 
-        public VoltageStabilityResultsViewModel VoltageStabilityResultsViewModel
-        {
-            get { return this._voltageStabilityResultsViewModel; }
-            set { _voltageStabilityResultsViewModel = value; OnPropertyChanged(); }
-        }
         public ModeMeterResultsViewModel ModeMeterResultsVM
         {
             get { return this._modeMeterResultsViewModel; }
@@ -87,7 +80,6 @@ namespace BAWGUI.Results.ViewModels
             _outOfRangeResultsViewModel = new OutOfRangeResultsViewModel();
             _ringdownResultsViewModel = new RingdownResultsViewModel();
             _windRampResultsViewModel = new WindRampResultsViewModel();
-            _voltageStabilityResultsViewModel = new VoltageStabilityResultsViewModel();
             _modeMeterResultsViewModel = new ModeMeterResultsViewModel();
             _run = new AWRunViewModel();
             _resultsExist = true;
@@ -123,7 +115,6 @@ namespace BAWGUI.Results.ViewModels
                 _outOfRangeResultsViewModel.Run = _run;
                 _ringdownResultsViewModel.Run = _run;
                 _windRampResultsViewModel.Run = _run;
-                _voltageStabilityResultsViewModel.Run = _run;
                 _modeMeterResultsViewModel.Run = _run;
                 OnPropertyChanged();
             }
@@ -141,6 +132,7 @@ namespace BAWGUI.Results.ViewModels
         //public void LoadResults(List<string> filenames, string startDate, string endDate)
         public void LoadResults(List<string> filenames, List<string> dates)
         {
+            //MessageBox.Show("In results viewmodel, LoadResults, 1st line of function");
             try
             {
                 _getAvailableDates(dates);
@@ -164,24 +156,68 @@ namespace BAWGUI.Results.ViewModels
             //Else
             //    endDate = dates.LastOrDefault
             //End If
-            this._resultsModel.LoadResults(filenames, dates);
-            var startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture);
+            try
+            {
+                this._resultsModel.LoadResults(filenames, dates);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, this._resultsModel.LoadResults(filenames, dates);");
+            }
+            var startTime = DateTime.Now;
+            try
+            {
+                startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), "yyMMdd", CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, startTime = DateTime.ParseExact(Enumerable.LastOrDefault(dates), \"yyMMdd\", CultureInfo.InvariantCulture);");
+            }
             //var endTime = startTime.AddDays(1).AddSeconds(-1);
-            var startTimeStr = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-            var endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            var startTimeStr = "";
+            var endTimeStr = "";
+            try
+            {
+                startTimeStr = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, startTimeStr = startTime.ToString(\"MM / dd / yyyy HH: mm:ss\");");
+            }
+            try
+            {
+                endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("In results viewmodel, LoadResults, endTimeStr = startTime.AddDays(1).AddSeconds(-1).ToString(\"MM / dd / yyyy HH: mm:ss\");");
+            }
+            //MessageBox.Show("In results viewmodel, LoadResults, starting forced oscillation");
             _forcedOscillationResultsViewModel.FOPlotModel = new OxyPlot.PlotModel();
             _forcedOscillationResultsViewModel.Models = _resultsModel.ForcedOscillationCombinedList;
+            //MessageBox.Show("In results viewmodel, LoadResults, before _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;");
             _forcedOscillationResultsViewModel.SelectedEndTime = endTimeStr;
+            //MessageBox.Show("In results viewmodel, LoadResults, before _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;");
             _forcedOscillationResultsViewModel.SelectedStartTime = startTimeStr;
             var findStartTimeHasEvents = startTime;
             if (_forcedOscillationResultsViewModel.Models.Count() != 0)
             {
+                //MessageBox.Show("In results viewmodel, LoadResults, in if;");
                 while (_forcedOscillationResultsViewModel.FilteredResults.Count() == 0)
                 {
+                    //MessageBox.Show("In results viewmodel, LoadResults, in while;");
                     findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
-                    _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                    try
+                    {
+                        _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("In results viewmodel, LoadResults, tostring error: _forcedOscillationResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString(\"MM / dd / yyyy HH: mm:ss\");");
+                    }
                 }
             }
+            //MessageBox.Show("In results viewmodel, LoadResults, starting ring down");
             _ringdownResultsViewModel.SparsePlotModels = new ObservableCollection<SparsePlot>();
             _ringdownResultsViewModel.RdReRunPlotModels = new ObservableCollection<RDreRunPlot>();
             _ringdownResultsViewModel.Models = _resultsModel.RingdownEvents;
@@ -197,6 +233,7 @@ namespace BAWGUI.Results.ViewModels
                     _ringdownResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
+            //MessageBox.Show("In results viewmodel, LoadResults, starting out of range");
             _outOfRangeResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             _outOfRangeResultsViewModel.OORReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<OORReRunPlot>();
             _outOfRangeResultsViewModel.Models = _resultsModel.OutOfRangeEvents;
@@ -225,26 +262,6 @@ namespace BAWGUI.Results.ViewModels
                     _windRampResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
                 }
             }
-            if (_resultsModel.VoltageStabilityEvents.Count() > 0)
-            {
-                _voltageStabilityResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
-                _voltageStabilityResultsViewModel.OORSparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
-                _voltageStabilityResultsViewModel.VSReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<VSReRunPlot>();
-                _voltageStabilityResultsViewModel.Models = _resultsModel.VoltageStabilityEvents;
-                _voltageStabilityResultsViewModel.SelectedEndTime = endTimeStr;
-                _voltageStabilityResultsViewModel.SelectedStartTime = startTimeStr;
-                _voltageStabilityResultsViewModel.OOrResults = _resultsModel.OutOfRangeEvents;
-                findStartTimeHasEvents = startTime;
-                if (_voltageStabilityResultsViewModel.Models.Count() != 0)
-                {
-                    while (_voltageStabilityResultsViewModel.FilteredResults.Count() == 0)
-                    {
-                        findStartTimeHasEvents = findStartTimeHasEvents.AddDays(-1);
-                        _voltageStabilityResultsViewModel.SelectedStartTime = findStartTimeHasEvents.ToString("MM/dd/yyyy HH:mm:ss");
-                    }
-                }
-            }
-
             //_ringdownResultsViewModel.SparseResults = _engine.GetSparseData(_ringdownResultsViewModel.SelectedStartTime, _ringdownResultsViewModel.SelectedEndTime, _configFilePath, "Ringdown");
             //if(_ringdownResultsViewModel.FilteredResults.Count() != 0)
             //{
@@ -333,32 +350,89 @@ namespace BAWGUI.Results.ViewModels
         }
         private void _getAvailableDates(List<string> dates)
         {
-            List<DateStruct> dateList = new List<DateStruct>();
-            string year, month, day;
-            foreach(var date in dates)
-            {
-                year = "20" + date.Substring(0, 2);
-                month = date.Substring(2, 2);
-                day = date.Substring(4, 2);
+            var initPath = Run.Model.InitializationPath;
 
-                dateList.Add(new DateStruct(year, month, day));
-                if (!_availableDateDict.ContainsKey(year))
+            string[] alldirs;
+            try
+            {
+                //allFiles = Directory.GetFiles(initPath, "*.mat", SearchOption.AllDirectories);
+                //allFiles = Directory.GetFiles(initPath, "*.mat");
+                alldirs = Directory.GetDirectories(initPath);
+                Array.Sort(alldirs);
+                List<int> yearList = new List<int>();
+                for (int i = 0; i < alldirs.Length; i++)
                 {
-                    _availableDateDict[year] = new Dictionary<string, List<string>>();
+                    var frag = alldirs[i].Split('\\');
+                    if (int.TryParse(frag.Last(), out int dir))
+                    {
+                        yearList.Add(dir);
+                    }
                 }
-                if (!_availableDateDict[year].ContainsKey(month))
+                var firstY = yearList.Min();
+                var lastY = yearList.Max();
+                var alldates = Directory.GetDirectories(initPath + firstY.ToString());
+                List<int> dayList = new List<int>();
+                for (int i = 0; i < alldates.Length; i++)
                 {
-                    _availableDateDict[year][month] = new List<string>();
+                    var frag = alldates[i].Split('\\');
+                    if (int.TryParse(frag.Last(), out int dir))
+                    {
+                        dayList.Add(dir);
+                    }
                 }
-                _availableDateDict[year][month].Add(day);
+                var firstT = dayList.Min();
+                var alltimes = Directory.GetFiles(initPath + firstY.ToString() + "\\" + firstT.ToString(), "*.mat");
+                Array.Sort(alltimes);
+                var firstFile = Path.GetFileNameWithoutExtension(alltimes.First());
+                FirstAvailableDate = DateTime.ParseExact(firstFile, "\"Initialization\"_yyyyMMdd_HHmmss", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+
+                alldates = Directory.GetDirectories(initPath + lastY.ToString());
+                for (int i = 0; i < alldates.Length; i++)
+                {
+                    var frag = alldates[i].Split('\\');
+                    if (int.TryParse(frag.Last(), out int dir))
+                    {
+                        dayList.Add(dir);
+                    }
+                }
+                var lastT = dayList.Max();
+                alltimes = Directory.GetFiles(initPath + lastY.ToString() + "\\" + lastT.ToString(), "*.mat");
+                Array.Sort(alltimes);
+                var lastFile = Path.GetFileNameWithoutExtension(alltimes.Last());
+                LastAvailableDate = DateTime.ParseExact(lastFile, "\"Initialization\"_yyyyMMdd_HHmmss", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+
             }
-            YearList = _availableDateDict.Keys.ToList();
-            DateStruct date1 = dateList.FirstOrDefault();
-            string d1 = date1.Year.Substring(2, 2) + date1.Month + date1.Day;
-            DateStruct date2 = dateList.LastOrDefault();
-            string d2= date2.Year.Substring(2, 2) + date2.Month + date2.Day;
-            FirstAvailableDate = DateTime.ParseExact(d1, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
-            LastAvailableDate = DateTime.ParseExact(d2, "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            //List<DateStruct> dateList = new List<DateStruct>();
+            //string year, month, day;
+            //foreach(var date in dates)
+            //{
+            //    year = "20" + date.Substring(0, 2);
+            //    month = date.Substring(2, 2);
+            //    day = date.Substring(4, 2);
+
+            //    dateList.Add(new DateStruct(year, month, day));
+            //    if (!_availableDateDict.ContainsKey(year))
+            //    {
+            //        _availableDateDict[year] = new Dictionary<string, List<string>>();
+            //    }
+            //    if (!_availableDateDict[year].ContainsKey(month))
+            //    {
+            //        _availableDateDict[year][month] = new List<string>();
+            //    }
+            //    _availableDateDict[year][month].Add(day);
+            //}
+            //YearList = _availableDateDict.Keys.ToList();
+            //DateStruct date1 = dateList.FirstOrDefault();
+            //string d1 = date1.Year.Substring(2, 2) + date1.Month + date1.Day;
+            //DateStruct date2 = dateList.LastOrDefault();
+            //string d2= date2.Year.Substring(2, 2) + date2.Month + date2.Day;
+            //FirstAvailableDate = DateTime.ParseExact(d1, "yyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy HH:mm:ss");
+            //LastAvailableDate = DateTime.ParseExact(d2, "yyMMdd", CultureInfo.InvariantCulture).AddDays(1).AddSeconds(-1).ToString("MM/dd/yyyy HH:mm:ss");
             
             //AvailableDates.Values.
         }
@@ -468,7 +542,7 @@ namespace BAWGUI.Results.ViewModels
             var dateTimeNode = from el in _configData.Descendants("DateTimeEnd") select(string)el;
             if (dateTimeNode.Any())
             {
-                _lastDateOfTheRun = System.DateTime.ParseExact(dateTimeNode.FirstOrDefault(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
+                _lastDateOfTheRun = System.DateTime.ParseExact(dateTimeNode.FirstOrDefault(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ToString("yyMMdd");
             }
             //_lastDateOfTheRun = System.DateTime.ParseExact((from el in _configData.Descendants("DateTimeEnd") select (string)el).FirstOrDefault(), "yyyy-MM-dd HH:mm:ss GMT", CultureInfo.InvariantCulture).ToUniversalTime().ToString("yyMMdd");
             if (!String.IsNullOrEmpty(_resultPath) && Directory.Exists(_resultPath))
@@ -494,7 +568,6 @@ namespace BAWGUI.Results.ViewModels
             RingdownResultsViewModel.RdReRunPlotModels = new System.Collections.ObjectModel.ObservableCollection<RDreRunPlot>();
             RingdownResultsViewModel.SparsePlotModels = new System.Collections.ObjectModel.ObservableCollection<SparsePlot>();
             WindRampResultsViewModel = new WindRampResultsViewModel();
-            VoltageStabilityResultsViewModel = new VoltageStabilityResultsViewModel();
             ModeMeterResultsVM = new ModeMeterResultsViewModel();
         }
 
@@ -554,6 +627,7 @@ namespace BAWGUI.Results.ViewModels
                 dates.Sort();
                 try
                 {
+                    //MessageBox.Show("starting load results");
                     LoadResults(files, dates);
                 }
                 catch (Exception ex)

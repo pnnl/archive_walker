@@ -62,14 +62,22 @@ namespace MapService.ViewModels
             Gmap.ShowCenter = false;
 
             Gmap.MapProvider = GMapProviders.OpenStreetMap;
+            //Gmap.MapProvider = GoogleSatelliteMapProvider.Instance; //satellite view
             if (!IsOfflineMode)
             {
                 Gmap.Manager.Mode = AccessMode.ServerAndCache;
             }
 #if DEBUG
-            Gmap.CacheLocation = "..\\MapCache";
+            //Gmap.CacheLocation = "..\\MapCache";
+            var cwd = Directory.GetCurrentDirectory();
+            var oneLevelUp = cwd.Substring(0, cwd.LastIndexOf(@"\"));
+            Gmap.CacheLocation = oneLevelUp + @"\MapCache";
+            Console.WriteLine("The Gmap.CacheLocation is {0}", Gmap.CacheLocation);
 #else
-            Gmap.CacheLocation = "\\MapCache";
+            //Gmap.CacheLocation = ".\\MapCache";
+            var cwd = Directory.GetCurrentDirectory();
+            Gmap.CacheLocation = cwd + @"\MapCache";
+            //Console.WriteLine("The Gmap.CacheLocation is {0}", Gmap.CacheLocation);
 #endif
             Gmap.MouseMove += GMap_MouseMove;
             Gmap.MouseLeftButtonDown += GMap_MouseLeftButtonDown;
@@ -315,7 +323,7 @@ namespace MapService.ViewModels
 
                     if (res == DialogResult.Yes)
                     {
-                        TilePrefetcher tileFetcher = new TilePrefetcher();
+                        GMap.NET.WindowsPresentation.TilePrefetcher tileFetcher = new GMap.NET.WindowsPresentation.TilePrefetcher();
                         //tileFetcher.Owner = this;
                         tileFetcher.ShowCompleteMessage = true;
                         tileFetcher.Start(area, i, Gmap.MapProvider, 100);

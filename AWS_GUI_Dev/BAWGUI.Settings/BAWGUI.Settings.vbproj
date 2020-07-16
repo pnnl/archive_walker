@@ -92,9 +92,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataReaderBase">
-      <HintPath>..\libs\DataReaderBase.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -192,6 +189,9 @@
     </Compile>
     <Compile Include="Views\AngleConversionCustomization.xaml.vb">
       <DependentUpon>AngleConversionCustomization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AutoEventExportView.xaml.vb">
+      <DependentUpon>AutoEventExportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChannelsListView.xaml.vb">
       <DependentUpon>ChannelsListView.xaml</DependentUpon>
@@ -313,6 +313,9 @@
     <Compile Include="Views\RingdownView.xaml.vb">
       <DependentUpon>RingdownView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\RMSEnergyFilterparameters.xaml.vb">
+      <DependentUpon>RMSEnergyFilterparameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RunningAverageFilterParameters.xaml.vb">
       <DependentUpon>RunningAverageFilterParameters.xaml</DependentUpon>
     </Compile>
@@ -324,6 +327,9 @@
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SignalListPanel.xaml.vb">
+      <DependentUpon>SignalListPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SignalReplicationCustomization.xaml.vb">
       <DependentUpon>SignalReplicationCustomization.xaml</DependentUpon>
@@ -413,6 +419,10 @@
     <Page Include="Views\AngleConversionCustomization.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AutoEventExportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChannelsListView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -574,6 +584,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\RMSEnergyFilterparameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RunningAverageFilterParameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -589,6 +603,10 @@
     <Page Include="Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SignalListPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SignalReplicationCustomization.xaml">
       <SubType>Designer</SubType>
@@ -683,13 +701,13 @@
       <Project>{b948a304-8616-4d5f-9563-9805f8a506c2}</Project>
       <Name>BAWGUI.Xml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DissipationEnergyFlow\DissipationEnergyFlow.csproj">
+      <Project>{548b4b31-7a6a-416e-9b4f-345bd69b1c8f}</Project>
+      <Name>DissipationEnergyFlow</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModeMeter\ModeMeter.csproj">
       <Project>{F28598D8-9C9F-42C9-B828-4D1BD86BB751}</Project>
       <Name>ModeMeter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VoltageStability\VoltageStability.csproj">
-      <Project>{6f2a8bd2-ee3e-465b-9b64-362a35846f4d}</Project>
-      <Name>VoltageStability</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

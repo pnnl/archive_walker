@@ -54,7 +54,13 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             set {
                 _siteCoords = value;
                 OnPropertyChanged();
+                OnSiteCoordsDefinitionChanged(EventArgs.Empty);
             }
+        }
+        public event EventHandler SiteCoordsDefinitionChanged;
+        protected virtual void OnSiteCoordsDefinitionChanged(EventArgs e)
+        {
+            SiteCoordsDefinitionChanged?.Invoke(this, e);
         }
         public ICommand AddALocation { get; set; }
         private void _addALocation(object obj)
@@ -145,6 +151,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
         public ICommand LoadCoordinates { get; set; }
         private void _openCoordsFile(object obj)
         {
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.RestoreDirectory = true;
             openFileDialog.FileName = "";
@@ -158,7 +165,6 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             {
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory;
             }
-            openFileDialog.RestoreDirectory = true;
             openFileDialog.Title = "Please select a location coordinates file";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -167,6 +173,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
                 Properties.Settings.Default.Save();
                 _readLocationCoordsFile(_locationCoordinatesFilePath);
             }
+            //Console.WriteLine("The current directory is {0}", Directory.GetCurrentDirectory());
         }
 
         private void _readLocationCoordsFile(string path)
@@ -174,7 +181,7 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             try
             {
                 var reader = new SiteCoordinatesReader();
-                reader.ReadCoordsFile(path, SiteCoords);
+                SiteCoords = reader.ReadCoordsFile(path);
                 MapVM.Annotations.Clear();
                 foreach (var item in SiteCoords)
                 {
@@ -230,6 +237,16 @@ namespace BAWGUI.CoordinateMapping.ViewModels
             }
         }
 
-
+        //public static SiteCoordinatesViewModel FindSite(string Lat, string Lng)
+        //{
+        //    foreach (var site in SiteCoords)
+        //    {
+        //        if (site.Latitude == Lat && site.Longitude == Lng) //instead of equal, we could give a certain percentage to decide if they mean the same location even if the number are not exact the same.
+        //        {
+        //            return site;
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 }

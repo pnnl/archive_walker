@@ -11,12 +11,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <local:DesiredModeAttributesView Grid.Row="0" Grid.Column="0" Margin="2" DataContext="{Binding DesiredModes}"/>
-        <local:ModeSignalSelectionView Grid.Row="0" Grid.Column="1" Margin="2" DataContext="{Binding PMUs}"/>
-        <local:ModeAnalysisParametersView Grid.Row="1" Grid.ColumnSpan="2" Margin="2"/>
+        </Grid.ColumnDefinitions>-->
+        <local:DesiredModeAttributesView Grid.Row="0" Margin="2" DataContext="{Binding DesiredModes}"/>
+        <!--<local:ModeSignalSelectionView Grid.Row="0" Grid.Column="1" Margin="2" DataContext="{Binding PMUs}"/>-->
+        <local:ModeAnalysisParametersView Grid.Row="1" Margin="2"/>
     </Grid>
 </UserControl>
