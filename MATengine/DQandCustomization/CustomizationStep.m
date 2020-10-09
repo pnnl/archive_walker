@@ -82,5 +82,7 @@ for CustIdx = 1:NumCusts
             PMU = PointOnWavePowerCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
         case 'VoltageAngleGraph'
             PMU = VAgraphCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
+        case 'PCA'
+            PMU = PCAcustomization(PMU,Num_Flags,Parameters,FlagBitCust);
     end
 end
