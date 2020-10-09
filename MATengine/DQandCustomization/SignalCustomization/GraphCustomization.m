@@ -46,7 +46,7 @@
 %     
 %Created by: Jim Follum (james.follum@pnnl.gov) October 8, 2020
 
-function PMUstruct = VAgraphCustomization(PMUstruct,Num_Flags,Parameters,FlagBitCust)
+function PMUstruct = GraphCustomization(PMUstruct,Num_Flags,Parameters,FlagBitCust)
 
 AvailablePMU = {PMUstruct.PMU_Name};
 
@@ -60,7 +60,8 @@ end
 
 % Collect each input signal
 InputData = [];
-ErrFlag = 0; % Error flag 
+ErrFlag = 0; % Error flag
+AngleInputs = true;
 for TermIdx = 1:NumTerms
     PMUidx = find(strcmp(Parameters.term{TermIdx}.PMU,AvailablePMU));
     % If the specified PMU is not in PMUstruct, return NaNs for the sum
@@ -86,9 +87,9 @@ for TermIdx = 1:NumTerms
             ThisSig = PMUstruct(PMUidx).Data(:,SigIdx);
             ThisFlag = sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3) > 0;
         otherwise
-            warning('Inputs to voltage angle graph customization must be an angle with units of DEG or RAD');
-            ErrFlag = 1;
-            break
+            AngleInputs = false;
+            ThisSig = PMUstruct(PMUidx).Data(:,SigIdx);
+            ThisFlag = sum(PMUstruct(PMUidx).Flag(:,SigIdx,:),3) > 0;
     end
     
     if isempty(InputData)
@@ -118,7 +119,9 @@ if ErrFlag
 else
     % This unwrapping operation keeps the voltage angles from different PMUs at
     % a particular time close together (along dimension 2)
-    InputData = unwrap(InputData,[],2);
+    if AngleInputs
+        InputData = unwrap(InputData,[],2);
+    end
     
     % Calculate the eigenvalue based on the form of the A matrix
     CustSig = zeros(size(InputData,1),1);
