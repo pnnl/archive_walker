@@ -80,9 +80,9 @@ for CustIdx = 1:NumCusts
             PMU = ReplicateSignalCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
         case 'PointOnWavePower'
             PMU = PointOnWavePowerCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
-        case 'VoltageAngleGraph'
-            PMU = VAgraphCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
         case 'PCA'
             PMU = PCAcustomization(PMU,Num_Flags,Parameters,FlagBitCust);
+        case 'Graph'
+            PMU = GraphCustomization(PMU,Num_Flags,Parameters,FlagBitCust);
     end
 end
