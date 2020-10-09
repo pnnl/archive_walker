@@ -119,27 +119,19 @@ else
     % This unwrapping operation keeps the voltage angles from different PMUs at
     % a particular time close together (along dimension 2)
     InputData = unwrap(InputData,[],2);
-    A = zeros(size(InputData,1),NumTerms,NumTerms);
-    for p = 1:NumTerms
-        for q = p+1:NumTerms
-            A(:,p,q) = InputData(:,p) - InputData(:,q);
-        end
-    end
-    A = A - permute(A,[1,3,2]);
     
-    CustSig = zeros(size(A,1),1);
-    for n = 1:size(A,1)
-        try
-            e = eig(squeeze(A(n,:,:)));
-            CustSig(n) = abs(imag(e(1)));
-        catch ME
-            if strcmp(ME.identifier,'MATLAB:eig:matrixWithNaNInf')
-                CustSig(n) = NaN;
+    % Calculate the eigenvalue based on the form of the A matrix
+    CustSig = zeros(size(InputData,1),1);
+    for k = 1:NumTerms
+        for r = k:NumTerms
+            if k == r
+                CustSig = CustSig - (NumTerms-1)*InputData(:,k).^2;
             else
-                rethrow(ME)
+                CustSig = CustSig + 2*InputData(:,k).*InputData(:,r);
             end
         end
     end
+    CustSig = imag(sqrt(CustSig));
 end
 
 
