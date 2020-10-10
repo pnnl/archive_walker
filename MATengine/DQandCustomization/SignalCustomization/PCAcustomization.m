@@ -114,7 +114,13 @@ if ErrFlag
     CustSig = NaN(size(InputData,1),NumCustSigs);
 else
     [~,CustSig] = pca(InputData);
-    CustSig = CustSig(:,1:NumCustSigs);
+    
+    % CustSig returns empty if one of the signals is all NaN
+    if isempty(CustSig)
+        CustSig = NaN(size(InputData,1),NumCustSigs);
+    else
+        CustSig = CustSig(:,1:NumCustSigs);
+    end
 end
 
 
