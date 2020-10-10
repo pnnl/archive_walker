@@ -142,7 +142,7 @@ for OutIdx = 1:length(Parameters.CustomSignals)
 
 
     PMUstruct(custPMUidx).Signal_Name{NumSig+1} = SignalName;
-    if ErrFlag
+    if ErrFlag || (OutIdx > size(CustSig,2))
         PMUstruct(custPMUidx).Data(:,NumSig+1) = NaN;    
         PMUstruct(custPMUidx).Flag(:,NumSig+1,FlagBitCust(2)) = true; %flagged for error in user input
     else
