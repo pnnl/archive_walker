@@ -3,7 +3,7 @@
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>5.2</param.version>
+    <param.version>5.3</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -129,6 +129,7 @@
     </fileset.classes>
     <fileset.resources>
       <file>C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCustomization\GraphCustomization.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCustomization\PCAcustomization.m</file>
     </fileset.resources>
     <fileset.depfun>
       <file>C:\GitFolders\archive_walker\MATengine\BAWS_main9.m</file>
