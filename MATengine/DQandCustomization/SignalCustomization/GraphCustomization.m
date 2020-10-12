@@ -134,6 +134,10 @@ else
             end
         end
     end
+    % Give any NaN values an imaginary component so that they don't get set
+    % to zero when the imag() function is applied next
+    CustSig(isnan(CustSig)) = 1i*NaN;
+    
     CustSig = imag(sqrt(CustSig));
 end
 
