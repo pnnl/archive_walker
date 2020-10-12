@@ -207,6 +207,10 @@ Namespace ViewModels
                             stepCounter += 1
                             Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr)
                             allSteps.Add(a)
+                        Case "Graph Eigenvalue"
+                            stepCounter += 1
+                            Dim a = New GraphEigenvalueCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
                         Case Else
                             Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
                     End Select
@@ -3738,6 +3742,106 @@ Namespace ViewModels
                 Return True
             End If
         End Function
+    End Class
+    Public Class GraphEigenvalueCust
+        Inherits Customization
+        Public Sub New()
+            MyBase.New
+            _model = New GraphEigenvalueCustModel
+        End Sub
+        Public Sub New(stp As GraphEigenvalueCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
+            MyBase.New(stp)
+            Me._model = stp
+            Me.StepCounter = stepCounter
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & stp.Name)
+            End Try
+
+            'Dim type = ""
+            'Dim unit = ""
+            Dim samplingRate = -1
+            Dim output = New SignalSignatureViewModel(_model.SignalName, _model.CustPMUname, "OTHER")
+            output.Unit = "O"
+            'output.TypeAbbreviation = "OTHER"
+            For Each signal In InputChannels
+                'If String.IsNullOrEmpty(type) Then
+                '    type = signal.TypeAbbreviation
+                'ElseIf type <> signal.TypeAbbreviation Then
+                '    type = "OTHER"
+                '    unit = "O"
+                '    'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
+                'End If
+                'If String.IsNullOrEmpty(unit) Then
+                '    unit = signal.Unit
+                'ElseIf unit <> signal.Unit Then
+                '    unit = "O"
+                '    type = "OTHER"
+                '    'Throw New Exception("All terms of addition customization have to have the same unit! Different unit found in addition customization step: " & stepCounter & ", with unit: " & unit & " and " & signal.Unit & ".")
+                'End If
+                If samplingRate = -1 Then
+                    samplingRate = signal.SamplingRate
+                ElseIf samplingRate <> signal.SamplingRate Then
+                    Throw New Exception("All terms of Graph Eigenvalue customization have to have the same sampling rate! Different sampling rate found in addition customization step: " & stepCounter & ", with sampling rate: " & samplingRate & " and " & signal.SamplingRate & ".")
+                End If
+            Next
+            'If Not String.IsNullOrEmpty(type) Then
+            '    output.TypeAbbreviation = type
+            'End If
+            'If Not String.IsNullOrEmpty(unit) Then
+            '    output.Unit = unit
+            'End If
+            If samplingRate <> -1 Then
+                output.SamplingRate = samplingRate
+            End If
+            output.OldUnit = output.Unit
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldSignalName = output.SignalName
+            OutputChannels.Add(output)
+
+
+            Try
+                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+        End Sub
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
+        Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
+        Private _model As GraphEigenvalueCustModel
+        Public Property Model As GraphEigenvalueCustModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As GraphEigenvalueCustModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
     End Class
 #End Region
 End Namespace

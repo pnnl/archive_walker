@@ -247,6 +247,9 @@
     <Compile Include="Views\filterViews\ZerosMissingDQFilterView.xaml.vb">
       <DependentUpon>ZerosMissingDQFilterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GraphEigenvalueCustomization.xaml.vb">
+      <DependentUpon>GraphEigenvalueCustomization.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HighPassFilterParameters.xaml.vb">
       <DependentUpon>HighPassFilterParameters.xaml</DependentUpon>
     </Compile>
@@ -493,6 +496,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\filterViews\ZerosMissingDQFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GraphEigenvalueCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
