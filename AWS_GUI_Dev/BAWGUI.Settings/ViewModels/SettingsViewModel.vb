@@ -1432,7 +1432,7 @@ Namespace ViewModels
                             Select Case _currentSelectedStep.Name
                                 Case "Scalar Repetition"
                                     Throw New Exception("Please do NOT select signals for Scalar Repetition!")
-                                Case "Addition"
+                                Case "Addition", "Graph Eigenvalue"
                                     _changeSignalSelection(obj)
                                     _checkAdditionCustomizationOutputTypeAndSamplingRate()
                                 Case "Multiplication"
@@ -1479,7 +1479,7 @@ Namespace ViewModels
                             _determineSamplingRateCheckableStatus()
                         Catch ex As Exception
                             _keepOriginalSelection(obj)
-                            If _currentSelectedStep.Name = "Addition" Then
+                            If _currentSelectedStep.Name = "Addition" Or _currentSelectedStep.Name = "Graph Eigenvalue" Then
                                 _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
                             End If
                             If _currentSelectedStep.Name = "Angle Calculation" Then
@@ -3882,6 +3882,11 @@ Namespace ViewModels
                         newCustomization = New AngleConversionCust
                     Case "Duplicate Signals"
                         newCustomization = New SignalReplicationCust
+                    Case "Graph Eigenvalue"
+                        newCustomization = New GraphEigenvalueCust
+                        Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname)
+                        newSignal.IsCustomSignal = True
+                        newCustomization.OutputChannels.Add(newSignal)
                     Case Else
                         Throw New Exception("Customization step not supported!")
                 End Select
@@ -4065,6 +4070,7 @@ Namespace ViewModels
                             End If
                         ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
                             _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
+                            'ElseIf CurrentSelectedStep.Name = "Angle Conversion" Or CurrentSelectedStep.Name = "Graph Eigenvalue" Then
                         ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                             _disableEnableAllButAngleSignalsInDataConfig(True)
                         End If
@@ -4092,6 +4098,7 @@ Namespace ViewModels
                         End If
                     ElseIf processStep.Name = "Metric Prefix" Then
                         _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(False)
+                        'ElseIf processStep.Name = "Angle Conversion" Or processStep.Name = "Graph Eigenvalue" Then
                     ElseIf processStep.Name = "Angle Conversion" Then
                         _disableEnableAllButAngleSignalsInDataConfig(False)
                     End If
@@ -4529,6 +4536,7 @@ Namespace ViewModels
                     End If
                 ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
                     _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
+                    'ElseIf CurrentSelectedStep.Name = "Angle Conversion" Or CurrentSelectedStep.Name = "Graph Eigenvalue" Then
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInDataConfig(True)
                 End If

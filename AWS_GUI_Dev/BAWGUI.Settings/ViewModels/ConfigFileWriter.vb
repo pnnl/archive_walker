@@ -733,7 +733,7 @@ Namespace ViewModels
                     If singleStep.TimeSourcePMU IsNot Nothing AndAlso Not String.IsNullOrEmpty(singleStep.TimeSourcePMU.PMU) Then
                         aStep.<Parameters>.LastOrDefault.Add(<TimeSourcePMU><%= singleStep.TimeSourcePMU.PMU %></TimeSourcePMU>)
                     End If
-                Case "Addition"
+                Case "Addition", "Graph Eigenvalue"
                     aStep = <Customization>
                                 <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
                                 <Parameters>
