@@ -974,6 +974,26 @@ Namespace ViewModels
                                                       </ToReplicate>
                         aStep.<Parameters>.LastOrDefault.Add(toReplicate)
                     Next
+                Case "PCA"
+                    aStep = <Customization>
+                                <Name><%= _svm.DataConfigure.CustomizationNameDictionary(singleStep.Name) %></Name>
+                                <Parameters>
+                                    <CustPMUname><%= singleStep.CustPMUname %></CustPMUname>
+                                </Parameters>
+                            </Customization>
+                    For Each signal In singleStep.OutputChannels
+                        Dim term As XElement = <CustomSignals>
+                                                   <SignalName><%= signal.SignalName %></SignalName>
+                                               </CustomSignals>
+                        aStep.<Parameters>.LastOrDefault.Add(term)
+                    Next
+                    For Each signal In singleStep.InputChannels
+                        Dim term As XElement = <term>
+                                                   <PMU><%= signal.PMUName %></PMU>
+                                                   <Channel><%= signal.SignalName %></Channel>
+                                               </term>
+                        aStep.<Parameters>.LastOrDefault.Add(term)
+                    Next
                 Case "Status Flags"
                     aStep = <Filter>
                                 <Name><%= _svm.DataConfigure.DQFilterNameDictionary(singleStep.Name) %></Name>

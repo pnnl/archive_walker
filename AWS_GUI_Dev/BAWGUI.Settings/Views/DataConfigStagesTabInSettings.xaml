@@ -60,6 +60,9 @@
             <DataTemplate x:Key="GraphEigenvalueCustomization">
                 <local:GraphEigenvalueCustomization/>
             </DataTemplate>
+            <DataTemplate x:Key="PCACustomization">
+                <local:PCACustomization/>
+            </DataTemplate>
             <DataTemplate x:Key="StatusFlagDQFilterView">
                 <local:StatusFlagDQFilterView/>
             </DataTemplate>
@@ -389,6 +392,9 @@
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Name}" Value="Graph Eigenvalue">
                                                                 <Setter Property="ContentTemplate" Value="{StaticResource GraphEigenvalueCustomization}"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Name}" Value="PCA">
+                                                                <Setter Property="ContentTemplate" Value="{StaticResource PCACustomization}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>

@@ -26,7 +26,8 @@ Namespace ViewModels
                                                                             {"Metric Prefix", "MetricPrefix"},
                                                                             {"Angle Conversion", "AngleConversion"},
                                                                             {"Duplicate Signals", "ReplicateSignal"},
-                                                                            {"Graph Eigenvalue", "Graph"}}
+                                                                            {"Graph Eigenvalue", "Graph"},
+                                                                            {"PCA", "PCA"}}
             _customizationReverseNameDictionary = _customizationNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
             _customizationList = _customizationNameDictionary.Keys.ToList
             _customizationNameParemetersDictionary = New Dictionary(Of String, List(Of String)) From {{"Scalar Repetition", {"CustPMUname", "scalar", "SignalName", "SignalType", "SignalUnit", "TimeSourcePMU"}.ToList},
@@ -170,11 +171,15 @@ Namespace ViewModels
                             allSteps.Add(a)
                         Case "Duplicate Signals"
                             stepCounter += 1
-                            Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr)
+                            Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr, True)
                             allSteps.Add(a)
                         Case "Graph Eigenvalue"
                             stepCounter += 1
                             Dim a = New GraphEigenvalueCust(stp, stepCounter, signalsMgr, True)
+                            allSteps.Add(a)
+                        Case "PCA"
+                            stepCounter += 1
+                            Dim a = New PCACust(stp, stepCounter, signalsMgr, True)
                             allSteps.Add(a)
                         Case Else
                             Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
