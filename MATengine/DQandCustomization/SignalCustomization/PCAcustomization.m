@@ -116,9 +116,9 @@ else
     [~,CustSig] = pca(InputData);
     
     % CustSig returns as empty if one of the signals is all NaN. It returns
-    % as NaN if all signals are NaN. Checking the size of the first
-    % dimension (time) checks for both of these problems.
-    if size(CustSig,1) ~= size(InputData,1)
+    % as NaN if all signals are NaN. Check both dimensions to check for
+    % both of these problems.
+    if (size(CustSig,1) ~= size(InputData,1)) || (size(CustSig,2) ~= size(InputData,2))
         CustSig = NaN(size(InputData,1),NumCustSigs);
     else
         CustSig = CustSig(:,1:NumCustSigs);
