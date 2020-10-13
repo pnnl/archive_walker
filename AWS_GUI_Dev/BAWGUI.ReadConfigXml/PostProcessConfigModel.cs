@@ -110,6 +110,9 @@ namespace BAWGUI.ReadConfigXml
                         case "Graph":
                             CollectionOfSteps.Add(new GraphEigenvalueCustModel(item));
                             break;
+                        case "PCA":
+                            CollectionOfSteps.Add(new PCACustModel(item));
+                            break;
                         default:
                             throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
                     }
