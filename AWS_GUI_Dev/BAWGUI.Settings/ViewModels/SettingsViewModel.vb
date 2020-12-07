@@ -1471,6 +1471,9 @@ Namespace ViewModels
                                 ' It only relates to user choice and would only affect MATLAB calculation afterwards
                                 Case "Signal Type/Unit"
                                     _specifySignalTypeUnitSignalSelectionChanged(obj)
+                                Case "PCA", "Graph Eigenvalue"
+                                    _changeSignalSelection(obj)
+                                    _checkEVPCACustomizationOutputTypeAndSamplingRate()
                                 Case Else
                                     Throw New Exception("Customization step not supported!")
                             End Select
@@ -1479,7 +1482,7 @@ Namespace ViewModels
                             _determineSamplingRateCheckableStatus()
                         Catch ex As Exception
                             _keepOriginalSelection(obj)
-                            If _currentSelectedStep.Name = "Addition" Then
+                            If _currentSelectedStep.Name = "Addition" Or _currentSelectedStep.Name = "Multiplication" Or _currentSelectedStep.Name = "Graph Eigenvalue" Or _currentSelectedStep.Name = "PCA" Then
                                 _addOrDeleteInputSignal(obj, obj.SignalSignature.IsChecked)
                             End If
                             If _currentSelectedStep.Name = "Angle Calculation" Then
@@ -1796,6 +1799,24 @@ Namespace ViewModels
             End If
             If rate <> -1 Then
                 CurrentSelectedStep.OutputChannels(0).SamplingRate = rate
+            End If
+        End Sub
+
+        Private Sub _checkEVPCACustomizationOutputTypeAndSamplingRate()
+            Dim rate = -1
+            For Each signal In CurrentSelectedStep.InputChannels
+                If rate = -1 Then
+                    rate = signal.SamplingRate
+                ElseIf rate <> signal.SamplingRate Then
+                    _addLog("Sampling rate of all terms in PCA/EigenValue Graph customization have to be the same. Different sampling rate found in addition customization step: " & CurrentSelectedStep.stepCounter & ", with sampling rate: " & rate & " and " & signal.SamplingRate & ".")
+                    CurrentSelectedStep.OutputChannels(0).SamplingRate = -1
+                    Exit Sub
+                End If
+            Next
+            If rate <> -1 Then
+                For Each output In CurrentSelectedStep.OutputChannels
+                    output.SamplingRate = rate
+                Next
             End If
         End Sub
 
@@ -3882,6 +3903,13 @@ Namespace ViewModels
                         newCustomization = New AngleConversionCust
                     Case "Duplicate Signals"
                         newCustomization = New SignalReplicationCust
+                    Case "Graph Eigenvalue"
+                        newCustomization = New GraphEigenvalueCust
+                        Dim newSignal = New SignalSignatureViewModel("", newCustomization.CustPMUname, "OTHER")
+                        newSignal.IsCustomSignal = True
+                        newCustomization.OutputChannels.Add(newSignal)
+                    Case "PCA"
+                        newCustomization = New PCACust
                     Case Else
                         Throw New Exception("Customization step not supported!")
                 End Select
@@ -4065,6 +4093,7 @@ Namespace ViewModels
                             End If
                         ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
                             _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
+                            'ElseIf CurrentSelectedStep.Name = "Angle Conversion" Or CurrentSelectedStep.Name = "Graph Eigenvalue" Then
                         ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                             _disableEnableAllButAngleSignalsInDataConfig(True)
                         End If
@@ -4092,6 +4121,7 @@ Namespace ViewModels
                         End If
                     ElseIf processStep.Name = "Metric Prefix" Then
                         _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(False)
+                        'ElseIf processStep.Name = "Angle Conversion" Or processStep.Name = "Graph Eigenvalue" Then
                     ElseIf processStep.Name = "Angle Conversion" Then
                         _disableEnableAllButAngleSignalsInDataConfig(False)
                     End If
@@ -4529,6 +4559,7 @@ Namespace ViewModels
                     End If
                 ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
                     _enableDisableAllButAngleDigitalScalarOtherSignalsInDataConfig(True)
+                    'ElseIf CurrentSelectedStep.Name = "Angle Conversion" Or CurrentSelectedStep.Name = "Graph Eigenvalue" Then
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInDataConfig(True)
                 End If

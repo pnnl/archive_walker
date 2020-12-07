@@ -247,6 +247,9 @@
     <Compile Include="Views\filterViews\ZerosMissingDQFilterView.xaml.vb">
       <DependentUpon>ZerosMissingDQFilterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GraphEigenvalueCustomization.xaml.vb">
+      <DependentUpon>GraphEigenvalueCustomization.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HighPassFilterParameters.xaml.vb">
       <DependentUpon>HighPassFilterParameters.xaml</DependentUpon>
     </Compile>
@@ -279,6 +282,9 @@
     </Compile>
     <Compile Include="Views\OutOfRangeGeneralView.xaml.vb">
       <DependentUpon>OutOfRangeGeneralView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PCACustomization.xaml.vb">
+      <DependentUpon>PCACustomization.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PeriodogramAlarmingView.xaml.vb">
       <DependentUpon>PeriodogramAlarmingView.xaml</DependentUpon>
@@ -496,6 +502,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GraphEigenvalueCustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HighPassFilterParameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -539,6 +549,10 @@
     <Page Include="Views\OutOfRangeGeneralView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PCACustomization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PeriodogramAlarmingView.xaml">
       <Generator>MSBuild:Compile</Generator>

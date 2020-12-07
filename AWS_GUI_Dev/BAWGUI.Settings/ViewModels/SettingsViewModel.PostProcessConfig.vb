@@ -147,6 +147,7 @@ Namespace ViewModels
                             End If
                         ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
                             _enableDisableAllButAngleDigitalScalarOtherSignalsInPostProcessConfig(True)
+                            'ElseIf CurrentSelectedStep.Name = "Angle Conversion" Or CurrentSelectedStep.Name = "Graph Eigenvalue" Then
                         ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                             _disableEnableAllButAngleSignalsInPostProcessConfig(True)
                         End If
@@ -171,6 +172,7 @@ Namespace ViewModels
                         End If
                     ElseIf processStep.Name = "Metric Prefix" Then
                         _enableDisableAllButAngleDigitalScalarOtherSignalsInPostProcessConfig(False)
+                        'ElseIf processStep.Name = "Angle Conversion" Or processStep.Name = "Graph Eigenvalue" Then
                     ElseIf processStep.Name = "Angle Conversion" Then
                         _disableEnableAllButAngleSignalsInPostProcessConfig(False)
                     End If
@@ -255,6 +257,7 @@ Namespace ViewModels
                     End If
                 ElseIf CurrentSelectedStep.Name = "Metric Prefix" Then
                     _enableDisableAllButAngleDigitalScalarOtherSignalsInPostProcessConfig(True)
+                    'ElseIf CurrentSelectedStep.Name = "Angle Conversion" Or CurrentSelectedStep.Name = "Graph Eigenvalue" Then
                 ElseIf CurrentSelectedStep.Name = "Angle Conversion" Then
                     _disableEnableAllButAngleSignalsInPostProcessConfig(True)
                 End If
