@@ -119,6 +119,12 @@ namespace BAWGUI.ReadConfigXml
                             case "ReplicateSignal":
                                 CollectionOfSteps.Add(new SignalReplicationCustModel(item));
                                 break;
+                            case "Graph":
+                                CollectionOfSteps.Add(new GraphEigenvalueCustModel(item));
+                                break;
+                            case "PCA":
+                                CollectionOfSteps.Add(new PCACustModel(item));
+                                break;
                             default:
                                 throw new Exception("Error in reading data config customization steps, customization not recognized: " + name);
                         }
