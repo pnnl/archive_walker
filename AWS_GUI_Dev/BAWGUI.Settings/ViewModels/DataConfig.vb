@@ -207,6 +207,14 @@ Namespace ViewModels
                             stepCounter += 1
                             Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr)
                             allSteps.Add(a)
+                        Case "Graph Eigenvalue"
+                            stepCounter += 1
+                            Dim a = New GraphEigenvalueCust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
+                        Case "PCA"
+                            stepCounter += 1
+                            Dim a = New PCACust(stp, stepCounter, signalsMgr)
+                            allSteps.Add(a)
                         Case Else
                             Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
                     End Select
@@ -3727,6 +3735,238 @@ Namespace ViewModels
             End Get
             Set(ByVal value As SignalReplicationCustModel)
                 _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            If String.IsNullOrEmpty(CustPMUname) Then
+                'Throw New Exception("Please fill in custom PMU name.")
+                Return False
+            Else
+                Return True
+            End If
+        End Function
+    End Class
+    Public Class GraphEigenvalueCust
+        Inherits Customization
+        Public Sub New()
+            MyBase.New
+            _model = New GraphEigenvalueCustModel
+        End Sub
+        Public Sub New(stp As GraphEigenvalueCustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
+            MyBase.New(stp)
+            Me._model = stp
+            Me.StepCounter = stepCounter
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+            Try
+                InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & stp.Name)
+            End Try
+
+            'Dim type = ""
+            'Dim unit = ""
+            Dim samplingRate = -1
+            Dim output = New SignalSignatureViewModel(_model.SignalName, _model.CustPMUname, "OTHER")
+            output.Unit = "O"
+            'output.TypeAbbreviation = "OTHER"
+            For Each signal In InputChannels
+                'If String.IsNullOrEmpty(type) Then
+                '    type = signal.TypeAbbreviation
+                'ElseIf type <> signal.TypeAbbreviation Then
+                '    type = "OTHER"
+                '    unit = "O"
+                '    'Throw New Exception("All terms of addition customization have to be the same signal type! Different signal type found in addition customization step: " & stepCounter & ", with types: " & type & " and " & signal.TypeAbbreviation & ".")
+                'End If
+                'If String.IsNullOrEmpty(unit) Then
+                '    unit = signal.Unit
+                'ElseIf unit <> signal.Unit Then
+                '    unit = "O"
+                '    type = "OTHER"
+                '    'Throw New Exception("All terms of addition customization have to have the same unit! Different unit found in addition customization step: " & stepCounter & ", with unit: " & unit & " and " & signal.Unit & ".")
+                'End If
+                If samplingRate = -1 Then
+                    samplingRate = signal.SamplingRate
+                ElseIf samplingRate <> signal.SamplingRate Then
+                    Throw New Exception("All terms of Graph Eigenvalue customization have to have the same sampling rate! Different sampling rate found in addition customization step: " & stepCounter & ", with sampling rate: " & samplingRate & " and " & signal.SamplingRate & ".")
+                End If
+            Next
+            'If Not String.IsNullOrEmpty(type) Then
+            '    output.TypeAbbreviation = type
+            'End If
+            'If Not String.IsNullOrEmpty(unit) Then
+            '    output.Unit = unit
+            'End If
+            If samplingRate <> -1 Then
+                output.SamplingRate = samplingRate
+            End If
+            output.OldUnit = output.Unit
+            output.OldTypeAbbreviation = output.TypeAbbreviation
+            output.OldSignalName = output.SignalName
+            OutputChannels.Add(output)
+
+
+            Try
+                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+        End Sub
+        Public Overrides Function CheckStepIsComplete() As Boolean
+            Return True
+        End Function
+        Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
+        Private _model As GraphEigenvalueCustModel
+        Public Property Model As GraphEigenvalueCustModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As GraphEigenvalueCustModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+    End Class
+    Public Class PCACust
+        Inherits Customization
+        Public Sub New()
+            MyBase.New
+            _model = New PCACustModel
+        End Sub
+        Private signalsMgr As SignalManager
+
+        Public Sub New(stp As PCACustModel, stepCounter As Integer, signalsMgr As SignalManager, Optional postProcess As Boolean = False)
+            MyBase.New(stp)
+            Me._model = stp
+            Me.StepCounter = stepCounter
+            ThisStepInputsAsSignalHerachyByType.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+            ThisStepOutputsAsSignalHierachyByPMU.SignalSignature.SignalName = "Step " & stepCounter.ToString & " - " & Name
+
+            Try
+                InputChannels = signalsMgr.FindSignals(stp.PMUElementList)
+            Catch ex As Exception
+                Throw New Exception("Error finding signal in step: " & stp.Name)
+            End Try
+            Dim samplingRate = -1
+            For Each signal In InputChannels
+                If samplingRate = -1 Then
+                    samplingRate = signal.SamplingRate
+                ElseIf samplingRate <> signal.SamplingRate Then
+                    Throw New Exception("All terms of PCA customization have to have the same sampling rate! Different sampling rate found in addition customization step: " & stepCounter & ", with sampling rate: " & samplingRate & " and " & signal.SamplingRate & ".")
+                End If
+            Next
+            For Each signal In _model.SignalNames
+                'Dim input = signalsMgr.SearchForSignalInTaggedSignals(signal.PMUName, signal.Channel)
+                'If input IsNot Nothing Then
+                '    InputChannels.Add(input)
+                'Else
+                '    input = New SignalSignatureViewModel("SignalNotFound")
+                '    input.IsValid = False
+                '    input.TypeAbbreviation = "C"
+                '    Throw New Exception("Error reading config file! Input signal in step: " & stepCounter & ", with channel name: " & signal.Channel & " in PMU " & signal.PMUName & " not found!")
+                'End If
+                Dim output = New SignalSignatureViewModel(signal, CustPMUname, "OTHER")
+                If samplingRate <> -1 Then
+                    output.SamplingRate = samplingRate
+                End If
+                output.IsCustomSignal = True
+                output.Unit = "O"
+                output.OldSignalName = output.SignalName
+                output.OldTypeAbbreviation = output.TypeAbbreviation
+                output.OldUnit = output.Unit
+                OutputChannels.Add(output)
+                'Dim newPair = New KeyValuePair(Of SignalSignatureViewModel, ObservableCollection(Of SignalSignatureViewModel))(output, New ObservableCollection(Of SignalSignatureViewModel))
+                'newPair.Value.Add(input)
+                'OutputInputMappingPair.Add(newPair)
+            Next
+            _numberOfOutputs = OutputChannels.Count
+
+            Try
+                ThisStepInputsAsSignalHerachyByType.SignalList = signalsMgr.SortSignalByType(InputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by type in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsInput.Add(ThisStepInputsAsSignalHerachyByType)
+            End If
+            Try
+                ThisStepOutputsAsSignalHierachyByPMU.SignalList = signalsMgr.SortSignalByPMU(OutputChannels)
+            Catch ex As Exception
+                Throw New Exception("Error when sort signals by PMU in step: " & Name)
+            End Try
+            If postProcess Then
+                signalsMgr.GroupedSignalByPostProcessConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            Else
+                signalsMgr.GroupedSignalByDataConfigStepsOutput.Add(ThisStepOutputsAsSignalHierachyByPMU)
+            End If
+        End Sub
+        Public ReadOnly Property Name As String
+            Get
+                Return _model.Name
+            End Get
+        End Property
+        Private _model As PCACustModel
+        Public Property Model As PCACustModel
+            Get
+                Return _model
+            End Get
+            Set(ByVal value As PCACustModel)
+                _model = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _numberOfOutputs As Integer
+        Public Property NumberOfOutputs As Integer
+            Get
+                Return _numberOfOutputs
+            End Get
+            Set(ByVal value As Integer)
+                If value > _numberOfOutputs Then
+                    Dim samplingRate = -1
+                    If InputChannels.Count > 0 Then
+                        samplingRate = InputChannels.FirstOrDefault().SamplingRate
+                    End If
+                    For index = _numberOfOutputs To value - 1
+                        Dim output = New SignalSignatureViewModel("", CustPMUname, "OTHER")
+                        If samplingRate <> -1 Then
+                            output.SamplingRate = samplingRate
+                        End If
+                        output.IsCustomSignal = True
+                        output.Unit = "O"
+                        output.OldSignalName = output.SignalName
+                        output.OldTypeAbbreviation = output.TypeAbbreviation
+                        output.OldUnit = output.Unit
+                        OutputChannels.Add(output)
+                    Next
+                End If
+                If value < _numberOfOutputs Then
+                    For index = _numberOfOutputs - 1 To value Step -1
+                        OutputChannels.RemoveAt(index)
+                    Next
+                End If
+                _numberOfOutputs = value
                 OnPropertyChanged()
             End Set
         End Property

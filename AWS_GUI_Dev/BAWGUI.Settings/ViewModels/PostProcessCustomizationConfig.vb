@@ -25,7 +25,9 @@ Namespace ViewModels
                                                                             {"Signal Type/Unit", "SpecTypeUnit"},
                                                                             {"Metric Prefix", "MetricPrefix"},
                                                                             {"Angle Conversion", "AngleConversion"},
-                                                                            {"Duplicate Signals", "ReplicateSignal"}}
+                                                                            {"Duplicate Signals", "ReplicateSignal"},
+                                                                            {"Graph Eigenvalue", "Graph"},
+                                                                            {"PCA", "PCA"}}
             _customizationReverseNameDictionary = _customizationNameDictionary.ToDictionary(Function(x) x.Value, Function(x) x.Key)
             _customizationList = _customizationNameDictionary.Keys.ToList
             _customizationNameParemetersDictionary = New Dictionary(Of String, List(Of String)) From {{"Scalar Repetition", {"CustPMUname", "scalar", "SignalName", "SignalType", "SignalUnit", "TimeSourcePMU"}.ToList},
@@ -44,7 +46,8 @@ Namespace ViewModels
                                                                             {"Power Calculation", {"CustPMUname", "PowType", "power"}.ToList},
                                                                             {"Signal Type/Unit", {"CustPMUname", "CustName", "SigType", "SigUnit", "PMU", "Channel"}.ToList},
                                                                             {"Metric Prefix", {"CustPMUname", "ToConvert"}.ToList},
-                                                                            {"Angle Conversion", {"CustPMUname", "ToConvert"}.ToList}}
+                                                                            {"Angle Conversion", {"CustPMUname", "ToConvert"}.ToList},
+                                                                            {"Graph Eigenvalue", {"CustPMUname", "SignalName", "term"}.ToList}}
             _typeUnitDictionary = New Dictionary(Of String, List(Of String)) From {{"VMP", {"kV", "V"}.ToList},
                                                                                    {"VMA", {"kV", "V"}.ToList},
                                                                                    {"VMB", {"kV", "V"}.ToList},
@@ -168,7 +171,15 @@ Namespace ViewModels
                             allSteps.Add(a)
                         Case "Duplicate Signals"
                             stepCounter += 1
-                            Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr)
+                            Dim a = New SignalReplicationCust(stp, stepCounter, signalsMgr, True)
+                            allSteps.Add(a)
+                        Case "Graph Eigenvalue"
+                            stepCounter += 1
+                            Dim a = New GraphEigenvalueCust(stp, stepCounter, signalsMgr, True)
+                            allSteps.Add(a)
+                        Case "PCA"
+                            stepCounter += 1
+                            Dim a = New PCACust(stp, stepCounter, signalsMgr, True)
                             allSteps.Add(a)
                         Case Else
                             Throw New Exception(String.Format("Wrong stage name found in Config.xml file: {0}", name))
