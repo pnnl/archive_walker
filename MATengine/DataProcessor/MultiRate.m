@@ -89,17 +89,18 @@ for SigIdx = 1:length(SigsToProc)
         
         %Lowpass filter setup
         if isempty(InitialCondos{SigIdx}.bLO)
-            rp=0.1;
-            rs=50;
-            v = max([p q]);
-            f=[0.6/v 1/v];  % Scaled as if fs=2 (default for firpmord)
-            a=[1 0];
-            dev = [(10^(rp/20)-1)/(10^(rp/20)+1)  10^(-rs/20)];
-            [nLP,fo,ao,w] = firpmord(f,a,dev);
-            if nLP > 1000
-                error('The required filter order for this sampling rate conversion is greater than 1000. Implement in stages instead.');
-            end
-            bLO = firpm(nLP,fo,ao,w);
+            [~,bLO] = resample(1,p,q);
+%             rp=0.1;
+%             rs=50;
+%             v = max([p q]);
+%             f=[0.6/v 1/v];  % Scaled as if fs=2 (default for firpmord)
+%             a=[1 0];
+%             dev = [(10^(rp/20)-1)/(10^(rp/20)+1)  10^(-rs/20)];
+%             [nLP,fo,ao,w] = firpmord(f,a,dev);
+%             if nLP > 1000
+%                 error('The required filter order for this sampling rate conversion is greater than 1000. Implement in stages instead.');
+%             end
+%             bLO = firpm(nLP,fo,ao,w);
             
             InitialCondos{SigIdx}.bLO = bLO;
         end
