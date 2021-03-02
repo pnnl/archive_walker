@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="1462016462" file="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\GitFolders\archive_walker\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="2919372351" file="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\GitFolders\archive_walker\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>5.3</param.version>
+    <param.version>5.4</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -128,6 +128,7 @@
       </entity.package>
     </fileset.classes>
     <fileset.resources>
+      <file>C:\GitFolders\archive_walker\MATengine\DataProcessor\Filter\POWpmuFilt.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCustomization\GraphCustomization.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCustomization\PCAcustomization.m</file>
     </fileset.resources>
