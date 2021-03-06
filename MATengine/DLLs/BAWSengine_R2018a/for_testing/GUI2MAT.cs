@@ -1,10 +1,6 @@
 /*
 * MATLAB Compiler: 6.6 (R2018a)
-<<<<<<< HEAD
-* Date: Tue Mar  2 15:19:17 2021
-=======
-* Date: Fri Mar  5 16:36:25 2021
->>>>>>> OHpowTimestamps
+* Date: Fri Mar  5 17:02:14 2021
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\GitF
 * olders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_testing""-v""class{GUI2MAT:C:
