@@ -48,6 +48,8 @@ if(exist(currYearFolder,'dir'))
                     checkFiles = dir([checkFolder,'\*.csv']);
                 elseif(fileType == 3)
                     checkFiles = dir([checkFolder,'\*.mat']);
+                elseif(fileType == 4)
+                    checkFiles = dir([checkFolder,'\*.dat']);
                 end
                 if(~isempty(checkFiles))
                     % found future files
@@ -103,6 +105,8 @@ if(~foundFolder)
                             checkFiles = dir([checkFolder,'\*.csv']);
                         elseif(fileType == 3)
                             checkFiles = dir([checkFolder,'\*.mat']);
+                        elseif(fileType == 4)
+                            checkFiles = dir([checkFolder,'\*.dat']);
                         end
                         if(~isempty(checkFiles))
                             % found future files
