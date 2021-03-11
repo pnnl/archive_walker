@@ -65,6 +65,8 @@ elseif(strcmpi(FileInfo.FileType,'csv'))
     fileType = 2;
 elseif(strcmpi(FileInfo.FileType,'powHQ'))
     fileType = 3;
+elseif(strcmpi(FileInfo.FileType,'uPMUdat'))
+    fileType = 4;
 elseif(strcmpi(FileInfo.FileType,'PI'))
     SkippedFiles = 0;
     FocusFileTime = InitialFocusFileTime;
@@ -245,6 +247,8 @@ while(checking == 1)
                     files1 = dir([focusFileFolder,'*.csv']);
                 elseif(fileType == 3)
                     files1 = dir([focusFileFolder,'*.mat']);
+                elseif(fileType == 4)
+                    files1 = dir([focusFileFolder,'*.dat']);
                 end
                 if(~isempty(files1))
                     files1 = {files1.name};
@@ -271,6 +275,8 @@ while(checking == 1)
                     files2 = dir([nextFileFolder,'*.csv']);
                 elseif(fileType == 3)
                     files2 = dir([nextFileFolder,'*.mat']);
+                elseif(fileType == 4)
+                    files2 = dir([nextFileFolder,'*.dat']);
                 end
                 if(~isempty(files2))
                     files2 = {files2.name};
