@@ -33,6 +33,8 @@ try
         [PMU,~,fs] = JSIS_CSV_2_Mat(InputFile,0);
     elseif FileType == 3
         [PMU,~,fs] = POWreadHQ(InputFile,0);
+    elseif FileType == 4
+        [PMU,~,fs] = uPMUdatReader(InputFile,0,[]);
     else
         Unsupported = 1;
         error(['FileType = ' num2str(FileType) ' is not a supported value.']);

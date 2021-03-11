@@ -42,6 +42,8 @@ else
                 [PMUbyFileTemp,tPMU] = JSIS_CSV_2_Mat(focusFile{idx3},Num_Flags);
             elseif(strcmpi(FileInfo(idx3).FileType, 'powHQ'))
                 [PMUbyFileTemp,tPMU] = POWreadHQ(focusFile{idx3},Num_Flags);
+            elseif(strcmpi(FileInfo(idx3).FileType, 'uPMUdat'))
+                [PMUbyFileTemp,tPMU] = uPMUdatReader(focusFile{idx3},Num_Flags,FileLength);
             elseif(strcmpi(FileInfo(idx3).FileType, 'PI'))
                 [PMUbyFileTemp,tPMU] = PIreaderDLL(focusFile{idx3},Num_Flags,FileLength,FileInfo(idx3).FileMnemonic,DataInfo.PresetFile);
             elseif(strcmpi(FileInfo(idx3).FileType, 'OpenHistorian'))
