@@ -20,6 +20,8 @@ Namespace Converters
                     Return "openHistorian"
                 Case DataFileType.OpenPDC
                     Return "openPDC"
+                Case DataFileType.uPMUdat
+                    Return "uPMU DAT"
                 Case Else
                     Throw New Exception("Data file type not valid!")
             End Select
@@ -39,6 +41,8 @@ Namespace Converters
                     Return DataFileType.OpenHistorian
                 Case "openPDC"
                     Return DataFileType.OpenPDC
+                Case "uPMU DAT"
+                    Return DataFileType.uPMUdat
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

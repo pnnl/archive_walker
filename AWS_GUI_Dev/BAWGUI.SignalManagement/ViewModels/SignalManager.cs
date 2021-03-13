@@ -217,6 +217,18 @@ namespace BAWGUI.SignalManagement.ViewModels
                             MissingExampleFile.Add("\nError reading openPDC database:  " + Path.GetFileName(item.ExampleFile) + ". " + ex.Message + ".");
                         }
                     }
+                    else if (item.FileType == DataFileType.uPMUdat)
+                    {
+                        try
+                        {
+                            _readExampleFile(aFileInfo, 4);
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                    }
                     //FileInfo.Add(aFileInfo);
                 }
             }
@@ -306,6 +318,17 @@ namespace BAWGUI.SignalManagement.ViewModels
                     catch (Exception ex)
                     {
                         throw new Exception("Error reading openPDC database. " + ex.Message);
+                    }
+                }
+                else if (model.Model.FileType == DataFileType.uPMUdat)
+                {
+                    try
+                    {
+                        _readExampleFile(model, 4);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error reading .dat file. " + ex.Message);
                     }
                 }
                 //FileInfo.Add(model);
@@ -2968,6 +2991,10 @@ namespace BAWGUI.SignalManagement.ViewModels
                     else if (info.FileType == DataFileType.OpenPDC)
                     {
                         _engine.GetDBExampleSignals(starttime, info.Mnemonic, info.ExampleFile, "openPDC");
+                    }
+                    else if (info.FileType == DataFileType.uPMUdat)
+                    {
+                        _engine.GetFileExampleSignalData(info.ExampleFile, 4);
                     }
                 }
                 catch (Exception ex)

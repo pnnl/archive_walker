@@ -51,7 +51,9 @@ namespace BAWGUI.Core.Models
         [Description("openHistorian")]
         OpenHistorian,
         [Description("openPDC")]
-        OpenPDC
+        OpenPDC,
+        [Description("uPMU DAT")]
+        uPMUdat
     }
 
     public enum ModeType
