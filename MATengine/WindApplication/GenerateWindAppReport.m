@@ -252,6 +252,8 @@ for RankIdx = unique(EventRank)
                             PMUtemp = JSIS_CSV_2_Mat(PMUfilePath,Num_Flags);
                         elseif(strcmpi(FileInfo(idx3).FileType, 'powHQ'))
                             PMUtemp = POWreadHQ(PMUfilePath,Num_Flags);
+                        elseif(strcmpi(FileInfo(idx3).FileType, 'uPMUdat'))
+                            PMUtemp = uPMUdatReader(PMUfilePath,Num_Flags,FileLength);
                         end
 
                         PMUconcat = ConcatenatePMU(PMUconcat,PMUtemp);

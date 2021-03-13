@@ -140,6 +140,64 @@ if (nargin == 5) && (~Unpause)
     SparsePMU = struct();
     
     PMUbyFile = cell(1,length(FileInfo));
+    
+    
+    
+    
+
+    
+    
+    % If all data sources are files, load the example file for each data
+    % source. This provides a template that allows AW to run even before
+    % all files are available.
+    for exIdx = 1:length(FileInfo)
+        try
+            if(strcmpi(FileInfo(exIdx).FileType, 'pdat'))
+                % pdat format
+                [PMUbyFile{exIdx}, FileInfo(exIdx).tPMU] = pdatReadnCreateStruct(DataXML.ReaderProperties.FilePath{exIdx}.ExampleFile,Num_Flags,[]);
+            elseif(strcmpi(FileInfo(exIdx).FileType, 'csv'))
+                % JSIS_CSV format
+                [PMUbyFile{exIdx}, FileInfo(exIdx).tPMU] = JSIS_CSV_2_Mat(DataXML.ReaderProperties.FilePath{exIdx}.ExampleFile,Num_Flags);
+            elseif(strcmpi(FileInfo(exIdx).FileType, 'powHQ'))
+                [PMUbyFile{exIdx}, FileInfo(exIdx).tPMU] = POWreadHQ(DataXML.ReaderProperties.FilePath{exIdx}.ExampleFile,Num_Flags);
+            elseif(strcmpi(FileInfo(exIdx).FileType, 'uPMUdat'))
+                [PMUbyFile{exIdx}, FileInfo(exIdx).tPMU] = uPMUdatReader(DataXML.ReaderProperties.FilePath{exIdx}.ExampleFile,Num_Flags,[]);
+            else
+                % Not all data sources are files, so don't attempt this
+                PMUbyFile = cell(1,length(FileInfo));
+                for exIdx2 = 1:length(FileInfo)
+                    FileInfo(exIdx).tPMU = [];
+                end
+                break;
+            end
+            
+            % Adjust timestamps to correspond to the desired start time
+            % (one file length before the start time)
+            ThisFileLength = round((FileInfo(exIdx).tPMU(end)-FileInfo(exIdx).tPMU(1) + FileInfo(exIdx).tPMU(2)-FileInfo(exIdx).tPMU(1))*24*60*60);
+            FileInfo(exIdx).tPMU = FileInfo(exIdx).tPMU - (FileInfo(exIdx).tPMU(1) - datenum(DataInfo.DateTimeStart)) - ThisFileLength;
+            tString = cellstr(datestr(FileInfo(exIdx).tPMU,'yyyy-mm-dd HH:MM:SS.FFF'));
+            tDT = datetime(FileInfo(exIdx).tPMU,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
+            
+            for pmuIdx = 1:length(PMUbyFile{exIdx})
+                PMUbyFile{exIdx}(pmuIdx).File_Name = 'Missing';
+                PMUbyFile{exIdx}(pmuIdx).Flag(:) = 1;
+                PMUbyFile{exIdx}(pmuIdx).Data(:) = NaN;
+                PMUbyFile{exIdx}(pmuIdx).Stat(:) = NaN;
+                PMUbyFile{exIdx}(pmuIdx).Signal_Time.Signal_datenum = FileInfo(exIdx).tPMU;
+                PMUbyFile{exIdx}(pmuIdx).Signal_Time.Time_String = tString;
+                PMUbyFile{exIdx}(pmuIdx).Signal_Time.datetime = tDT;
+            end
+            clear tString tDT
+        catch
+            % Something went wrong trying to read the example files, so
+            % carry on without this.
+            PMUbyFile = cell(1,length(FileInfo));
+            for exIdx2 = 1:length(FileInfo)
+                FileInfo(exIdx).tPMU = [];
+            end
+            break;
+        end
+    end
 elseif ~Unpause
     RunMode = 'Rerun';
     
@@ -422,6 +480,10 @@ while(~min(done))
         % same FocusFileTime - assumes files from different directories
         % correspond to the same time frames.
         SkippedFiles = SkippedFiles(find(idx,1));
+        
+        if isempty(SkippedFiles)
+            SkippedFiles = 0;
+        end
     end
     
     

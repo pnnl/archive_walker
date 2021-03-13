@@ -30,6 +30,8 @@ elseif(fileType == 2)
     currFile = [currFile '.csv'];
 elseif(fileType == 3)
     currFile = [currFile '.mat'];
+elseif(fileType == 4)
+    currFile = [currFile '.dat'];
 end
 
 
