@@ -1,7 +1,7 @@
 ﻿Imports BAWGUI.Utilities
 Imports System.Windows.Media
 
-Public Class TunableFilterInputSignalView2
+Public Class PointOnWavePowerCalFilterView
     Private Sub PAVPMU_GotFocus(sender As Object, e As Windows.RoutedEventArgs)
         sender.Background = Utility.HighlightColor
         For Each item In sender.Parent.Children

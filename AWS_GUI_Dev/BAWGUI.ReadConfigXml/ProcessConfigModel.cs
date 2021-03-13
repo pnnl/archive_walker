@@ -152,7 +152,11 @@ namespace BAWGUI.ReadConfigXml
         public TunableFilterModel()
         {
             PointOnWavePowerCalculationFilterParam = new PointOnWavePowerCalculationFilterParameters();
+            POWPMUFilterParameters = new PointOnWavePMUFilterParameters();
             PMUElementList = new List<PMUElementForUnaryCustModel>();
+            ReturnABCPhases = false;
+            ReturnPositiveSequence = false;
+            CalculateFandROCOF = false;
         }
         public TunableFilterModel(XElement filter) : this()
         {
@@ -293,6 +297,155 @@ namespace BAWGUI.ReadConfigXml
                         BandType = EnumExtencsionMethod.GetValueFromDescription<RMSEnergyBandOptions>(value.Value);
                     }
                     break;
+                case TunableFilterType.POWpmuFilt:
+                    value = filter.Element("Parameters").Element("PmagName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.PmagName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("PangName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.PangName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("AmagName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.AmagName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("AangName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.AangName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("AfitName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.AfitName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("BmagName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.BmagName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("BangName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.BangName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("BfitName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.BfitName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("CmagName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.CmagName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("CangName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.CangName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("CfitName");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.CfitName = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("Fname");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.Fname = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("ROCOFname");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.ROCOFname = value.Value;
+                    }
+                    double v = 0d;
+                    value = filter.Element("Parameters").Element("ReportRate");
+                    if (value != null && double.TryParse(value.Value, out v))
+                    {
+                        POWPMUFilterParameters.ReportRate = v;
+                    }
+                    value = filter.Element("Parameters").Element("WinLength");
+                    if (value != null && double.TryParse(value.Value, out v))
+                    {
+                        POWPMUFilterParameters.WinLength = v;
+                    }
+                    value = filter.Element("Parameters").Element("SynchFreq");
+                    if (value != null && double.TryParse(value.Value, out v))
+                    {
+                        POWPMUFilterParameters.SynchFreq = v;
+                    }
+                    value = filter.Element("Parameters").Element("PA");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.PA = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("PB");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.PB = value.Value;
+                    }
+                    value = filter.Element("Parameters").Element("PC");
+                    if (value != null)
+                    {
+                        POWPMUFilterParameters.PC = value.Value;
+                    }
+                    value = filter.Element("InputType");
+                    if (value != null)
+                    {
+                        if (value.Value.ToUpper() == "VOLTAGE")
+                        {
+                            PMUFilterInputType = POWPMUFilterInputType.Voltage;
+                        }
+                        else if (value.Value.ToUpper() == "CURRENT")
+                        {
+                            PMUFilterInputType = POWPMUFilterInputType.Current;
+                        }
+                        else
+                        {
+                        }
+                    }
+                    value = filter.Element("ReturnABCPhase");
+                    if (value != null)
+                    {
+                        if (value.Value.ToUpper() == "TRUE")
+                        {
+                            ReturnABCPhases = true;
+                        }
+                        else
+                        {
+                            ReturnABCPhases = false;
+                        }
+                    }
+                    value = filter.Element("ReturnPositiveSequence");
+                    if (value != null)
+                    {
+                        if (value.Value.ToUpper() == "TRUE")
+                        {
+                            ReturnPositiveSequence = true;
+                        }
+                        else
+                        {
+                            ReturnPositiveSequence = false;
+                        }
+                    }
+                    value = filter.Element("CalculateFandROCOF");
+                    if (value != null)
+                    {
+                        if (value.Value.ToUpper() == "TRUE")
+                        {
+                            CalculateFandROCOF = true;
+                        }
+                        else
+                        {
+                            CalculateFandROCOF = false;
+                        }
+                    }
+                    break;
                 default:
                     throw new Exception("Unknow tunable filter type!");
             }
@@ -320,7 +473,7 @@ namespace BAWGUI.ReadConfigXml
                     {
                         var channelName = channel.Element("Name").Value;
                         var custname = "";
-                        if (UseCustomPMU && Type != TunableFilterType.PointOnWavePower)
+                        if (UseCustomPMU && Type != TunableFilterType.PointOnWavePower && Type != TunableFilterType.POWpmuFilt)
                         {
                             custname = channel.Element("CustName").Value;
                         }
@@ -351,6 +504,11 @@ namespace BAWGUI.ReadConfigXml
         public List<PMUElementForUnaryCustModel> PMUElementList { get; set; }
         public PointOnWavePowerCalculationFilterParameters PointOnWavePowerCalculationFilterParam { get; set; }
         public RMSEnergyBandOptions BandType { get; set; }
+        public PointOnWavePMUFilterParameters POWPMUFilterParameters { get; set; }
+        public POWPMUFilterInputType PMUFilterInputType { get; set; }
+        public bool ReturnABCPhases { get; set; }
+        public bool ReturnPositiveSequence { get; set; }
+        public bool CalculateFandROCOF { get; set; }
         //public string Pname { get; private set; }
         //public string Qname { get; private set; }
         //public string VA { get; private set; }
@@ -480,5 +638,32 @@ namespace BAWGUI.ReadConfigXml
         public string IC { get; set; }
         public string PhaseShiftV { get; set; }
         public string PhaseShiftI { get; set; }
+    }
+    public class PointOnWavePMUFilterParameters
+    {
+        public PointOnWavePMUFilterParameters()
+        {
+            SynchFreq = 60;
+            ReportRate = 30;
+        }
+        public string PmagName { get; set; }
+        public string PangName { get; set; }
+        public string AmagName { get; set; }
+        public string AangName { get; set; }
+        public string AfitName { get; set; }
+        public string BmagName { get; set; }
+        public string BangName { get; set; }
+        public string BfitName { get; set; }
+        public string CmagName { get; set; }
+        public string CangName { get; set; }
+        public string CfitName { get; set; }
+        public string Fname { get; set; }
+        public string ROCOFname { get; set; }
+        public double ReportRate { get; set; }
+        public double WinLength { get; set; }
+        public double SynchFreq { get; set; }
+        public string PA { get; set; }
+        public string PB { get; set; }
+        public string PC { get; set; }
     }
 }

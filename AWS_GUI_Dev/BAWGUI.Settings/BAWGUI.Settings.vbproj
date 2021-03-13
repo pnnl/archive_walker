@@ -247,17 +247,20 @@
     <Compile Include="Views\filterViews\ZerosMissingDQFilterView.xaml.vb">
       <DependentUpon>ZerosMissingDQFilterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FrequencyDerivationFilterView.xaml.vb">
+      <DependentUpon>FrequencyDerivationFilterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GraphEigenvalueCustomization.xaml.vb">
       <DependentUpon>GraphEigenvalueCustomization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HighPassFilterParameters.xaml.vb">
-      <DependentUpon>HighPassFilterParameters.xaml</DependentUpon>
+    <Compile Include="Views\HighPassFilterView.xaml.vb">
+      <DependentUpon>HighPassFilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InterpolationView.xaml.vb">
       <DependentUpon>InterpolationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LowPassFilterParameters.xaml.vb">
-      <DependentUpon>LowPassFilterParameters.xaml</DependentUpon>
+    <Compile Include="Views\LowPassFilterView.xaml.vb">
+      <DependentUpon>LowPassFilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MetricPrefixCustomization.xaml.vb">
       <DependentUpon>MetricPrefixCustomization.xaml</DependentUpon>
@@ -295,8 +298,11 @@
     <Compile Include="Views\PMUOnlyFilterListBox.xaml.vb">
       <DependentUpon>PMUOnlyFilterListBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PointOnWavePowerCalFilterparameters.xaml.vb">
-      <DependentUpon>PointOnWavePowerCalFilterparameters.xaml</DependentUpon>
+    <Compile Include="Views\PointOnWavePMUFilterView.xaml.vb">
+      <DependentUpon>PointOnWavePMUFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PointOnWavePMUFilterParametersView.xaml.vb">
+      <DependentUpon>PointOnWavePMUFilterParametersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PostProcessingConfigTabInSettings.xaml.vb">
       <DependentUpon>PostProcessingConfigTabInSettings.xaml</DependentUpon>
@@ -307,8 +313,8 @@
     <Compile Include="Views\ProcessConfigTabInSettings.xaml.vb">
       <DependentUpon>ProcessConfigTabInSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RationalFilterParameters.xaml.vb">
-      <DependentUpon>RationalFilterParameters.xaml</DependentUpon>
+    <Compile Include="Views\RationalFilterView.xaml.vb">
+      <DependentUpon>RationalFilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ReadPropertiesTabInSettings.xaml.vb">
       <DependentUpon>ReadPropertiesTabInSettings.xaml</DependentUpon>
@@ -319,11 +325,11 @@
     <Compile Include="Views\RingdownView.xaml.vb">
       <DependentUpon>RingdownView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RMSEnergyFilterparameters.xaml.vb">
-      <DependentUpon>RMSEnergyFilterparameters.xaml</DependentUpon>
+    <Compile Include="Views\RMSEnergyFilterView.xaml.vb">
+      <DependentUpon>RMSEnergyFilterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RunningAverageFilterParameters.xaml.vb">
-      <DependentUpon>RunningAverageFilterParameters.xaml</DependentUpon>
+    <Compile Include="Views\RunningAverageFilterView.xaml.vb">
+      <DependentUpon>RunningAverageFilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ScalarRepCustomization.xaml.vb">
       <DependentUpon>ScalarRepCustomization.xaml</DependentUpon>
@@ -361,8 +367,8 @@
     <Compile Include="Views\TunableFilterInputSignalView1.xaml.vb">
       <DependentUpon>TunableFilterInputSignalView1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TunableFilterInputSignalView2.xaml.vb">
-      <DependentUpon>TunableFilterInputSignalView2.xaml</DependentUpon>
+    <Compile Include="Views\PointOnWavePowerCalFilterView.xaml.vb">
+      <DependentUpon>PointOnWavePowerCalFilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TunableFilterView.xaml.vb">
       <DependentUpon>TunableFilterView.xaml</DependentUpon>
@@ -502,11 +508,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FrequencyDerivationFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GraphEigenvalueCustomization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HighPassFilterParameters.xaml">
+    <Page Include="Views\HighPassFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -514,7 +524,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LowPassFilterParameters.xaml">
+    <Page Include="Views\LowPassFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -566,7 +576,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PointOnWavePowerCalFilterparameters.xaml">
+    <Page Include="Views\PointOnWavePMUFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PointOnWavePMUFilterParametersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -582,7 +596,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\RationalFilterParameters.xaml">
+    <Page Include="Views\RationalFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -598,11 +612,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\RMSEnergyFilterparameters.xaml">
+    <Page Include="Views\RMSEnergyFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RunningAverageFilterParameters.xaml">
+    <Page Include="Views\RunningAverageFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -654,7 +668,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TunableFilterInputSignalView2.xaml">
+    <Page Include="Views\PointOnWavePowerCalFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

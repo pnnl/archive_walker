@@ -1417,6 +1417,13 @@ Namespace ViewModels
                                 _keepOriginalSelection(obj)
                                 Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
                             End Try
+                        ElseIf DirectCast(_currentSelectedStep, TunableFilter).Type = TunableFilterType.POWpmuFilt Then
+                            Try
+
+                            Catch ex As Exception
+                                _keepOriginalSelection(obj)
+                                Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            End Try
                         Else
                             Try
                                 _changeSignalSelectionUnarySteps(obj)
@@ -1511,8 +1518,8 @@ Namespace ViewModels
             Next
         End Sub
         Private Sub _checkPointOnWavePowCalFltrOutputUnit()
-            Dim PhAVUnit = CurrentSelectedStep.POWInputSignals.PhaseAVoltage.Unit
-            Dim PhAIUnit = CurrentSelectedStep.POWInputSignals.PhaseACurrent.Unit
+            Dim PhAVUnit = CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage.Unit
+            Dim PhAIUnit = CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent.Unit
             Dim output1 = CurrentSelectedStep.OutputChannels(0)
             Dim output2 = CurrentSelectedStep.OutputChannels(1)
             If PhAVUnit = "V" And PhAIUnit = "A" Then
@@ -1548,18 +1555,19 @@ Namespace ViewModels
             _signalMgr.DetermineSamplingRateCheckableStatus(_currentSelectedStep, _currentTabIndex, freq)
         End Sub
         Private Sub _changePointOnWavePowCalFltrInputSignal(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 Then
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount > 0 Then
                 Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
             Else
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseAVoltage" Then
                     If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
                         Throw New Exception("Input must be a point-on-wave voltage")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseAVoltage)
-                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage = DummySignature
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage = DummySignature
                     If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseAVoltage = obj.SignalSignature
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage = obj.SignalSignature
                         CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     End If
                 End If
@@ -1567,11 +1575,11 @@ Namespace ViewModels
                     If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
                         Throw New Exception("Input must be a point-on-wave voltage")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBVoltage)
-                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage = DummySignature
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage = DummySignature
                     If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseBVoltage = obj.SignalSignature
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage = obj.SignalSignature
                         CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     End If
                 End If
@@ -1579,11 +1587,11 @@ Namespace ViewModels
                     If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
                         Throw New Exception("Input must be a point-on-wave voltage")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCVoltage)
-                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage = DummySignature
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage = DummySignature
                     If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseCVoltage = obj.SignalSignature
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage = obj.SignalSignature
                         CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     End If
                 End If
@@ -1591,11 +1599,11 @@ Namespace ViewModels
                     If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
                         Throw New Exception("Input must be a point-on-wave current")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseACurrent)
-                    CurrentSelectedStep.POWInputSignals.PhaseACurrent.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseACurrent = DummySignature
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent = DummySignature
                     If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseACurrent = obj.SignalSignature
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent = obj.SignalSignature
                         CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     End If
                 End If
@@ -1603,11 +1611,11 @@ Namespace ViewModels
                     If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
                         Throw New Exception("Input must be a point-on-wave current")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBCurrent)
-                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent = DummySignature
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent = DummySignature
                     If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseBCurrent = obj.SignalSignature
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent = obj.SignalSignature
                         CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     End If
                 End If
@@ -1615,11 +1623,11 @@ Namespace ViewModels
                     If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
                         Throw New Exception("Input must be a point-on-wave current")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCCurrent)
-                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent = DummySignature
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent = DummySignature
                     If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseCCurrent = obj.SignalSignature
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent = obj.SignalSignature
                         CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
                     End If
                 End If

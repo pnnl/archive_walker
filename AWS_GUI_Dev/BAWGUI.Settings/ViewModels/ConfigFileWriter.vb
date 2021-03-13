@@ -245,23 +245,23 @@ Namespace ViewModels
                             If Not String.IsNullOrEmpty(stp.WindowLength) Then
                                 parameters.Add(<WindowLength><%= stp.WindowLength %></WindowLength>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseAVoltage.SignalName) Then
-                                parameters.Add(<VA><%= stp.POWInputSignals.PhaseAVoltage.SignalName %></VA>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseAVoltage.SignalName) Then
+                                parameters.Add(<VA><%= stp.POWCalcInputSignals.PhaseAVoltage.SignalName %></VA>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseBVoltage.SignalName) Then
-                                parameters.Add(<VB><%= stp.POWInputSignals.PhaseBVoltage.SignalName %></VB>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseBVoltage.SignalName) Then
+                                parameters.Add(<VB><%= stp.POWCalcInputSignals.PhaseBVoltage.SignalName %></VB>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseCVoltage.SignalName) Then
-                                parameters.Add(<VC><%= stp.POWInputSignals.PhaseCVoltage.SignalName %></VC>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseCVoltage.SignalName) Then
+                                parameters.Add(<VC><%= stp.POWCalcInputSignals.PhaseCVoltage.SignalName %></VC>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseACurrent.SignalName) Then
-                                parameters.Add(<IA><%= stp.POWInputSignals.PhaseACurrent.SignalName %></IA>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseACurrent.SignalName) Then
+                                parameters.Add(<IA><%= stp.POWCalcInputSignals.PhaseACurrent.SignalName %></IA>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseBCurrent.SignalName) Then
-                                parameters.Add(<IB><%= stp.POWInputSignals.PhaseBCurrent.SignalName %></IB>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseBCurrent.SignalName) Then
+                                parameters.Add(<IB><%= stp.POWCalcInputSignals.PhaseBCurrent.SignalName %></IB>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseCCurrent.SignalName) Then
-                                parameters.Add(<IC><%= stp.POWInputSignals.PhaseCCurrent.SignalName %></IC>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseCCurrent.SignalName) Then
+                                parameters.Add(<IC><%= stp.POWCalcInputSignals.PhaseCCurrent.SignalName %></IC>)
                             End If
                             If Not String.IsNullOrEmpty(stp.PhaseShiftV) Then
                                 parameters.Add(<PhaseShiftV><%= stp.PhaseShiftV %></PhaseShiftV>)
@@ -275,6 +275,10 @@ Namespace ViewModels
                             If Not String.IsNullOrEmpty(stp.BandType) Then
                                 parameters.Add(<Band><%= EnumExtencsionMethod.ToStringEnums(stp.BandType) %></Band>)
                             End If
+                            aStep.Add(parameters)
+                        Case TunableFilterType.POWpmuFilt
+                            Dim parameters = <Parameters></Parameters>
+
                             aStep.Add(parameters)
                         Case Else
                             Dim parameters = <Parameters></Parameters>

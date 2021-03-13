@@ -99,7 +99,9 @@ Namespace Converters
                         Return "Step " & number.ToString & " - Running Average"
                     Case TunableFilterType.RMSenergyFilt
                         Return "Step " & number.ToString & " - RMS Energy Filter"
-                    Case Else
+                    Case TunableFilterType.POWpmuFilt
+                        Return "Step " & number.ToString & " - Point on Wave PMU Filter"
+                    Case TunableFilterType.PointOnWavePower
                         Return "Step " & number.ToString & " - Point on Wave Power Calculation Filter"
                 End Select
             Else

@@ -86,7 +86,9 @@ namespace BAWGUI.Core.Models
         [Description("Point on Wave Power Calculation")]
         PointOnWavePower,
         [Description("RMS Energy")]
-        RMSenergyFilt
+        RMSenergyFilt,
+        [Description("PMU")]
+        POWpmuFilt
     }
     public enum InterpolateType
     {
@@ -130,6 +132,11 @@ namespace BAWGUI.Core.Models
         Band3,
         [Description("Band 4")]
         Band4
+    }
+    public enum POWPMUFilterInputType
+    {
+        Voltage,
+        Current
     }
     public static class EnumExtencsionMethod
     {
