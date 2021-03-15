@@ -413,6 +413,7 @@ Namespace ViewModels
             _model = New TunableFilterModel()
             _powCalcInputSignals = New PointOnWaveCalFilterInputSignals
             _powPMUFilterInputSignals = New PointOnWavePMUFilterInputSignals
+            _powPMUFilterOutputSignals = New PointOnWavePMUFilterOutputSignals
             Type = TunableFilterType.Rational
             IsExpanded = False
             _order = 1
@@ -577,6 +578,7 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.PmagOut = output
                 End If
                 If Not String.IsNullOrEmpty(PangName) Then
                     Dim output = New SignalSignatureViewModel(PangName, CustPMUName, "OTHER")
@@ -594,6 +596,7 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.PangOut = output
                 End If
                 If Not String.IsNullOrEmpty(AmagName) Then
                     Dim output = New SignalSignatureViewModel(AmagName, CustPMUName, "OTHER")
@@ -611,6 +614,7 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.AmagOut = output
                 End If
                 If Not String.IsNullOrEmpty(AangName) Then
                     Dim output = New SignalSignatureViewModel(AangName, CustPMUName, "OTHER")
@@ -628,12 +632,14 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.AangOut = output
                 End If
                 If Not String.IsNullOrEmpty(AfitName) Then
                     Dim output = New SignalSignatureViewModel(AfitName, CustPMUName, "OTHER")
                     output.SamplingRate = fs
                     output.Unit = "O"
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.AfitOut = output
                 End If
                 If Not String.IsNullOrEmpty(BmagName) Then
                     Dim output = New SignalSignatureViewModel(BmagName, CustPMUName, "OTHER")
@@ -651,6 +657,7 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.BmagOut = output
                 End If
                 If Not String.IsNullOrEmpty(BangName) Then
                     Dim output = New SignalSignatureViewModel(BangName, CustPMUName, "OTHER")
@@ -668,12 +675,14 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.BangOut = output
                 End If
                 If Not String.IsNullOrEmpty(BfitName) Then
                     Dim output = New SignalSignatureViewModel(BfitName, CustPMUName, "OTHER")
                     output.SamplingRate = fs
                     output.Unit = "O"
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.BfitOut = output
                 End If
                 If Not String.IsNullOrEmpty(CmagName) Then
                     Dim output = New SignalSignatureViewModel(CmagName, CustPMUName, "OTHER")
@@ -691,6 +700,7 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.CmagOut = output
                 End If
                 If Not String.IsNullOrEmpty(CangName) Then
                     Dim output = New SignalSignatureViewModel(CangName, CustPMUName, "OTHER")
@@ -708,12 +718,14 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.CangOut = output
                 End If
                 If Not String.IsNullOrEmpty(CfitName) Then
                     Dim output = New SignalSignatureViewModel(CfitName, CustPMUName, "OTHER")
                     output.SamplingRate = fs
                     output.Unit = "O"
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.CfitOut = output
                 End If
                 If Not String.IsNullOrEmpty(Fname) Then
                     Dim output = New SignalSignatureViewModel(Fname, CustPMUName, "OTHER")
@@ -731,6 +743,7 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.FOut = output
                 End If
                 If Not String.IsNullOrEmpty(ROCOFname) Then
                     Dim output = New SignalSignatureViewModel(ROCOFname, CustPMUName, "OTHER")
@@ -748,6 +761,7 @@ Namespace ViewModels
                         End If
                     End If
                     OutputChannels.Add(output)
+                    PowPMUFilterOutputSignals.ROCOFOut = output
                 End If
             End If
             'Try
@@ -1204,7 +1218,7 @@ Namespace ViewModels
                 If Type = TunableFilterType.POWpmuFilt Then
                     If _model.POWPMUFilterParameters.Fname <> value Then
                         _model.POWPMUFilterParameters.Fname = value
-                        'OutputChannels(0).SignalName = value
+                        PowPMUFilterOutputSignals.FOut.SignalName = value
                         OnPropertyChanged()
                     End If
                 End If
@@ -1226,8 +1240,13 @@ Namespace ViewModels
                 Return _model.PMUFilterInputType
             End Get
             Set(ByVal value As POWPMUFilterInputType)
-                _model.PMUFilterInputType = value
-                OnPropertyChanged()
+                If _model.PMUFilterInputType <> value Then
+                    _model.PMUFilterInputType = value
+                    OnPropertyChanged()
+                    If _model.PMUFilterInputType = POWPMUFilterInputType.Current Then
+                        CalculateFandROCOF = False
+                    End If
+                End If
             End Set
         End Property
         Public Property ReturnABCPhases As Boolean
@@ -1270,7 +1289,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.PmagName <> value Then
                     _model.POWPMUFilterParameters.PmagName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.PmagOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1282,7 +1301,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.PangName <> value Then
                     _model.POWPMUFilterParameters.PangName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.PangOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1294,7 +1313,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.AmagName <> value Then
                     _model.POWPMUFilterParameters.AmagName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.AmagOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1306,7 +1325,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.AangName <> value Then
                     _model.POWPMUFilterParameters.AangName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.AangOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1318,7 +1337,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.AfitName <> value Then
                     _model.POWPMUFilterParameters.AfitName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.AfitOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1330,7 +1349,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.BmagName <> value Then
                     _model.POWPMUFilterParameters.BmagName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.BmagOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1342,7 +1361,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.BangName <> value Then
                     _model.POWPMUFilterParameters.BangName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.BangOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1354,7 +1373,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.BfitName <> value Then
                     _model.POWPMUFilterParameters.BfitName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.BfitOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1366,7 +1385,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.CmagName <> value Then
                     _model.POWPMUFilterParameters.CmagName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.CmagOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1378,7 +1397,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.CangName <> value Then
                     _model.POWPMUFilterParameters.CangName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.CangOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1390,7 +1409,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.CfitName <> value Then
                     _model.POWPMUFilterParameters.CfitName = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.CfitOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1402,7 +1421,7 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _model.POWPMUFilterParameters.ROCOFname <> value Then
                     _model.POWPMUFilterParameters.ROCOFname = value
-                    'OutputChannels(0).SignalName = value
+                    PowPMUFilterOutputSignals.ROCOFOut.SignalName = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1451,6 +1470,19 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _commonName <> value Then
                     _commonName = value
+                    PmagName = value
+                    PangName = value
+                    AmagName = value
+                    AangName = value
+                    AfitName = value
+                    BmagName = value
+                    BangName = value
+                    BfitName = value
+                    CmagName = value
+                    CangName = value
+                    CfitName = value
+                    Fname = value
+                    ROCOFname = value
                     OnPropertyChanged()
                 End If
             End Set
@@ -1474,6 +1506,16 @@ Namespace ViewModels
             End Get
             Set(ByVal value As PointOnWavePMUFilterInputSignals)
                 _powPMUFilterInputSignals = value
+                OnPropertyChanged()
+            End Set
+        End Property
+        Private _powPMUFilterOutputSignals As PointOnWavePMUFilterOutputSignals
+        Public Property PowPMUFilterOutputSignals As PointOnWavePMUFilterOutputSignals
+            Get
+                Return _powPMUFilterOutputSignals
+            End Get
+            Set(ByVal value As PointOnWavePMUFilterOutputSignals)
+                _powPMUFilterOutputSignals = value
                 OnPropertyChanged()
             End Set
         End Property
@@ -1607,7 +1649,180 @@ Namespace ViewModels
             End Set
         End Property
     End Class
-
+    Public Class PointOnWavePMUFilterOutputSignals
+        Inherits ViewModelBase
+        Public Sub New()
+            _pmagOut = New SignalSignatureViewModel
+            _pangOut = New SignalSignatureViewModel
+            _amagOut = New SignalSignatureViewModel
+            _aangOut = New SignalSignatureViewModel
+            _afitOut = New SignalSignatureViewModel
+            _bmagOut = New SignalSignatureViewModel
+            _bangOut = New SignalSignatureViewModel
+            _bfitOut = New SignalSignatureViewModel
+            _cmagOut = New SignalSignatureViewModel
+            _cangOut = New SignalSignatureViewModel
+            _cfitOut = New SignalSignatureViewModel
+            _fOut = New SignalSignatureViewModel
+            _rocofOut = New SignalSignatureViewModel
+        End Sub
+        Private _pmagOut As SignalSignatureViewModel
+        Public Property PmagOut As SignalSignatureViewModel
+            Get
+                Return _pmagOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _pmagOut <> value Then
+                    _pmagOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _pangOut As SignalSignatureViewModel
+        Public Property PangOut As SignalSignatureViewModel
+            Get
+                Return _pangOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _pangOut <> value Then
+                    _pangOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _amagOut As SignalSignatureViewModel
+        Public Property AmagOut As SignalSignatureViewModel
+            Get
+                Return _amagOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _amagOut <> value Then
+                    _amagOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _aangOut As SignalSignatureViewModel
+        Public Property AangOut As SignalSignatureViewModel
+            Get
+                Return _aangOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _aangOut <> value Then
+                    _aangOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _afitOut As SignalSignatureViewModel
+        Public Property AfitOut As SignalSignatureViewModel
+            Get
+                Return _afitOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _afitOut <> value Then
+                    _afitOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _bmagOut As SignalSignatureViewModel
+        Public Property BmagOut As SignalSignatureViewModel
+            Get
+                Return _bmagOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _bmagOut <> value Then
+                    _bmagOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _bangOut As SignalSignatureViewModel
+        Public Property BangOut As SignalSignatureViewModel
+            Get
+                Return _bangOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _bangOut <> value Then
+                    _bangOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _bfitOut As SignalSignatureViewModel
+        Public Property BfitOut As SignalSignatureViewModel
+            Get
+                Return _bfitOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _bfitOut <> value Then
+                    _bfitOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _cmagOut As SignalSignatureViewModel
+        Public Property CmagOut As SignalSignatureViewModel
+            Get
+                Return _cmagOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _cmagOut <> value Then
+                    _cmagOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _cangOut As SignalSignatureViewModel
+        Public Property CangOut As SignalSignatureViewModel
+            Get
+                Return _cangOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _cangOut <> value Then
+                    _cangOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _cfitOut As SignalSignatureViewModel
+        Public Property CfitOut As SignalSignatureViewModel
+            Get
+                Return _cfitOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _cfitOut <> value Then
+                    _cfitOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _fOut As SignalSignatureViewModel
+        Public Property FOut As SignalSignatureViewModel
+            Get
+                Return _fOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _fOut <> value Then
+                    _fOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+        Private _rocofOut As SignalSignatureViewModel
+        Public Property ROCOFOut As SignalSignatureViewModel
+            Get
+                Return _rocofOut
+            End Get
+            Set(ByVal value As SignalSignatureViewModel)
+                If _rocofOut <> value Then
+                    _rocofOut = value
+                    OnPropertyChanged()
+                End If
+            End Set
+        End Property
+    End Class
     Public Class Multirate
         Inherits Filter
         Public Sub New()

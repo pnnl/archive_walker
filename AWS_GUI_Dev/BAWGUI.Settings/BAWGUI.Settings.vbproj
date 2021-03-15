@@ -155,6 +155,7 @@
     <Compile Include="Converters\HeaderConverters.vb" />
     <Compile Include="Converters\InverseBooleanConverter.vb" />
     <Compile Include="Converters\MisConverters.vb" />
+    <Compile Include="Converters\PMUFilterInputTypeBooleanConverter.vb" />
     <Compile Include="Converters\TypeUnitDictionaryConverter.vb" />
     <Compile Include="Converters\ValueIfEmptyConverter.vb" />
     <Compile Include="Converters\VisibilityConverters.vb" />

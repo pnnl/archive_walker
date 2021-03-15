@@ -32,6 +32,7 @@
             <coreconverter:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
             <converters:TunableFilterTypeVisibilityConverter x:Key="TunableFilterTypeVisibilityConverter"/>
             <coreconverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+            <converters:PMUFilterInputTypeBooleanConverter x:Key="PMUFilterInputTypeBooleanConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -99,7 +100,7 @@
                 <Label Grid.Row="1" Grid.Column="0" Margin="0" Width="210" VerticalAlignment="Center" Content="Return positive sequence?" HorizontalAlignment="Left"/>
                 <CheckBox Grid.Row="1" Grid.Column="1" Margin="0" Width="100" VerticalAlignment="Center" IsChecked="{Binding ReturnPositiveSequence}" HorizontalAlignment="Center"/>
                 <Label Grid.Row="2" Grid.Column="0" Margin="0" Width="210" VerticalAlignment="Center" Content="Calculate frequency and ROCOF?" HorizontalAlignment="Left"/>
-                <CheckBox Grid.Row="2" Grid.Column="1" Margin="0" Width="100" VerticalAlignment="Center" IsChecked="{Binding CalculateFandROCOF}" HorizontalAlignment="Center"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" Margin="0" Width="100" VerticalAlignment="Center" IsChecked="{Binding CalculateFandROCOF}" HorizontalAlignment="Center" IsEnabled="{Binding PMUFilterInputType, Converter={StaticResource PMUFilterInputTypeBooleanConverter}}"/>
                 <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Header="Parameters">
                     <Grid>
                         <Grid.ColumnDefinitions>
