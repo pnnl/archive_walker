@@ -1,38 +1,23 @@
 /*
 * MATLAB Compiler: 6.6 (R2018a)
-* Date: Thu Mar 11 15:40:47 2021
+* Date: Mon Mar 15 10:42:01 2021
 * Arguments:
 * "-B""macro_default""-W""dotnet:BAWSengine,GUI2MAT,4.0,private""-T""link:lib""-d""C:\GitF
 * olders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_testing""-v""class{GUI2MAT:C:
-* \Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m,C:
-* \Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleDB.m,
-* C:\Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m,C:\
-* Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnalysis.
-* m,C:\Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m,C:\Use
-* rs\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillat
-* ion.m,C:\Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m,C
-* :\Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m,C:\
-* Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m,C:\U
-* sers\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m,C:\
-* Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m,
-* C:\Users\foll154\OneDrive -
-* PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m}""-
-* a""C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCustomization\GraphCu
-* stomization.m""-a""C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCusto
-* mization\PCAcustomization.m""-a""C:\GitFolders\archive_walker\MATengine\DataProcessor\Fi
-* lter\POWpmuFilt.m""-a""C:\GitFolders\archive_walker\MATengine\ReadingData\uPMUdatReader.
-* m"
+* \GitFolders\archive_walker\MATengine\GUIfunctions\GetFileExample.m,C:\GitFolders\archive
+* _walker\MATengine\GUIfunctions\GetFileExampleDB.m,C:\GitFolders\archive_walker\MATengine
+* \GUIfunctions\GetSparseData.m,C:\GitFolders\archive_walker\MATengine\GUIfunctions\Inspec
+* tionAnalysis.m,C:\GitFolders\archive_walker\MATengine\GUIfunctions\ReadMMdata.m,C:\GitFo
+* lders\archive_walker\MATengine\GUIfunctions\RerunForcedOscillation.m,C:\GitFolders\archi
+* ve_walker\MATengine\GUIfunctions\RerunOutOfRange.m,C:\GitFolders\archive_walker\MATengin
+* e\GUIfunctions\RerunRingdown.m,C:\GitFolders\archive_walker\MATengine\GUIfunctions\Retri
+* eveData.m,C:\GitFolders\archive_walker\MATengine\GUIfunctions\RunNormalMode.m,C:\GitFold
+* ers\archive_walker\MATengine\GUIfunctions\UpdateOBATpreset.m,C:\GitFolders\archive_walke
+* r\MATengine\GUIfunctions\WriteMMreport.m}""-a""C:\GitFolders\archive_walker\MATengine\DQ
+* andCustomization\SignalCustomization\GraphCustomization.m""-a""C:\GitFolders\archive_wal
+* ker\MATengine\DQandCustomization\SignalCustomization\PCAcustomization.m""-a""C:\GitFolde
+* rs\archive_walker\MATengine\DataProcessor\Filter\POWpmuFilt.m""-a""C:\GitFolders\archive
+* _walker\MATengine\ReadingData\uPMUdatReader.m"
 */
 using System;
 using System.Reflection;
@@ -51,47 +36,29 @@ namespace BAWSengineNative
   /// The GUI2MAT class provides a CLS compliant, Object (native) interface to the MATLAB
   /// functions contained in the files:
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.
-  /// m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetFileExample.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleD
-  /// B.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetFileExampleDB.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetSparseData.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnaly
-  /// sis.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\InspectionAnalysis.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\ReadMMdata.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOsci
-  /// llation.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunForcedOscillation.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange
-  /// .m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunOutOfRange.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunRingdown.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\RetrieveData.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\RunNormalMode.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATprese
-  /// t.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\UpdateOBATpreset.m
   /// <newpara></newpara>
-  /// C:\Users\foll154\OneDrive -
-  /// PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m
+  /// C:\GitFolders\archive_walker\MATengine\GUIfunctions\WriteMMreport.m
   /// </summary>
   /// <remarks>
   /// @Version 4.0
