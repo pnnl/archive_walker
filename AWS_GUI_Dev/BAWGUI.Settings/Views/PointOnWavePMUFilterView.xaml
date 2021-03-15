@@ -9,6 +9,7 @@
              xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
              xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
              xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -33,6 +34,7 @@
             <converters:TunableFilterTypeVisibilityConverter x:Key="TunableFilterTypeVisibilityConverter"/>
             <coreconverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
             <converters:PMUFilterInputTypeBooleanConverter x:Key="PMUFilterInputTypeBooleanConverter"/>
+            <coreconverter:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -73,14 +75,92 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Label Content="Phase A" Margin="2,1" Width="60" Grid.Row="0" Grid.Column="0"/>
-                        <xtlkt:WatermarkTextBox Watermark="Phase A PMU" ToolTip="Please select phase A signal" Text="{Binding PowPMUFilterInputSignals.PhaseA.PMUName}" Grid.Row="0" Grid.Column="1" Width="150" Margin="2,1"/>
-                        <xtlkt:WatermarkTextBox Watermark="Phase A Channel" ToolTip="Please select phase A signal" Text="{Binding PowPMUFilterInputSignals.PhaseA.SignalName}" Grid.Row="0" Grid.Column="2" Width="150" Margin="2,1"/>
+                        <xtlkt:WatermarkTextBox Watermark="Phase A PMU" ToolTip="Please select phase A signal" Text="{Binding PowPMUFilterInputSignals.PhaseA.PMUName}" Grid.Row="0" Grid.Column="1" Width="150" Margin="2,1" GotFocus="PAPMU_GotFocus" LostFocus="PAPMU_LostFocus" IsReadOnly="True" Name="PAPMU">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentPointOnWavePMUFilterInputFocusedTexBox}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                                <Binding Path="PowPMUFilterInputSignals.PhaseA"/>
+                                                <Binding Source="PhaseA"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xtlkt:WatermarkTextBox>
+                        <xtlkt:WatermarkTextBox Watermark="Phase A Channel" ToolTip="Please select phase A signal" Text="{Binding PowPMUFilterInputSignals.PhaseA.SignalName}" Grid.Row="0" Grid.Column="2" Width="150" Margin="2,1" GotFocus="PAChannel_GotFocus" LostFocus="PAChannel_LostFocus" IsReadOnly="True" Name="PAChannel">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentPointOnWavePMUFilterInputFocusedTexBox}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                                <Binding Path="PowPMUFilterInputSignals.PhaseA"/>
+                                                <Binding Source="PhaseA"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xtlkt:WatermarkTextBox>
                         <Label Content="Phase B" Margin="2,1" Width="60" Grid.Row="1" Grid.Column="0"/>
-                        <xtlkt:WatermarkTextBox Watermark="Phase B PMU" ToolTip="Please select phase B signal" Text="{Binding PowPMUFilterInputSignals.PhaseB.PMUName}" Grid.Row="1" Grid.Column="1" Width="150" Margin="2,1"/>
-                        <xtlkt:WatermarkTextBox Watermark="Phase B Channel" ToolTip="Please select phase B signal" Text="{Binding PowPMUFilterInputSignals.PhaseB.SignalName}" Grid.Row="1" Grid.Column="2" Width="150" Margin="2,1"/>
+                        <xtlkt:WatermarkTextBox Watermark="Phase B PMU" ToolTip="Please select phase B signal" Text="{Binding PowPMUFilterInputSignals.PhaseB.PMUName}" Grid.Row="1" Grid.Column="1" Width="150" Margin="2,1" GotFocus="PBPMU_GotFocus" LostFocus="PBPMU_LostFocus" IsReadOnly="True" Name="PBPMU">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentPointOnWavePMUFilterInputFocusedTexBox}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                                <Binding Path="PowPMUFilterInputSignals.PhaseB"/>
+                                                <Binding Source="PhaseB"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xtlkt:WatermarkTextBox>
+                        <xtlkt:WatermarkTextBox Watermark="Phase B Channel" ToolTip="Please select phase B signal" Text="{Binding PowPMUFilterInputSignals.PhaseB.SignalName}" Grid.Row="1" Grid.Column="2" Width="150" Margin="2,1" GotFocus="PBChannel_GotFocus" LostFocus="PBChannel_LostFocus" IsReadOnly="True" Name="PBChannel">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentPointOnWavePMUFilterInputFocusedTexBox}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                                <Binding Path="PowPMUFilterInputSignals.PhaseB"/>
+                                                <Binding Source="PhaseB"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xtlkt:WatermarkTextBox>
                         <Label Content="Phase C" Margin="2,1" Width="60" Grid.Row="2" Grid.Column="0"/>
-                        <xtlkt:WatermarkTextBox Watermark="Phase C PMU" ToolTip="Please select phase C signal" Text="{Binding PowPMUFilterInputSignals.PhaseB.PMUName}" Grid.Row="2" Grid.Column="1" Width="150" Margin="2,1"/>
-                        <xtlkt:WatermarkTextBox Watermark="Phase C Channel" ToolTip="Please select phase C signal" Text="{Binding PowPMUFilterInputSignals.PhaseC.SignalName}" Grid.Row="2" Grid.Column="2" Width="150" Margin="2,1"/>
+                        <xtlkt:WatermarkTextBox Watermark="Phase C PMU" ToolTip="Please select phase C signal" Text="{Binding PowPMUFilterInputSignals.PhaseB.PMUName}" Grid.Row="2" Grid.Column="1" Width="150" Margin="2,1" GotFocus="PCPMU_GotFocus" LostFocus="PCPMU_LostFocus" IsReadOnly="True" Name="PCPMU">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentPointOnWavePMUFilterInputFocusedTexBox}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                                <Binding Path="PowPMUFilterInputSignals.PhaseC"/>
+                                                <Binding Source="PhaseC"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xtlkt:WatermarkTextBox>
+                        <xtlkt:WatermarkTextBox Watermark="Phase C Channel" ToolTip="Please select phase C signal" Text="{Binding PowPMUFilterInputSignals.PhaseC.SignalName}" Grid.Row="2" Grid.Column="2" Width="150" Margin="2,1" GotFocus="PCChannel_GotFocus" LostFocus="PCChannel_LostFocus" IsReadOnly="True" Name="PCChannel">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor, AncestorLevel=3}, Path=DataContext.SetCurrentPointOnWavePMUFilterInputFocusedTexBox}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                                <Binding Path="PowPMUFilterInputSignals.PhaseC"/>
+                                                <Binding Source="PhaseC"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </xtlkt:WatermarkTextBox>
                     </Grid>
                 </GroupBox>
             </StackPanel>
