@@ -170,12 +170,12 @@ PMU.PMU_Name = PMUname;
 
 if (ExtendedPMUData==0)
     PMU.Data = BasePhasorData;
-    PMU.Signal_Type = {'VAA','VAM','VBA','VBM','VCA','VCM','IAA','IAM','IBA','IBM','ICA','ICM'};
+    PMU.Signal_Type = {'VAA','VMA','VAB','VMB','VAC','VMC','IAA','IMA','IAB','IMB','IAC','IMC'};
     PMU.Signal_Unit = {'DEG','V','DEG','V','DEG','V','DEG','A','DEG','A','DEG','A'};
     PMU.Signal_Name = strcat([PMUname '_'],PMU.Signal_Type);
 else
     PMU.Data = [BasePhasorData ExtendedPhasorData];
-    PMU.Signal_Type = {'VAA','VAM','VBA','VBM','VCA','VCM','IAA','IAM','IBA','IBM','ICA','ICM','P','Q','S','RCF','F'};
+    PMU.Signal_Type = {'VAA','VMA','VAB','VMB','VAC','VMC','IAA','IMA','IAB','IMB','IAC','IMC','P','Q','S','RCF','F'};
     PMU.Signal_Unit = {'DEG','V','DEG','V','DEG','V','DEG','A','DEG','A','DEG','A','W','VAR','VA','Hz/sec','Hz'};
     PMU.Signal_Name = strcat([PMUname '_'],PMU.Signal_Type);
 end
