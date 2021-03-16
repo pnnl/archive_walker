@@ -372,6 +372,10 @@ elseif ~Unpause
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.Time_String = ttStr;
             PMUbyFile{FileIdx}(pmuIdx).Signal_Time.datetime = datetime(tt,'ConvertFrom','datenum','Format','MM/dd/yy HH:mm:ss.SSSSSS');
         end
+        
+                
+        % Update FileInfo as well
+        FileInfo(FileIdx).tPMU = tt;
     end
     
     clear RerunStartTimeAdj RerunStartTimeDT InitializationPathUser IDX StarterInitializationFile Mode
