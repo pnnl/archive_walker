@@ -564,7 +564,7 @@ Namespace ViewModels
                 'End If
                 If Not String.IsNullOrEmpty(PmagName) Then
                     Dim output = New SignalSignatureViewModel(PmagName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -582,7 +582,7 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(PangName) Then
                     Dim output = New SignalSignatureViewModel(PangName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -600,7 +600,7 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(AmagName) Then
                     Dim output = New SignalSignatureViewModel(AmagName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -618,7 +618,7 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(AangName) Then
                     Dim output = New SignalSignatureViewModel(AangName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -636,14 +636,14 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(AfitName) Then
                     Dim output = New SignalSignatureViewModel(AfitName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     OutputChannels.Add(output)
                     PowPMUFilterOutputSignals.AfitOut = output
                 End If
                 If Not String.IsNullOrEmpty(BmagName) Then
                     Dim output = New SignalSignatureViewModel(BmagName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -661,7 +661,7 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(BangName) Then
                     Dim output = New SignalSignatureViewModel(BangName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -679,14 +679,14 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(BfitName) Then
                     Dim output = New SignalSignatureViewModel(BfitName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     OutputChannels.Add(output)
                     PowPMUFilterOutputSignals.BfitOut = output
                 End If
                 If Not String.IsNullOrEmpty(CmagName) Then
                     Dim output = New SignalSignatureViewModel(CmagName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -704,7 +704,7 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(CangName) Then
                     Dim output = New SignalSignatureViewModel(CangName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -722,14 +722,14 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(CfitName) Then
                     Dim output = New SignalSignatureViewModel(CfitName, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     OutputChannels.Add(output)
                     PowPMUFilterOutputSignals.CfitOut = output
                 End If
                 If Not String.IsNullOrEmpty(Fname) Then
                     Dim output = New SignalSignatureViewModel(Fname, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -747,7 +747,7 @@ Namespace ViewModels
                 End If
                 If Not String.IsNullOrEmpty(ROCOFname) Then
                     Dim output = New SignalSignatureViewModel(ROCOFname, CustPMUName, "OTHER")
-                    output.SamplingRate = fs
+                    output.SamplingRate = ReportRate
                     output.Unit = "O"
                     If type = POWPMUFilterInputType.Current Then
                         If unit <> Nothing Then
@@ -1433,6 +1433,9 @@ Namespace ViewModels
             Set(ByVal value As Double)
                 If _model.POWPMUFilterParameters.ReportRate <> value Then
                     _model.POWPMUFilterParameters.ReportRate = value
+                    For Each s In OutputChannels
+                        s.SamplingRate = value
+                    Next
                     'OutputChannels(0).SignalName = value
                     OnPropertyChanged()
                 End If
@@ -1470,19 +1473,19 @@ Namespace ViewModels
             Set(ByVal value As String)
                 If _commonName <> value Then
                     _commonName = value
-                    PmagName = value
-                    PangName = value
-                    AmagName = value
-                    AangName = value
-                    AfitName = value
-                    BmagName = value
-                    BangName = value
-                    BfitName = value
-                    CmagName = value
-                    CangName = value
-                    CfitName = value
-                    Fname = value
-                    ROCOFname = value
+                    PmagName = value + "_Pmag"
+                    PangName = value + "_Pang"
+                    AmagName = value + "_Amag"
+                    AangName = value + "_Aang"
+                    AfitName = value + "_Afit"
+                    BmagName = value + "_Bmag"
+                    BangName = value + "_Bang"
+                    BfitName = value + "_Bfit"
+                    CmagName = value + "_Cmag"
+                    CangName = value + "_Cang"
+                    CfitName = value + "_Cfit"
+                    Fname = value + "_F"
+                    ROCOFname = value + "_RCF"
                     OnPropertyChanged()
                 End If
             End Set
