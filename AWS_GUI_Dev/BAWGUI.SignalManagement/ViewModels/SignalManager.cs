@@ -2693,15 +2693,15 @@ namespace BAWGUI.SignalManagement.ViewModels
         {
             if (SelectedSignalPlotPanel != null)
             {
-                var freqMatch = true;
+                //var freqMatch = true;
                 var hk = obj as SignalTypeHierachy;
-                if (SelectedSignalPlotPanel.Signals.Count > 0)
-                {
-                    freqMatch = _checkFreq(SelectedSignalPlotPanel.Signals[0].SamplingRate, hk);
-                }
+                //if (SelectedSignalPlotPanel.Signals.Count > 0)
+                //{
+                //    freqMatch = _checkFreq(SelectedSignalPlotPanel.Signals[0].SamplingRate, hk);
+                //}
                 //SelectedSignalPlotPanel.Signals.Add();
-                if (freqMatch)
-                {
+                //if (freqMatch)
+                //{
                     if ((bool)hk.SignalSignature.IsChecked)
                     {
                         _addSignalsToPlot(hk);
@@ -2718,11 +2718,11 @@ namespace BAWGUI.SignalManagement.ViewModels
                     {
                         InspectionAnalysisParams.Fs = SelectedSignalPlotPanel.Signals[0].SamplingRate;
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Selected signal has a different sampling rate than the plotted ones.");
-                }
+                //}
+                //else
+                //{
+                //    MessageBox.Show("Selected signal has a different sampling rate than the plotted ones.");
+                //}
             }
             else
             {
