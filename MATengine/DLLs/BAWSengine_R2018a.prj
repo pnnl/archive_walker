@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="1462016462" file="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\GitFolders\archive_walker\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="2919372351" file="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a.prj" location="C:\GitFolders\archive_walker\MATengine\DLLs" name="BAWSengine_R2018a" preferred-package-location="C:\GitFolders\archive_walker\MATengine\DLLs\BAWSengine_R2018a\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>BAWSengine</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>5.3</param.version>
+    <param.version>5.7</param.version>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -96,40 +96,42 @@
       <param.cpp.api />
     </unset>
     <fileset.exports>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleDB.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetFileExample.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetFileExampleDB.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetSparseData.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\InspectionAnalysis.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\ReadMMdata.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunOutOfRange.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunRingdown.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RetrieveData.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RunNormalMode.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\WriteMMreport.m</file>
     </fileset.exports>
     <fileset.classes>
       <entity.package name="">
         <entity.class name="GUI2MAT">
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExample.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetFileExampleDB.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\GetSparseData.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\InspectionAnalysis.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\ReadMMdata.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunOutOfRange.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RerunRingdown.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RetrieveData.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\RunNormalMode.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
-          <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\GUIfunctions\WriteMMreport.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetFileExample.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetFileExampleDB.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\GetSparseData.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\InspectionAnalysis.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\ReadMMdata.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunForcedOscillation.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunOutOfRange.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RerunRingdown.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RetrieveData.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\RunNormalMode.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\UpdateOBATpreset.m</file>
+          <file>C:\GitFolders\archive_walker\MATengine\GUIfunctions\WriteMMreport.m</file>
         </entity.class>
       </entity.package>
     </fileset.classes>
     <fileset.resources>
+      <file>C:\GitFolders\archive_walker\MATengine\DataProcessor\Filter\POWpmuFilt.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCustomization\GraphCustomization.m</file>
       <file>C:\GitFolders\archive_walker\MATengine\DQandCustomization\SignalCustomization\PCAcustomization.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\ReadingData\uPMUdatReader.m</file>
     </fileset.resources>
     <fileset.depfun>
       <file>C:\GitFolders\archive_walker\MATengine\BAWS_main9.m</file>

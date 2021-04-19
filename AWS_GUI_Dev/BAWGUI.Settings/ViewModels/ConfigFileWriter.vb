@@ -245,23 +245,23 @@ Namespace ViewModels
                             If Not String.IsNullOrEmpty(stp.WindowLength) Then
                                 parameters.Add(<WindowLength><%= stp.WindowLength %></WindowLength>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseAVoltage.SignalName) Then
-                                parameters.Add(<VA><%= stp.POWInputSignals.PhaseAVoltage.SignalName %></VA>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseAVoltage.SignalName) Then
+                                parameters.Add(<VA><%= stp.POWCalcInputSignals.PhaseAVoltage.SignalName %></VA>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseBVoltage.SignalName) Then
-                                parameters.Add(<VB><%= stp.POWInputSignals.PhaseBVoltage.SignalName %></VB>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseBVoltage.SignalName) Then
+                                parameters.Add(<VB><%= stp.POWCalcInputSignals.PhaseBVoltage.SignalName %></VB>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseCVoltage.SignalName) Then
-                                parameters.Add(<VC><%= stp.POWInputSignals.PhaseCVoltage.SignalName %></VC>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseCVoltage.SignalName) Then
+                                parameters.Add(<VC><%= stp.POWCalcInputSignals.PhaseCVoltage.SignalName %></VC>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseACurrent.SignalName) Then
-                                parameters.Add(<IA><%= stp.POWInputSignals.PhaseACurrent.SignalName %></IA>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseACurrent.SignalName) Then
+                                parameters.Add(<IA><%= stp.POWCalcInputSignals.PhaseACurrent.SignalName %></IA>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseBCurrent.SignalName) Then
-                                parameters.Add(<IB><%= stp.POWInputSignals.PhaseBCurrent.SignalName %></IB>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseBCurrent.SignalName) Then
+                                parameters.Add(<IB><%= stp.POWCalcInputSignals.PhaseBCurrent.SignalName %></IB>)
                             End If
-                            If Not String.IsNullOrEmpty(stp.POWInputSignals.PhaseCCurrent.SignalName) Then
-                                parameters.Add(<IC><%= stp.POWInputSignals.PhaseCCurrent.SignalName %></IC>)
+                            If Not String.IsNullOrEmpty(stp.POWCalcInputSignals.PhaseCCurrent.SignalName) Then
+                                parameters.Add(<IC><%= stp.POWCalcInputSignals.PhaseCCurrent.SignalName %></IC>)
                             End If
                             If Not String.IsNullOrEmpty(stp.PhaseShiftV) Then
                                 parameters.Add(<PhaseShiftV><%= stp.PhaseShiftV %></PhaseShiftV>)
@@ -276,6 +276,54 @@ Namespace ViewModels
                                 parameters.Add(<Band><%= EnumExtencsionMethod.ToStringEnums(stp.BandType) %></Band>)
                             End If
                             aStep.Add(parameters)
+                        Case TunableFilterType.POWpmuFilt
+                            aStep.Add(<InputType><%= stp.PMUFilterInputType.ToString() %></InputType>)
+                            aStep.Add(<ReturnABCPhase><%= stp.ReturnABCPhases.ToString() %></ReturnABCPhase>)
+                            aStep.Add(<ReturnPositiveSequence><%= stp.ReturnPositiveSequence.ToString() %></ReturnPositiveSequence>)
+                            aStep.Add(<CalculateFandROCOF><%= stp.CalculateFandROCOF.ToString() %></CalculateFandROCOF>)
+                            Dim parameters = <Parameters></Parameters>
+                            If stp.ReturnPositiveSequence Then
+                                parameters.Add(<PmagName><%= stp.PmagName %></PmagName>)
+                                parameters.Add(<PangName><%= stp.PangName %></PangName>)
+                            Else
+                                parameters.Add(<PmagName></PmagName>)
+                                parameters.Add(<PangName></PangName>)
+                            End If
+                            If stp.ReturnABCPhases Then
+                                parameters.Add(<AmagName><%= stp.AmagName %></AmagName>)
+                                parameters.Add(<AangName><%= stp.AangName %></AangName>)
+                                parameters.Add(<AfitName><%= stp.AfitName %></AfitName>)
+                                parameters.Add(<BmagName><%= stp.BmagName %></BmagName>)
+                                parameters.Add(<BangName><%= stp.BangName %></BangName>)
+                                parameters.Add(<BfitName><%= stp.BfitName %></BfitName>)
+                                parameters.Add(<CmagName><%= stp.CmagName %></CmagName>)
+                                parameters.Add(<CangName><%= stp.CangName %></CangName>)
+                                parameters.Add(<CfitName><%= stp.CfitName %></CfitName>)
+                            Else
+                                parameters.Add(<AmagName></AmagName>)
+                                parameters.Add(<AangName></AangName>)
+                                parameters.Add(<AfitName></AfitName>)
+                                parameters.Add(<BmagName></BmagName>)
+                                parameters.Add(<BangName></BangName>)
+                                parameters.Add(<BfitName></BfitName>)
+                                parameters.Add(<CmagName></CmagName>)
+                                parameters.Add(<CangName></CangName>)
+                                parameters.Add(<CfitName></CfitName>)
+                            End If
+                            If stp.CalculateFandROCOF Then
+                                parameters.Add(<Fname><%= stp.Fname %></Fname>)
+                                parameters.Add(<ROCOFname><%= stp.ROCOFname %></ROCOFname>)
+                            Else
+                                parameters.Add(<Fname></Fname>)
+                                parameters.Add(<ROCOFname></ROCOFname>)
+                            End If
+                            parameters.Add(<ReportRate><%= stp.ReportRate %></ReportRate>)
+                            parameters.Add(<WinLength><%= stp.WinLength %></WinLength>)
+                            parameters.Add(<SynchFreq><%= stp.SynchFreq %></SynchFreq>)
+                            parameters.Add(<PA><%= stp.PowPMUFilterInputSignals.PhaseA.SignalName %></PA>)
+                            parameters.Add(<PB><%= stp.PowPMUFilterInputSignals.PhaseB.SignalName %></PB>)
+                            parameters.Add(<PC><%= stp.PowPMUFilterInputSignals.PhaseC.SignalName %></PC>)
+                            aStep.Add(parameters)
                         Case Else
                             Dim parameters = <Parameters></Parameters>
                             aStep.Add(parameters)
@@ -284,7 +332,7 @@ Namespace ViewModels
                     '    Dim para As XElement = New XElement(parameter.ParameterName.ToString, parameter.Value)
                     '    aStep.<Parameters>.LastOrDefault.Add(para)
                     'Next
-                    If stp.UseCustomPMU AndAlso stp.Type <> TunableFilterType.PointOnWavePower Then
+                    If stp.UseCustomPMU AndAlso stp.Type <> TunableFilterType.PointOnWavePower AndAlso stp.Type <> TunableFilterType.POWpmuFilt Then
                         Dim PMUSignalDictionary = DirectCast(stp, TunableFilter).InputChannels.GroupBy(Function(x) x.PMUName).ToDictionary(Function(x) x.Key, Function(x) x.ToList)
                         For Each pmuGroup In PMUSignalDictionary
                             Dim PMU As XElement = <PMU>

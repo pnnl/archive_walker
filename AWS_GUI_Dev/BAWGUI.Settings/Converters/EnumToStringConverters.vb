@@ -20,6 +20,8 @@ Namespace Converters
                     Return "openHistorian"
                 Case DataFileType.OpenPDC
                     Return "openPDC"
+                Case DataFileType.uPMUdat
+                    Return "uPMU DAT"
                 Case Else
                     Throw New Exception("Data file type not valid!")
             End Select
@@ -39,6 +41,8 @@ Namespace Converters
                     Return DataFileType.OpenHistorian
                 Case "openPDC"
                     Return DataFileType.OpenPDC
+                Case "uPMU DAT"
+                    Return DataFileType.uPMUdat
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select
@@ -197,8 +201,8 @@ Namespace Converters
                     Return "Point on Wave Power Calculation"
                 Case TunableFilterType.RMSenergyFilt
                     Return "RMS Energy"
-                    'Case TunableFilterType.Median
-                    '    Return "Median"
+                Case TunableFilterType.POWpmuFilt
+                    Return "PMU"
                 Case Else
                     Throw New Exception("TunableFilter type not valid!")
             End Select
@@ -220,8 +224,8 @@ Namespace Converters
                     Return TunableFilterType.PointOnWavePower
                 Case "RMS Energy"
                     Return TunableFilterType.RMSenergyFilt
-                    'Case "Median"
-                    '    Return TunableFilterType.Median
+                Case "PMU"
+                    Return TunableFilterType.POWpmuFilt
                 Case Else
                     Throw New Exception("Enum type not valid!")
             End Select

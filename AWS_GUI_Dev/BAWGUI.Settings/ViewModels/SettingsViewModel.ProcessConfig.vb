@@ -689,6 +689,9 @@ Namespace ViewModels
                 If TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.Type = TunableFilterType.PointOnWavePower Then
                     _pointOnWavePowCalFltrInputSignalNeedToBeChanged = ""
                 End If
+                If TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.Type = TunableFilterType.POWpmuFilt Then
+                    _pointOnWavePMUFltrInputSignalNeedToBeChanged = ""
+                End If
             End If
             If Not processStep.IsStepSelected Then
                 Try
@@ -818,7 +821,7 @@ Namespace ViewModels
 
                     CurrentSelectedStep = processStep
                     If TypeOf CurrentSelectedStep Is TunableFilter AndAlso CurrentSelectedStep.Type = TunableFilterType.PointOnWavePower Then
-                        _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+                        _determinePointOnWaveFltrsSamplingRateCheckableStatus()
                     Else
                         _determineSamplingRateCheckableStatus()
                     End If

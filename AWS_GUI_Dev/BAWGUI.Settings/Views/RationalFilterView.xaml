@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="RationalFilterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BAWGUI.Settings"
+             xmlns:xtlkt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:coreconverter="clr-namespace:BAWGUI.Core.Converters;assembly=BAWGUI.Core"
+             xmlns:coremodels="clr-namespace:BAWGUI.Core.Models;assembly=BAWGUI.Core"
+             xmlns:converters="clr-namespace:BAWGUI.Settings.Converters"
+             xmlns:utility="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:EnumToStringConverter7 x:Key="EnumToStringConverter7"/>
+            <coreconverter:EnumToStringConverter11 x:Key="EnumToStringConverter11"/>
+            <converters:TunableFilterTypeVisibilityConverter x:Key="TunableFilterTypeVisibilityConverter"/>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="InterpolateTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="coremodels:InterpolateType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="TunableFilterTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="coremodels:TunableFilterType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type utility:EnumerationManager}" x:Key="OutputSignalStorageTypeValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="coremodels:OutputSignalStorageType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <coreconverter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Margin="2" Grid.Column="0">
+            <StackPanel Orientation="Horizontal" Margin="2,0">
+                <Label Margin="15,0,0,0" Width="150" VerticalAlignment="Center" Content="Filter Type: " HorizontalAlignment="Left"/>
+                <ComboBox ItemsSource="{Binding Source={StaticResource TunableFilterTypeValues}}" Text="{Binding Type, Converter={StaticResource EnumToStringConverter7}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" HorizontalContentAlignment="Right" Margin="-15,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,0">
+                <Label Content="Output Signal Storage:" Margin="15,0,0,0" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Type, Converter={StaticResource TunableFilterTypeVisibilityConverter}}"/>
+                <ComboBox ItemsSource="{Binding Source={StaticResource OutputSignalStorageTypeValues}}" Text="{Binding OutputSignalStorage, Converter={StaticResource EnumToStringConverter11}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" HorizontalContentAlignment="Right" Margin="-15,0,0,0" Visibility="{Binding Type, Converter={StaticResource TunableFilterTypeVisibilityConverter}}"/>
+                <Label Margin="15,0,0,0" Width="150" VerticalAlignment="Center" Content="Custom PMU:" HorizontalAlignment="Center" ToolTip="{Binding ToolTip}" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <xtlkt:WatermarkTextBox Watermark="Enter PMU Name" ToolTip="Please enter custom PMU name" Text="{Binding CustPMUName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" HorizontalContentAlignment="Right" Margin="-15,0,0,0" Visibility="{Binding UseCustomPMU, Converter={StaticResource BooleanVisibilityConverter}}"/>
+            </StackPanel>
+            <local:TunableFilterInputSignalView1/>
+        </StackPanel>
+        <Grid Margin="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Label.Content>
+                    <TextBlock>
+                    <Run Text="Numerator (b"/><Run 
+                        Text="0" Typography.Variants="Subscript" FontSize="8"/><Run
+                        Text=", b"/><Run
+                        Text="1" Typography.Variants="Subscript" FontSize="8"/><Run
+                        Text=",..., b"/><Run
+                        Text="m" Typography.Variants="Subscript" FontSize="8"/><Run
+                        Text="):"/>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Numerator, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+            <Label Grid.Row="1" Grid.Column="1" Margin="0,2" Width="210" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Label.Content>
+                    <TextBlock>
+                    <Run Text="Denominator (a"/><Run
+                        Text="0" Typography.Variants="Subscript" FontSize="8"/><Run
+                        Text=", a"/><Run
+                        Text="1" Typography.Variants="Subscript" FontSize="8"/><Run
+                        Text=",..., a"/><Run
+                        Text="n" Typography.Variants="Subscript" FontSize="8"/><Run
+                        Text="):"/>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,2" Width="100" VerticalAlignment="Center" Text="{Binding Denominator, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</UserControl>

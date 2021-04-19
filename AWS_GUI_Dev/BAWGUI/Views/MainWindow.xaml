@@ -18,7 +18,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         xmlns:behaviors="clr-namespace:BAWGUI.Utilities;assembly=BAWGUI.Utilities"
         mc:Ignorable="d"
-        Title="BPA Archive Walker GUI" Height="768" Width="1024" WindowState="Maximized"
+        Title="BPA/DOE Archive Walker" Height="768" Width="1024" WindowState="Maximized"
         Name="myMainWindow">
     <Window.Resources>
         <Style TargetType="{x:Type Image}">
@@ -66,7 +66,7 @@
                 <behaviors:GridColumnWidthReseterBehaviour TargetGridColumnIndex="0"></behaviors:GridColumnWidthReseterBehaviour>
             </i:Interaction.Behaviors>
             <Expander.Header>
-                <TextBlock Text="BPA Archive Walker Projects">
+                <TextBlock Text="Archive Walker Projects">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="-90"/>
                     </TextBlock.LayoutTransform>

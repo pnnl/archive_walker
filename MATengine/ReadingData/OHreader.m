@@ -48,7 +48,7 @@ if isdeployed
 else
     % The function is being called from a Matlab session, so the path must
     % be specified.
-    dllpath  = 'C:\Users\foll154\Documents\BPAoscillationApp\AWrepository\MATengine\matlabDLLs\OH\ReadHistorian.dll'; % Full pathname is required
+    dllpath  = 'C:\GitFolders\archive_walker\MATengine\matlabDLLs\OH\ReadHistorian.dll'; % Full pathname is required
 end
 try
     asmInfo  = NET.addAssembly(dllpath); % Make .NET assembly visible to MATLAB
@@ -103,7 +103,9 @@ for PMUidx = 1:length(PMU)
         
         PMUtemp(PMUidx).Data{k} = ThisDataTable.Value;
         
-        PMUtemp(PMUidx).Time{k} = datenum(ThisDataTable.Time,'yyyy-mm-dd HH:MM:SS.FFF');
+        % This odd way of writing this is necessary because matlab's
+        % datestr can't handle microseconds.
+        PMUtemp(PMUidx).Time{k} = datenum(datetime(ThisDataTable.Time,'InputFormat','yyyy-MM-dd HH:mm:ss.SSSSSS'));
         
         if isempty(time_offset)
             time_offset = round((PMUtemp(PMUidx).Time{k}(1) - StartTime)*24);

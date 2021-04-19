@@ -17,7 +17,7 @@ for tIdx = 1:length(AdditionalOutput(1).t)
 end
 tt = round(tt,3);
 if exist(FileName,'file') > 0
-    Habc = readtable(FileName);
+    Habc = readtable(FileName,'Format','auto');
     H1 = Habc.Properties.VariableNames;
     H2 = Habc{1,:};
     H3 = Habc{2,:};

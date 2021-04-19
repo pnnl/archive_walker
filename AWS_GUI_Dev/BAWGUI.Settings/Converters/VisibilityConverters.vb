@@ -69,7 +69,7 @@ Namespace Converters
         Implements IValueConverter
 
         Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-            If value = 3 OrElse value = 5 OrElse value = 6 Then
+            If value = 3 OrElse value >= 5 Then
                 Return Visibility.Collapsed
             Else
                 Return Visibility.Visible
