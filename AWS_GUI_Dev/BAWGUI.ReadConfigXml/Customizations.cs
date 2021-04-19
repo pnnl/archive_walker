@@ -490,4 +490,70 @@ namespace BAWGUI.ReadConfigXml
         public List<ToReplicate> ToRep { get; set; }
         public new string Name { get => "Duplicate Signals"; }
     }
+    public class GraphEigenvalueCustModel : CustomizationModel
+    {
+        public GraphEigenvalueCustModel() { }
+        private XElement item;
+
+        public GraphEigenvalueCustModel(XElement item)
+        {
+            this.item = item;
+            var par = item.Element("Parameters").Element("CustPMUname").Value;
+            if (par != null)
+            {
+                CustPMUname = par;
+            }
+            par = item.Element("Parameters").Element("SignalName").Value;
+            if (par != null)
+            {
+                SignalName = par;
+            }
+            var terms = item.Element("Parameters").Elements("term");
+            PMUElementList = new List<SignalSignatures>();
+            foreach (var term in terms)
+            {
+                var newTerm = new SignalSignatures(term.Element("PMU").Value, term.Element("Channel").Value);
+                PMUElementList.Add(newTerm);
+            }
+        }
+        public new string Name { get => "Graph Eigenvalue"; }
+        public string SignalName { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
+    }
+    public class PCACustModel : CustomizationModel
+    {
+        public PCACustModel() { }
+        private XElement item;
+
+        public PCACustModel(XElement item)
+        {
+            this.item = item;
+            var par = item.Element("Parameters").Element("CustPMUname").Value;
+            if (par != null)
+            {
+                CustPMUname = par;
+            }
+            SignalNames = new List<string>();
+            var signalNames = item.Element("Parameters").Elements("CustomSignals");
+            foreach (var name in signalNames)
+            {
+                par = name.Element("SignalName").Value;
+                if (par != null)
+                {
+                    SignalNames.Add(par);
+                }
+            }
+            var terms = item.Element("Parameters").Elements("term");
+            PMUElementList = new List<SignalSignatures>();
+            foreach (var term in terms)
+            {
+                var newTerm = new SignalSignatures(term.Element("PMU").Value, term.Element("Channel").Value);
+                PMUElementList.Add(newTerm);
+            }
+        }
+        public new string Name { get => "PCA"; }
+        //public string SignalName { get; set; }
+        public List<string> SignalNames { get; set; }
+        public List<SignalSignatures> PMUElementList { get; set; }
+    }
 }
