@@ -81,6 +81,7 @@ Namespace ViewModels
             _readExampleFile = New DelegateCommand(AddressOf _parseExampleFile, AddressOf CanExecute)
             _updateExampleFile = New DelegateCommand(AddressOf _writeExampleFileAddressToConfig, AddressOf CanExecute)
             _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox = New DelegateCommand(AddressOf _setCurrentPointOnWavePowerCalFilterInput, AddressOf CanExecute)
+            _SetCurrentPointOnWavePMUFilterInputFocusedTexBox = New DelegateCommand(AddressOf _setCurrentPointOnWavePMUFilterInput, AddressOf CanExecute)
             '_detectorStepDeSelected = New DelegateCommand(AddressOf _aDetectorStepDeSelected, AddressOf CanExecute)
             '_postProcessingSelected = New DelegateCommand(AddressOf _selectPostProcessing, AddressOf CanExecute)
             _addDataWriterDetector = New DelegateCommand(AddressOf _addADataWriterDetector, AddressOf CanExecute)
@@ -775,22 +776,25 @@ Namespace ViewModels
             openFileDialog.RestoreDirectory = True
             openFileDialog.FileName = ""
             openFileDialog.DefaultExt = ".pdat"
-            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+            openFileDialog.Filter = "pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|uPMU DAT (*.dat)|*.dat|All files (*.*)|*.*"
             If obj.FileType = DataFileType.csv Then
                 openFileDialog.DefaultExt = ".csv"
-                openFileDialog.Filter = "JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+                openFileDialog.Filter = "JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|openHistorian Preset (*.xml)|*.xml|uPMU DAT (*.dat)|*.dat|All files (*.*)|*.*"
             ElseIf obj.FileType = DataFileType.PI Then
                 openFileDialog.DefaultExt = ".xml"
-                openFileDialog.Filter = "PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+                openFileDialog.Filter = "PI Reader Preset (*.xml)|*.xml|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|HQ Point on Wave (*.mat)|*.mat|openHistorian Preset (*.xml)|*.xml|uPMU DAT (*.dat)|*.dat|All files (*.*)|*.*"
             ElseIf obj.FileType = DataFileType.powHQ Then
                 openFileDialog.DefaultExt = ".mat"
-                openFileDialog.Filter = "HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|All files (*.*)|*.*"
+                openFileDialog.Filter = "HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|openHistorian Preset (*.xml)|*.xml|uPMU DAT (*.dat)|*.dat|All files (*.*)|*.*"
             ElseIf obj.FileType = DataFileType.OpenHistorian Then
                 openFileDialog.DefaultExt = ".xml"
-                openFileDialog.Filter = "openHistorian Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
+                openFileDialog.Filter = "openHistorian Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|uPMU DAT (*.dat)|*.dat|All files (*.*)|*.*"
             ElseIf obj.FileType = DataFileType.OpenPDC Then
                 openFileDialog.DefaultExt = ".xml"
-                openFileDialog.Filter = "openPDC Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
+                openFileDialog.Filter = "openPDC Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|uPMU DAT (*.dat)|*.dat|All files (*.*)|*.*"
+            ElseIf obj.FileType = DataFileType.uPMUdat Then
+                openFileDialog.DefaultExt = ".dat"
+                openFileDialog.Filter = "uPMU DAT (*.dat)|*.dat|openPDC Preset (*.xml)|*.xml|HQ Point on Wave (*.mat)|*.mat|pdat files (*.pdat)|*.pdat|JSIS_CSV files (*.csv)|*.csv|PI Reader Preset (*.xml)|*.xml|All files (*.*)|*.*"
             End If
             If _lastInputFolderLocation Is Nothing Then
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory
@@ -1409,10 +1413,21 @@ Namespace ViewModels
                         If DirectCast(_currentSelectedStep, TunableFilter).Type = TunableFilterType.PointOnWavePower Then
                             Try
                                 _changePointOnWavePowCalFltrInputSignal(obj)
-                                _checkPointOnWavePowCalFltrOutputSamplingRate(obj)
+                                _checkPointOnWaveFltrsOutputSamplingRate(obj)
                                 _checkPointOnWavePowCalFltrOutputUnit()
                                 _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
-                                _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+                                _determinePointOnWaveFltrsSamplingRateCheckableStatus()
+                            Catch ex As Exception
+                                _keepOriginalSelection(obj)
+                                Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
+                            End Try
+                        ElseIf DirectCast(_currentSelectedStep, TunableFilter).Type = TunableFilterType.POWpmuFilt Then
+                            Try
+                                _changePointOnWavePMUFltrInputSignal(obj)
+                                _checkPointOnWaveFltrsOutputSamplingRate(obj)
+                                _checkPointOnWavePMUFltrOutputUnit()
+                                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                                _determinePointOnWaveFltrsSamplingRateCheckableStatus()
                             Catch ex As Exception
                                 _keepOriginalSelection(obj)
                                 Forms.MessageBox.Show("Error selecting signal(s) for TunableFilter step! " & ex.Message, "Error!", MessageBoxButtons.OK)
@@ -1498,7 +1513,28 @@ Namespace ViewModels
             End If
         End Sub
 
-        Private Sub _checkPointOnWavePowCalFltrOutputSamplingRate(obj As SignalTypeHierachy)
+        'Private Sub _checkPointOnWavePMUFltrOutputSamplingRate(obj As SignalTypeHierachy)
+        '    Dim freq = -1
+        '    For Each signal In CurrentSelectedStep.InputChannels
+        '        If signal.SamplingRate <> -1 Then
+        '            freq = signal.SamplingRate
+        '            Exit For
+        '        End If
+        '    Next
+        '    For Each signal In CurrentSelectedStep.OutputChannels
+        '        signal.SamplingRate = freq
+        '    Next
+        'End Sub
+
+        'Private Sub _determinePointOnWavePMUFltrSamplingRateCheckableStatus()
+        '    Throw New NotImplementedException()
+        'End Sub
+
+        Private Sub _checkPointOnWavePMUFltrOutputUnit()
+
+        End Sub
+
+        Private Sub _checkPointOnWaveFltrsOutputSamplingRate(obj As SignalTypeHierachy)
             Dim freq = -1
             For Each signal In CurrentSelectedStep.InputChannels
                 If signal.SamplingRate <> -1 Then
@@ -1511,8 +1547,8 @@ Namespace ViewModels
             Next
         End Sub
         Private Sub _checkPointOnWavePowCalFltrOutputUnit()
-            Dim PhAVUnit = CurrentSelectedStep.POWInputSignals.PhaseAVoltage.Unit
-            Dim PhAIUnit = CurrentSelectedStep.POWInputSignals.PhaseACurrent.Unit
+            Dim PhAVUnit = CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage.Unit
+            Dim PhAIUnit = CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent.Unit
             Dim output1 = CurrentSelectedStep.OutputChannels(0)
             Dim output2 = CurrentSelectedStep.OutputChannels(1)
             If PhAVUnit = "V" And PhAIUnit = "A" Then
@@ -1537,7 +1573,7 @@ Namespace ViewModels
                 output2.OldUnit = output2.Unit
             End If
         End Sub
-        Private Sub _determinePointOnWavePowCalFltrSamplingRateCheckableStatus()
+        Private Sub _determinePointOnWaveFltrsSamplingRateCheckableStatus()
             Dim freq = -1
             For Each signal In CurrentSelectedStep.InputChannels
                 If signal.SamplingRate <> -1 Then
@@ -1548,84 +1584,135 @@ Namespace ViewModels
             _signalMgr.DetermineSamplingRateCheckableStatus(_currentSelectedStep, _currentTabIndex, freq)
         End Sub
         Private Sub _changePointOnWavePowCalFltrInputSignal(obj As SignalTypeHierachy)
-            If obj.SignalList.Count > 0 Then
-                Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
-            Else
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseAVoltage" Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "VW" Then
                         Throw New Exception("Input must be a point-on-wave voltage")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseAVoltage)
-                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseAVoltage = DummySignature
-                    If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseAVoltage = obj.SignalSignature
-                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseAVoltage = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBVoltage" Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "VW" Then
                         Throw New Exception("Input must be a point-on-wave voltage")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBVoltage)
-                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseBVoltage = DummySignature
-                    If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseBVoltage = obj.SignalSignature
-                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseBVoltage = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCVoltage" Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "VW" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "VW" Then
                         Throw New Exception("Input must be a point-on-wave voltage")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCVoltage)
-                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseCVoltage = DummySignature
-                    If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseCVoltage = obj.SignalSignature
-                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseCVoltage = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseACurrent" Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "IW" Then
                         Throw New Exception("Input must be a point-on-wave current")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseACurrent)
-                    CurrentSelectedStep.POWInputSignals.PhaseACurrent.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseACurrent = DummySignature
-                    If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseACurrent = obj.SignalSignature
-                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseACurrent = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseBCurrent" Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "IW" Then
                         Throw New Exception("Input must be a point-on-wave current")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseBCurrent)
-                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseBCurrent = DummySignature
-                    If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseBCurrent = obj.SignalSignature
-                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseBCurrent = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
                     End If
                 End If
                 If _pointOnWavePowCalFltrInputSignalNeedToBeChanged = "PhaseCCurrent" Then
-                    If obj.SignalSignature.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "IW" Then
                         Throw New Exception("Input must be a point-on-wave current")
                     End If
-                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWInputSignals.PhaseCCurrent)
-                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent.IsChecked = False
-                    CurrentSelectedStep.POWInputSignals.PhaseCCurrent = DummySignature
-                    If obj.SignalSignature.IsChecked Then
-                        CurrentSelectedStep.POWInputSignals.PhaseCCurrent = obj.SignalSignature
-                        CurrentSelectedStep.InputChannels.Add(obj.SignalSignature)
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent)
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent.IsChecked = False
+                    CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.POWCalcInputSignals.PhaseCCurrent = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
                     End If
                 End If
+            Else 'if selected a group of signal
+                _keepOriginalSelection(obj)
+                Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
             End If
         End Sub
-
+        Private Sub _changePointOnWavePMUFltrInputSignal(obj As SignalTypeHierachy)
+            Dim sgnl = New SignalSignatureViewModel
+            Dim signalCount = _determineSignalCountInTree(obj)
+            If signalCount = 1 Then
+                sgnl = _findTheBottomSignal(obj)
+                sgnl.IsChecked = obj.SignalSignature.IsChecked
+                If _pointOnWavePMUFltrInputSignalNeedToBeChanged = "PhaseA" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "VW" AndAlso sgnl.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                        Throw New Exception("Input must be a point-on-wave voltage")
+                    End If
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.PowPMUFilterInputSignals.PhaseA)
+                    CurrentSelectedStep.PowPMUFilterInputSignals.PhaseA.IsChecked = False
+                    CurrentSelectedStep.PowPMUFilterInputSignals.PhaseA = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.PowPMUFilterInputSignals.PhaseA = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
+                    End If
+                End If
+                If _pointOnWavePMUFltrInputSignalNeedToBeChanged = "PhaseB" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "VW" AndAlso sgnl.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                        Throw New Exception("Input must be a point-on-wave voltage")
+                    End If
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.PowPMUFilterInputSignals.PhaseB)
+                    CurrentSelectedStep.PowPMUFilterInputSignals.PhaseB.IsChecked = False
+                    CurrentSelectedStep.PowPMUFilterInputSignals.PhaseB = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.PowPMUFilterInputSignals.PhaseB = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
+                    End If
+                End If
+                If _pointOnWavePMUFltrInputSignalNeedToBeChanged = "PhaseC" Then
+                    If sgnl.TypeAbbreviation.Substring(0, 2) <> "VW" AndAlso sgnl.TypeAbbreviation.Substring(0, 2) <> "IW" Then
+                        Throw New Exception("Input must be a point-on-wave voltage")
+                    End If
+                    CurrentSelectedStep.InputChannels.Remove(CurrentSelectedStep.PowPMUFilterInputSignals.PhaseC)
+                    CurrentSelectedStep.PowPMUFilterInputSignals.PhaseC.IsChecked = False
+                    CurrentSelectedStep.PowPMUFilterInputSignals.PhaseC = DummySignature
+                    If sgnl.IsChecked Then
+                        CurrentSelectedStep.PowPMUFilterInputSignals.PhaseC = sgnl
+                        CurrentSelectedStep.InputChannels.Add(sgnl)
+                    End If
+                End If
+            Else 'if selected a group of signal
+                _keepOriginalSelection(obj)
+                Throw New Exception("Please only select a signal valid signal instead of a group of signals!")
+            End If
+        End Sub
         Private Sub _checkAngleForComplexSignalCustomizationOutputType()
             For Each inputOutputPair In CurrentSelectedStep.OutputInputMappingPair
                 If inputOutputPair.Value.Count > 0 Then
@@ -1636,13 +1723,13 @@ Namespace ViewModels
                         'If input.TypeAbbreviation = "CP" Then
                         '    inputOutputPair.Key.Unit = "RAD"
                         If input.TypeAbbreviation.Length = 3 Then
-                                Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
-                                If letter2 = "P" Then
-                                    inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
-                                    inputOutputPair.Key.Unit = "RAD"
-                                End If
+                            Dim letter2 = input.TypeAbbreviation.ToString.ToArray(1)
+                            If letter2 = "P" Then
+                                inputOutputPair.Key.TypeAbbreviation = input.TypeAbbreviation.Substring(0, 1) & "A" & input.TypeAbbreviation.Substring(2, 1)
+                                inputOutputPair.Key.Unit = "RAD"
                             End If
                         End If
+                    End If
                 End If
             Next
         End Sub
@@ -3243,7 +3330,7 @@ Namespace ViewModels
             End If
         End Sub
         Private _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
-        Public Property SeCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
+        Public Property SetCurrentPointOnWavePowerCalFilterInputFocusedTexBox As ICommand
             Get
                 Return _setCurrentPointOnWavePowerCalFilterInputFocusedTexBox
             End Get
@@ -3263,7 +3350,29 @@ Namespace ViewModels
                 _pointOnWavePowCalFltrInputSignalNeedToBeChanged = obj(1)
             End If
         End Sub
+        Private _SetCurrentPointOnWavePMUFilterInputFocusedTexBox As ICommand
+        Public Property SetCurrentPointOnWavePMUFilterInputFocusedTexBox As ICommand
+            Get
+                Return _SetCurrentPointOnWavePMUFilterInputFocusedTexBox
+            End Get
+            Set(ByVal value As ICommand)
+                _SetCurrentPointOnWavePMUFilterInputFocusedTexBox = value
+            End Set
+        End Property
+        Private Sub _setCurrentPointOnWavePMUFilterInput(obj As Object)
+            If _currentSelectedStep IsNot Nothing Then
+                For Each signal In _currentSelectedStep.InputChannels
+                    signal.IsChecked = False
+                Next
+                If obj(0) IsNot Nothing AndAlso Not String.IsNullOrEmpty(obj(0).TypeAbbreviation) AndAlso Not String.IsNullOrEmpty(obj(0).PMUName) Then
+                    obj(0).IsChecked = True
+                End If
+                _signalMgr.ProcessConfigDetermineAllParentNodeStatus()
+                _pointOnWavePMUFltrInputSignalNeedToBeChanged = obj(1)
+            End If
+        End Sub
         Private _pointOnWavePowCalFltrInputSignalNeedToBeChanged As String
+        Private _pointOnWavePMUFltrInputSignalNeedToBeChanged As String
 #End Region
         Private Function _determineSignalCountInTree(obj As SignalTypeHierachy) As Integer
             If obj.SignalList.Count > 0 Then

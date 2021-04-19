@@ -119,9 +119,13 @@ for RMSsig = 1:length(ToRetrieve)
         s2SS = var(Tprime);
         
         % Choose param vectors for the HE based on the means and variances
-        lam = SelectAlternativeHEparams(uSS,s2SS,Nlam);
-        gamPrime = invhypoexp(1-Pfa,lam);
-        gam{RMSsig} = [gam{RMSsig}; sqrt(1/(nLP/2)*gamPrime)];
+        try
+            lam = SelectAlternativeHEparams(uSS,s2SS,Nlam);
+            gamPrime = invhypoexp(1-Pfa,lam);
+            gam{RMSsig} = [gam{RMSsig}; sqrt(1/(nLP/2)*gamPrime)];
+        catch
+            gam{RMSsig} = [gam{RMSsig}; NaN];
+        end
         
         dt = [dt; t];
     end

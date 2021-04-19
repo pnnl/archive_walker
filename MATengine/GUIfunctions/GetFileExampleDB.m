@@ -38,7 +38,7 @@ try
         [PMU,~,fs] = openPDCreader(StartTime,0,FileLength,preset,PresetFile);
     else
         Unsupported = 1;
-        error(['FileType = ' num2str(FileType) ' is not a supported value.']);
+        error(['Database type ' DBtype ' is not supported.']);
     end
 catch e
     if Unsupported == 1

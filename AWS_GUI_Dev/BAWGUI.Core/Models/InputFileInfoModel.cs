@@ -138,6 +138,8 @@ namespace BAWGUI.Core.Models
                 return true;
             else if ((FileType == DataFileType.PI || FileType == DataFileType.OpenHistorian || FileType == DataFileType.OpenPDC) && tp == "xml")
                 return true;
+            else if (FileType == DataFileType.uPMUdat && tp == "dat")
+                return true;
             else
                 return false;
         }

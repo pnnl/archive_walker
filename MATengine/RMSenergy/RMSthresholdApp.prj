@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration file="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\RMSenergy\RMSthresholdApp.prj" location="C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\RMSenergy" name="RMSthresholdApp" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration file="C:\GitFolders\archive_walker\MATengine\RMSenergy\RMSthresholdApp.prj" location="C:\GitFolders\archive_walker\MATengine\RMSenergy" name="RMSthresholdApp" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>RMSthresholdApp</param.appname>
     <param.icon />
     <param.icons />
@@ -81,11 +81,11 @@
     <fileset.resources />
     <fileset.package />
     <fileset.depfun>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\ArchiveWalkerRTD\ListProjectsTasks.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\fun_xmlread_comments.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\near.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\getPdatFileTime.m</file>
-      <file>C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\ReadingData\JSIS_CSV_2_Mat.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\ArchiveWalkerRTD\ListProjectsTasks.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\fun_xmlread_comments.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\near.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\ReadingData\getPdatFileTime.m</file>
+      <file>C:\GitFolders\archive_walker\MATengine\ReadingData\JSIS_CSV_2_Mat.m</file>
       <file>${PROJECT_ROOT}\DesignRMSfilters.m</file>
       <file>${PROJECT_ROOT}\hypoexpcdf.m</file>
       <file>${PROJECT_ROOT}\invhypoexp.m</file>
@@ -94,9 +94,9 @@
       <file>${PROJECT_ROOT}\SetRMSenergyThresh.m</file>
     </fileset.depfun>
     <build-deliverables>
-      <file location="${PROJECT_ROOT}\RMSthresholdApp\for_testing" name="readme.txt" optional="true">C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\RMSenergy\RMSthresholdApp\for_testing\readme.txt</file>
-      <file location="${PROJECT_ROOT}\RMSthresholdApp\for_testing" name="RMSthresholdApp.exe" optional="false">C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\RMSenergy\RMSthresholdApp\for_testing\RMSthresholdApp.exe</file>
-      <file location="${PROJECT_ROOT}\RMSthresholdApp\for_testing" name="splash.png" optional="false">C:\Users\foll154\OneDrive - PNNL\Documents\BPAoscillationApp\AWrepository\MATengine\RMSenergy\RMSthresholdApp\for_testing\splash.png</file>
+      <file location="${PROJECT_ROOT}\RMSthresholdApp\for_testing" name="splash.png" optional="false">C:\GitFolders\archive_walker\MATengine\RMSenergy\RMSthresholdApp\for_testing\splash.png</file>
+      <file location="${PROJECT_ROOT}\RMSthresholdApp\for_testing" name="readme.txt" optional="true">C:\GitFolders\archive_walker\MATengine\RMSenergy\RMSthresholdApp\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\RMSthresholdApp\for_testing" name="RMSthresholdApp.exe" optional="false">C:\GitFolders\archive_walker\MATengine\RMSenergy\RMSthresholdApp\for_testing\RMSthresholdApp.exe</file>
     </build-deliverables>
     <workflow />
     <matlab>
